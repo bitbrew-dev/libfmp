@@ -48,6 +48,34 @@ pub enum ErrorCategory {
     Decode,
 }
 
+/// Machine-readable reasons a client or request configuration was rejected.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum ConfigurationErrorKind {
+    /// The configured base URL is not a supported absolute HTTP(S) URL.
+    InvalidBaseUrl,
+    /// The base URL contains user information, a query, or a fragment.
+    UnsafeBaseUrl,
+    /// A path prefix or endpoint path contains unsafe segments.
+    InvalidPath,
+    /// A header name is not a valid HTTP field name.
+    InvalidHeaderName,
+    /// A header value is not a valid HTTP field value.
+    InvalidHeaderValue,
+    /// A query parameter name is empty or contains control characters.
+    InvalidQueryName,
+    /// A credential is empty.
+    EmptyCredential,
+    /// Direct FMP access was configured without an API credential.
+    MissingCredential,
+    /// More than one authentication selection was supplied.
+    ConflictingAuthentication,
+    /// A caller attempted to replace a transport-owned field.
+    ProtectedFieldCollision,
+    /// The underlying HTTP client could not be constructed.
+    HttpClient,
+}
+
 impl ErrorCategory {
     /// Returns the stable lowercase value exposed to language bindings.
     pub const fn as_str(self) -> &'static str {
@@ -380,6 +408,7 @@ pub struct Error {
     endpoint: Option<&'static str>,
     status: Option<u16>,
     body: Option<SafeBody>,
+    configuration_kind: Option<ConfigurationErrorKind>,
 }
 
 impl Error {
@@ -391,6 +420,16 @@ impl Error {
     /// Creates a configuration error from a static, secret-free message.
     pub fn configuration(message: &'static str) -> Self {
         Self::new(ErrorCategory::Configuration, message)
+    }
+
+    /// Creates a typed configuration error from a static, secret-free message.
+    pub(crate) fn configuration_with_kind(
+        kind: ConfigurationErrorKind,
+        message: &'static str,
+    ) -> Self {
+        let mut error = Self::configuration(message);
+        error.configuration_kind = Some(kind);
+        error
     }
 
     /// Creates a transport failure tied to an optional logical endpoint descriptor.
@@ -436,6 +475,7 @@ impl Error {
             endpoint: None,
             status: None,
             body: None,
+            configuration_kind: None,
         }
     }
 
@@ -467,6 +507,11 @@ impl Error {
     /// Returns the redacted, bounded provider body, when retained.
     pub fn body(&self) -> Option<&SafeBody> {
         self.body.as_ref()
+    }
+
+    /// Returns the machine-readable configuration failure, when applicable.
+    pub fn configuration_kind(&self) -> Option<ConfigurationErrorKind> {
+        self.configuration_kind
     }
 }
 
