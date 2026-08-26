@@ -1,5 +1,8 @@
 //! Thin Python facade for `libfmp`.
 
+mod client;
+mod models;
+
 use pyo3::{
     create_exception,
     exceptions::{PyBaseException, PyException, PyValueError},
@@ -47,10 +50,6 @@ create_exception!(
 ///
 /// Attribute assignment is fallible and is propagated as a Python exception;
 /// this function never unwraps or panics at the FFI boundary.
-#[allow(
-    dead_code,
-    reason = "used by client methods added in the transport slice"
-)]
 fn to_py_error(error: libfmp::Error) -> PyErr {
     Python::attach(|py| {
         let exception = match error.category() {
@@ -121,6 +120,12 @@ mod _native {
         FmpConfigError, FmpDecodeError, FmpError, FmpStatusError, FmpTransportError,
         FmpValidationError,
     };
+
+    #[pymodule_export]
+    use super::client::FmpClient;
+
+    #[pymodule_export]
+    use super::models::QuoteShort;
 
     #[pymodule_init]
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
