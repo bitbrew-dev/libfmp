@@ -1,4 +1,4 @@
-from ._native import (
+from fmp_py._native import (
     FmpConfigError as FmpConfigError,
     FmpDecodeError as FmpDecodeError,
     FmpError as FmpError,
