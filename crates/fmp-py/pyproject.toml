@@ -6,14 +6,28 @@ build-backend = "maturin"
 name = "fmp-py-sdk"
 dynamic = ["version"]
 requires-python = ">=3.9"
-description = "Python bindings for libfmp"
+description = "Typed Python bindings for Financial Modeling Prep, powered by libfmp"
+readme = "README.md"
+keywords = ["finance", "market-data", "fmp", "api", "sdk"]
 classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
   "Programming Language :: Rust",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: Implementation :: CPython",
+  "Typing :: Typed",
 ]
 
 [project.urls]
+Documentation = "https://github.com/bitbrew-dev/libfmp/blob/main/crates/fmp-py/README.md"
+Issues = "https://github.com/bitbrew-dev/libfmp/issues"
 Repository = "https://github.com/bitbrew-dev/libfmp"
 
 [tool.maturin]

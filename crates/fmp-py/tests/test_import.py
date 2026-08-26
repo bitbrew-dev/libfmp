@@ -1,7 +1,21 @@
 def test_import_exposes_workspace_version() -> None:
+    from importlib.metadata import distribution
+    from importlib.resources import files
+
     import fmp_py
 
-    assert fmp_py.__version__ == "0.1.0"
+    installed_distribution = distribution("fmp-py-sdk")
+
+    assert installed_distribution.metadata["Name"] == "fmp-py-sdk"
+    assert installed_distribution.version == "0.1.0"
+    assert fmp_py.__name__ == "fmp_py"
+    assert fmp_py.__version__ == installed_distribution.version
+
+    package_files = files("fmp_py")
+    assert package_files.joinpath("py.typed").is_file()
+    assert package_files.joinpath("__init__.pyi").is_file()
+    assert package_files.joinpath("_native.pyi").is_file()
+    assert package_files.joinpath("quote.pyi").is_file()
 
 
 def test_public_exception_hierarchy_is_stable() -> None:
