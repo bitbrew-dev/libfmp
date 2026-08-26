@@ -1,110 +1,23 @@
 //! Shared async client and proxy-ready request transport.
 
-use std::{collections::BTreeSet, fmt, marker::PhantomData, sync::Arc, time::Duration};
+use std::{collections::BTreeSet, fmt, sync::Arc, time::Duration};
 
-use http::header::{HeaderMap, HeaderName, HeaderValue, LOCATION, USER_AGENT};
-use serde::de::DeserializeOwned;
+use http::header::{CONTENT_TYPE, HeaderMap, HeaderName, HeaderValue, LOCATION, USER_AGENT};
 use url::Url;
 
 use crate::{
     Result, VERSION,
     config::{Authentication, DEFAULT_BASE_URL, DEFAULT_PATH_PREFIX, RedirectPolicy},
+    endpoints::QueryEncoder,
     error::{ConfigurationErrorKind, Error, Redactor, SafeBody, SecretString},
-    transport::{HttpExecutor, HttpMethod, PreparedRequest, ReqwestExecutor, TransportResponse},
+    transport::{HttpExecutor, PreparedRequest, ReqwestExecutor, TransportResponse},
 };
+
+pub use crate::endpoints::{EndpointSpec, QueryParameters};
 
 const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 const MAX_REDIRECTS: usize = 10;
-
-/// A typed endpoint description that contains no transport configuration.
-///
-/// Domain endpoint modules own values of this type. Base URLs,
-/// authentication, default headers, redirects, and timeouts stay on `Client`.
-pub struct EndpointSpec<Q, R> {
-    method: HttpMethod,
-    id: &'static str,
-    relative_path: &'static str,
-    query: Q,
-    response: PhantomData<fn() -> R>,
-}
-
-impl<Q, R> EndpointSpec<Q, R> {
-    /// Creates a transport-independent endpoint description.
-    pub const fn new(
-        method: HttpMethod,
-        id: &'static str,
-        relative_path: &'static str,
-        query: Q,
-    ) -> Self {
-        Self {
-            method,
-            id,
-            relative_path,
-            query,
-            response: PhantomData,
-        }
-    }
-
-    /// Returns the stable logical endpoint identity used in errors.
-    pub const fn id(&self) -> &'static str {
-        self.id
-    }
-
-    /// Returns the relative endpoint path.
-    pub const fn relative_path(&self) -> &'static str {
-        self.relative_path
-    }
-
-    /// Returns the endpoint method.
-    pub const fn method(&self) -> HttpMethod {
-        self.method
-    }
-
-    /// Borrows the typed query value.
-    pub const fn query(&self) -> &Q {
-        &self.query
-    }
-}
-
-impl<Q, R> fmt::Debug for EndpointSpec<Q, R> {
-    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
-        formatter
-            .debug_struct("EndpointSpec")
-            .field("method", &self.method)
-            .field("id", &self.id)
-            .field("relative_path", &self.relative_path)
-            .field("query", &"[REDACTED QUERY]")
-            .field("response_type", &std::any::type_name::<R>())
-            .finish()
-    }
-}
-
-/// Query values append their wire names and unencoded values to a request URL.
-pub trait QueryParameters {
-    /// Visits each query name/value pair in wire order.
-    fn visit(&self, visitor: &mut dyn FnMut(&str, &str));
-}
-
-impl QueryParameters for () {
-    fn visit(&self, _visitor: &mut dyn FnMut(&str, &str)) {}
-}
-
-impl QueryParameters for Vec<(String, String)> {
-    fn visit(&self, visitor: &mut dyn FnMut(&str, &str)) {
-        for (name, value) in self {
-            visitor(name, value);
-        }
-    }
-}
-
-impl<const N: usize> QueryParameters for [(&str, &str); N] {
-    fn visit(&self, visitor: &mut dyn FnMut(&str, &str)) {
-        for (name, value) in self {
-            visitor(name, value);
-        }
-    }
-}
 
 #[derive(Clone)]
 struct AuthMaterial {
@@ -354,7 +267,6 @@ impl Client {
     pub async fn execute<Q, R>(&self, endpoint: &EndpointSpec<Q, R>) -> Result<R>
     where
         Q: QueryParameters,
-        R: DeserializeOwned,
     {
         self.execute_with_headers(endpoint, &[]).await
     }
@@ -370,15 +282,14 @@ impl Client {
     ) -> Result<R>
     where
         Q: QueryParameters,
-        R: DeserializeOwned,
     {
-        validate_relative_path(endpoint.relative_path)?;
+        validate_relative_path(endpoint.relative_path())?;
         let mut url = build_endpoint_url(
             &self.inner.base_url,
             &self.inner.path_prefix,
-            endpoint.relative_path,
+            endpoint.relative_path(),
         )?;
-        append_endpoint_query(&mut url, &endpoint.query, self.inner.auth.query.as_ref())?;
+        append_endpoint_query(&mut url, endpoint.query(), self.inner.auth.query.as_ref())?;
 
         let mut headers = self.inner.default_headers.clone();
         merge_request_headers(&mut headers, request_headers, &self.inner.protected_headers)?;
@@ -401,60 +312,86 @@ impl Client {
         mut url: Url,
         headers: HeaderMap,
         redactor: &Redactor,
-    ) -> Result<R>
-    where
-        R: DeserializeOwned,
-    {
+    ) -> Result<R> {
         for redirect_count in 0..=MAX_REDIRECTS {
             apply_query_auth(&mut url, self.inner.auth.query.as_ref());
             let response = self
                 .inner
                 .executor
                 .execute(PreparedRequest::new(
-                    endpoint.method,
+                    endpoint.method(),
                     url.clone(),
                     headers.clone(),
                 ))
                 .await
-                .map_err(|_| Error::transport(Some(endpoint.id), "request execution failed"))?;
+                .map_err(|_| Error::transport(Some(endpoint.id()), "request execution failed"))?;
 
             if is_redirect(response.status()) {
                 if self.inner.redirect_policy == RedirectPolicy::None {
-                    return status_error(endpoint.id, response, redactor);
+                    return status_error(endpoint.id(), response, redactor);
                 }
                 if redirect_count == MAX_REDIRECTS {
                     return Err(Error::transport(
-                        Some(endpoint.id),
+                        Some(endpoint.id()),
                         "same-origin redirect limit exceeded",
                     ));
                 }
                 let Some(location) = response.headers().get(LOCATION) else {
-                    return status_error(endpoint.id, response, redactor);
+                    return status_error(endpoint.id(), response, redactor);
                 };
                 let Ok(location) = location.to_str() else {
-                    return status_error(endpoint.id, response, redactor);
+                    return status_error(endpoint.id(), response, redactor);
                 };
                 let Ok(mut destination) = url.join(location) else {
-                    return status_error(endpoint.id, response, redactor);
+                    return status_error(endpoint.id(), response, redactor);
                 };
                 destination.set_fragment(None);
                 if destination.username() != ""
                     || destination.password().is_some()
                     || !same_origin(&url, &destination)
                 {
-                    return status_error(endpoint.id, response, redactor);
+                    return status_error(endpoint.id(), response, redactor);
                 }
                 url = destination;
                 continue;
             }
 
             if !(200..300).contains(&response.status()) {
-                return status_error(endpoint.id, response, redactor);
+                return status_error(endpoint.id(), response, redactor);
             }
 
-            return serde_json::from_slice(response.body()).map_err(|_| {
+            let Some(content_type) = response.headers().get(CONTENT_TYPE) else {
+                return Err(Error::decode(
+                    Some(endpoint.id()),
+                    Some(response.status()),
+                    Some(safe_body(response.body(), redactor)),
+                    "successful response omitted its content type",
+                ));
+            };
+            let Ok(content_type) = content_type.to_str() else {
+                return Err(Error::decode(
+                    Some(endpoint.id()),
+                    Some(response.status()),
+                    Some(safe_body(response.body(), redactor)),
+                    "successful response used an invalid content type",
+                ));
+            };
+            if !endpoint
+                .response()
+                .expected_content_type()
+                .matches(content_type)
+            {
+                return Err(Error::decode(
+                    Some(endpoint.id()),
+                    Some(response.status()),
+                    Some(safe_body(response.body(), redactor)),
+                    "successful response used an unexpected content type",
+                ));
+            }
+
+            return endpoint.response().decode(response.body()).map_err(|_| {
                 Error::decode(
-                    Some(endpoint.id),
+                    Some(endpoint.id()),
                     Some(response.status()),
                     Some(safe_body(response.body(), redactor)),
                     "successful response could not be decoded",
@@ -463,7 +400,7 @@ impl Client {
         }
 
         Err(Error::transport(
-            Some(endpoint.id),
+            Some(endpoint.id()),
             "redirect processing ended unexpectedly",
         ))
     }
@@ -545,7 +482,7 @@ fn append_endpoint_query<Q: QueryParameters>(
     auth_query: Option<&(String, SecretString)>,
 ) -> Result<()> {
     let mut failure = None;
-    query.visit(&mut |name, value| {
+    query.encode(&mut QueryEncoder::new(&mut |name, value| {
         if failure.is_some() {
             return;
         }
@@ -564,7 +501,7 @@ fn append_endpoint_query<Q: QueryParameters>(
             return;
         }
         url.query_pairs_mut().append_pair(name, value);
-    });
+    }));
     failure.map_or(Ok(()), Err)
 }
 

@@ -5,7 +5,7 @@ use std::{
     time::Duration,
 };
 
-use http::header::{HeaderMap, HeaderValue, LOCATION};
+use http::header::{CONTENT_TYPE, HeaderMap, HeaderValue, LOCATION};
 use libfmp::{
     Client,
     client::EndpointSpec,
@@ -480,7 +480,7 @@ async fn status_decode_connection_and_timeout_failures_are_safe() {
 
     let invalid_json = format!("{{\"secret\":\"{secret}\"");
     let decode_response = format!(
-        "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{invalid_json}",
+        "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{invalid_json}",
         invalid_json.len()
     );
     let (base_url, server) = serve(vec![decode_response]).await;
@@ -555,7 +555,9 @@ struct ScriptedExecutor {
 }
 
 fn json_response() -> TransportResponse {
-    TransportResponse::new(200, HeaderMap::new(), br#"{"ok":true}"#.as_slice())
+    let mut headers = HeaderMap::new();
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    TransportResponse::new(200, headers, br#"{"ok":true}"#.as_slice())
 }
 
 impl ScriptedExecutor {
