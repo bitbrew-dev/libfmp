@@ -1,7 +1,10 @@
 //! Rust-first access to Financial Modeling Prep data.
 
+pub mod error;
 pub mod responses;
 pub mod types;
+
+pub use error::{Error, Result};
 
 /// The version of the `libfmp` crate.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
