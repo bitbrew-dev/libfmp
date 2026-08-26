@@ -1,5 +1,21 @@
 """Python bindings for libfmp."""
 
-from ._native import __version__
+from ._native import (
+    FmpConfigError,
+    FmpDecodeError,
+    FmpError,
+    FmpStatusError,
+    FmpTransportError,
+    FmpValidationError,
+    __version__,
+)
 
-__all__ = ["__version__"]
+__all__ = [
+    "FmpConfigError",
+    "FmpDecodeError",
+    "FmpError",
+    "FmpStatusError",
+    "FmpTransportError",
+    "FmpValidationError",
+    "__version__",
+]
