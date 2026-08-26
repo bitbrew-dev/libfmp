@@ -29,7 +29,7 @@ pub struct Quote {
     pub timestamp: UnixSeconds,
 }
 
-/// The compact response returned by the stock quote short endpoint.
+/// The compact response returned by quote-short endpoints across asset classes.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct QuoteShort {

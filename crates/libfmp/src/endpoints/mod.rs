@@ -1,5 +1,7 @@
 //! Transport-independent endpoint, query, and response contracts.
 
+pub mod quote;
+
 use std::{fmt, marker::PhantomData};
 
 use serde::de::DeserializeOwned;
