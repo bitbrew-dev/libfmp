@@ -1,6 +1,6 @@
 """Python bindings for libfmp."""
 
-from ._native import (
+from fmp_py._native import (
     FmpConfigError,
     FmpDecodeError,
     FmpError,
