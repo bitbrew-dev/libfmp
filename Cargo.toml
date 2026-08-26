@@ -1,6 +1,12 @@
-[package]
-name = "libfmp"
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/bitbrew-dev/libfmp"
 
-[dependencies]
+[workspace.dependencies]
+libfmp = { path = "crates/libfmp" }
+pyo3 = { version = "0.29", features = ["abi3-py39"] }
