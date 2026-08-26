@@ -8,5 +8,8 @@ edition = "2024"
 repository = "https://github.com/bitbrew-dev/libfmp"
 
 [workspace.dependencies]
+chrono = { version = "0.4.45", default-features = false, features = ["std"] }
 libfmp = { path = "crates/libfmp" }
 pyo3 = { version = "0.29", features = ["abi3-py39"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.149"
