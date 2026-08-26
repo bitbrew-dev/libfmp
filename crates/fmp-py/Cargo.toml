@@ -1,0 +1,19 @@
+[package]
+name = "fmp-py"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+publish = false
+
+[lib]
+name = "_native"
+crate-type = ["cdylib"]
+doctest = false
+test = false
+
+[features]
+extension-module = ["pyo3/extension-module"]
+
+[dependencies]
+libfmp.workspace = true
+pyo3.workspace = true

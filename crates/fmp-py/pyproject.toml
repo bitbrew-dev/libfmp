@@ -1,0 +1,23 @@
+[build-system]
+requires = ["maturin>=1.9,<2"]
+build-backend = "maturin"
+
+[project]
+name = "fmp-py-sdk"
+dynamic = ["version"]
+requires-python = ">=3.9"
+description = "Python bindings for libfmp"
+classifiers = [
+  "Programming Language :: Rust",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[project.urls]
+Repository = "https://github.com/bitbrew-dev/libfmp"
+
+[tool.maturin]
+bindings = "pyo3"
+features = ["extension-module"]
+module-name = "fmp_py._native"
+python-source = "python"

@@ -1,0 +1,8 @@
+[package]
+name = "libfmp"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+
+[lib]
+path = "src/lib.rs"
