@@ -4,12 +4,13 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+license.workspace = true
 description = "Async, typed Rust client for the Financial Modeling Prep API"
 readme = "README.md"
 documentation = "https://docs.rs/libfmp"
 keywords = ["finance", "market-data", "fmp", "api", "sdk"]
 categories = ["api-bindings", "finance"]
-include = ["/src/**", "/tests/**", "/Cargo.toml", "/README.md"]
+include = ["/src/**", "/tests/**", "/Cargo.toml", "/LICENSE", "/README.md"]
 
 [lib]
 path = "src/lib.rs"

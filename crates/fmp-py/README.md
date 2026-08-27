@@ -43,4 +43,4 @@ Available auth modes are `none`, `fmp_header`, `fmp_query`, `bearer`, `custom_he
 
 The package supports CPython 3.9 or newer through Python's stable ABI. It includes `.pyi` stubs and a `py.typed` marker for type checkers.
 
-The project license is not yet selected, so publication is blocked until consistent license metadata is added.
+This project is available under the [MIT License](LICENSE).

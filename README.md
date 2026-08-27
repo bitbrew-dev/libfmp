@@ -77,4 +77,4 @@ The repository ships inline Rust documentation plus Python `.pyi` stubs and a `p
 
 ## Release status
 
-The project license has not yet been selected. Publication of both packages is blocked until a license is chosen and matching repository, Cargo, and Python metadata are added. See [docs/releasing.md](docs/releasing.md) for the remaining release checks.
+This project is available under the [MIT License](LICENSE). See [docs/releasing.md](docs/releasing.md) for the remaining release checks.
