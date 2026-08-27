@@ -1,0 +1,25 @@
+[
+  {
+    "askPrice": 500.3,
+    "askSize": 9007199254740993,
+    "bidPrice": 500.2,
+    "bidSize": 18446744073709551615,
+    "futureField": [
+      1,
+      2,
+      3
+    ],
+    "symbol": "BRK.B",
+    "timestamp": 9223372036854775807,
+    "volume": 18446744073709551614
+  },
+  {
+    "askPrice": 12.6,
+    "askSize": 3,
+    "bidPrice": 12.4,
+    "bidSize": 2,
+    "symbol": "000001.SZ",
+    "timestamp": 1700000000000,
+    "volume": 9007199254740993
+  }
+]
