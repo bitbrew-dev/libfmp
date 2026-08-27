@@ -60,10 +60,18 @@ def fixture_server():
 
 
 def test_direct_and_proxy_construction_and_call_shape():
+    import sys
+
     from fmp import FmpClient
+    from fmp import _native
+    from fmp.client import FmpClient as DomainFmpClient
 
     direct = FmpClient(token="direct-secret")
     assert type(direct).__name__ == "FmpClient"
+    assert FmpClient is DomainFmpClient
+    assert FmpClient.__module__ == "fmp.client"
+    assert _native.client is sys.modules["fmp.client"]
+    assert not hasattr(_native, "FmpClient")
 
     with fixture_server() as (base_url, requests):
         proxy = FmpClient(

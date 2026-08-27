@@ -1,16 +1,21 @@
 """Python bindings for libfmp."""
 
-from fmp._native import (
-    FmpClient,
+# Importing the private extension registers the public native submodules before
+# the imports below are resolved. Public classes are re-exported only from their
+# stable domain modules.
+from fmp import _native as _native
+from fmp.client import FmpClient
+from fmp.errors import (
     FmpConfigError,
     FmpDecodeError,
     FmpError,
     FmpStatusError,
     FmpTransportError,
     FmpValidationError,
-    __version__,
 )
 from fmp.quote import QuoteShort
+
+__version__ = _native.__version__
 
 __all__ = [
     "FmpClient",

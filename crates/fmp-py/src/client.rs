@@ -8,7 +8,7 @@ use libfmp::{
 use pyo3::{prelude::*, types::PyDict};
 use tokio::runtime::{Builder as RuntimeBuilder, Runtime};
 
-use crate::{quote::QuoteShort, to_py_error};
+use crate::{errors::to_py_error, quote::QuoteShort};
 
 static RUNTIME: OnceLock<Result<Runtime, &'static str>> = OnceLock::new();
 
@@ -128,7 +128,7 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// omitting both selects no auth, which is valid only with a custom base URL.
 /// `timeout` and `connect_timeout` are positive finite numbers of seconds.
 /// Redirects are either disabled or restricted to the same origin.
-#[pyclass(module = "fmp._native", frozen)]
+#[pyclass(module = "fmp.client", frozen)]
 pub(crate) struct FmpClient {
     client: Client,
 }
