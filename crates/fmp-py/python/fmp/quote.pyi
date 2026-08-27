@@ -1,5 +1,3 @@
-# Hand-written stubs for fmp.quote; sync manually with src/quote.rs.
-
 class QuoteShort:
     """A compact quote returned by the quote-short endpoint."""
 
