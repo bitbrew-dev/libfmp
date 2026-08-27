@@ -1,5 +1,6 @@
 //! Transport-independent endpoint, query, and response contracts.
 
+pub mod company;
 pub mod directory;
 pub mod metadata;
 pub mod quote;
