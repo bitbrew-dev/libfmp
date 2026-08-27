@@ -129,6 +129,81 @@ string_value!(Isin, "An ISIN identifier.", false);
 string_value!(ExchangeCode, "An open provider exchange code.", false);
 string_value!(CurrencyCode, "An open provider currency code.", false);
 string_value!(CountryCode, "An open provider country code.", false);
+string_value!(Sector, "An open provider company sector.", false);
+string_value!(Industry, "An open provider company industry.", false);
+
+/// Error returned when a query decimal is NaN or infinite.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NonFiniteDecimal;
+
+impl fmt::Display for NonFiniteDecimal {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("decimal value must be finite")
+    }
+}
+
+impl Error for NonFiniteDecimal {}
+
+/// A finite decimal suitable for inclusion in a request URL.
+///
+/// This deliberately imposes no sign or range restriction: endpoint
+/// documentation, rather than the shared scalar, owns those constraints.
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
+pub struct FiniteDecimal(f64);
+
+impl FiniteDecimal {
+    /// Validates and constructs a finite decimal.
+    pub fn new(value: f64) -> Result<Self, NonFiniteDecimal> {
+        if value.is_finite() {
+            Ok(Self(value))
+        } else {
+            Err(NonFiniteDecimal)
+        }
+    }
+
+    /// Returns the validated primitive value.
+    pub const fn get(self) -> f64 {
+        self.0
+    }
+}
+
+impl TryFrom<f64> for FiniteDecimal {
+    type Error = NonFiniteDecimal;
+
+    fn try_from(value: f64) -> Result<Self, Self::Error> {
+        Self::new(value)
+    }
+}
+
+impl From<FiniteDecimal> for f64 {
+    fn from(value: FiniteDecimal) -> Self {
+        value.get()
+    }
+}
+
+impl fmt::Display for FiniteDecimal {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
+impl Serialize for FiniteDecimal {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_f64(self.0)
+    }
+}
+
+impl<'de> Deserialize<'de> for FiniteDecimal {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::new(f64::deserialize(deserializer)?).map_err(de::Error::custom)
+    }
+}
 
 /// Error returned when constructing an empty ticker list.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -1,0 +1,22 @@
+[
+  {
+    "beta": 1.097,
+    "companyName": "Apple Inc.",
+    "country": "US",
+    "exchange": "NASDAQ Global Select",
+    "exchangeShortName": "NASDAQ",
+    "futureProviderField": {
+      "nested": true
+    },
+    "industry": "Consumer Electronics",
+    "isActivelyTrading": true,
+    "isEtf": false,
+    "isFund": false,
+    "lastAnnualDividend": 1.05,
+    "marketCap": 4885602246714,
+    "price": 332.64001,
+    "sector": "Technology",
+    "symbol": "AAPL",
+    "volume": 29909012
+  }
+]
