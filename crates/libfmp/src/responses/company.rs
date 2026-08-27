@@ -1,10 +1,11 @@
 //! Response models returned by company profile, note, peer, delisting, workforce,
-//! market-cap, and share-float endpoints.
+//! market-cap, share-float, and merger-and-acquisition endpoints.
 //!
 //! Future Python bindings should expose these models from `fmp.company` as
 //! `CompanyProfile`, `CompanyNote`, `StockPeer`, `DelistedCompany`, and
 //! `EmployeeCount`, plus `MarketCapitalizationRecord`, `CompanyShareFloat`, and
-//! `AllSharesFloatRecord`. This crate does not implement those Python bindings.
+//! `AllSharesFloatRecord` and `MergerAcquisition`. This crate does not implement
+//! those Python bindings.
 
 use serde::{Deserialize, Serialize};
 
@@ -136,4 +137,19 @@ pub struct AllSharesFloatRecord {
     pub free_float: Percentage,
     pub float_shares: Count,
     pub outstanding_shares: Count,
+}
+
+/// One US merger or acquisition transaction and its official filing link.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MergerAcquisition {
+    pub symbol: Ticker,
+    pub company_name: String,
+    pub cik: Cik,
+    pub targeted_company_name: String,
+    pub targeted_cik: Cik,
+    pub targeted_symbol: Ticker,
+    pub transaction_date: Date,
+    pub accepted_date: ApiDateTime,
+    pub link: String,
 }
