@@ -1,3 +1,4 @@
+# standard library
 from typing import Optional
 
 class FmpError(Exception):
