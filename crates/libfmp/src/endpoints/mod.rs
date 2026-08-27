@@ -6,6 +6,7 @@ pub mod metadata;
 pub mod quote;
 pub mod screener;
 pub mod search;
+pub mod statements;
 
 use std::{fmt, marker::PhantomData};
 

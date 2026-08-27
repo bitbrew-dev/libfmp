@@ -5,9 +5,18 @@ use libfmp::{
     types::{
         ApiDateTime, BenchmarkYear, Cik, CountryCode, CurrencyCode, Cusip, Date, DateRange,
         ExchangeCode, FiniteDecimal, Industry, Isin, Limit, Page, SearchTerm, Sector,
-        StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
+        StatementAmount, StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
     },
 };
+
+#[test]
+fn statement_amount_is_a_signed_exact_integer() {
+    let debit: StatementAmount = -416_161_000_000;
+    let credit: StatementAmount = 416_161_000_000;
+
+    assert_eq!(debit, -416_161_000_000_i64);
+    assert_eq!(credit, 416_161_000_000_i64);
+}
 
 #[test]
 fn string_values_preserve_representation_and_leading_zeroes() {

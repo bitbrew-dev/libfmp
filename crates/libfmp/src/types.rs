@@ -517,3 +517,8 @@ pub type Volume = u64;
 pub type Count = u64;
 /// A market capitalization represented by the provider as a JSON integer.
 pub type MarketCapitalization = u64;
+/// A signed currency amount reported in a financial statement.
+///
+/// Statement values can be negative (for example, expenses and cash outflows),
+/// so this deliberately differs from non-negative market-cap and volume types.
+pub type StatementAmount = i64;
