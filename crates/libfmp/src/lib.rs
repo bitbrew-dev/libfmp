@@ -4,6 +4,7 @@ pub mod client;
 pub mod config;
 pub mod endpoints;
 pub mod error;
+pub mod query;
 pub mod responses;
 pub mod transport;
 pub mod types;

@@ -163,4 +163,6 @@ fn pagination_units_do_not_invent_global_bounds() {
     assert_eq!(Page(u32::MAX).0, u32::MAX);
     assert_eq!(Limit(0).0, 0);
     assert_eq!(Limit(u32::MAX).0, u32::MAX);
+    assert_eq!(Page(0).to_string(), "0");
+    assert_eq!(Limit(1000).to_string(), "1000");
 }
