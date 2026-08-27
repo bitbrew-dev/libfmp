@@ -1,8 +1,9 @@
 use std::str::FromStr;
 
 use libfmp::types::{
-    ApiDateTime, Cik, CountryCode, CurrencyCode, Cusip, Date, DateRange, ExchangeCode, Isin, Limit,
-    Page, SearchTerm, StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
+    ApiDateTime, Cik, CountryCode, CurrencyCode, Cusip, Date, DateRange, ExchangeCode,
+    FiniteDecimal, Industry, Isin, Limit, Page, SearchTerm, Sector, StringValueError, Ticker,
+    TickerList, UnixMilliseconds, UnixSeconds,
 };
 
 #[test]
@@ -78,6 +79,34 @@ fn ticker_rejects_comma_but_other_string_values_remain_open() {
     );
     assert_eq!(CurrencyCode::new("XTS").unwrap().as_str(), "XTS");
     assert_eq!(CountryCode::new("N/A").unwrap().as_str(), "N/A");
+    assert_eq!(
+        Sector::new("Future Sector").unwrap().as_str(),
+        "Future Sector"
+    );
+    assert_eq!(
+        Industry::new("Future Industry").unwrap().as_str(),
+        "Future Industry"
+    );
+    assert!(Sector::new("").is_err());
+    assert!(Industry::new("bad\nindustry").is_err());
+}
+
+#[test]
+fn finite_decimal_rejects_values_that_cannot_safely_enter_a_url() {
+    for value in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+        assert!(FiniteDecimal::new(value).is_err());
+    }
+
+    for value in [-1.25, 0.0, 10.5, f64::MAX] {
+        let finite = FiniteDecimal::new(value).unwrap();
+        assert_eq!(finite.get(), value);
+        assert_eq!(f64::from(finite), value);
+        let json = serde_json::to_string(&finite).unwrap();
+        assert_eq!(
+            serde_json::from_str::<FiniteDecimal>(&json).unwrap(),
+            finite
+        );
+    }
 }
 
 #[test]

@@ -1,0 +1,36 @@
+[
+  {
+    "beta": 0.0,
+    "companyName": "Beyond Float Precision Corp.",
+    "country": "ZZ",
+    "exchange": "Future Exchange",
+    "exchangeShortName": "NEXT",
+    "industry": "Future Industry",
+    "isActivelyTrading": false,
+    "isEtf": false,
+    "isFund": false,
+    "lastAnnualDividend": 0.0,
+    "marketCap": 9007199254740993,
+    "price": 0.0,
+    "sector": "Future Sector",
+    "symbol": "BIG",
+    "volume": 18446744073709551615
+  },
+  {
+    "beta": 1.25,
+    "companyName": "Example Fund",
+    "country": "US",
+    "exchange": "New York Stock Exchange",
+    "exchangeShortName": "NYSE",
+    "industry": "Asset Management",
+    "isActivelyTrading": true,
+    "isEtf": false,
+    "isFund": true,
+    "lastAnnualDividend": 2.5,
+    "marketCap": 4294967296,
+    "price": 42.5,
+    "sector": "Financial Services",
+    "symbol": "FUND",
+    "volume": 4294967296
+  }
+]
