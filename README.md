@@ -1,6 +1,6 @@
 # libfmp
 
-`libfmp` is a Rust-first client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API, with synchronous Python bindings distributed as `fmp-py-sdk` and imported as `fmp_py`.
+`libfmp` is a Rust-first client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API, with synchronous Python bindings distributed as `fmp-py-sdk` and imported as `fmp`.
 
 Version 0.1 is intentionally a name-release walking skeleton. It supports only the documented `GET /stable/quote-short?symbol=...` endpoint. It does not yet promise broad FMP endpoint coverage.
 
@@ -35,7 +35,7 @@ python -m pip install fmp-py-sdk
 ```python
 import os
 
-from fmp_py import FmpClient
+from fmp import FmpClient
 
 client = FmpClient(token=os.environ["FMP_API_KEY"])
 rows = client.quote_short("AAPL")
@@ -51,7 +51,7 @@ Endpoint code is independent of transport configuration. Both clients support a 
 ```python
 import os
 
-from fmp_py import FmpClient
+from fmp import FmpClient
 
 client = FmpClient(
     base_url=os.environ["FMP_PROXY_BASE_URL"],

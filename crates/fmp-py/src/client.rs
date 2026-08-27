@@ -17,7 +17,7 @@ fn runtime() -> PyResult<&'static Runtime> {
         RuntimeBuilder::new_multi_thread()
             .enable_all()
             .build()
-            .map_err(|_| "the fmp_py runtime could not be constructed")
+            .map_err(|_| "the fmp runtime could not be constructed")
     }) {
         Ok(runtime) => Ok(runtime),
         Err(message) => Err(to_py_error(libfmp::Error::configuration(message))),
@@ -128,7 +128,7 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// omitting both selects no auth, which is valid only with a custom base URL.
 /// `timeout` and `connect_timeout` are positive finite numbers of seconds.
 /// Redirects are either disabled or restricted to the same origin.
-#[pyclass(module = "fmp_py._native", frozen)]
+#[pyclass(module = "fmp._native", frozen)]
 pub(crate) struct FmpClient {
     client: Client,
 }
@@ -202,7 +202,7 @@ impl FmpClient {
         let result = py.detach(move || receiver.recv()).map_err(|_| {
             to_py_error(libfmp::Error::transport(
                 Some("quote-short"),
-                "the fmp_py runtime stopped before the request completed",
+                "the fmp runtime stopped before the request completed",
             ))
         })?;
 

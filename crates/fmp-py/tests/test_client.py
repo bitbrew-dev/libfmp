@@ -60,7 +60,7 @@ def fixture_server():
 
 
 def test_direct_and_proxy_construction_and_call_shape():
-    from fmp_py import FmpClient
+    from fmp import FmpClient
 
     direct = FmpClient(token="direct-secret")
     assert type(direct).__name__ == "FmpClient"
@@ -104,9 +104,9 @@ def test_direct_and_proxy_construction_and_call_shape():
 def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
     import pickle
 
-    import fmp_py.quote
-    from fmp_py import FmpClient, QuoteShort
-    from fmp_py import _native
+    import fmp.quote
+    from fmp import FmpClient, QuoteShort
+    from fmp import _native
 
     with fixture_server() as (base_url, _requests):
         client = FmpClient(base_url=base_url, path_prefix="", auth_mode="none")
@@ -116,9 +116,9 @@ def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
     assert empty == []
     assert isinstance(multiple, list)
     assert all(isinstance(row, QuoteShort) for row in multiple)
-    assert QuoteShort is fmp_py.quote.QuoteShort
+    assert QuoteShort is fmp.quote.QuoteShort
     assert QuoteShort is _native.QuoteShort
-    assert QuoteShort.__module__ == "fmp_py.quote"
+    assert QuoteShort.__module__ == "fmp.quote"
     assert [row.symbol for row in multiple] == ["000001.SZ", "^VIX"]
     assert multiple[0].volume == 4294967296
     restored = pickle.loads(pickle.dumps(multiple[0]))
@@ -132,7 +132,7 @@ def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
 
 
 def test_auth_modes_and_default_headers_reach_the_same_endpoint():
-    from fmp_py import FmpClient
+    from fmp import FmpClient
 
     configurations = [
         ({"auth_mode": "none"}, None, None),
@@ -209,7 +209,7 @@ def test_auth_modes_and_default_headers_reach_the_same_endpoint():
 
 
 def test_invalid_configuration_and_call_errors_are_structured():
-    from fmp_py import (
+    from fmp import (
         FmpClient,
         FmpConfigError,
         FmpDecodeError,

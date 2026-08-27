@@ -2,16 +2,15 @@ def test_import_exposes_workspace_version() -> None:
     from importlib.metadata import distribution
     from importlib.resources import files
 
-    import fmp_py
+    import fmp
 
     installed_distribution = distribution("fmp-py-sdk")
 
     assert installed_distribution.metadata["Name"] == "fmp-py-sdk"
-    assert installed_distribution.version == "0.1.0"
-    assert fmp_py.__name__ == "fmp_py"
-    assert fmp_py.__version__ == installed_distribution.version
+    assert fmp.__name__ == "fmp"
+    assert fmp.__version__ == installed_distribution.version
 
-    package_files = files("fmp_py")
+    package_files = files("fmp")
     assert package_files.joinpath("py.typed").is_file()
     assert package_files.joinpath("__init__.pyi").is_file()
     assert package_files.joinpath("_native.pyi").is_file()
@@ -21,8 +20,8 @@ def test_import_exposes_workspace_version() -> None:
 def test_public_exception_hierarchy_is_stable() -> None:
     import pickle
 
-    import fmp_py
-    from fmp_py import (
+    import fmp
+    from fmp import (
         FmpConfigError,
         FmpDecodeError,
         FmpError,
@@ -30,7 +29,7 @@ def test_public_exception_hierarchy_is_stable() -> None:
         FmpTransportError,
         FmpValidationError,
     )
-    from fmp_py import _native
+    from fmp import _native
 
     subclasses = (
         FmpValidationError,
@@ -41,7 +40,7 @@ def test_public_exception_hierarchy_is_stable() -> None:
     )
     assert all(issubclass(exception, FmpError) for exception in subclasses)
     assert all(issubclass(exception, Exception) for exception in subclasses)
-    assert fmp_py.FmpError is _native.FmpError
+    assert fmp.FmpError is _native.FmpError
     assert {exception.__name__ for exception in subclasses} == {
         "FmpValidationError",
         "FmpConfigError",
@@ -49,8 +48,8 @@ def test_public_exception_hierarchy_is_stable() -> None:
         "FmpStatusError",
         "FmpDecodeError",
     }
-    assert all(exception.__module__ == "fmp_py._native" for exception in subclasses)
-    assert FmpError.__module__ == "fmp_py._native"
+    assert all(exception.__module__ == "fmp._native" for exception in subclasses)
+    assert FmpError.__module__ == "fmp._native"
 
     expected_categories = {
         FmpError: None,
@@ -74,14 +73,14 @@ def test_public_exception_hierarchy_is_stable() -> None:
 
 
 def test_native_error_conversion_has_exact_safe_attributes() -> None:
-    from fmp_py import (
+    from fmp import (
         FmpConfigError,
         FmpDecodeError,
         FmpStatusError,
         FmpTransportError,
         FmpValidationError,
     )
-    from fmp_py import _native
+    from fmp import _native
 
     safe_body = "denied?apikey=[REDACTED] [REDACTED]"
     cases = {
@@ -112,7 +111,7 @@ def test_native_error_conversion_has_exact_safe_attributes() -> None:
         ),
     }
 
-    assert "_test_error" not in __import__("fmp_py").__all__
+    assert "_test_error" not in __import__("fmp").__all__
     for category, (exception_type, attributes, message) in cases.items():
         try:
             _native._test_error(category)

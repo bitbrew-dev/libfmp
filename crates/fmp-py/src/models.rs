@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 
 /// Python-owned compact quote value with documented snake_case attributes.
-#[pyclass(module = "fmp_py.quote", frozen)]
+#[pyclass(module = "fmp.quote", frozen)]
 pub(crate) struct QuoteShort {
     #[pyo3(get)]
     symbol: String,

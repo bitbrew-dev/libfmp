@@ -1,6 +1,6 @@
 # Release validation
 
-The Rust crate and Python distribution share version `0.1.0` through `workspace.package.version`. The Python wheel must report distribution name `fmp-py-sdk`; its import package remains `fmp_py` and its private extension remains `fmp_py._native`.
+The Rust crate and Python distribution share their version through `workspace.package.version`. The Python wheel must report distribution name `fmp-py-sdk`; its import package is `fmp` and its private extension is `fmp._native`.
 
 ## License
 
@@ -24,8 +24,8 @@ Install the wheel into a clean Python environment and verify the names, shared v
 
 ```console
 python -m venv .venv-release-check
-.venv-release-check/bin/python -m pip install target/wheels/fmp_py_sdk-0.1.0-*.whl
-.venv-release-check/bin/python -c 'from importlib.metadata import metadata, version; import fmp_py; package = metadata("fmp-py-sdk"); assert version("fmp-py-sdk") == fmp_py.__version__ == "0.1.0"; assert package["License-Expression"] == "MIT"; assert package.get_all("License-File") == ["LICENSE"]'
+.venv-release-check/bin/python -m pip install target/wheels/fmp_py_sdk-*.whl
+.venv-release-check/bin/python -c 'from importlib.metadata import metadata, version; import fmp; package = metadata("fmp-py-sdk"); assert version("fmp-py-sdk") == fmp.__version__; assert package["License-Expression"] == "MIT"; assert package.get_all("License-File") == ["LICENSE"]'
 ```
 
 ## Check names immediately before publishing

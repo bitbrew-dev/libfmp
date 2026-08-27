@@ -1,6 +1,6 @@
 """Python bindings for libfmp."""
 
-from fmp_py._native import (
+from fmp._native import (
     FmpClient,
     FmpConfigError,
     FmpDecodeError,
@@ -10,7 +10,7 @@ from fmp_py._native import (
     FmpValidationError,
     __version__,
 )
-from fmp_py.quote import QuoteShort
+from fmp.quote import QuoteShort
 
 __all__ = [
     "FmpClient",
