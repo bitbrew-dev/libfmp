@@ -1,0 +1,16 @@
+[
+  {
+    "currency": "CNY",
+    "exchange": "SHZ",
+    "exchangeFullName": "Shenzhen Stock Exchange",
+    "name": "Ping An Bank Co., Ltd.",
+    "symbol": "000001.SZ"
+  },
+  {
+    "currency": "USD",
+    "exchange": "INDEX",
+    "exchangeFullName": "Chicago Board Options Exchange",
+    "name": "CBOE Volatility Index",
+    "symbol": "^VIX"
+  }
+]
