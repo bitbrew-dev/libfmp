@@ -1,10 +1,12 @@
-//! Company profile, note, peer, delisting, workforce, market-cap, and share-float endpoints.
+//! Company profile, note, peer, delisting, workforce, market-cap, share-float,
+//! and merger-and-acquisition endpoints.
 //!
 //! A future Python binding reserves the matching `FmpClient` method names:
 //! `profile`, `profile_by_cik`, `company_notes`, `stock_peers`,
 //! `delisted_companies`, `employee_count`, `historical_employee_count`,
 //! `market_capitalization`, `market_capitalization_batch`,
-//! `historical_market_capitalization`, `shares_float`, and `shares_float_all`.
+//! `historical_market_capitalization`, `shares_float`, `shares_float_all`,
+//! `mergers_acquisitions_latest`, and `mergers_acquisitions_search`.
 //! The typed query structs below are Rust-only contracts, not reserved Python
 //! public classes. This crate does not implement those Python bindings.
 
@@ -16,9 +18,9 @@ use crate::{
     },
     responses::company::{
         AllSharesFloatRecord, CompanyNote, CompanyProfile, CompanyShareFloat, DelistedCompany,
-        EmployeeCount, MarketCapitalizationRecord, StockPeer,
+        EmployeeCount, MarketCapitalizationRecord, MergerAcquisition, StockPeer,
     },
-    types::{Cik, Date, Limit, Page, Ticker, TickerList},
+    types::{Cik, Date, Limit, Page, SearchTerm, Ticker, TickerList},
 };
 
 macro_rules! required_query {
@@ -68,6 +70,59 @@ required_query!(
     Ticker,
     "symbol"
 );
+required_query!(
+    "Required company-name search term for US mergers and acquisitions.",
+    MergersAcquisitionsSearchQuery,
+    name,
+    SearchTerm,
+    "name"
+);
+
+/// Optional pagination parameters for the latest US mergers and acquisitions.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MergersAcquisitionsLatestQuery {
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl MergersAcquisitionsLatestQuery {
+    /// Creates a query without undocumented pagination defaults.
+    pub const fn new() -> Self {
+        Self {
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for MergersAcquisitionsLatestQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
 required_query!(
     "Required query parameters for a worldwide company market-capitalization lookup.",
     MarketCapitalizationQuery,
@@ -358,6 +413,8 @@ const EMPLOYEE_COUNTS: EndpointMetadata =
     US_ONLY.with_bounds(EndpointBounds::new().with_response_rows(10_000));
 const MARKET_DATA_5K: EndpointMetadata =
     WORLDWIDE.with_bounds(EndpointBounds::new().with_response_rows(5_000));
+const MERGERS_ACQUISITIONS_LATEST: EndpointMetadata =
+    US_ONLY.with_bounds(EndpointBounds::new().with_response_rows(1_000));
 
 /// Describes `GET profile` without binding it to a transport.
 pub fn profile(query: ProfileQuery) -> EndpointSpec<ProfileQuery, Vec<CompanyProfile>> {
@@ -456,6 +513,30 @@ pub fn shares_float_all(
     EndpointSpec::get("shares-float-all", "shares-float-all", query).with_metadata(MARKET_DATA_5K)
 }
 
+/// Describes `GET mergers-acquisitions-latest` without binding it to a transport.
+pub fn mergers_acquisitions_latest(
+    query: MergersAcquisitionsLatestQuery,
+) -> EndpointSpec<MergersAcquisitionsLatestQuery, Vec<MergerAcquisition>> {
+    EndpointSpec::get(
+        "mergers-acquisitions-latest",
+        "mergers-acquisitions-latest",
+        query,
+    )
+    .with_metadata(MERGERS_ACQUISITIONS_LATEST)
+}
+
+/// Describes `GET mergers-acquisitions-search` without binding it to a transport.
+pub fn mergers_acquisitions_search(
+    query: MergersAcquisitionsSearchQuery,
+) -> EndpointSpec<MergersAcquisitionsSearchQuery, Vec<MergerAcquisition>> {
+    EndpointSpec::get(
+        "mergers-acquisitions-search",
+        "mergers-acquisitions-search",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves worldwide company profiles by provider ticker.
     pub async fn profile(&self, query: impl Into<ProfileQuery>) -> Result<Vec<CompanyProfile>> {
@@ -547,5 +628,22 @@ impl Client {
         query: SharesFloatAllQuery,
     ) -> Result<Vec<AllSharesFloatRecord>> {
         self.execute(&shares_float_all(query)).await
+    }
+
+    /// Retrieves the latest US mergers and acquisitions with optional pagination.
+    pub async fn mergers_acquisitions_latest(
+        &self,
+        query: MergersAcquisitionsLatestQuery,
+    ) -> Result<Vec<MergerAcquisition>> {
+        self.execute(&mergers_acquisitions_latest(query)).await
+    }
+
+    /// Searches US mergers and acquisitions by representation-preserving company name.
+    pub async fn mergers_acquisitions_search(
+        &self,
+        query: impl Into<MergersAcquisitionsSearchQuery>,
+    ) -> Result<Vec<MergerAcquisition>> {
+        self.execute(&mergers_acquisitions_search(query.into()))
+            .await
     }
 }

@@ -1,0 +1,24 @@
+[
+  {
+    "acceptedDate": "2026-07-29 16:00:46",
+    "cik": "0002009312",
+    "companyName": "Aureus Greenway Holdings Inc",
+    "link": "https://www.sec.gov/Archives/edgar/data/2009312/000149315226035181/forms-4.htm",
+    "symbol": "AGH",
+    "targetedCik": "0002009312",
+    "targetedCompanyName": "Aureus Greenway Holdings, Inc.",
+    "targetedSymbol": "PUSA",
+    "transactionDate": "2026-07-29"
+  },
+  {
+    "acceptedDate": "2021-11-12 09:54:22",
+    "cik": "0000022701",
+    "companyName": "Pineapple Energy Inc.",
+    "link": "https://www.sec.gov/Archives/edgar/data/22701/000089710121000932/a211292_s-4.htm",
+    "symbol": "PEGY",
+    "targetedCik": "0000022701",
+    "targetedCompanyName": "Communications Systems, Inc.",
+    "targetedSymbol": "JCS",
+    "transactionDate": "2021-11-12"
+  }
+]
