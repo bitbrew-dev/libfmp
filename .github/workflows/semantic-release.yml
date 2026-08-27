@@ -34,6 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write # mint the OIDC token crates.io trusted publishing verifies
     steps:
       - name: checkout the released tag
         uses: actions/checkout@v4
@@ -46,39 +47,13 @@ jobs:
           VER="${{ needs.semantic-release.outputs.new_release_tag }}"
           sed -i -E "s/^version = \"[0-9]+\.[0-9]+\.[0-9]+\"/version = \"${VER}\"/" Cargo.toml
           grep -E "^version" Cargo.toml
+      - name: authenticate to crates.io via OIDC trusted publishing
+        uses: rust-lang/crates-io-auth-action@v1
+        id: auth
       - name: publish
         env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
         run: cargo publish -p libfmp --allow-dirty
-
-
-  # publish-crate:
-  #   name: publish libfmp to crates.io
-  #   needs: semantic-release
-  #   if: ${{ needs.semantic-release.outputs.new_release == 'true' }}
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     id-token: write # mint the OIDC token crates.io trusted publishing verifies
-  #   steps:
-  #     - name: checkout the released tag
-  #       uses: actions/checkout@v4
-  #       with:
-  #         ref: ${{ needs.semantic-release.outputs.new_release_tag }}
-  #     - name: install Rust toolchain
-  #       uses: dtolnay/rust-toolchain@stable
-  #     - name: sync the workspace version to the release tag
-  #       run: |
-  #         VER="${{ needs.semantic-release.outputs.new_release_tag }}"
-  #         sed -i -E "s/^version = \"[0-9]+\.[0-9]+\.[0-9]+\"/version = \"${VER}\"/" Cargo.toml
-  #         grep -E "^version" Cargo.toml
-  #     - name: authenticate to crates.io via OIDC trusted publishing
-  #       uses: rust-lang/crates-io-auth-action@v1
-  #       id: auth
-  #     - name: publish
-  #       env:
-  #         CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
-  #       run: cargo publish -p libfmp --allow-dirty
 
   build-python-wheels:
     name: build fmp wheels (${{ matrix.os }})
