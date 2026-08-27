@@ -4,29 +4,7 @@ mod client;
 mod errors;
 mod quote;
 
-use pyo3::{exceptions::PyValueError, prelude::*};
-
-#[pyfunction]
-fn _test_error(category: &str) -> PyResult<()> {
-    let secret = libfmp::error::SecretString::new("body-secret");
-    let mut redactor = libfmp::error::Redactor::new();
-    redactor.add_secret(&secret);
-    let body = || libfmp::error::SafeBody::new("denied?apikey=query-secret body-secret", &redactor);
-    let error = match category {
-        "validation" => libfmp::Error::validation("invalid ticker"),
-        "configuration" => libfmp::Error::configuration("invalid client configuration"),
-        "transport" => libfmp::Error::transport(Some("quote-short"), "request failed"),
-        "status" => libfmp::Error::status("quote-short", 401, Some(body())),
-        "decode" => libfmp::Error::decode(
-            Some("quote-short"),
-            Some(200),
-            Some(body()),
-            "response decode failed",
-        ),
-        _ => return Err(PyValueError::new_err("unknown test error category")),
-    };
-    Err(errors::to_py_error(error))
-}
+use pyo3::prelude::*;
 
 fn register_submodule<'py>(
     extension: &Bound<'py, PyModule>,
@@ -51,7 +29,6 @@ mod _native {
     #[pymodule_init]
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
         module.add("__version__", libfmp::VERSION)?;
-        module.add_function(wrap_pyfunction!(super::_test_error, module)?)?;
 
         let py = module.py();
         let sys_modules = PyModule::import(py, "sys")?
