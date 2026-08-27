@@ -8,7 +8,7 @@ use libfmp::{
 use pyo3::{prelude::*, types::PyDict};
 use tokio::runtime::{Builder as RuntimeBuilder, Runtime};
 
-use crate::{models::QuoteShort, to_py_error};
+use crate::{quote::QuoteShort, to_py_error};
 
 static RUNTIME: OnceLock<Result<Runtime, &'static str>> = OnceLock::new();
 

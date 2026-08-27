@@ -103,6 +103,8 @@ def test_direct_and_proxy_construction_and_call_shape():
 
 def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
     import pickle
+    import sys
+    from types import ModuleType
 
     import fmp.quote
     from fmp import FmpClient, QuoteShort
@@ -117,7 +119,11 @@ def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
     assert isinstance(multiple, list)
     assert all(isinstance(row, QuoteShort) for row in multiple)
     assert QuoteShort is fmp.quote.QuoteShort
-    assert QuoteShort is _native.QuoteShort
+    assert isinstance(fmp.quote, ModuleType)
+    assert fmp.quote is sys.modules["fmp.quote"]
+    assert fmp.quote is _native.quote
+    assert not hasattr(_native, "QuoteShort")
+    assert not hasattr(fmp.quote, "__file__")
     assert QuoteShort.__module__ == "fmp.quote"
     assert [row.symbol for row in multiple] == ["000001.SZ", "^VIX"]
     assert multiple[0].volume == 4294967296

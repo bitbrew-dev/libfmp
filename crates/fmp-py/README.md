@@ -18,7 +18,7 @@ rows = client.quote_short("AAPL")
 print(rows)
 ```
 
-`quote_short` returns `list[QuoteShort]`, preserving empty and multi-row provider responses. `FmpClient` is synchronous; it releases the Python GIL while its async Rust transport waits.
+`quote_short` returns `list[QuoteShort]`, preserving empty and multi-row provider responses. `QuoteShort` lives in the native `fmp.quote` domain module and remains available from the package root. `FmpClient` is synchronous; it releases the Python GIL while its async Rust transport waits.
 
 ## Custom router or proxy
 
@@ -41,6 +41,8 @@ rows = client.quote_short("AAPL")
 
 Available auth modes are `none`, `fmp_header`, `fmp_query`, `bearer`, `custom_header`, and `custom_query`. `auth_mode="none"` supports credential-free local or trusted routers. Redirect following is either disabled or same-origin only.
 
-The package supports CPython 3.9 or newer through Python's stable ABI. It includes `.pyi` stubs and a `py.typed` marker for type checkers.
+The package supports CPython 3.9 or newer through Python's stable ABI. Native
+domain modules are paired with documentation/source `.py` shims and
+hand-maintained `.pyi` contracts, plus a `py.typed` marker for type checkers.
 
 This project is available under the [MIT License](LICENSE).

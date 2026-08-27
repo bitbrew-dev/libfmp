@@ -26,7 +26,7 @@ The Rust client is async. `quote_short` preserves FMP's bare-array response as `
 
 ## Python
 
-Install the distribution and import the underscore-named package:
+Install the distribution and import the public package:
 
 ```console
 python -m pip install fmp-py-sdk
@@ -73,7 +73,9 @@ rows = client.quote_short("AAPL")
 - Python: CPython 3.9 or newer, using the stable ABI from Python 3.9.
 - Package version: the Cargo workspace version is the single source used by both the `libfmp` crate and the `fmp-py-sdk` wheel.
 
-The repository ships inline Rust documentation plus Python `.pyi` stubs and a `py.typed` marker.
+The repository ships inline Rust documentation plus domain-aligned native
+Python modules, documentation/source `.py` shims, hand-maintained `.pyi` stubs,
+and a `py.typed` marker.
 
 ## Release status
 

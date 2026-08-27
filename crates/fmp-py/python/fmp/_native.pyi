@@ -1,5 +1,7 @@
 from typing import Literal, Optional
 
+from fmp import quote as quote
+
 AuthMode = Literal[
     "none",
     "fmp_header",
@@ -8,19 +10,6 @@ AuthMode = Literal[
     "custom_header",
     "custom_query",
 ]
-
-class QuoteShort:
-    """A compact quote returned by the quote-short endpoint."""
-
-    def __init__(self, symbol: str, price: float, change: float, volume: int) -> None: ...
-    @property
-    def symbol(self) -> str: ...
-    @property
-    def price(self) -> float: ...
-    @property
-    def change(self) -> float: ...
-    @property
-    def volume(self) -> int: ...
 
 class FmpClient:
     """Synchronous FMP client backed by the async Rust transport.
@@ -46,7 +35,7 @@ class FmpClient:
         follow_redirects: Optional[bool] = ...,
     ) -> None: ...
 
-    def quote_short(self, symbol: str) -> list[QuoteShort]: ...
+    def quote_short(self, symbol: str) -> list[quote.QuoteShort]: ...
 
 class FmpError(Exception):
     """Base exception for all fmp failures."""
