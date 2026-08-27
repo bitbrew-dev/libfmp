@@ -48,4 +48,4 @@ let rows = client.quote_short(Ticker::new("AAPL")?).await?;
 # }
 ```
 
-Rust 1.96 or newer is supported. The repository pins Rust 1.96.0 for development and release validation. The project license is not yet selected, so publication is blocked until consistent license metadata is added.
+Rust 1.96 or newer is supported. The repository pins Rust 1.96.0 for development and release validation. This project is available under the [MIT License](LICENSE).

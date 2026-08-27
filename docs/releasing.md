@@ -2,9 +2,9 @@
 
 The Rust crate and Python distribution share version `0.1.0` through `workspace.package.version`. The Python wheel must report distribution name `fmp-py-sdk`; its import package remains `fmp_py` and its private extension remains `fmp_py._native`.
 
-## Publication blocker
+## License
 
-No project license has been selected. Do not publish either package until a license is chosen and matching repository, Cargo, and Python package metadata are added. This repository intentionally has no speculative `license`, `license-file`, or Python license classifier.
+The repository, Rust crate, and Python distribution are licensed under the [MIT License](../LICENSE). Artifact validation must confirm that both package metadata and the packaged license text remain consistent before publishing.
 
 ## Validate artifacts
 
@@ -18,12 +18,14 @@ maturin build --manifest-path crates/fmp-py/Cargo.toml --release --offline
 maturin sdist --manifest-path crates/fmp-py/Cargo.toml --out target/wheels
 ```
 
-Install the wheel into a clean Python environment and verify both names and the shared version:
+Confirm that Cargo metadata reports `license = "MIT"`, the crate file list contains `LICENSE`, and the wheel and source distribution metadata contain both `License-Expression: MIT` and `License-File: LICENSE`. Each artifact must contain the complete license text.
+
+Install the wheel into a clean Python environment and verify the names, shared version, and installed license metadata:
 
 ```console
 python -m venv .venv-release-check
 .venv-release-check/bin/python -m pip install target/wheels/fmp_py_sdk-0.1.0-*.whl
-.venv-release-check/bin/python -c 'from importlib.metadata import version; import fmp_py; assert version("fmp-py-sdk") == fmp_py.__version__ == "0.1.0"'
+.venv-release-check/bin/python -c 'from importlib.metadata import metadata, version; import fmp_py; package = metadata("fmp-py-sdk"); assert version("fmp-py-sdk") == fmp_py.__version__ == "0.1.0"; assert package["License-Expression"] == "MIT"; assert package.get_all("License-File") == ["LICENSE"]'
 ```
 
 ## Check names immediately before publishing
