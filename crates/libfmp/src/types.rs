@@ -408,6 +408,14 @@ impl DateRange {
     pub fn to(&self) -> Date {
         self.to
     }
+
+    /// Returns the elapsed calendar days between the inclusive endpoints.
+    ///
+    /// Equal endpoints have a span of zero days. This is exposed so each
+    /// endpoint can apply its own documented maximum date range.
+    pub fn span_days(&self) -> u64 {
+        self.to.0.signed_duration_since(self.from.0).num_days() as u64
+    }
 }
 
 /// A price represented by the provider as a JSON number.
