@@ -1,0 +1,17 @@
+[
+  {
+    "futureField": {
+      "nested": true
+    },
+    "price": 500.25,
+    "symbol": "BRK.B",
+    "timestamp": 9223372036854775807,
+    "tradeSize": 18446744073709551615
+  },
+  {
+    "price": 12.5,
+    "symbol": "000001.SZ",
+    "timestamp": 1700000000000,
+    "tradeSize": 9007199254740993
+  }
+]
