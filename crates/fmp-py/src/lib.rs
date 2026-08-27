@@ -1,7 +1,7 @@
 //! Thin Python facade for `libfmp`.
 
 mod client;
-mod models;
+mod quote;
 
 use pyo3::{
     create_exception,
@@ -113,7 +113,7 @@ fn _test_error(category: &str) -> PyResult<()> {
 
 #[pymodule]
 mod _native {
-    use pyo3::prelude::*;
+    use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyDict};
 
     #[pymodule_export]
     use super::{
@@ -123,9 +123,6 @@ mod _native {
 
     #[pymodule_export]
     use super::client::FmpClient;
-
-    #[pymodule_export]
-    use super::models::QuoteShort;
 
     #[pymodule_init]
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -150,6 +147,28 @@ mod _native {
             .setattr("category", "status")?;
         py.get_type::<super::FmpDecodeError>()
             .setattr("category", "decode")?;
+
+        // Native domain modules must be registered under their public dotted
+        // names. `add_submodule` alone only provides `_native.quote`; the
+        // `sys.modules` entry makes `import fmp.quote` resolve to this module
+        // before Python considers the documentation-only `quote.py` shim.
+        // Keep the simple native module name used by libitofin; the public
+        // class metadata and registry key carry the stable dotted namespace.
+        let quote = PyModule::new(py, "quote")?;
+        quote.add_class::<super::quote::QuoteShort>()?;
+        quote.add("__all__", vec!["QuoteShort"])?;
+        module.add_submodule(&quote)?;
+        let sys_modules = PyModule::import(py, "sys")?
+            .getattr("modules")?
+            .cast_into::<PyDict>()?;
+        sys_modules.set_item("fmp.quote", &quote)?;
+
+        // Because the extension is `fmp._native` rather than the package root,
+        // explicitly attach the domain module to the already-loading package.
+        let package = sys_modules
+            .get_item("fmp")?
+            .ok_or_else(|| PyRuntimeError::new_err("fmp package is not initialized"))?;
+        package.setattr("quote", &quote)?;
         Ok(())
     }
 }

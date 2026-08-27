@@ -1,5 +1,7 @@
-"""Compact quote response models."""
+"""Runtime source shim for the native ``fmp.quote`` submodule.
 
-from fmp._native import QuoteShort
-
-__all__ = ["QuoteShort"]
+The real ``fmp.quote`` is a compiled submodule registered in ``sys.modules``
+while ``fmp._native`` initializes, so this file does not run during normal
+imports. It exists so source-aware tools can discover the module and resolve
+its hand-maintained ``quote.pyi`` typing contract.
+"""

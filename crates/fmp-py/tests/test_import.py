@@ -17,6 +17,27 @@ def test_import_exposes_workspace_version() -> None:
     assert package_files.joinpath("quote.pyi").is_file()
 
 
+def test_quote_import_resolves_to_registered_native_domain_module() -> None:
+    import sys
+    from types import ModuleType
+
+    import fmp
+    import fmp.quote
+    from fmp import QuoteShort
+    from fmp.quote import QuoteShort as DomainQuoteShort
+
+    assert isinstance(fmp.quote, ModuleType)
+    assert fmp.quote is sys.modules["fmp.quote"]
+    assert fmp.quote is fmp._native.quote
+    assert fmp.quote.__name__ == "quote"
+    assert fmp.quote.__package__ is None
+    assert fmp.quote.__all__ == ["QuoteShort"]
+    assert QuoteShort is DomainQuoteShort
+    assert QuoteShort.__module__ == "fmp.quote"
+    assert not hasattr(fmp.quote, "__file__")
+    assert not hasattr(fmp._native, "QuoteShort")
+
+
 def test_public_exception_hierarchy_is_stable() -> None:
     import pickle
 

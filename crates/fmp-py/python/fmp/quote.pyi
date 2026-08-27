@@ -1,3 +1,16 @@
-from fmp._native import QuoteShort as QuoteShort
+# Hand-written stubs for fmp.quote; sync manually with src/quote.rs.
+
+class QuoteShort:
+    """A compact quote returned by the quote-short endpoint."""
+
+    def __init__(self, symbol: str, price: float, change: float, volume: int) -> None: ...
+    @property
+    def symbol(self) -> str: ...
+    @property
+    def price(self) -> float: ...
+    @property
+    def change(self) -> float: ...
+    @property
+    def volume(self) -> int: ...
 
 __all__: list[str]
