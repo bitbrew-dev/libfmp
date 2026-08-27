@@ -345,6 +345,18 @@ pub struct Page(pub u32);
 #[serde(transparent)]
 pub struct Limit(pub u32);
 
+impl fmt::Display for Page {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
+impl fmt::Display for Limit {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
 /// Error returned when an inclusive date range starts after it ends.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct InvalidDateRange;
