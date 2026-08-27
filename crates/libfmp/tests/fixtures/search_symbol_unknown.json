@@ -1,0 +1,12 @@
+[
+  {
+    "currency": "USD",
+    "exchange": "NASDAQ",
+    "exchangeFullName": "NASDAQ Global Select",
+    "futureProviderField": {
+      "nested": true
+    },
+    "name": "Apple Inc.",
+    "symbol": "AAPL"
+  }
+]

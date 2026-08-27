@@ -118,6 +118,11 @@ macro_rules! string_value {
 }
 
 string_value!(Ticker, "A provider ticker symbol.", true);
+string_value!(
+    SearchTerm,
+    "A representation-preserving provider search term.",
+    false
+);
 string_value!(Cik, "A Central Index Key.", false);
 string_value!(Cusip, "A CUSIP identifier.", false);
 string_value!(Isin, "An ISIN identifier.", false);

@@ -2,6 +2,7 @@
 
 pub mod metadata;
 pub mod quote;
+pub mod search;
 
 use std::{fmt, marker::PhantomData};
 

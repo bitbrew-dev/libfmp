@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use libfmp::types::{
     ApiDateTime, Cik, CountryCode, CurrencyCode, Cusip, Date, DateRange, ExchangeCode, Isin, Limit,
-    Page, StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
+    Page, SearchTerm, StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
 };
 
 #[test]
@@ -45,6 +45,23 @@ fn string_values_reject_empty_whitespace_and_controls() {
     assert!(CurrencyCode::new("\r").is_err());
     assert!(CountryCode::new("   ").is_err());
     assert!(serde_json::from_str::<Ticker>(r#""line\nbreak""#).is_err());
+    assert_eq!(SearchTerm::new(" ").unwrap_err(), StringValueError::Empty);
+    assert_eq!(
+        SearchTerm::new("Apple\nInc.").unwrap_err(),
+        StringValueError::ControlCharacter
+    );
+}
+
+#[test]
+fn search_terms_preserve_representation_without_identifier_normalization() {
+    let term = SearchTerm::new("  Apple, Inc. / Class A  ").unwrap();
+
+    assert_eq!(term.as_str(), "  Apple, Inc. / Class A  ");
+    assert_eq!(term.to_string(), "  Apple, Inc. / Class A  ");
+    assert_eq!(
+        serde_json::from_str::<SearchTerm>(r#""  Apple, Inc. / Class A  ""#).unwrap(),
+        term
+    );
 }
 
 #[test]
