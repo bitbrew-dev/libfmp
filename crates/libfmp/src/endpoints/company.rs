@@ -1,12 +1,12 @@
-//! Company profile, note, peer, delisting, and workforce endpoints.
+//! Company profile, note, peer, delisting, workforce, market-cap, and share-float endpoints.
 //!
-//! The reserved Python surface for a future binding is `fmp.company`, with
-//! `FmpClient.profile`, `profile_by_cik`, `company_notes`, `stock_peers`,
-//! `delisted_companies`, `employee_count`, and `historical_employee_count`
-//! methods. The matching `ProfileQuery`, `ProfileByCikQuery`,
-//! `CompanyNotesQuery`, `StockPeersQuery`, `DelistedCompaniesQuery`,
-//! `EmployeeCountQuery`, and `HistoricalEmployeeCountQuery` names are also
-//! reserved there. This crate does not implement those Python bindings.
+//! A future Python binding reserves the matching `FmpClient` method names:
+//! `profile`, `profile_by_cik`, `company_notes`, `stock_peers`,
+//! `delisted_companies`, `employee_count`, `historical_employee_count`,
+//! `market_capitalization`, `market_capitalization_batch`,
+//! `historical_market_capitalization`, `shares_float`, and `shares_float_all`.
+//! The typed query structs below are Rust-only contracts, not reserved Python
+//! public classes. This crate does not implement those Python bindings.
 
 use crate::{
     Client, Result,
@@ -14,8 +14,11 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::company::{CompanyNote, CompanyProfile, DelistedCompany, EmployeeCount, StockPeer},
-    types::{Cik, Limit, Page, Ticker},
+    responses::company::{
+        AllSharesFloatRecord, CompanyNote, CompanyProfile, CompanyShareFloat, DelistedCompany,
+        EmployeeCount, MarketCapitalizationRecord, StockPeer,
+    },
+    types::{Cik, Date, Limit, Page, Ticker, TickerList},
 };
 
 macro_rules! required_query {
@@ -65,6 +68,153 @@ required_query!(
     Ticker,
     "symbol"
 );
+required_query!(
+    "Required query parameters for a worldwide company market-capitalization lookup.",
+    MarketCapitalizationQuery,
+    symbol,
+    Ticker,
+    "symbol"
+);
+required_query!(
+    "Required query parameters for a worldwide batch market-capitalization lookup.",
+    MarketCapitalizationBatchQuery,
+    symbols,
+    TickerList,
+    "symbols"
+);
+required_query!(
+    "Required query parameters for a worldwide company share-float lookup.",
+    SharesFloatQuery,
+    symbol,
+    Ticker,
+    "symbol"
+);
+
+/// Required symbol and independently optional filters for historical market capitalization.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HistoricalMarketCapitalizationQuery {
+    symbol: Ticker,
+    limit: Option<Limit>,
+    from: Option<Date>,
+    to: Option<Date>,
+}
+
+impl HistoricalMarketCapitalizationQuery {
+    /// Creates a query without undocumented filter defaults.
+    pub fn new(symbol: Ticker) -> Self {
+        Self {
+            symbol,
+            limit: None,
+            from: None,
+            to: None,
+        }
+    }
+
+    /// Sets the optional provider result limit.
+    pub fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Sets the optional inclusive start date independently of the end date.
+    pub fn with_from(mut self, from: Date) -> Self {
+        self.from = Some(from);
+        self
+    }
+
+    /// Sets the optional inclusive end date independently of the start date.
+    pub fn with_to(mut self, to: Date) -> Self {
+        self.to = Some(to);
+        self
+    }
+
+    /// Borrows the required provider ticker.
+    pub fn symbol(&self) -> &Ticker {
+        &self.symbol
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+
+    /// Returns the optional inclusive start date.
+    pub const fn from(&self) -> Option<Date> {
+        self.from
+    }
+
+    /// Returns the optional inclusive end date.
+    pub const fn to(&self) -> Option<Date> {
+        self.to
+    }
+}
+
+impl From<Ticker> for HistoricalMarketCapitalizationQuery {
+    fn from(symbol: Ticker) -> Self {
+        Self::new(symbol)
+    }
+}
+
+impl From<&Ticker> for HistoricalMarketCapitalizationQuery {
+    fn from(symbol: &Ticker) -> Self {
+        Self::new(symbol.clone())
+    }
+}
+
+impl QueryParameters for HistoricalMarketCapitalizationQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("symbol", &self.symbol);
+        encoder.optional("limit", self.limit);
+        encoder.optional("from", self.from);
+        encoder.optional("to", self.to);
+    }
+}
+
+/// Optional pagination parameters for worldwide all-company share-float data.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SharesFloatAllQuery {
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl SharesFloatAllQuery {
+    /// Creates a query without undocumented pagination defaults.
+    pub const fn new() -> Self {
+        Self {
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for SharesFloatAllQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
 
 /// Optional pagination parameters for delisted US companies.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -206,6 +356,8 @@ const DELISTED_COMPANIES: EndpointMetadata =
     US_ONLY.with_bounds(EndpointBounds::new().with_response_rows(100));
 const EMPLOYEE_COUNTS: EndpointMetadata =
     US_ONLY.with_bounds(EndpointBounds::new().with_response_rows(10_000));
+const MARKET_DATA_5K: EndpointMetadata =
+    WORLDWIDE.with_bounds(EndpointBounds::new().with_response_rows(5_000));
 
 /// Describes `GET profile` without binding it to a transport.
 pub fn profile(query: ProfileQuery) -> EndpointSpec<ProfileQuery, Vec<CompanyProfile>> {
@@ -258,6 +410,52 @@ pub fn historical_employee_count(
     .with_metadata(EMPLOYEE_COUNTS)
 }
 
+/// Describes `GET market-capitalization` without binding it to a transport.
+pub fn market_capitalization(
+    query: MarketCapitalizationQuery,
+) -> EndpointSpec<MarketCapitalizationQuery, Vec<MarketCapitalizationRecord>> {
+    EndpointSpec::get("market-capitalization", "market-capitalization", query)
+        .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET market-capitalization-batch` without binding it to a transport.
+pub fn market_capitalization_batch(
+    query: MarketCapitalizationBatchQuery,
+) -> EndpointSpec<MarketCapitalizationBatchQuery, Vec<MarketCapitalizationRecord>> {
+    EndpointSpec::get(
+        "market-capitalization-batch",
+        "market-capitalization-batch",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET historical-market-capitalization` without binding it to a transport.
+pub fn historical_market_capitalization(
+    query: HistoricalMarketCapitalizationQuery,
+) -> EndpointSpec<HistoricalMarketCapitalizationQuery, Vec<MarketCapitalizationRecord>> {
+    EndpointSpec::get(
+        "historical-market-capitalization",
+        "historical-market-capitalization",
+        query,
+    )
+    .with_metadata(MARKET_DATA_5K)
+}
+
+/// Describes `GET shares-float` without binding it to a transport.
+pub fn shares_float(
+    query: SharesFloatQuery,
+) -> EndpointSpec<SharesFloatQuery, Vec<CompanyShareFloat>> {
+    EndpointSpec::get("shares-float", "shares-float", query).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET shares-float-all` without binding it to a transport.
+pub fn shares_float_all(
+    query: SharesFloatAllQuery,
+) -> EndpointSpec<SharesFloatAllQuery, Vec<AllSharesFloatRecord>> {
+    EndpointSpec::get("shares-float-all", "shares-float-all", query).with_metadata(MARKET_DATA_5K)
+}
+
 impl Client {
     /// Retrieves worldwide company profiles by provider ticker.
     pub async fn profile(&self, query: impl Into<ProfileQuery>) -> Result<Vec<CompanyProfile>> {
@@ -307,5 +505,47 @@ impl Client {
         query: impl Into<HistoricalEmployeeCountQuery>,
     ) -> Result<Vec<EmployeeCount>> {
         self.execute(&historical_employee_count(query.into())).await
+    }
+
+    /// Retrieves current worldwide market capitalization for one company.
+    pub async fn market_capitalization(
+        &self,
+        query: impl Into<MarketCapitalizationQuery>,
+    ) -> Result<Vec<MarketCapitalizationRecord>> {
+        self.execute(&market_capitalization(query.into())).await
+    }
+
+    /// Retrieves current worldwide market capitalization for multiple companies.
+    pub async fn market_capitalization_batch(
+        &self,
+        query: impl Into<MarketCapitalizationBatchQuery>,
+    ) -> Result<Vec<MarketCapitalizationRecord>> {
+        self.execute(&market_capitalization_batch(query.into()))
+            .await
+    }
+
+    /// Retrieves historical worldwide market capitalization for one company.
+    pub async fn historical_market_capitalization(
+        &self,
+        query: impl Into<HistoricalMarketCapitalizationQuery>,
+    ) -> Result<Vec<MarketCapitalizationRecord>> {
+        self.execute(&historical_market_capitalization(query.into()))
+            .await
+    }
+
+    /// Retrieves current worldwide share-float data for one company.
+    pub async fn shares_float(
+        &self,
+        query: impl Into<SharesFloatQuery>,
+    ) -> Result<Vec<CompanyShareFloat>> {
+        self.execute(&shares_float(query.into())).await
+    }
+
+    /// Retrieves paginated worldwide share-float data for all companies.
+    pub async fn shares_float_all(
+        &self,
+        query: SharesFloatAllQuery,
+    ) -> Result<Vec<AllSharesFloatRecord>> {
+        self.execute(&shares_float_all(query)).await
     }
 }
