@@ -49,7 +49,7 @@ class FmpClient:
     def quote_short(self, symbol: str) -> list[QuoteShort]: ...
 
 class FmpError(Exception):
-    """Base exception for all fmp_py failures."""
+    """Base exception for all fmp failures."""
 
     category: Optional[str]
     endpoint: Optional[str]

@@ -1,4 +1,4 @@
-from fmp_py._native import (
+from fmp._native import (
     FmpClient as FmpClient,
     FmpConfigError as FmpConfigError,
     FmpDecodeError as FmpDecodeError,
@@ -8,6 +8,6 @@ from fmp_py._native import (
     FmpValidationError as FmpValidationError,
     __version__ as __version__,
 )
-from fmp_py.quote import QuoteShort as QuoteShort
+from fmp.quote import QuoteShort as QuoteShort
 
 __all__: list[str]

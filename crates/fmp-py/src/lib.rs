@@ -10,37 +10,37 @@ use pyo3::{
 };
 
 create_exception!(
-    fmp_py._native,
+    fmp._native,
     FmpError,
     PyException,
-    "Base exception for all fmp_py failures."
+    "Base exception for all fmp failures."
 );
 create_exception!(
-    fmp_py._native,
+    fmp._native,
     FmpValidationError,
     FmpError,
     "An input failed local validation."
 );
 create_exception!(
-    fmp_py._native,
+    fmp._native,
     FmpConfigError,
     FmpError,
     "Client or transport configuration is invalid."
 );
 create_exception!(
-    fmp_py._native,
+    fmp._native,
     FmpTransportError,
     FmpError,
     "A request could not be completed by the transport."
 );
 create_exception!(
-    fmp_py._native,
+    fmp._native,
     FmpStatusError,
     FmpError,
     "The provider returned a non-success HTTP status."
 );
 create_exception!(
-    fmp_py._native,
+    fmp._native,
     FmpDecodeError,
     FmpError,
     "A successful response could not be decoded."
