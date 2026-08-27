@@ -1,5 +1,7 @@
+# standard library
 from typing import Literal, Optional
 
+# fmp library
 from fmp.quote import QuoteShort
 
 class FmpClient:
@@ -34,7 +36,6 @@ class FmpClient:
         connect_timeout: Optional[float] = ...,
         follow_redirects: Optional[bool] = ...,
     ) -> None: ...
-
     def quote_short(self, symbol: str) -> list[QuoteShort]: ...
 
 __all__: list[str]
