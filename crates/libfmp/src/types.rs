@@ -131,6 +131,11 @@ string_value!(CurrencyCode, "An open provider currency code.", false);
 string_value!(CountryCode, "An open provider country code.", false);
 string_value!(Sector, "An open provider company sector.", false);
 string_value!(Industry, "An open provider company industry.", false);
+string_value!(
+    BenchmarkYear,
+    "An open, representation-preserving executive-compensation benchmark query year.",
+    false
+);
 
 /// Error returned when a query decimal is NaN or infinite.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

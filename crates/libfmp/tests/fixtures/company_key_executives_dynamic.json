@@ -1,0 +1,29 @@
+[
+  {
+    "active": true,
+    "currencyPay": "USD",
+    "gender": "female",
+    "name": "Kristin Huguet Quayle",
+    "pay": null,
+    "title": "Vice President of Worldwide Communications",
+    "titleSince": null,
+    "yearBorn": null
+  },
+  {
+    "active": false,
+    "currencyPay": "XTS",
+    "gender": "unspecified",
+    "name": "Representation Probe",
+    "pay": {
+      "amount": "00123.450",
+      "components": [
+        1,
+        true,
+        null
+      ]
+    },
+    "title": "Synthetic Executive",
+    "titleSince": 1704067200,
+    "yearBorn": "01980"
+  }
+]

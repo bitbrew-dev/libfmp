@@ -1,12 +1,14 @@
 //! Company profile, note, peer, delisting, workforce, market-cap, share-float,
-//! and merger-and-acquisition endpoints.
+//! merger-and-acquisition, and company-governance endpoints.
 //!
 //! A future Python binding reserves the matching `FmpClient` method names:
 //! `profile`, `profile_by_cik`, `company_notes`, `stock_peers`,
 //! `delisted_companies`, `employee_count`, `historical_employee_count`,
 //! `market_capitalization`, `market_capitalization_batch`,
 //! `historical_market_capitalization`, `shares_float`, `shares_float_all`,
-//! `mergers_acquisitions_latest`, and `mergers_acquisitions_search`.
+//! `mergers_acquisitions_latest`, `mergers_acquisitions_search`,
+//! `key_executives`, `executive_compensation`, and
+//! `executive_compensation_benchmark`.
 //! The typed query structs below are Rust-only contracts, not reserved Python
 //! public classes. This crate does not implement those Python bindings.
 
@@ -17,10 +19,11 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     responses::company::{
-        AllSharesFloatRecord, CompanyNote, CompanyProfile, CompanyShareFloat, DelistedCompany,
-        EmployeeCount, MarketCapitalizationRecord, MergerAcquisition, StockPeer,
+        AllSharesFloatRecord, CompanyExecutive, CompanyNote, CompanyProfile, CompanyShareFloat,
+        DelistedCompany, EmployeeCount, ExecutiveCompensation, ExecutiveCompensationBenchmark,
+        MarketCapitalizationRecord, MergerAcquisition, StockPeer,
     },
-    types::{Cik, Date, Limit, Page, SearchTerm, Ticker, TickerList},
+    types::{BenchmarkYear, Cik, Date, Limit, Page, SearchTerm, Ticker, TickerList},
 };
 
 macro_rules! required_query {
@@ -77,6 +80,50 @@ required_query!(
     SearchTerm,
     "name"
 );
+required_query!(
+    "Required query parameters for worldwide company executives.",
+    KeyExecutivesQuery,
+    symbol,
+    Ticker,
+    "symbol"
+);
+required_query!(
+    "Required query parameters for US executive compensation.",
+    ExecutiveCompensationQuery,
+    symbol,
+    Ticker,
+    "symbol"
+);
+
+/// Optional year for US executive-compensation industry benchmarks.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ExecutiveCompensationBenchmarkQuery {
+    year: Option<BenchmarkYear>,
+}
+
+impl ExecutiveCompensationBenchmarkQuery {
+    /// Creates a query without an undocumented year default.
+    pub const fn new() -> Self {
+        Self { year: None }
+    }
+
+    /// Sets the optional provider year string.
+    pub fn with_year(mut self, year: BenchmarkYear) -> Self {
+        self.year = Some(year);
+        self
+    }
+
+    /// Borrows the optional provider year string.
+    pub const fn year(&self) -> Option<&BenchmarkYear> {
+        self.year.as_ref()
+    }
+}
+
+impl QueryParameters for ExecutiveCompensationBenchmarkQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("year", self.year.as_ref());
+    }
+}
 
 /// Optional pagination parameters for the latest US mergers and acquisitions.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -537,6 +584,37 @@ pub fn mergers_acquisitions_search(
     .with_metadata(US_ONLY)
 }
 
+/// Describes `GET key-executives` without binding it to a transport.
+pub fn key_executives(
+    query: KeyExecutivesQuery,
+) -> EndpointSpec<KeyExecutivesQuery, Vec<CompanyExecutive>> {
+    EndpointSpec::get("key-executives", "key-executives", query).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET governance-executive-compensation` without binding it to a transport.
+pub fn executive_compensation(
+    query: ExecutiveCompensationQuery,
+) -> EndpointSpec<ExecutiveCompensationQuery, Vec<ExecutiveCompensation>> {
+    EndpointSpec::get(
+        "governance-executive-compensation",
+        "governance-executive-compensation",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
+/// Describes `GET executive-compensation-benchmark` without binding it to a transport.
+pub fn executive_compensation_benchmark(
+    query: ExecutiveCompensationBenchmarkQuery,
+) -> EndpointSpec<ExecutiveCompensationBenchmarkQuery, Vec<ExecutiveCompensationBenchmark>> {
+    EndpointSpec::get(
+        "executive-compensation-benchmark",
+        "executive-compensation-benchmark",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves worldwide company profiles by provider ticker.
     pub async fn profile(&self, query: impl Into<ProfileQuery>) -> Result<Vec<CompanyProfile>> {
@@ -645,5 +723,29 @@ impl Client {
     ) -> Result<Vec<MergerAcquisition>> {
         self.execute(&mergers_acquisitions_search(query.into()))
             .await
+    }
+
+    /// Retrieves worldwide company executives by provider ticker.
+    pub async fn key_executives(
+        &self,
+        query: impl Into<KeyExecutivesQuery>,
+    ) -> Result<Vec<CompanyExecutive>> {
+        self.execute(&key_executives(query.into())).await
+    }
+
+    /// Retrieves executive compensation for a US company.
+    pub async fn executive_compensation(
+        &self,
+        query: impl Into<ExecutiveCompensationQuery>,
+    ) -> Result<Vec<ExecutiveCompensation>> {
+        self.execute(&executive_compensation(query.into())).await
+    }
+
+    /// Retrieves US executive-compensation benchmarks with an optional year.
+    pub async fn executive_compensation_benchmark(
+        &self,
+        query: ExecutiveCompensationBenchmarkQuery,
+    ) -> Result<Vec<ExecutiveCompensationBenchmark>> {
+        self.execute(&executive_compensation_benchmark(query)).await
     }
 }

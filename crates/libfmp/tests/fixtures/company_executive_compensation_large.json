@@ -1,0 +1,36 @@
+[
+  {
+    "acceptedDate": "2026-01-08 16:31:36",
+    "allOtherCompensation": 22204,
+    "bonus": 0,
+    "cik": "0000320193",
+    "companyName": "Apple Inc.",
+    "filingDate": "2026-01-08",
+    "incentivePlanCompensation": 1638462,
+    "link": "https://www.sec.gov/Archives/edgar/data/320193/000130817926000008/0001308179-26-000008-index.htm",
+    "nameAndPosition": "Luca Maestri Former Senior Vice President, Chief Financial Officer",
+    "optionAward": 0,
+    "salary": 819231,
+    "stockAward": 13003031,
+    "symbol": "AAPL",
+    "total": 15482928,
+    "year": 2025
+  },
+  {
+    "acceptedDate": "2026-01-01 00:00:00",
+    "allOtherCompensation": 10000000000,
+    "bonus": 6000000000,
+    "cik": "0000000001",
+    "companyName": "Large Amount Probe",
+    "filingDate": "2025-12-31",
+    "incentivePlanCompensation": 9000000000,
+    "link": "https://example.test/filing",
+    "nameAndPosition": "Synthetic Executive",
+    "optionAward": 8000000000,
+    "salary": 5000000000,
+    "stockAward": 7000000000,
+    "symbol": "BIG",
+    "total": 18446744073709551615,
+    "year": 2024
+  }
+]

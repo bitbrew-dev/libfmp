@@ -1,16 +1,18 @@
 //! Response models returned by company profile, note, peer, delisting, workforce,
-//! market-cap, share-float, and merger-and-acquisition endpoints.
+//! market-cap, share-float, merger-and-acquisition, and governance endpoints.
 //!
 //! Future Python bindings should expose these models from `fmp.company` as
 //! `CompanyProfile`, `CompanyNote`, `StockPeer`, `DelistedCompany`, and
 //! `EmployeeCount`, plus `MarketCapitalizationRecord`, `CompanyShareFloat`, and
 //! `AllSharesFloatRecord` and `MergerAcquisition`. This crate does not implement
-//! those Python bindings.
+//! those Python bindings. The governance additions reserve `CompanyExecutive`,
+//! `ExecutiveCompensation`, and `ExecutiveCompensationBenchmark` in the same
+//! future `fmp.company` module.
 
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    codecs::NumericString,
+    codecs::{DynamicJson, NumericString},
     types::{
         ApiDateTime, Change, Cik, Count, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode,
         Industry, Isin, MarketCapitalization, MarketValue, Percentage, Price, Sector, Ticker,
@@ -152,4 +154,48 @@ pub struct MergerAcquisition {
     pub transaction_date: Date,
     pub accepted_date: ApiDateTime,
     pub link: String,
+}
+
+/// One executive in a worldwide company's current leadership data.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CompanyExecutive {
+    pub title: String,
+    pub name: String,
+    pub pay: Option<DynamicJson>,
+    pub currency_pay: CurrencyCode,
+    pub gender: String,
+    pub year_born: Option<DynamicJson>,
+    pub title_since: Option<DynamicJson>,
+    pub active: bool,
+}
+
+/// One executive-compensation filing row for a US company.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExecutiveCompensation {
+    pub cik: Cik,
+    pub symbol: Ticker,
+    pub company_name: String,
+    pub filing_date: Date,
+    pub accepted_date: ApiDateTime,
+    pub name_and_position: String,
+    pub year: i64,
+    pub salary: u64,
+    pub bonus: u64,
+    pub stock_award: u64,
+    pub option_award: u64,
+    pub incentive_plan_compensation: u64,
+    pub all_other_compensation: u64,
+    pub total: u64,
+    pub link: String,
+}
+
+/// One US industry executive-compensation benchmark.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExecutiveCompensationBenchmark {
+    pub industry_title: Industry,
+    pub year: i64,
+    pub average_compensation: f64,
 }
