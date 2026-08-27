@@ -28,13 +28,12 @@ jobs:
       new_version_title: "📈 LibFMP"
 
   publish-crate:
-    name: publish libitofin to crates.io
+    name: publish libfmp to crates.io
     needs: semantic-release
     if: ${{ needs.semantic-release.outputs.new_release == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # mint the OIDC token crates.io trusted publishing verifies
     steps:
       - name: checkout the released tag
         uses: actions/checkout@v4
@@ -47,16 +46,42 @@ jobs:
           VER="${{ needs.semantic-release.outputs.new_release_tag }}"
           sed -i -E "s/^version = \"[0-9]+\.[0-9]+\.[0-9]+\"/version = \"${VER}\"/" Cargo.toml
           grep -E "^version" Cargo.toml
-      - name: authenticate to crates.io via OIDC trusted publishing
-        uses: rust-lang/crates-io-auth-action@v1
-        id: auth
       - name: publish
         env:
-          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
-        run: cargo publish -p libitofin --allow-dirty
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish -p libfmp --allow-dirty
+
+
+  # publish-crate:
+  #   name: publish libfmp to crates.io
+  #   needs: semantic-release
+  #   if: ${{ needs.semantic-release.outputs.new_release == 'true' }}
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     id-token: write # mint the OIDC token crates.io trusted publishing verifies
+  #   steps:
+  #     - name: checkout the released tag
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ needs.semantic-release.outputs.new_release_tag }}
+  #     - name: install Rust toolchain
+  #       uses: dtolnay/rust-toolchain@stable
+  #     - name: sync the workspace version to the release tag
+  #       run: |
+  #         VER="${{ needs.semantic-release.outputs.new_release_tag }}"
+  #         sed -i -E "s/^version = \"[0-9]+\.[0-9]+\.[0-9]+\"/version = \"${VER}\"/" Cargo.toml
+  #         grep -E "^version" Cargo.toml
+  #     - name: authenticate to crates.io via OIDC trusted publishing
+  #       uses: rust-lang/crates-io-auth-action@v1
+  #       id: auth
+  #     - name: publish
+  #       env:
+  #         CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+  #       run: cargo publish -p libfmp --allow-dirty
 
   build-python-wheels:
-    name: build itofin wheels (${{ matrix.os }})
+    name: build fmp wheels (${{ matrix.os }})
     needs: semantic-release
     if: ${{ needs.semantic-release.outputs.new_release == 'true' }}
     runs-on: ${{ matrix.os }}
@@ -80,14 +105,14 @@ jobs:
         uses: PyO3/maturin-action@v1
         with:
           command: build
-          args: --release --out dist -m crates/itofin-py/Cargo.toml
+          args: --release --out dist -m crates/fmp-py/Cargo.toml
           manylinux: auto
       - name: build sdist
         if: matrix.os == 'ubuntu-latest'
         uses: PyO3/maturin-action@v1
         with:
           command: sdist
-          args: --out dist -m crates/itofin-py/Cargo.toml
+          args: --out dist -m crates/fmp-py/Cargo.toml
       - name: upload the built distributions
         uses: actions/upload-artifact@v4
         with:
@@ -95,7 +120,7 @@ jobs:
           path: dist
 
   publish-pypi:
-    name: publish itofin to PyPI
+    name: publish fmp to PyPI
     needs: [semantic-release, build-python-wheels]
     if: ${{ needs.semantic-release.outputs.new_release == 'true' }}
     runs-on: ubuntu-latest
@@ -114,5 +139,5 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         # For a TestPyPI dry-run, register a separate TestPyPI trusted publisher,
         # then uncomment the override below (and remove it for the real publish):
-        with:
-          repository-url: https://test.pypi.org/legacy/
+        # with:
+        #   repository-url: https://test.pypi.org/legacy/
