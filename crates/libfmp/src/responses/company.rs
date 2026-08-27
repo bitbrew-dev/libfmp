@@ -1,8 +1,10 @@
-//! Response models returned by company profile, note, peer, delisting, and workforce endpoints.
+//! Response models returned by company profile, note, peer, delisting, workforce,
+//! market-cap, and share-float endpoints.
 //!
 //! Future Python bindings should expose these models from `fmp.company` as
 //! `CompanyProfile`, `CompanyNote`, `StockPeer`, `DelistedCompany`, and
-//! `EmployeeCount`. This crate does not implement those Python bindings.
+//! `EmployeeCount`, plus `MarketCapitalizationRecord`, `CompanyShareFloat`, and
+//! `AllSharesFloatRecord`. This crate does not implement those Python bindings.
 
 use serde::{Deserialize, Serialize};
 
@@ -102,4 +104,36 @@ pub struct EmployeeCount {
     pub filing_date: Date,
     pub employee_count: Count,
     pub source: String,
+}
+
+/// One current or historical worldwide market-capitalization observation.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MarketCapitalizationRecord {
+    pub symbol: Ticker,
+    pub date: Date,
+    pub market_cap: MarketCapitalization,
+}
+
+/// One worldwide company share-float observation with its filing source.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CompanyShareFloat {
+    pub symbol: Ticker,
+    pub date: ApiDateTime,
+    pub free_float: Percentage,
+    pub float_shares: Count,
+    pub outstanding_shares: Count,
+    pub source: String,
+}
+
+/// One all-company share-float observation, whose payload has no source field.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AllSharesFloatRecord {
+    pub symbol: Ticker,
+    pub date: ApiDateTime,
+    pub free_float: Percentage,
+    pub float_shares: Count,
+    pub outstanding_shares: Count,
 }
