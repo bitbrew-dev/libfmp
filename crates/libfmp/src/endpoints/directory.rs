@@ -1,10 +1,12 @@
-//! Symbol and earnings-transcript directory endpoints.
+//! Symbol, transcript, and provider-taxonomy directory endpoints.
 //!
 //! The reserved Python surface for a future binding is `fmp.directory`, with
 //! `FmpClient.company_symbols`, `financial_statement_symbols`, `cik_list`,
 //! `symbol_changes`, `etf_symbols`, `actively_trading`, and
-//! `earnings_transcript_list` methods and the corresponding public response
-//! models. This crate does not implement those Python bindings.
+//! `earnings_transcript_list`, `available_exchanges`, `available_sectors`,
+//! `available_industries`, and `available_countries` methods and the
+//! corresponding public response models. This crate does not implement those
+//! Python bindings.
 
 use crate::{
     Client, Result,
@@ -14,11 +16,42 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     responses::directory::{
-        ActivelyTradingSymbol, CikEntry, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
+        ActivelyTradingSymbol, AvailableCountry, AvailableExchange, AvailableIndustry,
+        AvailableSector, CikEntry, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
         FinancialStatementSymbol, SymbolChange,
     },
     types::{Limit, Page},
 };
+
+/// Optional parameters for the supported-exchanges directory.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct AvailableExchangesQuery {
+    extended: Option<bool>,
+}
+
+impl AvailableExchangesQuery {
+    /// Creates a query without an undocumented value for `extended`.
+    pub const fn new() -> Self {
+        Self { extended: None }
+    }
+
+    /// Sets whether the provider should return its extended exchange list.
+    pub const fn with_extended(mut self, extended: bool) -> Self {
+        self.extended = Some(extended);
+        self
+    }
+
+    /// Returns the optional provider `extended` flag.
+    pub const fn extended(&self) -> Option<bool> {
+        self.extended
+    }
+}
+
+impl QueryParameters for AvailableExchangesQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("extended", self.extended);
+    }
+}
 
 /// Optional pagination parameters for the CIK directory.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -162,6 +195,28 @@ pub fn earnings_transcript_list() -> EndpointSpec<(), Vec<EarningsTranscriptAvai
         .with_metadata(US_ONLY)
 }
 
+/// Describes `GET available-exchanges` without binding it to a transport.
+pub fn available_exchanges(
+    query: AvailableExchangesQuery,
+) -> EndpointSpec<AvailableExchangesQuery, Vec<AvailableExchange>> {
+    EndpointSpec::get("available-exchanges", "available-exchanges", query).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET available-sectors` without binding it to a transport.
+pub fn available_sectors() -> EndpointSpec<(), Vec<AvailableSector>> {
+    EndpointSpec::get("available-sectors", "available-sectors", ())
+}
+
+/// Describes `GET available-industries` without binding it to a transport.
+pub fn available_industries() -> EndpointSpec<(), Vec<AvailableIndustry>> {
+    EndpointSpec::get("available-industries", "available-industries", ())
+}
+
+/// Describes `GET available-countries` without binding it to a transport.
+pub fn available_countries() -> EndpointSpec<(), Vec<AvailableCountry>> {
+    EndpointSpec::get("available-countries", "available-countries", ())
+}
+
 impl Client {
     /// Lists worldwide company and instrument symbols.
     pub async fn company_symbols(&self) -> Result<Vec<CompanySymbol>> {
@@ -196,5 +251,28 @@ impl Client {
     /// Lists US companies with their available earnings-transcript counts.
     pub async fn earnings_transcript_list(&self) -> Result<Vec<EarningsTranscriptAvailability>> {
         self.execute(&earnings_transcript_list()).await
+    }
+
+    /// Lists supported worldwide stock exchanges.
+    pub async fn available_exchanges(
+        &self,
+        query: AvailableExchangesQuery,
+    ) -> Result<Vec<AvailableExchange>> {
+        self.execute(&available_exchanges(query)).await
+    }
+
+    /// Lists the provider's available sectors.
+    pub async fn available_sectors(&self) -> Result<Vec<AvailableSector>> {
+        self.execute(&available_sectors()).await
+    }
+
+    /// Lists the provider's available industries.
+    pub async fn available_industries(&self) -> Result<Vec<AvailableIndustry>> {
+        self.execute(&available_industries()).await
+    }
+
+    /// Lists the provider's available countries.
+    pub async fn available_countries(&self) -> Result<Vec<AvailableCountry>> {
+        self.execute(&available_countries()).await
     }
 }
