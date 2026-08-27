@@ -200,6 +200,10 @@ pub struct InvalidTemporalValue {
 }
 
 impl InvalidTemporalValue {
+    pub(crate) const fn new(expected: &'static str) -> Self {
+        Self { expected }
+    }
+
     pub fn expected(&self) -> &'static str {
         self.expected
     }
@@ -334,6 +338,18 @@ pub struct UnixSeconds(pub i64);
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct UnixMilliseconds(pub i64);
+
+impl fmt::Display for UnixSeconds {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
+impl fmt::Display for UnixMilliseconds {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
 
 /// A provider page index. Endpoint-specific validation is applied elsewhere.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]

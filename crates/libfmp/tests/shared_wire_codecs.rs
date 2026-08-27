@@ -1,0 +1,137 @@
+use std::str::FromStr;
+
+use libfmp::{
+    codecs::{
+        DateOrDateTime, DynamicJson, FiscalYear, IsoTimestamp, NumberOrNumericString,
+        OpaqueDateText, PercentageValue, TitleCaseBoolFlag, TrueFalseFlag, UsDate, WireBool,
+        YesNoFlag, YnFlag, empty_or_null_date, empty_or_null_date_or_datetime,
+    },
+    types::Date,
+};
+use serde::{Deserialize, Serialize};
+
+#[test]
+fn mixed_numeric_forms_round_trip_without_f64_coercion() {
+    let year_string: FiscalYear = serde_json::from_str(r#""2025""#).unwrap();
+    let year_integer: FiscalYear = serde_json::from_str("2025").unwrap();
+    assert_eq!(serde_json::to_string(&year_string).unwrap(), r#""2025""#);
+    assert_eq!(serde_json::to_string(&year_integer).unwrap(), "2025");
+    assert!(serde_json::from_str::<FiscalYear>("-2025").is_err());
+    assert!(serde_json::from_str::<FiscalYear>(r#""20.25""#).is_err());
+
+    let documented_string: NumberOrNumericString =
+        serde_json::from_str(r#""33644000000""#).unwrap();
+    let documented_number: NumberOrNumericString = serde_json::from_str("416161000000").unwrap();
+    assert_eq!(
+        serde_json::to_string(&documented_string).unwrap(),
+        r#""33644000000""#
+    );
+    assert_eq!(
+        serde_json::to_string(&documented_number).unwrap(),
+        "416161000000"
+    );
+
+    let beyond_javascript_safe_integer = "9007199254740993";
+    let exact: NumberOrNumericString =
+        serde_json::from_str(beyond_javascript_safe_integer).unwrap();
+    assert_eq!(
+        serde_json::to_string(&exact).unwrap(),
+        beyond_javascript_safe_integer
+    );
+
+    // This cannot be held by u64. The exact bare-number round trip depends on
+    // serde_json's arbitrary-precision representation remaining enabled.
+    let beyond_u64 = "18446744073709551616";
+    let exact: NumberOrNumericString = serde_json::from_str(beyond_u64).unwrap();
+    assert_eq!(serde_json::to_string(&exact).unwrap(), beyond_u64);
+}
+
+#[test]
+fn percentages_and_boolean_families_preserve_wire_kinds_and_spelling() {
+    for wire in ["0.4690516410716045", r#""0.10335""#, r#""97.26%""#] {
+        let value: PercentageValue = serde_json::from_str(wire).unwrap();
+        assert_eq!(serde_json::to_string(&value).unwrap(), wire);
+    }
+
+    assert_eq!(
+        serde_json::from_str::<WireBool>("true").unwrap(),
+        WireBool(true)
+    );
+    assert_eq!(
+        serde_json::from_str::<YnFlag>(r#""N""#).unwrap(),
+        YnFlag::False
+    );
+    assert_eq!(
+        serde_json::from_str::<YesNoFlag>(r#""Yes""#).unwrap(),
+        YesNoFlag::True
+    );
+    assert_eq!(
+        serde_json::from_str::<TrueFalseFlag>(r#""false""#).unwrap(),
+        TrueFalseFlag::False
+    );
+    assert_eq!(
+        serde_json::from_str::<TitleCaseBoolFlag>(r#""False""#).unwrap(),
+        TitleCaseBoolFlag::False
+    );
+    assert!(serde_json::from_str::<YnFlag>(r#""No""#).is_err());
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+struct OptionalTemporalFixture {
+    #[serde(default, with = "empty_or_null_date")]
+    declaration_date: Option<Date>,
+    #[serde(default, with = "empty_or_null_date_or_datetime")]
+    filing_date: Option<DateOrDateTime>,
+}
+
+#[test]
+fn temporal_contracts_are_strict_and_empty_or_null_aware() {
+    assert_eq!(
+        IsoTimestamp::from_str("2026-07-30T16:00:20.049Z")
+            .unwrap()
+            .to_string(),
+        "2026-07-30T16:00:20.049Z"
+    );
+    assert!(IsoTimestamp::from_str("2026-07-30 16:00:20").is_err());
+    assert_eq!(
+        UsDate::from_str("10-31-2026").unwrap().to_string(),
+        "10-31-2026"
+    );
+    assert!(UsDate::from_str("2026-10-31").is_err());
+
+    assert!(matches!(
+        DateOrDateTime::from_str("2023-11-13").unwrap(),
+        DateOrDateTime::Date(_)
+    ));
+    assert!(matches!(
+        DateOrDateTime::from_str("2026-07-30 00:00:00").unwrap(),
+        DateOrDateTime::DateTime(_)
+    ));
+    assert!(DateOrDateTime::from_str("2026-07-30T00:00:00Z").is_err());
+
+    for wire in [
+        r#"{"declaration_date":"","filing_date":null}"#,
+        r#"{"declaration_date":null,"filing_date":""}"#,
+        r#"{}"#,
+    ] {
+        let fixture: OptionalTemporalFixture = serde_json::from_str(wire).unwrap();
+        assert_eq!(fixture.declaration_date, None);
+        assert_eq!(fixture.filing_date, None);
+    }
+
+    let partial = OpaqueDateText("--09-27".to_owned());
+    assert_eq!(serde_json::to_string(&partial).unwrap(), r#""--09-27""#);
+}
+
+#[test]
+fn dynamic_json_preserves_recursive_native_shape() {
+    let value: DynamicJson = serde_json::from_str(
+        r#"{"documenttype":"10-K","documentannualreport":"true","documentfiscalyearfocus":2025,"nested":[null,false,{"amount":"33644000000","exact":9007199254740993}]}"#,
+    )
+    .unwrap();
+
+    assert_eq!(value["documenttype"], "10-K");
+    assert_eq!(value["documentfiscalyearfocus"], 2025);
+    assert_eq!(value["nested"][2]["amount"], "33644000000");
+    assert_eq!(value["nested"][2]["exact"].to_string(), "9007199254740993");
+}

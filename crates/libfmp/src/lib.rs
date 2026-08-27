@@ -1,6 +1,7 @@
 //! Rust-first access to Financial Modeling Prep data.
 
 pub mod client;
+pub mod codecs;
 pub mod config;
 pub mod endpoints;
 pub mod error;
