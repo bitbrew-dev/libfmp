@@ -1,93 +1,10 @@
 //! Thin Python facade for `libfmp`.
 
 mod client;
+mod errors;
 mod quote;
 
-use pyo3::{
-    create_exception,
-    exceptions::{PyBaseException, PyException, PyValueError},
-    prelude::*,
-};
-
-create_exception!(
-    fmp._native,
-    FmpError,
-    PyException,
-    "Base exception for all fmp failures."
-);
-create_exception!(
-    fmp._native,
-    FmpValidationError,
-    FmpError,
-    "An input failed local validation."
-);
-create_exception!(
-    fmp._native,
-    FmpConfigError,
-    FmpError,
-    "Client or transport configuration is invalid."
-);
-create_exception!(
-    fmp._native,
-    FmpTransportError,
-    FmpError,
-    "A request could not be completed by the transport."
-);
-create_exception!(
-    fmp._native,
-    FmpStatusError,
-    FmpError,
-    "The provider returned a non-success HTTP status."
-);
-create_exception!(
-    fmp._native,
-    FmpDecodeError,
-    FmpError,
-    "A successful response could not be decoded."
-);
-
-/// Converts a core error without exposing Rust implementation details or secrets.
-///
-/// Attribute assignment is fallible and is propagated as a Python exception;
-/// this function never unwraps or panics at the FFI boundary.
-fn to_py_error(error: libfmp::Error) -> PyErr {
-    Python::attach(|py| {
-        let exception = match error.category() {
-            libfmp::error::ErrorCategory::Validation => {
-                FmpValidationError::new_err(error.to_string())
-            }
-            libfmp::error::ErrorCategory::Configuration => {
-                FmpConfigError::new_err(error.to_string())
-            }
-            libfmp::error::ErrorCategory::Transport => {
-                FmpTransportError::new_err(error.to_string())
-            }
-            libfmp::error::ErrorCategory::Status => FmpStatusError::new_err(error.to_string()),
-            libfmp::error::ErrorCategory::Decode => FmpDecodeError::new_err(error.to_string()),
-            _ => FmpError::new_err(error.to_string()),
-        };
-
-        match set_error_attributes(exception.value(py), &error) {
-            Ok(()) => exception,
-            Err(attribute_error) => attribute_error,
-        }
-    })
-}
-
-fn set_error_attributes(
-    exception: &Bound<'_, PyBaseException>,
-    error: &libfmp::Error,
-) -> PyResult<()> {
-    exception.setattr("category", error.category().as_str())?;
-    exception.setattr("endpoint", error.endpoint())?;
-    exception.setattr("status", error.status_code())?;
-    exception.setattr("body", error.body().map(libfmp::error::SafeBody::as_str))?;
-    exception.setattr(
-        "body_truncated",
-        error.body().map(libfmp::error::SafeBody::is_truncated),
-    )?;
-    Ok(())
-}
+use pyo3::{exceptions::PyValueError, prelude::*};
 
 #[pyfunction]
 fn _test_error(category: &str) -> PyResult<()> {
@@ -108,21 +25,28 @@ fn _test_error(category: &str) -> PyResult<()> {
         ),
         _ => return Err(PyValueError::new_err("unknown test error category")),
     };
-    Err(to_py_error(error))
+    Err(errors::to_py_error(error))
+}
+
+fn register_submodule<'py>(
+    extension: &Bound<'py, PyModule>,
+    package: &Bound<'py, PyAny>,
+    sys_modules: &Bound<'py, pyo3::types::PyDict>,
+    public_name: &str,
+    module: &Bound<'py, PyModule>,
+) -> PyResult<()> {
+    extension.add_submodule(module)?;
+    sys_modules.set_item(public_name, module)?;
+    let attribute = public_name
+        .rsplit_once('.')
+        .map_or(public_name, |(_, name)| name);
+    package.setattr(attribute, module)?;
+    Ok(())
 }
 
 #[pymodule]
 mod _native {
     use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyDict};
-
-    #[pymodule_export]
-    use super::{
-        FmpConfigError, FmpDecodeError, FmpError, FmpStatusError, FmpTransportError,
-        FmpValidationError,
-    };
-
-    #[pymodule_export]
-    use super::client::FmpClient;
 
     #[pymodule_init]
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -130,45 +54,26 @@ mod _native {
         module.add_function(wrap_pyfunction!(super::_test_error, module)?)?;
 
         let py = module.py();
-        let base = py.get_type::<super::FmpError>();
-        base.setattr("category", py.None())?;
-        base.setattr("endpoint", py.None())?;
-        base.setattr("status", py.None())?;
-        base.setattr("body", py.None())?;
-        base.setattr("body_truncated", py.None())?;
-
-        py.get_type::<super::FmpValidationError>()
-            .setattr("category", "validation")?;
-        py.get_type::<super::FmpConfigError>()
-            .setattr("category", "configuration")?;
-        py.get_type::<super::FmpTransportError>()
-            .setattr("category", "transport")?;
-        py.get_type::<super::FmpStatusError>()
-            .setattr("category", "status")?;
-        py.get_type::<super::FmpDecodeError>()
-            .setattr("category", "decode")?;
-
-        // Native domain modules must be registered under their public dotted
-        // names. `add_submodule` alone only provides `_native.quote`; the
-        // `sys.modules` entry makes `import fmp.quote` resolve to this module
-        // before Python considers the documentation-only `quote.py` shim.
-        // Keep the simple native module name used by libitofin; the public
-        // class metadata and registry key carry the stable dotted namespace.
-        let quote = PyModule::new(py, "quote")?;
-        quote.add_class::<super::quote::QuoteShort>()?;
-        quote.add("__all__", vec!["QuoteShort"])?;
-        module.add_submodule(&quote)?;
         let sys_modules = PyModule::import(py, "sys")?
             .getattr("modules")?
             .cast_into::<PyDict>()?;
-        sys_modules.set_item("fmp.quote", &quote)?;
-
-        // Because the extension is `fmp._native` rather than the package root,
-        // explicitly attach the domain module to the already-loading package.
         let package = sys_modules
             .get_item("fmp")?
             .ok_or_else(|| PyRuntimeError::new_err("fmp package is not initialized"))?;
-        package.setattr("quote", &quote)?;
+
+        let client = PyModule::new(py, "client")?;
+        client.add_class::<super::client::FmpClient>()?;
+        client.add("__all__", vec!["FmpClient"])?;
+        super::register_submodule(module, &package, &sys_modules, "fmp.client", &client)?;
+
+        let errors = PyModule::new(py, "errors")?;
+        super::errors::register(&errors)?;
+        super::register_submodule(module, &package, &sys_modules, "fmp.errors", &errors)?;
+
+        let quote = PyModule::new(py, "quote")?;
+        quote.add_class::<super::quote::QuoteShort>()?;
+        quote.add("__all__", vec!["QuoteShort"])?;
+        super::register_submodule(module, &package, &sys_modules, "fmp.quote", &quote)?;
         Ok(())
     }
 }
