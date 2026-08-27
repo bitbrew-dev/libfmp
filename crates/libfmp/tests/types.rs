@@ -150,6 +150,8 @@ fn timestamps_keep_seconds_and_milliseconds_as_distinct_numeric_types() {
 
     assert_eq!(seconds, UnixSeconds(1_700_000_000));
     assert_eq!(milliseconds, UnixMilliseconds(1_700_000_000_000));
+    assert_eq!(seconds.to_string(), "1700000000");
+    assert_eq!(milliseconds.to_string(), "1700000000000");
     assert_eq!(serde_json::to_string(&seconds).unwrap(), "1700000000");
     assert_eq!(
         serde_json::to_string(&milliseconds).unwrap(),
