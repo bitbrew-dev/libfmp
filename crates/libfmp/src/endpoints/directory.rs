@@ -1,0 +1,200 @@
+//! Symbol and earnings-transcript directory endpoints.
+//!
+//! The reserved Python surface for a future binding is `fmp.directory`, with
+//! `FmpClient.company_symbols`, `financial_statement_symbols`, `cik_list`,
+//! `symbol_changes`, `etf_symbols`, `actively_trading`, and
+//! `earnings_transcript_list` methods and the corresponding public response
+//! models. This crate does not implement those Python bindings.
+
+use crate::{
+    Client, Result,
+    codecs::TrueFalseFlag,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
+    responses::directory::{
+        ActivelyTradingSymbol, CikEntry, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
+        FinancialStatementSymbol, SymbolChange,
+    },
+    types::{Limit, Page},
+};
+
+/// Optional pagination parameters for the CIK directory.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct CikListQuery {
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl CikListQuery {
+    /// Creates a CIK-directory query without undocumented defaults.
+    pub const fn new() -> Self {
+        Self {
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for CikListQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
+
+/// Optional wire parameters for the symbol-change directory.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct SymbolChangesQuery {
+    invalid: Option<TrueFalseFlag>,
+    limit: Option<Limit>,
+}
+
+impl SymbolChangesQuery {
+    /// Creates a symbol-change query without interpreting the `invalid` flag.
+    pub const fn new() -> Self {
+        Self {
+            invalid: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the provider's ambiguous lowercase-string `invalid` parameter.
+    pub const fn with_invalid(mut self, invalid: TrueFalseFlag) -> Self {
+        self.invalid = Some(invalid);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Returns the uninterpreted provider `invalid` flag.
+    pub const fn invalid(&self) -> Option<TrueFalseFlag> {
+        self.invalid
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for SymbolChangesQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("invalid", self.invalid);
+        encoder.optional("limit", self.limit);
+    }
+}
+
+const WORLDWIDE: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+const US_ONLY: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
+const CIK_LIST: EndpointMetadata =
+    US_ONLY.with_bounds(EndpointBounds::new().with_response_rows(10_000));
+
+/// Describes `GET stock-list` without binding it to a transport.
+pub fn company_symbols() -> EndpointSpec<(), Vec<CompanySymbol>> {
+    EndpointSpec::get("stock-list", "stock-list", ()).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET financial-statement-symbol-list` without binding it to a transport.
+pub fn financial_statement_symbols() -> EndpointSpec<(), Vec<FinancialStatementSymbol>> {
+    EndpointSpec::get(
+        "financial-statement-symbol-list",
+        "financial-statement-symbol-list",
+        (),
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET cik-list` without binding it to a transport.
+pub fn cik_list(query: CikListQuery) -> EndpointSpec<CikListQuery, Vec<CikEntry>> {
+    EndpointSpec::get("cik-list", "cik-list", query).with_metadata(CIK_LIST)
+}
+
+/// Describes `GET symbol-change` without binding it to a transport.
+pub fn symbol_changes(
+    query: SymbolChangesQuery,
+) -> EndpointSpec<SymbolChangesQuery, Vec<SymbolChange>> {
+    EndpointSpec::get("symbol-change", "symbol-change", query).with_metadata(US_ONLY)
+}
+
+/// Describes `GET etf-list` without binding it to a transport.
+pub fn etf_symbols() -> EndpointSpec<(), Vec<EtfSymbol>> {
+    EndpointSpec::get("etf-list", "etf-list", ()).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET actively-trading-list` without binding it to a transport.
+pub fn actively_trading() -> EndpointSpec<(), Vec<ActivelyTradingSymbol>> {
+    EndpointSpec::get("actively-trading-list", "actively-trading-list", ()).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET earnings-transcript-list` without binding it to a transport.
+pub fn earnings_transcript_list() -> EndpointSpec<(), Vec<EarningsTranscriptAvailability>> {
+    EndpointSpec::get("earnings-transcript-list", "earnings-transcript-list", ())
+        .with_metadata(US_ONLY)
+}
+
+impl Client {
+    /// Lists worldwide company and instrument symbols.
+    pub async fn company_symbols(&self) -> Result<Vec<CompanySymbol>> {
+        self.execute(&company_symbols()).await
+    }
+
+    /// Lists worldwide companies with financial statements available.
+    pub async fn financial_statement_symbols(&self) -> Result<Vec<FinancialStatementSymbol>> {
+        self.execute(&financial_statement_symbols()).await
+    }
+
+    /// Lists US SEC entities with optional provider pagination.
+    pub async fn cik_list(&self, query: CikListQuery) -> Result<Vec<CikEntry>> {
+        self.execute(&cik_list(query)).await
+    }
+
+    /// Lists US symbol changes without interpreting the provider's `invalid` flag.
+    pub async fn symbol_changes(&self, query: SymbolChangesQuery) -> Result<Vec<SymbolChange>> {
+        self.execute(&symbol_changes(query)).await
+    }
+
+    /// Lists worldwide exchange-traded fund symbols.
+    pub async fn etf_symbols(&self) -> Result<Vec<EtfSymbol>> {
+        self.execute(&etf_symbols()).await
+    }
+
+    /// Lists worldwide actively trading companies and instruments.
+    pub async fn actively_trading(&self) -> Result<Vec<ActivelyTradingSymbol>> {
+        self.execute(&actively_trading()).await
+    }
+
+    /// Lists US companies with their available earnings-transcript counts.
+    pub async fn earnings_transcript_list(&self) -> Result<Vec<EarningsTranscriptAvailability>> {
+        self.execute(&earnings_transcript_list()).await
+    }
+}
