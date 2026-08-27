@@ -12,7 +12,7 @@ version="${1:?usage: set-version.sh <version>}"
 tmp="$(mktemp)"
 
 awk -v v="$version" '
-  /^\[/            { in_pkg = ($0 == "[package]") }
+  /^\[/            { in_pkg = ($0 == "[workspace.package]") }
   in_pkg && !done && /^version[[:space:]]*=/ {
       print "version = \"" v "\""
       done = 1
