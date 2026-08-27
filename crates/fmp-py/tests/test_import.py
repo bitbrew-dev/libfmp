@@ -79,6 +79,7 @@ def test_public_imports_resolve_to_registered_native_modules() -> None:
     assert not hasattr(fmp._native, "FmpClient")
     assert not hasattr(fmp._native, "FmpError")
     assert not hasattr(fmp._native, "QuoteShort")
+    assert not hasattr(fmp._native, "_test_error")
 
 
 def test_public_exception_hierarchy_is_stable() -> None:
@@ -151,62 +152,3 @@ def test_public_exception_hierarchy_is_stable() -> None:
         assert type(restored) is exception_type
         assert restored.args == ("message",)
         assert restored.category == category
-
-
-def test_native_error_conversion_has_exact_safe_attributes() -> None:
-    from fmp import (
-        FmpConfigError,
-        FmpDecodeError,
-        FmpStatusError,
-        FmpTransportError,
-        FmpValidationError,
-    )
-    from fmp import _native
-
-    safe_body = "denied?apikey=[REDACTED] [REDACTED]"
-    cases = {
-        "validation": (
-            FmpValidationError,
-            ("validation", None, None, None, None),
-            "invalid ticker",
-        ),
-        "configuration": (
-            FmpConfigError,
-            ("configuration", None, None, None, None),
-            "invalid client configuration",
-        ),
-        "transport": (
-            FmpTransportError,
-            ("transport", "quote-short", None, None, None),
-            "request failed (endpoint: quote-short)",
-        ),
-        "status": (
-            FmpStatusError,
-            ("status", "quote-short", 401, safe_body, False),
-            f"provider returned HTTP status 401 (endpoint: quote-short): {safe_body}",
-        ),
-        "decode": (
-            FmpDecodeError,
-            ("decode", "quote-short", 200, safe_body, False),
-            f"response decode failed (endpoint: quote-short): {safe_body}",
-        ),
-    }
-
-    assert "_test_error" not in __import__("fmp").__all__
-    for category, (exception_type, attributes, message) in cases.items():
-        try:
-            _native._test_error(category)
-        except exception_type as error:
-            assert (
-                error.category,
-                error.endpoint,
-                error.status,
-                error.body,
-                error.body_truncated,
-            ) == attributes
-            assert str(error) == message
-            diagnostic = f"{error!s} {error!r} {error.body}"
-            assert "query-secret" not in diagnostic
-            assert "body-secret" not in diagnostic
-        else:
-            raise AssertionError(f"{category} did not raise {exception_type.__name__}")

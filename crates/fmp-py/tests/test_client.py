@@ -33,6 +33,12 @@ def fixture_server():
                 status, body, content_type = 200, MULTIPLE_QUOTES, "application/json"
             elif symbol == "DENIED":
                 status, body, content_type = 401, {"error": "denied"}, "application/json"
+            elif symbol == "SECRET_DENIED":
+                status, body, content_type = (
+                    401,
+                    b"denied?apikey=query-secret",
+                    "text/plain",
+                )
             elif symbol == "INVALID_JSON":
                 status, body, content_type = 200, b"not-json", "application/json"
             else:
@@ -228,6 +234,7 @@ def test_invalid_configuration_and_call_errors_are_structured():
         FmpConfigError,
         FmpDecodeError,
         FmpStatusError,
+        FmpTransportError,
         FmpValidationError,
     )
 
@@ -292,3 +299,45 @@ def test_invalid_configuration_and_call_errors_are_structured():
             assert error.body_truncated is False
         else:
             raise AssertionError("invalid JSON did not raise FmpDecodeError")
+
+    transport_client = FmpClient(
+        base_url="http://127.0.0.1:0",
+        path_prefix="",
+        auth_mode="none",
+        timeout=1.0,
+        connect_timeout=0.25,
+    )
+    try:
+        transport_client.quote_short("AAPL")
+    except FmpTransportError as error:
+        assert error.category == "transport"
+        assert error.endpoint == "quote-short"
+        assert error.status is None
+        assert error.body is None
+        assert error.body_truncated is None
+    else:
+        raise AssertionError("connection failure did not raise FmpTransportError")
+
+
+def test_status_error_redacts_configured_query_secret():
+    from fmp import FmpClient, FmpStatusError
+
+    with fixture_server() as (base_url, _requests):
+        client = FmpClient(
+            token="query-secret",
+            base_url=base_url,
+            path_prefix="",
+            auth_mode="fmp_query",
+        )
+        try:
+            client.quote_short("SECRET_DENIED")
+        except FmpStatusError as error:
+            assert error.category == "status"
+            assert error.endpoint == "quote-short"
+            assert error.status == 401
+            assert error.body == "denied?apikey=[REDACTED]"
+            assert error.body_truncated is False
+            diagnostic = f"{error!s} {error!r} {error.body}"
+            assert "query-secret" not in diagnostic
+        else:
+            raise AssertionError("non-success response did not raise FmpStatusError")
