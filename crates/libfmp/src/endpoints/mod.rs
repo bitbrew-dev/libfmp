@@ -1,5 +1,6 @@
 //! Transport-independent endpoint, query, and response contracts.
 
+pub mod metadata;
 pub mod quote;
 
 use std::{fmt, marker::PhantomData};
@@ -7,6 +8,7 @@ use std::{fmt, marker::PhantomData};
 use serde::de::DeserializeOwned;
 
 use crate::transport::HttpMethod;
+use metadata::EndpointMetadata;
 
 /// The JSON media type requested by FMP's structured-data endpoints.
 pub const APPLICATION_JSON: &str = "application/json";
@@ -21,6 +23,7 @@ pub struct EndpointSpec<Q, R> {
     relative_path: &'static str,
     query: Q,
     response: ResponseContract<R>,
+    metadata: EndpointMetadata,
 }
 
 impl<Q, R> EndpointSpec<Q, R> {
@@ -38,6 +41,7 @@ impl<Q, R> EndpointSpec<Q, R> {
             relative_path,
             query,
             response,
+            metadata: EndpointMetadata::new(),
         }
     }
 
@@ -64,6 +68,17 @@ impl<Q, R> EndpointSpec<Q, R> {
     /// Borrows the response decoding and content-type contract.
     pub const fn response(&self) -> &ResponseContract<R> {
         &self.response
+    }
+
+    /// Returns documentation metadata associated with this endpoint.
+    pub const fn metadata(&self) -> EndpointMetadata {
+        self.metadata
+    }
+
+    /// Attaches additive documentation metadata without changing the endpoint contract.
+    pub const fn with_metadata(mut self, metadata: EndpointMetadata) -> Self {
+        self.metadata = metadata;
+        self
     }
 }
 
@@ -126,6 +141,7 @@ impl<Q, R> fmt::Debug for EndpointSpec<Q, R> {
             .field("relative_path", &self.relative_path)
             .field("query", &"[REDACTED QUERY]")
             .field("response", &self.response)
+            .field("metadata", &self.metadata)
             .finish()
     }
 }
