@@ -1,16 +1,17 @@
-//! Response models returned by symbol and transcript directory endpoints.
+//! Response models returned by symbol, transcript, and taxonomy directories.
 //!
 //! Future Python bindings should expose the meaningful public models from
 //! `fmp.directory` as `CompanySymbol`, `FinancialStatementSymbol`, `CikEntry`,
 //! `SymbolChange`, `EtfSymbol`, `ActivelyTradingSymbol`, and
-//! `EarningsTranscriptAvailability`. This crate does not implement those
-//! Python bindings.
+//! `EarningsTranscriptAvailability`, `AvailableExchange`, `AvailableSector`,
+//! `AvailableIndustry`, and `AvailableCountry`. This crate does not implement
+//! those Python bindings.
 
 use serde::{Deserialize, Serialize};
 
 use crate::{
     codecs::NumericString,
-    types::{Cik, CurrencyCode, Date, Ticker},
+    types::{Cik, CountryCode, CurrencyCode, Date, ExchangeCode, Industry, Sector, Ticker},
 };
 
 /// One worldwide company or instrument in the company-symbol directory.
@@ -72,4 +73,34 @@ pub struct EarningsTranscriptAvailability {
     pub symbol: Ticker,
     pub company_name: String,
     pub no_of_transcripts: NumericString,
+}
+
+/// One stock exchange supported by FMP.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AvailableExchange {
+    pub exchange: ExchangeCode,
+    pub name: String,
+    pub country_name: String,
+    pub country_code: CountryCode,
+    pub symbol_suffix: String,
+    pub delay: String,
+}
+
+/// One sector accepted by provider sector filters.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AvailableSector {
+    pub sector: Sector,
+}
+
+/// One industry accepted by provider industry filters.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AvailableIndustry {
+    pub industry: Industry,
+}
+
+/// One country accepted by provider country filters.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct AvailableCountry {
+    pub country: CountryCode,
 }
