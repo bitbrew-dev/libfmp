@@ -1,16 +1,17 @@
-//! Response models returned by company profile, note, and peer endpoints.
+//! Response models returned by company profile, note, peer, delisting, and workforce endpoints.
 //!
 //! Future Python bindings should expose these models from `fmp.company` as
-//! `CompanyProfile`, `CompanyNote`, and `StockPeer`. This crate does not
-//! implement those Python bindings.
+//! `CompanyProfile`, `CompanyNote`, `StockPeer`, `DelistedCompany`, and
+//! `EmployeeCount`. This crate does not implement those Python bindings.
 
 use serde::{Deserialize, Serialize};
 
 use crate::{
     codecs::NumericString,
     types::{
-        Change, Cik, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode, Industry, Isin,
-        MarketCapitalization, MarketValue, Percentage, Price, Sector, Ticker, Volume,
+        ApiDateTime, Change, Cik, Count, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode,
+        Industry, Isin, MarketCapitalization, MarketValue, Percentage, Price, Sector, Ticker,
+        Volume,
     },
 };
 
@@ -75,4 +76,30 @@ pub struct StockPeer {
     pub price: Price,
     #[serde(rename = "mktCap")]
     pub market_cap: MarketCapitalization,
+}
+
+/// One US company that has been removed from an exchange.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DelistedCompany {
+    pub symbol: Ticker,
+    pub company_name: String,
+    pub exchange: ExchangeCode,
+    pub ipo_date: Date,
+    pub delisted_date: Date,
+}
+
+/// One current or historical US employee-count filing.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EmployeeCount {
+    pub symbol: Ticker,
+    pub cik: Cik,
+    pub acceptance_time: ApiDateTime,
+    pub period_of_report: Date,
+    pub company_name: String,
+    pub form_type: String,
+    pub filing_date: Date,
+    pub employee_count: Count,
+    pub source: String,
 }
