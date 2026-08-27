@@ -1,9 +1,12 @@
 use std::str::FromStr;
 
-use libfmp::types::{
-    ApiDateTime, Cik, CountryCode, CurrencyCode, Cusip, Date, DateRange, ExchangeCode,
-    FiniteDecimal, Industry, Isin, Limit, Page, SearchTerm, Sector, StringValueError, Ticker,
-    TickerList, UnixMilliseconds, UnixSeconds,
+use libfmp::{
+    query::Year,
+    types::{
+        ApiDateTime, BenchmarkYear, Cik, CountryCode, CurrencyCode, Cusip, Date, DateRange,
+        ExchangeCode, FiniteDecimal, Industry, Isin, Limit, Page, SearchTerm, Sector,
+        StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
+    },
 };
 
 #[test]
@@ -63,6 +66,28 @@ fn search_terms_preserve_representation_without_identifier_normalization() {
         serde_json::from_str::<SearchTerm>(r#""  Apple, Inc. / Class A  ""#).unwrap(),
         term
     );
+}
+
+#[test]
+fn benchmark_years_preserve_open_non_numeric_representations_without_query_year_collision() {
+    let year = BenchmarkYear::new("FY 2024/25").unwrap();
+
+    assert_eq!(year.as_str(), "FY 2024/25");
+    assert_eq!(year.to_string(), "FY 2024/25");
+    assert_eq!(
+        serde_json::from_str::<BenchmarkYear>(r#""FY 2024/25""#).unwrap(),
+        year
+    );
+    assert_eq!(BenchmarkYear::new(" 2024 ").unwrap().as_str(), " 2024 ");
+    assert_eq!(
+        BenchmarkYear::new(" ").unwrap_err(),
+        StringValueError::Empty
+    );
+    assert_eq!(
+        BenchmarkYear::new("2024\n").unwrap_err(),
+        StringValueError::ControlCharacter
+    );
+    assert_eq!(Year(2024).to_string(), "2024");
 }
 
 #[test]
