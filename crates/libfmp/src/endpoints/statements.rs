@@ -9,6 +9,10 @@
 //! Response rows and endpoint descriptors are intentionally defined by later
 //! statement modules rather than this query foundation.
 
+pub mod income;
+
+pub use income::{income_statement, income_statement_ttm};
+
 use crate::{
     endpoints::{
         QueryEncoder, QueryParameters,
@@ -176,7 +180,6 @@ ttm_statement_query!(
 
 /// Shared documented metadata for the six statement endpoints built on these
 /// query contracts. Kept crate-private until endpoint descriptors consume it.
-#[allow(dead_code)]
 pub(crate) const WORLDWIDE_STATEMENT_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::Worldwide)
     .with_bounds(EndpointBounds::new().with_response_rows(1_000));
