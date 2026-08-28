@@ -1,0 +1,35 @@
+[
+  {
+    "data": {
+      "comprehensiveincomenetoftax": 113611000000,
+      "costofgoodsandservicessold": 220960000000,
+      "earningspersharebasic": 7.49,
+      "earningspersharediluted": 7.46,
+      "grossprofit": 195201000000,
+      "incomelossfromcontinuingoperationsbeforeincometaxesextraordinaryitemsnoncontrollinginterest": 132729000000,
+      "incometaxexpensebenefit": 20719000000,
+      "netincomeloss": 112010000000,
+      "nonoperatingincomeexpense": -321000000,
+      "operatingexpenses": 62151000000,
+      "operatingincomeloss": 133050000000,
+      "othercomprehensiveincomelossavailableforsalesecuritiesadjustmentnetoftax": 1231000000,
+      "othercomprehensiveincomelosscashflowhedgegainlossafterreclassificationandtax": 637000000,
+      "othercomprehensiveincomelosscashflowhedgegainlossbeforereclassificationaftertax": 849000000,
+      "othercomprehensiveincomelosscashflowhedgegainlossreclassificationaftertax": 212000000,
+      "othercomprehensiveincomelossforeigncurrencytransactionandtranslationadjustmentnetoftax": -267000000,
+      "othercomprehensiveincomelossnetoftaxportionattributabletoparent": 1601000000,
+      "othercomprehensiveincomelossreclassificationadjustmentfromaociforsaleofsecuritiesnetoftax": -414000000,
+      "othercomprehensiveincomeunrealizedholdinggainlossonsecuritiesarisingduringperiodnetoftax": 817000000,
+      "researchanddevelopmentexpense": 34550000000,
+      "revenuefromcontractwithcustomerexcludingassessedtax": 416161000000,
+      "sellinggeneralandadministrativeexpense": 27601000000,
+      "weightedaveragenumberofdilutedsharesoutstanding": 15004697000,
+      "weightedaveragenumberofsharesoutstandingbasic": 14948500000
+    },
+    "date": "2025-09-26",
+    "fiscalYear": 2025,
+    "period": "FY",
+    "reportedCurrency": "USD",
+    "symbol": "AAPL"
+  }
+]

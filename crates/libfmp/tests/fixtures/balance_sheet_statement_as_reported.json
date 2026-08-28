@@ -1,0 +1,42 @@
+[
+  {
+    "data": {
+      "accountspayablecurrent": 69860000000,
+      "accountsreceivablenetcurrent": 39777000000,
+      "accumulatedothercomprehensiveincomelossnetoftax": -5571000000,
+      "assets": 359241000000,
+      "assetscurrent": 147957000000,
+      "assetsnoncurrent": 211284000000,
+      "cashandcashequivalentsatcarryingvalue": 35934000000,
+      "commercialpaper": 8000000000,
+      "commonstockparorstatedvaluepershare": 1e-05,
+      "commonstocksharesauthorized": 50400000000,
+      "commonstocksharesissued": 14773260000,
+      "commonstocksharesoutstanding": 14773260000,
+      "commonstocksincludingadditionalpaidincapital": 93568000000,
+      "contractwithcustomerliabilitycurrent": 9055000000,
+      "inventorynet": 5718000000,
+      "liabilities": 285508000000,
+      "liabilitiesandstockholdersequity": 359241000000,
+      "liabilitiescurrent": 165631000000,
+      "liabilitiesnoncurrent": 119877000000,
+      "longtermdebtcurrent": 12350000000,
+      "longtermdebtnoncurrent": 78328000000,
+      "marketablesecuritiescurrent": 18763000000,
+      "marketablesecuritiesnoncurrent": 77723000000,
+      "nontradereceivablescurrent": 33180000000,
+      "otherassetscurrent": 14585000000,
+      "otherassetsnoncurrent": 83727000000,
+      "otherliabilitiescurrent": 66387000000,
+      "otherliabilitiesnoncurrent": 41549000000,
+      "propertyplantandequipmentnet": 49834000000,
+      "retainedearningsaccumulateddeficit": -14264000000,
+      "stockholdersequity": 73733000000
+    },
+    "date": "2025-09-26",
+    "fiscalYear": 2025,
+    "period": "FY",
+    "reportedCurrency": "USD",
+    "symbol": "AAPL"
+  }
+]
