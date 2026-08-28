@@ -1,10 +1,12 @@
-//! Shared query contracts for stock chart endpoints.
-//!
-//! Endpoint descriptors and client methods are intentionally added by later
-//! chart implementation branches.
+//! Stock chart endpoint and query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
+    responses::chart::{StockChartFullBar, StockChartLightBar},
     types::{Date, Ticker},
 };
 
@@ -71,6 +73,52 @@ impl QueryParameters for StockChartEodQuery {
         encoder.required("symbol", &self.symbol);
         encoder.optional("from", self.from);
         encoder.optional("to", self.to);
+    }
+}
+
+const STOCK_CHART_EOD_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(5_000));
+
+/// Describes `GET historical-price-eod/light` without binding a transport.
+pub fn stock_chart_light(
+    query: StockChartEodQuery,
+) -> EndpointSpec<StockChartEodQuery, Vec<StockChartLightBar>> {
+    EndpointSpec::get(
+        "historical-price-eod/light",
+        "historical-price-eod/light",
+        query,
+    )
+    .with_metadata(STOCK_CHART_EOD_METADATA)
+}
+
+/// Describes `GET historical-price-eod/full` without binding a transport.
+pub fn stock_chart_full(
+    query: StockChartEodQuery,
+) -> EndpointSpec<StockChartEodQuery, Vec<StockChartFullBar>> {
+    EndpointSpec::get(
+        "historical-price-eod/full",
+        "historical-price-eod/full",
+        query,
+    )
+    .with_metadata(STOCK_CHART_EOD_METADATA)
+}
+
+impl Client {
+    /// Retrieves compact worldwide end-of-day stock chart rows.
+    pub async fn stock_chart_light(
+        &self,
+        query: impl Into<StockChartEodQuery>,
+    ) -> Result<Vec<StockChartLightBar>> {
+        self.execute(&stock_chart_light(query.into())).await
+    }
+
+    /// Retrieves detailed worldwide end-of-day stock chart rows.
+    pub async fn stock_chart_full(
+        &self,
+        query: impl Into<StockChartEodQuery>,
+    ) -> Result<Vec<StockChartFullBar>> {
+        self.execute(&stock_chart_full(query.into())).await
     }
 }
 
