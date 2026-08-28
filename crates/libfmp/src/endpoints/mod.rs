@@ -1,5 +1,6 @@
 //! Transport-independent endpoint, query, and response contracts.
 
+pub mod calendar;
 pub mod chart;
 pub mod company;
 pub mod directory;

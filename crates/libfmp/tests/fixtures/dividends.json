@@ -1,0 +1,13 @@
+[
+  {
+    "adjDividend": 0.27,
+    "date": "2026-05-11",
+    "declarationDate": "2026-04-30",
+    "dividend": 0.27,
+    "frequency": "Quarterly",
+    "paymentDate": "2026-05-14",
+    "recordDate": "2026-05-11",
+    "symbol": "AAPL",
+    "yield": 0.3587535875358754
+  }
+]
