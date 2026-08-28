@@ -21,8 +21,10 @@ pub mod segmentation;
 pub mod summaries;
 
 pub use as_reported::{
-    BalanceSheetStatementAsReportedQuery, IncomeStatementAsReportedQuery,
-    balance_sheet_statement_as_reported, income_statement_as_reported,
+    BalanceSheetStatementAsReportedQuery, CashFlowStatementAsReportedQuery,
+    FinancialStatementFullAsReportedQuery, IncomeStatementAsReportedQuery,
+    balance_sheet_statement_as_reported, cash_flow_statement_as_reported,
+    financial_statement_full_as_reported, income_statement_as_reported,
 };
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
 pub use cash_flow::{cash_flow_statement, cash_flow_statement_ttm};

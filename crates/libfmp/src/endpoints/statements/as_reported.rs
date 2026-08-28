@@ -1,9 +1,13 @@
 //! Query contracts and endpoint leaves for as-reported financial statements.
 
 pub mod balance;
+pub mod cash_flow;
+pub mod full;
 pub mod income;
 
 pub use balance::balance_sheet_statement_as_reported;
+pub use cash_flow::cash_flow_statement_as_reported;
+pub use full::financial_statement_full_as_reported;
 pub use income::income_statement_as_reported;
 
 use crate::{
@@ -93,6 +97,14 @@ as_reported_query!(
     "Query parameters for balance sheets as reported by the company.",
     BalanceSheetStatementAsReportedQuery
 );
+as_reported_query!(
+    "Query parameters for cash-flow statements as reported by the company.",
+    CashFlowStatementAsReportedQuery
+);
+as_reported_query!(
+    "Query parameters for complete financial statements as reported by the company.",
+    FinancialStatementFullAsReportedQuery
+);
 
 pub(super) const AS_REPORTED_METADATA: EndpointMetadata =
     EndpointMetadata::new().with_bounds(EndpointBounds::new().with_response_rows(1_000));
@@ -116,6 +128,10 @@ mod tests {
         let balance = BalanceSheetStatementAsReportedQuery::new(symbol.clone())
             .with_limit(Limit(1_000))
             .with_period(RetrievalFrequency::Quarterly);
+        let cash: CashFlowStatementAsReportedQuery = (&symbol).into();
+        let full = FinancialStatementFullAsReportedQuery::new(symbol.clone())
+            .with_limit(Limit(5))
+            .with_period(RetrievalFrequency::Annual);
 
         assert_eq!(income.symbol(), &symbol);
         assert_eq!(income.limit(), None);
@@ -134,6 +150,26 @@ mod tests {
                 ("symbol".to_owned(), "BRK.B / Class A".to_owned()),
                 ("limit".to_owned(), "1000".to_owned()),
                 ("period".to_owned(), "quarter".to_owned()),
+            ]
+        );
+
+        assert_eq!(cash.symbol(), &symbol);
+        assert_eq!(cash.limit(), None);
+        assert_eq!(cash.period(), None);
+        assert_eq!(
+            pairs(&cash),
+            [("symbol".to_owned(), "BRK.B / Class A".to_owned())]
+        );
+
+        assert_eq!(full.symbol(), &symbol);
+        assert_eq!(full.limit(), Some(Limit(5)));
+        assert_eq!(full.period(), Some(RetrievalFrequency::Annual));
+        assert_eq!(
+            pairs(&full),
+            [
+                ("symbol".to_owned(), "BRK.B / Class A".to_owned()),
+                ("limit".to_owned(), "5".to_owned()),
+                ("period".to_owned(), "annual".to_owned()),
             ]
         );
     }
@@ -155,6 +191,19 @@ mod tests {
             assert_eq!(
                 pairs(
                     &BalanceSheetStatementAsReportedQuery::new(symbol.clone()).with_period(period)
+                )[1]
+                .1,
+                expected
+            );
+            assert_eq!(
+                pairs(&CashFlowStatementAsReportedQuery::new(symbol.clone()).with_period(period))
+                    [1]
+                .1,
+                expected
+            );
+            assert_eq!(
+                pairs(
+                    &FinancialStatementFullAsReportedQuery::new(symbol.clone()).with_period(period)
                 )[1]
                 .1,
                 expected
