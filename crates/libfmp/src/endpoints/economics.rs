@@ -7,7 +7,9 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata},
     },
     query::EconomicIndicator,
-    responses::economics::{EconomicIndicatorObservation, TreasuryRate},
+    responses::economics::{
+        EconomicCalendarEvent, EconomicIndicatorObservation, MarketRiskPremium, TreasuryRate,
+    },
     types::{CountryCode, Date},
 };
 
@@ -216,6 +218,34 @@ impl QueryParameters for EconomicCalendarQuery {
         encoder.optional("country", self.country.as_ref());
         encoder.optional("from", self.from);
         encoder.optional("to", self.to);
+    }
+}
+
+/// Describes `GET economic-calendar` without binding a transport.
+pub fn economic_calendar(
+    query: EconomicCalendarQuery,
+) -> EndpointSpec<EconomicCalendarQuery, Vec<EconomicCalendarEvent>> {
+    EndpointSpec::get("economic-calendar", "economic-calendar", query)
+        .with_metadata(NINETY_DAY_RANGE)
+}
+
+/// Describes queryless `GET market-risk-premium` without binding a transport.
+pub fn market_risk_premium() -> EndpointSpec<(), Vec<MarketRiskPremium>> {
+    EndpointSpec::get("market-risk-premium", "market-risk-premium", ())
+}
+
+impl Client {
+    /// Retrieves economic-calendar events within the documented 90-day range.
+    pub async fn economic_calendar(
+        &self,
+        query: impl Into<EconomicCalendarQuery>,
+    ) -> Result<Vec<EconomicCalendarEvent>> {
+        self.execute(&economic_calendar(query.into())).await
+    }
+
+    /// Retrieves the provider's queryless country risk-premium rows.
+    pub async fn market_risk_premium(&self) -> Result<Vec<MarketRiskPremium>> {
+        self.execute(&market_risk_premium()).await
     }
 }
 

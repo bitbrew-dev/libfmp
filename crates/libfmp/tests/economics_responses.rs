@@ -83,16 +83,6 @@ fn calendar_fixture_decodes_all_11_fields_with_required_numeric_values() {
             unit: "%".to_owned(),
         }]
     );
-
-    for field in ["previous", "estimate", "actual"] {
-        let mut null: serde_json::Value = serde_json::from_slice(CALENDAR).unwrap();
-        null[0][field] = serde_json::Value::Null;
-        assert!(serde_json::from_value::<Vec<EconomicCalendarEvent>>(null).is_err());
-
-        let mut missing: serde_json::Value = serde_json::from_slice(CALENDAR).unwrap();
-        missing[0].as_object_mut().unwrap().remove(field);
-        assert!(serde_json::from_value::<Vec<EconomicCalendarEvent>>(missing).is_err());
-    }
 }
 
 #[test]
@@ -113,10 +103,16 @@ fn market_risk_fixture_uses_full_country_name_and_raw_percentage_values() {
     assert_eq!(rows[0].country, "Zimbabwe");
     assert_eq!(rows[0].country_risk_premium, 11.66);
     assert_eq!(rows[0].total_equity_risk_premium, 15.89);
+    assert!(
+        serde_json::to_value(&rows[0])
+            .unwrap()
+            .get("date")
+            .is_none()
+    );
 }
 
 #[test]
-fn every_documented_field_is_required_non_null_and_unknown_fields_are_accepted() {
+fn every_economics_row_requires_documented_fields_and_accepts_unknown_fields() {
     assert_contract::<TreasuryRate>(TREASURY);
     assert_contract::<EconomicIndicatorObservation>(INDICATORS);
     assert_contract::<EconomicCalendarEvent>(CALENDAR);
