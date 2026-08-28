@@ -10,9 +10,11 @@
 //! statement modules rather than this query foundation.
 
 pub mod balance;
+pub mod cash_flow;
 pub mod income;
 
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
+pub use cash_flow::{cash_flow_statement, cash_flow_statement_ttm};
 pub use income::{income_statement, income_statement_ttm};
 
 use crate::{
