@@ -9,6 +9,7 @@
 //! Response rows and endpoint descriptors are intentionally defined by later
 //! statement modules rather than this query foundation.
 
+pub mod as_reported;
 pub mod balance;
 pub mod cash_flow;
 pub mod growth;
@@ -19,6 +20,10 @@ pub mod reports;
 pub mod segmentation;
 pub mod summaries;
 
+pub use as_reported::{
+    BalanceSheetStatementAsReportedQuery, IncomeStatementAsReportedQuery,
+    balance_sheet_statement_as_reported, income_statement_as_reported,
+};
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
 pub use cash_flow::{cash_flow_statement, cash_flow_statement_ttm};
 pub use growth::{

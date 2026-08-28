@@ -1,5 +1,6 @@
 //! Financial-statement response models.
 
+pub mod as_reported;
 pub mod balance;
 pub mod cash_flow;
 pub mod growth;
@@ -10,6 +11,7 @@ pub mod reports;
 pub mod segmentation;
 pub mod summaries;
 
+pub use as_reported::AsReportedFinancialStatement;
 pub use balance::{BalanceSheetStatement, BalanceSheetStatementTtm};
 pub use cash_flow::CashFlowStatement;
 pub use growth::{
