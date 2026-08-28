@@ -6,7 +6,7 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::calendar::{DividendEvent, StockSplitEvent},
+    responses::calendar::{DividendEvent, EarningsEvent, StockSplitEvent},
     types::{Date, Limit, Page, Ticker},
 };
 
@@ -375,6 +375,19 @@ pub fn dividends_calendar(
         .with_metadata(MARKET_CALENDAR_METADATA)
 }
 
+/// Describes `GET earnings` without binding a transport.
+pub fn earnings(query: EarningsQuery) -> EndpointSpec<EarningsQuery, Vec<EarningsEvent>> {
+    EndpointSpec::get("earnings", "earnings", query).with_metadata(COMPANY_EVENT_METADATA)
+}
+
+/// Describes `GET earnings-calendar` without binding a transport.
+pub fn earnings_calendar(
+    query: EarningsCalendarQuery,
+) -> EndpointSpec<EarningsCalendarQuery, Vec<EarningsEvent>> {
+    EndpointSpec::get("earnings-calendar", "earnings-calendar", query)
+        .with_metadata(MARKET_CALENDAR_METADATA)
+}
+
 /// Describes `GET splits` without binding a transport.
 pub fn stock_splits(
     query: StockSplitsQuery,
@@ -402,6 +415,19 @@ impl Client {
         query: impl Into<DividendsCalendarQuery>,
     ) -> Result<Vec<DividendEvent>> {
         self.execute(&dividends_calendar(query.into())).await
+    }
+
+    /// Retrieves worldwide earnings events for one company.
+    pub async fn earnings(&self, query: impl Into<EarningsQuery>) -> Result<Vec<EarningsEvent>> {
+        self.execute(&earnings(query.into())).await
+    }
+
+    /// Retrieves the worldwide earnings calendar.
+    pub async fn earnings_calendar(
+        &self,
+        query: impl Into<EarningsCalendarQuery>,
+    ) -> Result<Vec<EarningsEvent>> {
+        self.execute(&earnings_calendar(query.into())).await
     }
 
     /// Retrieves worldwide stock-split events for one company.
