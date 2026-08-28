@@ -1,11 +1,13 @@
-//! Query contracts for economics endpoints.
-//!
-//! Endpoint descriptors and client methods are intentionally added by a later
-//! implementation branch.
+//! Economics endpoint and query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata},
+    },
     query::EconomicIndicator,
+    responses::economics::{EconomicIndicatorObservation, TreasuryRate},
     types::{CountryCode, Date},
 };
 
@@ -118,6 +120,42 @@ impl QueryParameters for EconomicIndicatorsQuery {
         encoder.required("name", &self.name);
         encoder.optional("from", self.from);
         encoder.optional("to", self.to);
+    }
+}
+
+const NINETY_DAY_RANGE: EndpointMetadata =
+    EndpointMetadata::new().with_bounds(EndpointBounds::new().with_date_range_days(90));
+
+/// Describes `GET treasury-rates` without binding a transport.
+pub fn treasury_rates(
+    query: TreasuryRatesQuery,
+) -> EndpointSpec<TreasuryRatesQuery, Vec<TreasuryRate>> {
+    EndpointSpec::get("treasury-rates", "treasury-rates", query).with_metadata(NINETY_DAY_RANGE)
+}
+
+/// Describes `GET economic-indicators` without binding a transport.
+pub fn economic_indicators(
+    query: EconomicIndicatorsQuery,
+) -> EndpointSpec<EconomicIndicatorsQuery, Vec<EconomicIndicatorObservation>> {
+    EndpointSpec::get("economic-indicators", "economic-indicators", query)
+        .with_metadata(NINETY_DAY_RANGE)
+}
+
+impl Client {
+    /// Retrieves Treasury-rate observations within the documented 90-day range.
+    pub async fn treasury_rates(
+        &self,
+        query: impl Into<TreasuryRatesQuery>,
+    ) -> Result<Vec<TreasuryRate>> {
+        self.execute(&treasury_rates(query.into())).await
+    }
+
+    /// Retrieves observations for one economic indicator within 90 days.
+    pub async fn economic_indicators(
+        &self,
+        query: impl Into<EconomicIndicatorsQuery>,
+    ) -> Result<Vec<EconomicIndicatorObservation>> {
+        self.execute(&economic_indicators(query.into())).await
     }
 }
 
