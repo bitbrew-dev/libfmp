@@ -11,6 +11,7 @@
 
 pub mod balance;
 pub mod cash_flow;
+pub mod growth;
 pub mod income;
 pub mod metrics;
 pub mod ratios;
@@ -18,6 +19,10 @@ pub mod summaries;
 
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
 pub use cash_flow::{cash_flow_statement, cash_flow_statement_ttm};
+pub use growth::{
+    BalanceSheetStatementGrowthQuery, IncomeStatementGrowthQuery, balance_sheet_statement_growth,
+    income_statement_growth,
+};
 pub use income::{income_statement, income_statement_ttm};
 pub use metrics::{key_metrics, key_metrics_ttm};
 pub use ratios::{financial_ratios, financial_ratios_ttm};
