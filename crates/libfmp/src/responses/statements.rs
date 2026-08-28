@@ -7,6 +7,7 @@ pub mod income;
 pub mod metrics;
 pub mod ratios;
 pub mod reports;
+pub mod segmentation;
 pub mod summaries;
 
 pub use balance::{BalanceSheetStatement, BalanceSheetStatementTtm};
@@ -19,4 +20,5 @@ pub use income::IncomeStatement;
 pub use metrics::{KeyMetrics, KeyMetricsTtm};
 pub use ratios::{FinancialRatios, FinancialRatiosTtm};
 pub use reports::{FinancialReportDate, FinancialReportJson};
+pub use segmentation::RevenueSegmentation;
 pub use summaries::{EnterpriseValue, FinancialScore, LatestFinancialStatement, OwnerEarnings};
