@@ -1,0 +1,9 @@
+[
+  {
+    "fiscalYear": 2026,
+    "linkJson": "https://financialmodelingprep.com/stable/financial-reports-json?symbol=AAPL&year=2026&period=Q2&apikey=[REDACTED]",
+    "linkXlsx": "https://financialmodelingprep.com/stable/financial-reports-xlsx?symbol=AAPL&year=2026&period=Q2&apikey=[REDACTED]",
+    "period": "Q2",
+    "symbol": "AAPL"
+  }
+]

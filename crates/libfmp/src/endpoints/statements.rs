@@ -15,6 +15,7 @@ pub mod growth;
 pub mod income;
 pub mod metrics;
 pub mod ratios;
+pub mod reports;
 pub mod summaries;
 
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
@@ -27,6 +28,7 @@ pub use growth::{
 pub use income::{income_statement, income_statement_ttm};
 pub use metrics::{key_metrics, key_metrics_ttm};
 pub use ratios::{financial_ratios, financial_ratios_ttm};
+pub use reports::{financial_reports_dates, financial_reports_json, financial_reports_xlsx};
 pub use summaries::{
     enterprise_values, financial_scores, latest_financial_statements, owner_earnings,
 };
