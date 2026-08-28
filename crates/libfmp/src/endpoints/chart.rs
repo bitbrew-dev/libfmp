@@ -6,7 +6,7 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::chart::{StockChartFullBar, StockChartLightBar},
+    responses::chart::{StockChartAdjustedBar, StockChartFullBar, StockChartLightBar},
     types::{Date, Ticker},
 };
 
@@ -104,6 +104,30 @@ pub fn stock_chart_full(
     .with_metadata(STOCK_CHART_EOD_METADATA)
 }
 
+/// Describes `GET historical-price-eod/non-split-adjusted` without binding a transport.
+pub fn stock_chart_non_split_adjusted(
+    query: StockChartEodQuery,
+) -> EndpointSpec<StockChartEodQuery, Vec<StockChartAdjustedBar>> {
+    EndpointSpec::get(
+        "historical-price-eod/non-split-adjusted",
+        "historical-price-eod/non-split-adjusted",
+        query,
+    )
+    .with_metadata(STOCK_CHART_EOD_METADATA)
+}
+
+/// Describes `GET historical-price-eod/dividend-adjusted` without binding a transport.
+pub fn stock_chart_dividend_adjusted(
+    query: StockChartEodQuery,
+) -> EndpointSpec<StockChartEodQuery, Vec<StockChartAdjustedBar>> {
+    EndpointSpec::get(
+        "historical-price-eod/dividend-adjusted",
+        "historical-price-eod/dividend-adjusted",
+        query,
+    )
+    .with_metadata(STOCK_CHART_EOD_METADATA)
+}
+
 impl Client {
     /// Retrieves compact worldwide end-of-day stock chart rows.
     pub async fn stock_chart_light(
@@ -119,6 +143,24 @@ impl Client {
         query: impl Into<StockChartEodQuery>,
     ) -> Result<Vec<StockChartFullBar>> {
         self.execute(&stock_chart_full(query.into())).await
+    }
+
+    /// Retrieves split-unadjusted worldwide end-of-day stock chart rows.
+    pub async fn stock_chart_non_split_adjusted(
+        &self,
+        query: impl Into<StockChartEodQuery>,
+    ) -> Result<Vec<StockChartAdjustedBar>> {
+        self.execute(&stock_chart_non_split_adjusted(query.into()))
+            .await
+    }
+
+    /// Retrieves dividend-adjusted worldwide end-of-day stock chart rows.
+    pub async fn stock_chart_dividend_adjusted(
+        &self,
+        query: impl Into<StockChartEodQuery>,
+    ) -> Result<Vec<StockChartAdjustedBar>> {
+        self.execute(&stock_chart_dividend_adjusted(query.into()))
+            .await
     }
 }
 

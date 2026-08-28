@@ -14,7 +14,7 @@ will share the listed Rust method name.
 | --- | --- | --- | --- | --- |
 | `historical-price-eod/light` | `stock_chart_light` | `StockChartEodQuery` | `StockChartLightBar` | `FmpClient.stock_chart_light`; `fmp.chart.StockChartLightBar` |
 | `historical-price-eod/full` | `stock_chart_full` | `StockChartEodQuery` | `StockChartFullBar` | `FmpClient.stock_chart_full`; `fmp.chart.StockChartFullBar` |
-| `historical-price-eod/non-split-adjusted` | `stock_chart_unadjusted` | `StockChartEodQuery` | `StockChartAdjustedBar` | `FmpClient.stock_chart_unadjusted`; `fmp.chart.StockChartAdjustedBar` |
+| `historical-price-eod/non-split-adjusted` | `stock_chart_non_split_adjusted` | `StockChartEodQuery` | `StockChartAdjustedBar` | `FmpClient.stock_chart_non_split_adjusted`; `fmp.chart.StockChartAdjustedBar` |
 | `historical-price-eod/dividend-adjusted` | `stock_chart_dividend_adjusted` | `StockChartEodQuery` | `StockChartAdjustedBar` | `FmpClient.stock_chart_dividend_adjusted`; `fmp.chart.StockChartAdjustedBar` |
 | `historical-chart/1min` | `stock_chart_one_minute` | `StockChartIntradayQuery` | `StockChartIntradayBar` | `FmpClient.stock_chart_one_minute`; `fmp.chart.StockChartIntradayBar` |
 | `historical-chart/5min` | `stock_chart_five_minutes` | `StockChartIntradayQuery` | `StockChartIntradayBar` | `FmpClient.stock_chart_five_minutes`; `fmp.chart.StockChartIntradayBar` |
