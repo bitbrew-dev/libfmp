@@ -32,8 +32,9 @@ values rather than being treated as absent.
 The date examples use `2026-03-06` through `2026-06-06`, a 92-day elapsed
 span, while the adjacent notes state a maximum date range of 90 days. The SDK
 does not silently choose between the contradictory contracts or reject the
-documented example at query construction time. The contradiction remains
-available to future endpoint metadata and documentation.
+documented example at query construction time. The applicable calendar
+descriptors expose the stated 90-day limit as metadata, where consumers can
+inspect the contradiction without changing query construction.
 
 `DividendEvent.declaration_date` uses `Option<Date>` with the shared
 empty-or-null date codec because one exact response supplies a date and the

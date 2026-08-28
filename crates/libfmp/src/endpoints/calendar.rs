@@ -6,7 +6,10 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::calendar::{DividendEvent, EarningsEvent, StockSplitEvent},
+    responses::calendar::{
+        DividendEvent, EarningsEvent, IpoCalendarEvent, IpoDisclosure, IpoProspectus,
+        StockSplitEvent,
+    },
     types::{Date, Limit, Page, Ticker},
 };
 
@@ -361,6 +364,11 @@ const MARKET_CALENDAR_METADATA: EndpointMetadata = EndpointMetadata::new()
             .with_response_rows(4_000)
             .with_date_range_days(90),
     );
+const IPO_CALENDAR_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_date_range_days(90));
+const US_ONLY_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 
 /// Describes `GET dividends` without binding a transport.
 pub fn dividends(query: DividendsQuery) -> EndpointSpec<DividendsQuery, Vec<DividendEvent>> {
@@ -386,6 +394,27 @@ pub fn earnings_calendar(
 ) -> EndpointSpec<EarningsCalendarQuery, Vec<EarningsEvent>> {
     EndpointSpec::get("earnings-calendar", "earnings-calendar", query)
         .with_metadata(MARKET_CALENDAR_METADATA)
+}
+
+/// Describes `GET ipos-calendar` without binding a transport.
+pub fn ipos_calendar(
+    query: IposCalendarQuery,
+) -> EndpointSpec<IposCalendarQuery, Vec<IpoCalendarEvent>> {
+    EndpointSpec::get("ipos-calendar", "ipos-calendar", query).with_metadata(IPO_CALENDAR_METADATA)
+}
+
+/// Describes `GET ipos-disclosure` without binding a transport.
+pub fn ipos_disclosure(
+    query: IposDisclosureQuery,
+) -> EndpointSpec<IposDisclosureQuery, Vec<IpoDisclosure>> {
+    EndpointSpec::get("ipos-disclosure", "ipos-disclosure", query).with_metadata(US_ONLY_METADATA)
+}
+
+/// Describes `GET ipos-prospectus` without binding a transport.
+pub fn ipos_prospectus(
+    query: IposProspectusQuery,
+) -> EndpointSpec<IposProspectusQuery, Vec<IpoProspectus>> {
+    EndpointSpec::get("ipos-prospectus", "ipos-prospectus", query).with_metadata(US_ONLY_METADATA)
 }
 
 /// Describes `GET splits` without binding a transport.
@@ -428,6 +457,30 @@ impl Client {
         query: impl Into<EarningsCalendarQuery>,
     ) -> Result<Vec<EarningsEvent>> {
         self.execute(&earnings_calendar(query.into())).await
+    }
+
+    /// Retrieves the worldwide IPO calendar within the documented 90-day range.
+    pub async fn ipos_calendar(
+        &self,
+        query: impl Into<IposCalendarQuery>,
+    ) -> Result<Vec<IpoCalendarEvent>> {
+        self.execute(&ipos_calendar(query.into())).await
+    }
+
+    /// Retrieves US IPO disclosure filings.
+    pub async fn ipos_disclosure(
+        &self,
+        query: impl Into<IposDisclosureQuery>,
+    ) -> Result<Vec<IpoDisclosure>> {
+        self.execute(&ipos_disclosure(query.into())).await
+    }
+
+    /// Retrieves US IPO prospectus filings and documented offering values.
+    pub async fn ipos_prospectus(
+        &self,
+        query: impl Into<IposProspectusQuery>,
+    ) -> Result<Vec<IpoProspectus>> {
+        self.execute(&ipos_prospectus(query.into())).await
     }
 
     /// Retrieves worldwide stock-split events for one company.
