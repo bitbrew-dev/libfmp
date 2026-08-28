@@ -9,8 +9,10 @@
 //! Response rows and endpoint descriptors are intentionally defined by later
 //! statement modules rather than this query foundation.
 
+pub mod balance;
 pub mod income;
 
+pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
 pub use income::{income_statement, income_statement_ttm};
 
 use crate::{
