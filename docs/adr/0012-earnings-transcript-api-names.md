@@ -7,10 +7,8 @@ Python facade.
 
 ## Decision
 
-The earnings-transcript endpoints reserve the following Rust descriptor,
-client, query, response-row, and future Python names. The first three
-descriptors and client methods are deferred; this issue implements their query
-and response contracts only.
+The earnings-transcript endpoints use the following Rust descriptor, client,
+query, and response-row names and reserve the listed future Python names.
 
 | FMP path | Rust method | Rust query | Rust response row | Future Python API |
 | --- | --- | --- | --- | --- |
@@ -41,11 +39,11 @@ mismatched prose. Complete transcript `content` is an exact, unbounded `String`;
 the SDK does not truncate or impose an undocumented length limit.
 
 The latest endpoint documents at most 100 responses and a maximum page number
-of 100. Those facts are reserved for its future descriptor metadata, not
-constructor rejection: `Limit` and `Page` remain endpoint-neutral query units.
-The full-transcript endpoint documents an optional limit without a maximum, and
-the transcript-dates endpoint documents no bound. No limit or pagination rules
-are invented for either endpoint.
+of 100. Its descriptor exposes those facts as metadata, not constructor
+rejection: `Limit` and `Page` remain endpoint-neutral query units. The
+full-transcript endpoint documents an optional limit without a maximum, and the
+transcript-dates endpoint documents no bound. No limit or pagination rules are
+invented for either endpoint.
 
 All three new response rows are bare arrays with required non-null documented
 fields and unknown-field tolerance. Python runtime parity remains deferred; the

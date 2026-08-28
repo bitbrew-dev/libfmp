@@ -9,7 +9,9 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     query::{Quarter, Year},
-    responses::transcripts::{EarningsTranscriptDate, LatestEarningsTranscript},
+    responses::transcripts::{
+        EarningsTranscript, EarningsTranscriptDate, LatestEarningsTranscript,
+    },
     types::{Limit, Page, Ticker},
 };
 
@@ -169,6 +171,14 @@ pub fn latest_earnings_transcripts(
     .with_metadata(LATEST_TRANSCRIPTS_METADATA)
 }
 
+/// Describes `GET earning-call-transcript` without binding a transport.
+pub fn earnings_transcript(
+    query: EarningsTranscriptQuery,
+) -> EndpointSpec<EarningsTranscriptQuery, Vec<EarningsTranscript>> {
+    EndpointSpec::get("earning-call-transcript", "earning-call-transcript", query)
+        .with_metadata(WORLDWIDE)
+}
+
 /// Describes `GET earning-call-transcript-dates` without binding a transport.
 pub fn earnings_transcript_dates(
     query: EarningsTranscriptDatesQuery,
@@ -189,6 +199,14 @@ impl Client {
     ) -> Result<Vec<LatestEarningsTranscript>> {
         self.execute(&latest_earnings_transcripts(query.into()))
             .await
+    }
+
+    /// Retrieves complete worldwide earnings-call transcripts.
+    pub async fn earnings_transcript(
+        &self,
+        query: impl Into<EarningsTranscriptQuery>,
+    ) -> Result<Vec<EarningsTranscript>> {
+        self.execute(&earnings_transcript(query.into())).await
     }
 
     /// Retrieves available worldwide transcript dates for one ticker.
