@@ -12,10 +12,14 @@
 pub mod balance;
 pub mod cash_flow;
 pub mod income;
+pub mod summaries;
 
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
 pub use cash_flow::{cash_flow_statement, cash_flow_statement_ttm};
 pub use income::{income_statement, income_statement_ttm};
+pub use summaries::{
+    enterprise_values, financial_scores, latest_financial_statements, owner_earnings,
+};
 
 use crate::{
     endpoints::{
@@ -23,7 +27,7 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     query::StatementPeriod,
-    types::{Limit, Ticker},
+    types::{Limit, Page, Ticker},
 };
 
 macro_rules! statement_query {
@@ -182,11 +186,243 @@ ttm_statement_query!(
     CashFlowStatementTtmQuery
 );
 
+/// Optional pagination for the worldwide latest-financial-statements endpoint.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct LatestFinancialStatementsQuery {
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl LatestFinancialStatementsQuery {
+    /// Creates a query without undocumented pagination defaults.
+    pub const fn new() -> Self {
+        Self {
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional provider page, including documented page zero.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Returns the optional page.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for LatestFinancialStatementsQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
+
+macro_rules! required_symbol_query {
+    ($docs:literal, $query:ident) => {
+        #[doc = $docs]
+        #[derive(Debug, Clone, PartialEq, Eq)]
+        pub struct $query {
+            symbol: Ticker,
+        }
+
+        impl $query {
+            /// Creates a query for one ticker.
+            pub fn new(symbol: Ticker) -> Self {
+                Self { symbol }
+            }
+
+            /// Borrows the requested ticker.
+            pub fn symbol(&self) -> &Ticker {
+                &self.symbol
+            }
+        }
+
+        impl From<Ticker> for $query {
+            fn from(symbol: Ticker) -> Self {
+                Self::new(symbol)
+            }
+        }
+
+        impl From<&Ticker> for $query {
+            fn from(symbol: &Ticker) -> Self {
+                Self::new(symbol.clone())
+            }
+        }
+
+        impl QueryParameters for $query {
+            fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+                encoder.required("symbol", &self.symbol);
+            }
+        }
+    };
+}
+
+required_symbol_query!(
+    "Required query parameters for worldwide financial scores.",
+    FinancialScoresQuery
+);
+
+macro_rules! symbol_limit_query {
+    ($docs:literal, $query:ident) => {
+        #[doc = $docs]
+        #[derive(Debug, Clone, PartialEq, Eq)]
+        pub struct $query {
+            symbol: Ticker,
+            limit: Option<Limit>,
+        }
+
+        impl $query {
+            /// Creates a query for one ticker without an undocumented limit.
+            pub fn new(symbol: Ticker) -> Self {
+                Self {
+                    symbol,
+                    limit: None,
+                }
+            }
+
+            /// Sets the optional provider result limit.
+            pub const fn with_limit(mut self, limit: Limit) -> Self {
+                self.limit = Some(limit);
+                self
+            }
+
+            /// Borrows the requested ticker.
+            pub fn symbol(&self) -> &Ticker {
+                &self.symbol
+            }
+
+            /// Returns the optional provider result limit.
+            pub const fn limit(&self) -> Option<Limit> {
+                self.limit
+            }
+        }
+
+        impl From<Ticker> for $query {
+            fn from(symbol: Ticker) -> Self {
+                Self::new(symbol)
+            }
+        }
+
+        impl From<&Ticker> for $query {
+            fn from(symbol: &Ticker) -> Self {
+                Self::new(symbol.clone())
+            }
+        }
+
+        impl QueryParameters for $query {
+            fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+                encoder.required("symbol", &self.symbol);
+                encoder.optional("limit", self.limit);
+            }
+        }
+    };
+}
+
+symbol_limit_query!(
+    "Query parameters for worldwide owner earnings.\n\nOwner-earnings queries deliberately have no period selector.\n\n```compile_fail\nuse libfmp::{endpoints::statements::OwnerEarningsQuery, query::FiscalPeriod, types::Ticker};\nlet query = OwnerEarningsQuery::new(Ticker::new(\"AAPL\").unwrap());\nlet _ = query.with_period(FiscalPeriod::Q1);\n```",
+    OwnerEarningsQuery
+);
+
+/// Query parameters for worldwide enterprise values.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EnterpriseValuesQuery {
+    symbol: Ticker,
+    limit: Option<Limit>,
+    period: Option<StatementPeriod>,
+}
+
+impl EnterpriseValuesQuery {
+    /// Creates a query for one ticker without undocumented defaults.
+    pub fn new(symbol: Ticker) -> Self {
+        Self {
+            symbol,
+            limit: None,
+            period: None,
+        }
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Sets the optional fiscal period or retrieval frequency.
+    pub fn with_period(mut self, period: impl Into<StatementPeriod>) -> Self {
+        self.period = Some(period.into());
+        self
+    }
+
+    /// Borrows the requested ticker.
+    pub fn symbol(&self) -> &Ticker {
+        &self.symbol
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+
+    /// Returns the optional fiscal period or retrieval frequency.
+    pub const fn period(&self) -> Option<StatementPeriod> {
+        self.period
+    }
+}
+
+impl From<Ticker> for EnterpriseValuesQuery {
+    fn from(symbol: Ticker) -> Self {
+        Self::new(symbol)
+    }
+}
+
+impl From<&Ticker> for EnterpriseValuesQuery {
+    fn from(symbol: &Ticker) -> Self {
+        Self::new(symbol.clone())
+    }
+}
+
+impl QueryParameters for EnterpriseValuesQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("symbol", &self.symbol);
+        encoder.optional("limit", self.limit);
+        encoder.optional("period", self.period);
+    }
+}
+
 /// Shared documented metadata for the six statement endpoints built on these
 /// query contracts. Kept crate-private until endpoint descriptors consume it.
 pub(crate) const WORLDWIDE_STATEMENT_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::Worldwide)
     .with_bounds(EndpointBounds::new().with_response_rows(1_000));
+
+/// Shared worldwide metadata for compact financial endpoints without bounds.
+pub(crate) const WORLDWIDE_FINANCIAL_SUMMARY_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+
+/// Shared worldwide metadata for financial-history endpoints capped at 1,000 rows.
+pub(crate) const WORLDWIDE_FINANCIAL_HISTORY_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(1_000));
+
+/// Documented metadata for the latest-financial-statements endpoint.
+pub(crate) const LATEST_FINANCIAL_STATEMENTS_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
 
 #[cfg(test)]
 mod tests {
@@ -325,6 +561,96 @@ mod tests {
                 .unwrap()
                 .maximum(),
             1_000
+        );
+    }
+
+    #[test]
+    fn compact_summary_queries_preserve_omission_and_documented_order() {
+        let symbol = Ticker::new("BRK.B / Class A").unwrap();
+        let latest = LatestFinancialStatementsQuery::new()
+            .with_page(Page(0))
+            .with_limit(Limit(250));
+        let scores: FinancialScoresQuery = (&symbol).into();
+        let owner = OwnerEarningsQuery::new(symbol.clone()).with_limit(Limit(5));
+        let enterprise = EnterpriseValuesQuery::new(symbol.clone())
+            .with_limit(Limit(1_000))
+            .with_period(RetrievalFrequency::Quarterly);
+
+        assert_eq!(latest.page(), Some(Page(0)));
+        assert_eq!(latest.limit(), Some(Limit(250)));
+        assert_eq!(scores.symbol(), &symbol);
+        assert_eq!(owner.symbol(), &symbol);
+        assert_eq!(owner.limit(), Some(Limit(5)));
+        assert_eq!(enterprise.symbol(), &symbol);
+        assert_eq!(enterprise.limit(), Some(Limit(1_000)));
+        assert_eq!(
+            enterprise.period(),
+            Some(RetrievalFrequency::Quarterly.into())
+        );
+        assert_eq!(
+            pairs(&latest),
+            [
+                ("page".to_owned(), "0".to_owned()),
+                ("limit".to_owned(), "250".to_owned()),
+            ]
+        );
+        assert_eq!(
+            pairs(&scores),
+            [("symbol".to_owned(), "BRK.B / Class A".to_owned())]
+        );
+        assert_eq!(
+            pairs(&owner),
+            [
+                ("symbol".to_owned(), "BRK.B / Class A".to_owned()),
+                ("limit".to_owned(), "5".to_owned()),
+            ]
+        );
+        assert_eq!(
+            pairs(&enterprise),
+            [
+                ("symbol".to_owned(), "BRK.B / Class A".to_owned()),
+                ("limit".to_owned(), "1000".to_owned()),
+                ("period".to_owned(), "quarter".to_owned()),
+            ]
+        );
+
+        assert!(pairs(&LatestFinancialStatementsQuery::new()).is_empty());
+        assert_eq!(
+            pairs(&OwnerEarningsQuery::new(symbol.clone())),
+            [("symbol".to_owned(), "BRK.B / Class A".to_owned())]
+        );
+        assert_eq!(
+            pairs(&EnterpriseValuesQuery::new(symbol)),
+            [("symbol".to_owned(), "BRK.B / Class A".to_owned())]
+        );
+    }
+
+    #[test]
+    fn compact_summary_metadata_records_only_documented_bounds() {
+        assert_eq!(
+            WORLDWIDE_FINANCIAL_SUMMARY_METADATA.geography(),
+            GeographicAvailability::Worldwide
+        );
+        assert_eq!(
+            WORLDWIDE_FINANCIAL_SUMMARY_METADATA.bounds(),
+            EndpointBounds::new()
+        );
+        assert_eq!(
+            WORLDWIDE_FINANCIAL_HISTORY_METADATA.bounds(),
+            EndpointBounds::new().with_response_rows(1_000)
+        );
+        assert_eq!(
+            LATEST_FINANCIAL_STATEMENTS_METADATA.geography(),
+            GeographicAvailability::Worldwide
+        );
+        assert_eq!(
+            LATEST_FINANCIAL_STATEMENTS_METADATA.bounds(),
+            EndpointBounds::new().with_response_rows(250).with_page(100)
+        );
+        assert!(
+            LATEST_FINANCIAL_STATEMENTS_METADATA
+                .bounds()
+                .accepts_page(Page(0))
         );
     }
 }
