@@ -12,11 +12,13 @@
 pub mod balance;
 pub mod cash_flow;
 pub mod income;
+pub mod metrics;
 pub mod summaries;
 
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
 pub use cash_flow::{cash_flow_statement, cash_flow_statement_ttm};
 pub use income::{income_statement, income_statement_ttm};
+pub use metrics::{key_metrics, key_metrics_ttm};
 pub use summaries::{
     enterprise_values, financial_scores, latest_financial_statements, owner_earnings,
 };
@@ -111,6 +113,10 @@ statement_query!(
 statement_query!(
     "Query parameters for the worldwide cash-flow-statement endpoint.",
     CashFlowStatementQuery
+);
+statement_query!(
+    "Query parameters for the worldwide historical key-metrics endpoint.",
+    KeyMetricsQuery
 );
 
 macro_rules! ttm_statement_query {
@@ -275,6 +281,10 @@ macro_rules! required_symbol_query {
 required_symbol_query!(
     "Required query parameters for worldwide financial scores.",
     FinancialScoresQuery
+);
+required_symbol_query!(
+    "Required query parameters for worldwide trailing-twelve-month key metrics.\n\nThe documented TTM query has no limit.\n\n```compile_fail\nuse libfmp::{endpoints::statements::KeyMetricsTtmQuery, types::{Limit, Ticker}};\nlet query = KeyMetricsTtmQuery::new(Ticker::new(\"AAPL\").unwrap());\nlet _ = query.with_limit(Limit(5));\n```\n\nThe documented TTM query has no period selector.\n\n```compile_fail\nuse libfmp::{endpoints::statements::KeyMetricsTtmQuery, query::FiscalPeriod, types::Ticker};\nlet query = KeyMetricsTtmQuery::new(Ticker::new(\"AAPL\").unwrap());\nlet _ = query.with_period(FiscalPeriod::Q1);\n```",
+    KeyMetricsTtmQuery
 );
 
 macro_rules! symbol_limit_query {
