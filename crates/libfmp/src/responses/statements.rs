@@ -10,7 +10,10 @@ pub mod summaries;
 
 pub use balance::{BalanceSheetStatement, BalanceSheetStatementTtm};
 pub use cash_flow::CashFlowStatement;
-pub use growth::{BalanceSheetStatementGrowth, IncomeStatementGrowth};
+pub use growth::{
+    BalanceSheetStatementGrowth, CashFlowStatementGrowth, FinancialStatementGrowth,
+    IncomeStatementGrowth,
+};
 pub use income::IncomeStatement;
 pub use metrics::{KeyMetrics, KeyMetricsTtm};
 pub use ratios::{FinancialRatios, FinancialRatiosTtm};
