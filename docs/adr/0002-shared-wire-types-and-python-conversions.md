@@ -44,10 +44,31 @@ reach public endpoint models:
   dates become `None`. Opaque human or partial date text remains `str`.
 - Dynamic JSON recursively becomes native Python dictionaries, lists, strings,
   integers, floats, booleans, and `None`.
-- Binary response bodies become Python `bytes`.
+- Binary response bytes become Python `bytes`; a future binding facade must
+  carry the validated content metadata alongside those bytes.
 - Query enums may initially be accepted as validated Python strings while Rust
   retains the exact enum vocabulary.
 
-The existing `BinaryBody` contract remains unchanged. The source does not
-establish one unambiguous XLSX MIME type, so this foundation does not invent one
-or add a header-aware binary wrapper.
+Dynamic object-root payloads use `DynamicObject`. It preserves arbitrary member
+names and recursively lossless JSON data, including arbitrary-precision integer
+tokens, but does not treat semantically insignificant object-member order as
+data. Duplicate names follow the JSON map model. Consequently, this foundation
+does not enable an order-preservation dependency.
+
+Binary downloads use the header-aware `BinaryResponse` value. `BinaryBody`
+remains a source-compatible alias. Both names provide `as_bytes()` and
+`into_bytes()`; `BinaryResponse` additionally provides the exact validated
+`content_type()` and an optional textual `content_disposition()`. Its `Debug`
+implementation includes only the byte length, validated base media type, and
+whether a disposition is present. It never prints body bytes, disposition
+contents, or content-type parameters.
+
+Each endpoint owns its accepted MIME allow-list because the provider source does
+not establish one global binary MIME policy. The client validates `Content-Type`
+against that endpoint contract before constructing `BinaryResponse`; optional
+`Content-Disposition` is retained only when it is valid header text.
+
+`PartialEq` and `Eq` compare bytes, exact content type, and optional content
+disposition. Metadata is part of binary response identity rather than incidental
+transport state. The compatibility alias preserves source compatibility, while
+the equality semantics intentionally reflect the enriched response value.

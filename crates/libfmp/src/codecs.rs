@@ -451,6 +451,14 @@ string_bool!(
 /// Dynamic endpoint JSON, recursively represented without assuming object keys.
 pub type DynamicJson = serde_json::Value;
 
+/// Object-root dynamic endpoint JSON with arbitrary member names and value shapes.
+///
+/// This preserves JSON values, including arbitrary-precision integer tokens,
+/// without treating object-member order as semantic. Duplicate member names
+/// therefore follow the JSON map model and are not preserved independently.
+/// No order-preservation dependency is enabled for this contract.
+pub type DynamicObject = serde_json::Map<String, DynamicJson>;
+
 /// A strict RFC 3339 timestamp that preserves its original offset and precision.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct IsoTimestamp(String);

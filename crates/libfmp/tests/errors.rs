@@ -6,6 +6,7 @@ use libfmp::{
     },
     types::Ticker,
 };
+use serde::Deserialize;
 
 #[test]
 fn validation_and_configuration_have_stable_categories() {
@@ -87,6 +88,43 @@ fn authentication_values_and_secret_urls_never_format_in_cleartext() {
         redactor.redact("/route?router_token=router-value&symbol=AAPL"),
         "/route?router_token=[REDACTED]&symbol=AAPL"
     );
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ReportLinks {
+    link_json: SecretUrl,
+    link_xlsx: SecretUrl,
+}
+
+#[test]
+fn secret_report_urls_deserialize_but_only_explicitly_expose_cleartext() {
+    const JSON_URL: &str = "https://example.test/report.json?symbol=TEST&apikey=json-report-secret";
+    const XLSX_URL: &str =
+        "https://example.test/report.xlsx?symbol=TEST&signature=xlsx-report-secret";
+    let wire = format!(r#"{{"linkJson":"{JSON_URL}","linkXlsx":"{XLSX_URL}"}}"#);
+
+    let links: ReportLinks = serde_json::from_str(&wire).unwrap();
+    assert_eq!(links.link_json.expose_secret(), JSON_URL);
+    assert_eq!(links.link_xlsx.expose_secret(), XLSX_URL);
+    assert_eq!(links.link_json.to_string(), "[REDACTED URL]");
+    assert_eq!(links.link_xlsx.to_string(), "[REDACTED URL]");
+
+    let debug = format!("{links:?}");
+    assert!(!debug.contains("example.test"));
+    assert!(!debug.contains("json-report-secret"));
+    assert!(!debug.contains("xlsx-report-secret"));
+
+    let safe_body = SafeBody::new(&wire, &Redactor::new());
+    let error = Error::decode(
+        Some("report-contract-test"),
+        Some(200),
+        Some(safe_body),
+        "successful response could not be decoded",
+    );
+    let diagnostic = format!("{error:?} {error}");
+    assert!(!diagnostic.contains("json-report-secret"));
+    assert!(!diagnostic.contains("xlsx-report-secret"));
 }
 
 #[test]

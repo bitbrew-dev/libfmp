@@ -2,6 +2,8 @@
 
 use std::{borrow::Cow, collections::BTreeSet, error::Error as StdError, fmt};
 
+use serde::{Deserialize, Deserializer};
+
 use crate::types::{EmptyTickerList, InvalidDateRange, InvalidTemporalValue, StringValueError};
 
 /// Replacement shown anywhere a secret value was removed.
@@ -124,6 +126,17 @@ impl fmt::Debug for SecretString {
 }
 
 /// A signed, authenticated, or report URL that is wholly secret in diagnostics.
+///
+/// Deserialization retains the exact URL for explicit use, while this type
+/// deliberately does not implement `Serialize` to prevent implicit cleartext
+/// emission.
+///
+/// ```compile_fail
+/// use libfmp::error::SecretUrl;
+///
+/// let url = SecretUrl::new("https://example.test/report?token=secret");
+/// let _ = serde_json::to_string(&url);
+/// ```
 #[derive(Clone, PartialEq, Eq)]
 pub struct SecretUrl(SecretString);
 
@@ -148,6 +161,15 @@ impl fmt::Display for SecretUrl {
 impl fmt::Debug for SecretUrl {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("SecretUrl([REDACTED URL])")
+    }
+}
+
+impl<'de> Deserialize<'de> for SecretUrl {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        String::deserialize(deserializer).map(Self::new)
     }
 }
 
