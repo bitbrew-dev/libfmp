@@ -436,6 +436,39 @@ impl fmt::Display for UnixMilliseconds {
     }
 }
 
+/// A numeric calendar year received in a response.
+///
+/// This is distinct from string-backed fiscal years and query-year units so
+/// the provider's JSON number representation remains part of the contract.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
+#[serde(transparent)]
+pub struct CalendarYear(pub u32);
+
+impl CalendarYear {
+    /// Returns the primitive numeric year.
+    pub const fn get(self) -> u32 {
+        self.0
+    }
+}
+
+impl From<u32> for CalendarYear {
+    fn from(value: u32) -> Self {
+        Self(value)
+    }
+}
+
+impl From<CalendarYear> for u32 {
+    fn from(value: CalendarYear) -> Self {
+        value.get()
+    }
+}
+
+impl fmt::Display for CalendarYear {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
 /// A provider page index. Endpoint-specific validation is applied elsewhere.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]

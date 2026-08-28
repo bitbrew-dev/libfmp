@@ -3,8 +3,8 @@ use std::str::FromStr;
 use libfmp::{
     query::Year,
     types::{
-        ApiDateTime, BenchmarkYear, Cik, CountryCode, CurrencyCode, Cusip, Date, DateRange,
-        ExchangeCode, FiniteDecimal, Industry, Isin, Limit, Page, SearchTerm, Sector,
+        ApiDateTime, BenchmarkYear, CalendarYear, Cik, CountryCode, CurrencyCode, Cusip, Date,
+        DateRange, ExchangeCode, FiniteDecimal, Industry, Isin, Limit, Page, SearchTerm, Sector,
         StatementAmount, StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
     },
 };
@@ -237,6 +237,19 @@ fn timestamps_keep_seconds_and_milliseconds_as_distinct_numeric_types() {
         serde_json::to_string(&milliseconds).unwrap(),
         "1700000000000"
     );
+}
+
+#[test]
+fn calendar_year_preserves_the_numeric_response_contract() {
+    let year = CalendarYear::from(2026);
+
+    assert_eq!(year.get(), 2026);
+    assert_eq!(u32::from(year), 2026);
+    assert_eq!(year.to_string(), "2026");
+    assert_eq!(serde_json::to_string(&year).unwrap(), "2026");
+    assert_eq!(serde_json::from_str::<CalendarYear>("2026").unwrap(), year);
+    assert!(serde_json::from_str::<CalendarYear>(r#""2026""#).is_err());
+    assert!(serde_json::from_str::<CalendarYear>("-1").is_err());
 }
 
 #[test]
