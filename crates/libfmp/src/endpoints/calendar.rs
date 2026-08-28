@@ -1,7 +1,12 @@
-//! Calendar endpoint query contracts.
+//! Calendar endpoint and query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
+    responses::calendar::{DividendEvent, StockSplitEvent},
     types::{Date, Limit, Page, Ticker},
 };
 
@@ -345,6 +350,76 @@ date_page_query!(
     StockSplitsCalendarQuery,
     "Optional independent dates and page for the stock-splits calendar."
 );
+
+const COMPANY_EVENT_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(1_000));
+const MARKET_CALENDAR_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(
+        EndpointBounds::new()
+            .with_response_rows(4_000)
+            .with_date_range_days(90),
+    );
+
+/// Describes `GET dividends` without binding a transport.
+pub fn dividends(query: DividendsQuery) -> EndpointSpec<DividendsQuery, Vec<DividendEvent>> {
+    EndpointSpec::get("dividends", "dividends", query).with_metadata(COMPANY_EVENT_METADATA)
+}
+
+/// Describes `GET dividends-calendar` without binding a transport.
+pub fn dividends_calendar(
+    query: DividendsCalendarQuery,
+) -> EndpointSpec<DividendsCalendarQuery, Vec<DividendEvent>> {
+    EndpointSpec::get("dividends-calendar", "dividends-calendar", query)
+        .with_metadata(MARKET_CALENDAR_METADATA)
+}
+
+/// Describes `GET splits` without binding a transport.
+pub fn stock_splits(
+    query: StockSplitsQuery,
+) -> EndpointSpec<StockSplitsQuery, Vec<StockSplitEvent>> {
+    EndpointSpec::get("splits", "splits", query).with_metadata(COMPANY_EVENT_METADATA)
+}
+
+/// Describes `GET splits-calendar` without binding a transport.
+pub fn stock_splits_calendar(
+    query: StockSplitsCalendarQuery,
+) -> EndpointSpec<StockSplitsCalendarQuery, Vec<StockSplitEvent>> {
+    EndpointSpec::get("splits-calendar", "splits-calendar", query)
+        .with_metadata(MARKET_CALENDAR_METADATA)
+}
+
+impl Client {
+    /// Retrieves worldwide dividend events for one company.
+    pub async fn dividends(&self, query: impl Into<DividendsQuery>) -> Result<Vec<DividendEvent>> {
+        self.execute(&dividends(query.into())).await
+    }
+
+    /// Retrieves the worldwide dividend calendar.
+    pub async fn dividends_calendar(
+        &self,
+        query: impl Into<DividendsCalendarQuery>,
+    ) -> Result<Vec<DividendEvent>> {
+        self.execute(&dividends_calendar(query.into())).await
+    }
+
+    /// Retrieves worldwide stock-split events for one company.
+    pub async fn stock_splits(
+        &self,
+        query: impl Into<StockSplitsQuery>,
+    ) -> Result<Vec<StockSplitEvent>> {
+        self.execute(&stock_splits(query.into())).await
+    }
+
+    /// Retrieves the worldwide stock-splits calendar.
+    pub async fn stock_splits_calendar(
+        &self,
+        query: impl Into<StockSplitsCalendarQuery>,
+    ) -> Result<Vec<StockSplitEvent>> {
+        self.execute(&stock_splits_calendar(query.into())).await
+    }
+}
 
 #[cfg(test)]
 mod tests {
