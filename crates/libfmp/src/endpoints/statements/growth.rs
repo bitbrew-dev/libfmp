@@ -1,9 +1,13 @@
 //! Query contracts and endpoint leaves for financial-statement growth.
 
 pub mod balance;
+pub mod cash_flow;
+pub mod combined;
 pub mod income;
 
 pub use balance::balance_sheet_statement_growth;
+pub use cash_flow::cash_flow_statement_growth;
+pub use combined::financial_statement_growth;
 pub use income::income_statement_growth;
 
 use crate::{
@@ -90,6 +94,14 @@ growth_query!(
     "Query parameters for worldwide balance-sheet-statement growth.",
     BalanceSheetStatementGrowthQuery
 );
+growth_query!(
+    "Query parameters for worldwide cash-flow-statement growth.",
+    CashFlowStatementGrowthQuery
+);
+growth_query!(
+    "Query parameters for worldwide combined financial-statement growth.",
+    FinancialStatementGrowthQuery
+);
 
 #[cfg(test)]
 mod tests {
@@ -160,5 +172,87 @@ mod tests {
         ] {
             assert_eq!(encoded, ["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]);
         }
+    }
+
+    #[test]
+    fn growth_queries_preserve_required_symbol_and_documented_optional_order() {
+        let symbol = Ticker::new("BRK.B / Class A").unwrap();
+        let cash = CashFlowStatementGrowthQuery::new(symbol.clone())
+            .with_limit(Limit(5))
+            .with_period(FiscalPeriod::Q1);
+        let combined = FinancialStatementGrowthQuery::new(symbol.clone())
+            .with_limit(Limit(1_000))
+            .with_period(RetrievalFrequency::Quarterly);
+
+        assert_eq!(cash.symbol(), &symbol);
+        assert_eq!(cash.limit(), Some(Limit(5)));
+        assert_eq!(cash.period(), Some(FiscalPeriod::Q1.into()));
+        assert_eq!(combined.symbol(), &symbol);
+        assert_eq!(combined.limit(), Some(Limit(1_000)));
+        assert_eq!(
+            combined.period(),
+            Some(RetrievalFrequency::Quarterly.into())
+        );
+        assert_eq!(
+            pairs(&cash),
+            [
+                ("symbol".to_owned(), "BRK.B / Class A".to_owned()),
+                ("limit".to_owned(), "5".to_owned()),
+                ("period".to_owned(), "Q1".to_owned()),
+            ]
+        );
+        assert_eq!(
+            pairs(&combined),
+            [
+                ("symbol".to_owned(), "BRK.B / Class A".to_owned()),
+                ("limit".to_owned(), "1000".to_owned()),
+                ("period".to_owned(), "quarter".to_owned()),
+            ]
+        );
+    }
+
+    #[test]
+    fn growth_queries_omit_unspecified_options_and_keep_distinct_types() {
+        let symbol = Ticker::new("AAPL").unwrap();
+        let cash: CashFlowStatementGrowthQuery = symbol.clone().into();
+        let combined: FinancialStatementGrowthQuery = (&symbol).into();
+
+        assert_eq!(pairs(&cash), [("symbol".to_owned(), "AAPL".to_owned())]);
+        assert_eq!(pairs(&combined), [("symbol".to_owned(), "AAPL".to_owned())]);
+        assert_eq!(cash.limit(), None);
+        assert_eq!(cash.period(), None);
+        assert_eq!(combined.limit(), None);
+        assert_eq!(combined.period(), None);
+    }
+
+    #[test]
+    fn growth_queries_preserve_all_seven_documented_period_spellings() {
+        let periods = [
+            StatementPeriod::from(FiscalPeriod::Q1),
+            StatementPeriod::from(FiscalPeriod::Q2),
+            StatementPeriod::from(FiscalPeriod::Q3),
+            StatementPeriod::from(FiscalPeriod::Q4),
+            StatementPeriod::from(FiscalPeriod::FullYear),
+            StatementPeriod::from(RetrievalFrequency::Annual),
+            StatementPeriod::from(RetrievalFrequency::Quarterly),
+        ];
+        let symbol = Ticker::new("AAPL").unwrap();
+
+        assert_eq!(
+            periods.map(|period| {
+                pairs(&CashFlowStatementGrowthQuery::new(symbol.clone()).with_period(period))[1]
+                    .1
+                    .clone()
+            }),
+            ["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        );
+        assert_eq!(
+            periods.map(|period| {
+                pairs(&FinancialStatementGrowthQuery::new(symbol.clone()).with_period(period))[1]
+                    .1
+                    .clone()
+            }),
+            ["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        );
     }
 }

@@ -20,8 +20,9 @@ pub mod summaries;
 pub use balance::{balance_sheet_statement, balance_sheet_statement_ttm};
 pub use cash_flow::{cash_flow_statement, cash_flow_statement_ttm};
 pub use growth::{
-    BalanceSheetStatementGrowthQuery, IncomeStatementGrowthQuery, balance_sheet_statement_growth,
-    income_statement_growth,
+    BalanceSheetStatementGrowthQuery, CashFlowStatementGrowthQuery, FinancialStatementGrowthQuery,
+    IncomeStatementGrowthQuery, balance_sheet_statement_growth, cash_flow_statement_growth,
+    financial_statement_growth, income_statement_growth,
 };
 pub use income::{income_statement, income_statement_ttm};
 pub use metrics::{key_metrics, key_metrics_ttm};
@@ -429,8 +430,8 @@ impl QueryParameters for EnterpriseValuesQuery {
     }
 }
 
-/// Shared documented metadata for the six statement endpoints built on these
-/// query contracts. Kept crate-private until endpoint descriptors consume it.
+/// Shared documented metadata for worldwide statement endpoints with a
+/// 1,000-row response cap.
 pub(crate) const WORLDWIDE_STATEMENT_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::Worldwide)
     .with_bounds(EndpointBounds::new().with_response_rows(1_000));
