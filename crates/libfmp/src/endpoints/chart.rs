@@ -6,7 +6,9 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::chart::{StockChartAdjustedBar, StockChartFullBar, StockChartLightBar},
+    responses::chart::{
+        StockChartAdjustedBar, StockChartFullBar, StockChartIntradayBar, StockChartLightBar,
+    },
     types::{Date, Ticker},
 };
 
@@ -255,6 +257,109 @@ impl QueryParameters for StockChartIntradayQuery {
         encoder.optional("to", self.to);
         encoder.optional("nonadjusted", self.nonadjusted);
         encoder.optional("extended", self.extended);
+    }
+}
+
+const STOCK_CHART_INTRADAY_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+
+/// Describes `GET historical-chart/1min` without binding a transport.
+pub fn stock_chart_one_minute(
+    query: StockChartIntradayQuery,
+) -> EndpointSpec<StockChartIntradayQuery, Vec<StockChartIntradayBar>> {
+    EndpointSpec::get("historical-chart/1min", "historical-chart/1min", query)
+        .with_metadata(STOCK_CHART_INTRADAY_METADATA)
+}
+
+/// Describes `GET historical-chart/5min` without binding a transport.
+pub fn stock_chart_five_minutes(
+    query: StockChartIntradayQuery,
+) -> EndpointSpec<StockChartIntradayQuery, Vec<StockChartIntradayBar>> {
+    EndpointSpec::get("historical-chart/5min", "historical-chart/5min", query)
+        .with_metadata(STOCK_CHART_INTRADAY_METADATA)
+}
+
+/// Describes `GET historical-chart/15min` without binding a transport.
+pub fn stock_chart_fifteen_minutes(
+    query: StockChartIntradayQuery,
+) -> EndpointSpec<StockChartIntradayQuery, Vec<StockChartIntradayBar>> {
+    EndpointSpec::get("historical-chart/15min", "historical-chart/15min", query)
+        .with_metadata(STOCK_CHART_INTRADAY_METADATA)
+}
+
+/// Describes `GET historical-chart/30min` without binding a transport.
+pub fn stock_chart_thirty_minutes(
+    query: StockChartIntradayQuery,
+) -> EndpointSpec<StockChartIntradayQuery, Vec<StockChartIntradayBar>> {
+    EndpointSpec::get("historical-chart/30min", "historical-chart/30min", query)
+        .with_metadata(STOCK_CHART_INTRADAY_METADATA)
+}
+
+/// Describes `GET historical-chart/1hour` without binding a transport.
+pub fn stock_chart_one_hour(
+    query: StockChartIntradayQuery,
+) -> EndpointSpec<StockChartIntradayQuery, Vec<StockChartIntradayBar>> {
+    EndpointSpec::get("historical-chart/1hour", "historical-chart/1hour", query)
+        .with_metadata(STOCK_CHART_INTRADAY_METADATA)
+}
+
+/// Describes `GET historical-chart/4hour` without binding a transport.
+pub fn stock_chart_four_hours(
+    query: StockChartIntradayQuery,
+) -> EndpointSpec<StockChartIntradayQuery, Vec<StockChartIntradayBar>> {
+    EndpointSpec::get("historical-chart/4hour", "historical-chart/4hour", query)
+        .with_metadata(STOCK_CHART_INTRADAY_METADATA)
+}
+
+impl Client {
+    /// Retrieves one-minute worldwide intraday stock chart rows.
+    pub async fn stock_chart_one_minute(
+        &self,
+        query: impl Into<StockChartIntradayQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&stock_chart_one_minute(query.into())).await
+    }
+
+    /// Retrieves five-minute worldwide intraday stock chart rows.
+    pub async fn stock_chart_five_minutes(
+        &self,
+        query: impl Into<StockChartIntradayQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&stock_chart_five_minutes(query.into())).await
+    }
+
+    /// Retrieves fifteen-minute worldwide intraday stock chart rows.
+    pub async fn stock_chart_fifteen_minutes(
+        &self,
+        query: impl Into<StockChartIntradayQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&stock_chart_fifteen_minutes(query.into()))
+            .await
+    }
+
+    /// Retrieves thirty-minute worldwide intraday stock chart rows.
+    pub async fn stock_chart_thirty_minutes(
+        &self,
+        query: impl Into<StockChartIntradayQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&stock_chart_thirty_minutes(query.into()))
+            .await
+    }
+
+    /// Retrieves one-hour worldwide intraday stock chart rows.
+    pub async fn stock_chart_one_hour(
+        &self,
+        query: impl Into<StockChartIntradayQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&stock_chart_one_hour(query.into())).await
+    }
+
+    /// Retrieves four-hour worldwide intraday stock chart rows.
+    pub async fn stock_chart_four_hours(
+        &self,
+        query: impl Into<StockChartIntradayQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&stock_chart_four_hours(query.into())).await
     }
 }
 
