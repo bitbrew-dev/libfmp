@@ -1,5 +1,6 @@
 //! Typed models for FMP API responses.
 
+pub mod chart;
 pub mod company;
 pub mod directory;
 pub mod quote;
