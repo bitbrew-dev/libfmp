@@ -8,3 +8,4 @@ pub mod quote;
 pub mod screener;
 pub mod search;
 pub mod statements;
+pub mod transcripts;
