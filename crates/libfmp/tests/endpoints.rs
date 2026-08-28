@@ -2,10 +2,12 @@ mod support;
 
 use std::sync::Arc;
 
+use http::header::{CONTENT_DISPOSITION, CONTENT_TYPE, HeaderMap, HeaderValue};
 use libfmp::{
     Client,
-    endpoints::{BinaryBody, EndpointSpec, QueryEncoder, QueryParameters},
-    error::ErrorCategory,
+    config::Authentication,
+    endpoints::{BinaryBody, BinaryResponse, EndpointSpec, QueryEncoder, QueryParameters},
+    error::{ErrorCategory, MAX_SAFE_BODY_BYTES},
     responses::quote::QuoteShort,
     transport::HttpMethod,
     types::Ticker,
@@ -145,9 +147,11 @@ async fn successful_json_requires_a_matching_content_type() {
 }
 
 #[tokio::test]
-async fn binary_contract_returns_bytes_only_for_declared_content_types() {
+async fn binary_contract_retains_bytes_and_safe_content_metadata() {
     const BINARY_TYPE: &str = "application/octet-stream";
-    const BINARY_BYTES: &[u8] = b"future-xlsx-response";
+    const CONTENT_TYPE_VALUE: &str = "Application/Octet-Stream; token=private-media-token";
+    const DISPOSITION: &str = "attachment; filename=private-report-name.xlsx";
+    const BINARY_BYTES: &[u8] = b"private-binary-payload";
 
     let endpoint: EndpointSpec<(), BinaryBody> = EndpointSpec::get_binary(
         "binary-contract-test",
@@ -155,19 +159,145 @@ async fn binary_contract_returns_bytes_only_for_declared_content_types() {
         (),
         &[BINARY_TYPE],
     );
-    let executor = Arc::new(FixtureExecutor::new([fixture_response(
-        Some(BINARY_TYPE),
-        BINARY_BYTES,
-    )]));
+    let mut headers = HeaderMap::new();
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static(CONTENT_TYPE_VALUE));
+    headers.insert(CONTENT_DISPOSITION, HeaderValue::from_static(DISPOSITION));
+    let executor = Arc::new(FixtureExecutor::new([
+        libfmp::transport::TransportResponse::new(200, headers, BINARY_BYTES),
+    ]));
 
     let body = mock_client(executor).execute(&endpoint).await.unwrap();
 
     assert_eq!(body.as_bytes(), BINARY_BYTES);
+    assert_eq!(body.content_type(), CONTENT_TYPE_VALUE);
+    assert_eq!(body.content_disposition(), Some(DISPOSITION));
 
-    let wrong_type = Arc::new(FixtureExecutor::new([json_fixture(BINARY_BYTES)]));
-    let error = mock_client(wrong_type)
+    let debug = format!("{body:?}");
+    assert!(debug.contains("body_bytes: 22"));
+    assert!(debug.contains("Application/Octet-Stream"));
+    assert!(debug.contains("has_content_disposition: true"));
+    assert!(!debug.contains("private-binary-payload"));
+    assert!(!debug.contains("private-report-name"));
+    assert!(!debug.contains("private-media-token"));
+
+    let compatibility_name: BinaryBody = body.clone();
+    let additive_name: BinaryResponse = compatibility_name;
+    assert_eq!(additive_name.into_bytes(), BINARY_BYTES);
+
+    let no_disposition = Arc::new(FixtureExecutor::new([fixture_response(
+        Some(BINARY_TYPE),
+        BINARY_BYTES,
+    )]));
+    let body = mock_client(no_disposition)
         .execute(&endpoint)
         .await
-        .unwrap_err();
+        .unwrap();
+    assert_eq!(body.content_disposition(), None);
+}
+
+#[tokio::test]
+async fn binary_response_equality_includes_bytes_and_exact_content_metadata() {
+    const BINARY_TYPE: &str = "application/octet-stream";
+    let endpoint: EndpointSpec<(), BinaryResponse> = EndpointSpec::get_binary(
+        "binary-equality-test",
+        "future-download",
+        (),
+        &[BINARY_TYPE],
+    );
+    let response =
+        |content_type: &'static str, content_disposition: &'static str, bytes: &'static [u8]| {
+            let mut headers = HeaderMap::new();
+            headers.insert(CONTENT_TYPE, HeaderValue::from_static(content_type));
+            headers.insert(
+                CONTENT_DISPOSITION,
+                HeaderValue::from_static(content_disposition),
+            );
+            libfmp::transport::TransportResponse::new(200, headers, bytes)
+        };
+    let executor = Arc::new(FixtureExecutor::new([
+        response(BINARY_TYPE, "attachment; filename=one.xlsx", b"same"),
+        response(BINARY_TYPE, "attachment; filename=one.xlsx", b"same"),
+        response(
+            "Application/Octet-Stream",
+            "attachment; filename=one.xlsx",
+            b"same",
+        ),
+        response(BINARY_TYPE, "attachment; filename=two.xlsx", b"same"),
+        response(BINARY_TYPE, "attachment; filename=one.xlsx", b"different"),
+    ]));
+    let client = mock_client(executor);
+
+    let baseline = client.execute(&endpoint).await.unwrap();
+    let identical = client.execute(&endpoint).await.unwrap();
+    let different_content_type = client.execute(&endpoint).await.unwrap();
+    let different_disposition = client.execute(&endpoint).await.unwrap();
+    let different_bytes = client.execute(&endpoint).await.unwrap();
+
+    assert_eq!(baseline, identical);
+    assert_ne!(baseline, different_content_type);
+    assert_ne!(baseline, different_disposition);
+    assert_ne!(baseline, different_bytes);
+}
+
+#[tokio::test]
+async fn binary_contract_rejects_missing_and_wrong_content_types() {
+    const BINARY_TYPE: &str = "application/octet-stream";
+    const BINARY_BYTES: &[u8] = b"future-binary-response";
+    let endpoint: EndpointSpec<(), BinaryBody> = EndpointSpec::get_binary(
+        "binary-contract-test",
+        "future-download",
+        (),
+        &[BINARY_TYPE],
+    );
+
+    for response in [
+        json_fixture(BINARY_BYTES),
+        fixture_response(None, BINARY_BYTES),
+    ] {
+        let error = mock_client(Arc::new(FixtureExecutor::new([response])))
+            .execute(&endpoint)
+            .await
+            .unwrap_err();
+        assert_eq!(error.category(), ErrorCategory::Decode);
+        assert_eq!(error.endpoint(), Some("binary-contract-test"));
+        assert_eq!(error.status_code(), Some(200));
+    }
+}
+
+#[tokio::test]
+async fn unexpected_binary_content_has_bounded_token_safe_diagnostics() {
+    const AUTH_SECRET: &str = "transport-secret-token";
+    const BODY_SECRET: &str = "body-secret-token";
+    let endpoint: EndpointSpec<(), BinaryBody> = EndpointSpec::get_binary(
+        "binary-contract-test",
+        "future-download",
+        (),
+        &["application/octet-stream"],
+    );
+    let body = format!(
+        "{{\"link\":\"https://example.test/report?apikey={BODY_SECRET}\",\"detail\":\"{AUTH_SECRET}{}\"}}",
+        "x".repeat(MAX_SAFE_BODY_BYTES)
+    );
+    let mut headers = HeaderMap::new();
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    let executor = Arc::new(FixtureExecutor::new([
+        libfmp::transport::TransportResponse::new(200, headers, body.into_bytes()),
+    ]));
+    let client = Client::builder()
+        .base_url("https://proxy.example/router")
+        .path_prefix("stable")
+        .authentication(Authentication::custom_query("router_token", AUTH_SECRET))
+        .executor(executor)
+        .build()
+        .unwrap();
+
+    let error = client.execute(&endpoint).await.unwrap_err();
+    let safe_body = error.body().unwrap();
+    let diagnostic = format!("{error:?} {error}");
+
     assert_eq!(error.category(), ErrorCategory::Decode);
+    assert!(safe_body.is_truncated());
+    assert!(safe_body.as_str().len() <= MAX_SAFE_BODY_BYTES);
+    assert!(!diagnostic.contains(AUTH_SECRET));
+    assert!(!diagnostic.contains(BODY_SECRET));
 }

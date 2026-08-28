@@ -2,9 +2,9 @@ use std::str::FromStr;
 
 use libfmp::{
     codecs::{
-        DateOrDateTime, DynamicJson, FiscalYear, IsoTimestamp, NumberOrNumericString,
-        OpaqueDateText, PercentageValue, TitleCaseBoolFlag, TrueFalseFlag, UsDate, WireBool,
-        YesNoFlag, YnFlag, empty_or_null_date, empty_or_null_date_or_datetime,
+        DateOrDateTime, DynamicJson, DynamicObject, FiscalYear, IsoTimestamp,
+        NumberOrNumericString, OpaqueDateText, PercentageValue, TitleCaseBoolFlag, TrueFalseFlag,
+        UsDate, WireBool, YesNoFlag, YnFlag, empty_or_null_date, empty_or_null_date_or_datetime,
     },
     types::Date,
 };
@@ -134,4 +134,38 @@ fn dynamic_json_preserves_recursive_native_shape() {
     assert_eq!(value["documentfiscalyearfocus"], 2025);
     assert_eq!(value["nested"][2]["amount"], "33644000000");
     assert_eq!(value["nested"][2]["exact"].to_string(), "9007199254740993");
+}
+
+#[test]
+fn dynamic_object_preserves_semantics_without_treating_member_order_as_data() {
+    let wire = r#"{
+        "Issuer Defined Section": {
+            "heterogeneousCells": [null, false, "text", 184467440737095516160, -42, 0.125],
+            "nested": {"arbitrary key": [1, {"flag": true}]}
+        },
+        "another section": []
+    }"#;
+    let object: DynamicObject = serde_json::from_str(wire).unwrap();
+
+    assert_eq!(
+        object["Issuer Defined Section"]["heterogeneousCells"][3].to_string(),
+        "184467440737095516160"
+    );
+    assert_eq!(
+        object["Issuer Defined Section"]["nested"]["arbitrary key"][1]["flag"],
+        true
+    );
+
+    // JSON object member order is intentionally not part of this contract;
+    // semantic equality, arbitrary keys, and exact value tokens are preserved.
+    let encoded = serde_json::to_string(&object).unwrap();
+    let round_trip: DynamicObject = serde_json::from_str(&encoded).unwrap();
+    assert_eq!(round_trip, object);
+    assert_eq!(
+        round_trip["Issuer Defined Section"]["heterogeneousCells"][3].to_string(),
+        "184467440737095516160"
+    );
+
+    assert!(serde_json::from_str::<DynamicObject>("[]").is_err());
+    assert!(serde_json::from_str::<DynamicObject>("null").is_err());
 }

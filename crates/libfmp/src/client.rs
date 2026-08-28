@@ -2,13 +2,15 @@
 
 use std::{collections::BTreeSet, fmt, sync::Arc, time::Duration};
 
-use http::header::{CONTENT_TYPE, HeaderMap, HeaderName, HeaderValue, LOCATION, USER_AGENT};
+use http::header::{
+    CONTENT_DISPOSITION, CONTENT_TYPE, HeaderMap, HeaderName, HeaderValue, LOCATION, USER_AGENT,
+};
 use url::Url;
 
 use crate::{
     Result, VERSION,
     config::{Authentication, DEFAULT_BASE_URL, DEFAULT_PATH_PREFIX, RedirectPolicy},
-    endpoints::QueryEncoder,
+    endpoints::{QueryEncoder, ResponseMetadata},
     error::{ConfigurationErrorKind, Error, Redactor, SafeBody, SecretString},
     transport::{HttpExecutor, PreparedRequest, ReqwestExecutor, TransportResponse},
 };
@@ -389,14 +391,25 @@ impl Client {
                 ));
             }
 
-            return endpoint.response().decode(response.body()).map_err(|_| {
-                Error::decode(
-                    Some(endpoint.id()),
-                    Some(response.status()),
-                    Some(safe_body(response.body(), redactor)),
-                    "successful response could not be decoded",
+            let content_disposition = response
+                .headers()
+                .get(CONTENT_DISPOSITION)
+                .and_then(|value| value.to_str().ok());
+
+            return endpoint
+                .response()
+                .decode(
+                    response.body(),
+                    ResponseMetadata::new(content_type, content_disposition),
                 )
-            });
+                .map_err(|_| {
+                    Error::decode(
+                        Some(endpoint.id()),
+                        Some(response.status()),
+                        Some(safe_body(response.body(), redactor)),
+                        "successful response could not be decoded",
+                    )
+                });
         }
 
         Err(Error::transport(

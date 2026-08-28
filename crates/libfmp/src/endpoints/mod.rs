@@ -239,7 +239,22 @@ impl ExpectedContentType {
     }
 }
 
-type Decoder<R> = fn(&[u8]) -> std::result::Result<R, ()>;
+#[derive(Clone, Copy)]
+pub(crate) struct ResponseMetadata<'a> {
+    content_type: &'a str,
+    content_disposition: Option<&'a str>,
+}
+
+impl<'a> ResponseMetadata<'a> {
+    pub(crate) const fn new(content_type: &'a str, content_disposition: Option<&'a str>) -> Self {
+        Self {
+            content_type,
+            content_disposition,
+        }
+    }
+}
+
+type Decoder<R> = for<'a> fn(&[u8], ResponseMetadata<'a>) -> std::result::Result<R, ()>;
 
 /// Decoding and media-type expectations associated with one endpoint.
 pub struct ResponseContract<R> {
@@ -254,8 +269,12 @@ impl<R> ResponseContract<R> {
         self.expected_content_type
     }
 
-    pub(crate) fn decode(&self, body: &[u8]) -> std::result::Result<R, ()> {
-        (self.decoder)(body)
+    pub(crate) fn decode(
+        &self,
+        body: &[u8],
+        metadata: ResponseMetadata<'_>,
+    ) -> std::result::Result<R, ()> {
+        (self.decoder)(body, metadata)
     }
 }
 
@@ -294,29 +313,77 @@ impl<R> fmt::Debug for ResponseContract<R> {
     }
 }
 
-fn decode_json<R>(body: &[u8]) -> std::result::Result<R, ()>
+fn decode_json<R>(body: &[u8], _metadata: ResponseMetadata<'_>) -> std::result::Result<R, ()>
 where
     R: DeserializeOwned,
 {
     serde_json::from_slice(body).map_err(|_| ())
 }
 
-/// An owned response body returned by a binary endpoint contract.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct BinaryBody(Vec<u8>);
+/// An owned binary response with validated media metadata.
+///
+/// `Content-Type` is retained exactly as received after the endpoint contract
+/// validates its media type. A valid `Content-Disposition` value is retained
+/// when supplied, but is never included in `Debug` output because it can carry
+/// an opaque filename or other provider-controlled text.
+#[derive(Clone, PartialEq, Eq)]
+pub struct BinaryResponse {
+    bytes: Vec<u8>,
+    content_type: Box<str>,
+    content_disposition: Option<Box<str>>,
+}
 
-impl BinaryBody {
+impl BinaryResponse {
     /// Borrows the response bytes.
     pub fn as_bytes(&self) -> &[u8] {
-        &self.0
+        &self.bytes
     }
 
     /// Returns the owned response bytes.
     pub fn into_bytes(self) -> Vec<u8> {
-        self.0
+        self.bytes
+    }
+
+    /// Returns the exact validated `Content-Type` header value.
+    pub fn content_type(&self) -> &str {
+        &self.content_type
+    }
+
+    /// Returns the exact `Content-Disposition` header value when it was valid text.
+    pub fn content_disposition(&self) -> Option<&str> {
+        self.content_disposition.as_deref()
     }
 }
 
-fn decode_binary(body: &[u8]) -> std::result::Result<BinaryBody, ()> {
-    Ok(BinaryBody(body.to_vec()))
+impl fmt::Debug for BinaryResponse {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let media_type = self
+            .content_type
+            .split_once(';')
+            .map_or(self.content_type.as_ref(), |(media_type, _)| media_type)
+            .trim();
+        formatter
+            .debug_struct("BinaryResponse")
+            .field("body_bytes", &self.bytes.len())
+            .field("media_type", &media_type)
+            .field(
+                "has_content_disposition",
+                &self.content_disposition.is_some(),
+            )
+            .finish()
+    }
+}
+
+/// Backward-compatible name for an owned binary response.
+pub type BinaryBody = BinaryResponse;
+
+fn decode_binary(
+    body: &[u8],
+    metadata: ResponseMetadata<'_>,
+) -> std::result::Result<BinaryResponse, ()> {
+    Ok(BinaryResponse {
+        bytes: body.to_vec(),
+        content_type: metadata.content_type.into(),
+        content_disposition: metadata.content_disposition.map(Into::into),
+    })
 }
