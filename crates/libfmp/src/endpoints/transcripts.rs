@@ -1,10 +1,15 @@
-//! Earnings-transcript endpoint query contracts.
+//! Earnings-transcript endpoint and query contracts.
 
 pub use crate::endpoints::directory::earnings_transcript_list;
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
     query::{Quarter, Year},
+    responses::transcripts::{EarningsTranscriptDate, LatestEarningsTranscript},
     types::{Limit, Page, Ticker},
 };
 
@@ -143,6 +148,55 @@ impl From<&Ticker> for EarningsTranscriptDatesQuery {
 impl QueryParameters for EarningsTranscriptDatesQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.required("symbol", &self.symbol);
+    }
+}
+
+const LATEST_TRANSCRIPTS_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(100).with_page(100));
+const WORLDWIDE: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+
+/// Describes `GET earning-call-transcript-latest` without binding a transport.
+pub fn latest_earnings_transcripts(
+    query: LatestEarningsTranscriptsQuery,
+) -> EndpointSpec<LatestEarningsTranscriptsQuery, Vec<LatestEarningsTranscript>> {
+    EndpointSpec::get(
+        "earning-call-transcript-latest",
+        "earning-call-transcript-latest",
+        query,
+    )
+    .with_metadata(LATEST_TRANSCRIPTS_METADATA)
+}
+
+/// Describes `GET earning-call-transcript-dates` without binding a transport.
+pub fn earnings_transcript_dates(
+    query: EarningsTranscriptDatesQuery,
+) -> EndpointSpec<EarningsTranscriptDatesQuery, Vec<EarningsTranscriptDate>> {
+    EndpointSpec::get(
+        "earning-call-transcript-dates",
+        "earning-call-transcript-dates",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+impl Client {
+    /// Retrieves the latest worldwide earnings-transcript metadata.
+    pub async fn latest_earnings_transcripts(
+        &self,
+        query: impl Into<LatestEarningsTranscriptsQuery>,
+    ) -> Result<Vec<LatestEarningsTranscript>> {
+        self.execute(&latest_earnings_transcripts(query.into()))
+            .await
+    }
+
+    /// Retrieves available worldwide transcript dates for one ticker.
+    pub async fn earnings_transcript_dates(
+        &self,
+        query: impl Into<EarningsTranscriptDatesQuery>,
+    ) -> Result<Vec<EarningsTranscriptDate>> {
+        self.execute(&earnings_transcript_dates(query.into())).await
     }
 }
 
