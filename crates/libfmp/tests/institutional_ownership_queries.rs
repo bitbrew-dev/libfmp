@@ -1,7 +1,7 @@
 use libfmp::{
     endpoints::institutional_ownership::{
-        Form13fFilingDatesQuery, InstitutionalOwnershipExtractQuery,
-        LatestInstitutionalOwnershipFilingsQuery,
+        Form13fFilingDatesQuery, HolderIndustryBreakdownQuery, HolderPerformanceSummaryQuery,
+        InstitutionalOwnershipExtractQuery, LatestInstitutionalOwnershipFilingsQuery,
     },
     query::{Quarter, Year},
     types::{Cik, Limit, Page},
@@ -41,4 +41,29 @@ fn dates_query_preserves_owned_and_borrowed_cik_conversions() {
     let borrowed: Form13fFilingDatesQuery = (&cik).into();
     assert_eq!(borrowed.cik(), &cik);
     assert_eq!(borrowed.cik().as_str(), "0001067983");
+}
+
+#[test]
+fn holder_performance_query_preserves_cik_conversions_and_unbounded_page() {
+    let cik = Cik::new("0001067983").unwrap();
+    let owned: HolderPerformanceSummaryQuery = cik.clone().into();
+    assert_eq!(owned.cik(), &cik);
+    assert_eq!(owned.page(), None);
+
+    let borrowed: HolderPerformanceSummaryQuery = (&cik).into();
+    assert_eq!(borrowed.cik().as_str(), "0001067983");
+    assert_eq!(
+        borrowed.with_page(Page(u32::MAX)).page(),
+        Some(Page(u32::MAX))
+    );
+}
+
+#[test]
+fn holder_industry_query_reuses_leading_zero_cik_year_and_textual_quarter() {
+    let cik = Cik::new("0001067983").unwrap();
+    let query = HolderIndustryBreakdownQuery::new(cik.clone(), Year(2023), Quarter::Q3);
+    assert_eq!(query.cik(), &cik);
+    assert_eq!(query.cik().as_str(), "0001067983");
+    assert_eq!(query.year(), Year(2023));
+    assert_eq!(query.quarter(), Quarter::Q3);
 }

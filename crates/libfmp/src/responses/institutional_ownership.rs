@@ -91,3 +91,71 @@ pub struct InstitutionalHolderAnalytics {
     pub change_in_performance: i64,
     pub is_counted_for_performance: bool,
 }
+
+/// One institutional holder's portfolio and benchmark performance summary.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HolderPerformanceSummary {
+    pub date: Date,
+    pub cik: Cik,
+    pub investor_name: String,
+    pub portfolio_size: u64,
+    pub securities_added: u64,
+    pub securities_removed: u64,
+    pub market_value: u64,
+    pub previous_market_value: u64,
+    pub change_in_market_value: i64,
+    pub change_in_market_value_percentage: f64,
+    pub average_holding_period: u64,
+    pub average_holding_period_top10: u64,
+    pub average_holding_period_top20: u64,
+    pub turnover: f64,
+    pub turnover_alternate_sell: f64,
+    pub turnover_alternate_buy: f64,
+    pub performance: i64,
+    pub performance_percentage: f64,
+    pub last_performance: i64,
+    pub change_in_performance: i64,
+    #[serde(rename = "performance1year")]
+    pub performance_1_year: i64,
+    #[serde(rename = "performancePercentage1year")]
+    pub performance_percentage_1_year: f64,
+    #[serde(rename = "performance3year")]
+    pub performance_3_year: i64,
+    #[serde(rename = "performancePercentage3year")]
+    pub performance_percentage_3_year: f64,
+    #[serde(rename = "performance5year")]
+    pub performance_5_year: i64,
+    #[serde(rename = "performancePercentage5year")]
+    pub performance_percentage_5_year: f64,
+    pub performance_since_inception: i64,
+    pub performance_since_inception_percentage: f64,
+    #[serde(rename = "performanceRelativeToSP500Percentage")]
+    pub performance_relative_to_sp500_percentage: f64,
+    #[serde(rename = "performance1yearRelativeToSP500Percentage")]
+    pub performance_1_year_relative_to_sp500_percentage: f64,
+    #[serde(rename = "performance3yearRelativeToSP500Percentage")]
+    pub performance_3_year_relative_to_sp500_percentage: f64,
+    #[serde(rename = "performance5yearRelativeToSP500Percentage")]
+    pub performance_5_year_relative_to_sp500_percentage: f64,
+    #[serde(rename = "performanceSinceInceptionRelativeToSP500Percentage")]
+    pub performance_since_inception_relative_to_sp500_percentage: f64,
+}
+
+/// One industry allocation and performance row for an institutional holder.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HolderIndustryBreakdown {
+    pub date: Date,
+    pub cik: Cik,
+    pub investor_name: String,
+    pub industry_title: String,
+    pub weight: f64,
+    pub last_weight: f64,
+    pub change_in_weight: f64,
+    pub change_in_weight_percentage: f64,
+    pub performance: i64,
+    pub performance_percentage: f64,
+    pub last_performance: i64,
+    pub change_in_performance: i64,
+}

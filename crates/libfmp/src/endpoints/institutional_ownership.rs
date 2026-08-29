@@ -8,8 +8,8 @@ use crate::{
     },
     query::{Quarter, Year},
     responses::institutional_ownership::{
-        Form13fFilingDate, InstitutionalHolderAnalytics, InstitutionalHolding,
-        InstitutionalOwnershipFiling,
+        Form13fFilingDate, HolderIndustryBreakdown, HolderPerformanceSummary,
+        InstitutionalHolderAnalytics, InstitutionalHolding, InstitutionalOwnershipFiling,
     },
     types::{Cik, Limit, Page, Ticker},
 };
@@ -204,6 +204,93 @@ impl QueryParameters for InstitutionalHolderAnalyticsQuery {
     }
 }
 
+/// Required holder CIK and optional pagination for performance summaries.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HolderPerformanceSummaryQuery {
+    cik: Cik,
+    page: Option<Page>,
+}
+
+impl HolderPerformanceSummaryQuery {
+    /// Creates a query for one Central Index Key without a page default.
+    pub const fn new(cik: Cik) -> Self {
+        Self { cik, page: None }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Borrows the required Central Index Key.
+    pub const fn cik(&self) -> &Cik {
+        &self.cik
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+}
+
+impl From<Cik> for HolderPerformanceSummaryQuery {
+    fn from(cik: Cik) -> Self {
+        Self::new(cik)
+    }
+}
+
+impl From<&Cik> for HolderPerformanceSummaryQuery {
+    fn from(cik: &Cik) -> Self {
+        Self::new(cik.clone())
+    }
+}
+
+impl QueryParameters for HolderPerformanceSummaryQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("cik", &self.cik);
+        encoder.optional("page", self.page);
+    }
+}
+
+/// Required holder CIK and reporting period for an industry breakdown.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HolderIndustryBreakdownQuery {
+    cik: Cik,
+    year: Year,
+    quarter: Quarter,
+}
+
+impl HolderIndustryBreakdownQuery {
+    /// Creates a query for one holder and reporting period.
+    pub const fn new(cik: Cik, year: Year, quarter: Quarter) -> Self {
+        Self { cik, year, quarter }
+    }
+
+    /// Borrows the required Central Index Key.
+    pub const fn cik(&self) -> &Cik {
+        &self.cik
+    }
+
+    /// Returns the required provider query year.
+    pub const fn year(&self) -> Year {
+        self.year
+    }
+
+    /// Returns the required textual provider query quarter.
+    pub const fn quarter(&self) -> Quarter {
+        self.quarter
+    }
+}
+
+impl QueryParameters for HolderIndustryBreakdownQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("cik", &self.cik);
+        encoder.required("year", self.year);
+        encoder.required("quarter", self.quarter);
+    }
+}
+
 const US_ONLY: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 const LATEST_FILINGS_METADATA: EndpointMetadata =
@@ -257,6 +344,30 @@ pub fn institutional_holder_analytics(
     .with_metadata(US_ONLY)
 }
 
+/// Describes `GET institutional-ownership/holder-performance-summary`.
+pub fn holder_performance_summary(
+    query: HolderPerformanceSummaryQuery,
+) -> EndpointSpec<HolderPerformanceSummaryQuery, Vec<HolderPerformanceSummary>> {
+    EndpointSpec::get(
+        "institutional-ownership/holder-performance-summary",
+        "institutional-ownership/holder-performance-summary",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
+/// Describes `GET institutional-ownership/holder-industry-breakdown`.
+pub fn holder_industry_breakdown(
+    query: HolderIndustryBreakdownQuery,
+) -> EndpointSpec<HolderIndustryBreakdownQuery, Vec<HolderIndustryBreakdown>> {
+    EndpointSpec::get(
+        "institutional-ownership/holder-industry-breakdown",
+        "institutional-ownership/holder-industry-breakdown",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves the latest US institutional-ownership filings.
     pub async fn latest_institutional_ownership_filings(
@@ -291,6 +402,23 @@ impl Client {
     ) -> Result<Vec<InstitutionalHolderAnalytics>> {
         self.execute(&institutional_holder_analytics(query.into()))
             .await
+    }
+
+    /// Retrieves a US institutional holder's portfolio performance summary.
+    pub async fn holder_performance_summary(
+        &self,
+        query: impl Into<HolderPerformanceSummaryQuery>,
+    ) -> Result<Vec<HolderPerformanceSummary>> {
+        self.execute(&holder_performance_summary(query.into()))
+            .await
+    }
+
+    /// Retrieves a US institutional holder's industry breakdown for one period.
+    pub async fn holder_industry_breakdown(
+        &self,
+        query: impl Into<HolderIndustryBreakdownQuery>,
+    ) -> Result<Vec<HolderIndustryBreakdown>> {
+        self.execute(&holder_industry_breakdown(query.into())).await
     }
 }
 
@@ -361,6 +489,30 @@ mod tests {
                 ("quarter".to_owned(), "3".to_owned()),
                 ("page".to_owned(), "0".to_owned()),
                 ("limit".to_owned(), "10".to_owned()),
+            ]
+        );
+    }
+
+    #[test]
+    fn holder_summary_queries_encode_required_values_in_exact_order() {
+        let cik = Cik::new("0001067983").unwrap();
+        assert_eq!(
+            pairs(&HolderPerformanceSummaryQuery::new(cik.clone()).with_page(Page(0))),
+            [
+                ("cik".to_owned(), "0001067983".to_owned()),
+                ("page".to_owned(), "0".to_owned()),
+            ]
+        );
+        assert_eq!(
+            pairs(&HolderIndustryBreakdownQuery::new(
+                cik,
+                Year(2023),
+                Quarter::Q3,
+            )),
+            [
+                ("cik".to_owned(), "0001067983".to_owned()),
+                ("year".to_owned(), "2023".to_owned()),
+                ("quarter".to_owned(), "3".to_owned()),
             ]
         );
     }
