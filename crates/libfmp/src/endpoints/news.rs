@@ -330,6 +330,35 @@ pub fn latest_forex_news(
         .with_metadata(MARKET_NEWS_METADATA)
 }
 
+/// Describes `GET news/press-releases` without binding a transport.
+pub fn search_press_releases(
+    query: SearchPressReleasesQuery,
+) -> EndpointSpec<SearchPressReleasesQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/press-releases", "news/press-releases", query)
+        .with_metadata(PRESS_RELEASES_METADATA)
+}
+
+/// Describes `GET news/stock` without binding a transport.
+pub fn search_stock_news(
+    query: SearchStockNewsQuery,
+) -> EndpointSpec<SearchStockNewsQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/stock", "news/stock", query).with_metadata(MARKET_NEWS_METADATA)
+}
+
+/// Describes `GET news/crypto` without binding a transport.
+pub fn search_crypto_news(
+    query: SearchCryptoNewsQuery,
+) -> EndpointSpec<SearchCryptoNewsQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/crypto", "news/crypto", query).with_metadata(MARKET_NEWS_METADATA)
+}
+
+/// Describes `GET news/forex` without binding a transport.
+pub fn search_forex_news(
+    query: SearchForexNewsQuery,
+) -> EndpointSpec<SearchForexNewsQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/forex", "news/forex", query).with_metadata(MARKET_NEWS_METADATA)
+}
+
 impl Client {
     /// Retrieves US-authored Financial Modeling Prep articles.
     pub async fn fmp_articles(
@@ -377,6 +406,38 @@ impl Client {
         query: impl Into<LatestForexNewsQuery>,
     ) -> Result<Vec<NewsArticle>> {
         self.execute(&latest_forex_news(query.into())).await
+    }
+
+    /// Searches US press releases for an ordered non-empty ticker list.
+    pub async fn search_press_releases(
+        &self,
+        query: impl Into<SearchPressReleasesQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&search_press_releases(query.into())).await
+    }
+
+    /// Searches stock news for an ordered non-empty ticker list.
+    pub async fn search_stock_news(
+        &self,
+        query: impl Into<SearchStockNewsQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&search_stock_news(query.into())).await
+    }
+
+    /// Searches cryptocurrency news for an ordered non-empty ticker list.
+    pub async fn search_crypto_news(
+        &self,
+        query: impl Into<SearchCryptoNewsQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&search_crypto_news(query.into())).await
+    }
+
+    /// Searches foreign-exchange news for an ordered non-empty ticker list.
+    pub async fn search_forex_news(
+        &self,
+        query: impl Into<SearchForexNewsQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&search_forex_news(query.into())).await
     }
 }
 
