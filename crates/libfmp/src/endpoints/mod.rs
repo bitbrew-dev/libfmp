@@ -4,6 +4,7 @@ pub mod calendar;
 pub mod chart;
 pub mod company;
 pub mod directory;
+pub mod economics;
 pub mod metadata;
 pub mod quote;
 pub mod screener;

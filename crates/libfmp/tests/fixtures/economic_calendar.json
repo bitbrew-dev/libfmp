@@ -1,0 +1,15 @@
+[
+  {
+    "actual": 13.6,
+    "change": -4.9,
+    "changePercentage": -26.486,
+    "country": "SG",
+    "currency": "SGD",
+    "date": "2026-07-29 03:30:00",
+    "estimate": 21,
+    "event": "Import Prices YoY (Jun)",
+    "impact": "Low",
+    "previous": 18.5,
+    "unit": "%"
+  }
+]
