@@ -1,0 +1,42 @@
+//! Response rows returned by news endpoints.
+
+use serde::{Deserialize, Deserializer, Serialize};
+
+use crate::types::{ApiDateTime, Ticker};
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
+
+/// One Financial Modeling Prep editorial article.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FmpArticle {
+    pub title: String,
+    pub date: ApiDateTime,
+    pub content: String,
+    pub tickers: String,
+    pub image: String,
+    pub link: String,
+    pub author: String,
+    pub site: String,
+}
+
+/// One provider-news article shared across general and market-specific feeds.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NewsArticle {
+    #[serde(deserialize_with = "required_option")]
+    pub symbol: Option<Ticker>,
+    pub published_date: ApiDateTime,
+    pub publisher: String,
+    pub title: String,
+    pub image: String,
+    pub site: String,
+    pub text: String,
+    pub url: String,
+}
