@@ -278,6 +278,8 @@ const GENERAL_NEWS_METADATA: EndpointMetadata = EndpointMetadata::new()
 const PRESS_RELEASES_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::UsOnly)
     .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
+const MARKET_NEWS_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
 
 /// Describes `GET fmp-articles` without binding a transport.
 pub fn fmp_articles(query: FmpArticlesQuery) -> EndpointSpec<FmpArticlesQuery, Vec<FmpArticle>> {
@@ -304,6 +306,30 @@ pub fn latest_press_releases(
     .with_metadata(PRESS_RELEASES_METADATA)
 }
 
+/// Describes `GET news/stock-latest` without binding a transport.
+pub fn latest_stock_news(
+    query: LatestStockNewsQuery,
+) -> EndpointSpec<LatestStockNewsQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/stock-latest", "news/stock-latest", query)
+        .with_metadata(MARKET_NEWS_METADATA)
+}
+
+/// Describes `GET news/crypto-latest` without binding a transport.
+pub fn latest_crypto_news(
+    query: LatestCryptoNewsQuery,
+) -> EndpointSpec<LatestCryptoNewsQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/crypto-latest", "news/crypto-latest", query)
+        .with_metadata(MARKET_NEWS_METADATA)
+}
+
+/// Describes `GET news/forex-latest` without binding a transport.
+pub fn latest_forex_news(
+    query: LatestForexNewsQuery,
+) -> EndpointSpec<LatestForexNewsQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/forex-latest", "news/forex-latest", query)
+        .with_metadata(MARKET_NEWS_METADATA)
+}
+
 impl Client {
     /// Retrieves US-authored Financial Modeling Prep articles.
     pub async fn fmp_articles(
@@ -327,6 +353,30 @@ impl Client {
         query: impl Into<LatestPressReleasesQuery>,
     ) -> Result<Vec<NewsArticle>> {
         self.execute(&latest_press_releases(query.into())).await
+    }
+
+    /// Retrieves the latest stock-news articles.
+    pub async fn latest_stock_news(
+        &self,
+        query: impl Into<LatestStockNewsQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&latest_stock_news(query.into())).await
+    }
+
+    /// Retrieves the latest cryptocurrency-news articles.
+    pub async fn latest_crypto_news(
+        &self,
+        query: impl Into<LatestCryptoNewsQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&latest_crypto_news(query.into())).await
+    }
+
+    /// Retrieves the latest foreign-exchange-news articles.
+    pub async fn latest_forex_news(
+        &self,
+        query: impl Into<LatestForexNewsQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&latest_forex_news(query.into())).await
     }
 }
 
