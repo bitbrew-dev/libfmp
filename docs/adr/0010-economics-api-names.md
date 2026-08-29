@@ -28,8 +28,8 @@ instead a full country-name `String`, as demonstrated by `Zimbabwe`.
 The economic-indicators parameter example spans `2025-04-27` through
 `2026-04-27`, while the adjacent note explicitly says the maximum date range is
 90 days. The query contract preserves both dates without enforcing either
-interpretation. A later descriptor may expose the stated 90-day bound as
-metadata, but the SDK must not reject the contradictory documented example at
+interpretation. The relevant descriptors expose the stated 90-day bound as
+metadata, but the SDK does not reject the contradictory documented example at
 construction time.
 
 The market-risk-premium prose says data can be accessed for specific dates,
