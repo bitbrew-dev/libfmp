@@ -7,7 +7,7 @@ facade.
 
 ## Decision
 
-The first six Form 13F endpoints use the following final Rust descriptor,
+The eight Form 13F endpoints use the following final Rust descriptor,
 client, query, and response-row names and reserve the listed future Python
 names.
 
@@ -19,8 +19,10 @@ names.
 | `institutional-ownership/extract-analytics/holder` | `institutional_holder_analytics` | `InstitutionalHolderAnalyticsQuery` | `InstitutionalHolderAnalytics` | `FmpClient.institutional_holder_analytics`; `fmp.institutional_ownership.InstitutionalHolderAnalytics` |
 | `institutional-ownership/holder-performance-summary` | `holder_performance_summary` | `HolderPerformanceSummaryQuery` | `HolderPerformanceSummary` | `FmpClient.holder_performance_summary`; `fmp.institutional_ownership.HolderPerformanceSummary` |
 | `institutional-ownership/holder-industry-breakdown` | `holder_industry_breakdown` | `HolderIndustryBreakdownQuery` | `HolderIndustryBreakdown` | `FmpClient.holder_industry_breakdown`; `fmp.institutional_ownership.HolderIndustryBreakdown` |
+| `institutional-ownership/symbol-positions-summary` | `institutional_positions_summary` | `InstitutionalPositionsSummaryQuery` | `InstitutionalPositionSummary` | `FmpClient.institutional_positions_summary`; `fmp.institutional_ownership.InstitutionalPositionSummary` |
+| `institutional-ownership/industry-summary` | `institutional_industry_summary` | `InstitutionalIndustrySummaryQuery` | `InstitutionalIndustrySummary` | `FmpClient.institutional_industry_summary`; `fmp.institutional_ownership.InstitutionalIndustrySummary` |
 
-All six endpoints are US-only `GET` requests returning bare arrays with
+All eight endpoints are US-only `GET` requests returning bare arrays with
 required, non-null documented fields and unknown-field tolerance. All rows
 reuse the representation-preserving `Cik` and `Cusip` fundamentals where those
 identifiers occur, so their leading zeroes remain data rather than numeric
@@ -64,6 +66,21 @@ The holder-industry query owns the required `Cik`, `Year`, and textual
 percentages and signed `i64` performance amounts. Neither holder-summary
 endpoint invents bounds, access requirements, or real-time semantics.
 
-Position summaries, the cross-holder industry summary, and Python runtime
-bindings are deferred. The future Python facade will accept ordinary method
-arguments and will not expose Rust query structs as Python public classes.
+The position-summary query owns the required `Ticker`, `Year`, and textual
+`Quarter` in that order. Its 36-field row uses representation-preserving `Cik`
+and `Date`; exact `u64` for non-negative current and previous counts, shares,
+invested values, positions, calls, and puts; signed `i64` for their integer
+changes; and raw `f64` for ownership percentages and put/call ratios. Explicit
+wire renames preserve the provider's lowercase `shares` suffix in
+`numberOf13Fshares`, `lastNumberOf13Fshares`, and
+`numberOf13FsharesChange`.
+
+The cross-holder industry-summary query owns only required `Year` and textual
+`Quarter`, in that order. Its three-field row keeps the industry title opaque,
+the non-negative industry value as exact `u64`, and the reporting date as
+`Date`. Neither new summary endpoint invents bounds, access requirements, or
+real-time semantics.
+
+Python runtime bindings are deferred. The future Python facade will accept
+ordinary method arguments and will not expose Rust query structs as Python
+public classes.
