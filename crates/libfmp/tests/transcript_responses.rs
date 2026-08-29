@@ -86,7 +86,9 @@ fn exact_dates_fixture_uses_numeric_response_quarter_and_year() {
 
 #[test]
 fn transcript_content_is_unbounded_and_preserved_exactly() {
-    let content = "Operator: synthetic transcript line.\n".repeat(100_000);
+    let chunk = "Operator: café 中文 📈.\nQuoted: \"guidance\"; path=C:\\reports\\Q4; tab=\tend.\n";
+    let content = chunk.repeat(40_000);
+    assert!(content.len() > 2 * 1024 * 1024);
     let value = serde_json::json!([{
         "symbol": "BIG",
         "period": "Q4",
@@ -94,7 +96,12 @@ fn transcript_content_is_unbounded_and_preserved_exactly() {
         "date": "2026-07-30",
         "content": content,
     }]);
-    let rows: Vec<EarningsTranscript> = serde_json::from_value(value).unwrap();
+    let wire = serde_json::to_vec(&value).unwrap();
+    assert!(wire.windows(2).any(|window| window == b"\\n"));
+    assert!(wire.windows(2).any(|window| window == b"\\\""));
+    assert!(wire.windows(2).any(|window| window == b"\\\\"));
+
+    let rows: Vec<EarningsTranscript> = serde_json::from_slice(&wire).unwrap();
     assert_eq!(rows[0].year, CalendarYear(u32::MAX));
     assert_eq!(rows[0].content.len(), content.len());
     assert_eq!(rows[0].content, content);
