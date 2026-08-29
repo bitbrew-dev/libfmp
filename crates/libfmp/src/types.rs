@@ -469,6 +469,79 @@ impl fmt::Display for CalendarYear {
     }
 }
 
+/// A numeric calendar quarter received in a response.
+///
+/// This is distinct from [`crate::query::Quarter`], whose textual `1` through
+/// `4` representations are query values. Response quarters are JSON integers.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct CalendarQuarter(u8);
+
+impl CalendarQuarter {
+    /// Validates and constructs a numeric response quarter.
+    pub const fn new(value: u8) -> Result<Self, InvalidCalendarQuarter> {
+        if value >= 1 && value <= 4 {
+            Ok(Self(value))
+        } else {
+            Err(InvalidCalendarQuarter)
+        }
+    }
+
+    /// Returns the primitive numeric quarter.
+    pub const fn get(self) -> u8 {
+        self.0
+    }
+}
+
+impl TryFrom<u8> for CalendarQuarter {
+    type Error = InvalidCalendarQuarter;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        Self::new(value)
+    }
+}
+
+impl From<CalendarQuarter> for u8 {
+    fn from(value: CalendarQuarter) -> Self {
+        value.get()
+    }
+}
+
+impl fmt::Display for CalendarQuarter {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(formatter)
+    }
+}
+
+impl Serialize for CalendarQuarter {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_u8(self.get())
+    }
+}
+
+impl<'de> Deserialize<'de> for CalendarQuarter {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::new(u8::deserialize(deserializer)?).map_err(de::Error::custom)
+    }
+}
+
+/// Why a numeric response quarter was rejected.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InvalidCalendarQuarter;
+
+impl fmt::Display for InvalidCalendarQuarter {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("calendar quarter must be an integer from 1 through 4")
+    }
+}
+
+impl Error for InvalidCalendarQuarter {}
+
 /// A provider page index. Endpoint-specific validation is applied elsewhere.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]

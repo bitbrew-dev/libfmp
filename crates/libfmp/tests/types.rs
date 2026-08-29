@@ -3,11 +3,33 @@ use std::str::FromStr;
 use libfmp::{
     query::Year,
     types::{
-        ApiDateTime, BenchmarkYear, CalendarYear, Cik, CountryCode, CurrencyCode, Cusip, Date,
-        DateRange, ExchangeCode, FiniteDecimal, Industry, Isin, Limit, Page, SearchTerm, Sector,
-        StatementAmount, StringValueError, Ticker, TickerList, UnixMilliseconds, UnixSeconds,
+        ApiDateTime, BenchmarkYear, CalendarQuarter, CalendarYear, Cik, CountryCode, CurrencyCode,
+        Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, Industry, Isin, Limit, Page,
+        SearchTerm, Sector, StatementAmount, StringValueError, Ticker, TickerList,
+        UnixMilliseconds, UnixSeconds,
     },
 };
+
+#[test]
+fn calendar_quarter_is_a_validated_numeric_response_fundamental() {
+    for raw in 1..=4 {
+        let quarter = CalendarQuarter::new(raw).unwrap();
+        assert_eq!(quarter.get(), raw);
+        assert_eq!(u8::from(quarter), raw);
+        assert_eq!(quarter.to_string(), raw.to_string());
+        assert_eq!(serde_json::to_string(&quarter).unwrap(), raw.to_string());
+        assert_eq!(
+            serde_json::from_str::<CalendarQuarter>(&raw.to_string()).unwrap(),
+            quarter
+        );
+    }
+
+    assert!(CalendarQuarter::new(0).is_err());
+    assert!(CalendarQuarter::new(5).is_err());
+    for invalid in ["0", "5", "2.0", r#""2""#] {
+        assert!(serde_json::from_str::<CalendarQuarter>(invalid).is_err());
+    }
+}
 
 #[test]
 fn statement_amount_is_a_signed_exact_integer() {
