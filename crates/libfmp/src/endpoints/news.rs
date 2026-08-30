@@ -1,7 +1,12 @@
-//! News endpoint query contracts.
+//! News endpoint and query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
+    responses::news::{FmpArticle, NewsArticle},
     types::{Date, Limit, Page, TickerList},
 };
 
@@ -264,6 +269,66 @@ search_news_query!(
     SearchForexNewsQuery,
     "Required tickers, optional filters, and pagination for foreign-exchange-news search."
 );
+
+const FMP_ARTICLES_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
+const GENERAL_NEWS_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
+const PRESS_RELEASES_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::UsOnly)
+    .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
+
+/// Describes `GET fmp-articles` without binding a transport.
+pub fn fmp_articles(query: FmpArticlesQuery) -> EndpointSpec<FmpArticlesQuery, Vec<FmpArticle>> {
+    EndpointSpec::get("fmp-articles", "fmp-articles", query).with_metadata(FMP_ARTICLES_METADATA)
+}
+
+/// Describes `GET news/general-latest` without binding a transport.
+pub fn latest_general_news(
+    query: LatestGeneralNewsQuery,
+) -> EndpointSpec<LatestGeneralNewsQuery, Vec<NewsArticle>> {
+    EndpointSpec::get("news/general-latest", "news/general-latest", query)
+        .with_metadata(GENERAL_NEWS_METADATA)
+}
+
+/// Describes `GET news/press-releases-latest` without binding a transport.
+pub fn latest_press_releases(
+    query: LatestPressReleasesQuery,
+) -> EndpointSpec<LatestPressReleasesQuery, Vec<NewsArticle>> {
+    EndpointSpec::get(
+        "news/press-releases-latest",
+        "news/press-releases-latest",
+        query,
+    )
+    .with_metadata(PRESS_RELEASES_METADATA)
+}
+
+impl Client {
+    /// Retrieves US-authored Financial Modeling Prep articles.
+    pub async fn fmp_articles(
+        &self,
+        query: impl Into<FmpArticlesQuery>,
+    ) -> Result<Vec<FmpArticle>> {
+        self.execute(&fmp_articles(query.into())).await
+    }
+
+    /// Retrieves the latest worldwide general-news articles.
+    pub async fn latest_general_news(
+        &self,
+        query: impl Into<LatestGeneralNewsQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&latest_general_news(query.into())).await
+    }
+
+    /// Retrieves the latest US press releases.
+    pub async fn latest_press_releases(
+        &self,
+        query: impl Into<LatestPressReleasesQuery>,
+    ) -> Result<Vec<NewsArticle>> {
+        self.execute(&latest_press_releases(query.into())).await
+    }
+}
 
 #[cfg(test)]
 mod tests {
