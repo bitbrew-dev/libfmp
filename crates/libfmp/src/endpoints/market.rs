@@ -1,7 +1,12 @@
-//! Market-performance endpoint query contracts.
+//! Market-performance endpoint contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointMetadata, GeographicAvailability},
+    },
+    responses::market::{IndustryPe, IndustryPerformance, SectorPe, SectorPerformance},
     types::{Date, ExchangeCode, Industry, Sector},
 };
 
@@ -280,6 +285,79 @@ historical_industry_query!(
     HistoricalIndustryPeQuery,
     "Required industry and optional exchange and date filters for historical P/E ratios."
 );
+
+const WORLDWIDE: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+
+/// Describes `GET sector-performance-snapshot` without binding a transport.
+pub fn sector_performance_snapshot(
+    query: SectorPerformanceSnapshotQuery,
+) -> EndpointSpec<SectorPerformanceSnapshotQuery, Vec<SectorPerformance>> {
+    EndpointSpec::get(
+        "sector-performance-snapshot",
+        "sector-performance-snapshot",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET industry-performance-snapshot` without binding a transport.
+pub fn industry_performance_snapshot(
+    query: IndustryPerformanceSnapshotQuery,
+) -> EndpointSpec<IndustryPerformanceSnapshotQuery, Vec<IndustryPerformance>> {
+    EndpointSpec::get(
+        "industry-performance-snapshot",
+        "industry-performance-snapshot",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET sector-pe-snapshot` without binding a transport.
+pub fn sector_pe_snapshot(
+    query: SectorPeSnapshotQuery,
+) -> EndpointSpec<SectorPeSnapshotQuery, Vec<SectorPe>> {
+    EndpointSpec::get("sector-pe-snapshot", "sector-pe-snapshot", query).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET industry-pe-snapshot` without binding a transport.
+pub fn industry_pe_snapshot(
+    query: IndustryPeSnapshotQuery,
+) -> EndpointSpec<IndustryPeSnapshotQuery, Vec<IndustryPe>> {
+    EndpointSpec::get("industry-pe-snapshot", "industry-pe-snapshot", query)
+        .with_metadata(WORLDWIDE)
+}
+
+impl Client {
+    /// Retrieves a worldwide dated sector-performance snapshot.
+    pub async fn sector_performance_snapshot(
+        &self,
+        query: SectorPerformanceSnapshotQuery,
+    ) -> Result<Vec<SectorPerformance>> {
+        self.execute(&sector_performance_snapshot(query)).await
+    }
+
+    /// Retrieves a worldwide dated industry-performance snapshot.
+    pub async fn industry_performance_snapshot(
+        &self,
+        query: IndustryPerformanceSnapshotQuery,
+    ) -> Result<Vec<IndustryPerformance>> {
+        self.execute(&industry_performance_snapshot(query)).await
+    }
+
+    /// Retrieves a worldwide dated sector P/E snapshot.
+    pub async fn sector_pe_snapshot(&self, query: SectorPeSnapshotQuery) -> Result<Vec<SectorPe>> {
+        self.execute(&sector_pe_snapshot(query)).await
+    }
+
+    /// Retrieves a worldwide dated industry P/E snapshot.
+    pub async fn industry_pe_snapshot(
+        &self,
+        query: IndustryPeSnapshotQuery,
+    ) -> Result<Vec<IndustryPe>> {
+        self.execute(&industry_pe_snapshot(query)).await
+    }
+}
 
 #[cfg(test)]
 mod tests {
