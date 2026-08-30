@@ -8,9 +8,10 @@ use crate::{
     },
     query::{Quarter, Year},
     responses::institutional_ownership::{
-        Form13fFilingDate, InstitutionalHolding, InstitutionalOwnershipFiling,
+        Form13fFilingDate, InstitutionalHolderAnalytics, InstitutionalHolding,
+        InstitutionalOwnershipFiling,
     },
-    types::{Cik, Limit, Page},
+    types::{Cik, Limit, Page, Ticker},
 };
 
 /// Optional page and limit for the latest institutional-ownership filings.
@@ -133,6 +134,76 @@ impl QueryParameters for Form13fFilingDatesQuery {
     }
 }
 
+/// Required security period and optional pagination for holder analytics.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstitutionalHolderAnalyticsQuery {
+    symbol: Ticker,
+    year: Year,
+    quarter: Quarter,
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl InstitutionalHolderAnalyticsQuery {
+    /// Creates a query for one security and reporting period.
+    pub fn new(symbol: Ticker, year: Year, quarter: Quarter) -> Self {
+        Self {
+            symbol,
+            year,
+            quarter,
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Borrows the required security ticker.
+    pub const fn symbol(&self) -> &Ticker {
+        &self.symbol
+    }
+
+    /// Returns the required provider query year.
+    pub const fn year(&self) -> Year {
+        self.year
+    }
+
+    /// Returns the required textual provider query quarter.
+    pub const fn quarter(&self) -> Quarter {
+        self.quarter
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for InstitutionalHolderAnalyticsQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("symbol", &self.symbol);
+        encoder.required("year", self.year);
+        encoder.required("quarter", self.quarter);
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
+
 const US_ONLY: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 const LATEST_FILINGS_METADATA: EndpointMetadata =
@@ -174,6 +245,18 @@ pub fn form_13f_filing_dates(
     .with_metadata(US_ONLY)
 }
 
+/// Describes `GET institutional-ownership/extract-analytics/holder`.
+pub fn institutional_holder_analytics(
+    query: InstitutionalHolderAnalyticsQuery,
+) -> EndpointSpec<InstitutionalHolderAnalyticsQuery, Vec<InstitutionalHolderAnalytics>> {
+    EndpointSpec::get(
+        "institutional-ownership/extract-analytics/holder",
+        "institutional-ownership/extract-analytics/holder",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves the latest US institutional-ownership filings.
     pub async fn latest_institutional_ownership_filings(
@@ -199,6 +282,15 @@ impl Client {
         query: impl Into<Form13fFilingDatesQuery>,
     ) -> Result<Vec<Form13fFilingDate>> {
         self.execute(&form_13f_filing_dates(query.into())).await
+    }
+
+    /// Retrieves holder-level analytics for one US security and filing period.
+    pub async fn institutional_holder_analytics(
+        &self,
+        query: impl Into<InstitutionalHolderAnalyticsQuery>,
+    ) -> Result<Vec<InstitutionalHolderAnalytics>> {
+        self.execute(&institutional_holder_analytics(query.into()))
+            .await
     }
 }
 
@@ -250,5 +342,26 @@ mod tests {
     fn dates_query_encodes_only_leading_zero_cik() {
         let query = Form13fFilingDatesQuery::new(Cik::new("0001067983").unwrap());
         assert_eq!(pairs(&query), [("cik".to_owned(), "0001067983".to_owned())]);
+    }
+
+    #[test]
+    fn holder_analytics_encodes_symbol_year_quarter_page_then_limit() {
+        let query = InstitutionalHolderAnalyticsQuery::new(
+            Ticker::new("AAPL").unwrap(),
+            Year(2023),
+            Quarter::Q3,
+        )
+        .with_page(Page(0))
+        .with_limit(Limit(10));
+        assert_eq!(
+            pairs(&query),
+            [
+                ("symbol".to_owned(), "AAPL".to_owned()),
+                ("year".to_owned(), "2023".to_owned()),
+                ("quarter".to_owned(), "3".to_owned()),
+                ("page".to_owned(), "0".to_owned()),
+                ("limit".to_owned(), "10".to_owned()),
+            ]
+        );
     }
 }

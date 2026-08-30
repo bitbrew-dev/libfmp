@@ -7,7 +7,7 @@ facade.
 
 ## Decision
 
-The first three Form 13F endpoints use the following final Rust descriptor,
+The first four Form 13F endpoints use the following final Rust descriptor,
 client, query, and response-row names and reserve the listed future Python
 names.
 
@@ -16,11 +16,13 @@ names.
 | `institutional-ownership/latest` | `latest_institutional_ownership_filings` | `LatestInstitutionalOwnershipFilingsQuery` | `InstitutionalOwnershipFiling` | `FmpClient.latest_institutional_ownership_filings`; `fmp.institutional_ownership.InstitutionalOwnershipFiling` |
 | `institutional-ownership/extract` | `institutional_ownership_extract` | `InstitutionalOwnershipExtractQuery` | `InstitutionalHolding` | `FmpClient.institutional_ownership_extract`; `fmp.institutional_ownership.InstitutionalHolding` |
 | `institutional-ownership/dates` | `form_13f_filing_dates` | `Form13fFilingDatesQuery` | `Form13fFilingDate` | `FmpClient.form_13f_filing_dates`; `fmp.institutional_ownership.Form13fFilingDate` |
+| `institutional-ownership/extract-analytics/holder` | `institutional_holder_analytics` | `InstitutionalHolderAnalyticsQuery` | `InstitutionalHolderAnalytics` | `FmpClient.institutional_holder_analytics`; `fmp.institutional_ownership.InstitutionalHolderAnalytics` |
 
-All three endpoints are US-only `GET` requests returning bare arrays with
-required, non-null documented fields and unknown-field tolerance. CIK and
-CUSIP values reuse the representation-preserving `Cik` and `Cusip`
-fundamentals, so leading zeroes remain data rather than numeric padding.
+All four endpoints are US-only `GET` requests returning bare arrays with
+required, non-null documented fields and unknown-field tolerance. All rows
+reuse the representation-preserving `Cik` and `Cusip` fundamentals where those
+identifiers occur, so their leading zeroes remain data rather than numeric
+padding.
 
 The latest-filing row distinguishes its reporting `date` (`Date`) from
 `filingDate` and `acceptedDate` (`ApiDateTime`). The extract response documents
@@ -39,6 +41,15 @@ Extracted `shares` and filing `value` are exact non-negative JSON integers and
 use `u64`. This preserves large documented-domain values without floating-point
 coercion. The SDK does not infer currency units or scale the filing value.
 
-Later holder analytics, summaries, industry endpoints, and Python runtime
-bindings are deferred. The future Python facade will accept ordinary method
-arguments and will not expose Rust query structs as Python public classes.
+Holder analytics uses `Cik` and `Cusip` for its identifiers, `Date` for all
+three temporal fields, and exact `u64` for base market/share/count values.
+Negative-capable market/share changes and performance values use `i64`;
+weights, percentages, and ownership ratios remain raw `f64` values; the two
+documented prices use `Price`. Its query owns the required symbol, `Year`, and
+textual `Quarter`, followed by optional page and limit values, with no invented
+bounds.
+
+Later holder summaries, position summaries, industry endpoints, and Python
+runtime bindings are deferred. The future Python facade will accept ordinary
+method arguments and will not expose Rust query structs as Python public
+classes.
