@@ -62,7 +62,5 @@ Python runtime bindings are deferred. The future facade reserves ordinary
 `FmpClient` methods and response classes under `fmp.analyst`; Rust query
 structs will not become Python public classes.
 
-The Rust descriptors and client methods for financial estimates, ratings
-snapshot, historical ratings, price-target summary, and price-target consensus
-are implemented. Stock-grade descriptors remain reserved for their subsequent
-vertical slice.
+The Rust descriptors and client methods for all eight Analyst endpoints are
+implemented.
