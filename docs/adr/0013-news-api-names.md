@@ -39,13 +39,13 @@ are bare arrays with required documented fields and unknown-field tolerance.
 
 The latest and search provider-news sections state a maximum of 250 responses
 per call and a maximum page number of 100. They do not state a maximum value
-for the `limit` query parameter. These are future descriptor metadata, not
-query-constructor bounds. The FMP Articles section documents neither bound.
+for the `limit` query parameter. Descriptors expose the response and page facts
+as metadata rather than query-constructor bounds. The FMP Articles section
+documents neither bound.
 
 The source explicitly marks FMP Articles and both press-release endpoints as
 US-only, and General News as worldwide. It provides no geography statement for
-the stock, cryptocurrency, or foreign-exchange latest/search endpoints; future
-descriptors must preserve those gaps rather than infer availability. Runtime
-descriptors, client methods, and Python bindings are deferred. The future
-Python facade will accept ordinary method arguments and will not expose Rust
-query structs as Python public classes.
+the stock, cryptocurrency, or foreign-exchange latest/search endpoints;
+descriptors preserve those gaps rather than infer availability. Python
+bindings remain deferred. The future Python facade will accept ordinary method
+arguments and will not expose Rust query structs as Python public classes.
