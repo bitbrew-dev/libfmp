@@ -56,6 +56,6 @@ Python runtime bindings are deferred. The future facade reserves ordinary
 query structs will not become Python public classes.
 
 This foundation defines the eight endpoint-owned queries and five shared
-response rows. The four snapshot descriptors and client methods are now
-implemented; the historical and market-mover routes remain for following
-stacked changes.
+response rows. The four snapshot and four historical descriptors and client
+methods are now implemented; the market-mover routes remain for the following
+stacked change.
