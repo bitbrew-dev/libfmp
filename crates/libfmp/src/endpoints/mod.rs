@@ -6,6 +6,7 @@ pub mod company;
 pub mod directory;
 pub mod economics;
 pub mod metadata;
+pub mod news;
 pub mod quote;
 pub mod screener;
 pub mod search;
