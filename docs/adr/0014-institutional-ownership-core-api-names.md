@@ -7,7 +7,7 @@ facade.
 
 ## Decision
 
-The first four Form 13F endpoints use the following final Rust descriptor,
+The first six Form 13F endpoints use the following final Rust descriptor,
 client, query, and response-row names and reserve the listed future Python
 names.
 
@@ -17,8 +17,10 @@ names.
 | `institutional-ownership/extract` | `institutional_ownership_extract` | `InstitutionalOwnershipExtractQuery` | `InstitutionalHolding` | `FmpClient.institutional_ownership_extract`; `fmp.institutional_ownership.InstitutionalHolding` |
 | `institutional-ownership/dates` | `form_13f_filing_dates` | `Form13fFilingDatesQuery` | `Form13fFilingDate` | `FmpClient.form_13f_filing_dates`; `fmp.institutional_ownership.Form13fFilingDate` |
 | `institutional-ownership/extract-analytics/holder` | `institutional_holder_analytics` | `InstitutionalHolderAnalyticsQuery` | `InstitutionalHolderAnalytics` | `FmpClient.institutional_holder_analytics`; `fmp.institutional_ownership.InstitutionalHolderAnalytics` |
+| `institutional-ownership/holder-performance-summary` | `holder_performance_summary` | `HolderPerformanceSummaryQuery` | `HolderPerformanceSummary` | `FmpClient.holder_performance_summary`; `fmp.institutional_ownership.HolderPerformanceSummary` |
+| `institutional-ownership/holder-industry-breakdown` | `holder_industry_breakdown` | `HolderIndustryBreakdownQuery` | `HolderIndustryBreakdown` | `FmpClient.holder_industry_breakdown`; `fmp.institutional_ownership.HolderIndustryBreakdown` |
 
-All four endpoints are US-only `GET` requests returning bare arrays with
+All six endpoints are US-only `GET` requests returning bare arrays with
 required, non-null documented fields and unknown-field tolerance. All rows
 reuse the representation-preserving `Cik` and `Cusip` fundamentals where those
 identifiers occur, so their leading zeroes remain data rather than numeric
@@ -49,7 +51,19 @@ documented prices use `Price`. Its query owns the required symbol, `Year`, and
 textual `Quarter`, followed by optional page and limit values, with no invented
 bounds.
 
-Later holder summaries, position summaries, industry endpoints, and Python
-runtime bindings are deferred. The future Python facade will accept ordinary
-method arguments and will not expose Rust query structs as Python public
-classes.
+The holder-performance query owns the required `Cik` followed by its optional
+page and has no documented page bound. The 33-field summary keeps counts,
+market values, and holding periods as `u64`; negative-capable changes and
+performance amounts as `i64`; and turnover, percentages, and S&P 500 relative
+values as raw `f64`. Explicit wire renames preserve the provider's
+`performance1year`, `performance3year`, `performance5year`, and `SP500`
+casing.
+
+The holder-industry query owns the required `Cik`, `Year`, and textual
+`Quarter` in that order. Its 12-field row uses raw `f64` weights and
+percentages and signed `i64` performance amounts. Neither holder-summary
+endpoint invents bounds, access requirements, or real-time semantics.
+
+Position summaries, the cross-holder industry summary, and Python runtime
+bindings are deferred. The future Python facade will accept ordinary method
+arguments and will not expose Rust query structs as Python public classes.
