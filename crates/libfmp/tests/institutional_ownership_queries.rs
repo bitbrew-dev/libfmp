@@ -1,7 +1,8 @@
 use libfmp::{
     endpoints::institutional_ownership::{
         Form13fFilingDatesQuery, HolderIndustryBreakdownQuery, HolderPerformanceSummaryQuery,
-        InstitutionalOwnershipExtractQuery, LatestInstitutionalOwnershipFilingsQuery,
+        InstitutionalIndustrySummaryQuery, InstitutionalOwnershipExtractQuery,
+        InstitutionalPositionsSummaryQuery, LatestInstitutionalOwnershipFilingsQuery,
     },
     query::{Quarter, Year},
     types::{Cik, Limit, Page},
@@ -66,4 +67,18 @@ fn holder_industry_query_reuses_leading_zero_cik_year_and_textual_quarter() {
     assert_eq!(query.cik().as_str(), "0001067983");
     assert_eq!(query.year(), Year(2023));
     assert_eq!(query.quarter(), Quarter::Q3);
+}
+
+#[test]
+fn position_and_industry_summary_queries_preserve_required_fundamentals() {
+    let symbol = libfmp::types::Ticker::new("BRK.B / Class A").unwrap();
+    let positions =
+        InstitutionalPositionsSummaryQuery::new(symbol.clone(), Year(2023), Quarter::Q3);
+    assert_eq!(positions.symbol(), &symbol);
+    assert_eq!(positions.year(), Year(2023));
+    assert_eq!(positions.quarter(), Quarter::Q3);
+
+    let industry = InstitutionalIndustrySummaryQuery::new(Year(2024), Quarter::Q4);
+    assert_eq!(industry.year(), Year(2024));
+    assert_eq!(industry.quarter(), Quarter::Q4);
 }

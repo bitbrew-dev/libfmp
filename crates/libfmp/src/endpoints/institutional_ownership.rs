@@ -9,7 +9,8 @@ use crate::{
     query::{Quarter, Year},
     responses::institutional_ownership::{
         Form13fFilingDate, HolderIndustryBreakdown, HolderPerformanceSummary,
-        InstitutionalHolderAnalytics, InstitutionalHolding, InstitutionalOwnershipFiling,
+        InstitutionalHolderAnalytics, InstitutionalHolding, InstitutionalIndustrySummary,
+        InstitutionalOwnershipFiling, InstitutionalPositionSummary,
     },
     types::{Cik, Limit, Page, Ticker},
 };
@@ -291,6 +292,79 @@ impl QueryParameters for HolderIndustryBreakdownQuery {
     }
 }
 
+/// Required security and reporting period for a cross-holder position summary.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstitutionalPositionsSummaryQuery {
+    symbol: Ticker,
+    year: Year,
+    quarter: Quarter,
+}
+
+impl InstitutionalPositionsSummaryQuery {
+    /// Creates a query for one security and reporting period.
+    pub fn new(symbol: Ticker, year: Year, quarter: Quarter) -> Self {
+        Self {
+            symbol,
+            year,
+            quarter,
+        }
+    }
+
+    /// Borrows the required security ticker.
+    pub const fn symbol(&self) -> &Ticker {
+        &self.symbol
+    }
+
+    /// Returns the required provider query year.
+    pub const fn year(&self) -> Year {
+        self.year
+    }
+
+    /// Returns the required textual provider query quarter.
+    pub const fn quarter(&self) -> Quarter {
+        self.quarter
+    }
+}
+
+impl QueryParameters for InstitutionalPositionsSummaryQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("symbol", &self.symbol);
+        encoder.required("year", self.year);
+        encoder.required("quarter", self.quarter);
+    }
+}
+
+/// Required reporting period for the cross-holder industry summary.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InstitutionalIndustrySummaryQuery {
+    year: Year,
+    quarter: Quarter,
+}
+
+impl InstitutionalIndustrySummaryQuery {
+    /// Creates a query for one reporting period.
+    pub const fn new(year: Year, quarter: Quarter) -> Self {
+        Self { year, quarter }
+    }
+
+    /// Returns the required provider query year.
+    pub const fn year(&self) -> Year {
+        self.year
+    }
+
+    /// Returns the required textual provider query quarter.
+    pub const fn quarter(&self) -> Quarter {
+        self.quarter
+    }
+}
+
+impl QueryParameters for InstitutionalIndustrySummaryQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("year", self.year);
+        encoder.required("quarter", self.quarter);
+    }
+}
+
 const US_ONLY: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 const LATEST_FILINGS_METADATA: EndpointMetadata =
@@ -368,6 +442,30 @@ pub fn holder_industry_breakdown(
     .with_metadata(US_ONLY)
 }
 
+/// Describes `GET institutional-ownership/symbol-positions-summary`.
+pub fn institutional_positions_summary(
+    query: InstitutionalPositionsSummaryQuery,
+) -> EndpointSpec<InstitutionalPositionsSummaryQuery, Vec<InstitutionalPositionSummary>> {
+    EndpointSpec::get(
+        "institutional-ownership/symbol-positions-summary",
+        "institutional-ownership/symbol-positions-summary",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
+/// Describes `GET institutional-ownership/industry-summary`.
+pub fn institutional_industry_summary(
+    query: InstitutionalIndustrySummaryQuery,
+) -> EndpointSpec<InstitutionalIndustrySummaryQuery, Vec<InstitutionalIndustrySummary>> {
+    EndpointSpec::get(
+        "institutional-ownership/industry-summary",
+        "institutional-ownership/industry-summary",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves the latest US institutional-ownership filings.
     pub async fn latest_institutional_ownership_filings(
@@ -419,6 +517,24 @@ impl Client {
         query: impl Into<HolderIndustryBreakdownQuery>,
     ) -> Result<Vec<HolderIndustryBreakdown>> {
         self.execute(&holder_industry_breakdown(query.into())).await
+    }
+
+    /// Retrieves the US institutional position summary for one security and period.
+    pub async fn institutional_positions_summary(
+        &self,
+        query: impl Into<InstitutionalPositionsSummaryQuery>,
+    ) -> Result<Vec<InstitutionalPositionSummary>> {
+        self.execute(&institutional_positions_summary(query.into()))
+            .await
+    }
+
+    /// Retrieves US institutional industry values for one reporting period.
+    pub async fn institutional_industry_summary(
+        &self,
+        query: impl Into<InstitutionalIndustrySummaryQuery>,
+    ) -> Result<Vec<InstitutionalIndustrySummary>> {
+        self.execute(&institutional_industry_summary(query.into()))
+            .await
     }
 }
 
@@ -511,6 +627,32 @@ mod tests {
             )),
             [
                 ("cik".to_owned(), "0001067983".to_owned()),
+                ("year".to_owned(), "2023".to_owned()),
+                ("quarter".to_owned(), "3".to_owned()),
+            ]
+        );
+    }
+
+    #[test]
+    fn position_and_industry_summaries_encode_required_values_in_exact_order() {
+        assert_eq!(
+            pairs(&InstitutionalPositionsSummaryQuery::new(
+                Ticker::new("AAPL").unwrap(),
+                Year(2023),
+                Quarter::Q3,
+            )),
+            [
+                ("symbol".to_owned(), "AAPL".to_owned()),
+                ("year".to_owned(), "2023".to_owned()),
+                ("quarter".to_owned(), "3".to_owned()),
+            ]
+        );
+        assert_eq!(
+            pairs(&InstitutionalIndustrySummaryQuery::new(
+                Year(2023),
+                Quarter::Q3,
+            )),
+            [
                 ("year".to_owned(), "2023".to_owned()),
                 ("quarter".to_owned(), "3".to_owned()),
             ]

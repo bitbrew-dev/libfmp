@@ -159,3 +159,57 @@ pub struct HolderIndustryBreakdown {
     pub last_performance: i64,
     pub change_in_performance: i64,
 }
+
+/// Cross-holder position totals and changes for one security and filing period.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InstitutionalPositionSummary {
+    pub symbol: Ticker,
+    pub cik: Cik,
+    pub date: Date,
+    pub investors_holding: u64,
+    pub last_investors_holding: u64,
+    pub investors_holding_change: i64,
+    #[serde(rename = "numberOf13Fshares")]
+    pub number_of_13f_shares: u64,
+    #[serde(rename = "lastNumberOf13Fshares")]
+    pub last_number_of_13f_shares: u64,
+    #[serde(rename = "numberOf13FsharesChange")]
+    pub number_of_13f_shares_change: i64,
+    pub total_invested: u64,
+    pub last_total_invested: u64,
+    pub total_invested_change: i64,
+    pub ownership_percent: f64,
+    pub last_ownership_percent: f64,
+    pub ownership_percent_change: f64,
+    pub new_positions: u64,
+    pub last_new_positions: u64,
+    pub new_positions_change: i64,
+    pub increased_positions: u64,
+    pub last_increased_positions: u64,
+    pub increased_positions_change: i64,
+    pub closed_positions: u64,
+    pub last_closed_positions: u64,
+    pub closed_positions_change: i64,
+    pub reduced_positions: u64,
+    pub last_reduced_positions: u64,
+    pub reduced_positions_change: i64,
+    pub total_calls: u64,
+    pub last_total_calls: u64,
+    pub total_calls_change: i64,
+    pub total_puts: u64,
+    pub last_total_puts: u64,
+    pub total_puts_change: i64,
+    pub put_call_ratio: f64,
+    pub last_put_call_ratio: f64,
+    pub put_call_ratio_change: f64,
+}
+
+/// Aggregate value for one US industry and filing date.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InstitutionalIndustrySummary {
+    pub industry_title: String,
+    pub industry_value: u64,
+    pub date: Date,
+}
