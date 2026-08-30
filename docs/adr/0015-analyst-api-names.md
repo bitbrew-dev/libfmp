@@ -61,3 +61,7 @@ symbol; the documented 1,000-row maximum does not constrain that query value.
 Python runtime bindings are deferred. The future facade reserves ordinary
 `FmpClient` methods and response classes under `fmp.analyst`; Rust query
 structs will not become Python public classes.
+
+The Rust descriptors and client methods for financial estimates, ratings
+snapshot, and historical ratings are implemented. Price-target and stock-grade
+descriptors remain reserved for their subsequent vertical slices.

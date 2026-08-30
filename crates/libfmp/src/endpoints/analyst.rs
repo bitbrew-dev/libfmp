@@ -1,8 +1,13 @@
 //! Analyst endpoint query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
     query::RetrievalFrequency,
+    responses::analyst::{FinancialEstimate, HistoricalRating, RatingSnapshot},
     types::{Limit, Page, Ticker},
 };
 
@@ -192,6 +197,66 @@ required_symbol_query!(
     StockGradesSummaryQuery,
     "Required ticker for the worldwide stock-grades summary."
 );
+
+const FINANCIAL_ESTIMATES_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(1_000));
+const RATINGS_SNAPSHOT_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(1));
+const HISTORICAL_RATINGS_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(10_000));
+
+/// Describes `GET analyst-estimates` without binding a transport.
+pub fn financial_estimates(
+    query: FinancialEstimatesQuery,
+) -> EndpointSpec<FinancialEstimatesQuery, Vec<FinancialEstimate>> {
+    EndpointSpec::get("analyst-estimates", "analyst-estimates", query)
+        .with_metadata(FINANCIAL_ESTIMATES_METADATA)
+}
+
+/// Describes `GET ratings-snapshot` without binding a transport.
+pub fn ratings_snapshot(
+    query: RatingsSnapshotQuery,
+) -> EndpointSpec<RatingsSnapshotQuery, Vec<RatingSnapshot>> {
+    EndpointSpec::get("ratings-snapshot", "ratings-snapshot", query)
+        .with_metadata(RATINGS_SNAPSHOT_METADATA)
+}
+
+/// Describes `GET ratings-historical` without binding a transport.
+pub fn historical_ratings(
+    query: HistoricalRatingsQuery,
+) -> EndpointSpec<HistoricalRatingsQuery, Vec<HistoricalRating>> {
+    EndpointSpec::get("ratings-historical", "ratings-historical", query)
+        .with_metadata(HISTORICAL_RATINGS_METADATA)
+}
+
+impl Client {
+    /// Retrieves worldwide analyst financial estimates for one ticker.
+    pub async fn financial_estimates(
+        &self,
+        query: impl Into<FinancialEstimatesQuery>,
+    ) -> Result<Vec<FinancialEstimate>> {
+        self.execute(&financial_estimates(query.into())).await
+    }
+
+    /// Retrieves the worldwide financial-rating snapshot for one ticker.
+    pub async fn ratings_snapshot(
+        &self,
+        query: impl Into<RatingsSnapshotQuery>,
+    ) -> Result<Vec<RatingSnapshot>> {
+        self.execute(&ratings_snapshot(query.into())).await
+    }
+
+    /// Retrieves worldwide historical financial ratings for one ticker.
+    pub async fn historical_ratings(
+        &self,
+        query: impl Into<HistoricalRatingsQuery>,
+    ) -> Result<Vec<HistoricalRating>> {
+        self.execute(&historical_ratings(query.into())).await
+    }
+}
 
 #[cfg(test)]
 mod tests {
