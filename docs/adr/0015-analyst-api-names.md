@@ -63,5 +63,6 @@ Python runtime bindings are deferred. The future facade reserves ordinary
 structs will not become Python public classes.
 
 The Rust descriptors and client methods for financial estimates, ratings
-snapshot, and historical ratings are implemented. Price-target and stock-grade
-descriptors remain reserved for their subsequent vertical slices.
+snapshot, historical ratings, price-target summary, and price-target consensus
+are implemented. Stock-grade descriptors remain reserved for their subsequent
+vertical slice.
