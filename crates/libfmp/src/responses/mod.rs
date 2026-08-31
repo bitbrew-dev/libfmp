@@ -7,6 +7,7 @@ pub mod company;
 pub mod directory;
 pub mod economics;
 pub mod institutional_ownership;
+pub mod market;
 pub mod news;
 pub mod quote;
 pub mod screener;
