@@ -328,6 +328,46 @@ pub fn industry_pe_snapshot(
         .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET historical-sector-performance` without binding a transport.
+pub fn historical_sector_performance(
+    query: HistoricalSectorPerformanceQuery,
+) -> EndpointSpec<HistoricalSectorPerformanceQuery, Vec<SectorPerformance>> {
+    EndpointSpec::get(
+        "historical-sector-performance",
+        "historical-sector-performance",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET historical-industry-performance` without binding a transport.
+pub fn historical_industry_performance(
+    query: HistoricalIndustryPerformanceQuery,
+) -> EndpointSpec<HistoricalIndustryPerformanceQuery, Vec<IndustryPerformance>> {
+    EndpointSpec::get(
+        "historical-industry-performance",
+        "historical-industry-performance",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET historical-sector-pe` without binding a transport.
+pub fn historical_sector_pe(
+    query: HistoricalSectorPeQuery,
+) -> EndpointSpec<HistoricalSectorPeQuery, Vec<SectorPe>> {
+    EndpointSpec::get("historical-sector-pe", "historical-sector-pe", query)
+        .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET historical-industry-pe` without binding a transport.
+pub fn historical_industry_pe(
+    query: HistoricalIndustryPeQuery,
+) -> EndpointSpec<HistoricalIndustryPeQuery, Vec<IndustryPe>> {
+    EndpointSpec::get("historical-industry-pe", "historical-industry-pe", query)
+        .with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves a worldwide dated sector-performance snapshot.
     pub async fn sector_performance_snapshot(
@@ -356,6 +396,40 @@ impl Client {
         query: IndustryPeSnapshotQuery,
     ) -> Result<Vec<IndustryPe>> {
         self.execute(&industry_pe_snapshot(query)).await
+    }
+
+    /// Retrieves worldwide historical sector performance.
+    pub async fn historical_sector_performance(
+        &self,
+        query: impl Into<HistoricalSectorPerformanceQuery>,
+    ) -> Result<Vec<SectorPerformance>> {
+        self.execute(&historical_sector_performance(query.into()))
+            .await
+    }
+
+    /// Retrieves worldwide historical industry performance.
+    pub async fn historical_industry_performance(
+        &self,
+        query: impl Into<HistoricalIndustryPerformanceQuery>,
+    ) -> Result<Vec<IndustryPerformance>> {
+        self.execute(&historical_industry_performance(query.into()))
+            .await
+    }
+
+    /// Retrieves worldwide historical sector P/E ratios.
+    pub async fn historical_sector_pe(
+        &self,
+        query: impl Into<HistoricalSectorPeQuery>,
+    ) -> Result<Vec<SectorPe>> {
+        self.execute(&historical_sector_pe(query.into())).await
+    }
+
+    /// Retrieves worldwide historical industry P/E ratios.
+    pub async fn historical_industry_pe(
+        &self,
+        query: impl Into<HistoricalIndustryPeQuery>,
+    ) -> Result<Vec<IndustryPe>> {
+        self.execute(&historical_industry_pe(query.into())).await
     }
 }
 
