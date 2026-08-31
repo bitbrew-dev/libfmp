@@ -1,9 +1,18 @@
 //! Technical-indicator query contracts.
 
 use crate::{
+    Client, Result,
     endpoints::{QueryEncoder, QueryParameters},
     query::{ChartTimeframe, PeriodLength},
+    responses::technical_indicators::{
+        ExponentialMovingAverageBar, SimpleMovingAverageBar, WeightedMovingAverageBar,
+    },
     types::{Date, Ticker},
+};
+
+use super::{
+    EndpointSpec,
+    metadata::{EndpointMetadata, GeographicAvailability},
 };
 
 /// Shared query parameters for the nine technical-indicator endpoints.
@@ -77,6 +86,71 @@ impl QueryParameters for TechnicalIndicatorQuery {
         encoder.required("timeframe", self.timeframe);
         encoder.optional("from", self.from);
         encoder.optional("to", self.to);
+    }
+}
+
+const WORLDWIDE: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+
+/// Describes `GET technical-indicators/sma` without binding a transport.
+pub fn simple_moving_average(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<SimpleMovingAverageBar>> {
+    EndpointSpec::get(
+        "technical-indicators/sma",
+        "technical-indicators/sma",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET technical-indicators/ema` without binding a transport.
+pub fn exponential_moving_average(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<ExponentialMovingAverageBar>> {
+    EndpointSpec::get(
+        "technical-indicators/ema",
+        "technical-indicators/ema",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET technical-indicators/wma` without binding a transport.
+pub fn weighted_moving_average(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<WeightedMovingAverageBar>> {
+    EndpointSpec::get(
+        "technical-indicators/wma",
+        "technical-indicators/wma",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+impl Client {
+    /// Retrieves worldwide simple-moving-average bars.
+    pub async fn simple_moving_average(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<SimpleMovingAverageBar>> {
+        self.execute(&simple_moving_average(query)).await
+    }
+
+    /// Retrieves worldwide exponential-moving-average bars.
+    pub async fn exponential_moving_average(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<ExponentialMovingAverageBar>> {
+        self.execute(&exponential_moving_average(query)).await
+    }
+
+    /// Retrieves worldwide weighted-moving-average bars.
+    pub async fn weighted_moving_average(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<WeightedMovingAverageBar>> {
+        self.execute(&weighted_moving_average(query)).await
     }
 }
 
