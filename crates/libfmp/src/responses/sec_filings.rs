@@ -5,7 +5,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    codecs::NumericString,
+    codecs::{DynamicJson, NumericString},
     types::{
         ApiDateTime, Cik, CountryCode, CurrencyCode, Date, ExchangeCode, FormType, Isin, Sector,
         Ticker,
@@ -76,7 +76,7 @@ pub struct SecCompanyProfile {
     pub price_currency: CurrencyCode,
     pub market_sector: Sector,
     #[serde(deserialize_with = "deserialize_nullable")]
-    pub security_type: Option<String>,
+    pub security_type: Option<DynamicJson>,
     pub is_etf: bool,
     pub is_adr: bool,
     pub is_fund: bool,
