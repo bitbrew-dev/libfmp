@@ -5,7 +5,8 @@ use crate::{
     endpoints::{QueryEncoder, QueryParameters},
     query::{ChartTimeframe, PeriodLength},
     responses::technical_indicators::{
-        ExponentialMovingAverageBar, SimpleMovingAverageBar, WeightedMovingAverageBar,
+        DoubleExponentialMovingAverageBar, ExponentialMovingAverageBar, SimpleMovingAverageBar,
+        TripleExponentialMovingAverageBar, WeightedMovingAverageBar,
     },
     types::{Date, Ticker},
 };
@@ -128,6 +129,30 @@ pub fn weighted_moving_average(
     .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET technical-indicators/dema` without binding a transport.
+pub fn double_exponential_moving_average(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<DoubleExponentialMovingAverageBar>> {
+    EndpointSpec::get(
+        "technical-indicators/dema",
+        "technical-indicators/dema",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET technical-indicators/tema` without binding a transport.
+pub fn triple_exponential_moving_average(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<TripleExponentialMovingAverageBar>> {
+    EndpointSpec::get(
+        "technical-indicators/tema",
+        "technical-indicators/tema",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves worldwide simple-moving-average bars.
     pub async fn simple_moving_average(
@@ -151,6 +176,24 @@ impl Client {
         query: TechnicalIndicatorQuery,
     ) -> Result<Vec<WeightedMovingAverageBar>> {
         self.execute(&weighted_moving_average(query)).await
+    }
+
+    /// Retrieves worldwide double-exponential-moving-average bars.
+    pub async fn double_exponential_moving_average(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<DoubleExponentialMovingAverageBar>> {
+        self.execute(&double_exponential_moving_average(query))
+            .await
+    }
+
+    /// Retrieves worldwide triple-exponential-moving-average bars.
+    pub async fn triple_exponential_moving_average(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<TripleExponentialMovingAverageBar>> {
+        self.execute(&triple_exponential_moving_average(query))
+            .await
     }
 }
 
