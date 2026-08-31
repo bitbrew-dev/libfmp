@@ -4,8 +4,8 @@ use libfmp::{
     query::Year,
     types::{
         ApiDateTime, BenchmarkYear, CalendarQuarter, CalendarYear, Cik, CountryCode, CurrencyCode,
-        Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, Industry, Isin, Lei, Limit, Page,
-        SearchTerm, Sector, StatementAmount, StringValueError, Ticker, TickerList,
+        Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, FormType, Industry, Isin, Lei, Limit,
+        Page, SearchTerm, Sector, StatementAmount, StringValueError, Ticker, TickerList,
         UnixMilliseconds, UnixSeconds,
     },
 };
@@ -77,6 +77,19 @@ fn string_values_preserve_representation_and_leading_zeroes() {
 fn documented_index_and_international_tickers_are_accepted() {
     assert_eq!(Ticker::new("^VIX").unwrap().as_str(), "^VIX");
     assert_eq!(Ticker::new("000001.SZ").unwrap().as_str(), "000001.SZ");
+}
+
+#[test]
+fn sec_form_type_is_open_and_representation_preserving() {
+    let form_type = FormType::new("10-K/A amendment").unwrap();
+    assert_eq!(form_type.as_str(), "10-K/A amendment");
+    assert_eq!(form_type.to_string(), "10-K/A amendment");
+    assert_eq!(
+        serde_json::from_str::<FormType>(r#""8-K""#)
+            .unwrap()
+            .as_str(),
+        "8-K"
+    );
 }
 
 #[test]
