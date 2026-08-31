@@ -9,6 +9,7 @@ use crate::{
     query::{Quarter, Year},
     responses::funds::{
         EtfAssetExposure, EtfCountryWeighting, EtfFundHolding, EtfFundInfo, EtfSectorWeighting,
+        FundDisclosure, FundDisclosureDate, FundDisclosureHolder, FundDisclosureSearchResult,
     },
     types::{Cik, SearchTerm, Ticker},
 };
@@ -221,6 +222,8 @@ impl QueryParameters for FundDisclosureDatesQuery {
 
 const WORLDWIDE: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+const US_ONLY: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 
 /// Describes `GET etf/holdings` without binding a transport.
 pub fn etf_holdings(
@@ -257,6 +260,45 @@ pub fn etf_sector_weightings(
         .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET funds/disclosure-holders-latest` without binding a transport.
+pub fn latest_fund_disclosure_holders(
+    query: LatestFundDisclosureHoldersQuery,
+) -> EndpointSpec<LatestFundDisclosureHoldersQuery, Vec<FundDisclosureHolder>> {
+    EndpointSpec::get(
+        "funds/disclosure-holders-latest",
+        "funds/disclosure-holders-latest",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
+/// Describes `GET funds/disclosure` without binding a transport.
+pub fn fund_disclosures(
+    query: FundDisclosureQuery,
+) -> EndpointSpec<FundDisclosureQuery, Vec<FundDisclosure>> {
+    EndpointSpec::get("funds/disclosure", "funds/disclosure", query).with_metadata(US_ONLY)
+}
+
+/// Describes `GET funds/disclosure-holders-search` without binding a transport.
+pub fn search_fund_disclosure_holders(
+    query: FundDisclosureHolderSearchQuery,
+) -> EndpointSpec<FundDisclosureHolderSearchQuery, Vec<FundDisclosureSearchResult>> {
+    EndpointSpec::get(
+        "funds/disclosure-holders-search",
+        "funds/disclosure-holders-search",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
+/// Describes `GET funds/disclosure-dates` without binding a transport.
+pub fn fund_disclosure_dates(
+    query: FundDisclosureDatesQuery,
+) -> EndpointSpec<FundDisclosureDatesQuery, Vec<FundDisclosureDate>> {
+    EndpointSpec::get("funds/disclosure-dates", "funds/disclosure-dates", query)
+        .with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves the worldwide holdings of one ETF or mutual fund.
     pub async fn etf_holdings(&self, query: EtfHoldingsQuery) -> Result<Vec<EtfFundHolding>> {
@@ -290,6 +332,38 @@ impl Client {
         query: EtfSectorWeightingsQuery,
     ) -> Result<Vec<EtfSectorWeighting>> {
         self.execute(&etf_sector_weightings(query)).await
+    }
+
+    /// Retrieves the latest US fund disclosures holding one requested asset.
+    pub async fn latest_fund_disclosure_holders(
+        &self,
+        query: LatestFundDisclosureHoldersQuery,
+    ) -> Result<Vec<FundDisclosureHolder>> {
+        self.execute(&latest_fund_disclosure_holders(query)).await
+    }
+
+    /// Retrieves positions from one US mutual-fund disclosure period.
+    pub async fn fund_disclosures(
+        &self,
+        query: FundDisclosureQuery,
+    ) -> Result<Vec<FundDisclosure>> {
+        self.execute(&fund_disclosures(query)).await
+    }
+
+    /// Searches US mutual-fund and ETF disclosure holders by exact name text.
+    pub async fn search_fund_disclosure_holders(
+        &self,
+        query: FundDisclosureHolderSearchQuery,
+    ) -> Result<Vec<FundDisclosureSearchResult>> {
+        self.execute(&search_fund_disclosure_holders(query)).await
+    }
+
+    /// Retrieves available US fund-disclosure reporting dates.
+    pub async fn fund_disclosure_dates(
+        &self,
+        query: FundDisclosureDatesQuery,
+    ) -> Result<Vec<FundDisclosureDate>> {
+        self.execute(&fund_disclosure_dates(query)).await
     }
 }
 
