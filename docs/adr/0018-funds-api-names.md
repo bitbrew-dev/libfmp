@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted. The Rust holdings, information, allocation, and exposure slices are
-implemented; the disclosure slice and future Python facade remain reserved.
+Accepted. All nine Rust endpoint slices are implemented; the future Python
+facade remains reserved.
 
 ## Decision
 
