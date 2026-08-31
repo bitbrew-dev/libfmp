@@ -7,7 +7,9 @@ use crate::{
         metadata::{EndpointMetadata, GeographicAvailability},
     },
     query::{Quarter, Year},
-    responses::funds::{EtfFundHolding, EtfFundInfo},
+    responses::funds::{
+        EtfAssetExposure, EtfCountryWeighting, EtfFundHolding, EtfFundInfo, EtfSectorWeighting,
+    },
     types::{Cik, SearchTerm, Ticker},
 };
 
@@ -232,6 +234,29 @@ pub fn etf_info(query: EtfInfoQuery) -> EndpointSpec<EtfInfoQuery, Vec<EtfFundIn
     EndpointSpec::get("etf/info", "etf/info", query).with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET etf/country-weightings` without binding a transport.
+pub fn etf_country_weightings(
+    query: EtfCountryWeightingsQuery,
+) -> EndpointSpec<EtfCountryWeightingsQuery, Vec<EtfCountryWeighting>> {
+    EndpointSpec::get("etf/country-weightings", "etf/country-weightings", query)
+        .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET etf/asset-exposure` without binding a transport.
+pub fn etf_asset_exposure(
+    query: EtfAssetExposureQuery,
+) -> EndpointSpec<EtfAssetExposureQuery, Vec<EtfAssetExposure>> {
+    EndpointSpec::get("etf/asset-exposure", "etf/asset-exposure", query).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET etf/sector-weightings` without binding a transport.
+pub fn etf_sector_weightings(
+    query: EtfSectorWeightingsQuery,
+) -> EndpointSpec<EtfSectorWeightingsQuery, Vec<EtfSectorWeighting>> {
+    EndpointSpec::get("etf/sector-weightings", "etf/sector-weightings", query)
+        .with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves the worldwide holdings of one ETF or mutual fund.
     pub async fn etf_holdings(&self, query: EtfHoldingsQuery) -> Result<Vec<EtfFundHolding>> {
@@ -241,6 +266,30 @@ impl Client {
     /// Retrieves worldwide descriptive and trading information for one fund.
     pub async fn etf_info(&self, query: EtfInfoQuery) -> Result<Vec<EtfFundInfo>> {
         self.execute(&etf_info(query)).await
+    }
+
+    /// Retrieves the worldwide country allocation for one ETF or mutual fund.
+    pub async fn etf_country_weightings(
+        &self,
+        query: EtfCountryWeightingsQuery,
+    ) -> Result<Vec<EtfCountryWeighting>> {
+        self.execute(&etf_country_weightings(query)).await
+    }
+
+    /// Retrieves the worldwide ETF exposure to one requested asset.
+    pub async fn etf_asset_exposure(
+        &self,
+        query: EtfAssetExposureQuery,
+    ) -> Result<Vec<EtfAssetExposure>> {
+        self.execute(&etf_asset_exposure(query)).await
+    }
+
+    /// Retrieves the worldwide sector allocation for one ETF or mutual fund.
+    pub async fn etf_sector_weightings(
+        &self,
+        query: EtfSectorWeightingsQuery,
+    ) -> Result<Vec<EtfSectorWeighting>> {
+        self.execute(&etf_sector_weightings(query)).await
     }
 }
 
