@@ -2,8 +2,9 @@
 
 ## Status
 
-Accepted for the Rust contract foundation. Endpoint descriptors, client methods,
-and the future Python facade remain reserved for the following vertical slices.
+Accepted. The five SEC filing feed/search descriptors and Rust client methods
+are implemented. The remaining Rust routes and future Python facade stay
+reserved for following vertical slices.
 
 ## Decision
 

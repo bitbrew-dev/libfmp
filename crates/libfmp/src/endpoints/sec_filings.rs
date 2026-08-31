@@ -1,7 +1,12 @@
 //! SEC filing, company lookup, profile, and industry-classification query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
+    responses::sec_filings::SecFiling,
     types::{Cik, Date, FormType, Limit, Page, SearchTerm, Ticker},
 };
 
@@ -439,6 +444,112 @@ impl QueryParameters for AllIndustryClassificationsQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.optional("page", self.page);
         encoder.optional("limit", self.limit);
+    }
+}
+
+const LATEST_FILING_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::UsOnly)
+    .with_bounds(
+        EndpointBounds::new()
+            .with_response_rows(1_000)
+            .with_page(100)
+            .with_date_range_days(90),
+    );
+const FILING_SEARCH_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::UsOnly)
+    .with_bounds(
+        EndpointBounds::new()
+            .with_response_rows(1_000)
+            .with_page(100),
+    );
+
+/// Describes `GET sec-filings-8k` without binding a transport.
+pub fn latest_8k_sec_filings(
+    query: Latest8kSecFilingsQuery,
+) -> EndpointSpec<Latest8kSecFilingsQuery, Vec<SecFiling>> {
+    EndpointSpec::get("sec-filings-8k", "sec-filings-8k", query)
+        .with_metadata(LATEST_FILING_METADATA)
+}
+
+/// Describes `GET sec-filings-financials` without binding a transport.
+pub fn latest_sec_filings(
+    query: LatestSecFilingsQuery,
+) -> EndpointSpec<LatestSecFilingsQuery, Vec<SecFiling>> {
+    EndpointSpec::get("sec-filings-financials", "sec-filings-financials", query)
+        .with_metadata(LATEST_FILING_METADATA)
+}
+
+/// Describes `GET sec-filings-search/form-type` without binding a transport.
+pub fn sec_filings_by_form_type(
+    query: SecFilingsByFormTypeQuery,
+) -> EndpointSpec<SecFilingsByFormTypeQuery, Vec<SecFiling>> {
+    EndpointSpec::get(
+        "sec-filings-search/form-type",
+        "sec-filings-search/form-type",
+        query,
+    )
+    .with_metadata(FILING_SEARCH_METADATA)
+}
+
+/// Describes `GET sec-filings-search/symbol` without binding a transport.
+pub fn sec_filings_by_symbol(
+    query: SecFilingsBySymbolQuery,
+) -> EndpointSpec<SecFilingsBySymbolQuery, Vec<SecFiling>> {
+    EndpointSpec::get(
+        "sec-filings-search/symbol",
+        "sec-filings-search/symbol",
+        query,
+    )
+    .with_metadata(FILING_SEARCH_METADATA)
+}
+
+/// Describes `GET sec-filings-search/cik` without binding a transport.
+pub fn sec_filings_by_cik(
+    query: SecFilingsByCikQuery,
+) -> EndpointSpec<SecFilingsByCikQuery, Vec<SecFiling>> {
+    EndpointSpec::get("sec-filings-search/cik", "sec-filings-search/cik", query)
+        .with_metadata(FILING_SEARCH_METADATA)
+}
+
+impl Client {
+    /// Retrieves the latest US 8-K SEC filings within the required date range.
+    pub async fn latest_8k_sec_filings(
+        &self,
+        query: impl Into<Latest8kSecFilingsQuery>,
+    ) -> Result<Vec<SecFiling>> {
+        self.execute(&latest_8k_sec_filings(query.into())).await
+    }
+
+    /// Retrieves the latest US financial SEC filings within the required date range.
+    pub async fn latest_sec_filings(
+        &self,
+        query: impl Into<LatestSecFilingsQuery>,
+    ) -> Result<Vec<SecFiling>> {
+        self.execute(&latest_sec_filings(query.into())).await
+    }
+
+    /// Retrieves US SEC filings by their open form type.
+    pub async fn sec_filings_by_form_type(
+        &self,
+        query: impl Into<SecFilingsByFormTypeQuery>,
+    ) -> Result<Vec<SecFiling>> {
+        self.execute(&sec_filings_by_form_type(query.into())).await
+    }
+
+    /// Retrieves US SEC filings for a ticker.
+    pub async fn sec_filings_by_symbol(
+        &self,
+        query: impl Into<SecFilingsBySymbolQuery>,
+    ) -> Result<Vec<SecFiling>> {
+        self.execute(&sec_filings_by_symbol(query.into())).await
+    }
+
+    /// Retrieves US SEC filings for a string-backed CIK.
+    pub async fn sec_filings_by_cik(
+        &self,
+        query: impl Into<SecFilingsByCikQuery>,
+    ) -> Result<Vec<SecFiling>> {
+        self.execute(&sec_filings_by_cik(query.into())).await
     }
 }
 
