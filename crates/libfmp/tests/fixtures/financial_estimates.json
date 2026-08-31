@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2030-09-27",
+    "ebitAvg": 227415289483,
+    "ebitHigh": 246178886382,
+    "ebitLow": 217109092822,
+    "ebitdaAvg": 245074834838,
+    "ebitdaHigh": 265295486763,
+    "ebitdaLow": 233968328102,
+    "epsAvg": 13.565,
+    "epsHigh": 15.01999,
+    "epsLow": 12.76582,
+    "netIncomeAvg": 203538714818,
+    "netIncomeHigh": 225370398908,
+    "netIncomeLow": 191547261069,
+    "numAnalystsEps": 7,
+    "numAnalystsRevenue": 16,
+    "revenueAvg": 679000000000,
+    "revenueHigh": 735022980353,
+    "revenueLow": 648228509004,
+    "sgaExpenseAvg": 43702109337,
+    "sgaExpenseHigh": 47307886087,
+    "sgaExpenseLow": 41721580524,
+    "symbol": "AAPL"
+  }
+]

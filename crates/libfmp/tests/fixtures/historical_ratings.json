@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-07-30",
+    "debtToEquityScore": 1,
+    "discountedCashFlowScore": 3,
+    "overallScore": 3,
+    "priceToBookScore": 1,
+    "priceToEarningsScore": 2,
+    "rating": "B",
+    "returnOnAssetsScore": 5,
+    "returnOnEquityScore": 5,
+    "symbol": "AAPL"
+  }
+]
