@@ -50,6 +50,6 @@ Python runtime bindings are deferred. The future facade reserves ordinary
 public class.
 
 This foundation defines the shared query and nine response rows. The Rust
-descriptors and client methods for SMA, EMA, and WMA are implemented; the
-remaining six indicators are intentionally implemented by later vertical
-slices. Python runtime bindings remain deferred.
+descriptors and client methods for SMA, EMA, WMA, DEMA, and TEMA are
+implemented; the remaining four indicators are intentionally implemented by
+later vertical slices. Python runtime bindings remain deferred.
