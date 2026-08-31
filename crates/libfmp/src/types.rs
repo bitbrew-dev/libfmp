@@ -124,6 +124,11 @@ string_value!(
     false
 );
 string_value!(Cik, "A Central Index Key.", false);
+string_value!(
+    FormType,
+    "An open, representation-preserving SEC filing form type.",
+    false
+);
 string_value!(Cusip, "A CUSIP identifier.", false);
 string_value!(Isin, "An ISIN identifier.", false);
 string_value!(Lei, "A Legal Entity Identifier.", false);

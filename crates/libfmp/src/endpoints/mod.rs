@@ -14,6 +14,7 @@ pub mod news;
 pub mod quote;
 pub mod screener;
 pub mod search;
+pub mod sec_filings;
 pub mod statements;
 pub mod technical_indicators;
 pub mod transcripts;
