@@ -1,0 +1,27 @@
+[
+  {
+    "acceptedDate": "2023-12-28 09:26:13",
+    "assetCat": "EC",
+    "balance": 2438784,
+    "cik": "0000857489",
+    "cur_cd": "CNY",
+    "cusip": "N/A",
+    "date": "2023-10-31",
+    "fairValLevel": "2",
+    "invCountry": "CN",
+    "isCashCollateral": "N",
+    "isLoanByFund": "N",
+    "isNonCashCollateral": "N",
+    "isRestrictedSec": "N",
+    "isin": "CNE000000VK1",
+    "issuerCat": "CORP",
+    "lei": "3003009W045RIKRBZI44",
+    "name": "Shenzhen Airport Co Ltd",
+    "payoffProfile": "Long",
+    "pctVal": 0.0023838966190458206,
+    "symbol": "000089.SZ",
+    "title": "SHENZ AIRPORT-A",
+    "units": "NS",
+    "valUsd": 2255873.6
+  }
+]

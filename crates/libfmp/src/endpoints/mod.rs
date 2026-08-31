@@ -6,6 +6,7 @@ pub mod chart;
 pub mod company;
 pub mod directory;
 pub mod economics;
+pub mod funds;
 pub mod institutional_ownership;
 pub mod market;
 pub mod metadata;

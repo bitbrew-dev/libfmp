@@ -1,0 +1,36 @@
+[
+  {
+    "assetClass": "Equity",
+    "assetsUnderManagement": 777349860000,
+    "avgVolume": 52093933,
+    "description": "SPY is the best-recognized and oldest US listed ETF and typically tops rankings for largest AUM and greatest trading volume. The fund tracks the massively popular US index, the S&P 500. Few realize that S&P's index committee chooses 500 securities to represent the US large-cap space - not necessarily the 500 largest by market cap, which can lead to some omissions of single names. Still, the index offers outstanding exposure to the US large-cap space. It's important to note, SPY is a unit investment trust, an older but entirely viable structure. As a UIT, SPY must fully replicate its index (it probably would anyway) and forgo the small risk and reward of securities lending. It also can`t reinvest portfolio dividends between distributions, the resulting cash drag will slightly hurt performance in up markets and help in downtrends. SPY is a favored vanilla trading vehicle.",
+    "domicile": "US",
+    "etfCompany": "SPDR",
+    "expenseRatio": 0.09,
+    "holdingsCount": 504,
+    "inceptionDate": "1993-01-22",
+    "isActivelyTrading": true,
+    "isin": "US78462F1030",
+    "name": "State Street SPDR S&P 500 ETF",
+    "nav": 729.27,
+    "navCurrency": "USD",
+    "sectorsList": [
+      {
+        "exposure": 1.6916311902850854,
+        "industry": "Basic Materials"
+      },
+      {
+        "exposure": 0.30489782336177595,
+        "industry": "Cash & Others"
+      },
+      {
+        "exposure": 9.23211353485037,
+        "industry": "Communication Services"
+      }
+    ],
+    "securityCusip": "78462F103",
+    "symbol": "SPY",
+    "updatedAt": "2026-07-30T16:00:20.049Z",
+    "website": "https://www.ssga.com/us/en/institutional/etfs/state-street-spdr-sp-500-etf-trust-spy"
+  }
+]
