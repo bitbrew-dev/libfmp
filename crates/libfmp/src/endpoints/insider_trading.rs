@@ -7,7 +7,8 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     responses::insider_trading::{
-        InsiderReportingName, InsiderTrade, InsiderTradeStatistics, InsiderTransactionType,
+        BeneficialOwnershipAcquisition, InsiderReportingName, InsiderTrade, InsiderTradeStatistics,
+        InsiderTransactionType,
     },
     types::{Cik, Date, Limit, Page, SearchTerm, Ticker, TransactionTypeCode},
 };
@@ -359,6 +360,18 @@ pub fn insider_trade_statistics(
     .with_metadata(US_ONLY)
 }
 
+/// Describes `GET acquisition-of-beneficial-ownership` without binding a transport.
+pub fn beneficial_ownership_acquisitions(
+    query: BeneficialOwnershipAcquisitionsQuery,
+) -> EndpointSpec<BeneficialOwnershipAcquisitionsQuery, Vec<BeneficialOwnershipAcquisition>> {
+    EndpointSpec::get(
+        "acquisition-of-beneficial-ownership",
+        "acquisition-of-beneficial-ownership",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves the latest US insider trades with optional date and pagination filters.
     pub async fn latest_insider_trades(
@@ -396,6 +409,15 @@ impl Client {
         query: impl Into<InsiderTradeStatisticsQuery>,
     ) -> Result<Vec<InsiderTradeStatistics>> {
         self.execute(&insider_trade_statistics(query.into())).await
+    }
+
+    /// Retrieves US beneficial-ownership acquisition filings for one ticker.
+    pub async fn beneficial_ownership_acquisitions(
+        &self,
+        query: impl Into<BeneficialOwnershipAcquisitionsQuery>,
+    ) -> Result<Vec<BeneficialOwnershipAcquisition>> {
+        self.execute(&beneficial_ownership_acquisitions(query.into()))
+            .await
     }
 }
 
