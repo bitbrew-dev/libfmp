@@ -2,9 +2,10 @@
 
 ## Status
 
-Accepted. The latest and search descriptors and Rust client methods are
-implemented; the remaining endpoints follow in stacked implementation slices.
-The future Python facade remains reserved for the parity work.
+Accepted. The latest, search, reporting-name, transaction-type, and statistics
+descriptors and Rust client methods are implemented; beneficial ownership
+follows in the remaining stacked implementation slice. The future Python
+facade remains reserved for the parity work.
 
 ## Decision
 

@@ -6,7 +6,9 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::insider_trading::InsiderTrade,
+    responses::insider_trading::{
+        InsiderReportingName, InsiderTrade, InsiderTradeStatistics, InsiderTransactionType,
+    },
     types::{Cik, Date, Limit, Page, SearchTerm, Ticker, TransactionTypeCode},
 };
 
@@ -304,6 +306,9 @@ const PAGINATED_US_ONLY: EndpointMetadata = EndpointMetadata::new()
             .with_page(100),
     );
 
+const US_ONLY: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
+
 /// Describes `GET insider-trading/latest` without binding a transport.
 pub fn latest_insider_trades(
     query: LatestInsiderTradesQuery,
@@ -318,6 +323,40 @@ pub fn search_insider_trades(
 ) -> EndpointSpec<InsiderTradesSearchQuery, Vec<InsiderTrade>> {
     EndpointSpec::get("insider-trading/search", "insider-trading/search", query)
         .with_metadata(PAGINATED_US_ONLY)
+}
+
+/// Describes `GET insider-trading/reporting-name` without binding a transport.
+pub fn search_insider_reporting_names(
+    query: InsiderReportingNameSearchQuery,
+) -> EndpointSpec<InsiderReportingNameSearchQuery, Vec<InsiderReportingName>> {
+    EndpointSpec::get(
+        "insider-trading/reporting-name",
+        "insider-trading/reporting-name",
+        query,
+    )
+    .with_metadata(US_ONLY)
+}
+
+/// Describes `GET insider-trading-transaction-type` without binding a transport.
+pub fn insider_transaction_types() -> EndpointSpec<(), Vec<InsiderTransactionType>> {
+    EndpointSpec::get(
+        "insider-trading-transaction-type",
+        "insider-trading-transaction-type",
+        (),
+    )
+    .with_metadata(US_ONLY)
+}
+
+/// Describes `GET insider-trading/statistics` without binding a transport.
+pub fn insider_trade_statistics(
+    query: InsiderTradeStatisticsQuery,
+) -> EndpointSpec<InsiderTradeStatisticsQuery, Vec<InsiderTradeStatistics>> {
+    EndpointSpec::get(
+        "insider-trading/statistics",
+        "insider-trading/statistics",
+        query,
+    )
+    .with_metadata(US_ONLY)
 }
 
 impl Client {
@@ -335,6 +374,28 @@ impl Client {
         query: InsiderTradesSearchQuery,
     ) -> Result<Vec<InsiderTrade>> {
         self.execute(&search_insider_trades(query)).await
+    }
+
+    /// Searches US insider-reporting identities by name.
+    pub async fn search_insider_reporting_names(
+        &self,
+        query: impl Into<InsiderReportingNameSearchQuery>,
+    ) -> Result<Vec<InsiderReportingName>> {
+        self.execute(&search_insider_reporting_names(query.into()))
+            .await
+    }
+
+    /// Retrieves the US insider transaction-type taxonomy.
+    pub async fn insider_transaction_types(&self) -> Result<Vec<InsiderTransactionType>> {
+        self.execute(&insider_transaction_types()).await
+    }
+
+    /// Retrieves quarterly US insider-trade statistics for one ticker.
+    pub async fn insider_trade_statistics(
+        &self,
+        query: impl Into<InsiderTradeStatisticsQuery>,
+    ) -> Result<Vec<InsiderTradeStatistics>> {
+        self.execute(&insider_trade_statistics(query.into())).await
     }
 }
 
