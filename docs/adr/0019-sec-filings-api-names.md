@@ -2,9 +2,9 @@
 
 ## Status
 
-Accepted. The five SEC filing feed/search and four company lookup/profile
-descriptors and Rust client methods are implemented. The remaining Rust routes
-and future Python facade stay reserved for following vertical slices.
+Accepted. All twelve SEC filing, company lookup, profile, and
+industry-classification descriptors and Rust client methods are implemented.
+The future Python facade stays reserved for a later parity slice.
 
 ## Decision
 
