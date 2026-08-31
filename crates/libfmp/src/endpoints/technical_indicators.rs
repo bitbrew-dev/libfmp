@@ -5,8 +5,9 @@ use crate::{
     endpoints::{QueryEncoder, QueryParameters},
     query::{ChartTimeframe, PeriodLength},
     responses::technical_indicators::{
-        DoubleExponentialMovingAverageBar, ExponentialMovingAverageBar, SimpleMovingAverageBar,
-        TripleExponentialMovingAverageBar, WeightedMovingAverageBar,
+        AverageDirectionalIndexBar, DoubleExponentialMovingAverageBar, ExponentialMovingAverageBar,
+        RelativeStrengthIndexBar, SimpleMovingAverageBar, StandardDeviationBar,
+        TripleExponentialMovingAverageBar, WeightedMovingAverageBar, WilliamsBar,
     },
     types::{Date, Ticker},
 };
@@ -153,6 +154,54 @@ pub fn triple_exponential_moving_average(
     .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET technical-indicators/rsi` without binding a transport.
+pub fn relative_strength_index(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<RelativeStrengthIndexBar>> {
+    EndpointSpec::get(
+        "technical-indicators/rsi",
+        "technical-indicators/rsi",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET technical-indicators/standarddeviation` without binding a transport.
+pub fn standard_deviation(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<StandardDeviationBar>> {
+    EndpointSpec::get(
+        "technical-indicators/standarddeviation",
+        "technical-indicators/standarddeviation",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET technical-indicators/williams` without binding a transport.
+pub fn williams(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<WilliamsBar>> {
+    EndpointSpec::get(
+        "technical-indicators/williams",
+        "technical-indicators/williams",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET technical-indicators/adx` without binding a transport.
+pub fn average_directional_index(
+    query: TechnicalIndicatorQuery,
+) -> EndpointSpec<TechnicalIndicatorQuery, Vec<AverageDirectionalIndexBar>> {
+    EndpointSpec::get(
+        "technical-indicators/adx",
+        "technical-indicators/adx",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves worldwide simple-moving-average bars.
     pub async fn simple_moving_average(
@@ -194,6 +243,35 @@ impl Client {
     ) -> Result<Vec<TripleExponentialMovingAverageBar>> {
         self.execute(&triple_exponential_moving_average(query))
             .await
+    }
+
+    /// Retrieves worldwide relative-strength-index bars.
+    pub async fn relative_strength_index(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<RelativeStrengthIndexBar>> {
+        self.execute(&relative_strength_index(query)).await
+    }
+
+    /// Retrieves worldwide standard-deviation bars.
+    pub async fn standard_deviation(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<StandardDeviationBar>> {
+        self.execute(&standard_deviation(query)).await
+    }
+
+    /// Retrieves worldwide Williams bars.
+    pub async fn williams(&self, query: TechnicalIndicatorQuery) -> Result<Vec<WilliamsBar>> {
+        self.execute(&williams(query)).await
+    }
+
+    /// Retrieves worldwide average-directional-index bars.
+    pub async fn average_directional_index(
+        &self,
+        query: TechnicalIndicatorQuery,
+    ) -> Result<Vec<AverageDirectionalIndexBar>> {
+        self.execute(&average_directional_index(query)).await
     }
 }
 

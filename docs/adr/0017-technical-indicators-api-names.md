@@ -49,7 +49,5 @@ Python runtime bindings are deferred. The future facade reserves ordinary
 `fmp.technical_indicators`; the Rust query struct will not become a Python
 public class.
 
-This foundation defines the shared query and nine response rows. The Rust
-descriptors and client methods for SMA, EMA, WMA, DEMA, and TEMA are
-implemented; the remaining four indicators are intentionally implemented by
-later vertical slices. Python runtime bindings remain deferred.
+The shared query, nine response rows, and all nine Rust descriptors and client
+methods are implemented. Python runtime bindings remain deferred.
