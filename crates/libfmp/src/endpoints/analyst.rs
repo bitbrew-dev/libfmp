@@ -8,8 +8,8 @@ use crate::{
     },
     query::RetrievalFrequency,
     responses::analyst::{
-        FinancialEstimate, HistoricalRating, PriceTargetConsensus, PriceTargetSummary,
-        RatingSnapshot,
+        FinancialEstimate, HistoricalRating, HistoricalStockGrade, PriceTargetConsensus,
+        PriceTargetSummary, RatingSnapshot, StockGrade, StockGradesSummary,
     },
     types::{Limit, Page, Ticker},
 };
@@ -212,6 +212,11 @@ const HISTORICAL_RATINGS_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_bounds(EndpointBounds::new().with_response_rows(10_000));
 const PRICE_TARGET_METADATA: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
+const STOCK_GRADES_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+const HISTORICAL_STOCK_GRADES_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::Worldwide)
+    .with_bounds(EndpointBounds::new().with_response_rows(1_000));
 
 /// Describes `GET analyst-estimates` without binding a transport.
 pub fn financial_estimates(
@@ -253,6 +258,27 @@ pub fn price_target_consensus(
         .with_metadata(PRICE_TARGET_METADATA)
 }
 
+/// Describes `GET grades` without binding a transport.
+pub fn stock_grades(query: StockGradesQuery) -> EndpointSpec<StockGradesQuery, Vec<StockGrade>> {
+    EndpointSpec::get("grades", "grades", query).with_metadata(STOCK_GRADES_METADATA)
+}
+
+/// Describes `GET grades-historical` without binding a transport.
+pub fn historical_stock_grades(
+    query: HistoricalStockGradesQuery,
+) -> EndpointSpec<HistoricalStockGradesQuery, Vec<HistoricalStockGrade>> {
+    EndpointSpec::get("grades-historical", "grades-historical", query)
+        .with_metadata(HISTORICAL_STOCK_GRADES_METADATA)
+}
+
+/// Describes `GET grades-consensus` without binding a transport.
+pub fn stock_grades_summary(
+    query: StockGradesSummaryQuery,
+) -> EndpointSpec<StockGradesSummaryQuery, Vec<StockGradesSummary>> {
+    EndpointSpec::get("grades-consensus", "grades-consensus", query)
+        .with_metadata(STOCK_GRADES_METADATA)
+}
+
 impl Client {
     /// Retrieves worldwide analyst financial estimates for one ticker.
     pub async fn financial_estimates(
@@ -292,6 +318,30 @@ impl Client {
         query: impl Into<PriceTargetConsensusQuery>,
     ) -> Result<Vec<PriceTargetConsensus>> {
         self.execute(&price_target_consensus(query.into())).await
+    }
+
+    /// Retrieves current worldwide stock-grade actions for one ticker.
+    pub async fn stock_grades(
+        &self,
+        query: impl Into<StockGradesQuery>,
+    ) -> Result<Vec<StockGrade>> {
+        self.execute(&stock_grades(query.into())).await
+    }
+
+    /// Retrieves worldwide historical stock-grade counts for one ticker.
+    pub async fn historical_stock_grades(
+        &self,
+        query: impl Into<HistoricalStockGradesQuery>,
+    ) -> Result<Vec<HistoricalStockGrade>> {
+        self.execute(&historical_stock_grades(query.into())).await
+    }
+
+    /// Retrieves the worldwide stock-grades summary for one ticker.
+    pub async fn stock_grades_summary(
+        &self,
+        query: impl Into<StockGradesSummaryQuery>,
+    ) -> Result<Vec<StockGradesSummary>> {
+        self.execute(&stock_grades_summary(query.into())).await
     }
 }
 
