@@ -126,6 +126,7 @@ string_value!(
 string_value!(Cik, "A Central Index Key.", false);
 string_value!(Cusip, "A CUSIP identifier.", false);
 string_value!(Isin, "An ISIN identifier.", false);
+string_value!(Lei, "A Legal Entity Identifier.", false);
 string_value!(ExchangeCode, "An open provider exchange code.", false);
 string_value!(CurrencyCode, "An open provider currency code.", false);
 string_value!(CountryCode, "An open provider country code.", false);

@@ -1,0 +1,13 @@
+[
+  {
+    "asset": "AAPL",
+    "isin": "US0378331005",
+    "marketValue": 61679458958,
+    "name": "APPLE INC",
+    "securityCusip": "037833100",
+    "sharesNumber": 181418073,
+    "symbol": "SPY",
+    "updatedAt": "2026-07-30 08:07:21",
+    "weightPercentage": 7.79997012
+  }
+]

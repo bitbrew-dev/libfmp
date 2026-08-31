@@ -4,11 +4,30 @@ use libfmp::{
     query::Year,
     types::{
         ApiDateTime, BenchmarkYear, CalendarQuarter, CalendarYear, Cik, CountryCode, CurrencyCode,
-        Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, Industry, Isin, Limit, Page,
+        Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, Industry, Isin, Lei, Limit, Page,
         SearchTerm, Sector, StatementAmount, StringValueError, Ticker, TickerList,
         UnixMilliseconds, UnixSeconds,
     },
 };
+
+#[test]
+fn lei_preserves_its_exact_string_representation() {
+    let lei = Lei::new("3003009W045RIKRBZI44").unwrap();
+    assert_eq!(lei.as_str(), "3003009W045RIKRBZI44");
+    assert_eq!(
+        serde_json::to_string(&lei).unwrap(),
+        r#""3003009W045RIKRBZI44""#
+    );
+    assert_eq!(
+        serde_json::from_str::<Lei>(r#""3003009W045RIKRBZI44""#).unwrap(),
+        lei
+    );
+    assert_eq!(Lei::new("").unwrap_err(), StringValueError::Empty);
+    assert_eq!(
+        Lei::new("3003009W045R\nKRBZI44").unwrap_err(),
+        StringValueError::ControlCharacter
+    );
+}
 
 #[test]
 fn calendar_quarter_is_a_validated_numeric_response_fundamental() {
