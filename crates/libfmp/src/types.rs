@@ -129,6 +129,11 @@ string_value!(
     "An open, representation-preserving SEC filing form type.",
     false
 );
+string_value!(
+    TransactionTypeCode,
+    "An open, representation-preserving insider transaction type code.",
+    false
+);
 string_value!(Cusip, "A CUSIP identifier.", false);
 string_value!(Isin, "An ISIN identifier.", false);
 string_value!(Lei, "A Legal Entity Identifier.", false);

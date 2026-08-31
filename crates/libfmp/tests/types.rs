@@ -6,7 +6,7 @@ use libfmp::{
         ApiDateTime, BenchmarkYear, CalendarQuarter, CalendarYear, Cik, CountryCode, CurrencyCode,
         Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, FormType, Industry, Isin, Lei, Limit,
         Page, SearchTerm, Sector, StatementAmount, StringValueError, Ticker, TickerList,
-        UnixMilliseconds, UnixSeconds,
+        TransactionTypeCode, UnixMilliseconds, UnixSeconds,
     },
 };
 
@@ -90,6 +90,21 @@ fn sec_form_type_is_open_and_representation_preserving() {
             .as_str(),
         "8-K"
     );
+}
+
+#[test]
+fn insider_transaction_type_code_is_open_and_representation_preserving() {
+    let code = TransactionTypeCode::new("S-Sale / future").unwrap();
+    assert_eq!(code.as_str(), "S-Sale / future");
+    assert_eq!(code.to_string(), "S-Sale / future");
+    assert_eq!(
+        serde_json::from_str::<TransactionTypeCode>(r#""A-Award""#)
+            .unwrap()
+            .as_str(),
+        "A-Award"
+    );
+    assert!(TransactionTypeCode::new("").is_err());
+    assert!(TransactionTypeCode::new("bad\ncode").is_err());
 }
 
 #[test]
