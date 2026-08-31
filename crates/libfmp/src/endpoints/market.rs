@@ -6,7 +6,9 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointMetadata, GeographicAvailability},
     },
-    responses::market::{IndustryPe, IndustryPerformance, SectorPe, SectorPerformance},
+    responses::market::{
+        IndustryPe, IndustryPerformance, MarketMover, SectorPe, SectorPerformance,
+    },
     types::{Date, ExchangeCode, Industry, Sector},
 };
 
@@ -288,6 +290,8 @@ historical_industry_query!(
 
 const WORLDWIDE: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+const US_ONLY: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 
 /// Describes `GET sector-performance-snapshot` without binding a transport.
 pub fn sector_performance_snapshot(
@@ -368,6 +372,21 @@ pub fn historical_industry_pe(
         .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET biggest-gainers` without binding a transport.
+pub fn biggest_gainers() -> EndpointSpec<(), Vec<MarketMover>> {
+    EndpointSpec::get("biggest-gainers", "biggest-gainers", ()).with_metadata(US_ONLY)
+}
+
+/// Describes `GET biggest-losers` without binding a transport.
+pub fn biggest_losers() -> EndpointSpec<(), Vec<MarketMover>> {
+    EndpointSpec::get("biggest-losers", "biggest-losers", ()).with_metadata(US_ONLY)
+}
+
+/// Describes `GET most-actives` without binding a transport.
+pub fn most_actives() -> EndpointSpec<(), Vec<MarketMover>> {
+    EndpointSpec::get("most-actives", "most-actives", ()).with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves a worldwide dated sector-performance snapshot.
     pub async fn sector_performance_snapshot(
@@ -430,6 +449,21 @@ impl Client {
         query: impl Into<HistoricalIndustryPeQuery>,
     ) -> Result<Vec<IndustryPe>> {
         self.execute(&historical_industry_pe(query.into())).await
+    }
+
+    /// Retrieves the US-only list of biggest stock gainers.
+    pub async fn biggest_gainers(&self) -> Result<Vec<MarketMover>> {
+        self.execute(&biggest_gainers()).await
+    }
+
+    /// Retrieves the US-only list of biggest stock losers.
+    pub async fn biggest_losers(&self) -> Result<Vec<MarketMover>> {
+        self.execute(&biggest_losers()).await
+    }
+
+    /// Retrieves the US-only list of most actively traded stocks.
+    pub async fn most_actives(&self) -> Result<Vec<MarketMover>> {
+        self.execute(&most_actives()).await
     }
 }
 
