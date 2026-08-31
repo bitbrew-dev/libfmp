@@ -1,8 +1,13 @@
 //! ETF and mutual-fund endpoint query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointMetadata, GeographicAvailability},
+    },
     query::{Quarter, Year},
+    responses::funds::{EtfFundHolding, EtfFundInfo},
     types::{Cik, SearchTerm, Ticker},
 };
 
@@ -209,6 +214,33 @@ impl QueryParameters for FundDisclosureDatesQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.required("symbol", &self.symbol);
         encoder.optional("cik", self.cik.as_ref());
+    }
+}
+
+const WORLDWIDE: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+
+/// Describes `GET etf/holdings` without binding a transport.
+pub fn etf_holdings(
+    query: EtfHoldingsQuery,
+) -> EndpointSpec<EtfHoldingsQuery, Vec<EtfFundHolding>> {
+    EndpointSpec::get("etf/holdings", "etf/holdings", query).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET etf/info` without binding a transport.
+pub fn etf_info(query: EtfInfoQuery) -> EndpointSpec<EtfInfoQuery, Vec<EtfFundInfo>> {
+    EndpointSpec::get("etf/info", "etf/info", query).with_metadata(WORLDWIDE)
+}
+
+impl Client {
+    /// Retrieves the worldwide holdings of one ETF or mutual fund.
+    pub async fn etf_holdings(&self, query: EtfHoldingsQuery) -> Result<Vec<EtfFundHolding>> {
+        self.execute(&etf_holdings(query)).await
+    }
+
+    /// Retrieves worldwide descriptive and trading information for one fund.
+    pub async fn etf_info(&self, query: EtfInfoQuery) -> Result<Vec<EtfFundInfo>> {
+        self.execute(&etf_info(query)).await
     }
 }
 

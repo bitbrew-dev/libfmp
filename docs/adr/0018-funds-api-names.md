@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for issue #27's Rust core implementation and reserved future Python
-facade.
+Accepted. The Rust holdings and information slice is implemented; the
+remaining Rust slices and future Python facade remain reserved.
 
 ## Decision
 
