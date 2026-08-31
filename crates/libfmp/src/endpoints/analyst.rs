@@ -7,7 +7,10 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     query::RetrievalFrequency,
-    responses::analyst::{FinancialEstimate, HistoricalRating, RatingSnapshot},
+    responses::analyst::{
+        FinancialEstimate, HistoricalRating, PriceTargetConsensus, PriceTargetSummary,
+        RatingSnapshot,
+    },
     types::{Limit, Page, Ticker},
 };
 
@@ -207,6 +210,8 @@ const RATINGS_SNAPSHOT_METADATA: EndpointMetadata = EndpointMetadata::new()
 const HISTORICAL_RATINGS_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::Worldwide)
     .with_bounds(EndpointBounds::new().with_response_rows(10_000));
+const PRICE_TARGET_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 
 /// Describes `GET analyst-estimates` without binding a transport.
 pub fn financial_estimates(
@@ -232,6 +237,22 @@ pub fn historical_ratings(
         .with_metadata(HISTORICAL_RATINGS_METADATA)
 }
 
+/// Describes `GET price-target-summary` without binding a transport.
+pub fn price_target_summary(
+    query: PriceTargetSummaryQuery,
+) -> EndpointSpec<PriceTargetSummaryQuery, Vec<PriceTargetSummary>> {
+    EndpointSpec::get("price-target-summary", "price-target-summary", query)
+        .with_metadata(PRICE_TARGET_METADATA)
+}
+
+/// Describes `GET price-target-consensus` without binding a transport.
+pub fn price_target_consensus(
+    query: PriceTargetConsensusQuery,
+) -> EndpointSpec<PriceTargetConsensusQuery, Vec<PriceTargetConsensus>> {
+    EndpointSpec::get("price-target-consensus", "price-target-consensus", query)
+        .with_metadata(PRICE_TARGET_METADATA)
+}
+
 impl Client {
     /// Retrieves worldwide analyst financial estimates for one ticker.
     pub async fn financial_estimates(
@@ -255,6 +276,22 @@ impl Client {
         query: impl Into<HistoricalRatingsQuery>,
     ) -> Result<Vec<HistoricalRating>> {
         self.execute(&historical_ratings(query.into())).await
+    }
+
+    /// Retrieves the US-only price-target summary for one ticker.
+    pub async fn price_target_summary(
+        &self,
+        query: impl Into<PriceTargetSummaryQuery>,
+    ) -> Result<Vec<PriceTargetSummary>> {
+        self.execute(&price_target_summary(query.into())).await
+    }
+
+    /// Retrieves the US-only price-target consensus for one ticker.
+    pub async fn price_target_consensus(
+        &self,
+        query: impl Into<PriceTargetConsensusQuery>,
+    ) -> Result<Vec<PriceTargetConsensus>> {
+        self.execute(&price_target_consensus(query.into())).await
     }
 }
 
