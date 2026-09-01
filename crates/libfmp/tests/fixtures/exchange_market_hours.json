@@ -1,0 +1,10 @@
+[
+  {
+    "closingHour": "04:00 PM -04:00",
+    "exchange": "NASDAQ",
+    "isMarketOpen": true,
+    "name": "NASDAQ",
+    "openingHour": "09:30 AM -04:00",
+    "timezone": "America/New_York"
+  }
+]

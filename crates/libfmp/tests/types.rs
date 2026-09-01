@@ -5,8 +5,8 @@ use libfmp::{
     types::{
         ApiDateTime, BenchmarkYear, CalendarQuarter, CalendarYear, Cik, CountryCode, CurrencyCode,
         Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, FormType, Industry, Isin, Lei, Limit,
-        Page, SearchTerm, Sector, StatementAmount, StringValueError, Ticker, TickerList,
-        TransactionTypeCode, UnixMilliseconds, UnixSeconds,
+        MarketHoursTimestamp, Page, SearchTerm, Sector, StatementAmount, StringValueError, Ticker,
+        TickerList, TransactionTypeCode, UnixMilliseconds, UnixSeconds,
     },
 };
 
@@ -105,6 +105,19 @@ fn insider_transaction_type_code_is_open_and_representation_preserving() {
     );
     assert!(TransactionTypeCode::new("").is_err());
     assert!(TransactionTypeCode::new("bad\ncode").is_err());
+}
+
+#[test]
+fn market_hours_timestamp_is_opaque_and_representation_preserving() {
+    let timestamp = MarketHoursTimestamp::new("001769527402").unwrap();
+    assert_eq!(timestamp.as_str(), "001769527402");
+    assert_eq!(timestamp.to_string(), "001769527402");
+    assert_eq!(
+        serde_json::from_str::<MarketHoursTimestamp>(r#""001769527402""#).unwrap(),
+        timestamp
+    );
+    assert!(MarketHoursTimestamp::new("").is_err());
+    assert!(MarketHoursTimestamp::new("1769\n527402").is_err());
 }
 
 #[test]
