@@ -2,11 +2,14 @@
 
 use crate::{
     Client, Result,
+    codecs::DynamicObject,
     endpoints::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::sec_filings::{SecCompanyProfile, SecCompanySearchResult, SecFiling},
+    responses::sec_filings::{
+        SecCompanyProfile, SecCompanySearchResult, SecFiling, SicClassification,
+    },
     types::{Cik, Date, FormType, Limit, Page, SearchTerm, Ticker},
 };
 
@@ -556,6 +559,42 @@ pub fn sec_company_profile(
     EndpointSpec::get("sec-profile", "sec-profile", query).with_metadata(SEC_COMPANY_METADATA)
 }
 
+/// Describes `GET standard-industrial-classification-list` without binding a transport.
+pub fn industry_classifications(
+    query: IndustryClassificationsQuery,
+) -> EndpointSpec<IndustryClassificationsQuery, Vec<SicClassification>> {
+    EndpointSpec::get(
+        "standard-industrial-classification-list",
+        "standard-industrial-classification-list",
+        query,
+    )
+    .with_metadata(SEC_COMPANY_METADATA)
+}
+
+/// Describes `GET industry-classification-search` without binding a transport.
+pub fn search_industry_classifications(
+    query: IndustryClassificationSearchQuery,
+) -> EndpointSpec<IndustryClassificationSearchQuery, Vec<DynamicObject>> {
+    EndpointSpec::get(
+        "industry-classification-search",
+        "industry-classification-search",
+        query,
+    )
+    .with_metadata(SEC_COMPANY_METADATA)
+}
+
+/// Describes `GET all-industry-classification` without binding a transport.
+pub fn all_industry_classifications(
+    query: AllIndustryClassificationsQuery,
+) -> EndpointSpec<AllIndustryClassificationsQuery, Vec<SecCompanySearchResult>> {
+    EndpointSpec::get(
+        "all-industry-classification",
+        "all-industry-classification",
+        query,
+    )
+    .with_metadata(SEC_COMPANY_METADATA)
+}
+
 impl Client {
     /// Retrieves the latest US 8-K SEC filings within the required date range.
     pub async fn latest_8k_sec_filings(
@@ -630,6 +669,32 @@ impl Client {
         query: impl Into<SecCompanyProfileQuery>,
     ) -> Result<Vec<SecCompanyProfile>> {
         self.execute(&sec_company_profile(query.into())).await
+    }
+
+    /// Retrieves the US Standard Industrial Classification directory.
+    pub async fn industry_classifications(
+        &self,
+        query: impl Into<IndustryClassificationsQuery>,
+    ) -> Result<Vec<SicClassification>> {
+        self.execute(&industry_classifications(query.into())).await
+    }
+
+    /// Searches US industry classifications while preserving raw documented rows.
+    pub async fn search_industry_classifications(
+        &self,
+        query: impl Into<IndustryClassificationSearchQuery>,
+    ) -> Result<Vec<DynamicObject>> {
+        self.execute(&search_industry_classifications(query.into()))
+            .await
+    }
+
+    /// Retrieves the paginated US company industry-classification feed.
+    pub async fn all_industry_classifications(
+        &self,
+        query: impl Into<AllIndustryClassificationsQuery>,
+    ) -> Result<Vec<SecCompanySearchResult>> {
+        self.execute(&all_industry_classifications(query.into()))
+            .await
     }
 }
 
