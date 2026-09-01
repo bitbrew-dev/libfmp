@@ -1,0 +1,17 @@
+[
+  {
+    "acquiredDisposedRatio": 0.175,
+    "acquiredTransactions": 7,
+    "averageAcquired": 43314.1429,
+    "averageDisposed": 23184.5,
+    "cik": "0000320193",
+    "disposedTransactions": 40,
+    "quarter": 2,
+    "symbol": "AAPL",
+    "totalAcquired": 303199,
+    "totalDisposed": 927380,
+    "totalPurchases": 0,
+    "totalSales": 14,
+    "year": 2026
+  }
+]
