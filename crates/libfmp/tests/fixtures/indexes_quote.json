@@ -1,0 +1,21 @@
+[
+  {
+    "change": -2.56,
+    "changePercentage": -12.39109,
+    "dayHigh": 20.08,
+    "dayLow": 18.08,
+    "exchange": "INDEX",
+    "marketCap": 0,
+    "name": "CBOE Volatility Index",
+    "open": 19.56,
+    "previousClose": 20.66,
+    "price": 18.1,
+    "priceAvg200": 18.7383,
+    "priceAvg50": 17.4256,
+    "symbol": "^VIX",
+    "timestamp": 1785430786,
+    "volume": 0,
+    "yearHigh": 35.3,
+    "yearLow": 13.38
+  }
+]

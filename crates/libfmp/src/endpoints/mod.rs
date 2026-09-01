@@ -7,6 +7,7 @@ pub mod company;
 pub mod directory;
 pub mod economics;
 pub mod funds;
+pub mod indexes;
 pub mod insider_trading;
 pub mod institutional_ownership;
 pub mod market;
