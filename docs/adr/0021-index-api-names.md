@@ -2,9 +2,9 @@
 
 ## Status
 
-Accepted for issue #30's Rust API. The index directory and quote facade are
-implemented in this slice; shared chart routes are recorded here, while the
-constituent routes and Python facade remain deferred.
+Accepted for issue #30's Rust API. The index directory, quote facade, and five
+history/chart routes are implemented; the constituent routes and Python facade
+remain deferred.
 
 ## Decision
 
@@ -17,11 +17,11 @@ Generic quote and chart contracts are reused rather than duplicated.
 | `quote` | `index_quote` | `QuoteQuery` | `Quote` | Index facade over shared route |
 | `quote-short` | `index_quote_short` | `QuoteShortQuery` | `QuoteShort` | Index facade over shared route |
 | `batch-index-quotes` | `index_quotes` | `ShortOnlyQuery` | `QuoteShort` | Existing client method; index descriptor facade added here |
-| `historical-price-eod/light` | `stock_chart_light` | `StockChartEodQuery` | `StockChartLightBar` | Existing shared route |
-| `historical-price-eod/full` | `stock_chart_full` | `StockChartEodQuery` | `StockChartFullBar` | Existing shared route |
-| `historical-chart/1min` | `stock_chart_one_minute` | `StockChartIntradayQuery` | `StockChartIntradayBar` | Existing shared route |
-| `historical-chart/5min` | `stock_chart_five_minutes` | `StockChartIntradayQuery` | `StockChartIntradayBar` | Existing shared route |
-| `historical-chart/1hour` | `stock_chart_one_hour` | `StockChartIntradayQuery` | `StockChartIntradayBar` | Existing shared route |
+| `historical-price-eod/light` | `index_chart_light` | `IndexChartQuery` | `StockChartLightBar` | Implemented here; shared row |
+| `historical-price-eod/full` | `index_chart_full` | `IndexChartQuery` | `StockChartFullBar` | Implemented here; shared row |
+| `historical-chart/1min` | `index_chart_one_minute` | `IndexChartQuery` | `StockChartIntradayBar` | Implemented here; shared row |
+| `historical-chart/5min` | `index_chart_five_minutes` | `IndexChartQuery` | `StockChartIntradayBar` | Implemented here; shared row |
+| `historical-chart/1hour` | `index_chart_one_hour` | `IndexChartQuery` | `StockChartIntradayBar` | Implemented here; shared row |
 | `sp500-constituent` | `sp500_constituents` | unit (`()`) | `IndexConstituent` | Deferred |
 | `nasdaq-constituent` | `nasdaq_constituents` | unit (`()`) | `IndexConstituent` | Deferred |
 | `dowjones-constituent` | `dow_jones_constituents` | unit (`()`) | `IndexConstituent` | Deferred |
@@ -36,6 +36,14 @@ exactly. The `Client` gains `index_quote` and `index_quote_short`; its existing
 `index_quotes` method already covers the batch route and is not duplicated.
 Symbols remain validated, representation-preserving `Ticker` values, including
 caret-prefixed values such as `^VIX`.
+
+The five index chart descriptors share one narrow `IndexChartQuery`, which
+encodes `symbol`, then the independently optional `from` and `to` dates. The
+index documentation does not expose the stock chart's `nonadjusted` or
+`extended` flags, so they are intentionally absent. The two end-of-day routes
+record only the documented 5,000-row response maximum; the three intraday
+routes have no invented bounds. Response rows are reused exactly from the chart
+module rather than introducing index-specific duplicates.
 
 `batch-index-quotes` remains a closed compact contract. `ShortOnlyQuery` always
 emits `short=true` and has no boolean setter. Although the parameter name implies
