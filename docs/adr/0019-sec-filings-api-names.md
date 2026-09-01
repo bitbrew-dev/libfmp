@@ -2,9 +2,9 @@
 
 ## Status
 
-Accepted. The five SEC filing feed/search descriptors and Rust client methods
-are implemented. The remaining Rust routes and future Python facade stay
-reserved for following vertical slices.
+Accepted. The five SEC filing feed/search and four company lookup/profile
+descriptors and Rust client methods are implemented. The remaining Rust routes
+and future Python facade stay reserved for following vertical slices.
 
 ## Decision
 
@@ -41,10 +41,10 @@ leading zeroes. The profile query emits the provider's unusual key literally as
 
 Company-search values preserve the documented `"None"` ticker, empty SIC and
 industry strings, and raw address text. Profile employees remain a
-`NumericString`, and nullable `securityType` remains distinct from required
-string fields. The SIC list is typed, while industry-classification search
-stays `Vec<DynamicObject>` because its only documented row is `{}`; no schema is
-invented from prose.
+`NumericString`. The required but null-only `securityType` uses
+`Option<DynamicJson>` so a non-null wire type is not invented. The SIC list is
+typed, while industry-classification search stays `Vec<DynamicObject>` because
+its only documented row is `{}`; no schema is invented from prose.
 
 Python runtime bindings are deferred. The future facade reserves ordinary
 `FmpClient` methods and response classes under `fmp.sec_filings`; Rust query

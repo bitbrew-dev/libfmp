@@ -109,6 +109,21 @@ fn full_profile_decodes_exactly_thirty_five_fields_and_documented_types() {
 }
 
 #[test]
+fn null_only_profile_security_type_preserves_future_json_without_inventing_a_type() {
+    let mut source: serde_json::Value = serde_json::from_slice(PROFILE).unwrap();
+    source[0]["securityType"] = serde_json::json!({
+        "providerKind": ["stock", 1, true, null]
+    });
+
+    let rows: Vec<SecCompanyProfile> = serde_json::from_value(source.clone()).unwrap();
+    assert_eq!(
+        rows[0].security_type.as_ref().unwrap(),
+        &source[0]["securityType"]
+    );
+    assert_eq!(serde_json::to_value(rows).unwrap(), source);
+}
+
+#[test]
 fn sic_list_is_typed_but_documented_empty_search_stays_raw() {
     assert_field_count(CLASSIFICATIONS, 3);
     let rows: Vec<SicClassification> = serde_json::from_slice(CLASSIFICATIONS).unwrap();

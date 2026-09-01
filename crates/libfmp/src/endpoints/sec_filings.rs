@@ -6,7 +6,7 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::sec_filings::SecFiling,
+    responses::sec_filings::{SecCompanyProfile, SecCompanySearchResult, SecFiling},
     types::{Cik, Date, FormType, Limit, Page, SearchTerm, Ticker},
 };
 
@@ -462,6 +462,8 @@ const FILING_SEARCH_METADATA: EndpointMetadata = EndpointMetadata::new()
             .with_response_rows(1_000)
             .with_page(100),
     );
+const SEC_COMPANY_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
 
 /// Describes `GET sec-filings-8k` without binding a transport.
 pub fn latest_8k_sec_filings(
@@ -511,6 +513,49 @@ pub fn sec_filings_by_cik(
         .with_metadata(FILING_SEARCH_METADATA)
 }
 
+/// Describes `GET sec-filings-company-search/name` without binding a transport.
+pub fn search_sec_companies_by_name(
+    query: SecCompaniesByNameQuery,
+) -> EndpointSpec<SecCompaniesByNameQuery, Vec<SecCompanySearchResult>> {
+    EndpointSpec::get(
+        "sec-filings-company-search/name",
+        "sec-filings-company-search/name",
+        query,
+    )
+    .with_metadata(SEC_COMPANY_METADATA)
+}
+
+/// Describes `GET sec-filings-company-search/symbol` without binding a transport.
+pub fn search_sec_companies_by_symbol(
+    query: SecCompaniesBySymbolQuery,
+) -> EndpointSpec<SecCompaniesBySymbolQuery, Vec<SecCompanySearchResult>> {
+    EndpointSpec::get(
+        "sec-filings-company-search/symbol",
+        "sec-filings-company-search/symbol",
+        query,
+    )
+    .with_metadata(SEC_COMPANY_METADATA)
+}
+
+/// Describes `GET sec-filings-company-search/cik` without binding a transport.
+pub fn search_sec_companies_by_cik(
+    query: SecCompaniesByCikQuery,
+) -> EndpointSpec<SecCompaniesByCikQuery, Vec<SecCompanySearchResult>> {
+    EndpointSpec::get(
+        "sec-filings-company-search/cik",
+        "sec-filings-company-search/cik",
+        query,
+    )
+    .with_metadata(SEC_COMPANY_METADATA)
+}
+
+/// Describes `GET sec-profile` without binding a transport.
+pub fn sec_company_profile(
+    query: SecCompanyProfileQuery,
+) -> EndpointSpec<SecCompanyProfileQuery, Vec<SecCompanyProfile>> {
+    EndpointSpec::get("sec-profile", "sec-profile", query).with_metadata(SEC_COMPANY_METADATA)
+}
+
 impl Client {
     /// Retrieves the latest US 8-K SEC filings within the required date range.
     pub async fn latest_8k_sec_filings(
@@ -550,6 +595,41 @@ impl Client {
         query: impl Into<SecFilingsByCikQuery>,
     ) -> Result<Vec<SecFiling>> {
         self.execute(&sec_filings_by_cik(query.into())).await
+    }
+
+    /// Searches US SEC companies by company-name text.
+    pub async fn search_sec_companies_by_name(
+        &self,
+        query: impl Into<SecCompaniesByNameQuery>,
+    ) -> Result<Vec<SecCompanySearchResult>> {
+        self.execute(&search_sec_companies_by_name(query.into()))
+            .await
+    }
+
+    /// Searches US SEC companies by ticker.
+    pub async fn search_sec_companies_by_symbol(
+        &self,
+        query: impl Into<SecCompaniesBySymbolQuery>,
+    ) -> Result<Vec<SecCompanySearchResult>> {
+        self.execute(&search_sec_companies_by_symbol(query.into()))
+            .await
+    }
+
+    /// Searches US SEC companies by string-backed CIK.
+    pub async fn search_sec_companies_by_cik(
+        &self,
+        query: impl Into<SecCompaniesByCikQuery>,
+    ) -> Result<Vec<SecCompanySearchResult>> {
+        self.execute(&search_sec_companies_by_cik(query.into()))
+            .await
+    }
+
+    /// Retrieves the full US SEC company profile for a ticker.
+    pub async fn sec_company_profile(
+        &self,
+        query: impl Into<SecCompanyProfileQuery>,
+    ) -> Result<Vec<SecCompanyProfile>> {
+        self.execute(&sec_company_profile(query.into())).await
     }
 }
 
