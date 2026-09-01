@@ -1,0 +1,10 @@
+[
+  {
+    "closingHour": "04:00 PM +10:00",
+    "exchange": "ASX",
+    "isMarketOpen": false,
+    "name": "Australian Securities Exchange",
+    "openingHour": "10:00 AM +10:00",
+    "timezone": "Australia/Sydney"
+  }
+]

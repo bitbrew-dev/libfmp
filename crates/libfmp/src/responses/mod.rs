@@ -11,6 +11,7 @@ pub mod indexes;
 pub mod insider_trading;
 pub mod institutional_ownership;
 pub mod market;
+pub mod market_hours;
 pub mod news;
 pub mod quote;
 pub mod screener;
