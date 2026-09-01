@@ -2,9 +2,8 @@
 
 ## Status
 
-Accepted for issue #30's Rust API. The index directory, quote facade, and five
-history/chart routes are implemented; the constituent routes and Python facade
-remain deferred.
+Accepted for issue #30's Rust API. All 15 index routes are implemented; the
+Python facade remains deferred.
 
 ## Decision
 
@@ -22,12 +21,12 @@ Generic quote and chart contracts are reused rather than duplicated.
 | `historical-chart/1min` | `index_chart_one_minute` | `IndexChartQuery` | `StockChartIntradayBar` | Implemented here; shared row |
 | `historical-chart/5min` | `index_chart_five_minutes` | `IndexChartQuery` | `StockChartIntradayBar` | Implemented here; shared row |
 | `historical-chart/1hour` | `index_chart_one_hour` | `IndexChartQuery` | `StockChartIntradayBar` | Implemented here; shared row |
-| `sp500-constituent` | `sp500_constituents` | unit (`()`) | `IndexConstituent` | Deferred |
-| `nasdaq-constituent` | `nasdaq_constituents` | unit (`()`) | `IndexConstituent` | Deferred |
-| `dowjones-constituent` | `dow_jones_constituents` | unit (`()`) | `IndexConstituent` | Deferred |
-| `historical-sp500-constituent` | `historical_sp500_constituents` | unit (`()`) | `HistoricalIndexConstituent` | Deferred |
-| `historical-nasdaq-constituent` | `historical_nasdaq_constituents` | unit (`()`) | `HistoricalIndexConstituent` | Deferred |
-| `historical-dowjones-constituent` | `historical_dow_jones_constituents` | unit (`()`) | `HistoricalIndexConstituent` | Deferred |
+| `sp500-constituent` | `sp500_constituents` | unit (`()`) | `IndexConstituent` | Implemented here |
+| `nasdaq-constituent` | `nasdaq_constituents` | unit (`()`) | `IndexConstituent` | Implemented here |
+| `dowjones-constituent` | `dow_jones_constituents` | unit (`()`) | `IndexConstituent` | Implemented here |
+| `historical-sp500-constituent` | `historical_sp500_constituents` | unit (`()`) | `HistoricalIndexConstituent` | Implemented here |
+| `historical-nasdaq-constituent` | `historical_nasdaq_constituents` | unit (`()`) | `HistoricalIndexConstituent` | Implemented here |
+| `historical-dowjones-constituent` | `historical_dow_jones_constituents` | unit (`()`) | `HistoricalIndexConstituent` | Implemented here |
 
 The dedicated quote descriptor names make the generic provider routes
 discoverable from `endpoints::indexes`. They delegate to the existing quote
@@ -57,9 +56,16 @@ worldwide coverage and required, non-null `symbol`, `name`, `exchange`, and
 slice. Unknown fields remain accepted for forward compatibility. No query or
 response caps are documented for the directory or quote routes.
 
-The six future constituent methods may share a private `IndexKind` routing
-abstraction, but the public API stays discoverable through the names listed
-above. Python runtime bindings are deferred. The future facade reserves
+The six constituent methods share a private `IndexKind` routing abstraction,
+but the public API stays discoverable through the names listed above. Current
+constituents share `IndexConstituent`; their documented `dateFirstAdded` is
+required but nullable. Historical changes share `HistoricalIndexConstituent`;
+their human-readable `dateAdded` is representation-preserving text, while
+`removedTicker` and `removedSecurity` are required but nullable. CIK values
+remain representation-preserving, including leading zeroes. No geography or
+bounds are inferred for these six routes.
+
+Python runtime bindings are deferred. The future facade reserves
 ordinary `FmpClient` method names and `fmp.indexes.IndexListing`,
 `IndexConstituent`, and `HistoricalIndexConstituent`; generic quote and chart
 rows remain in their existing Python modules.
