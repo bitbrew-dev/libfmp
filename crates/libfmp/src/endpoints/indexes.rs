@@ -11,7 +11,7 @@ use crate::{
     },
     responses::{
         chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar},
-        indexes::IndexListing,
+        indexes::{HistoricalIndexConstituent, IndexConstituent, IndexListing},
         quote::{Quote, QuoteShort},
     },
     types::{Date, Ticker},
@@ -23,6 +23,41 @@ const WORLDWIDE: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
 const WORLDWIDE_EOD: EndpointMetadata =
     WORLDWIDE.with_bounds(EndpointBounds::new().with_response_rows(5_000));
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum IndexKind {
+    Sp500,
+    Nasdaq,
+    DowJones,
+}
+
+impl IndexKind {
+    const fn constituent_path(self) -> &'static str {
+        match self {
+            Self::Sp500 => "sp500-constituent",
+            Self::Nasdaq => "nasdaq-constituent",
+            Self::DowJones => "dowjones-constituent",
+        }
+    }
+
+    const fn historical_constituent_path(self) -> &'static str {
+        match self {
+            Self::Sp500 => "historical-sp500-constituent",
+            Self::Nasdaq => "historical-nasdaq-constituent",
+            Self::DowJones => "historical-dowjones-constituent",
+        }
+    }
+}
+
+fn constituents(kind: IndexKind) -> EndpointSpec<(), Vec<IndexConstituent>> {
+    let path = kind.constituent_path();
+    EndpointSpec::get(path, path, ())
+}
+
+fn historical_constituents(kind: IndexKind) -> EndpointSpec<(), Vec<HistoricalIndexConstituent>> {
+    let path = kind.historical_constituent_path();
+    EndpointSpec::get(path, path, ())
+}
 
 /// Shared query parameters for the five documented index chart endpoints.
 ///
@@ -165,6 +200,36 @@ pub fn index_chart_one_hour(
         .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET sp500-constituent` without binding it to a transport.
+pub fn sp500_constituents() -> EndpointSpec<(), Vec<IndexConstituent>> {
+    constituents(IndexKind::Sp500)
+}
+
+/// Describes `GET nasdaq-constituent` without binding it to a transport.
+pub fn nasdaq_constituents() -> EndpointSpec<(), Vec<IndexConstituent>> {
+    constituents(IndexKind::Nasdaq)
+}
+
+/// Describes `GET dowjones-constituent` without binding it to a transport.
+pub fn dow_jones_constituents() -> EndpointSpec<(), Vec<IndexConstituent>> {
+    constituents(IndexKind::DowJones)
+}
+
+/// Describes `GET historical-sp500-constituent` without binding it to a transport.
+pub fn historical_sp500_constituents() -> EndpointSpec<(), Vec<HistoricalIndexConstituent>> {
+    historical_constituents(IndexKind::Sp500)
+}
+
+/// Describes `GET historical-nasdaq-constituent` without binding it to a transport.
+pub fn historical_nasdaq_constituents() -> EndpointSpec<(), Vec<HistoricalIndexConstituent>> {
+    historical_constituents(IndexKind::Nasdaq)
+}
+
+/// Describes `GET historical-dowjones-constituent` without binding it to a transport.
+pub fn historical_dow_jones_constituents() -> EndpointSpec<(), Vec<HistoricalIndexConstituent>> {
+    historical_constituents(IndexKind::DowJones)
+}
+
 impl Client {
     /// Lists worldwide stock-market indexes.
     pub async fn index_list(&self) -> Result<Vec<IndexListing>> {
@@ -222,5 +287,37 @@ impl Client {
         query: impl Into<IndexChartQuery>,
     ) -> Result<Vec<StockChartIntradayBar>> {
         self.execute(&index_chart_one_hour(query.into())).await
+    }
+
+    /// Lists the current S&P 500 constituents.
+    pub async fn sp500_constituents(&self) -> Result<Vec<IndexConstituent>> {
+        self.execute(&sp500_constituents()).await
+    }
+
+    /// Lists the current Nasdaq constituents.
+    pub async fn nasdaq_constituents(&self) -> Result<Vec<IndexConstituent>> {
+        self.execute(&nasdaq_constituents()).await
+    }
+
+    /// Lists the current Dow Jones constituents.
+    pub async fn dow_jones_constituents(&self) -> Result<Vec<IndexConstituent>> {
+        self.execute(&dow_jones_constituents()).await
+    }
+
+    /// Lists historical S&P 500 constituent changes.
+    pub async fn historical_sp500_constituents(&self) -> Result<Vec<HistoricalIndexConstituent>> {
+        self.execute(&historical_sp500_constituents()).await
+    }
+
+    /// Lists historical Nasdaq constituent changes.
+    pub async fn historical_nasdaq_constituents(&self) -> Result<Vec<HistoricalIndexConstituent>> {
+        self.execute(&historical_nasdaq_constituents()).await
+    }
+
+    /// Lists historical Dow Jones constituent changes.
+    pub async fn historical_dow_jones_constituents(
+        &self,
+    ) -> Result<Vec<HistoricalIndexConstituent>> {
+        self.execute(&historical_dow_jones_constituents()).await
     }
 }
