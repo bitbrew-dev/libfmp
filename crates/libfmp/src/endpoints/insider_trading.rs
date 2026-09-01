@@ -1,7 +1,12 @@
 //! Insider-trading endpoint query contracts.
 
 use crate::{
-    endpoints::{QueryEncoder, QueryParameters},
+    Client, Result,
+    endpoints::{
+        EndpointSpec, QueryEncoder, QueryParameters,
+        metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
+    },
+    responses::insider_trading::InsiderTrade,
     types::{Cik, Date, Limit, Page, SearchTerm, Ticker, TransactionTypeCode},
 };
 
@@ -288,6 +293,48 @@ impl QueryParameters for BeneficialOwnershipAcquisitionsQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.required("symbol", &self.symbol);
         encoder.optional("limit", self.limit);
+    }
+}
+
+const PAGINATED_US_ONLY: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::UsOnly)
+    .with_bounds(
+        EndpointBounds::new()
+            .with_response_rows(1_000)
+            .with_page(100),
+    );
+
+/// Describes `GET insider-trading/latest` without binding a transport.
+pub fn latest_insider_trades(
+    query: LatestInsiderTradesQuery,
+) -> EndpointSpec<LatestInsiderTradesQuery, Vec<InsiderTrade>> {
+    EndpointSpec::get("insider-trading/latest", "insider-trading/latest", query)
+        .with_metadata(PAGINATED_US_ONLY)
+}
+
+/// Describes `GET insider-trading/search` without binding a transport.
+pub fn search_insider_trades(
+    query: InsiderTradesSearchQuery,
+) -> EndpointSpec<InsiderTradesSearchQuery, Vec<InsiderTrade>> {
+    EndpointSpec::get("insider-trading/search", "insider-trading/search", query)
+        .with_metadata(PAGINATED_US_ONLY)
+}
+
+impl Client {
+    /// Retrieves the latest US insider trades with optional date and pagination filters.
+    pub async fn latest_insider_trades(
+        &self,
+        query: LatestInsiderTradesQuery,
+    ) -> Result<Vec<InsiderTrade>> {
+        self.execute(&latest_insider_trades(query)).await
+    }
+
+    /// Searches US insider trades using independently optional filters.
+    pub async fn search_insider_trades(
+        &self,
+        query: InsiderTradesSearchQuery,
+    ) -> Result<Vec<InsiderTrade>> {
+        self.execute(&search_insider_trades(query)).await
     }
 }
 

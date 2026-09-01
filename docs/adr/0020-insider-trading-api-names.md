@@ -2,9 +2,9 @@
 
 ## Status
 
-Accepted for the contract foundation. Endpoint descriptors and Rust client
-methods follow in the stacked implementation slices; the future Python facade
-remains reserved for the parity work.
+Accepted. The latest and search descriptors and Rust client methods are
+implemented; the remaining endpoints follow in stacked implementation slices.
+The future Python facade remains reserved for the parity work.
 
 ## Decision
 
