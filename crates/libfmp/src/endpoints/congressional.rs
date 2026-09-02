@@ -7,6 +7,7 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     responses::congressional::{
+        CongressionalMemberNetWorthAggregate, CongressionalMemberNetWorthEntry,
         CongressionalMemberPosition, CongressionalMemberProfile, CongressionalTrade,
     },
     types::{CongressionalMemberId, Limit, Page, SearchTerm, Ticker},
@@ -410,6 +411,124 @@ impl QueryParameters for CongressionalPositionsQuery {
     }
 }
 
+/// Required congressional member ID with optional provider pagination.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CongressionalNetWorthQuery {
+    member_id: CongressionalMemberId,
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl CongressionalNetWorthQuery {
+    /// Creates an itemized net-worth query without pagination defaults.
+    pub const fn new(member_id: CongressionalMemberId) -> Self {
+        Self {
+            member_id,
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Borrows the required congressional member identifier.
+    pub const fn member_id(&self) -> &CongressionalMemberId {
+        &self.member_id
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl From<CongressionalMemberId> for CongressionalNetWorthQuery {
+    fn from(member_id: CongressionalMemberId) -> Self {
+        Self::new(member_id)
+    }
+}
+
+impl From<&CongressionalMemberId> for CongressionalNetWorthQuery {
+    fn from(member_id: &CongressionalMemberId) -> Self {
+        Self::new(member_id.clone())
+    }
+}
+
+impl QueryParameters for CongressionalNetWorthQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("senateID", &self.member_id);
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
+
+/// Required member ID and optional provider-defined aggregation column.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CongressionalNetWorthAggregatedQuery {
+    member_id: CongressionalMemberId,
+    totals_col: Option<String>,
+}
+
+impl CongressionalNetWorthAggregatedQuery {
+    /// Creates an aggregated net-worth query without a column filter.
+    pub const fn new(member_id: CongressionalMemberId) -> Self {
+        Self {
+            member_id,
+            totals_col: None,
+        }
+    }
+
+    /// Sets the optional raw provider aggregation column, preserving an empty value.
+    pub fn with_totals_col(mut self, totals_col: impl Into<String>) -> Self {
+        self.totals_col = Some(totals_col.into());
+        self
+    }
+
+    /// Borrows the required congressional member identifier.
+    pub const fn member_id(&self) -> &CongressionalMemberId {
+        &self.member_id
+    }
+
+    /// Borrows the optional provider aggregation column.
+    pub fn totals_col(&self) -> Option<&str> {
+        self.totals_col.as_deref()
+    }
+}
+
+impl From<CongressionalMemberId> for CongressionalNetWorthAggregatedQuery {
+    fn from(member_id: CongressionalMemberId) -> Self {
+        Self::new(member_id)
+    }
+}
+
+impl From<&CongressionalMemberId> for CongressionalNetWorthAggregatedQuery {
+    fn from(member_id: &CongressionalMemberId) -> Self {
+        Self::new(member_id.clone())
+    }
+}
+
+impl QueryParameters for CongressionalNetWorthAggregatedQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("senateID", &self.member_id);
+        encoder.optional("totalsCol", self.totals_col.as_deref());
+    }
+}
+
 const PAGINATED_US_ONLY: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::UsOnly)
     .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
@@ -421,6 +540,9 @@ const CONGRESSIONAL_PROFILES_METADATA: EndpointMetadata = EndpointMetadata::new(
 const CONGRESSIONAL_POSITIONS_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::UsOnly)
     .with_bounds(EndpointBounds::new().with_response_rows(300).with_page(50));
+const CONGRESSIONAL_NET_WORTH_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::UsOnly)
+    .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
 
 macro_rules! paginated_endpoint {
     ($function:ident, $path:literal, $query:ty) => {
@@ -481,6 +603,26 @@ pub fn congressional_positions(
 ) -> EndpointSpec<CongressionalPositionsQuery, Vec<CongressionalMemberPosition>> {
     EndpointSpec::get("senate-positions", "senate-positions", query)
         .with_metadata(CONGRESSIONAL_POSITIONS_METADATA)
+}
+
+/// Describes `GET senate-net-worth` without binding a transport.
+pub fn congressional_net_worth(
+    query: CongressionalNetWorthQuery,
+) -> EndpointSpec<CongressionalNetWorthQuery, Vec<CongressionalMemberNetWorthEntry>> {
+    EndpointSpec::get("senate-net-worth", "senate-net-worth", query)
+        .with_metadata(CONGRESSIONAL_NET_WORTH_METADATA)
+}
+
+/// Describes `GET senate-net-worth-aggregated` without binding a transport.
+pub fn congressional_net_worth_aggregated(
+    query: CongressionalNetWorthAggregatedQuery,
+) -> EndpointSpec<CongressionalNetWorthAggregatedQuery, Vec<CongressionalMemberNetWorthAggregate>> {
+    EndpointSpec::get(
+        "senate-net-worth-aggregated",
+        "senate-net-worth-aggregated",
+        query,
+    )
+    .with_metadata(US_ONLY)
 }
 
 impl Client {
@@ -562,6 +704,23 @@ impl Client {
         query: CongressionalPositionsQuery,
     ) -> Result<Vec<CongressionalMemberPosition>> {
         self.execute(&congressional_positions(query)).await
+    }
+
+    /// Retrieves itemized congressional net-worth disclosures.
+    pub async fn congressional_net_worth(
+        &self,
+        query: impl Into<CongressionalNetWorthQuery>,
+    ) -> Result<Vec<CongressionalMemberNetWorthEntry>> {
+        self.execute(&congressional_net_worth(query.into())).await
+    }
+
+    /// Retrieves aggregated congressional net-worth totals by year.
+    pub async fn congressional_net_worth_aggregated(
+        &self,
+        query: impl Into<CongressionalNetWorthAggregatedQuery>,
+    ) -> Result<Vec<CongressionalMemberNetWorthAggregate>> {
+        self.execute(&congressional_net_worth_aggregated(query.into()))
+            .await
     }
 }
 
@@ -661,6 +820,51 @@ mod tests {
         );
         assert!(encoded(&CongressionalProfilesQuery::new()).is_empty());
         assert!(encoded(&CongressionalPositionsQuery::new()).is_empty());
+        assert_eq!(
+            encoded(
+                &CongressionalNetWorthQuery::new(CongressionalMemberId::new("P000197").unwrap())
+                    .with_page(Page(0))
+                    .with_limit(Limit(250))
+            ),
+            [
+                ("senateID".into(), "P000197".into()),
+                ("page".into(), "0".into()),
+                ("limit".into(), "250".into()),
+            ]
+        );
+        assert_eq!(
+            encoded(
+                &CongressionalNetWorthAggregatedQuery::new(
+                    CongressionalMemberId::new("P000197").unwrap()
+                )
+                .with_totals_col("")
+            ),
+            [
+                ("senateID".into(), "P000197".into()),
+                ("totalsCol".into(), String::new()),
+            ]
+        );
+        assert_eq!(
+            encoded(&CongressionalNetWorthQuery::new(
+                CongressionalMemberId::new("P000197").unwrap()
+            )),
+            [("senateID".into(), "P000197".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalNetWorthAggregatedQuery::new(
+                CongressionalMemberId::new("P000197").unwrap()
+            )),
+            [("senateID".into(), "P000197".into())]
+        );
+        let member_id = CongressionalMemberId::new("P000197").unwrap();
+        assert_eq!(
+            encoded(&CongressionalNetWorthQuery::from(&member_id)),
+            [("senateID".into(), "P000197".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalNetWorthAggregatedQuery::from(&member_id)),
+            [("senateID".into(), "P000197".into())]
+        );
     }
 
     #[test]

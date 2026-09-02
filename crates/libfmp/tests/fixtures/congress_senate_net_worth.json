@@ -1,0 +1,26 @@
+[
+  {
+    "assetType": "Mortgage on 2640 Broadway, San Francisco, CA",
+    "category": "Mortgage & Real Estate Liability",
+    "comment": null,
+    "debtDetails": {
+      "dateIncurred": "September 2007"
+    },
+    "filingDate": "2023-05-15",
+    "formType": "House Report",
+    "income": null,
+    "incomeRange": null,
+    "incomeType": null,
+    "link": "https://disclosures-clerk.house.gov/public_disc/financial-pdfs/2022/10053231.pdf",
+    "name": "Union Bank of California",
+    "owner": "Joint",
+    "section": "Liabilities",
+    "senateID": "P000197",
+    "value": 3000001,
+    "valueRange": {
+      "max": 5000000,
+      "min": 1000001
+    },
+    "year": 2022
+  }
+]

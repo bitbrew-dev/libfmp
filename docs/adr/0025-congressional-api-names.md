@@ -2,9 +2,8 @@
 
 ## Status
 
-Accepted for issue #34's Rust API inventory. The eight financial-disclosure
-and trade routes plus the two profile and position routes are implemented in
-Rust; two net-worth routes and the Python facade remain reserved.
+Accepted for issue #34's Rust API inventory. All 12 congressional routes are
+implemented in Rust; the Python facade remains reserved.
 
 ## Decision
 
@@ -23,8 +22,8 @@ names. All are US-only GET endpoints with bare-array responses.
 | `house-trades-by-id` | `house_trades_by_member_id` | `CongressionalTradesByMemberIdQuery` | `CongressionalTrade` | Implemented | `FmpClient.house_trades_by_member_id`; `fmp.congressional.CongressionalTrade` |
 | `senate-profile` | `congressional_profiles` | `CongressionalProfilesQuery` | `CongressionalMemberProfile` | Implemented | `FmpClient.congressional_profiles`; `fmp.congressional.CongressionalMemberProfile` |
 | `senate-positions` | `congressional_positions` | `CongressionalPositionsQuery` | `CongressionalMemberPosition` | Implemented | `FmpClient.congressional_positions`; `fmp.congressional.CongressionalMemberPosition` |
-| `senate-net-worth` | `congressional_net_worth` | Reserved | Reserved | Reserved | `FmpClient.congressional_net_worth`; rows in `fmp.congressional` |
-| `senate-net-worth-aggregated` | `congressional_net_worth_aggregated` | Reserved | Reserved | Reserved | `FmpClient.congressional_net_worth_aggregated`; rows in `fmp.congressional` |
+| `senate-net-worth` | `congressional_net_worth` | `CongressionalNetWorthQuery` | `CongressionalMemberNetWorthEntry` | Implemented | `FmpClient.congressional_net_worth`; `fmp.congressional.CongressionalMemberNetWorthEntry` |
+| `senate-net-worth-aggregated` | `congressional_net_worth_aggregated` | `CongressionalNetWorthAggregatedQuery` | `CongressionalMemberNetWorthAggregate` | Implemented | `FmpClient.congressional_net_worth_aggregated`; `fmp.congressional.CongressionalMemberNetWorthAggregate` |
 
 The provider uses the wire key `senateID` for both Senate and House members.
 The public fundamental is therefore the chamber-neutral
@@ -57,6 +56,23 @@ raw strings. The profile endpoint carries only its documented 500-row and
 page-20 bounds; the position endpoint carries only its documented 300-row and
 page-50 bounds. Profile fields are required exactly as shown. Position
 `endDate` alone is nullable in the documented row.
+
+The itemized net-worth endpoint requires a member ID. Its parameter table omits
+pagination, but its documented endpoint URL includes `page=0&limit=250` and the
+notes specify both a 250-row maximum and page 100 maximum. The Rust query
+therefore exposes optional page and limit values after the required `senateID`
+and attaches those two documented bounds; it does not inject the example
+values as defaults. The aggregated query requires `senateID` and preserves the
+optional raw `totalsCol` string, including the explicitly documented empty
+value. No bounds are inferred for that route.
+
+The itemized example is House-shaped despite its Senate-prefixed path: it uses
+`"House Report"` and a House Clerk disclosure link. The neutral public model
+names and the existing `CongressionalMemberId` deliberately reflect this
+cross-chamber provider behavior. Nullable fields remain key-required and
+accept JSON null. Opaque debt dates such as `"September 2007"` are preserved
+without date parsing, and signed integers keep all monetary values exact while
+allowing negative net worth.
 
 Python runtime parity is deferred. Future Python methods and response-module
 placement are reserved in the table and intentionally mirror the Rust API.
