@@ -10,6 +10,7 @@ pub mod crypto;
 pub mod dcf;
 pub mod directory;
 pub mod economics;
+pub mod esg;
 pub mod forex;
 pub mod funds;
 pub mod indexes;
