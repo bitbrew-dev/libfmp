@@ -3,6 +3,7 @@
 pub mod analyst;
 pub mod calendar;
 pub mod chart;
+pub mod commitment_of_traders;
 pub mod commodities;
 pub mod company;
 pub mod congressional;

@@ -74,6 +74,7 @@ pub struct CongressionalMemberPosition {
     pub member_id: CongressionalMemberId,
     pub congress_number: u32,
     pub start_date: Date,
+    #[serde(deserialize_with = "required_option")]
     pub end_date: Option<Date>,
     pub party: String,
     pub position: String,
