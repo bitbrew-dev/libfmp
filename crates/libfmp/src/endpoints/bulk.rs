@@ -12,15 +12,15 @@ use crate::{
     query::{FiscalPeriod, Year},
     responses::{
         bulk::{
-            BulkBalanceSheetStatement, BulkBalanceSheetStatementGrowth, BulkDcfValuation,
-            BulkEarningsSurprise, BulkEtfHolding, BulkFinancialRatiosTtm, BulkFinancialScore,
-            BulkIncomeStatement, BulkIncomeStatementGrowth, BulkKeyMetricsTtm,
-            BulkPriceTargetSummary, BulkStockPeers, BulkStockRating,
-            BulkUpgradesDowngradesConsensus,
+            BulkBalanceSheetStatement, BulkBalanceSheetStatementGrowth, BulkCashFlowStatement,
+            BulkCashFlowStatementGrowth, BulkDcfValuation, BulkEarningsSurprise, BulkEodBar,
+            BulkEtfHolding, BulkFinancialRatiosTtm, BulkFinancialScore, BulkIncomeStatement,
+            BulkIncomeStatementGrowth, BulkKeyMetricsTtm, BulkPriceTargetSummary, BulkStockPeers,
+            BulkStockRating, BulkUpgradesDowngradesConsensus,
         },
         company::CompanyProfile,
     },
-    types::BulkPart,
+    types::{BulkPart, Date},
 };
 
 /// Required provider partition shared by partitioned bulk routes.
@@ -117,6 +117,36 @@ impl QueryParameters for BulkStatementQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.required("year", self.year);
         encoder.required("period", self.period);
+    }
+}
+
+/// Required provider date for the bulk end-of-day route.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BulkEodQuery {
+    date: Date,
+}
+
+impl BulkEodQuery {
+    /// Creates a bulk end-of-day query for the documented required date.
+    pub const fn new(date: Date) -> Self {
+        Self { date }
+    }
+
+    /// Returns the requested provider date.
+    pub const fn date(&self) -> Date {
+        self.date
+    }
+}
+
+impl From<Date> for BulkEodQuery {
+    fn from(date: Date) -> Self {
+        Self::new(date)
+    }
+}
+
+impl QueryParameters for BulkEodQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("date", self.date);
     }
 }
 
@@ -236,6 +266,35 @@ pub fn bulk_balance_sheet_statement_growth(
     .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET cash-flow-statement-bulk` without binding a transport.
+pub fn bulk_cash_flow_statements(
+    query: BulkStatementQuery,
+) -> EndpointSpec<BulkStatementQuery, Vec<BulkCashFlowStatement>> {
+    EndpointSpec::get(
+        "cash-flow-statement-bulk",
+        "cash-flow-statement-bulk",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET cash-flow-statement-growth-bulk` without binding a transport.
+pub fn bulk_cash_flow_statement_growth(
+    query: BulkStatementQuery,
+) -> EndpointSpec<BulkStatementQuery, Vec<BulkCashFlowStatementGrowth>> {
+    EndpointSpec::get(
+        "cash-flow-statement-growth-bulk",
+        "cash-flow-statement-growth-bulk",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET eod-bulk` without binding a transport.
+pub fn bulk_eod(query: BulkEodQuery) -> EndpointSpec<BulkEodQuery, Vec<BulkEodBar>> {
+    EndpointSpec::get("eod-bulk", "eod-bulk", query).with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves one provider partition of worldwide company profiles.
     pub async fn bulk_company_profiles(
@@ -335,6 +394,27 @@ impl Client {
         self.execute(&bulk_balance_sheet_statement_growth(query))
             .await
     }
+
+    /// Retrieves worldwide bulk cash-flow statements for one year and fiscal period.
+    pub async fn bulk_cash_flow_statements(
+        &self,
+        query: BulkStatementQuery,
+    ) -> Result<Vec<BulkCashFlowStatement>> {
+        self.execute(&bulk_cash_flow_statements(query)).await
+    }
+
+    /// Retrieves worldwide bulk cash-flow growth for one year and fiscal period.
+    pub async fn bulk_cash_flow_statement_growth(
+        &self,
+        query: BulkStatementQuery,
+    ) -> Result<Vec<BulkCashFlowStatementGrowth>> {
+        self.execute(&bulk_cash_flow_statement_growth(query)).await
+    }
+
+    /// Retrieves worldwide bulk end-of-day prices for one required date.
+    pub async fn bulk_eod(&self, query: impl Into<BulkEodQuery>) -> Result<Vec<BulkEodBar>> {
+        self.execute(&bulk_eod(query.into())).await
+    }
 }
 
 #[cfg(test)]
@@ -386,5 +466,15 @@ mod tests {
                 ("period".into(), "Q1".into())
             ]
         );
+    }
+
+    #[test]
+    fn bulk_eod_query_has_one_exact_required_key() {
+        let date = Date::parse("2024-10-22").unwrap();
+        let query = BulkEodQuery::new(date);
+
+        assert_eq!(query.date(), date);
+        assert_eq!(encoded(&query), [("date".into(), "2024-10-22".into())]);
+        assert_eq!(BulkEodQuery::from(date), query);
     }
 }

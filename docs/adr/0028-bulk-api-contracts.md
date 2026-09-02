@@ -2,13 +2,12 @@
 
 ## Status
 
-Accepted for issue #37's Rust API inventory. The first fifteen routes are
-implemented in Rust; the remaining three routes and the Python facade are
-reserved.
+Accepted for issue #37's Rust API inventory. All 18 routes are implemented in
+Rust; the Python facade remains reserved.
 
 ## Decision
 
-All 18 documented bulk entries use or reserve the following public names.
+All 18 documented bulk entries use the following public Rust names.
 Every response is a bare JSON array. Future Python methods mirror these
 snake-case Rust names under `FmpClient`, with models under `fmp.bulk`.
 
@@ -29,9 +28,9 @@ snake-case Rust names under `FmpClient`, with models under `fmp.bulk`.
 | `income-statement-growth-bulk` | `bulk_income_statement_growth` | `BulkStatementQuery` | `BulkIncomeStatementGrowth` | Rust complete |
 | `balance-sheet-statement-bulk` | `bulk_balance_sheet_statements` | `BulkStatementQuery` | `BulkBalanceSheetStatement` | Rust complete |
 | `balance-sheet-statement-growth-bulk` | `bulk_balance_sheet_statement_growth` | `BulkStatementQuery` | `BulkBalanceSheetStatementGrowth` | Rust complete |
-| `cash-flow-statement-bulk` | `bulk_cash_flow_statements` | `BulkStatementQuery` | `BulkCashFlowStatement` | Reserved |
-| `cash-flow-statement-growth-bulk` | `bulk_cash_flow_statement_growth` | `BulkStatementQuery` | `BulkCashFlowStatementGrowth` | Reserved |
-| `eod-bulk` | `bulk_eod` | `BulkEodQuery` | `BulkEodBar` | Reserved |
+| `cash-flow-statement-bulk` | `bulk_cash_flow_statements` | `BulkStatementQuery` | `BulkCashFlowStatement` | Rust complete |
+| `cash-flow-statement-growth-bulk` | `bulk_cash_flow_statement_growth` | `BulkStatementQuery` | `BulkCashFlowStatementGrowth` | Rust complete |
+| `eod-bulk` | `bulk_eod` | `BulkEodQuery` | `BulkEodBar` | Rust complete |
 
 The endpoint contracts live in `endpoints::bulk`. Response contracts live in
 `responses::bulk`, with snapshot-like rows separated into
@@ -102,8 +101,23 @@ distinct documented key `growthTotalLiabilitiesAndStockholdersEquity` is not
 silently changed to the non-growth row's `totalLiabilitiesAndTotalEquity`
 wording.
 
-The source marks only `price-target-summary-bulk` as US-only. The other fourteen
-implemented endpoints are worldwide. No response bounds, pagination, access
+The two cash-flow bulk rows also remain distinct from the normalized statement
+models. Their monetary, count, and growth metrics are required
+`NumericString` values. Four provider wire keys misspell `Activities` as
+`Activites`: `growthNetCashProvidedByOperatingActivites`,
+`growthOtherInvestingActivites`, `growthNetCashUsedForInvestingActivites`, and
+`growthOtherFinancingActivites`. Those wire spellings are preserved while the
+public Rust fields use corrected `activities` names. The separate
+`growthNetCashUsedProvidedByFinancingActivities` key has the documented correct
+spelling and remains distinct.
+
+`BulkEodQuery` has exactly one required `date` key backed by the strict `Date`
+type. `BulkEodBar` preserves all six documented price and volume values as
+required `NumericString` fields, including decimal precision and large quoted
+volume representations; JSON numbers are not accepted.
+
+The source marks only `price-target-summary-bulk` as US-only. The other
+seventeen endpoints are worldwide. No response bounds, pagination, access
 requirement, conditional plan, or realtime behavior is inferred.
 
 Python runtime parity remains deferred. Only the future `fmp.bulk` namespace
