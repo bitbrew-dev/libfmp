@@ -2,12 +2,20 @@
 //!
 //! Future Python bindings reserve these models under `fmp.congressional`.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
-    codecs::TitleCaseBoolFlag,
-    types::{CongressionalMemberId, Date},
+    codecs::{DynamicJson, OpaqueDateText, TitleCaseBoolFlag},
+    types::{CalendarYear, CongressionalMemberId, Date, FormType},
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One financial trade disclosed by a member of Congress.
 ///
@@ -71,4 +79,71 @@ pub struct CongressionalMemberPosition {
     pub position: String,
     pub state: String,
     pub years_in_term: f64,
+}
+
+/// A minimum and maximum value disclosed for a congressional asset or income.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CongressionalNetWorthRange {
+    pub min: i64,
+    pub max: i64,
+}
+
+/// Opaque provider details for a disclosed debt.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CongressionalDebtDetails {
+    pub date_incurred: OpaqueDateText,
+}
+
+/// One itemized congressional net-worth disclosure.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CongressionalMemberNetWorthEntry {
+    #[serde(rename = "senateID")]
+    pub member_id: CongressionalMemberId,
+    pub form_type: FormType,
+    pub year: CalendarYear,
+    pub filing_date: Date,
+    pub section: String,
+    pub category: String,
+    pub name: String,
+    pub asset_type: String,
+    #[serde(deserialize_with = "required_option")]
+    pub income_type: Option<String>,
+    pub owner: String,
+    #[serde(deserialize_with = "required_option")]
+    pub comment: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub debt_details: Option<CongressionalDebtDetails>,
+    #[serde(deserialize_with = "required_option")]
+    pub value_range: Option<CongressionalNetWorthRange>,
+    pub value: i64,
+    #[serde(deserialize_with = "required_option")]
+    pub income_range: Option<CongressionalNetWorthRange>,
+    #[serde(deserialize_with = "required_option")]
+    pub income: Option<DynamicJson>,
+    pub link: String,
+}
+
+/// Aggregated congressional net-worth totals for one filing year.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CongressionalMemberNetWorthAggregate {
+    #[serde(rename = "senateID")]
+    pub member_id: CongressionalMemberId,
+    pub year: CalendarYear,
+    pub total: i64,
+    pub real_estate_liabilities: i64,
+    pub cash_and_cash_equivalents: i64,
+    pub business_and_self_employment: i64,
+    pub real_estate: i64,
+    pub ownership_interest: i64,
+    pub stock: i64,
+    pub options: i64,
+    pub revolving_and_credit_lines: i64,
+    pub asset_backed_securities: i64,
+    pub business_liabilities: i64,
+    #[serde(rename = "mutualFundsAndETFs")]
+    pub mutual_funds_and_etfs: i64,
 }
