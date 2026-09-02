@@ -1,6 +1,7 @@
 //! Typed models for FMP API responses.
 
 pub mod analyst;
+pub mod bulk;
 pub mod calendar;
 pub mod chart;
 pub mod commitment_of_traders;

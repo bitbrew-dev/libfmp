@@ -2,6 +2,7 @@
 
 pub mod analyst;
 pub mod asset_chart;
+pub mod bulk;
 pub mod calendar;
 pub mod chart;
 pub mod commitment_of_traders;
