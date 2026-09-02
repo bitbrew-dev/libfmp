@@ -12,7 +12,10 @@ use crate::{
             PlanCondition,
         },
     },
-    responses::tipranks::{TipRanksPointInTimeRating, TipRanksRatingSearchResult},
+    responses::tipranks::{
+        TipRanksAnalystSummary, TipRanksFirmSummary, TipRanksPointInTimeRating,
+        TipRanksRatingSearchResult, TipRanksSymbolSummary,
+    },
     types::{Date, Limit, Page, SearchTerm, Ticker, TipRanksExpertUid},
 };
 
@@ -323,6 +326,168 @@ impl QueryParameters for PointInTimeRatingsByAnalystQuery {
     }
 }
 
+/// Required ticker and optional independent date bounds for a ratings summary.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TipRanksSymbolSummaryQuery {
+    symbol: Ticker,
+    from: Option<Date>,
+    to: Option<Date>,
+}
+
+impl TipRanksSymbolSummaryQuery {
+    /// Creates a summary request without injecting the provider's date defaults.
+    pub const fn new(symbol: Ticker) -> Self {
+        Self {
+            symbol,
+            from: None,
+            to: None,
+        }
+    }
+
+    /// Sets the optional independent recommendation start date.
+    pub const fn with_from(mut self, from: Date) -> Self {
+        self.from = Some(from);
+        self
+    }
+
+    /// Sets the optional independent recommendation end date.
+    pub const fn with_to(mut self, to: Date) -> Self {
+        self.to = Some(to);
+        self
+    }
+
+    /// Borrows the required ticker.
+    pub const fn symbol(&self) -> &Ticker {
+        &self.symbol
+    }
+
+    /// Returns the optional independent recommendation start date.
+    pub const fn from(&self) -> Option<Date> {
+        self.from
+    }
+
+    /// Returns the optional independent recommendation end date.
+    pub const fn to(&self) -> Option<Date> {
+        self.to
+    }
+}
+
+impl QueryParameters for TipRanksSymbolSummaryQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("symbol", &self.symbol);
+        encoder.optional("from", self.from);
+        encoder.optional("to", self.to);
+    }
+}
+
+/// Required analyst identifier and optional independent date bounds for a summary.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TipRanksAnalystSummaryQuery {
+    expert_uid: TipRanksExpertUid,
+    from: Option<Date>,
+    to: Option<Date>,
+}
+
+impl TipRanksAnalystSummaryQuery {
+    /// Creates a summary request without injecting the provider's date defaults.
+    pub const fn new(expert_uid: TipRanksExpertUid) -> Self {
+        Self {
+            expert_uid,
+            from: None,
+            to: None,
+        }
+    }
+
+    /// Sets the optional independent recommendation start date.
+    pub const fn with_from(mut self, from: Date) -> Self {
+        self.from = Some(from);
+        self
+    }
+
+    /// Sets the optional independent recommendation end date.
+    pub const fn with_to(mut self, to: Date) -> Self {
+        self.to = Some(to);
+        self
+    }
+
+    /// Borrows the required stable TipRanks analyst identifier.
+    pub const fn expert_uid(&self) -> &TipRanksExpertUid {
+        &self.expert_uid
+    }
+
+    /// Returns the optional independent recommendation start date.
+    pub const fn from(&self) -> Option<Date> {
+        self.from
+    }
+
+    /// Returns the optional independent recommendation end date.
+    pub const fn to(&self) -> Option<Date> {
+        self.to
+    }
+}
+
+impl QueryParameters for TipRanksAnalystSummaryQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("expertUID", &self.expert_uid);
+        encoder.optional("from", self.from);
+        encoder.optional("to", self.to);
+    }
+}
+
+/// Required exact firm text and optional independent date bounds for a summary.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TipRanksFirmSummaryQuery {
+    firm_name: SearchTerm,
+    from: Option<Date>,
+    to: Option<Date>,
+}
+
+impl TipRanksFirmSummaryQuery {
+    /// Creates a summary request without injecting the provider's date defaults.
+    pub const fn new(firm_name: SearchTerm) -> Self {
+        Self {
+            firm_name,
+            from: None,
+            to: None,
+        }
+    }
+
+    /// Sets the optional independent recommendation start date.
+    pub const fn with_from(mut self, from: Date) -> Self {
+        self.from = Some(from);
+        self
+    }
+
+    /// Sets the optional independent recommendation end date.
+    pub const fn with_to(mut self, to: Date) -> Self {
+        self.to = Some(to);
+        self
+    }
+
+    /// Borrows the required exact firm-name text.
+    pub const fn firm_name(&self) -> &SearchTerm {
+        &self.firm_name
+    }
+
+    /// Returns the optional independent recommendation start date.
+    pub const fn from(&self) -> Option<Date> {
+        self.from
+    }
+
+    /// Returns the optional independent recommendation end date.
+    pub const fn to(&self) -> Option<Date> {
+        self.to
+    }
+}
+
+impl QueryParameters for TipRanksFirmSummaryQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("firmName", &self.firm_name);
+        encoder.optional("from", self.from);
+        encoder.optional("to", self.to);
+    }
+}
+
 const TIPRANKS_SEARCH_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_access(AccessRequirement::NamedAddOn("TipRanks"))
     .with_conditional_plan(ConditionalPlanRequirement::new(
@@ -334,6 +499,10 @@ const TIPRANKS_SEARCH_METADATA: EndpointMetadata = EndpointMetadata::new()
             .with_limit(5_000)
             .with_response_rows(5_000),
     );
+
+const TIPRANKS_SUMMARY_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_access(AccessRequirement::NamedAddOn("TipRanks"))
+    .with_bounds(EndpointBounds::new().with_response_rows(1));
 
 /// Describes `GET tipranks-search` without binding a transport.
 pub fn tipranks_ratings_search(
@@ -357,6 +526,34 @@ pub fn tipranks_point_in_time_ratings_by_analyst(
 ) -> EndpointSpec<PointInTimeRatingsByAnalystQuery, Vec<TipRanksPointInTimeRating>> {
     EndpointSpec::get("tipranks-pit-analyst", "tipranks-pit-analyst", query)
         .with_metadata(TIPRANKS_SEARCH_METADATA)
+}
+
+/// Describes `GET tipranks-symbol-summary` without binding a transport.
+pub fn tipranks_symbol_summary(
+    query: TipRanksSymbolSummaryQuery,
+) -> EndpointSpec<TipRanksSymbolSummaryQuery, Vec<TipRanksSymbolSummary>> {
+    EndpointSpec::get("tipranks-symbol-summary", "tipranks-symbol-summary", query)
+        .with_metadata(TIPRANKS_SUMMARY_METADATA)
+}
+
+/// Describes `GET tipranks-analyst-summary` without binding a transport.
+pub fn tipranks_analyst_summary(
+    query: TipRanksAnalystSummaryQuery,
+) -> EndpointSpec<TipRanksAnalystSummaryQuery, Vec<TipRanksAnalystSummary>> {
+    EndpointSpec::get(
+        "tipranks-analyst-summary",
+        "tipranks-analyst-summary",
+        query,
+    )
+    .with_metadata(TIPRANKS_SUMMARY_METADATA)
+}
+
+/// Describes `GET tipranks-firm-summary` without binding a transport.
+pub fn tipranks_firm_summary(
+    query: TipRanksFirmSummaryQuery,
+) -> EndpointSpec<TipRanksFirmSummaryQuery, Vec<TipRanksFirmSummary>> {
+    EndpointSpec::get("tipranks-firm-summary", "tipranks-firm-summary", query)
+        .with_metadata(TIPRANKS_SUMMARY_METADATA)
 }
 
 impl Client {
@@ -384,6 +581,30 @@ impl Client {
     ) -> Result<Vec<TipRanksPointInTimeRating>> {
         self.execute(&tipranks_point_in_time_ratings_by_analyst(query))
             .await
+    }
+
+    /// Retrieves a ticker's aggregate TipRanks ratings summary.
+    pub async fn tipranks_symbol_summary(
+        &self,
+        query: TipRanksSymbolSummaryQuery,
+    ) -> Result<Vec<TipRanksSymbolSummary>> {
+        self.execute(&tipranks_symbol_summary(query)).await
+    }
+
+    /// Retrieves an analyst's aggregate TipRanks ratings summary.
+    pub async fn tipranks_analyst_summary(
+        &self,
+        query: TipRanksAnalystSummaryQuery,
+    ) -> Result<Vec<TipRanksAnalystSummary>> {
+        self.execute(&tipranks_analyst_summary(query)).await
+    }
+
+    /// Retrieves a firm's aggregate TipRanks ratings summary.
+    pub async fn tipranks_firm_summary(
+        &self,
+        query: TipRanksFirmSummaryQuery,
+    ) -> Result<Vec<TipRanksFirmSummary>> {
+        self.execute(&tipranks_firm_summary(query)).await
     }
 }
 
@@ -522,6 +743,61 @@ mod tests {
                 ("page".into(), "0".into()),
                 ("nonadjusted".into(), "false".into()),
             ]
+        );
+    }
+
+    #[test]
+    fn summary_queries_emit_required_identity_then_independent_optional_dates() {
+        let from = Date::parse("2025-06-10").unwrap();
+        let to = Date::parse("2026-06-10").unwrap();
+
+        let symbol = TipRanksSymbolSummaryQuery::new(Ticker::new("BRK.B").unwrap())
+            .with_from(from)
+            .with_to(to);
+        assert_eq!(symbol.symbol().as_str(), "BRK.B");
+        assert_eq!(symbol.from(), Some(from));
+        assert_eq!(symbol.to(), Some(to));
+        assert_eq!(
+            encoded(&symbol),
+            [
+                ("symbol".into(), "BRK.B".into()),
+                ("from".into(), "2025-06-10".into()),
+                ("to".into(), "2026-06-10".into()),
+            ]
+        );
+
+        let analyst =
+            TipRanksAnalystSummaryQuery::new(TipRanksExpertUid::new("expert / one").unwrap())
+                .with_to(to);
+        assert_eq!(analyst.expert_uid().as_str(), "expert / one");
+        assert_eq!(analyst.from(), None);
+        assert_eq!(analyst.to(), Some(to));
+        assert_eq!(
+            encoded(&analyst),
+            [
+                ("expertUID".into(), "expert / one".into()),
+                ("to".into(), "2026-06-10".into()),
+            ]
+        );
+
+        let firm = TipRanksFirmSummaryQuery::new(SearchTerm::new("Morgan Stanley / Asia").unwrap())
+            .with_from(from);
+        assert_eq!(firm.firm_name().as_str(), "Morgan Stanley / Asia");
+        assert_eq!(firm.from(), Some(from));
+        assert_eq!(firm.to(), None);
+        assert_eq!(
+            encoded(&firm),
+            [
+                ("firmName".into(), "Morgan Stanley / Asia".into()),
+                ("from".into(), "2025-06-10".into()),
+            ]
+        );
+
+        assert_eq!(
+            encoded(&TipRanksSymbolSummaryQuery::new(
+                Ticker::new("AAPL").unwrap()
+            )),
+            [("symbol".into(), "AAPL".into())]
         );
     }
 }

@@ -2,9 +2,9 @@
 
 ## Status
 
-Accepted for issue #38's Rust API inventory. The ratings search and both
-point-in-time routes are implemented in Rust; the other four routes and the
-Python facade remain reserved.
+Accepted for issue #38's Rust API inventory. The ratings search, both
+point-in-time routes, and all three summary routes are implemented in Rust; the
+analyst directory route and the Python facade remain reserved.
 
 ## Decision
 
@@ -17,9 +17,9 @@ snake-case Rust names under `FmpClient`, with models under `fmp.tipranks`.
 | `tipranks-search` | `tipranks_ratings_search` | `TipRanksSearchQuery` | `TipRanksRatingSearchResult` | Rust complete |
 | `tipranks-pit-symbol` | `tipranks_point_in_time_ratings_by_symbol` | `PointInTimeRatingsBySymbolQuery` | `TipRanksPointInTimeRating` | Rust complete |
 | `tipranks-pit-analyst` | `tipranks_point_in_time_ratings_by_analyst` | `PointInTimeRatingsByAnalystQuery` | `TipRanksPointInTimeRating` | Rust complete |
-| `tipranks-symbol-summary` | `tipranks_symbol_summary` | `TipRanksSymbolSummaryQuery` | `TipRanksRatingsSummary` | Reserved |
-| `tipranks-analyst-summary` | `tipranks_analyst_summary` | `TipRanksAnalystSummaryQuery` | `TipRanksRatingsSummary` | Reserved |
-| `tipranks-firm-summary` | `tipranks_firm_summary` | `TipRanksFirmSummaryQuery` | `TipRanksRatingsSummary` | Reserved |
+| `tipranks-symbol-summary` | `tipranks_symbol_summary` | `TipRanksSymbolSummaryQuery` | `TipRanksSymbolSummary` | Rust complete |
+| `tipranks-analyst-summary` | `tipranks_analyst_summary` | `TipRanksAnalystSummaryQuery` | `TipRanksAnalystSummary` | Rust complete |
+| `tipranks-firm-summary` | `tipranks_firm_summary` | `TipRanksFirmSummaryQuery` | `TipRanksFirmSummary` | Rust complete |
 | `tipranks-analysts` | `tipranks_analysts` | `TipRanksAnalystsQuery` | `TipRanksAnalyst` | Reserved |
 
 The endpoint contracts live in `endpoints::tipranks`, and response contracts
@@ -70,6 +70,23 @@ example; missing keys still fail decoding. Number values use
 `serde_json::Number` to preserve integer-versus-decimal spelling and reject
 numeric strings. Recommendation text stays open and preserves source casing
 such as `buy` and `Hold`.
+
+Each summary query requires its documented identity (`symbol`, `expertUID`, or
+the exact `firmName` text), followed by independently optional `from` and `to`
+dates in wire order. No trailing-twelve-month default or date relationship is
+enforced locally. Each route retains a bare array so an empty successful
+response remains representable, while metadata records the documented
+single-row maximum. The routes require the named `TipRanks` add-on; geography
+is unspecified, and the source documents no realtime behavior, pagination,
+query limit, date-span bound, conditional plan, or historical cutoff.
+
+The three concrete summary response rows keep their distinct identity fields
+required and expose the same 14-field aggregate payload. All fields and both
+nested count objects are required and non-null. Count values use the shared
+unsigned `Count`, while `averageReturn`, `topReturn`, and `worstReturn` use
+`serde_json::Number` to reject numeric strings and preserve signed, fractional,
+and integer JSON number tokens. The exact `expertUID` acronym and singular
+`analystAction` key are mapped explicitly.
 
 The directory prose says to provide an exact `analystName`, but its parameter
 table instead lists `page`, `limit`, and `firmName`. That separate conflict

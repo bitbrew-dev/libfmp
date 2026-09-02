@@ -1,0 +1,30 @@
+[
+  {
+    "analystAction": {
+      "downgraded": 0,
+      "initiated": 0,
+      "maintained": 21,
+      "reiterated": 1,
+      "resumed": 0,
+      "upgraded": 0
+    },
+    "averageReturn": -0.1206,
+    "beats": 2,
+    "comparedPriceTargets": 13,
+    "distinctAnalysts": 1,
+    "distinctSymbols": 8,
+    "expertUID": "3c6eb8cf1347a4e5757e628fccb684a93abee587",
+    "from": "2025-07-30",
+    "misses": 11,
+    "recommendations": {
+      "buy": 16,
+      "hold": 6,
+      "sell": 0
+    },
+    "to": "2026-07-30",
+    "topReturn": 0.3284,
+    "totalRecommendations": 22,
+    "validPriceTargets": 13,
+    "worstReturn": -0.5881
+  }
+]
