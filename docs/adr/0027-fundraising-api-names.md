@@ -2,8 +2,9 @@
 
 ## Status
 
-Accepted for issue #36's Rust API inventory. The two search routes are
-implemented in Rust; four detailed routes and the Python facade remain reserved.
+Accepted for issue #36's Rust API inventory. Both search routes and the two
+crowdfunding detail routes are implemented in Rust; the two Regulation D detail
+routes and the Python facade remain reserved.
 
 ## Decision
 
@@ -14,8 +15,8 @@ snake-case Rust names under `FmpClient`, with models under `fmp.fundraising`.
 | FMP path | Rust descriptor/client method | Rust query | Rust response row | State |
 | --- | --- | --- | --- | --- |
 | `crowdfunding-offerings-search` | `search_crowdfunding_offerings` | `OfferingSearchQuery` | `CrowdfundingOfferingSearchResult` | Implemented |
-| `crowdfunding-offerings-latest` | `latest_crowdfunding_offerings` | `LatestCrowdfundingOfferingsQuery` | `CrowdfundingOffering` | Reserved |
-| `crowdfunding-offerings` | `crowdfunding_offerings_by_cik` | `OfferingByCikQuery` | `CrowdfundingOffering` | Reserved |
+| `crowdfunding-offerings-latest` | `latest_crowdfunding_offerings` | `LatestCrowdfundingOfferingsQuery` | `CrowdfundingOffering` | Implemented |
+| `crowdfunding-offerings` | `crowdfunding_offerings_by_cik` | `OfferingByCikQuery` | `CrowdfundingOffering` | Implemented |
 | `fundraising-search` | `search_regulation_d_offerings` | `OfferingSearchQuery` | `RegulationDOfferingSearchResult` | Implemented |
 | `fundraising-latest` | `latest_regulation_d_offerings` | `LatestRegulationDOfferingsQuery` | `RegulationDOffering` | Reserved |
 | `fundraising` | `regulation_d_offerings_by_cik` | `OfferingByCikQuery` | `RegulationDOffering` | Reserved |
@@ -34,7 +35,13 @@ the source documentation supplies one. The Regulation D search sample proves
 the exact `YYYY-MM-DD HH:MM:SS` form and therefore uses `ApiDateTime`. Both CIKs
 use the representation-preserving `Cik` type so leading zeroes survive.
 
-The four reserved detailed routes will complete issue #36's Rust surface in a
-later stack branch. Their shared `OfferingByCikQuery` requires `Cik`; their
-route-specific latest queries preserve only parameters documented for each
-family. Python runtime parity remains deferred.
+The shared `OfferingByCikQuery` requires a representation-preserving `Cik` and
+is now used by crowdfunding while remaining reserved for Regulation D. The
+crowdfunding latest query independently preserves optional `page` and `limit`
+without injecting defaults or inferring bounds. Its two routes share the exact
+48-key `CrowdfundingOffering` row. The provider's misspelled
+`cashAndCashEquiValent...` keys remain exact wire names behind corrected public
+fields, and required-present nullable values remain distinct from absent keys.
+
+The two reserved Regulation D detailed routes will complete issue #36's Rust
+surface in the next stack branch. Python runtime parity remains deferred.
