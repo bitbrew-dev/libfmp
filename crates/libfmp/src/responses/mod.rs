@@ -13,6 +13,7 @@ pub mod directory;
 pub mod economics;
 pub mod esg;
 pub mod forex;
+pub mod fundraising;
 pub mod funds;
 pub mod indexes;
 pub mod insider_trading;
