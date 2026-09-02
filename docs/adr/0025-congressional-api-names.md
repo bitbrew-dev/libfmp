@@ -3,8 +3,8 @@
 ## Status
 
 Accepted for issue #34's Rust API inventory. The eight financial-disclosure
-and trade routes are implemented in Rust; four profile, position, and net-worth
-routes and the Python facade remain reserved.
+and trade routes plus the two profile and position routes are implemented in
+Rust; two net-worth routes and the Python facade remain reserved.
 
 ## Decision
 
@@ -21,8 +21,8 @@ names. All are US-only GET endpoints with bare-array responses.
 | `house-trades` | `house_trades` | `CongressionalTradesQuery` | `CongressionalTrade` | Implemented | `FmpClient.house_trades`; `fmp.congressional.CongressionalTrade` |
 | `house-trades-by-name` | `house_trades_by_name` | `CongressionalTradesByNameQuery` | `CongressionalTrade` | Implemented | `FmpClient.house_trades_by_name`; `fmp.congressional.CongressionalTrade` |
 | `house-trades-by-id` | `house_trades_by_member_id` | `CongressionalTradesByMemberIdQuery` | `CongressionalTrade` | Implemented | `FmpClient.house_trades_by_member_id`; `fmp.congressional.CongressionalTrade` |
-| `senate-profile` | `congressional_profiles` | Reserved | Reserved | Reserved | `FmpClient.congressional_profiles`; rows in `fmp.congressional` |
-| `senate-positions` | `congressional_positions` | Reserved | Reserved | Reserved | `FmpClient.congressional_positions`; rows in `fmp.congressional` |
+| `senate-profile` | `congressional_profiles` | `CongressionalProfilesQuery` | `CongressionalMemberProfile` | Implemented | `FmpClient.congressional_profiles`; `fmp.congressional.CongressionalMemberProfile` |
+| `senate-positions` | `congressional_positions` | `CongressionalPositionsQuery` | `CongressionalMemberPosition` | Implemented | `FmpClient.congressional_positions`; `fmp.congressional.CongressionalMemberPosition` |
 | `senate-net-worth` | `congressional_net_worth` | Reserved | Reserved | Reserved | `FmpClient.congressional_net_worth`; rows in `fmp.congressional` |
 | `senate-net-worth-aggregated` | `congressional_net_worth_aggregated` | Reserved | Reserved | Reserved | `FmpClient.congressional_net_worth_aggregated`; rows in `fmp.congressional` |
 
@@ -50,6 +50,13 @@ All other documented fields remain required.
 Only routes whose documentation gives both caps carry the 250-response and
 page-100 metadata. The two name searches have no inferred bounds. No access,
 realtime, or other metadata is inferred.
+
+The profile and position routes use independently optional filters and preserve
+their documented wire order. Open provider party and position values remain
+raw strings. The profile endpoint carries only its documented 500-row and
+page-20 bounds; the position endpoint carries only its documented 300-row and
+page-50 bounds. Profile fields are required exactly as shown. Position
+`endDate` alone is nullable in the documented row.
 
 Python runtime parity is deferred. Future Python methods and response-module
 placement are reserved in the table and intentionally mirror the Rust API.

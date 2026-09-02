@@ -6,7 +6,9 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::congressional::CongressionalTrade,
+    responses::congressional::{
+        CongressionalMemberPosition, CongressionalMemberProfile, CongressionalTrade,
+    },
     types::{CongressionalMemberId, Limit, Page, SearchTerm, Ticker},
 };
 
@@ -218,11 +220,207 @@ impl QueryParameters for CongressionalTradesByMemberIdQuery {
     }
 }
 
+/// Independently optional filters and pagination for congressional profiles.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct CongressionalProfilesQuery {
+    active: Option<bool>,
+    member_id: Option<CongressionalMemberId>,
+    latest_party: Option<String>,
+    latest_position: Option<String>,
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl CongressionalProfilesQuery {
+    /// Creates a query without undocumented defaults.
+    pub const fn new() -> Self {
+        Self {
+            active: None,
+            member_id: None,
+            latest_party: None,
+            latest_position: None,
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional active-member filter, preserving explicit false.
+    pub const fn with_active(mut self, active: bool) -> Self {
+        self.active = Some(active);
+        self
+    }
+
+    /// Sets the optional congressional member identifier.
+    pub fn with_member_id(mut self, member_id: CongressionalMemberId) -> Self {
+        self.member_id = Some(member_id);
+        self
+    }
+
+    /// Sets the optional provider party filter without narrowing its vocabulary.
+    pub fn with_latest_party(mut self, latest_party: impl Into<String>) -> Self {
+        self.latest_party = Some(latest_party.into());
+        self
+    }
+
+    /// Sets the optional provider position filter without narrowing its vocabulary.
+    pub fn with_latest_position(mut self, latest_position: impl Into<String>) -> Self {
+        self.latest_position = Some(latest_position.into());
+        self
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Returns the optional active-member filter.
+    pub const fn active(&self) -> Option<bool> {
+        self.active
+    }
+
+    /// Borrows the optional congressional member identifier.
+    pub const fn member_id(&self) -> Option<&CongressionalMemberId> {
+        self.member_id.as_ref()
+    }
+
+    /// Borrows the optional provider party filter.
+    pub fn latest_party(&self) -> Option<&str> {
+        self.latest_party.as_deref()
+    }
+
+    /// Borrows the optional provider position filter.
+    pub fn latest_position(&self) -> Option<&str> {
+        self.latest_position.as_deref()
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for CongressionalProfilesQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("active", self.active);
+        encoder.optional("senateID", self.member_id.as_ref());
+        encoder.optional("latestParty", self.latest_party.as_deref());
+        encoder.optional("latestPosition", self.latest_position.as_deref());
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
+
+/// Independently optional filters and pagination for congressional positions.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct CongressionalPositionsQuery {
+    member_id: Option<CongressionalMemberId>,
+    party: Option<String>,
+    position: Option<String>,
+    page: Option<Page>,
+    limit: Option<Limit>,
+}
+
+impl CongressionalPositionsQuery {
+    /// Creates a query without undocumented defaults.
+    pub const fn new() -> Self {
+        Self {
+            member_id: None,
+            party: None,
+            position: None,
+            page: None,
+            limit: None,
+        }
+    }
+
+    /// Sets the optional congressional member identifier.
+    pub fn with_member_id(mut self, member_id: CongressionalMemberId) -> Self {
+        self.member_id = Some(member_id);
+        self
+    }
+
+    /// Sets the optional provider party filter without narrowing its vocabulary.
+    pub fn with_party(mut self, party: impl Into<String>) -> Self {
+        self.party = Some(party.into());
+        self
+    }
+
+    /// Sets the optional provider position filter without narrowing its vocabulary.
+    pub fn with_position(mut self, position: impl Into<String>) -> Self {
+        self.position = Some(position.into());
+        self
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Borrows the optional congressional member identifier.
+    pub const fn member_id(&self) -> Option<&CongressionalMemberId> {
+        self.member_id.as_ref()
+    }
+
+    /// Borrows the optional provider party filter.
+    pub fn party(&self) -> Option<&str> {
+        self.party.as_deref()
+    }
+
+    /// Borrows the optional provider position filter.
+    pub fn position(&self) -> Option<&str> {
+        self.position.as_deref()
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+}
+
+impl QueryParameters for CongressionalPositionsQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("senateID", self.member_id.as_ref());
+        encoder.optional("party", self.party.as_deref());
+        encoder.optional("position", self.position.as_deref());
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+    }
+}
+
 const PAGINATED_US_ONLY: EndpointMetadata = EndpointMetadata::new()
     .with_geography(GeographicAvailability::UsOnly)
     .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
 const US_ONLY: EndpointMetadata =
     EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
+const CONGRESSIONAL_PROFILES_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::UsOnly)
+    .with_bounds(EndpointBounds::new().with_response_rows(500).with_page(20));
+const CONGRESSIONAL_POSITIONS_METADATA: EndpointMetadata = EndpointMetadata::new()
+    .with_geography(GeographicAvailability::UsOnly)
+    .with_bounds(EndpointBounds::new().with_response_rows(300).with_page(50));
 
 macro_rules! paginated_endpoint {
     ($function:ident, $path:literal, $query:ty) => {
@@ -268,6 +466,22 @@ paginated_endpoint!(
     "house-trades-by-id",
     CongressionalTradesByMemberIdQuery
 );
+
+/// Describes `GET senate-profile` without binding a transport.
+pub fn congressional_profiles(
+    query: CongressionalProfilesQuery,
+) -> EndpointSpec<CongressionalProfilesQuery, Vec<CongressionalMemberProfile>> {
+    EndpointSpec::get("senate-profile", "senate-profile", query)
+        .with_metadata(CONGRESSIONAL_PROFILES_METADATA)
+}
+
+/// Describes `GET senate-positions` without binding a transport.
+pub fn congressional_positions(
+    query: CongressionalPositionsQuery,
+) -> EndpointSpec<CongressionalPositionsQuery, Vec<CongressionalMemberPosition>> {
+    EndpointSpec::get("senate-positions", "senate-positions", query)
+        .with_metadata(CONGRESSIONAL_POSITIONS_METADATA)
+}
 
 impl Client {
     /// Retrieves the latest Senate financial disclosures.
@@ -333,6 +547,22 @@ impl Client {
     ) -> Result<Vec<CongressionalTrade>> {
         self.execute(&house_trades_by_member_id(query)).await
     }
+
+    /// Retrieves congressional profiles using optional provider filters.
+    pub async fn congressional_profiles(
+        &self,
+        query: CongressionalProfilesQuery,
+    ) -> Result<Vec<CongressionalMemberProfile>> {
+        self.execute(&congressional_profiles(query)).await
+    }
+
+    /// Retrieves congressional position history using optional provider filters.
+    pub async fn congressional_positions(
+        &self,
+        query: CongressionalPositionsQuery,
+    ) -> Result<Vec<CongressionalMemberPosition>> {
+        self.execute(&congressional_positions(query)).await
+    }
 }
 
 #[cfg(test)]
@@ -392,6 +622,94 @@ mod tests {
                 ("limit".into(), "100".into()),
                 ("senateID".into(), "P000197".into()),
             ]
+        );
+        assert_eq!(
+            encoded(
+                &CongressionalProfilesQuery::new()
+                    .with_active(false)
+                    .with_member_id(CongressionalMemberId::new("P000197").unwrap())
+                    .with_latest_party("Republican")
+                    .with_latest_position("Representative")
+                    .with_page(Page(0))
+                    .with_limit(Limit(500))
+            ),
+            [
+                ("active".into(), "false".into()),
+                ("senateID".into(), "P000197".into()),
+                ("latestParty".into(), "Republican".into()),
+                ("latestPosition".into(), "Representative".into()),
+                ("page".into(), "0".into()),
+                ("limit".into(), "500".into()),
+            ]
+        );
+        assert_eq!(
+            encoded(
+                &CongressionalPositionsQuery::new()
+                    .with_member_id(CongressionalMemberId::new("P000197").unwrap())
+                    .with_party("Republican")
+                    .with_position("Representative")
+                    .with_page(Page(0))
+                    .with_limit(Limit(300))
+            ),
+            [
+                ("senateID".into(), "P000197".into()),
+                ("party".into(), "Republican".into()),
+                ("position".into(), "Representative".into()),
+                ("page".into(), "0".into()),
+                ("limit".into(), "300".into()),
+            ]
+        );
+        assert!(encoded(&CongressionalProfilesQuery::new()).is_empty());
+        assert!(encoded(&CongressionalPositionsQuery::new()).is_empty());
+    }
+
+    #[test]
+    fn profile_and_position_filters_are_independently_optional() {
+        let member_id = || CongressionalMemberId::new("P000197").unwrap();
+        assert_eq!(
+            encoded(&CongressionalProfilesQuery::new().with_active(true)),
+            [("active".into(), "true".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalProfilesQuery::new().with_member_id(member_id())),
+            [("senateID".into(), "P000197".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalProfilesQuery::new().with_latest_party("Independent")),
+            [("latestParty".into(), "Independent".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalProfilesQuery::new().with_latest_position("Senator")),
+            [("latestPosition".into(), "Senator".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalProfilesQuery::new().with_page(Page(20))),
+            [("page".into(), "20".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalProfilesQuery::new().with_limit(Limit(500))),
+            [("limit".into(), "500".into())]
+        );
+
+        assert_eq!(
+            encoded(&CongressionalPositionsQuery::new().with_member_id(member_id())),
+            [("senateID".into(), "P000197".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalPositionsQuery::new().with_party("Independent")),
+            [("party".into(), "Independent".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalPositionsQuery::new().with_position("Senator")),
+            [("position".into(), "Senator".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalPositionsQuery::new().with_page(Page(50))),
+            [("page".into(), "50".into())]
+        );
+        assert_eq!(
+            encoded(&CongressionalPositionsQuery::new().with_limit(Limit(300))),
+            [("limit".into(), "300".into())]
         );
     }
 }
