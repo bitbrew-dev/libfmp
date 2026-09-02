@@ -3,9 +3,12 @@
 pub mod analyst;
 pub mod calendar;
 pub mod chart;
+pub mod commodities;
 pub mod company;
+pub mod crypto;
 pub mod directory;
 pub mod economics;
+pub mod forex;
 pub mod funds;
 pub mod indexes;
 pub mod insider_trading;

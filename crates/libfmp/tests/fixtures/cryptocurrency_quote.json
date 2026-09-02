@@ -1,0 +1,21 @@
+[
+  {
+    "change": 853.94,
+    "changePercentage": 1.33631,
+    "dayHigh": 65038.38,
+    "dayLow": 63547.793,
+    "exchange": "CRYPTO",
+    "marketCap": 1293361815015,
+    "name": "Bitcoin USD",
+    "open": 63902.9,
+    "previousClose": 63902.9,
+    "price": 64756.84,
+    "priceAvg200": 71727.62,
+    "priceAvg50": 63335.02,
+    "symbol": "BTCUSD",
+    "timestamp": 1785430805,
+    "volume": 32030003200,
+    "yearHigh": 126198.07,
+    "yearLow": 57747.766
+  }
+]
