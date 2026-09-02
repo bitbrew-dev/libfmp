@@ -1,0 +1,20 @@
+[
+  {
+    "changeInNetPosition": 1.11,
+    "currentLongMarketSituation": 20.87,
+    "currentShortMarketSituation": 79.13,
+    "date": "2024-02-27 00:00:00",
+    "exchange": "PALLADIUM - NEW YORK MERCANTILE EXCHANGE",
+    "marketSentiment": "Increasing Bullish",
+    "marketSituation": "Bearish",
+    "name": "Palladium (PA)",
+    "netPostion": -12315,
+    "previousLongMarketSituation": 20.88,
+    "previousMarketSituation": "Bearish",
+    "previousNetPosition": -12453,
+    "previousShortMarketSituation": 79.12,
+    "reversalTrend": true,
+    "sector": "METALS",
+    "symbol": "PA"
+  }
+]
