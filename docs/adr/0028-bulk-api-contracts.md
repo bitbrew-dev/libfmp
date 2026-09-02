@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for issue #37's Rust API inventory. The first thirteen routes are
-implemented in Rust; the remaining five routes and the Python facade are
+Accepted for issue #37's Rust API inventory. The first fifteen routes are
+implemented in Rust; the remaining three routes and the Python facade are
 reserved.
 
 ## Decision
@@ -27,8 +27,8 @@ snake-case Rust names under `FmpClient`, with models under `fmp.bulk`.
 | `earnings-surprises-bulk` | `bulk_earnings_surprises` | `BulkYearQuery` | `BulkEarningsSurprise` | Rust complete |
 | `income-statement-bulk` | `bulk_income_statements` | `BulkStatementQuery` | `BulkIncomeStatement` | Rust complete |
 | `income-statement-growth-bulk` | `bulk_income_statement_growth` | `BulkStatementQuery` | `BulkIncomeStatementGrowth` | Rust complete |
-| `balance-sheet-statement-bulk` | `bulk_balance_sheet_statements` | `BulkStatementQuery` | `BulkBalanceSheetStatement` | Reserved |
-| `balance-sheet-statement-growth-bulk` | `bulk_balance_sheet_statement_growth` | `BulkStatementQuery` | `BulkBalanceSheetStatementGrowth` | Reserved |
+| `balance-sheet-statement-bulk` | `bulk_balance_sheet_statements` | `BulkStatementQuery` | `BulkBalanceSheetStatement` | Rust complete |
+| `balance-sheet-statement-growth-bulk` | `bulk_balance_sheet_statement_growth` | `BulkStatementQuery` | `BulkBalanceSheetStatementGrowth` | Rust complete |
 | `cash-flow-statement-bulk` | `bulk_cash_flow_statements` | `BulkStatementQuery` | `BulkCashFlowStatement` | Reserved |
 | `cash-flow-statement-growth-bulk` | `bulk_cash_flow_statement_growth` | `BulkStatementQuery` | `BulkCashFlowStatementGrowth` | Reserved |
 | `eod-bulk` | `bulk_eod` | `BulkEodQuery` | `BulkEodBar` | Reserved |
@@ -94,7 +94,15 @@ zeroes survive. The exact acronym keys `growthEBITDA`, `growthEPS`,
 ask for year 2026 while both response examples identify fiscal year 2025; the
 response is preserved as documented rather than made to agree with the query.
 
-The source marks only `price-target-summary-bulk` as US-only. The other twelve
+The two balance-sheet bulk rows likewise remain distinct from the normalized
+statement models, and every documented metric is a required `NumericString`.
+The provider typo `growthOthertotalStockholdersEquity` is preserved on the wire
+while the public Rust field uses the corrected `other_total` spelling. The
+distinct documented key `growthTotalLiabilitiesAndStockholdersEquity` is not
+silently changed to the non-growth row's `totalLiabilitiesAndTotalEquity`
+wording.
+
+The source marks only `price-target-summary-bulk` as US-only. The other fourteen
 implemented endpoints are worldwide. No response bounds, pagination, access
 requirement, conditional plan, or realtime behavior is inferred.
 
