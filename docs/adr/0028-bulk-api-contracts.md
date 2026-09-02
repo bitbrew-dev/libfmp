@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for issue #37's Rust API inventory. The first seven routes are
-implemented in Rust; the remaining eleven routes and the Python facade are
+Accepted for issue #37's Rust API inventory. The first eleven routes are
+implemented in Rust; the remaining seven routes and the Python facade are
 reserved.
 
 ## Decision
@@ -21,10 +21,10 @@ snake-case Rust names under `FmpClient`, with models under `fmp.bulk`.
 | `price-target-summary-bulk` | `bulk_price_target_summaries` | `()` | `BulkPriceTargetSummary` | Rust complete |
 | `etf-holder-bulk` | `bulk_etf_holdings` | `BulkPartQuery` | `BulkEtfHolding` | Rust complete |
 | `upgrades-downgrades-consensus-bulk` | `bulk_upgrades_downgrades_consensus` | `()` | `BulkUpgradesDowngradesConsensus` | Rust complete |
-| `key-metrics-ttm-bulk` | `bulk_key_metrics_ttm` | `()` | `BulkKeyMetricsTtm` | Reserved |
-| `ratios-ttm-bulk` | `bulk_financial_ratios_ttm` | `()` | `BulkFinancialRatiosTtm` | Reserved |
-| `peers-bulk` | `bulk_stock_peers` | `()` | `BulkStockPeers` | Reserved |
-| `earnings-surprises-bulk` | `bulk_earnings_surprises` | `BulkYearQuery` | `BulkEarningsSurprise` | Reserved |
+| `key-metrics-ttm-bulk` | `bulk_key_metrics_ttm` | `()` | `BulkKeyMetricsTtm` | Rust complete |
+| `ratios-ttm-bulk` | `bulk_financial_ratios_ttm` | `()` | `BulkFinancialRatiosTtm` | Rust complete |
+| `peers-bulk` | `bulk_stock_peers` | `()` | `BulkStockPeers` | Rust complete |
+| `earnings-surprises-bulk` | `bulk_earnings_surprises` | `BulkYearQuery` | `BulkEarningsSurprise` | Rust complete |
 | `income-statement-bulk` | `bulk_income_statements` | `BulkStatementQuery` | `BulkIncomeStatement` | Reserved |
 | `income-statement-growth-bulk` | `bulk_income_statement_growth` | `BulkStatementQuery` | `BulkIncomeStatementGrowth` | Reserved |
 | `balance-sheet-statement-bulk` | `bulk_balance_sheet_statements` | `BulkStatementQuery` | `BulkBalanceSheetStatement` | Reserved |
@@ -61,7 +61,23 @@ the exact key `lastUpdated"` to `last_updated_raw` and keeps the documented
 trailing quote in its string value; no corrected alias or date parser is added.
 The empty ETF CUSIP remains a plain string.
 
-The source marks only `price-target-summary-bulk` as US-only. The other six
+The two trailing-twelve-month contracts explicitly map every TTM-bearing field
+to its documented wire key. Serde's ordinary camel-case conversion would emit
+`Ttm`, while the provider uses uppercase `TTM`, including the compound keys
+`evToEBITDATTM`, `netDebtToEBITDATTM`, and `netIncomePerEBTTTM`. The provider
+typo `researchAndDevelopementToRevenueTTM` is preserved on the wire while the
+public Rust field uses the corrected `development` spelling. Every documented
+metric and ratio remains a `NumericString`, preserving zero, negative, large,
+and decimal representations and rejecting JSON numbers. The two diluted P/E
+fields absent from the bulk fixture are not inferred from related APIs.
+
+`BulkStockPeers.peers` remains the documented scalar `String`; it is neither
+split nor promoted to a ticker collection. `BulkYearQuery` has exactly one
+required `year` key backed by the existing open `Year` type. No range or
+default is inferred. Earnings-surprise EPS fields remain numeric strings, and
+both documented dates use the strict `Date` type.
+
+The source marks only `price-target-summary-bulk` as US-only. The other ten
 implemented endpoints are worldwide. No response bounds, pagination, access
 requirement, conditional plan, or realtime behavior is inferred.
 

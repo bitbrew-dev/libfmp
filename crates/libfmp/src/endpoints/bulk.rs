@@ -9,9 +9,11 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointMetadata, GeographicAvailability},
     },
+    query::Year,
     responses::{
         bulk::{
-            BulkDcfValuation, BulkEtfHolding, BulkFinancialScore, BulkPriceTargetSummary,
+            BulkDcfValuation, BulkEarningsSurprise, BulkEtfHolding, BulkFinancialRatiosTtm,
+            BulkFinancialScore, BulkKeyMetricsTtm, BulkPriceTargetSummary, BulkStockPeers,
             BulkStockRating, BulkUpgradesDowngradesConsensus,
         },
         company::CompanyProfile,
@@ -52,6 +54,36 @@ impl From<&BulkPart> for BulkPartQuery {
 impl QueryParameters for BulkPartQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.required("part", &self.part);
+    }
+}
+
+/// Required provider year for the annual earnings-surprises bulk route.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BulkYearQuery {
+    year: Year,
+}
+
+impl BulkYearQuery {
+    /// Creates a bulk year query without inferring an undocumented range.
+    pub const fn new(year: Year) -> Self {
+        Self { year }
+    }
+
+    /// Returns the requested provider year.
+    pub const fn year(&self) -> Year {
+        self.year
+    }
+}
+
+impl From<Year> for BulkYearQuery {
+    fn from(year: Year) -> Self {
+        Self::new(year)
+    }
+}
+
+impl QueryParameters for BulkYearQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("year", self.year);
     }
 }
 
@@ -104,6 +136,29 @@ pub fn bulk_upgrades_downgrades_consensus() -> EndpointSpec<(), Vec<BulkUpgrades
     .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET key-metrics-ttm-bulk` without binding a transport.
+pub fn bulk_key_metrics_ttm() -> EndpointSpec<(), Vec<BulkKeyMetricsTtm>> {
+    EndpointSpec::get("key-metrics-ttm-bulk", "key-metrics-ttm-bulk", ()).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET ratios-ttm-bulk` without binding a transport.
+pub fn bulk_financial_ratios_ttm() -> EndpointSpec<(), Vec<BulkFinancialRatiosTtm>> {
+    EndpointSpec::get("ratios-ttm-bulk", "ratios-ttm-bulk", ()).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET peers-bulk` without binding a transport.
+pub fn bulk_stock_peers() -> EndpointSpec<(), Vec<BulkStockPeers>> {
+    EndpointSpec::get("peers-bulk", "peers-bulk", ()).with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET earnings-surprises-bulk` without binding a transport.
+pub fn bulk_earnings_surprises(
+    query: BulkYearQuery,
+) -> EndpointSpec<BulkYearQuery, Vec<BulkEarningsSurprise>> {
+    EndpointSpec::get("earnings-surprises-bulk", "earnings-surprises-bulk", query)
+        .with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves one provider partition of worldwide company profiles.
     pub async fn bulk_company_profiles(
@@ -147,6 +202,29 @@ impl Client {
     ) -> Result<Vec<BulkUpgradesDowngradesConsensus>> {
         self.execute(&bulk_upgrades_downgrades_consensus()).await
     }
+
+    /// Retrieves worldwide trailing-twelve-month key metrics in one bulk response.
+    pub async fn bulk_key_metrics_ttm(&self) -> Result<Vec<BulkKeyMetricsTtm>> {
+        self.execute(&bulk_key_metrics_ttm()).await
+    }
+
+    /// Retrieves worldwide trailing-twelve-month financial ratios in one bulk response.
+    pub async fn bulk_financial_ratios_ttm(&self) -> Result<Vec<BulkFinancialRatiosTtm>> {
+        self.execute(&bulk_financial_ratios_ttm()).await
+    }
+
+    /// Retrieves worldwide stock peers in one provider bulk response.
+    pub async fn bulk_stock_peers(&self) -> Result<Vec<BulkStockPeers>> {
+        self.execute(&bulk_stock_peers()).await
+    }
+
+    /// Retrieves worldwide annual earnings surprises for one required provider year.
+    pub async fn bulk_earnings_surprises(
+        &self,
+        query: impl Into<BulkYearQuery>,
+    ) -> Result<Vec<BulkEarningsSurprise>> {
+        self.execute(&bulk_earnings_surprises(query.into())).await
+    }
 }
 
 #[cfg(test)]
@@ -174,5 +252,14 @@ mod tests {
             encoded(&borrowed),
             [("part".into(), "segment 01/alpha".into())]
         );
+    }
+
+    #[test]
+    fn bulk_year_query_has_one_exact_required_key() {
+        let query = BulkYearQuery::new(Year(2026));
+
+        assert_eq!(query.year(), Year(2026));
+        assert_eq!(encoded(&query), [("year".into(), "2026".into())]);
+        assert_eq!(BulkYearQuery::from(Year(7)), BulkYearQuery::new(Year(7)));
     }
 }
