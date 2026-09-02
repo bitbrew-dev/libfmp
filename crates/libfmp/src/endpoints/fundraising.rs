@@ -11,7 +11,8 @@ use crate::{
         metadata::{EndpointMetadata, GeographicAvailability},
     },
     responses::fundraising::{
-        CrowdfundingOffering, CrowdfundingOfferingSearchResult, RegulationDOfferingSearchResult,
+        CrowdfundingOffering, CrowdfundingOfferingSearchResult, RegulationDOffering,
+        RegulationDOfferingSearchResult,
     },
     types::{Cik, Limit, Page, SearchTerm},
 };
@@ -59,6 +60,66 @@ impl QueryParameters for LatestCrowdfundingOfferingsQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.optional("page", self.page);
         encoder.optional("limit", self.limit);
+    }
+}
+
+/// Independently optional pagination and issuer CIK for the latest Regulation D offerings.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct LatestRegulationDOfferingsQuery {
+    page: Option<Page>,
+    limit: Option<Limit>,
+    cik: Option<Cik>,
+}
+
+impl LatestRegulationDOfferingsQuery {
+    /// Creates a query without undocumented defaults.
+    pub const fn new() -> Self {
+        Self {
+            page: None,
+            limit: None,
+            cik: None,
+        }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Restricts the latest feed to an optional issuer CIK.
+    pub fn with_cik(mut self, cik: Cik) -> Self {
+        self.cik = Some(cik);
+        self
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+
+    /// Borrows the optional issuer CIK.
+    pub const fn cik(&self) -> Option<&Cik> {
+        self.cik.as_ref()
+    }
+}
+
+impl QueryParameters for LatestRegulationDOfferingsQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+        encoder.optional("cik", self.cik.as_ref());
     }
 }
 
@@ -176,6 +237,20 @@ pub fn search_regulation_d_offerings(
     EndpointSpec::get("fundraising-search", "fundraising-search", query).with_metadata(US_ONLY)
 }
 
+/// Describes `GET fundraising-latest` without binding a transport.
+pub fn latest_regulation_d_offerings(
+    query: LatestRegulationDOfferingsQuery,
+) -> EndpointSpec<LatestRegulationDOfferingsQuery, Vec<RegulationDOffering>> {
+    EndpointSpec::get("fundraising-latest", "fundraising-latest", query).with_metadata(US_ONLY)
+}
+
+/// Describes `GET fundraising` without binding a transport.
+pub fn regulation_d_offerings_by_cik(
+    query: OfferingByCikQuery,
+) -> EndpointSpec<OfferingByCikQuery, Vec<RegulationDOffering>> {
+    EndpointSpec::get("fundraising", "fundraising", query).with_metadata(US_ONLY)
+}
+
 impl Client {
     /// Retrieves the latest US crowdfunding offerings.
     pub async fn latest_crowdfunding_offerings(
@@ -209,6 +284,23 @@ impl Client {
         query: impl Into<OfferingSearchQuery>,
     ) -> Result<Vec<RegulationDOfferingSearchResult>> {
         self.execute(&search_regulation_d_offerings(query.into()))
+            .await
+    }
+
+    /// Retrieves the latest US Regulation D offerings.
+    pub async fn latest_regulation_d_offerings(
+        &self,
+        query: LatestRegulationDOfferingsQuery,
+    ) -> Result<Vec<RegulationDOffering>> {
+        self.execute(&latest_regulation_d_offerings(query)).await
+    }
+
+    /// Retrieves US Regulation D offerings for one issuer CIK.
+    pub async fn regulation_d_offerings_by_cik(
+        &self,
+        query: impl Into<OfferingByCikQuery>,
+    ) -> Result<Vec<RegulationDOffering>> {
+        self.execute(&regulation_d_offerings_by_cik(query.into()))
             .await
     }
 }
@@ -265,5 +357,25 @@ mod tests {
         assert_eq!(owned.cik(), &cik);
         assert_eq!(borrowed.cik(), &cik);
         assert_eq!(encoded(&borrowed), [("cik".into(), "0001916078".into())]);
+
+        assert!(encoded(&LatestRegulationDOfferingsQuery::new()).is_empty());
+        let latest = LatestRegulationDOfferingsQuery::new()
+            .with_page(Page(u32::MAX))
+            .with_limit(Limit(0))
+            .with_cik(Cik::new("0002013736").unwrap());
+        assert_eq!(
+            encoded(&latest),
+            [
+                ("page".into(), u32::MAX.to_string()),
+                ("limit".into(), "0".into()),
+                ("cik".into(), "0002013736".into()),
+            ]
+        );
+        assert_eq!(
+            encoded(
+                &LatestRegulationDOfferingsQuery::new().with_cik(Cik::new("0002013736").unwrap())
+            ),
+            [("cik".into(), "0002013736".into())]
+        );
     }
 }

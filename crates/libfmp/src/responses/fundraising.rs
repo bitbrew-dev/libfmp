@@ -6,8 +6,8 @@ use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Number;
 
 use crate::{
-    codecs::{DynamicJson, UsDate, YnFlag},
-    types::{ApiDateTime, Cik, Count, FormType, StatementAmount},
+    codecs::{DynamicJson, UsDate, YnFlag, empty_date},
+    types::{ApiDateTime, Cik, Count, Date, FormType, StatementAmount},
 };
 
 fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
@@ -101,4 +101,60 @@ pub struct CrowdfundingOffering {
     pub taxes_paid_prior_fiscal_year: StatementAmount,
     pub net_income_most_recent_fiscal_year: StatementAmount,
     pub net_income_prior_fiscal_year: StatementAmount,
+}
+
+/// One detailed Regulation D exempt offering.
+///
+/// All 43 provider keys are required. `incorporatedWithinFiveYears` is the
+/// only required-present nullable field documented by the two routes.
+/// `dateOfFirstSale` uses the provider's empty-string sentinel rather than
+/// JSON null. Amounts and investor counts are nonnegative JSON integers.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RegulationDOffering {
+    pub cik: Cik,
+    pub company_name: String,
+    pub date: Date,
+    pub filing_date: ApiDateTime,
+    pub accepted_date: ApiDateTime,
+    pub form_type: FormType,
+    pub form_signification: String,
+    pub entity_name: String,
+    pub issuer_street: String,
+    pub issuer_city: String,
+    pub issuer_state_or_country: String,
+    pub issuer_state_or_country_description: String,
+    pub issuer_zip_code: String,
+    pub issuer_phone_number: String,
+    pub jurisdiction_of_incorporation: String,
+    pub entity_type: String,
+    #[serde(deserialize_with = "required_option")]
+    pub incorporated_within_five_years: Option<bool>,
+    pub year_of_incorporation: String,
+    pub related_person_first_name: String,
+    pub related_person_last_name: String,
+    pub related_person_street: String,
+    pub related_person_city: String,
+    pub related_person_state_or_country: String,
+    pub related_person_state_or_country_description: String,
+    pub related_person_zip_code: String,
+    pub related_person_relationship: String,
+    pub industry_group_type: String,
+    pub revenue_range: String,
+    pub federal_exemptions_exclusions: String,
+    pub is_amendment: bool,
+    #[serde(with = "empty_date")]
+    pub date_of_first_sale: Option<Date>,
+    pub duration_of_offering_is_more_than_year: bool,
+    pub securities_offered_are_of_equity_type: bool,
+    pub is_business_combination_transaction: bool,
+    pub minimum_investment_accepted: u64,
+    pub total_offering_amount: u64,
+    pub total_amount_sold: u64,
+    pub total_amount_remaining: u64,
+    pub has_non_accredited_investors: bool,
+    pub total_number_already_invested: Count,
+    pub sales_commissions: u64,
+    pub finders_fees: u64,
+    pub gross_proceeds_used: u64,
 }
