@@ -1,5 +1,3 @@
-# plugins
-# itofin library
 # fmp library
 from fmp.client import FmpClient as FmpClient
 from fmp.errors import FmpConfigError as FmpConfigError
