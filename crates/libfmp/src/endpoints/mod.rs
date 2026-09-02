@@ -7,6 +7,7 @@ pub mod chart;
 pub mod commodities;
 pub mod company;
 pub mod crypto;
+pub mod dcf;
 pub mod directory;
 pub mod economics;
 pub mod forex;

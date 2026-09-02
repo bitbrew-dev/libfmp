@@ -22,6 +22,8 @@ jobs:
       contents: read
       packages: read
     secrets: inherit
+    with:
+      prek_skip: test
 
   # python-bindings:
   #   name: python bindings
