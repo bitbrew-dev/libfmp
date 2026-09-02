@@ -2,9 +2,8 @@
 
 ## Status
 
-Accepted for issue #32's Rust API inventory. The 12 catalog and quote entries
-are implemented in this slice; the 15 chart entries and Python facade remain
-deferred.
+Accepted for issue #32's Rust API inventory. All 27 catalog, quote, and chart
+entries are implemented in Rust; the Python facade remains deferred.
 
 ## Decision
 
@@ -18,29 +17,29 @@ than duplicated.
 | Commodity | `quote` | `commodity_quote` | `QuoteQuery` | `Quote` | Implemented facade | `FmpClient.commodity_quote`; `fmp.quote.Quote` |
 | Commodity | `quote-short` | `commodity_quote_short` | `QuoteShortQuery` | `QuoteShort` | Implemented facade | `FmpClient.commodity_quote_short`; `fmp.quote.QuoteShort` |
 | Commodity | `batch-commodity-quotes` | `commodity_quotes` | `ShortOnlyQuery` | `QuoteShort` | Existing client method; domain descriptor facade added | `FmpClient.commodity_quotes`; `fmp.quote.QuoteShort` |
-| Commodity | `historical-price-eod/light` | `commodity_chart_light` | `AssetChartQuery` | `StockChartLightBar` | Reserved | `FmpClient.commodity_chart_light`; `fmp.chart.StockChartLightBar` |
-| Commodity | `historical-price-eod/full` | `commodity_chart_full` | `AssetChartQuery` | `StockChartFullBar` | Reserved | `FmpClient.commodity_chart_full`; `fmp.chart.StockChartFullBar` |
-| Commodity | `historical-chart/1min` | `commodity_chart_one_minute` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.commodity_chart_one_minute`; `fmp.chart.StockChartIntradayBar` |
-| Commodity | `historical-chart/5min` | `commodity_chart_five_minutes` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.commodity_chart_five_minutes`; `fmp.chart.StockChartIntradayBar` |
-| Commodity | `historical-chart/1hour` | `commodity_chart_one_hour` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.commodity_chart_one_hour`; `fmp.chart.StockChartIntradayBar` |
+| Commodity | `historical-price-eod/light` | `commodity_chart_light` | `AssetChartQuery` | `StockChartLightBar` | Implemented facade | `FmpClient.commodity_chart_light`; `fmp.chart.StockChartLightBar` |
+| Commodity | `historical-price-eod/full` | `commodity_chart_full` | `AssetChartQuery` | `StockChartFullBar` | Implemented facade | `FmpClient.commodity_chart_full`; `fmp.chart.StockChartFullBar` |
+| Commodity | `historical-chart/1min` | `commodity_chart_one_minute` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.commodity_chart_one_minute`; `fmp.chart.StockChartIntradayBar` |
+| Commodity | `historical-chart/5min` | `commodity_chart_five_minutes` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.commodity_chart_five_minutes`; `fmp.chart.StockChartIntradayBar` |
+| Commodity | `historical-chart/1hour` | `commodity_chart_one_hour` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.commodity_chart_one_hour`; `fmp.chart.StockChartIntradayBar` |
 | Forex | `forex-list` | `forex_list` | unit (`()`) | `ForexPair` | Implemented | `FmpClient.forex_list`; `fmp.forex.ForexPair` |
 | Forex | `quote` | `forex_quote` | `QuoteQuery` | `Quote` | Implemented facade | `FmpClient.forex_quote`; `fmp.quote.Quote` |
 | Forex | `quote-short` | `forex_quote_short` | `QuoteShortQuery` | `QuoteShort` | Implemented facade | `FmpClient.forex_quote_short`; `fmp.quote.QuoteShort` |
 | Forex | `batch-forex-quotes` | `forex_quotes` | `ShortOnlyQuery` | `QuoteShort` | Existing client method; domain descriptor facade added | `FmpClient.forex_quotes`; `fmp.quote.QuoteShort` |
-| Forex | `historical-price-eod/light` | `forex_chart_light` | `AssetChartQuery` | `StockChartLightBar` | Reserved | `FmpClient.forex_chart_light`; `fmp.chart.StockChartLightBar` |
-| Forex | `historical-price-eod/full` | `forex_chart_full` | `AssetChartQuery` | `StockChartFullBar` | Reserved | `FmpClient.forex_chart_full`; `fmp.chart.StockChartFullBar` |
-| Forex | `historical-chart/1min` | `forex_chart_one_minute` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.forex_chart_one_minute`; `fmp.chart.StockChartIntradayBar` |
-| Forex | `historical-chart/5min` | `forex_chart_five_minutes` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.forex_chart_five_minutes`; `fmp.chart.StockChartIntradayBar` |
-| Forex | `historical-chart/1hour` | `forex_chart_one_hour` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.forex_chart_one_hour`; `fmp.chart.StockChartIntradayBar` |
+| Forex | `historical-price-eod/light` | `forex_chart_light` | `AssetChartQuery` | `StockChartLightBar` | Implemented facade | `FmpClient.forex_chart_light`; `fmp.chart.StockChartLightBar` |
+| Forex | `historical-price-eod/full` | `forex_chart_full` | `AssetChartQuery` | `StockChartFullBar` | Implemented facade | `FmpClient.forex_chart_full`; `fmp.chart.StockChartFullBar` |
+| Forex | `historical-chart/1min` | `forex_chart_one_minute` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.forex_chart_one_minute`; `fmp.chart.StockChartIntradayBar` |
+| Forex | `historical-chart/5min` | `forex_chart_five_minutes` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.forex_chart_five_minutes`; `fmp.chart.StockChartIntradayBar` |
+| Forex | `historical-chart/1hour` | `forex_chart_one_hour` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.forex_chart_one_hour`; `fmp.chart.StockChartIntradayBar` |
 | Crypto | `cryptocurrency-list` | `cryptocurrency_list` | unit (`()`) | `CryptocurrencyListing` | Implemented | `FmpClient.cryptocurrency_list`; `fmp.crypto.CryptocurrencyListing` |
 | Crypto | `quote` | `cryptocurrency_quote` | `QuoteQuery` | `Quote` | Implemented facade | `FmpClient.cryptocurrency_quote`; `fmp.quote.Quote` |
 | Crypto | `quote-short` | `cryptocurrency_quote_short` | `QuoteShortQuery` | `QuoteShort` | Implemented facade | `FmpClient.cryptocurrency_quote_short`; `fmp.quote.QuoteShort` |
 | Crypto | `batch-crypto-quotes` | `cryptocurrency_quotes` | `ShortOnlyQuery` | `QuoteShort` | Existing client method; domain descriptor facade added | `FmpClient.cryptocurrency_quotes`; `fmp.quote.QuoteShort` |
-| Crypto | `historical-price-eod/light` | `cryptocurrency_chart_light` | `AssetChartQuery` | `StockChartLightBar` | Reserved | `FmpClient.cryptocurrency_chart_light`; `fmp.chart.StockChartLightBar` |
-| Crypto | `historical-price-eod/full` | `cryptocurrency_chart_full` | `AssetChartQuery` | `StockChartFullBar` | Reserved | `FmpClient.cryptocurrency_chart_full`; `fmp.chart.StockChartFullBar` |
-| Crypto | `historical-chart/1min` | `cryptocurrency_chart_one_minute` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.cryptocurrency_chart_one_minute`; `fmp.chart.StockChartIntradayBar` |
-| Crypto | `historical-chart/5min` | `cryptocurrency_chart_five_minutes` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.cryptocurrency_chart_five_minutes`; `fmp.chart.StockChartIntradayBar` |
-| Crypto | `historical-chart/1hour` | `cryptocurrency_chart_one_hour` | `AssetChartQuery` | `StockChartIntradayBar` | Reserved | `FmpClient.cryptocurrency_chart_one_hour`; `fmp.chart.StockChartIntradayBar` |
+| Crypto | `historical-price-eod/light` | `cryptocurrency_chart_light` | `AssetChartQuery` | `StockChartLightBar` | Implemented facade | `FmpClient.cryptocurrency_chart_light`; `fmp.chart.StockChartLightBar` |
+| Crypto | `historical-price-eod/full` | `cryptocurrency_chart_full` | `AssetChartQuery` | `StockChartFullBar` | Implemented facade | `FmpClient.cryptocurrency_chart_full`; `fmp.chart.StockChartFullBar` |
+| Crypto | `historical-chart/1min` | `cryptocurrency_chart_one_minute` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.cryptocurrency_chart_one_minute`; `fmp.chart.StockChartIntradayBar` |
+| Crypto | `historical-chart/5min` | `cryptocurrency_chart_five_minutes` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.cryptocurrency_chart_five_minutes`; `fmp.chart.StockChartIntradayBar` |
+| Crypto | `historical-chart/1hour` | `cryptocurrency_chart_one_hour` | `AssetChartQuery` | `StockChartIntradayBar` | Implemented facade | `FmpClient.cryptocurrency_chart_one_hour`; `fmp.chart.StockChartIntradayBar` |
 
 Each domain owns a thin endpoint and response namespace:
 `endpoints::commodities`/`responses::commodities`, `endpoints::forex`/
@@ -70,11 +69,12 @@ exchange codes remain accepted. `CryptocurrencyListing.ico_date` is a typed
 preserved. `Quote.market_cap` remains nullable and the shared unsigned market
 capitalization and volume types preserve the documented large crypto values.
 
-The 15 future chart methods reserve one narrow shared `AssetChartQuery` because
+The 15 chart methods use one narrow shared `AssetChartQuery` because
 all three documentation sections expose the same required `symbol` followed by
 independently optional `from` and `to` dates. The response rows remain the
-existing chart models. The two end-of-day routes in each domain reserve only
-the documented 5,000-row bound; no bounds are reserved for intraday routes.
+existing chart models. Thin domain facades delegate to one path engine. The two
+end-of-day routes in each domain carry only the documented 5,000-row bound; no
+bounds are attached to intraday routes.
 
 Python runtime parity is deferred. Future client methods use the ordinary names
 in the table. Catalog rows live in their matching asset modules; generic quote

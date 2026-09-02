@@ -9,9 +9,13 @@ use crate::{
         EndpointSpec,
         metadata::{EndpointMetadata, GeographicAvailability},
     },
-    responses::forex::{ForexPair, Quote, QuoteShort},
+    responses::{
+        chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar},
+        forex::{ForexPair, Quote, QuoteShort},
+    },
 };
 
+pub use super::asset_chart::AssetChartQuery;
 pub use super::quote::{QuoteQuery, QuoteShortQuery, ShortOnlyQuery};
 
 const US_ONLY: EndpointMetadata =
@@ -40,6 +44,41 @@ pub fn forex_quotes() -> EndpointSpec<ShortOnlyQuery, Vec<QuoteShort>> {
     super::quote::forex_quotes()
 }
 
+/// Describes compact forex `GET historical-price-eod/light` history.
+pub fn forex_chart_light(
+    query: AssetChartQuery,
+) -> EndpointSpec<AssetChartQuery, Vec<StockChartLightBar>> {
+    super::asset_chart::chart_light(query)
+}
+
+/// Describes detailed forex `GET historical-price-eod/full` history.
+pub fn forex_chart_full(
+    query: AssetChartQuery,
+) -> EndpointSpec<AssetChartQuery, Vec<StockChartFullBar>> {
+    super::asset_chart::chart_full(query)
+}
+
+/// Describes forex `GET historical-chart/1min` history.
+pub fn forex_chart_one_minute(
+    query: AssetChartQuery,
+) -> EndpointSpec<AssetChartQuery, Vec<StockChartIntradayBar>> {
+    super::asset_chart::chart_one_minute(query)
+}
+
+/// Describes forex `GET historical-chart/5min` history.
+pub fn forex_chart_five_minutes(
+    query: AssetChartQuery,
+) -> EndpointSpec<AssetChartQuery, Vec<StockChartIntradayBar>> {
+    super::asset_chart::chart_five_minutes(query)
+}
+
+/// Describes forex `GET historical-chart/1hour` history.
+pub fn forex_chart_one_hour(
+    query: AssetChartQuery,
+) -> EndpointSpec<AssetChartQuery, Vec<StockChartIntradayBar>> {
+    super::asset_chart::chart_one_hour(query)
+}
+
 impl Client {
     /// Lists the provider's documented forex pairs.
     pub async fn forex_list(&self) -> Result<Vec<ForexPair>> {
@@ -57,5 +96,45 @@ impl Client {
         query: impl Into<QuoteShortQuery>,
     ) -> Result<Vec<QuoteShort>> {
         self.execute(&forex_quote_short(query.into())).await
+    }
+
+    /// Retrieves compact end-of-day forex history.
+    pub async fn forex_chart_light(
+        &self,
+        query: impl Into<AssetChartQuery>,
+    ) -> Result<Vec<StockChartLightBar>> {
+        self.execute(&forex_chart_light(query.into())).await
+    }
+
+    /// Retrieves detailed end-of-day forex history.
+    pub async fn forex_chart_full(
+        &self,
+        query: impl Into<AssetChartQuery>,
+    ) -> Result<Vec<StockChartFullBar>> {
+        self.execute(&forex_chart_full(query.into())).await
+    }
+
+    /// Retrieves one-minute forex history.
+    pub async fn forex_chart_one_minute(
+        &self,
+        query: impl Into<AssetChartQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&forex_chart_one_minute(query.into())).await
+    }
+
+    /// Retrieves five-minute forex history.
+    pub async fn forex_chart_five_minutes(
+        &self,
+        query: impl Into<AssetChartQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&forex_chart_five_minutes(query.into())).await
+    }
+
+    /// Retrieves one-hour forex history.
+    pub async fn forex_chart_one_hour(
+        &self,
+        query: impl Into<AssetChartQuery>,
+    ) -> Result<Vec<StockChartIntradayBar>> {
+        self.execute(&forex_chart_one_hour(query.into())).await
     }
 }
