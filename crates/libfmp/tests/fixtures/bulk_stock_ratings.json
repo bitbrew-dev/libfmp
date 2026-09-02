@@ -1,0 +1,13 @@
+[
+  {
+    "date": "2025-07-09",
+    "debtToEquityScore": "1",
+    "discountedCashFlowScore": "5",
+    "priceToBookScore": "4",
+    "priceToEarningsScore": "4",
+    "rating": "B+",
+    "returnOnAssetsScore": "2",
+    "returnOnEquityScore": "3",
+    "symbol": "000001.SZ"
+  }
+]
