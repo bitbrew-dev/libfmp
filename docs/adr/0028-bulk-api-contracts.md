@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for issue #37's Rust API inventory. The first eleven routes are
-implemented in Rust; the remaining seven routes and the Python facade are
+Accepted for issue #37's Rust API inventory. The first thirteen routes are
+implemented in Rust; the remaining five routes and the Python facade are
 reserved.
 
 ## Decision
@@ -25,8 +25,8 @@ snake-case Rust names under `FmpClient`, with models under `fmp.bulk`.
 | `ratios-ttm-bulk` | `bulk_financial_ratios_ttm` | `()` | `BulkFinancialRatiosTtm` | Rust complete |
 | `peers-bulk` | `bulk_stock_peers` | `()` | `BulkStockPeers` | Rust complete |
 | `earnings-surprises-bulk` | `bulk_earnings_surprises` | `BulkYearQuery` | `BulkEarningsSurprise` | Rust complete |
-| `income-statement-bulk` | `bulk_income_statements` | `BulkStatementQuery` | `BulkIncomeStatement` | Reserved |
-| `income-statement-growth-bulk` | `bulk_income_statement_growth` | `BulkStatementQuery` | `BulkIncomeStatementGrowth` | Reserved |
+| `income-statement-bulk` | `bulk_income_statements` | `BulkStatementQuery` | `BulkIncomeStatement` | Rust complete |
+| `income-statement-growth-bulk` | `bulk_income_statement_growth` | `BulkStatementQuery` | `BulkIncomeStatementGrowth` | Rust complete |
 | `balance-sheet-statement-bulk` | `bulk_balance_sheet_statements` | `BulkStatementQuery` | `BulkBalanceSheetStatement` | Reserved |
 | `balance-sheet-statement-growth-bulk` | `bulk_balance_sheet_statement_growth` | `BulkStatementQuery` | `BulkBalanceSheetStatementGrowth` | Reserved |
 | `cash-flow-statement-bulk` | `bulk_cash_flow_statements` | `BulkStatementQuery` | `BulkCashFlowStatement` | Reserved |
@@ -77,7 +77,24 @@ required `year` key backed by the existing open `Year` type. No range or
 default is inferred. Earnings-surprise EPS fields remain numeric strings, and
 both documented dates use the strict `Date` type.
 
-The source marks only `price-target-summary-bulk` as US-only. The other ten
+`BulkStatementQuery` has exactly the required `year` and `period` keys, in that
+wire order. It uses the existing open `Year` and the narrower `FiscalPeriod`
+whose complete documented set is `Q1`, `Q2`, `Q3`, `Q4`, and `FY`; it does not
+reuse the ordinary statement query's retrieval-frequency alternatives or
+documented 1,000-row response bound. No default, option, or year range is
+inferred.
+
+The two income bulk rows remain separate from the normalized statement models.
+Every documented monetary, count, EPS, and growth metric is `NumericString`,
+which preserves integer-like, decimal, negative, zero, and large quoted values
+while rejecting JSON numbers. Identity fields use the proven narrow types,
+including a representation-preserving `Cik` so the documented ten leading
+zeroes survive. The exact acronym keys `growthEBITDA`, `growthEPS`,
+`growthEPSDiluted`, and `growthEBIT` are mapped explicitly. The request examples
+ask for year 2026 while both response examples identify fiscal year 2025; the
+response is preserved as documented rather than made to agree with the query.
+
+The source marks only `price-target-summary-bulk` as US-only. The other twelve
 implemented endpoints are worldwide. No response bounds, pagination, access
 requirement, conditional plan, or realtime behavior is inferred.
 

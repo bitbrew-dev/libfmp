@@ -9,12 +9,13 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointMetadata, GeographicAvailability},
     },
-    query::Year,
+    query::{FiscalPeriod, Year},
     responses::{
         bulk::{
             BulkDcfValuation, BulkEarningsSurprise, BulkEtfHolding, BulkFinancialRatiosTtm,
-            BulkFinancialScore, BulkKeyMetricsTtm, BulkPriceTargetSummary, BulkStockPeers,
-            BulkStockRating, BulkUpgradesDowngradesConsensus,
+            BulkFinancialScore, BulkIncomeStatement, BulkIncomeStatementGrowth, BulkKeyMetricsTtm,
+            BulkPriceTargetSummary, BulkStockPeers, BulkStockRating,
+            BulkUpgradesDowngradesConsensus,
         },
         company::CompanyProfile,
     },
@@ -84,6 +85,37 @@ impl From<Year> for BulkYearQuery {
 impl QueryParameters for BulkYearQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.required("year", self.year);
+    }
+}
+
+/// Required provider year and fiscal period shared by bulk statement routes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BulkStatementQuery {
+    year: Year,
+    period: FiscalPeriod,
+}
+
+impl BulkStatementQuery {
+    /// Creates a bulk statement query with both documented required values.
+    pub const fn new(year: Year, period: FiscalPeriod) -> Self {
+        Self { year, period }
+    }
+
+    /// Returns the requested provider year.
+    pub const fn year(&self) -> Year {
+        self.year
+    }
+
+    /// Returns the requested fiscal period.
+    pub const fn period(&self) -> FiscalPeriod {
+        self.period
+    }
+}
+
+impl QueryParameters for BulkStatementQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("year", self.year);
+        encoder.required("period", self.period);
     }
 }
 
@@ -159,6 +191,26 @@ pub fn bulk_earnings_surprises(
         .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET income-statement-bulk` without binding a transport.
+pub fn bulk_income_statements(
+    query: BulkStatementQuery,
+) -> EndpointSpec<BulkStatementQuery, Vec<BulkIncomeStatement>> {
+    EndpointSpec::get("income-statement-bulk", "income-statement-bulk", query)
+        .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET income-statement-growth-bulk` without binding a transport.
+pub fn bulk_income_statement_growth(
+    query: BulkStatementQuery,
+) -> EndpointSpec<BulkStatementQuery, Vec<BulkIncomeStatementGrowth>> {
+    EndpointSpec::get(
+        "income-statement-growth-bulk",
+        "income-statement-growth-bulk",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves one provider partition of worldwide company profiles.
     pub async fn bulk_company_profiles(
@@ -225,6 +277,22 @@ impl Client {
     ) -> Result<Vec<BulkEarningsSurprise>> {
         self.execute(&bulk_earnings_surprises(query.into())).await
     }
+
+    /// Retrieves worldwide bulk income statements for one year and fiscal period.
+    pub async fn bulk_income_statements(
+        &self,
+        query: BulkStatementQuery,
+    ) -> Result<Vec<BulkIncomeStatement>> {
+        self.execute(&bulk_income_statements(query)).await
+    }
+
+    /// Retrieves worldwide bulk income-statement growth for one year and fiscal period.
+    pub async fn bulk_income_statement_growth(
+        &self,
+        query: BulkStatementQuery,
+    ) -> Result<Vec<BulkIncomeStatementGrowth>> {
+        self.execute(&bulk_income_statement_growth(query)).await
+    }
 }
 
 #[cfg(test)]
@@ -261,5 +329,20 @@ mod tests {
         assert_eq!(query.year(), Year(2026));
         assert_eq!(encoded(&query), [("year".into(), "2026".into())]);
         assert_eq!(BulkYearQuery::from(Year(7)), BulkYearQuery::new(Year(7)));
+    }
+
+    #[test]
+    fn bulk_statement_query_has_two_exact_required_keys_in_documented_order() {
+        let query = BulkStatementQuery::new(Year(2026), FiscalPeriod::Q1);
+
+        assert_eq!(query.year(), Year(2026));
+        assert_eq!(query.period(), FiscalPeriod::Q1);
+        assert_eq!(
+            encoded(&query),
+            [
+                ("year".into(), "2026".into()),
+                ("period".into(), "Q1".into())
+            ]
+        );
     }
 }
