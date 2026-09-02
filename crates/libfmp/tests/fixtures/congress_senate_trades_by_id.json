@@ -1,0 +1,20 @@
+[
+  {
+    "amount": "$1,001 - $15,000",
+    "assetDescription": "Canadian Imperial Bank of Commerce",
+    "assetType": "Corporate Bond",
+    "capitalGainsOver200USD": "False",
+    "comment": "",
+    "disclosureDate": "2026-07-24",
+    "district": "",
+    "firstName": "Bernie",
+    "lastName": "Moreno",
+    "link": "https://efdsearch.senate.gov/search/view/ptr/bccf83ce-dd72-4ab6-8564-b3bbb1d2ee55/",
+    "office": "Bernie Moreno",
+    "owner": "Self",
+    "senateID": "M001242",
+    "symbol": "CM",
+    "transactionDate": "2026-06-22",
+    "type": "Sale"
+  }
+]

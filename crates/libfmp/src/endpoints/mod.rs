@@ -6,6 +6,7 @@ pub mod calendar;
 pub mod chart;
 pub mod commodities;
 pub mod company;
+pub mod congressional;
 pub mod crypto;
 pub mod dcf;
 pub mod directory;

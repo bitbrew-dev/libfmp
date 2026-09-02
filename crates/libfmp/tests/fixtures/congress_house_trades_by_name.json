@@ -1,0 +1,20 @@
+[
+  {
+    "amount": "$1,001 - $15,000",
+    "assetDescription": "Bank of America Corp",
+    "assetType": "Stock",
+    "capitalGainsOver200USD": "False",
+    "comment": "",
+    "disclosureDate": "2026-07-21",
+    "district": "CT04",
+    "firstName": "James A.",
+    "lastName": "Himes",
+    "link": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20035047.pdf",
+    "office": "James A. Himes",
+    "owner": "Joint",
+    "senateID": "H001047",
+    "symbol": "BAC",
+    "transactionDate": "2026-07-20",
+    "type": "Sale"
+  }
+]

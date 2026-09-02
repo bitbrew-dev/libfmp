@@ -3,10 +3,11 @@ use std::str::FromStr;
 use libfmp::{
     query::Year,
     types::{
-        ApiDateTime, BenchmarkYear, CalendarQuarter, CalendarYear, Cik, CountryCode, CurrencyCode,
-        Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, FormType, Industry, Isin, Lei, Limit,
-        MarketHoursTimestamp, Page, SearchTerm, Sector, StatementAmount, StringValueError, Ticker,
-        TickerList, TransactionTypeCode, UnixMilliseconds, UnixSeconds,
+        ApiDateTime, BenchmarkYear, CalendarQuarter, CalendarYear, Cik, CongressionalMemberId,
+        CountryCode, CurrencyCode, Cusip, Date, DateRange, ExchangeCode, FiniteDecimal, FormType,
+        Industry, Isin, Lei, Limit, MarketHoursTimestamp, Page, SearchTerm, Sector,
+        StatementAmount, StringValueError, Ticker, TickerList, TransactionTypeCode,
+        UnixMilliseconds, UnixSeconds,
     },
 };
 
@@ -105,6 +106,22 @@ fn insider_transaction_type_code_is_open_and_representation_preserving() {
     );
     assert!(TransactionTypeCode::new("").is_err());
     assert!(TransactionTypeCode::new("bad\ncode").is_err());
+}
+
+#[test]
+fn congressional_member_id_is_chamber_neutral_and_representation_preserving() {
+    for raw in ["M001242", "C001120", "  P000197  "] {
+        let member_id = CongressionalMemberId::new(raw).unwrap();
+        assert_eq!(member_id.as_str(), raw);
+        assert_eq!(member_id.to_string(), raw);
+        assert_eq!(
+            serde_json::from_str::<CongressionalMemberId>(&serde_json::to_string(raw).unwrap())
+                .unwrap(),
+            member_id
+        );
+    }
+    assert!(CongressionalMemberId::new("").is_err());
+    assert!(CongressionalMemberId::new("M001\n242").is_err());
 }
 
 #[test]

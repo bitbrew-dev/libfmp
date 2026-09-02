@@ -1,0 +1,20 @@
+[
+  {
+    "amount": "$1,001 - $15,000",
+    "assetDescription": "Apple Inc",
+    "assetType": "Stock",
+    "capitalGainsOver200USD": "False",
+    "comment": "",
+    "disclosureDate": "2026-07-17",
+    "district": "TX02",
+    "firstName": "Dan",
+    "lastName": "Crenshaw",
+    "link": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20035024.pdf",
+    "office": "Dan Crenshaw",
+    "owner": "",
+    "senateID": "C001120",
+    "symbol": "AAPL",
+    "transactionDate": "2026-06-01",
+    "type": "Sale"
+  }
+]

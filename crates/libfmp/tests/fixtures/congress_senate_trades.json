@@ -1,0 +1,20 @@
+[
+  {
+    "amount": "$15,001 - $50,000",
+    "assetDescription": "Apple Inc",
+    "assetType": "Stock",
+    "capitalGainsOver200USD": "False",
+    "comment": "",
+    "disclosureDate": "2026-07-08",
+    "district": "RI",
+    "firstName": "Sheldon",
+    "lastName": "Whitehouse",
+    "link": "https://efdsearch.senate.gov/search/view/ptr/5d9b1b8e-2ae1-442b-860c-e79b8a701dc6/",
+    "office": "Sheldon Whitehouse",
+    "owner": "Spouse",
+    "senateID": "W000802",
+    "symbol": "AAPL",
+    "transactionDate": "2026-06-24",
+    "type": "Sale"
+  }
+]

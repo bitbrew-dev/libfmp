@@ -1,0 +1,20 @@
+[
+  {
+    "amount": "$15,001 - $50,000",
+    "assetDescription": "Berkshire Hathaway Inc",
+    "assetType": "Stock",
+    "capitalGainsOver200USD": "False",
+    "comment": "",
+    "disclosureDate": "2026-07-21",
+    "district": "KS",
+    "firstName": "Jerry",
+    "lastName": "Moran",
+    "link": "https://efdsearch.senate.gov/search/view/ptr/cff197e2-b90b-4b53-b97d-eecf226a1980/",
+    "office": "Jerry Moran",
+    "owner": "Self",
+    "senateID": "M000934",
+    "symbol": "",
+    "transactionDate": "2026-06-23",
+    "type": "Purchase"
+  }
+]
