@@ -222,6 +222,12 @@ fn documented_fields_have_strict_types_and_only_position_end_date_is_nullable() 
 
     let position = serde_json::from_slice::<serde_json::Value>(POSITIONS).unwrap()[0].clone();
     assert!(serde_json::from_value::<CongressionalMemberPosition>(position.clone()).is_ok());
+    let mut missing_end_date = position.clone();
+    missing_end_date.as_object_mut().unwrap().remove("endDate");
+    assert!(
+        serde_json::from_value::<CongressionalMemberPosition>(missing_end_date).is_err(),
+        "position endDate must be present even when nullable"
+    );
     for field in [
         "senateID",
         "congressNumber",
