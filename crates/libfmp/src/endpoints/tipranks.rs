@@ -12,8 +12,8 @@ use crate::{
             PlanCondition,
         },
     },
-    responses::tipranks::TipRanksRatingSearchResult,
-    types::{Date, Limit, Page, Ticker, TipRanksExpertUid},
+    responses::tipranks::{TipRanksPointInTimeRating, TipRanksRatingSearchResult},
+    types::{Date, Limit, Page, SearchTerm, Ticker, TipRanksExpertUid},
 };
 
 /// Optional filters and pagination for the TipRanks analyst ratings search.
@@ -135,6 +135,194 @@ impl QueryParameters for TipRanksSearchQuery {
     }
 }
 
+/// Required symbol and optional snapshot controls for point-in-time ratings.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PointInTimeRatingsBySymbolQuery {
+    symbol: Ticker,
+    date: Option<Date>,
+    limit: Option<Limit>,
+    page: Option<Page>,
+    nonadjusted: Option<bool>,
+}
+
+impl PointInTimeRatingsBySymbolQuery {
+    /// Creates a current snapshot request for one ticker without injected defaults.
+    pub const fn new(symbol: Ticker) -> Self {
+        Self {
+            symbol,
+            date: None,
+            limit: None,
+            page: None,
+            nonadjusted: None,
+        }
+    }
+
+    /// Sets the optional historical snapshot date.
+    pub const fn with_date(mut self, date: Date) -> Self {
+        self.date = Some(date);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets native-currency price targets when true, preserving explicit false.
+    pub const fn with_nonadjusted(mut self, nonadjusted: bool) -> Self {
+        self.nonadjusted = Some(nonadjusted);
+        self
+    }
+
+    /// Borrows the required ticker.
+    pub const fn symbol(&self) -> &Ticker {
+        &self.symbol
+    }
+
+    /// Returns the optional historical snapshot date.
+    pub const fn date(&self) -> Option<Date> {
+        self.date
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional native-currency flag.
+    pub const fn nonadjusted(&self) -> Option<bool> {
+        self.nonadjusted
+    }
+}
+
+impl QueryParameters for PointInTimeRatingsBySymbolQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.required("symbol", &self.symbol);
+        encoder.optional("date", self.date);
+        encoder.optional("limit", self.limit);
+        encoder.optional("page", self.page);
+        encoder.optional("nonadjusted", self.nonadjusted);
+    }
+}
+
+/// Optional analyst selectors and snapshot controls for point-in-time ratings.
+///
+/// The provider prose calls `expertUID` a supplied selector, while its parameter
+/// table marks neither selector as required. This query therefore preserves the
+/// documented wire surface without imposing a local selector requirement or XOR.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct PointInTimeRatingsByAnalystQuery {
+    expert_uid: Option<TipRanksExpertUid>,
+    analyst_name: Option<SearchTerm>,
+    date: Option<Date>,
+    limit: Option<Limit>,
+    page: Option<Page>,
+    nonadjusted: Option<bool>,
+}
+
+impl PointInTimeRatingsByAnalystQuery {
+    /// Creates a request with no selector, pagination, date, or flag defaults.
+    pub const fn new() -> Self {
+        Self {
+            expert_uid: None,
+            analyst_name: None,
+            date: None,
+            limit: None,
+            page: None,
+            nonadjusted: None,
+        }
+    }
+
+    /// Selects a stable TipRanks analyst identifier.
+    pub fn with_expert_uid(mut self, expert_uid: TipRanksExpertUid) -> Self {
+        self.expert_uid = Some(expert_uid);
+        self
+    }
+
+    /// Selects an analyst by the provider's open name text.
+    pub fn with_analyst_name(mut self, analyst_name: SearchTerm) -> Self {
+        self.analyst_name = Some(analyst_name);
+        self
+    }
+
+    /// Sets the optional historical snapshot date.
+    pub const fn with_date(mut self, date: Date) -> Self {
+        self.date = Some(date);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets native-currency price targets when true, preserving explicit false.
+    pub const fn with_nonadjusted(mut self, nonadjusted: bool) -> Self {
+        self.nonadjusted = Some(nonadjusted);
+        self
+    }
+
+    /// Borrows the optional stable TipRanks analyst identifier.
+    pub fn expert_uid(&self) -> Option<&TipRanksExpertUid> {
+        self.expert_uid.as_ref()
+    }
+
+    /// Borrows the optional analyst name selector.
+    pub fn analyst_name(&self) -> Option<&SearchTerm> {
+        self.analyst_name.as_ref()
+    }
+
+    /// Returns the optional historical snapshot date.
+    pub const fn date(&self) -> Option<Date> {
+        self.date
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional native-currency flag.
+    pub const fn nonadjusted(&self) -> Option<bool> {
+        self.nonadjusted
+    }
+}
+
+impl QueryParameters for PointInTimeRatingsByAnalystQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("expertUID", self.expert_uid.as_ref());
+        encoder.optional("analystName", self.analyst_name.as_ref());
+        encoder.optional("date", self.date);
+        encoder.optional("limit", self.limit);
+        encoder.optional("page", self.page);
+        encoder.optional("nonadjusted", self.nonadjusted);
+    }
+}
+
 const TIPRANKS_SEARCH_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_access(AccessRequirement::NamedAddOn("TipRanks"))
     .with_conditional_plan(ConditionalPlanRequirement::new(
@@ -155,6 +343,22 @@ pub fn tipranks_ratings_search(
         .with_metadata(TIPRANKS_SEARCH_METADATA)
 }
 
+/// Describes `GET tipranks-pit-symbol` without binding a transport.
+pub fn tipranks_point_in_time_ratings_by_symbol(
+    query: PointInTimeRatingsBySymbolQuery,
+) -> EndpointSpec<PointInTimeRatingsBySymbolQuery, Vec<TipRanksPointInTimeRating>> {
+    EndpointSpec::get("tipranks-pit-symbol", "tipranks-pit-symbol", query)
+        .with_metadata(TIPRANKS_SEARCH_METADATA)
+}
+
+/// Describes `GET tipranks-pit-analyst` without binding a transport.
+pub fn tipranks_point_in_time_ratings_by_analyst(
+    query: PointInTimeRatingsByAnalystQuery,
+) -> EndpointSpec<PointInTimeRatingsByAnalystQuery, Vec<TipRanksPointInTimeRating>> {
+    EndpointSpec::get("tipranks-pit-analyst", "tipranks-pit-analyst", query)
+        .with_metadata(TIPRANKS_SEARCH_METADATA)
+}
+
 impl Client {
     /// Retrieves individual analyst ratings from the TipRanks add-on.
     pub async fn tipranks_ratings_search(
@@ -162,6 +366,24 @@ impl Client {
         query: TipRanksSearchQuery,
     ) -> Result<Vec<TipRanksRatingSearchResult>> {
         self.execute(&tipranks_ratings_search(query)).await
+    }
+
+    /// Retrieves a ticker's analyst ratings as of an optional snapshot date.
+    pub async fn tipranks_point_in_time_ratings_by_symbol(
+        &self,
+        query: PointInTimeRatingsBySymbolQuery,
+    ) -> Result<Vec<TipRanksPointInTimeRating>> {
+        self.execute(&tipranks_point_in_time_ratings_by_symbol(query))
+            .await
+    }
+
+    /// Retrieves an analyst's active coverage as of an optional snapshot date.
+    pub async fn tipranks_point_in_time_ratings_by_analyst(
+        &self,
+        query: PointInTimeRatingsByAnalystQuery,
+    ) -> Result<Vec<TipRanksPointInTimeRating>> {
+        self.execute(&tipranks_point_in_time_ratings_by_analyst(query))
+            .await
     }
 }
 
@@ -236,6 +458,69 @@ mod tests {
                 ("limit".into(), "0".into()),
                 ("page".into(), "0".into()),
                 ("nonadjusted".into(), "true".into())
+            ]
+        );
+    }
+
+    #[test]
+    fn point_in_time_symbol_query_preserves_required_first_and_optional_order() {
+        let query = PointInTimeRatingsBySymbolQuery::new(Ticker::new("BRK.B").unwrap())
+            .with_date(Date::parse("2026-06-10").unwrap())
+            .with_limit(Limit(5_000))
+            .with_page(Page(0))
+            .with_nonadjusted(false);
+
+        assert_eq!(query.symbol().as_str(), "BRK.B");
+        assert_eq!(query.date(), Some(Date::parse("2026-06-10").unwrap()));
+        assert_eq!(query.limit(), Some(Limit(5_000)));
+        assert_eq!(query.page(), Some(Page(0)));
+        assert_eq!(query.nonadjusted(), Some(false));
+        assert_eq!(
+            encoded(&query),
+            [
+                ("symbol".into(), "BRK.B".into()),
+                ("date".into(), "2026-06-10".into()),
+                ("limit".into(), "5000".into()),
+                ("page".into(), "0".into()),
+                ("nonadjusted".into(), "false".into()),
+            ]
+        );
+        assert_eq!(
+            encoded(&PointInTimeRatingsBySymbolQuery::new(
+                Ticker::new("AAPL").unwrap()
+            )),
+            [("symbol".into(), "AAPL".into())]
+        );
+    }
+
+    #[test]
+    fn point_in_time_analyst_query_omits_defaults_and_allows_both_selectors() {
+        assert!(encoded(&PointInTimeRatingsByAnalystQuery::new()).is_empty());
+        assert!(encoded(&PointInTimeRatingsByAnalystQuery::default()).is_empty());
+
+        let query = PointInTimeRatingsByAnalystQuery::new()
+            .with_expert_uid(TipRanksExpertUid::new("0001").unwrap())
+            .with_analyst_name(SearchTerm::new("Analyst / Name").unwrap())
+            .with_date(Date::parse("2026-06-10").unwrap())
+            .with_limit(Limit(5_000))
+            .with_page(Page(0))
+            .with_nonadjusted(false);
+
+        assert_eq!(query.expert_uid().unwrap().as_str(), "0001");
+        assert_eq!(query.analyst_name().unwrap().as_str(), "Analyst / Name");
+        assert_eq!(query.date(), Some(Date::parse("2026-06-10").unwrap()));
+        assert_eq!(query.limit(), Some(Limit(5_000)));
+        assert_eq!(query.page(), Some(Page(0)));
+        assert_eq!(query.nonadjusted(), Some(false));
+        assert_eq!(
+            encoded(&query),
+            [
+                ("expertUID".into(), "0001".into()),
+                ("analystName".into(), "Analyst / Name".into()),
+                ("date".into(), "2026-06-10".into()),
+                ("limit".into(), "5000".into()),
+                ("page".into(), "0".into()),
+                ("nonadjusted".into(), "false".into()),
             ]
         );
     }
