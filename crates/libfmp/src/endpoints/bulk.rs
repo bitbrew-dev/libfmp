@@ -12,8 +12,9 @@ use crate::{
     query::{FiscalPeriod, Year},
     responses::{
         bulk::{
-            BulkDcfValuation, BulkEarningsSurprise, BulkEtfHolding, BulkFinancialRatiosTtm,
-            BulkFinancialScore, BulkIncomeStatement, BulkIncomeStatementGrowth, BulkKeyMetricsTtm,
+            BulkBalanceSheetStatement, BulkBalanceSheetStatementGrowth, BulkDcfValuation,
+            BulkEarningsSurprise, BulkEtfHolding, BulkFinancialRatiosTtm, BulkFinancialScore,
+            BulkIncomeStatement, BulkIncomeStatementGrowth, BulkKeyMetricsTtm,
             BulkPriceTargetSummary, BulkStockPeers, BulkStockRating,
             BulkUpgradesDowngradesConsensus,
         },
@@ -211,6 +212,30 @@ pub fn bulk_income_statement_growth(
     .with_metadata(WORLDWIDE)
 }
 
+/// Describes `GET balance-sheet-statement-bulk` without binding a transport.
+pub fn bulk_balance_sheet_statements(
+    query: BulkStatementQuery,
+) -> EndpointSpec<BulkStatementQuery, Vec<BulkBalanceSheetStatement>> {
+    EndpointSpec::get(
+        "balance-sheet-statement-bulk",
+        "balance-sheet-statement-bulk",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
+/// Describes `GET balance-sheet-statement-growth-bulk` without binding a transport.
+pub fn bulk_balance_sheet_statement_growth(
+    query: BulkStatementQuery,
+) -> EndpointSpec<BulkStatementQuery, Vec<BulkBalanceSheetStatementGrowth>> {
+    EndpointSpec::get(
+        "balance-sheet-statement-growth-bulk",
+        "balance-sheet-statement-growth-bulk",
+        query,
+    )
+    .with_metadata(WORLDWIDE)
+}
+
 impl Client {
     /// Retrieves one provider partition of worldwide company profiles.
     pub async fn bulk_company_profiles(
@@ -292,6 +317,23 @@ impl Client {
         query: BulkStatementQuery,
     ) -> Result<Vec<BulkIncomeStatementGrowth>> {
         self.execute(&bulk_income_statement_growth(query)).await
+    }
+
+    /// Retrieves worldwide bulk balance sheets for one year and fiscal period.
+    pub async fn bulk_balance_sheet_statements(
+        &self,
+        query: BulkStatementQuery,
+    ) -> Result<Vec<BulkBalanceSheetStatement>> {
+        self.execute(&bulk_balance_sheet_statements(query)).await
+    }
+
+    /// Retrieves worldwide bulk balance-sheet growth for one year and fiscal period.
+    pub async fn bulk_balance_sheet_statement_growth(
+        &self,
+        query: BulkStatementQuery,
+    ) -> Result<Vec<BulkBalanceSheetStatementGrowth>> {
+        self.execute(&bulk_balance_sheet_statement_growth(query))
+            .await
     }
 }
 
