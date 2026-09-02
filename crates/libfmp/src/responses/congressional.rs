@@ -40,3 +40,35 @@ pub struct CongressionalTrade {
     pub comment: String,
     pub link: String,
 }
+
+/// One current or historical profile for a member of Congress.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CongressionalMemberProfile {
+    #[serde(rename = "senateID")]
+    pub member_id: CongressionalMemberId,
+    pub first_name: String,
+    pub last_name: String,
+    pub birth_date: Date,
+    pub latest_party: String,
+    pub latest_state: String,
+    pub latest_position: String,
+    pub image: String,
+    pub active: bool,
+    pub years_active: f64,
+}
+
+/// One congressional position held by a member.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CongressionalMemberPosition {
+    #[serde(rename = "senateID")]
+    pub member_id: CongressionalMemberId,
+    pub congress_number: u32,
+    pub start_date: Date,
+    pub end_date: Option<Date>,
+    pub party: String,
+    pub position: String,
+    pub state: String,
+    pub years_in_term: f64,
+}
