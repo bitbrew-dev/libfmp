@@ -125,6 +125,11 @@ string_value!(
 );
 string_value!(Cik, "A Central Index Key.", false);
 string_value!(
+    CongressionalMemberId,
+    "A representation-preserving congressional member identifier.",
+    false
+);
+string_value!(
     FormType,
     "An open, representation-preserving SEC filing form type.",
     false

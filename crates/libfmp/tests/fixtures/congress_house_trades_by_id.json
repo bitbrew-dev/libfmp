@@ -1,0 +1,20 @@
+[
+  {
+    "amount": "$1,001 - $15,000",
+    "assetDescription": "Monster Beverage Corp (2)",
+    "assetType": "Stock",
+    "capitalGainsOver200USD": "False",
+    "comment": "",
+    "disclosureDate": "2026-07-27",
+    "district": "FL23",
+    "firstName": "Jared",
+    "lastName": "Moskowitz",
+    "link": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2026/20034963.pdf",
+    "office": "Jared Moskowitz",
+    "owner": "",
+    "senateID": "M001217",
+    "symbol": "MNST",
+    "transactionDate": "2026-06-17",
+    "type": "Purchase"
+  }
+]
