@@ -28,4 +28,5 @@ pub mod search;
 pub mod sec_filings;
 pub mod statements;
 pub mod technical_indicators;
+pub mod tipranks;
 pub mod transcripts;
