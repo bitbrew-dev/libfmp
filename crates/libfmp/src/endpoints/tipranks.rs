@@ -13,8 +13,8 @@ use crate::{
         },
     },
     responses::tipranks::{
-        TipRanksAnalystSummary, TipRanksFirmSummary, TipRanksPointInTimeRating,
-        TipRanksRatingSearchResult, TipRanksSymbolSummary,
+        TipRanksAnalystProfile, TipRanksAnalystSummary, TipRanksFirmSummary,
+        TipRanksPointInTimeRating, TipRanksRatingSearchResult, TipRanksSymbolSummary,
     },
     types::{Date, Limit, Page, SearchTerm, Ticker, TipRanksExpertUid},
 };
@@ -488,6 +488,84 @@ impl QueryParameters for TipRanksFirmSummaryQuery {
     }
 }
 
+/// Optional pagination and name filters for the TipRanks analyst directory.
+///
+/// The provider's parameter table lists `page`, `limit`, and `firmName`, while
+/// its prose repeatedly documents an exact `analystName` lookup. This query
+/// preserves both documented surfaces without requiring or coupling selectors.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct TipRanksAnalystsQuery {
+    page: Option<Page>,
+    limit: Option<Limit>,
+    firm_name: Option<SearchTerm>,
+    analyst_name: Option<SearchTerm>,
+}
+
+impl TipRanksAnalystsQuery {
+    /// Creates a directory request without filters or pagination defaults.
+    pub const fn new() -> Self {
+        Self {
+            page: None,
+            limit: None,
+            firm_name: None,
+            analyst_name: None,
+        }
+    }
+
+    /// Sets the optional provider page index.
+    pub const fn with_page(mut self, page: Page) -> Self {
+        self.page = Some(page);
+        self
+    }
+
+    /// Sets the optional provider result limit.
+    pub const fn with_limit(mut self, limit: Limit) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    /// Filters the directory by the provider's open firm-name text.
+    pub fn with_firm_name(mut self, firm_name: SearchTerm) -> Self {
+        self.firm_name = Some(firm_name);
+        self
+    }
+
+    /// Looks up an analyst by the exact published name documented in prose.
+    pub fn with_analyst_name(mut self, analyst_name: SearchTerm) -> Self {
+        self.analyst_name = Some(analyst_name);
+        self
+    }
+
+    /// Returns the optional provider page index.
+    pub const fn page(&self) -> Option<Page> {
+        self.page
+    }
+
+    /// Returns the optional provider result limit.
+    pub const fn limit(&self) -> Option<Limit> {
+        self.limit
+    }
+
+    /// Borrows the optional firm-name filter.
+    pub fn firm_name(&self) -> Option<&SearchTerm> {
+        self.firm_name.as_ref()
+    }
+
+    /// Borrows the optional exact analyst-name lookup.
+    pub fn analyst_name(&self) -> Option<&SearchTerm> {
+        self.analyst_name.as_ref()
+    }
+}
+
+impl QueryParameters for TipRanksAnalystsQuery {
+    fn encode(&self, encoder: &mut QueryEncoder<'_>) {
+        encoder.optional("page", self.page);
+        encoder.optional("limit", self.limit);
+        encoder.optional("firmName", self.firm_name.as_ref());
+        encoder.optional("analystName", self.analyst_name.as_ref());
+    }
+}
+
 const TIPRANKS_SEARCH_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_access(AccessRequirement::NamedAddOn("TipRanks"))
     .with_conditional_plan(ConditionalPlanRequirement::new(
@@ -503,6 +581,9 @@ const TIPRANKS_SEARCH_METADATA: EndpointMetadata = EndpointMetadata::new()
 const TIPRANKS_SUMMARY_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_access(AccessRequirement::NamedAddOn("TipRanks"))
     .with_bounds(EndpointBounds::new().with_response_rows(1));
+
+const TIPRANKS_DIRECTORY_METADATA: EndpointMetadata =
+    EndpointMetadata::new().with_access(AccessRequirement::NamedAddOn("TipRanks"));
 
 /// Describes `GET tipranks-search` without binding a transport.
 pub fn tipranks_ratings_search(
@@ -556,6 +637,14 @@ pub fn tipranks_firm_summary(
         .with_metadata(TIPRANKS_SUMMARY_METADATA)
 }
 
+/// Describes `GET tipranks-analysts` without binding a transport.
+pub fn tipranks_analysts(
+    query: TipRanksAnalystsQuery,
+) -> EndpointSpec<TipRanksAnalystsQuery, Vec<TipRanksAnalystProfile>> {
+    EndpointSpec::get("tipranks-analysts", "tipranks-analysts", query)
+        .with_metadata(TIPRANKS_DIRECTORY_METADATA)
+}
+
 impl Client {
     /// Retrieves individual analyst ratings from the TipRanks add-on.
     pub async fn tipranks_ratings_search(
@@ -605,6 +694,14 @@ impl Client {
         query: TipRanksFirmSummaryQuery,
     ) -> Result<Vec<TipRanksFirmSummary>> {
         self.execute(&tipranks_firm_summary(query)).await
+    }
+
+    /// Retrieves analyst profiles from the TipRanks directory.
+    pub async fn tipranks_analysts(
+        &self,
+        query: TipRanksAnalystsQuery,
+    ) -> Result<Vec<TipRanksAnalystProfile>> {
+        self.execute(&tipranks_analysts(query)).await
     }
 }
 
@@ -798,6 +895,35 @@ mod tests {
                 Ticker::new("AAPL").unwrap()
             )),
             [("symbol".into(), "AAPL".into())]
+        );
+    }
+
+    #[test]
+    fn analyst_directory_query_omits_defaults_and_preserves_reconciled_wire_order() {
+        assert!(encoded(&TipRanksAnalystsQuery::new()).is_empty());
+        assert!(encoded(&TipRanksAnalystsQuery::default()).is_empty());
+
+        let query = TipRanksAnalystsQuery::new()
+            .with_page(Page(0))
+            .with_limit(Limit(1_000))
+            .with_firm_name(SearchTerm::new("Morgan Stanley / Asia").unwrap())
+            .with_analyst_name(SearchTerm::new("Andrew Marok / Exact").unwrap());
+
+        assert_eq!(query.page(), Some(Page(0)));
+        assert_eq!(query.limit(), Some(Limit(1_000)));
+        assert_eq!(query.firm_name().unwrap().as_str(), "Morgan Stanley / Asia");
+        assert_eq!(
+            query.analyst_name().unwrap().as_str(),
+            "Andrew Marok / Exact"
+        );
+        assert_eq!(
+            encoded(&query),
+            [
+                ("page".into(), "0".into()),
+                ("limit".into(), "1000".into()),
+                ("firmName".into(), "Morgan Stanley / Asia".into()),
+                ("analystName".into(), "Andrew Marok / Exact".into()),
+            ]
         );
     }
 }

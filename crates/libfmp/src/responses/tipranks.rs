@@ -152,3 +152,19 @@ pub struct TipRanksFirmSummary {
     pub top_return: Number,
     pub worst_return: Number,
 }
+
+/// One analyst profile returned by the TipRanks directory.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TipRanksAnalystProfile {
+    #[serde(rename = "expertUID")]
+    pub expert_uid: TipRanksExpertUid,
+    pub analyst_name: String,
+    pub firm_name: String,
+    pub success_rate: Number,
+    pub excess_return: Number,
+    pub total_recommendations: Count,
+    pub good_recommendations: Count,
+    pub analyst_rank: Count,
+    pub num_of_stars: Count,
+}
