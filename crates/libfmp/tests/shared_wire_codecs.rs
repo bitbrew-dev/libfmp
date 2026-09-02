@@ -4,7 +4,8 @@ use libfmp::{
     codecs::{
         DateOrDateTime, DynamicJson, DynamicObject, FiscalYear, IsoTimestamp,
         NumberOrNumericString, OpaqueDateText, PercentageValue, TitleCaseBoolFlag, TrueFalseFlag,
-        UsDate, WireBool, YesNoFlag, YnFlag, empty_or_null_date, empty_or_null_date_or_datetime,
+        UsDate, WireBool, YesNoFlag, YnFlag, empty_date, empty_or_null_date,
+        empty_or_null_date_or_datetime,
     },
     types::Date,
 };
@@ -84,6 +85,12 @@ struct OptionalTemporalFixture {
     filing_date: Option<DateOrDateTime>,
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+struct RequiredEmptyDateFixture {
+    #[serde(with = "empty_date")]
+    date_of_first_sale: Option<Date>,
+}
+
 #[test]
 fn temporal_contracts_are_strict_and_empty_or_null_aware() {
     assert_eq!(
@@ -121,6 +128,34 @@ fn temporal_contracts_are_strict_and_empty_or_null_aware() {
 
     let partial = OpaqueDateText("--09-27".to_owned());
     assert_eq!(serde_json::to_string(&partial).unwrap(), r#""--09-27""#);
+}
+
+#[test]
+fn required_empty_date_preserves_its_sentinel_and_rejects_null_missing_or_malformed_values() {
+    let empty: RequiredEmptyDateFixture =
+        serde_json::from_str(r#"{"date_of_first_sale":""}"#).unwrap();
+    assert_eq!(empty.date_of_first_sale, None);
+    assert_eq!(
+        serde_json::to_string(&empty).unwrap(),
+        r#"{"date_of_first_sale":""}"#
+    );
+
+    let actual: RequiredEmptyDateFixture =
+        serde_json::from_str(r#"{"date_of_first_sale":"2014-02-14"}"#).unwrap();
+    assert_eq!(actual.date_of_first_sale.unwrap().to_string(), "2014-02-14");
+    assert_eq!(
+        serde_json::to_string(&actual).unwrap(),
+        r#"{"date_of_first_sale":"2014-02-14"}"#
+    );
+
+    for wire in [
+        r#"{"date_of_first_sale":null}"#,
+        r#"{}"#,
+        r#"{"date_of_first_sale":"02-14-2014"}"#,
+        r#"{"date_of_first_sale":"2014-02-30"}"#,
+    ] {
+        assert!(serde_json::from_str::<RequiredEmptyDateFixture>(wire).is_err());
+    }
 }
 
 #[test]

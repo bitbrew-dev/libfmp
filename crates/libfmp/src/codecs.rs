@@ -666,3 +666,34 @@ macro_rules! optional_temporal_module {
 
 optional_temporal_module!(empty_or_null_date, Date);
 optional_temporal_module!(empty_or_null_date_or_datetime, DateOrDateTime);
+
+/// Codec for a required wire key whose absent date is represented by `""`.
+///
+/// Unlike [`empty_or_null_date`], JSON null is rejected and `None` serializes
+/// back to the provider's exact empty-string sentinel. Do not add
+/// `#[serde(default)]` at call sites when the response key is required.
+pub mod empty_date {
+    use super::*;
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Date>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value = String::deserialize(deserializer)?;
+        if value.is_empty() {
+            Ok(None)
+        } else {
+            value.parse().map(Some).map_err(de::Error::custom)
+        }
+    }
+
+    pub fn serialize<S>(value: &Option<Date>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match value {
+            Some(value) => serializer.collect_str(value),
+            None => serializer.serialize_str(""),
+        }
+    }
+}
