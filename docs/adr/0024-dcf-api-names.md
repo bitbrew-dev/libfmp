@@ -2,8 +2,8 @@
 
 ## Status
 
-Accepted for issue #33's Rust API inventory. The standard and levered routes
-are implemented in Rust; custom routes and the Python facade remain deferred.
+Accepted for issue #33's Rust API inventory. All four routes are implemented
+in Rust; the Python facade remains deferred.
 
 ## Decision
 
@@ -14,8 +14,8 @@ names. All routes are worldwide GET endpoints with bare-array responses.
 | --- | --- | --- | --- | --- | --- |
 | `discounted-cash-flow` | `discounted_cash_flow` | `DcfQuery` | `DcfValuation` | Implemented | `FmpClient.discounted_cash_flow`; `fmp.dcf.DcfValuation` |
 | `levered-discounted-cash-flow` | `levered_discounted_cash_flow` | `DcfQuery` | `DcfValuation` | Implemented | `FmpClient.levered_discounted_cash_flow`; `fmp.dcf.DcfValuation` |
-| `custom-discounted-cash-flow` | `custom_discounted_cash_flow` | Reserved custom DCF query | Reserved custom DCF row | Reserved | `FmpClient.custom_discounted_cash_flow`; row in `fmp.dcf` |
-| `custom-levered-discounted-cash-flow` | `custom_levered_discounted_cash_flow` | Reserved custom DCF query | Reserved custom levered DCF row | Reserved | `FmpClient.custom_levered_discounted_cash_flow`; row in `fmp.dcf` |
+| `custom-discounted-cash-flow` | `custom_discounted_cash_flow` | `CustomDcfQuery` + `DcfAssumptions` | `CustomDcfValuation` | Implemented | `FmpClient.custom_discounted_cash_flow`; row in `fmp.dcf` |
+| `custom-levered-discounted-cash-flow` | `custom_levered_discounted_cash_flow` | `CustomDcfQuery` + `DcfAssumptions` | `CustomLeveredDcfValuation` | Implemented | `FmpClient.custom_levered_discounted_cash_flow`; row in `fmp.dcf` |
 
 The implemented endpoints live in `endpoints::dcf`; their response model lives
 in `responses::dcf`. `DcfQuery` contains only the documented required `Ticker`.
@@ -26,9 +26,11 @@ explicit Serde rename, so neither camel-case nor snake-case spelling is
 accepted as the wire key.
 
 No response-row, pagination, date-range, access-plan, or realtime bounds are
-inferred. The custom endpoints require their own typed parameter and response
-contracts because their documented shapes differ substantially from the two
-simple valuations. Their names are reserved here to prevent later naming drift.
+inferred. The custom endpoints share one `DcfAssumptions` object for their 18
+independently optional, finite decimal inputs. Query encoding preserves the
+documented order and supplied magnitudes. Their outputs remain distinct because
+the documented 47-field unlevered and 34-field levered rows are different wire
+contracts, including the provider's exact `costofDebt` spelling.
 
 Python runtime parity is deferred. Future Python methods mirror the Rust
 methods in the table, while response rows belong in `fmp.dcf`.
