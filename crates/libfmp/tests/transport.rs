@@ -1,7 +1,10 @@
 use std::{
     collections::VecDeque,
     fmt,
+    future::Future,
     sync::{Arc, Mutex},
+    task::{Context, Poll, Wake, Waker},
+    thread,
     time::Duration,
 };
 
@@ -623,6 +626,27 @@ async fn total_timeout_cancels_a_custom_executor() {
     assert!(!format!("{error:?} {error}").contains("example.test"));
 }
 
+#[test]
+fn custom_executor_timeout_is_runtime_independent() {
+    let executor = Arc::new(DelayedExecutor::new(
+        Duration::from_millis(100),
+        vec![Ok(json_response())],
+    ));
+    let error = block_on(
+        Client::builder()
+            .base_url("https://example.test")
+            .timeout(Duration::from_millis(10))
+            .executor(executor)
+            .build()
+            .unwrap()
+            .execute(&endpoint()),
+    )
+    .unwrap_err();
+
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(error.message(), "request deadline exceeded");
+}
+
 #[tokio::test]
 async fn one_total_timeout_is_shared_across_redirect_hops() {
     let mut redirect_headers = HeaderMap::new();
@@ -863,8 +887,33 @@ impl fmt::Debug for DelayedExecutor {
 impl HttpExecutor for DelayedExecutor {
     fn execute(&self, request: PreparedRequest) -> ExecutorFuture<'_> {
         Box::pin(async move {
-            tokio::time::sleep(self.delay).await;
+            futures_timer::Delay::new(self.delay).await;
             self.inner.execute(request).await
         })
+    }
+}
+
+#[derive(Debug)]
+struct ThreadWaker(thread::Thread);
+
+impl Wake for ThreadWaker {
+    fn wake(self: Arc<Self>) {
+        self.0.unpark();
+    }
+
+    fn wake_by_ref(self: &Arc<Self>) {
+        self.0.unpark();
+    }
+}
+
+fn block_on<F: Future>(future: F) -> F::Output {
+    let waker = Waker::from(Arc::new(ThreadWaker(thread::current())));
+    let mut context = Context::from_waker(&waker);
+    let mut future = Box::pin(future);
+    loop {
+        match future.as_mut().poll(&mut context) {
+            Poll::Ready(output) => return output,
+            Poll::Pending => thread::park(),
+        }
     }
 }
