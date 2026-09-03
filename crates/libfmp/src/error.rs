@@ -262,12 +262,28 @@ impl Redactor {
 
     /// Removes registered values and values of known secret query parameters.
     pub fn redact(&self, value: &str) -> String {
-        let mut redacted = value.to_owned();
-        for secret in &self.secrets {
-            redacted = redacted.replace(secret.expose_secret(), REDACTED);
-        }
+        let redacted = redact_secret_values(value, &self.secrets);
         redact_query_values(&redacted, &self.secret_query_names)
     }
+}
+
+fn redact_secret_values(value: &str, secrets: &[SecretString]) -> String {
+    let mut ranges = Vec::new();
+    for secret in secrets {
+        let secret = secret.expose_secret();
+        let mut search_start = 0;
+        while let Some(offset) = value[search_start..].find(secret) {
+            let start = search_start + offset;
+            ranges.push((start, start + secret.len()));
+            search_start = start
+                + value[start..]
+                    .chars()
+                    .next()
+                    .expect("registered secrets are non-empty")
+                    .len_utf8();
+        }
+    }
+    replace_ranges(value, ranges)
 }
 
 fn validate_secret_header_name(name: String) -> std::result::Result<String, SecretNameError> {
@@ -351,6 +367,10 @@ fn redact_query_values(value: &str, names: &BTreeSet<String>) -> String {
         }
     }
 
+    replace_ranges(value, ranges)
+}
+
+fn replace_ranges(value: &str, mut ranges: Vec<(usize, usize)>) -> String {
     ranges.sort_unstable();
     let mut disjoint_ranges: Vec<(usize, usize)> = Vec::with_capacity(ranges.len());
     for (start, end) in ranges {

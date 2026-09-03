@@ -62,6 +62,43 @@ fn safe_body_is_redacted_and_bounded_in_utf8_bytes() {
 }
 
 #[test]
+fn overlapping_secrets_are_redacted_as_one_complete_range() {
+    let mut redactor = Redactor::new();
+    redactor.add_secret(&SecretString::new("shared-secret-prefix"));
+    redactor.add_secret(&SecretString::new("secret-prefix-and-suffix"));
+
+    assert_eq!(
+        redactor.redact("denied: shared-secret-prefix-and-suffix"),
+        "denied: [REDACTED]"
+    );
+}
+
+#[test]
+fn nested_secrets_are_order_independent_and_do_not_leak_suffixes() {
+    for secrets in [
+        ["token", "token-with-sensitive-suffix"],
+        ["token-with-sensitive-suffix", "token"],
+    ] {
+        let mut redactor = Redactor::new();
+        for secret in secrets {
+            redactor.add_secret(&SecretString::new(secret));
+        }
+
+        let redacted = redactor.redact("token-with-sensitive-suffix");
+        assert_eq!(redacted, "[REDACTED]");
+        assert!(!redacted.contains("with-sensitive-suffix"));
+    }
+}
+
+#[test]
+fn repeated_occurrences_that_overlap_each_other_are_fully_redacted() {
+    let mut redactor = Redactor::new();
+    redactor.add_secret(&SecretString::new("aba"));
+
+    assert_eq!(redactor.redact("ababa"), "[REDACTED]");
+}
+
+#[test]
 fn authentication_values_and_secret_urls_never_format_in_cleartext() {
     let secret = SecretString::new("bearer-token");
     let url = SecretUrl::new(
