@@ -323,7 +323,10 @@ impl EconomicIndicator {
     }
 }
 
-/// A provider query year. Endpoint-specific range validation is applied elsewhere.
+/// A representation-preserving provider query year.
+///
+/// Construction does not enforce an endpoint-specific range. Endpoints encode
+/// the supplied value unchanged unless a narrower query type says otherwise.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct Year(pub u32);

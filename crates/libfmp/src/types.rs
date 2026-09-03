@@ -573,12 +573,18 @@ impl fmt::Display for InvalidCalendarQuarter {
 
 impl Error for InvalidCalendarQuarter {}
 
-/// A provider page index. Endpoint-specific validation is applied elsewhere.
+/// A representation-preserving provider page index.
+///
+/// Construction does not enforce endpoint-specific bounds. Documented bounds
+/// are exposed as advisory endpoint metadata with opt-in `accepts_page` checks.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct Page(pub u32);
 
-/// A provider result limit. Endpoint-specific validation is applied elsewhere.
+/// A representation-preserving provider result limit.
+///
+/// Construction does not enforce endpoint-specific bounds. Documented bounds
+/// are exposed as advisory endpoint metadata with opt-in `accepts_limit` checks.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 #[serde(transparent)]
 pub struct Limit(pub u32);
@@ -633,8 +639,8 @@ impl DateRange {
 
     /// Returns the elapsed calendar days between the inclusive endpoints.
     ///
-    /// Equal endpoints have a span of zero days. This is exposed so each
-    /// endpoint can apply its own documented maximum date range.
+    /// Equal endpoints have a span of zero days. This supports optional checks
+    /// against the advisory maximum date range in endpoint metadata.
     pub fn span_days(&self) -> u64 {
         self.to.0.signed_duration_since(self.from.0).num_days() as u64
     }
