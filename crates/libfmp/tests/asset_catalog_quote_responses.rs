@@ -1,3 +1,6 @@
+#[path = "support/exact_json.rs"]
+mod exact_json;
+
 use serde::{Serialize, de::DeserializeOwned};
 use serde_json::{Value, json};
 
@@ -14,6 +17,8 @@ use libfmp::{
     },
     types::Date,
 };
+
+use exact_json::assert_json_wire_equivalent;
 
 const COMMODITIES_LIST: &[u8] = include_bytes!("fixtures/commodities_list.json");
 const COMMODITY_QUOTE: &[u8] = include_bytes!("fixtures/commodities_quote.json");
@@ -51,33 +56,31 @@ fn assert_exact<T>(fixture: &[u8])
 where
     T: DeserializeOwned + Serialize,
 {
-    let source: Value = serde_json::from_slice(fixture).unwrap();
+    let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let rows: Vec<T> = serde_json::from_slice(fixture).unwrap();
-    assert_wire_equivalent(&serde_json::to_value(rows).unwrap(), &source);
+    assert_json_wire_equivalent(&serde_json::to_value(rows).unwrap(), &source);
 }
 
-fn assert_wire_equivalent(actual: &Value, expected: &Value) {
-    match (actual, expected) {
-        (Value::Number(actual), Value::Number(expected)) => {
-            assert_eq!(actual.as_f64(), expected.as_f64());
-        }
-        (Value::Array(actual), Value::Array(expected)) => {
-            assert_eq!(actual.len(), expected.len());
-            for (actual, expected) in actual.iter().zip(expected) {
-                assert_wire_equivalent(actual, expected);
-            }
-        }
-        (Value::Object(actual), Value::Object(expected)) => {
-            assert_eq!(actual.len(), expected.len());
-            for (key, expected) in expected {
-                let actual = actual
-                    .get(key)
-                    .unwrap_or_else(|| panic!("missing key {key}"));
-                assert_wire_equivalent(actual, expected);
-            }
-        }
-        _ => assert_eq!(actual, expected),
-    }
+#[test]
+fn exact_wire_comparison_preserves_f64_semantics_but_rejects_unsafe_integer_rounding() {
+    assert_json_wire_equivalent(&json!(1.0), &json!(1));
+
+    let rounded_integer = json!(9_007_199_254_740_992_u64);
+    let adjacent_integer = json!(9_007_199_254_740_993_u64);
+    assert!(
+        std::panic::catch_unwind(|| {
+            assert_json_wire_equivalent(&rounded_integer, &adjacent_integer);
+        })
+        .is_err()
+    );
+
+    let rounded_float: serde_json::Value = serde_json::from_str("9007199254740992.0").unwrap();
+    assert!(
+        std::panic::catch_unwind(|| {
+            assert_json_wire_equivalent(&rounded_float, &adjacent_integer);
+        })
+        .is_err()
+    );
 }
 
 #[test]

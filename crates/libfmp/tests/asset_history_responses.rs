@@ -1,6 +1,10 @@
+#[path = "support/exact_json.rs"]
+mod exact_json;
+
 use libfmp::responses::chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar};
 use serde::{Serialize, de::DeserializeOwned};
-use serde_json::Value;
+
+use exact_json::assert_json_wire_equivalent;
 
 const COMMODITY_LIGHT: &[u8] = include_bytes!("fixtures/commodity_chart_light.json");
 const COMMODITY_FULL: &[u8] = include_bytes!("fixtures/commodity_chart_full.json");
@@ -62,28 +66,7 @@ fn assert_exact<T>(fixture: &[u8])
 where
     T: DeserializeOwned + Serialize,
 {
-    let source: Value = serde_json::from_slice(fixture).unwrap();
+    let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let rows: Vec<T> = serde_json::from_slice(fixture).unwrap();
-    assert_json_value(&serde_json::to_value(rows).unwrap(), &source);
-}
-
-fn assert_json_value(actual: &Value, expected: &Value) {
-    match (actual, expected) {
-        (Value::Number(actual), Value::Number(expected)) => {
-            assert_eq!(actual.as_f64(), expected.as_f64());
-        }
-        (Value::Array(actual), Value::Array(expected)) => {
-            assert_eq!(actual.len(), expected.len());
-            for (actual, expected) in actual.iter().zip(expected) {
-                assert_json_value(actual, expected);
-            }
-        }
-        (Value::Object(actual), Value::Object(expected)) => {
-            assert_eq!(actual.len(), expected.len());
-            for (key, expected) in expected {
-                assert_json_value(&actual[key], expected);
-            }
-        }
-        _ => assert_eq!(actual, expected),
-    }
+    assert_json_wire_equivalent(&serde_json::to_value(rows).unwrap(), &source);
 }
