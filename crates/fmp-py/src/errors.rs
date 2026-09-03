@@ -104,22 +104,11 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     py.get_type::<FmpDecodeError>()
         .setattr("category", "decode")?;
 
-    module.add("FmpError", base)?;
-    module.add("FmpValidationError", py.get_type::<FmpValidationError>())?;
-    module.add("FmpConfigError", py.get_type::<FmpConfigError>())?;
-    module.add("FmpTransportError", py.get_type::<FmpTransportError>())?;
-    module.add("FmpStatusError", py.get_type::<FmpStatusError>())?;
-    module.add("FmpDecodeError", py.get_type::<FmpDecodeError>())?;
-    module.add(
-        "__all__",
-        vec![
-            "FmpError",
-            "FmpValidationError",
-            "FmpConfigError",
-            "FmpTransportError",
-            "FmpStatusError",
-            "FmpDecodeError",
-        ],
-    )?;
+    module.add("_FmpError", base)?;
+    module.add("_FmpValidationError", py.get_type::<FmpValidationError>())?;
+    module.add("_FmpConfigError", py.get_type::<FmpConfigError>())?;
+    module.add("_FmpTransportError", py.get_type::<FmpTransportError>())?;
+    module.add("_FmpStatusError", py.get_type::<FmpStatusError>())?;
+    module.add("_FmpDecodeError", py.get_type::<FmpDecodeError>())?;
     Ok(())
 }

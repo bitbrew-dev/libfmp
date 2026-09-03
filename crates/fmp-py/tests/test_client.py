@@ -66,8 +66,6 @@ def fixture_server():
 
 
 def test_direct_and_proxy_construction_and_call_shape():
-    import sys
-
     from fmp import FmpClient
     from fmp import _native
     from fmp.client import FmpClient as DomainFmpClient
@@ -76,7 +74,6 @@ def test_direct_and_proxy_construction_and_call_shape():
     assert type(direct).__name__ == "FmpClient"
     assert FmpClient is DomainFmpClient
     assert FmpClient.__module__ == "fmp.client"
-    assert _native.client is sys.modules["fmp.client"]
     assert not hasattr(_native, "FmpClient")
 
     with fixture_server() as (base_url, requests):
@@ -135,9 +132,8 @@ def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
     assert QuoteShort is fmp.quote.QuoteShort
     assert isinstance(fmp.quote, ModuleType)
     assert fmp.quote is sys.modules["fmp.quote"]
-    assert fmp.quote is _native.quote
     assert not hasattr(_native, "QuoteShort")
-    assert not hasattr(fmp.quote, "__file__")
+    assert fmp.quote.__file__ is not None
     assert QuoteShort.__module__ == "fmp.quote"
     assert [row.symbol for row in multiple] == ["000001.SZ", "^VIX"]
     assert multiple[0].volume == 4294967296
