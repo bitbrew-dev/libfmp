@@ -1,8 +1,37 @@
 import os
 import signal
+import threading
 import time
 
 from test_client import fixture_server
+
+
+def test_one_client_supports_concurrent_python_threads():
+    from fmp import FmpClient
+
+    with fixture_server() as (base_url, requests):
+        client = FmpClient(base_url=base_url, path_prefix="", auth_mode="none")
+        barrier = threading.Barrier(5)
+        errors = []
+
+        def call_repeatedly():
+            try:
+                barrier.wait(timeout=5)
+                for _ in range(5):
+                    assert client.quote_short("AAPL")[0].symbol == "AAPL"
+            except BaseException as error:
+                errors.append(error)
+
+        threads = [threading.Thread(target=call_repeatedly) for _ in range(4)]
+        for thread in threads:
+            thread.start()
+        barrier.wait(timeout=5)
+        for thread in threads:
+            thread.join(timeout=10)
+
+        assert all(not thread.is_alive() for thread in threads)
+        assert errors == []
+        assert len(requests) == 20
 
 
 def test_client_initialized_in_parent_remains_usable_after_fork():

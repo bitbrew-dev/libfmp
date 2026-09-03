@@ -19,9 +19,12 @@ def fixture_server():
     requests = []
 
     class Handler(BaseHTTPRequestHandler):
+        protocol_version = "HTTP/1.1"
+
         def do_GET(self):
             requests.append(
                 {
+                    "connection": self.client_address,
                     "path": self.path,
                     "headers": {name.lower(): value for name, value in self.headers.items()},
                 }
@@ -145,6 +148,18 @@ def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
         multiple[0].change,
         multiple[0].volume,
     )
+
+
+def test_sequential_calls_reuse_one_http_connection():
+    from fmp import FmpClient
+
+    with fixture_server() as (base_url, requests):
+        client = FmpClient(base_url=base_url, path_prefix="", auth_mode="none")
+        for _ in range(10):
+            assert client.quote_short("AAPL")[0].symbol == "AAPL"
+
+        assert len(requests) == 10
+        assert len({request["connection"] for request in requests}) == 1
 
 
 def test_auth_modes_and_default_headers_reach_the_same_endpoint():

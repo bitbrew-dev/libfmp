@@ -1,4 +1,11 @@
-use std::time::Duration;
+use std::{
+    cell::RefCell,
+    collections::HashMap,
+    future::Future,
+    mem, process,
+    sync::{Arc, Weak},
+    time::Duration,
+};
 
 use libfmp::{
     Client, ClientBuilder,
@@ -10,15 +17,121 @@ use tokio::runtime::Builder as RuntimeBuilder;
 
 use crate::{errors::to_py_error, quote::QuoteShort};
 
-fn runtime() -> PyResult<tokio::runtime::Runtime> {
-    RuntimeBuilder::new_current_thread()
-        .enable_all()
-        .build()
-        .map_err(|_| {
+struct CachedClient {
+    owner: Weak<ClientBuilder>,
+    client: Client,
+}
+
+struct RuntimeState {
+    owner_pid: u32,
+    clients: HashMap<usize, CachedClient>,
+    runtime: Option<tokio::runtime::Runtime>,
+}
+
+impl RuntimeState {
+    fn new() -> Self {
+        Self {
+            owner_pid: process::id(),
+            clients: HashMap::new(),
+            runtime: None,
+        }
+    }
+
+    fn reset_after_fork(&mut self) {
+        let current_pid = process::id();
+        if self.owner_pid != current_pid {
+            // Fork removes the runtime workers that own both the Tokio driver
+            // and Reqwest pool tasks. Their destructors may wait, panic, or
+            // abort in the child, so leak only this unreachable inherited state.
+            let inherited_clients = mem::take(&mut self.clients);
+            mem::forget(inherited_clients);
+            if let Some(inherited_runtime) = self.runtime.take() {
+                mem::forget(inherited_runtime);
+            }
+            self.owner_pid = current_pid;
+        }
+    }
+
+    fn client(&mut self, builder: &Arc<ClientBuilder>) -> PyResult<Client> {
+        self.clients
+            .retain(|_, cached| cached.owner.upgrade().is_some());
+        let id = Arc::as_ptr(builder) as usize;
+        if let Some(cached) = self.clients.get(&id) {
+            return Ok(cached.client.clone());
+        }
+        let client = builder.as_ref().clone().build().map_err(to_py_error)?;
+        self.clients.insert(
+            id,
+            CachedClient {
+                owner: Arc::downgrade(builder),
+                client: client.clone(),
+            },
+        );
+        Ok(client)
+    }
+
+    fn runtime(&mut self) -> PyResult<&tokio::runtime::Runtime> {
+        if self.runtime.is_none() {
+            let runtime = RuntimeBuilder::new_multi_thread()
+                .worker_threads(1)
+                .enable_all()
+                .build()
+                .map_err(|_| {
+                    to_py_error(libfmp::Error::configuration(
+                        "the fmp runtime could not be constructed",
+                    ))
+                })?;
+            self.runtime = Some(runtime);
+        }
+
+        self.runtime.as_ref().ok_or_else(|| {
             to_py_error(libfmp::Error::configuration(
-                "the fmp runtime could not be constructed",
+                "the fmp runtime is unavailable",
             ))
         })
+    }
+}
+
+impl Drop for RuntimeState {
+    fn drop(&mut self) {
+        if self.owner_pid != process::id() {
+            let inherited_clients = mem::take(&mut self.clients);
+            mem::forget(inherited_clients);
+            if let Some(inherited_runtime) = self.runtime.take() {
+                mem::forget(inherited_runtime);
+            }
+        } else {
+            // Close pooled clients while their runtime is still alive.
+            self.clients.clear();
+        }
+    }
+}
+
+thread_local! {
+    static RUNTIME: RefCell<RuntimeState> = RefCell::new(RuntimeState::new());
+}
+
+fn block_on<F, Fut, T>(builder: Arc<ClientBuilder>, operation: F) -> PyResult<T>
+where
+    F: FnOnce(Client) -> Fut,
+    Fut: Future<Output = T>,
+{
+    RUNTIME
+        .try_with(|state| {
+            let mut state = state.try_borrow_mut().map_err(|_| {
+                to_py_error(libfmp::Error::configuration(
+                    "the fmp runtime is already in use on this thread",
+                ))
+            })?;
+            state.reset_after_fork();
+            let client = state.client(&builder)?;
+            Ok(state.runtime()?.block_on(operation(client)))
+        })
+        .map_err(|_| {
+            to_py_error(libfmp::Error::configuration(
+                "the fmp runtime is unavailable on this thread",
+            ))
+        })?
 }
 
 fn invalid_configuration(message: &'static str) -> PyErr {
@@ -127,7 +240,7 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// Redirects are either disabled or restricted to the same origin.
 #[pyclass(module = "fmp.client", frozen)]
 pub(crate) struct FmpClient {
-    client: Client,
+    builder: Arc<ClientBuilder>,
 }
 
 #[pymethods]
@@ -177,10 +290,10 @@ impl FmpClient {
             });
         }
 
-        builder
-            .build()
-            .map(|client| Self { client })
-            .map_err(to_py_error)
+        builder.clone().build().map_err(to_py_error)?;
+        Ok(Self {
+            builder: Arc::new(builder),
+        })
     }
 
     /// Retrieve the documented bare quote-short array without changing its shape.
@@ -188,9 +301,13 @@ impl FmpClient {
         let symbol = Ticker::new(symbol)
             .map_err(libfmp::Error::from)
             .map_err(to_py_error)?;
-        let client = self.client.clone();
-        let runtime = runtime()?;
-        let result = py.detach(move || runtime.block_on(client.quote_short(symbol)));
+        let builder = self.builder.clone();
+        let result = py.detach(move || {
+            block_on(
+                builder,
+                |client| async move { client.quote_short(symbol).await },
+            )
+        })?;
 
         result
             .map(|rows| rows.into_iter().map(QuoteShort::from).collect())
