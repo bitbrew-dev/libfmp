@@ -386,15 +386,8 @@ impl Client {
                     max_body_bytes,
                 ))
                 .await
-                .map_err(|error| {
-                    let message = if error.is_response_too_large() {
-                        "response body exceeded configured limit"
-                    } else {
-                        "request execution failed"
-                    };
-                    Error::transport(Some(endpoint.id()), message)
-                })?;
-            if response.body().len() > max_body_bytes {
+                .map_err(|_| Error::transport(Some(endpoint.id()), "request execution failed"))?;
+            if response.body_limit_exceeded() || response.body().len() > max_body_bytes {
                 return Err(Error::transport(
                     Some(endpoint.id()),
                     "response body exceeded configured limit",

@@ -40,6 +40,12 @@ fn endpoint() -> EndpointSpec<[(&'static str, &'static str); 1], Answer> {
     )
 }
 
+#[test]
+fn executor_error_preserves_public_unit_struct_construction() {
+    let downstream_constructed = ExecutorError;
+    assert_eq!(downstream_constructed, ExecutorError::new());
+}
+
 async fn serve(responses: Vec<String>) -> (String, JoinHandle<Vec<String>>) {
     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
     let address = listener.local_addr().unwrap();
