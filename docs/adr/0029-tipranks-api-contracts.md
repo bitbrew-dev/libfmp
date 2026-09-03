@@ -2,9 +2,8 @@
 
 ## Status
 
-Accepted for issue #38's Rust API inventory. The ratings search, both
-point-in-time routes, and all three summary routes are implemented in Rust; the
-analyst directory route and the Python facade remain reserved.
+Accepted for issue #38's Rust API inventory. All seven TipRanks routes are
+implemented in Rust; the Python facade remains reserved.
 
 ## Decision
 
@@ -20,7 +19,7 @@ snake-case Rust names under `FmpClient`, with models under `fmp.tipranks`.
 | `tipranks-symbol-summary` | `tipranks_symbol_summary` | `TipRanksSymbolSummaryQuery` | `TipRanksSymbolSummary` | Rust complete |
 | `tipranks-analyst-summary` | `tipranks_analyst_summary` | `TipRanksAnalystSummaryQuery` | `TipRanksAnalystSummary` | Rust complete |
 | `tipranks-firm-summary` | `tipranks_firm_summary` | `TipRanksFirmSummaryQuery` | `TipRanksFirmSummary` | Rust complete |
-| `tipranks-analysts` | `tipranks_analysts` | `TipRanksAnalystsQuery` | `TipRanksAnalyst` | Reserved |
+| `tipranks-analysts` | `tipranks_analysts` | `TipRanksAnalystsQuery` | `TipRanksAnalystProfile` | Rust complete |
 
 The endpoint contracts live in `endpoints::tipranks`, and response contracts
 live in `responses::tipranks`. `TipRanksSearchQuery` exposes all seven optional
@@ -88,9 +87,29 @@ unsigned `Count`, while `averageReturn`, `topReturn`, and `worstReturn` use
 and integer JSON number tokens. The exact `expertUID` acronym and singular
 `analystAction` key are mapped explicitly.
 
-The directory prose says to provide an exact `analystName`, but its parameter
-table instead lists `page`, `limit`, and `firmName`. That separate conflict
-remains unresolved and must not be silently invented into the reserved query
-contract.
+The directory prose repeatedly says to provide an exact `analystName`, but its
+parameter table lists only `page`, `limit`, and `firmName`, while the displayed
+endpoint URL also omits `analystName`.
+`TipRanksAnalystsQuery` exposes all four fields independently. It emits the
+table-backed fields first in their documented order (`page`, `limit`, then
+`firmName`) and the prose-only `analystName` last because the source provides no
+canonical table position. It injects no defaults, selector requirement, XOR,
+case folding, or fuzzy-search behavior. Page zero and the example limit of
+1,000 remain representable values rather than a default or a maximum.
+
+The directory requires the named `TipRanks` add-on. Geography is unspecified,
+and the source documents no Enterprise history rule, bounds, realtime behavior,
+or special authentication behavior for this route. The exact response is a
+required, non-null nine-field row. `successRate` and `excessReturn` use
+`serde_json::Number` to retain strict JSON-number kind and integer-versus-decimal
+spelling. The four counters use `Count`, while `expertUID` keeps its exact wire
+acronym and open validated identifier type. The prose mentions profile images
+and links but supplies no wire names or example keys, so the response model does
+not invent image, link, or URL fields and does not add a route-specific raw
+escape hatch.
+
+Completing this route brings the Rust inventory to 276 of 276 documented
+endpoints. The earlier 268-of-276 report undercounted the already implemented
+Rust surface by one; the corrected pre-TipRanks baseline was 269 of 276.
 
 Python runtime parity remains deferred and reserved under `fmp.tipranks`.
