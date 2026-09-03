@@ -544,6 +544,24 @@ async fn custom_executor_buffers_are_checked_for_errors_and_redirects() {
 }
 
 #[tokio::test]
+async fn built_in_executor_does_not_buffer_redirect_bodies() {
+    let redirect = "HTTP/1.1 302 Found\r\nLocation: /next\r\nContent-Length: 1048576\r\nConnection: close\r\n\r\nbody is deliberately incomplete";
+    let (base_url, server) = serve(vec![redirect.to_owned(), OK_RESPONSE.to_owned()]).await;
+    let answer = Client::builder()
+        .base_url(base_url)
+        .path_prefix("")
+        .max_response_body_bytes(11)
+        .build()
+        .unwrap()
+        .execute(&endpoint())
+        .await
+        .unwrap();
+
+    assert_eq!(answer, Answer { ok: true });
+    assert_eq!(server.await.unwrap().len(), 2);
+}
+
+#[tokio::test]
 async fn endpoint_override_replaces_the_client_body_limit() {
     let executor = Arc::new(ScriptedExecutor::new(vec![Ok(json_response())]));
     let endpoint = endpoint().with_max_response_body_bytes(11);

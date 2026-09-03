@@ -152,6 +152,9 @@ impl Client {
     }
 
     /// Downloads one financial report using the endpoint's XLSX MIME policy.
+    ///
+    /// The download inherits the client's finite response-body limit. Configure
+    /// a larger client limit when a known workbook requires it.
     pub async fn financial_reports_xlsx(
         &self,
         query: FinancialReportsXlsxQuery,
@@ -207,5 +210,18 @@ mod tests {
             assert_eq!(pairs(&json), expected);
             assert_eq!(pairs(&xlsx), expected);
         }
+    }
+
+    #[test]
+    fn xlsx_descriptor_inherits_the_finite_client_response_limit() {
+        let query = FinancialReportsXlsxQuery::new(
+            Ticker::new("AAPL").unwrap(),
+            Year(2025),
+            FiscalPeriod::FullYear,
+        );
+        assert_eq!(
+            financial_reports_xlsx(query).max_response_body_bytes(),
+            None
+        );
     }
 }
