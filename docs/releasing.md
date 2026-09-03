@@ -14,11 +14,18 @@ From the repository root:
 cargo metadata --no-deps --format-version 1 --offline
 cargo package -p libfmp --list
 cargo package -p libfmp --offline
+scripts/check-crate-package.sh
 maturin build --manifest-path crates/fmp-py/Cargo.toml --release --offline
 maturin sdist --manifest-path crates/fmp-py/Cargo.toml --out target/wheels
 ```
 
 Confirm that Cargo metadata reports `license = "MIT"`, the crate file list contains `LICENSE`, and the wheel and source distribution metadata contain both `License-Expression: MIT` and `License-File: LICENSE`. Each artifact must contain the complete license text.
+
+The crate package check rejects published test or fixture trees and rejects a
+compressed `.crate` larger than 512 KiB. Set `LIBFMP_CRATE_MAX_KIB` when a
+reviewed release intentionally changes that budget. This standalone check is
+suitable for local release validation now and can be called unchanged by a
+future publication gate.
 
 Install the wheel into a clean Python environment and verify the names, shared version, and installed license metadata:
 

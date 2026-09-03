@@ -10,7 +10,7 @@ readme = "README.md"
 documentation = "https://docs.rs/libfmp"
 keywords = ["finance", "market-data", "fmp", "api", "sdk"]
 categories = ["api-bindings", "finance"]
-include = ["/src/**", "/tests/**", "/Cargo.toml", "/LICENSE", "/README.md"]
+include = ["/src/**", "/Cargo.toml", "/LICENSE", "/README.md"]
 
 [lib]
 path = "src/lib.rs"
