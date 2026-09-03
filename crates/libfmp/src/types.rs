@@ -119,6 +119,11 @@ macro_rules! string_value {
 
 string_value!(Ticker, "A provider ticker symbol.", true);
 string_value!(
+    TipRanksExpertUid,
+    "A representation-preserving stable TipRanks analyst identifier.",
+    false
+);
+string_value!(
     BulkPart,
     "An open, representation-preserving provider bulk partition.",
     false
