@@ -256,17 +256,21 @@ impl ClientBuilder {
             redactor.add_secret(&SecretString::new(value.clone()));
         }
 
-        let executor = match self.executor {
-            Some(executor) => executor,
-            None => Arc::new(
-                ReqwestExecutor::new(self.timeout, self.connect_timeout).map_err(|_| {
-                    Error::configuration_with_kind(
-                        ConfigurationErrorKind::HttpClient,
-                        "HTTP client could not be constructed",
-                    )
-                })?,
-            ),
-        };
+        let (executor, deadline_backend): (Arc<dyn HttpExecutor>, DeadlineBackend) =
+            match self.executor {
+                Some(executor) => (executor, DeadlineBackend::Thread),
+                None => (
+                    Arc::new(
+                        ReqwestExecutor::new(self.timeout, self.connect_timeout).map_err(|_| {
+                            Error::configuration_with_kind(
+                                ConfigurationErrorKind::HttpClient,
+                                "HTTP client could not be constructed",
+                            )
+                        })?,
+                    ),
+                    DeadlineBackend::Tokio,
+                ),
+            };
 
         Ok(Client {
             inner: Arc::new(ClientInner {
@@ -277,6 +281,7 @@ impl ClientBuilder {
                 protected_headers,
                 redactor,
                 executor,
+                deadline_backend,
                 timeout: self.timeout,
                 max_response_body_bytes: self.max_response_body_bytes,
                 redirect_policy: self.redirect_policy,
@@ -293,6 +298,7 @@ struct ClientInner {
     protected_headers: BTreeSet<String>,
     redactor: Redactor,
     executor: Arc<dyn HttpExecutor>,
+    deadline_backend: DeadlineBackend,
     timeout: Duration,
     max_response_body_bytes: usize,
     redirect_policy: RedirectPolicy,
@@ -371,6 +377,7 @@ impl Client {
         }
 
         with_timeout(
+            self.inner.deadline_backend,
             self.inner.timeout,
             self.execute_redirects(endpoint, url, headers, &redactor),
         )
@@ -499,14 +506,17 @@ impl Client {
     }
 }
 
-async fn with_timeout<F>(duration: Duration, future: F) -> Option<F::Output>
+async fn with_timeout<F>(
+    backend: DeadlineBackend,
+    duration: Duration,
+    future: F,
+) -> Option<F::Output>
 where
     F: Future,
 {
-    if deadline_backend() == DeadlineBackend::Tokio {
-        tokio::time::timeout(duration, future).await.ok()
-    } else {
-        with_thread_timeout(duration, future).await
+    match backend {
+        DeadlineBackend::Tokio => tokio::time::timeout(duration, future).await.ok(),
+        DeadlineBackend::Thread => with_thread_timeout(duration, future).await,
     }
 }
 
@@ -535,15 +545,7 @@ enum DeadlineBackend {
     Thread,
 }
 
-fn deadline_backend() -> DeadlineBackend {
-    if tokio::runtime::Handle::try_current().is_ok() {
-        DeadlineBackend::Tokio
-    } else {
-        DeadlineBackend::Thread
-    }
-}
-
-/// Runtime-neutral deadline used only when no Tokio runtime is active.
+/// Runtime-neutral deadline used for injected executors.
 ///
 /// Each fallback deadline owns a cancellable thread rather than retaining a
 /// process-global timer handle. Process-aware bindings can therefore rebuild
@@ -1025,17 +1027,33 @@ mod tests {
     use super::*;
 
     #[test]
-    fn deadline_backend_uses_thread_fallback_without_tokio() {
-        assert_eq!(deadline_backend(), DeadlineBackend::Thread);
+    fn builder_reserves_tokio_deadlines_for_the_built_in_executor() {
+        let built_in = Client::builder()
+            .base_url("https://example.test")
+            .build()
+            .unwrap();
+        let injected = Client::builder()
+            .base_url("https://example.test")
+            .executor(Arc::new(
+                ReqwestExecutor::new(DEFAULT_TIMEOUT, DEFAULT_CONNECT_TIMEOUT).unwrap(),
+            ))
+            .build()
+            .unwrap();
+
+        assert_eq!(built_in.inner.deadline_backend, DeadlineBackend::Tokio);
+        assert_eq!(injected.inner.deadline_backend, DeadlineBackend::Thread);
     }
 
     #[tokio::test]
-    async fn deadline_backend_uses_active_tokio_runtime() {
-        assert_eq!(deadline_backend(), DeadlineBackend::Tokio);
+    async fn tokio_deadline_backend_times_out() {
         assert!(
-            with_timeout(Duration::from_millis(1), std::future::pending::<()>())
-                .await
-                .is_none()
+            with_timeout(
+                DeadlineBackend::Tokio,
+                Duration::from_millis(1),
+                std::future::pending::<()>(),
+            )
+            .await
+            .is_none()
         );
     }
 

@@ -644,6 +644,27 @@ fn custom_executor_timeout_is_runtime_independent() {
     assert_eq!(error.message(), "request deadline exceeded");
 }
 
+#[test]
+fn custom_executor_timeout_does_not_require_a_tokio_time_driver() {
+    let runtime = tokio::runtime::Builder::new_current_thread()
+        .build()
+        .unwrap();
+    let error = runtime
+        .block_on(
+            Client::builder()
+                .base_url("https://example.test")
+                .timeout(Duration::from_millis(10))
+                .executor(Arc::new(PendingExecutor))
+                .build()
+                .unwrap()
+                .execute(&endpoint()),
+        )
+        .unwrap_err();
+
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(error.message(), "request deadline exceeded");
+}
+
 #[tokio::test]
 async fn one_total_timeout_is_shared_across_redirect_hops() {
     let mut redirect_headers = HeaderMap::new();
