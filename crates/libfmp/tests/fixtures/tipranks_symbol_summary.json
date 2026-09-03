@@ -1,0 +1,30 @@
+[
+  {
+    "analystAction": {
+      "downgraded": 5,
+      "initiated": 3,
+      "maintained": 309,
+      "reiterated": 92,
+      "resumed": 0,
+      "upgraded": 16
+    },
+    "averageReturn": 0.1697,
+    "beats": 323,
+    "comparedPriceTargets": 379,
+    "distinctAnalysts": 45,
+    "distinctSymbols": 1,
+    "from": "2025-07-30",
+    "misses": 56,
+    "recommendations": {
+      "buy": 277,
+      "hold": 122,
+      "sell": 26
+    },
+    "symbol": "AAPL",
+    "to": "2026-07-30",
+    "topReturn": 0.8466,
+    "totalRecommendations": 425,
+    "validPriceTargets": 379,
+    "worstReturn": -0.169
+  }
+]

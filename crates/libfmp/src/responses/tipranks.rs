@@ -7,7 +7,7 @@ use serde_json::Number;
 
 use crate::{
     codecs::IsoTimestamp,
-    types::{CurrencyCode, Date, Ticker, TipRanksExpertUid},
+    types::{Count, CurrencyCode, Date, Ticker, TipRanksExpertUid},
 };
 
 fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
@@ -63,4 +63,92 @@ pub struct TipRanksPointInTimeRating {
     pub stock_return: Option<Number>,
     #[serde(deserialize_with = "required_option")]
     pub beat_target: Option<bool>,
+}
+
+/// Recommendation counts in a TipRanks ratings summary.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TipRanksRecommendationCounts {
+    pub buy: Count,
+    pub hold: Count,
+    pub sell: Count,
+}
+
+/// Analyst-action counts in a TipRanks ratings summary.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TipRanksAnalystActionCounts {
+    pub initiated: Count,
+    pub maintained: Count,
+    pub upgraded: Count,
+    pub downgraded: Count,
+    pub reiterated: Count,
+    pub resumed: Count,
+}
+
+/// Aggregated TipRanks ratings for one ticker over a date window.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TipRanksSymbolSummary {
+    pub symbol: Ticker,
+    pub from: Date,
+    pub to: Date,
+    pub total_recommendations: Count,
+    pub distinct_symbols: Count,
+    pub distinct_analysts: Count,
+    pub valid_price_targets: Count,
+    pub recommendations: TipRanksRecommendationCounts,
+    #[serde(rename = "analystAction")]
+    pub analyst_action: TipRanksAnalystActionCounts,
+    pub compared_price_targets: Count,
+    pub beats: Count,
+    pub misses: Count,
+    pub average_return: Number,
+    pub top_return: Number,
+    pub worst_return: Number,
+}
+
+/// Aggregated TipRanks ratings for one analyst over a date window.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TipRanksAnalystSummary {
+    #[serde(rename = "expertUID")]
+    pub expert_uid: TipRanksExpertUid,
+    pub from: Date,
+    pub to: Date,
+    pub total_recommendations: Count,
+    pub distinct_symbols: Count,
+    pub distinct_analysts: Count,
+    pub valid_price_targets: Count,
+    pub recommendations: TipRanksRecommendationCounts,
+    #[serde(rename = "analystAction")]
+    pub analyst_action: TipRanksAnalystActionCounts,
+    pub compared_price_targets: Count,
+    pub beats: Count,
+    pub misses: Count,
+    pub average_return: Number,
+    pub top_return: Number,
+    pub worst_return: Number,
+}
+
+/// Aggregated TipRanks ratings for one firm over a date window.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TipRanksFirmSummary {
+    pub firm_name: String,
+    pub from: Date,
+    pub to: Date,
+    pub total_recommendations: Count,
+    pub distinct_symbols: Count,
+    pub distinct_analysts: Count,
+    pub valid_price_targets: Count,
+    pub recommendations: TipRanksRecommendationCounts,
+    #[serde(rename = "analystAction")]
+    pub analyst_action: TipRanksAnalystActionCounts,
+    pub compared_price_targets: Count,
+    pub beats: Count,
+    pub misses: Count,
+    pub average_return: Number,
+    pub top_return: Number,
+    pub worst_return: Number,
 }

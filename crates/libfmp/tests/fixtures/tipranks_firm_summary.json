@@ -1,0 +1,30 @@
+[
+  {
+    "analystAction": {
+      "downgraded": 448,
+      "initiated": 300,
+      "maintained": 11474,
+      "reiterated": 1583,
+      "resumed": 4,
+      "upgraded": 373
+    },
+    "averageReturn": -0.0299,
+    "beats": 5133,
+    "comparedPriceTargets": 13847,
+    "distinctAnalysts": 258,
+    "distinctSymbols": 4146,
+    "firmName": "Morgan Stanley",
+    "from": "2025-07-30",
+    "misses": 8714,
+    "recommendations": {
+      "buy": 6156,
+      "hold": 6297,
+      "sell": 1729
+    },
+    "to": "2026-07-30",
+    "topReturn": 17.0036,
+    "totalRecommendations": 14182,
+    "validPriceTargets": 14019,
+    "worstReturn": -1
+  }
+]
