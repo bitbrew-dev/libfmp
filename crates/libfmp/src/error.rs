@@ -225,7 +225,9 @@ impl Redactor {
 
     /// Registers another secret value to remove from arbitrary diagnostic text.
     pub fn add_secret(&mut self, secret: &SecretString) {
-        if !secret.expose_secret().is_empty() {
+        if !secret.expose_secret().is_empty()
+            && !self.secrets.iter().any(|registered| registered == secret)
+        {
             self.secrets.push(secret.clone());
         }
     }

@@ -791,6 +791,40 @@ async fn status_decode_connection_and_timeout_failures_are_safe() {
 }
 
 #[tokio::test]
+async fn overlapping_secrets_are_redacted_from_status_and_decode_bodies() {
+    let mut json_headers = HeaderMap::new();
+    json_headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+    let executor = Arc::new(ScriptedExecutor::new(vec![
+        Ok(TransportResponse::new(
+            401,
+            HeaderMap::new(),
+            "shared-secret-prefix-and-suffix",
+        )),
+        Ok(TransportResponse::new(
+            200,
+            json_headers,
+            "shared-secret-prefix-and-suffix",
+        )),
+    ]));
+    let client = Client::builder()
+        .base_url("https://example.test")
+        .authentication(Authentication::bearer("shared-secret-prefix"))
+        .default_header("x-overlap", "secret-prefix-and-suffix")
+        .executor(executor)
+        .build()
+        .unwrap();
+
+    for expected_category in [ErrorCategory::Status, ErrorCategory::Decode] {
+        let error = client.execute(&endpoint()).await.unwrap_err();
+        assert_eq!(error.category(), expected_category);
+        assert_eq!(error.body().map(|body| body.as_str()), Some("[REDACTED]"));
+        let diagnostic = format!("{error:?} {error}");
+        assert!(!diagnostic.contains("shared-secret-prefix"));
+        assert!(!diagnostic.contains("and-suffix"));
+    }
+}
+
+#[tokio::test]
 async fn debug_output_never_contains_configured_secrets_or_urls() {
     let secret = "debug-secret-value";
     let builder = Client::builder()

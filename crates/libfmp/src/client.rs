@@ -171,8 +171,10 @@ impl ClientBuilder {
 
     /// Sets the largest body buffered for any one response, in bytes.
     ///
-    /// The limit is enforced for success, error, and redirect responses. An
-    /// endpoint can replace it with
+    /// The built-in executor skips redirect bodies and bounds every success or
+    /// error body while streaming. Buffers returned by custom executors are
+    /// checked defensively for every status, including redirects. An endpoint
+    /// can replace the limit with
     /// [`EndpointSpec::with_max_response_body_bytes`]. Bulk and XLSX
     /// convenience methods inherit this client-wide value.
     pub fn max_response_body_bytes(mut self, max_bytes: usize) -> Self {
