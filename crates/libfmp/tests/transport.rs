@@ -325,6 +325,38 @@ fn invalid_configuration_has_typed_secret_free_failures() {
     );
 }
 
+#[test]
+fn authenticated_plaintext_requires_a_conspicuous_non_loopback_opt_in() {
+    for base_url in ["http://example.test", "http://localhost"] {
+        let error = Client::builder()
+            .base_url(base_url)
+            .authentication(Authentication::bearer("secret"))
+            .build()
+            .unwrap_err();
+        assert_eq!(
+            error.configuration_kind(),
+            Some(ConfigurationErrorKind::InsecureAuthentication)
+        );
+        assert!(!format!("{error:?} {error}").contains("secret"));
+        assert!(!format!("{error:?} {error}").contains(base_url));
+    }
+
+    for base_url in ["http://127.0.0.1", "http://[::1]"] {
+        Client::builder()
+            .base_url(base_url)
+            .authentication(Authentication::bearer("secret"))
+            .build()
+            .unwrap();
+    }
+
+    Client::builder()
+        .base_url("http://proxy.internal")
+        .authentication(Authentication::custom_query("proxy_token", "secret"))
+        .danger_allow_insecure_authentication(true)
+        .build()
+        .unwrap();
+}
+
 #[tokio::test]
 async fn same_origin_redirects_reapply_header_and_query_authentication() {
     for authentication in [
