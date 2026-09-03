@@ -36,7 +36,10 @@ pub use growth::{
 pub use income::{income_statement, income_statement_ttm};
 pub use metrics::{key_metrics, key_metrics_ttm};
 pub use ratios::{financial_ratios, financial_ratios_ttm};
-pub use reports::{financial_reports_dates, financial_reports_json, financial_reports_xlsx};
+pub use reports::{
+    FinancialReportsDatesQuery, FinancialReportsJsonQuery, FinancialReportsXlsxQuery,
+    financial_reports_dates, financial_reports_json, financial_reports_xlsx,
+};
 pub use segmentation::{
     RevenueGeographicSegmentationQuery, RevenueProductSegmentationQuery, SegmentationStructure,
     revenue_geographic_segmentation, revenue_product_segmentation,

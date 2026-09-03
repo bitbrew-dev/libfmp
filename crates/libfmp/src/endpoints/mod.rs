@@ -250,18 +250,53 @@ impl ExpectedContentType {
             .map_or(content_type, |(media_type, _)| media_type)
             .trim();
         match self {
-            Self::Json => {
-                media_type.eq_ignore_ascii_case(APPLICATION_JSON)
-                    || media_type
-                        .to_ascii_lowercase()
-                        .strip_suffix("+json")
-                        .is_some_and(|prefix| prefix.contains('/'))
-            }
+            Self::Json => valid_json_media_type(media_type),
             Self::Binary(expected) => expected
                 .iter()
                 .any(|expected| media_type.eq_ignore_ascii_case(expected)),
         }
     }
+}
+
+fn valid_json_media_type(media_type: &str) -> bool {
+    let Some((type_name, subtype)) = media_type.split_once('/') else {
+        return false;
+    };
+    if !valid_media_type_token(type_name)
+        || !valid_media_type_token(subtype)
+        || subtype.contains('/')
+    {
+        return false;
+    }
+
+    (type_name.eq_ignore_ascii_case("application") && subtype.eq_ignore_ascii_case("json"))
+        || subtype.rsplit_once('+').is_some_and(|(name, suffix)| {
+            !name.is_empty() && !name.contains('+') && suffix.eq_ignore_ascii_case("json")
+        })
+}
+
+fn valid_media_type_token(value: &str) -> bool {
+    !value.is_empty()
+        && value.bytes().all(|byte| {
+            byte.is_ascii_alphanumeric()
+                || matches!(
+                    byte,
+                    b'!' | b'#'
+                        | b'$'
+                        | b'%'
+                        | b'&'
+                        | b'\''
+                        | b'*'
+                        | b'+'
+                        | b'-'
+                        | b'.'
+                        | b'^'
+                        | b'_'
+                        | b'`'
+                        | b'|'
+                        | b'~'
+                )
+        })
 }
 
 #[derive(Clone, Copy)]

@@ -118,6 +118,25 @@ fn flattened_sections_round_trip_arbitrary_names_large_numbers_and_native_json_k
 }
 
 #[test]
+fn serialization_rejects_every_reserved_header_in_dynamic_sections() {
+    let rows: Vec<FinancialReportJson> = serde_json::from_slice(REPORT).unwrap();
+
+    for reserved in ["symbol", "period", "year"] {
+        let mut report = rows[0].clone();
+        report.sections.insert(
+            reserved.to_owned(),
+            serde_json::json!("attacker-controlled replacement"),
+        );
+
+        let error = serde_json::to_value(report).unwrap_err();
+        assert!(
+            error.to_string().contains(reserved),
+            "collision error did not identify reserved key {reserved}: {error}"
+        );
+    }
+}
+
+#[test]
 fn strict_header_wire_kinds_and_requiredness_are_enforced() {
     let mut string_calendar_year: serde_json::Value = serde_json::from_slice(DATES).unwrap();
     string_calendar_year[0]["fiscalYear"] = serde_json::json!("2026");

@@ -147,6 +147,32 @@ async fn successful_json_requires_a_matching_content_type() {
 }
 
 #[tokio::test]
+async fn json_contract_rejects_malformed_or_non_json_media_types() {
+    for content_type in [
+        "text/html/foo+json",
+        "application/+json",
+        "application/problem++json",
+        "/problem+json",
+        "application/problem+json/extra",
+        "application/pro blem+json",
+        "application/problem+jsonx",
+    ] {
+        let response = fixture_response(Some(content_type), QUOTE_SHORT);
+        let client = mock_client(Arc::new(FixtureExecutor::new([response])));
+        let error = client
+            .execute(&contract_probe_descriptor("AAPL", None))
+            .await
+            .unwrap_err();
+
+        assert_eq!(
+            error.category(),
+            ErrorCategory::Decode,
+            "accepted malformed content type {content_type}"
+        );
+    }
+}
+
+#[tokio::test]
 async fn binary_contract_retains_bytes_and_safe_content_metadata() {
     const BINARY_TYPE: &str = "application/octet-stream";
     const CONTENT_TYPE_VALUE: &str = "Application/Octet-Stream; token=private-media-token";
