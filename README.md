@@ -2,7 +2,10 @@
 
 `libfmp` is a Rust-first client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API, with synchronous Python bindings distributed as `fmp-py-sdk` and imported as `fmp`.
 
-Version 0.1 is intentionally a name-release walking skeleton. It supports only the documented `GET /stable/quote-short?symbol=...` endpoint. It does not yet promise broad FMP endpoint coverage.
+The Rust client implements all 276 endpoint entries in the repository's
+captured API documentation oracle. This is coverage of that pinned oracle, not
+a claim that every endpoint currently or historically offered by the provider
+is covered. The Python facade currently exposes 1 of those 276 entries.
 
 ## Rust
 
@@ -22,7 +25,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-The Rust client is async. `quote_short` preserves FMP's bare-array response as `Vec<QuoteShort>`, including empty and multi-row responses.
+The Rust client is async. Endpoint descriptors, typed queries, response models,
+and `Client` methods cover all 276 documented oracle entries. `quote_short`,
+for example, preserves FMP's bare-array response as `Vec<QuoteShort>`, including
+empty and multi-row responses.
 
 ## Python
 
@@ -42,7 +48,10 @@ rows = client.quote_short("AAPL")
 print(rows)
 ```
 
-The Python facade is synchronous and returns `list[QuoteShort]`. While waiting for the async Rust transport it releases the Python GIL.
+The Python facade is synchronous and currently implements only the documented
+`quote_short` endpoint (1/276). It returns `list[QuoteShort]`; while waiting for
+the async Rust transport it releases the Python GIL. The other Python facades
+remain planned work and should not be inferred from Rust coverage.
 
 ## Custom routers and proxies
 
