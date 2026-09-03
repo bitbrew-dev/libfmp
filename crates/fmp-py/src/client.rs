@@ -1,4 +1,4 @@
-use std::{sync::OnceLock, time::Duration};
+use std::time::Duration;
 
 use libfmp::{
     Client, ClientBuilder,
@@ -6,22 +6,19 @@ use libfmp::{
     types::Ticker,
 };
 use pyo3::{prelude::*, types::PyDict};
-use tokio::runtime::{Builder as RuntimeBuilder, Runtime};
+use tokio::runtime::Builder as RuntimeBuilder;
 
 use crate::{errors::to_py_error, quote::QuoteShort};
 
-static RUNTIME: OnceLock<Result<Runtime, &'static str>> = OnceLock::new();
-
-fn runtime() -> PyResult<&'static Runtime> {
-    match RUNTIME.get_or_init(|| {
-        RuntimeBuilder::new_multi_thread()
-            .enable_all()
-            .build()
-            .map_err(|_| "the fmp runtime could not be constructed")
-    }) {
-        Ok(runtime) => Ok(runtime),
-        Err(message) => Err(to_py_error(libfmp::Error::configuration(message))),
-    }
+fn runtime() -> PyResult<tokio::runtime::Runtime> {
+    RuntimeBuilder::new_current_thread()
+        .enable_all()
+        .build()
+        .map_err(|_| {
+            to_py_error(libfmp::Error::configuration(
+                "the fmp runtime could not be constructed",
+            ))
+        })
 }
 
 fn invalid_configuration(message: &'static str) -> PyErr {
@@ -192,19 +189,8 @@ impl FmpClient {
             .map_err(libfmp::Error::from)
             .map_err(to_py_error)?;
         let client = self.client.clone();
-        let (sender, receiver) = std::sync::mpsc::channel();
-
-        runtime()?.spawn(async move {
-            let result = client.quote_short(symbol).await;
-            let _send_result = sender.send(result);
-        });
-
-        let result = py.detach(move || receiver.recv()).map_err(|_| {
-            to_py_error(libfmp::Error::transport(
-                Some("quote-short"),
-                "the fmp runtime stopped before the request completed",
-            ))
-        })?;
+        let runtime = runtime()?;
+        let result = py.detach(move || runtime.block_on(client.quote_short(symbol)));
 
         result
             .map(|rows| rows.into_iter().map(QuoteShort::from).collect())
