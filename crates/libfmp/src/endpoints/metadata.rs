@@ -1,4 +1,11 @@
 //! Additive endpoint availability, access, latency, and bounds metadata.
+//!
+//! Metadata is advisory and intended for discovery and introspection. Building
+//! or executing a request does not automatically validate it against the
+//! documented bounds. Callers that want a preflight check can use the
+//! [`EndpointBounds::accepts_limit`], [`EndpointBounds::accepts_response_rows`],
+//! [`EndpointBounds::accepts_page`], and [`EndpointBounds::accepts_date_range`]
+//! helpers.
 
 use crate::types::{DateRange, Limit, Page};
 
@@ -135,7 +142,12 @@ impl InclusiveMaximum {
     }
 }
 
-/// Bounds attached to one endpoint rather than imposed globally.
+/// Advisory bounds attached to one endpoint rather than imposed globally.
+///
+/// These values preserve provider documentation for introspection. Query
+/// builders deliberately remain representation-preserving and do not reject
+/// values outside these bounds. Use the `accepts_*` helpers when an application
+/// chooses to validate a request before sending it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub struct EndpointBounds {
     limit: Option<InclusiveMaximum>,
@@ -190,6 +202,7 @@ impl EndpointBounds {
         self.date_range_days
     }
 
+    /// Reports whether `value` is within the documented limit maximum, if any.
     pub const fn accepts_limit(self, value: Limit) -> bool {
         match self.limit {
             Some(maximum) => maximum.contains(value.0),
@@ -197,6 +210,7 @@ impl EndpointBounds {
         }
     }
 
+    /// Reports whether `value` is within the documented response-row maximum.
     pub const fn accepts_response_rows(self, value: u32) -> bool {
         match self.response_rows {
             Some(maximum) => maximum.contains(value),
@@ -204,6 +218,7 @@ impl EndpointBounds {
         }
     }
 
+    /// Reports whether `value` is within the documented page maximum, if any.
     pub const fn accepts_page(self, value: Page) -> bool {
         match self.page {
             Some(maximum) => maximum.contains(value.0),
@@ -211,6 +226,7 @@ impl EndpointBounds {
         }
     }
 
+    /// Reports whether `value` is within the documented date-span maximum.
     pub fn accepts_date_range(self, value: &DateRange) -> bool {
         match self.date_range_days {
             Some(maximum) => maximum.contains(value.span_days() as u32),

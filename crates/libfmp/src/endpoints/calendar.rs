@@ -459,7 +459,11 @@ impl Client {
         self.execute(&earnings_calendar(query.into())).await
     }
 
-    /// Retrieves the worldwide IPO calendar within the documented 90-day range.
+    /// Retrieves the worldwide IPO calendar.
+    ///
+    /// The documented 90-day maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_date_range`](super::metadata::EndpointBounds::accepts_date_range)
+    /// for optional preflight validation.
     pub async fn ipos_calendar(
         &self,
         query: impl Into<IposCalendarQuery>,

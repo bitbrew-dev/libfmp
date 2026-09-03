@@ -144,7 +144,11 @@ pub fn economic_indicators(
 }
 
 impl Client {
-    /// Retrieves Treasury-rate observations within the documented 90-day range.
+    /// Retrieves Treasury-rate observations.
+    ///
+    /// The documented 90-day maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_date_range`](super::metadata::EndpointBounds::accepts_date_range)
+    /// for optional preflight validation.
     pub async fn treasury_rates(
         &self,
         query: impl Into<TreasuryRatesQuery>,
@@ -152,7 +156,11 @@ impl Client {
         self.execute(&treasury_rates(query.into())).await
     }
 
-    /// Retrieves observations for one economic indicator within 90 days.
+    /// Retrieves observations for one economic indicator.
+    ///
+    /// The documented 90-day maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_date_range`](super::metadata::EndpointBounds::accepts_date_range)
+    /// for optional preflight validation.
     pub async fn economic_indicators(
         &self,
         query: impl Into<EconomicIndicatorsQuery>,
@@ -235,7 +243,11 @@ pub fn market_risk_premium() -> EndpointSpec<(), Vec<MarketRiskPremium>> {
 }
 
 impl Client {
-    /// Retrieves economic-calendar events within the documented 90-day range.
+    /// Retrieves economic-calendar events.
+    ///
+    /// The documented 90-day maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_date_range`](super::metadata::EndpointBounds::accepts_date_range)
+    /// for optional preflight validation.
     pub async fn economic_calendar(
         &self,
         query: impl Into<EconomicCalendarQuery>,
