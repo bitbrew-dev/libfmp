@@ -2,8 +2,9 @@
 
 ## Status
 
-Accepted for issue #38's Rust API inventory. The ratings search is implemented
-in Rust; the other six routes and the Python facade remain reserved.
+Accepted for issue #38's Rust API inventory. The ratings search and both
+point-in-time routes are implemented in Rust; the other four routes and the
+Python facade remain reserved.
 
 ## Decision
 
@@ -14,8 +15,8 @@ snake-case Rust names under `FmpClient`, with models under `fmp.tipranks`.
 | FMP path | Rust descriptor/client method | Rust query | Rust response row | State |
 | --- | --- | --- | --- | --- |
 | `tipranks-search` | `tipranks_ratings_search` | `TipRanksSearchQuery` | `TipRanksRatingSearchResult` | Rust complete |
-| `tipranks-pit-symbol` | `tipranks_ratings_by_symbol` | `TipRanksSymbolQuery` | `TipRanksPointInTimeRating` | Reserved |
-| `tipranks-pit-analyst` | `tipranks_ratings_by_analyst` | `TipRanksAnalystQuery` | `TipRanksPointInTimeRating` | Reserved |
+| `tipranks-pit-symbol` | `tipranks_point_in_time_ratings_by_symbol` | `PointInTimeRatingsBySymbolQuery` | `TipRanksPointInTimeRating` | Rust complete |
+| `tipranks-pit-analyst` | `tipranks_point_in_time_ratings_by_analyst` | `PointInTimeRatingsByAnalystQuery` | `TipRanksPointInTimeRating` | Rust complete |
 | `tipranks-symbol-summary` | `tipranks_symbol_summary` | `TipRanksSymbolSummaryQuery` | `TipRanksRatingsSummary` | Reserved |
 | `tipranks-analyst-summary` | `tipranks_analyst_summary` | `TipRanksAnalystSummaryQuery` | `TipRanksRatingsSummary` | Reserved |
 | `tipranks-firm-summary` | `tipranks_firm_summary` | `TipRanksFirmSummaryQuery` | `TipRanksRatingsSummary` | Reserved |
@@ -49,11 +50,30 @@ fractional representation without coercion through `f64`; currency is an open
 validated code, and recommendation, action, article, site, and URL values
 remain open strings. The exact `expertUID` key is preserved on serialization.
 
-The point-in-time analyst example contains nullable price-target, currency,
-return, and beat-target values, so later work must not derive that response's
-nullability from the non-null search row. The directory prose says to provide
-an exact `analystName`, but its parameter table instead lists `page`, `limit`,
-and `firmName`. That conflict remains unresolved and must not be silently
-invented into the reserved query contract.
+The symbol point-in-time query requires `symbol`, then preserves the documented
+optional `date`, `limit`, `page`, and `nonadjusted` wire order. The analyst
+point-in-time prose says to supply `expertUID`, while its parameter table marks
+both `expertUID` and `analystName` without a required label. Its query therefore
+keeps both selectors optional, permits either or both, and adds no local XOR or
+selector requirement. Both queries inject no limit default, preserve page zero
+and explicit false, and leave the provider's stated default of 100 to the
+server. Their access, conditional three-year history rule, and 5,000-row bounds
+match the search endpoint; no client-side historical cutoff is imposed.
+
+Both point-in-time routes share the exact documented 16-field response. The
+documentation prose promises `analystRank` and `stockAvgReturn`, but neither is
+present in either response example, so neither is invented. Conversely,
+`stockReturn` is preserved exactly without an alias. `stockSuccessRate` is a
+strict bare JSON number. `priceTarget`, `priceTargetCurrency`, `stockReturn`,
+and `beatTarget` are required-present but nullable, matching the analyst
+example; missing keys still fail decoding. Number values use
+`serde_json::Number` to preserve integer-versus-decimal spelling and reject
+numeric strings. Recommendation text stays open and preserves source casing
+such as `buy` and `Hold`.
+
+The directory prose says to provide an exact `analystName`, but its parameter
+table instead lists `page`, `limit`, and `firmName`. That separate conflict
+remains unresolved and must not be silently invented into the reserved query
+contract.
 
 Python runtime parity remains deferred and reserved under `fmp.tipranks`.
