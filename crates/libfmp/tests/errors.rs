@@ -99,6 +99,30 @@ fn repeated_occurrences_that_overlap_each_other_are_fully_redacted() {
 }
 
 #[test]
+fn duplicate_registrations_are_deduplicated() {
+    let mut redactor = Redactor::new();
+    let secret = SecretString::new("same-secret");
+    redactor.add_secret(&secret);
+    redactor.add_secret(&secret);
+
+    assert_eq!(redactor.redact("same-secret"), REDACTED);
+    assert!(format!("{redactor:?}").contains("registered_secret_count: 1"));
+}
+
+#[test]
+fn unicode_secret_overlaps_preserve_character_boundaries() {
+    let mut redactor = Redactor::new();
+    redactor.add_secret(&SecretString::new("雪山"));
+    redactor.add_secret(&SecretString::new("山道"));
+    redactor.add_secret(&SecretString::new("界界"));
+
+    assert_eq!(
+        redactor.redact("雪山道 and 界界界"),
+        "[REDACTED] and [REDACTED]"
+    );
+}
+
+#[test]
 fn authentication_values_and_secret_urls_never_format_in_cleartext() {
     let secret = SecretString::new("bearer-token");
     let url = SecretUrl::new(
