@@ -5,11 +5,13 @@ use std::{
     time::Duration,
 };
 
+use bytes::Bytes;
 use http::header::{CONTENT_TYPE, HeaderMap, HeaderValue, LOCATION};
 use libfmp::{
     Client,
     client::EndpointSpec,
     config::{Authentication, RedirectPolicy},
+    endpoints::BinaryBody,
     error::{ConfigurationErrorKind, ErrorCategory},
     transport::{
         ExecutorError, ExecutorFuture, HttpExecutor, HttpMethod, PreparedRequest, TransportResponse,
@@ -458,6 +460,139 @@ async fn redirect_policy_and_hop_limit_are_enforced() {
         .unwrap_err();
     assert_eq!(error.category(), ErrorCategory::Transport);
     assert_eq!(executor.requests().len(), 11);
+}
+
+#[tokio::test]
+async fn declared_content_length_is_rejected_before_body_buffering() {
+    let response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: 1024\r\nConnection: close\r\n\r\n{}";
+    let (base_url, server) = serve(vec![response.to_owned()]).await;
+    let error = Client::builder()
+        .base_url(base_url)
+        .path_prefix("")
+        .max_response_body_bytes(16)
+        .build()
+        .unwrap()
+        .execute(&endpoint())
+        .await
+        .unwrap_err();
+
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(error.message(), "response body exceeded configured limit");
+    server.await.unwrap();
+}
+
+#[tokio::test]
+async fn chunked_body_is_stopped_when_its_accumulated_size_exceeds_the_limit() {
+    let response = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n6\r\n123456\r\n6\r\n789012\r\n0\r\n\r\n";
+    let (base_url, server) = serve(vec![response.to_owned()]).await;
+    let error = Client::builder()
+        .base_url(base_url)
+        .path_prefix("")
+        .max_response_body_bytes(10)
+        .build()
+        .unwrap()
+        .execute(&endpoint())
+        .await
+        .unwrap_err();
+
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(error.message(), "response body exceeded configured limit");
+    server.await.unwrap();
+}
+
+#[tokio::test]
+async fn custom_executor_buffers_are_checked_for_errors_and_redirects() {
+    let oversized_error = Arc::new(ScriptedExecutor::new(vec![Ok(TransportResponse::new(
+        503,
+        HeaderMap::new(),
+        "provider error is too large",
+    ))]));
+    let error = Client::builder()
+        .base_url("https://example.test")
+        .max_response_body_bytes(8)
+        .executor(oversized_error)
+        .build()
+        .unwrap()
+        .execute(&endpoint())
+        .await
+        .unwrap_err();
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(error.message(), "response body exceeded configured limit");
+    assert!(error.body().is_none());
+
+    let mut redirect_headers = HeaderMap::new();
+    redirect_headers.insert(LOCATION, HeaderValue::from_static("/next"));
+    let oversized_redirect = Arc::new(ScriptedExecutor::new(vec![
+        Ok(TransportResponse::new(
+            302,
+            redirect_headers,
+            "oversized redirect body",
+        )),
+        Ok(json_response()),
+    ]));
+    let error = Client::builder()
+        .base_url("https://example.test")
+        .max_response_body_bytes(8)
+        .executor(oversized_redirect.clone())
+        .build()
+        .unwrap()
+        .execute(&endpoint())
+        .await
+        .unwrap_err();
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(oversized_redirect.requests().len(), 1);
+}
+
+#[tokio::test]
+async fn endpoint_override_replaces_the_client_body_limit() {
+    let executor = Arc::new(ScriptedExecutor::new(vec![Ok(json_response())]));
+    let endpoint = endpoint().with_max_response_body_bytes(11);
+    let answer = Client::builder()
+        .base_url("https://example.test")
+        .max_response_body_bytes(1)
+        .executor(executor.clone())
+        .build()
+        .unwrap()
+        .execute(&endpoint)
+        .await
+        .unwrap();
+
+    assert_eq!(answer, Answer { ok: true });
+    assert_eq!(executor.requests()[0].max_response_body_bytes(), 11);
+}
+
+#[tokio::test]
+async fn binary_response_retains_the_transport_buffer_without_copying() {
+    let bytes = Bytes::from_static(b"binary-response");
+    let pointer = bytes.as_ptr();
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        CONTENT_TYPE,
+        HeaderValue::from_static("application/octet-stream"),
+    );
+    let executor = Arc::new(ScriptedExecutor::new(vec![Ok(
+        TransportResponse::from_bytes(200, headers, bytes),
+    )]));
+    let endpoint: EndpointSpec<(), BinaryBody> = EndpointSpec::get_binary(
+        "binary-transport-test",
+        "download",
+        (),
+        &["application/octet-stream"],
+    );
+    let response = Client::builder()
+        .base_url("https://example.test")
+        .executor(executor)
+        .build()
+        .unwrap()
+        .execute(&endpoint)
+        .await
+        .unwrap();
+
+    assert_eq!(response.as_bytes().as_ptr(), pointer);
+    assert_eq!(
+        response.into_buffer(),
+        Bytes::from_static(b"binary-response")
+    );
 }
 
 #[tokio::test]

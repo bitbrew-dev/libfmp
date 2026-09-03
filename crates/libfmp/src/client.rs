@@ -19,6 +19,8 @@ pub use crate::endpoints::{EndpointSpec, QueryParameters};
 
 const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
+/// Default maximum bytes buffered for each HTTP response.
+pub const DEFAULT_MAX_RESPONSE_BODY_BYTES: usize = 64 * 1024 * 1024;
 const MAX_REDIRECTS: usize = 10;
 
 #[derive(Clone)]
@@ -49,6 +51,7 @@ pub struct ClientBuilder {
     user_agent: String,
     timeout: Duration,
     connect_timeout: Duration,
+    max_response_body_bytes: usize,
     redirect_policy: RedirectPolicy,
     executor: Option<Arc<dyn HttpExecutor>>,
 }
@@ -65,6 +68,7 @@ impl Default for ClientBuilder {
             user_agent: format!("libfmp/{VERSION}"),
             timeout: DEFAULT_TIMEOUT,
             connect_timeout: DEFAULT_CONNECT_TIMEOUT,
+            max_response_body_bytes: DEFAULT_MAX_RESPONSE_BODY_BYTES,
             redirect_policy: RedirectPolicy::SameOrigin,
             executor: None,
         }
@@ -88,6 +92,7 @@ impl fmt::Debug for ClientBuilder {
             .field("user_agent", &"[CONFIGURED USER AGENT]")
             .field("timeout", &self.timeout)
             .field("connect_timeout", &self.connect_timeout)
+            .field("max_response_body_bytes", &self.max_response_body_bytes)
             .field("redirect_policy", &self.redirect_policy)
             .field("custom_executor", &self.executor.is_some())
             .finish()
@@ -142,6 +147,16 @@ impl ClientBuilder {
     /// Sets the connection establishment timeout.
     pub fn connect_timeout(mut self, connect_timeout: Duration) -> Self {
         self.connect_timeout = connect_timeout;
+        self
+    }
+
+    /// Sets the largest body buffered for any one response, in bytes.
+    ///
+    /// The limit is enforced for success, error, and redirect responses. An
+    /// endpoint can replace it with
+    /// [`EndpointSpec::with_max_response_body_bytes`].
+    pub fn max_response_body_bytes(mut self, max_bytes: usize) -> Self {
+        self.max_response_body_bytes = max_bytes;
         self
     }
 
@@ -215,6 +230,7 @@ impl ClientBuilder {
                 protected_headers,
                 redactor,
                 executor,
+                max_response_body_bytes: self.max_response_body_bytes,
                 redirect_policy: self.redirect_policy,
             }),
         })
@@ -229,6 +245,7 @@ struct ClientInner {
     protected_headers: BTreeSet<String>,
     redactor: Redactor,
     executor: Arc<dyn HttpExecutor>,
+    max_response_body_bytes: usize,
     redirect_policy: RedirectPolicy,
 }
 
@@ -317,6 +334,9 @@ impl Client {
     ) -> Result<R> {
         for redirect_count in 0..=MAX_REDIRECTS {
             apply_query_auth(&mut url, self.inner.auth.query.as_ref());
+            let max_body_bytes = endpoint
+                .max_response_body_bytes()
+                .unwrap_or(self.inner.max_response_body_bytes);
             let response = self
                 .inner
                 .executor
@@ -324,9 +344,23 @@ impl Client {
                     endpoint.method(),
                     url.clone(),
                     headers.clone(),
+                    max_body_bytes,
                 ))
                 .await
-                .map_err(|_| Error::transport(Some(endpoint.id()), "request execution failed"))?;
+                .map_err(|error| {
+                    let message = if error.is_response_too_large() {
+                        "response body exceeded configured limit"
+                    } else {
+                        "request execution failed"
+                    };
+                    Error::transport(Some(endpoint.id()), message)
+                })?;
+            if response.body().len() > max_body_bytes {
+                return Err(Error::transport(
+                    Some(endpoint.id()),
+                    "response body exceeded configured limit",
+                ));
+            }
 
             if is_redirect(response.status()) {
                 if self.inner.redirect_policy == RedirectPolicy::None {
@@ -399,7 +433,7 @@ impl Client {
             return endpoint
                 .response()
                 .decode(
-                    response.body(),
+                    response.body_bytes(),
                     ResponseMetadata::new(content_type, content_disposition),
                 )
                 .map_err(|_| {

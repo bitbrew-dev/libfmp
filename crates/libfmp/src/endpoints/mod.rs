@@ -35,6 +35,7 @@ pub mod transcripts;
 
 use std::{fmt, marker::PhantomData};
 
+use bytes::Bytes;
 use serde::de::DeserializeOwned;
 
 use crate::transport::HttpMethod;
@@ -54,6 +55,7 @@ pub struct EndpointSpec<Q, R> {
     query: Q,
     response: ResponseContract<R>,
     metadata: EndpointMetadata,
+    max_response_body_bytes: Option<usize>,
 }
 
 impl<Q, R> EndpointSpec<Q, R> {
@@ -72,6 +74,7 @@ impl<Q, R> EndpointSpec<Q, R> {
             query,
             response,
             metadata: EndpointMetadata::new(),
+            max_response_body_bytes: None,
         }
     }
 
@@ -109,6 +112,20 @@ impl<Q, R> EndpointSpec<Q, R> {
     pub const fn with_metadata(mut self, metadata: EndpointMetadata) -> Self {
         self.metadata = metadata;
         self
+    }
+
+    /// Overrides the client's buffered response-body limit for this endpoint.
+    ///
+    /// This applies to every response in the redirect chain. The value is a
+    /// per-response limit, not an aggregate across redirects.
+    pub const fn with_max_response_body_bytes(mut self, max_bytes: usize) -> Self {
+        self.max_response_body_bytes = Some(max_bytes);
+        self
+    }
+
+    /// Returns this endpoint's response-body limit override, when configured.
+    pub const fn max_response_body_bytes(&self) -> Option<usize> {
+        self.max_response_body_bytes
     }
 }
 
@@ -314,7 +331,7 @@ impl<'a> ResponseMetadata<'a> {
     }
 }
 
-type Decoder<R> = for<'a> fn(&[u8], ResponseMetadata<'a>) -> std::result::Result<R, ()>;
+type Decoder<R> = for<'a> fn(Bytes, ResponseMetadata<'a>) -> std::result::Result<R, ()>;
 
 /// Decoding and media-type expectations associated with one endpoint.
 pub struct ResponseContract<R> {
@@ -331,7 +348,7 @@ impl<R> ResponseContract<R> {
 
     pub(crate) fn decode(
         &self,
-        body: &[u8],
+        body: Bytes,
         metadata: ResponseMetadata<'_>,
     ) -> std::result::Result<R, ()> {
         (self.decoder)(body, metadata)
@@ -373,11 +390,11 @@ impl<R> fmt::Debug for ResponseContract<R> {
     }
 }
 
-fn decode_json<R>(body: &[u8], _metadata: ResponseMetadata<'_>) -> std::result::Result<R, ()>
+fn decode_json<R>(body: Bytes, _metadata: ResponseMetadata<'_>) -> std::result::Result<R, ()>
 where
     R: DeserializeOwned,
 {
-    serde_json::from_slice(body).map_err(|_| ())
+    serde_json::from_slice(&body).map_err(|_| ())
 }
 
 /// An owned binary response with validated media metadata.
@@ -388,7 +405,7 @@ where
 /// an opaque filename or other provider-controlled text.
 #[derive(Clone, PartialEq, Eq)]
 pub struct BinaryResponse {
-    bytes: Vec<u8>,
+    bytes: Bytes,
     content_type: Box<str>,
     content_disposition: Option<Box<str>>,
 }
@@ -401,6 +418,11 @@ impl BinaryResponse {
 
     /// Returns the owned response bytes.
     pub fn into_bytes(self) -> Vec<u8> {
+        self.bytes.to_vec()
+    }
+
+    /// Returns the owned, cheaply cloneable response buffer without copying.
+    pub fn into_buffer(self) -> Bytes {
         self.bytes
     }
 
@@ -438,11 +460,11 @@ impl fmt::Debug for BinaryResponse {
 pub type BinaryBody = BinaryResponse;
 
 fn decode_binary(
-    body: &[u8],
+    body: Bytes,
     metadata: ResponseMetadata<'_>,
 ) -> std::result::Result<BinaryResponse, ()> {
     Ok(BinaryResponse {
-        bytes: body.to_vec(),
+        bytes: body,
         content_type: metadata.content_type.into(),
         content_disposition: metadata.content_disposition.map(Into::into),
     })

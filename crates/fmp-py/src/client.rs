@@ -237,6 +237,7 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// Supplying `token` without `auth_mode` selects FMP's exact `apikey` header;
 /// omitting both selects no auth, which is valid only with a custom base URL.
 /// `timeout` and `connect_timeout` are positive finite numbers of seconds.
+/// `max_response_body_bytes` bounds each buffered response.
 /// Redirects are either disabled or restricted to the same origin.
 #[pyclass(module = "fmp.client", frozen)]
 pub(crate) struct FmpClient {
@@ -246,7 +247,7 @@ pub(crate) struct FmpClient {
 #[pymethods]
 impl FmpClient {
     #[new]
-    #[pyo3(signature = (*, token=None, base_url=None, path_prefix=None, auth_mode=None, auth_name=None, auth_prefix=None, headers=None, timeout=None, connect_timeout=None, follow_redirects=None))]
+    #[pyo3(signature = (*, token=None, base_url=None, path_prefix=None, auth_mode=None, auth_name=None, auth_prefix=None, headers=None, timeout=None, connect_timeout=None, max_response_body_bytes=None, follow_redirects=None))]
     #[allow(clippy::too_many_arguments)]
     fn new(
         token: Option<String>,
@@ -258,6 +259,7 @@ impl FmpClient {
         headers: Option<&Bound<'_, PyDict>>,
         timeout: Option<f64>,
         connect_timeout: Option<f64>,
+        max_response_body_bytes: Option<usize>,
         follow_redirects: Option<bool>,
     ) -> PyResult<Self> {
         let auth = authentication(auth_mode, token, auth_name, auth_prefix)?;
@@ -281,6 +283,9 @@ impl FmpClient {
         if let Some(connect_timeout) = connect_timeout {
             builder =
                 builder.connect_timeout(positive_duration(connect_timeout, "connect_timeout")?);
+        }
+        if let Some(max_response_body_bytes) = max_response_body_bytes {
+            builder = builder.max_response_body_bytes(max_response_body_bytes);
         }
         if let Some(follow_redirects) = follow_redirects {
             builder = builder.redirect_policy(if follow_redirects {
