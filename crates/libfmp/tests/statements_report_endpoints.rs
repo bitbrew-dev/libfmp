@@ -13,11 +13,9 @@ use libfmp::{
         BinaryResponse, EndpointSpec, ExpectedContentType,
         metadata::EndpointMetadata,
         statements::{
+            FinancialReportsDatesQuery, FinancialReportsJsonQuery, FinancialReportsXlsxQuery,
             financial_reports_dates, financial_reports_json, financial_reports_xlsx,
-            reports::{
-                FINANCIAL_REPORTS_XLSX_CONTENT_TYPES, FinancialReportsDatesQuery,
-                FinancialReportsJsonQuery, FinancialReportsXlsxQuery,
-            },
+            reports::FINANCIAL_REPORTS_XLSX_CONTENT_TYPES,
         },
     },
     error::{ErrorCategory, MAX_SAFE_BODY_BYTES},
@@ -88,6 +86,18 @@ fn descriptors_use_exact_paths_response_contracts_and_unspecified_metadata() {
         FINANCIAL_REPORTS_XLSX_CONTENT_TYPES,
         [OFFICIAL_XLSX, "application/octet-stream"]
     );
+}
+
+#[test]
+fn statement_module_reexports_all_financial_report_query_types() {
+    let symbol = Ticker::new("AAPL").unwrap();
+    let dates = FinancialReportsDatesQuery::new(symbol.clone());
+    let json = FinancialReportsJsonQuery::new(symbol.clone(), Year(2022), FiscalPeriod::FullYear);
+    let xlsx = FinancialReportsXlsxQuery::new(symbol, Year(2022), FiscalPeriod::FullYear);
+
+    assert_eq!(dates.symbol().as_str(), "AAPL");
+    assert_eq!(json.year(), Year(2022));
+    assert_eq!(xlsx.period(), FiscalPeriod::FullYear);
 }
 
 fn assert_facts<Q, R>(endpoint: &EndpointSpec<Q, R>, path: &'static str) {
