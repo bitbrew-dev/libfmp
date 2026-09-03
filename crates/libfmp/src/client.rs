@@ -147,7 +147,10 @@ impl ClientBuilder {
         self
     }
 
-    /// Sets the total request timeout, including response body buffering.
+    /// Sets one logical transport timeout across redirects and body buffering.
+    ///
+    /// The client enforces this deadline around custom executors as well as the
+    /// built-in executor; individual redirect hops do not reset it.
     pub fn timeout(mut self, timeout: Duration) -> Self {
         self.timeout = timeout;
         self
@@ -260,6 +263,7 @@ impl ClientBuilder {
                 protected_headers,
                 redactor,
                 executor,
+                timeout: self.timeout,
                 max_response_body_bytes: self.max_response_body_bytes,
                 redirect_policy: self.redirect_policy,
             }),
@@ -275,6 +279,7 @@ struct ClientInner {
     protected_headers: BTreeSet<String>,
     redactor: Redactor,
     executor: Arc<dyn HttpExecutor>,
+    timeout: Duration,
     max_response_body_bytes: usize,
     redirect_policy: RedirectPolicy,
 }
@@ -351,8 +356,12 @@ impl Client {
             redactor.add_secret(&SecretString::new((*value).to_owned()));
         }
 
-        self.execute_redirects(endpoint, url, headers, &redactor)
-            .await
+        tokio::time::timeout(
+            self.inner.timeout,
+            self.execute_redirects(endpoint, url, headers, &redactor),
+        )
+        .await
+        .map_err(|_| Error::transport(Some(endpoint.id()), "request deadline exceeded"))?
     }
 
     async fn execute_redirects<Q, R>(

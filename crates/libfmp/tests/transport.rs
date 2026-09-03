@@ -594,6 +594,56 @@ async fn built_in_executor_does_not_buffer_redirect_bodies() {
 }
 
 #[tokio::test]
+async fn total_timeout_cancels_a_custom_executor() {
+    let executor = Arc::new(DelayedExecutor::new(
+        Duration::from_millis(200),
+        vec![Ok(json_response())],
+    ));
+    let error = Client::builder()
+        .base_url("https://example.test")
+        .authentication(Authentication::bearer("timeout-secret"))
+        .timeout(Duration::from_millis(20))
+        .executor(executor.clone())
+        .build()
+        .unwrap()
+        .execute(&endpoint())
+        .await
+        .unwrap_err();
+
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(error.message(), "request deadline exceeded");
+    assert!(executor.requests().is_empty());
+    assert!(!format!("{error:?} {error}").contains("timeout-secret"));
+    assert!(!format!("{error:?} {error}").contains("example.test"));
+}
+
+#[tokio::test]
+async fn one_total_timeout_is_shared_across_redirect_hops() {
+    let mut redirect_headers = HeaderMap::new();
+    redirect_headers.insert(LOCATION, HeaderValue::from_static("/next"));
+    let executor = Arc::new(DelayedExecutor::new(
+        Duration::from_millis(80),
+        vec![
+            Ok(TransportResponse::new(302, redirect_headers, "")),
+            Ok(json_response()),
+        ],
+    ));
+    let error = Client::builder()
+        .base_url("https://example.test")
+        .timeout(Duration::from_millis(120))
+        .executor(executor.clone())
+        .build()
+        .unwrap()
+        .execute(&endpoint())
+        .await
+        .unwrap_err();
+
+    assert_eq!(error.category(), ErrorCategory::Transport);
+    assert_eq!(error.message(), "request deadline exceeded");
+    assert_eq!(executor.requests().len(), 1);
+}
+
+#[tokio::test]
 async fn endpoint_override_replaces_the_client_body_limit() {
     let executor = Arc::new(ScriptedExecutor::new(vec![Ok(json_response())]));
     let endpoint = endpoint().with_max_response_body_bytes(11);
@@ -739,6 +789,11 @@ struct ScriptedExecutor {
     requests: Mutex<Vec<PreparedRequest>>,
 }
 
+struct DelayedExecutor {
+    delay: Duration,
+    inner: ScriptedExecutor,
+}
+
 fn json_response() -> TransportResponse {
     let mut headers = HeaderMap::new();
     headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
@@ -758,6 +813,22 @@ impl ScriptedExecutor {
     }
 }
 
+impl DelayedExecutor {
+    fn new(
+        delay: Duration,
+        responses: Vec<std::result::Result<TransportResponse, ExecutorError>>,
+    ) -> Self {
+        Self {
+            delay,
+            inner: ScriptedExecutor::new(responses),
+        }
+    }
+
+    fn requests(&self) -> Vec<PreparedRequest> {
+        self.inner.requests()
+    }
+}
+
 impl fmt::Debug for ScriptedExecutor {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str("ScriptedExecutor(..)")
@@ -773,6 +844,21 @@ impl HttpExecutor for ScriptedExecutor {
                 .unwrap()
                 .pop_front()
                 .unwrap_or(Err(ExecutorError::new()))
+        })
+    }
+}
+
+impl fmt::Debug for DelayedExecutor {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("DelayedExecutor(..)")
+    }
+}
+
+impl HttpExecutor for DelayedExecutor {
+    fn execute(&self, request: PreparedRequest) -> ExecutorFuture<'_> {
+        Box::pin(async move {
+            tokio::time::sleep(self.delay).await;
+            self.inner.execute(request).await
         })
     }
 }
