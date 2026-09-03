@@ -2,7 +2,10 @@
 
 `fmp-py-sdk` is the Python distribution for the Rust-backed `fmp` package, a typed client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API.
 
-Version 0.1 is intentionally a name-release walking skeleton. It supports only the documented `GET /stable/quote-short?symbol=...` endpoint and does not claim broad endpoint coverage.
+The Python facade currently exposes 1 of the 276 endpoint entries in the
+repository's captured API documentation oracle: the documented
+`GET /stable/quote-short?symbol=...` endpoint. The remaining Python facades are
+planned work; Rust's broader endpoint coverage does not imply Python parity.
 
 ```console
 python -m pip install fmp-py-sdk
