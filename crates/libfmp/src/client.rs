@@ -4,8 +4,13 @@ use std::{
     collections::BTreeSet,
     fmt,
     future::{Future, poll_fn},
-    sync::Arc,
-    task::Poll,
+    sync::{
+        Arc, Mutex,
+        atomic::{AtomicBool, Ordering},
+        mpsc::{self, RecvTimeoutError, Sender},
+    },
+    task::{Context, Poll, Waker},
+    thread,
     time::Duration,
 };
 
@@ -498,8 +503,19 @@ async fn with_timeout<F>(duration: Duration, future: F) -> Option<F::Output>
 where
     F: Future,
 {
+    if deadline_backend() == DeadlineBackend::Tokio {
+        tokio::time::timeout(duration, future).await.ok()
+    } else {
+        with_thread_timeout(duration, future).await
+    }
+}
+
+async fn with_thread_timeout<F>(duration: Duration, future: F) -> Option<F::Output>
+where
+    F: Future,
+{
     let mut future = Box::pin(future);
-    let mut deadline = Box::pin(futures_timer::Delay::new(duration));
+    let mut deadline = Box::pin(ThreadDeadline::new(duration));
     poll_fn(move |context| {
         if let Poll::Ready(output) = future.as_mut().poll(context) {
             return Poll::Ready(Some(output));
@@ -511,6 +527,121 @@ where
         }
     })
     .await
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum DeadlineBackend {
+    Tokio,
+    Thread,
+}
+
+fn deadline_backend() -> DeadlineBackend {
+    if tokio::runtime::Handle::try_current().is_ok() {
+        DeadlineBackend::Tokio
+    } else {
+        DeadlineBackend::Thread
+    }
+}
+
+/// Runtime-neutral deadline used only when no Tokio runtime is active.
+///
+/// Each fallback deadline owns a cancellable thread rather than retaining a
+/// process-global timer handle. Process-aware bindings can therefore rebuild
+/// their runtime after `fork` without inheriting this fallback's timer state.
+struct ThreadDeadline {
+    state: Arc<ThreadDeadlineState>,
+    cancel: Option<Sender<()>>,
+    thread: Option<thread::JoinHandle<()>>,
+}
+
+struct ThreadDeadlineState {
+    elapsed: AtomicBool,
+    waker: Mutex<Option<Waker>>,
+}
+
+impl ThreadDeadline {
+    fn new(duration: Duration) -> Self {
+        let state = Arc::new(ThreadDeadlineState {
+            elapsed: AtomicBool::new(false),
+            waker: Mutex::new(None),
+        });
+        let thread_state = Arc::clone(&state);
+        let (cancel, receiver) = mpsc::channel();
+        let spawned = thread::Builder::new()
+            .name("libfmp-deadline".to_owned())
+            .spawn(move || {
+                if matches!(
+                    receiver.recv_timeout(duration),
+                    Err(RecvTimeoutError::Timeout)
+                ) {
+                    thread_state.elapsed.store(true, Ordering::Release);
+                    let waker = match thread_state.waker.lock() {
+                        Ok(mut slot) => slot.take(),
+                        Err(poisoned) => poisoned.into_inner().take(),
+                    };
+                    if let Some(waker) = waker {
+                        waker.wake();
+                    }
+                }
+            });
+
+        let (cancel, thread) = match spawned {
+            Ok(thread) => (Some(cancel), Some(thread)),
+            Err(_) => {
+                state.elapsed.store(true, Ordering::Release);
+                (None, None)
+            }
+        };
+
+        Self {
+            state,
+            cancel,
+            thread,
+        }
+    }
+}
+
+impl Future for ThreadDeadline {
+    type Output = ();
+
+    fn poll(self: std::pin::Pin<&mut Self>, context: &mut Context<'_>) -> Poll<Self::Output> {
+        if self.state.elapsed.load(Ordering::Acquire) {
+            return Poll::Ready(());
+        }
+
+        match self.state.waker.lock() {
+            Ok(mut slot) => {
+                if slot
+                    .as_ref()
+                    .is_none_or(|registered| !registered.will_wake(context.waker()))
+                {
+                    *slot = Some(context.waker().clone());
+                }
+            }
+            Err(mut poisoned) => {
+                **poisoned.get_mut() = Some(context.waker().clone());
+            }
+        }
+
+        if self.state.elapsed.load(Ordering::Acquire) {
+            Poll::Ready(())
+        } else {
+            Poll::Pending
+        }
+    }
+}
+
+impl Drop for ThreadDeadline {
+    fn drop(&mut self) {
+        if let Some(cancel) = self.cancel.take() {
+            let _ = cancel.send(());
+        }
+        if let Some(thread) = self.thread.take()
+            && thread.thread().id() != thread::current().id()
+        {
+            let _ = thread.join();
+        }
+    }
 }
 
 fn parse_base_url(value: &str) -> Result<Url> {
@@ -892,6 +1023,21 @@ fn safe_body(body: &[u8], redactor: &Redactor) -> SafeBody {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn deadline_backend_uses_thread_fallback_without_tokio() {
+        assert_eq!(deadline_backend(), DeadlineBackend::Thread);
+    }
+
+    #[tokio::test]
+    async fn deadline_backend_uses_active_tokio_runtime() {
+        assert_eq!(deadline_backend(), DeadlineBackend::Tokio);
+        assert!(
+            with_timeout(Duration::from_millis(1), std::future::pending::<()>())
+                .await
+                .is_none()
+        );
+    }
 
     #[test]
     fn request_headers_override_defaults_except_reserved_fields() {

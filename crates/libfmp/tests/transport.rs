@@ -628,10 +628,7 @@ async fn total_timeout_cancels_a_custom_executor() {
 
 #[test]
 fn custom_executor_timeout_is_runtime_independent() {
-    let executor = Arc::new(DelayedExecutor::new(
-        Duration::from_millis(100),
-        vec![Ok(json_response())],
-    ));
+    let executor = Arc::new(PendingExecutor);
     let error = block_on(
         Client::builder()
             .base_url("https://example.test")
@@ -921,9 +918,18 @@ impl fmt::Debug for DelayedExecutor {
 impl HttpExecutor for DelayedExecutor {
     fn execute(&self, request: PreparedRequest) -> ExecutorFuture<'_> {
         Box::pin(async move {
-            futures_timer::Delay::new(self.delay).await;
+            tokio::time::sleep(self.delay).await;
             self.inner.execute(request).await
         })
+    }
+}
+
+#[derive(Debug)]
+struct PendingExecutor;
+
+impl HttpExecutor for PendingExecutor {
+    fn execute(&self, _request: PreparedRequest) -> ExecutorFuture<'_> {
+        Box::pin(std::future::pending())
     }
 }
 
