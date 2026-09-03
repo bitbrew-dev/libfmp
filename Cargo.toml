@@ -18,5 +18,5 @@ pyo3 = { version = "0.29", features = ["abi3-py39"] }
 reqwest = { version = "0.13.4", default-features = false, features = ["rustls"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = { version = "1.0.149", features = ["arbitrary_precision"] }
-tokio = { version = "1.52.3", features = ["io-util", "macros", "net", "rt-multi-thread", "time"] }
+tokio = "1.52.3"
 url = "2.5.8"
