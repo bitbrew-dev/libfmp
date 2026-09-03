@@ -10,6 +10,11 @@ if ! [[ "$max_kib" =~ ^[1-9][0-9]*$ ]]; then
     exit 2
 fi
 
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "python3 is required to read Cargo package metadata" >&2
+    exit 2
+fi
+
 package_list="$(mktemp)"
 trap 'rm -f "$package_list"' EXIT
 
@@ -23,10 +28,12 @@ fi
 
 cargo package -p "$crate_name" --allow-dirty --offline --quiet
 
-workspace_version="$(sed -n 's/^version = "\([^"]*\)"/\1/p' Cargo.toml | head -n 1)"
-artifact="target/package/${crate_name}-${workspace_version}.crate"
+metadata="$(cargo metadata --no-deps --format-version 1 --offline)"
+target_directory="$(python3 -c 'import json, sys; print(json.load(sys.stdin)["target_directory"])' <<<"$metadata")"
+workspace_version="$(python3 -c 'import json, sys; data = json.load(sys.stdin); print(next(package["version"] for package in data["packages"] if package["name"] == "libfmp"))' <<<"$metadata")"
+artifact="${target_directory}/package/${crate_name}-${workspace_version}.crate"
 
-if [[ -z "$workspace_version" || ! -f "$artifact" ]]; then
+if [[ -z "$target_directory" || -z "$workspace_version" || ! -f "$artifact" ]]; then
     echo "could not locate the packaged crate artifact" >&2
     exit 1
 fi
