@@ -2,13 +2,14 @@
 
 ## Status
 
-Accepted for issue #18's Rust implementation and reserved future Python facade.
+Accepted. The Rust implementation is complete; the Python facade remains
+deferred.
 
 ## Decision
 
 The ten stock chart endpoints use the following Rust descriptor, client, query,
-and response-row names. Each future free descriptor and its `Client` method
-will share the listed Rust method name.
+and response-row names. Each free descriptor and its `Client` method share the
+listed Rust method name.
 
 | FMP path | Rust method | Rust query | Rust response row | Future Python API |
 | --- | --- | --- | --- | --- |
