@@ -16,6 +16,7 @@ include = ["/src/**", "/Cargo.toml", "/LICENSE", "/README.md"]
 path = "src/lib.rs"
 
 [dependencies]
+bytes.workspace = true
 chrono.workspace = true
 http.workspace = true
 reqwest.workspace = true
