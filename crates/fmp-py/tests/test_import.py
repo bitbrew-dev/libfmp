@@ -33,7 +33,9 @@ def test_import_exposes_workspace_version() -> None:
     ]
 
 
-def test_public_imports_resolve_to_registered_native_modules() -> None:
+def test_public_imports_are_canonical_python_modules() -> None:
+    import importlib
+    import importlib.util
     import sys
     from types import ModuleType
 
@@ -55,10 +57,12 @@ def test_public_imports_resolve_to_registered_native_modules() -> None:
     for name, module in modules.items():
         assert isinstance(module, ModuleType)
         assert module is sys.modules[f"fmp.{name}"]
-        assert module is getattr(fmp._native, name)
-        assert module.__name__ == name
-        assert module.__package__ is None
-        assert not hasattr(module, "__file__")
+        assert module.__name__ == f"fmp.{name}"
+        assert module.__package__ == "fmp"
+        assert module.__spec__ is not None
+        assert module.__spec__.name == f"fmp.{name}"
+        assert importlib.util.find_spec(f"fmp.{name}") is module.__spec__
+        assert importlib.reload(module) is module
 
     assert fmp.client.__all__ == ["FmpClient"]
     assert fmp.errors.__all__ == [
@@ -121,7 +125,6 @@ def test_public_exception_hierarchy_is_stable() -> None:
         DomainFmpStatusError,
         DomainFmpDecodeError,
     )
-    assert fmp.errors is _native.errors
     assert {exception.__name__ for exception in subclasses} == {
         "FmpValidationError",
         "FmpConfigError",
