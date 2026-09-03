@@ -174,7 +174,7 @@ checksum = "d45db016d36b838f563236e9193d0ee6ce38f3f68b6c94e914b4929c96bbb890"
 
 [[package]]
 name = "fmp-py"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "libfmp",
  "pyo3",
@@ -553,7 +553,7 @@ checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
 name = "libfmp"
-version = "0.4.0"
+version = "0.5.0"
 dependencies = [
  "bytes",
  "chrono",
