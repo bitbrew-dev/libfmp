@@ -275,12 +275,10 @@ fn redact_secret_values(value: &str, secrets: &[SecretString]) -> String {
         while let Some(offset) = value[search_start..].find(secret) {
             let start = search_start + offset;
             ranges.push((start, start + secret.len()));
-            search_start = start
-                + value[start..]
-                    .chars()
-                    .next()
-                    .expect("registered secrets are non-empty")
-                    .len_utf8();
+            let Some(first_character) = value[start..].chars().next() else {
+                break;
+            };
+            search_start = start + first_character.len_utf8();
         }
     }
     replace_ranges(value, ranges)
