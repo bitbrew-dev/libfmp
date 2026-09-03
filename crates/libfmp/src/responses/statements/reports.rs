@@ -1,6 +1,6 @@
 //! Financial-report discovery and dynamic JSON response models.
 
-use serde::{Deserialize, Deserializer, Serialize, de};
+use serde::{Deserialize, Deserializer, Serialize, Serializer, de, ser::SerializeMap};
 
 use crate::{
     codecs::{DynamicObject, FiscalYearString},
@@ -21,13 +21,36 @@ pub struct FinancialReportDate {
 }
 
 /// One dynamic financial report with strict identifying headers.
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct FinancialReportJson {
     pub symbol: Ticker,
     pub period: FiscalPeriod,
     pub year: FiscalYearString,
-    #[serde(flatten)]
     pub sections: DynamicObject,
+}
+
+impl Serialize for FinancialReportJson {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        for reserved in ["symbol", "period", "year"] {
+            if self.sections.contains_key(reserved) {
+                return Err(serde::ser::Error::custom(format_args!(
+                    "financial report section key `{reserved}` is reserved"
+                )));
+            }
+        }
+
+        let mut map = serializer.serialize_map(Some(self.sections.len() + 3))?;
+        map.serialize_entry("symbol", &self.symbol)?;
+        map.serialize_entry("period", &self.period)?;
+        map.serialize_entry("year", &self.year)?;
+        for (name, value) in &self.sections {
+            map.serialize_entry(name, value)?;
+        }
+        map.end()
+    }
 }
 
 impl<'de> Deserialize<'de> for FinancialReportJson {
