@@ -28,6 +28,7 @@ FmpClient(
     auth_name="X-Proxy-Token",
     headers={"X-Tenant": "blue"},
     max_response_body_bytes=67_108_864,
+    danger_allow_insecure_authentication=False,
 )
 
 status_error: FmpError = FmpStatusError("denied")

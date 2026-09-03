@@ -10,7 +10,8 @@ class FmpClient:
     Supplying ``token`` without ``auth_mode`` selects FMP's exact ``apikey``
     header. Omitting both selects no auth, which requires a custom base URL.
     ``timeout`` and ``connect_timeout`` are positive finite numbers of seconds.
-    ``max_response_body_bytes`` bounds each buffered response.
+    ``max_response_body_bytes`` bounds each buffered response. Authenticated
+    non-loopback HTTP requires the conspicuous insecure-authentication opt-in.
     Redirects are either disabled or restricted to the same origin.
     """
 
@@ -36,6 +37,7 @@ class FmpClient:
         timeout: Optional[float] = ...,
         connect_timeout: Optional[float] = ...,
         max_response_body_bytes: Optional[int] = ...,
+        danger_allow_insecure_authentication: bool = ...,
         follow_redirects: Optional[bool] = ...,
     ) -> None: ...
     def quote_short(self, symbol: str) -> list[QuoteShort]: ...

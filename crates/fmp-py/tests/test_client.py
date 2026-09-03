@@ -277,6 +277,20 @@ def test_invalid_configuration_and_call_errors_are_structured():
         else:
             raise AssertionError(f"configuration unexpectedly succeeded: {configuration!r}")
 
+    try:
+        FmpClient(token="secret", base_url="http://proxy.example")
+    except FmpConfigError as error:
+        assert error.category == "configuration"
+    else:
+        raise AssertionError("authenticated non-loopback HTTP unexpectedly succeeded")
+
+    FmpClient(
+        token="secret",
+        base_url="http://proxy.example",
+        max_response_body_bytes=1024,
+        danger_allow_insecure_authentication=True,
+    )
+
     with fixture_server() as (base_url, _requests):
         client = FmpClient(base_url=base_url, path_prefix="", auth_mode="none")
 

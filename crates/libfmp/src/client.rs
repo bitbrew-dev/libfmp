@@ -55,6 +55,7 @@ pub struct ClientBuilder {
     timeout: Duration,
     connect_timeout: Duration,
     max_response_body_bytes: usize,
+    danger_allow_insecure_authentication: bool,
     redirect_policy: RedirectPolicy,
     executor: Option<Arc<dyn HttpExecutor>>,
 }
@@ -72,6 +73,7 @@ impl Default for ClientBuilder {
             timeout: DEFAULT_TIMEOUT,
             connect_timeout: DEFAULT_CONNECT_TIMEOUT,
             max_response_body_bytes: DEFAULT_MAX_RESPONSE_BODY_BYTES,
+            danger_allow_insecure_authentication: false,
             redirect_policy: RedirectPolicy::SameOrigin,
             executor: None,
         }
@@ -96,6 +98,10 @@ impl fmt::Debug for ClientBuilder {
             .field("timeout", &self.timeout)
             .field("connect_timeout", &self.connect_timeout)
             .field("max_response_body_bytes", &self.max_response_body_bytes)
+            .field(
+                "danger_allow_insecure_authentication",
+                &self.danger_allow_insecure_authentication,
+            )
             .field("redirect_policy", &self.redirect_policy)
             .field("custom_executor", &self.executor.is_some())
             .finish()
@@ -164,6 +170,16 @@ impl ClientBuilder {
         self
     }
 
+    /// Allows credentials to be sent over plaintext HTTP to a non-loopback host.
+    ///
+    /// This opt-in is intentionally conspicuous: plaintext transport can expose
+    /// API keys and bearer tokens to intermediaries. It is unnecessary for
+    /// literal IPv4 and IPv6 loopback URLs used by local test servers.
+    pub fn danger_allow_insecure_authentication(mut self, allow: bool) -> Self {
+        self.danger_allow_insecure_authentication = allow;
+        self
+    }
+
     /// Selects whether redirects are disabled or restricted to the same origin.
     pub fn redirect_policy(mut self, redirect_policy: RedirectPolicy) -> Self {
         self.redirect_policy = redirect_policy;
@@ -187,6 +203,16 @@ impl ClientBuilder {
         let base_url = parse_base_url(&self.base_url)?;
         validate_relative_path(&self.path_prefix)?;
         let auth = build_auth_material(&self.authentication)?;
+        if !matches!(self.authentication, Authentication::None)
+            && base_url.scheme() == "http"
+            && !is_loopback_origin(&base_url)
+            && !self.danger_allow_insecure_authentication
+        {
+            return Err(Error::configuration_with_kind(
+                ConfigurationErrorKind::InsecureAuthentication,
+                "authenticated plaintext HTTP requires an explicit dangerous opt-in",
+            ));
+        }
 
         let mut protected_headers = reserved_header_names();
         if let Some((name, _)) = &auth.header {
@@ -487,6 +513,14 @@ fn is_default_fmp_origin(url: &Url) -> bool {
     url.scheme() == "https"
         && url.host_str() == Some("financialmodelingprep.com")
         && url.port_or_known_default() == Some(443)
+}
+
+fn is_loopback_origin(url: &Url) -> bool {
+    match url.host() {
+        Some(url::Host::Ipv4(address)) => address.is_loopback(),
+        Some(url::Host::Ipv6(address)) => address.is_loopback(),
+        Some(url::Host::Domain(_)) | None => false,
+    }
 }
 
 fn validate_relative_path(value: &str) -> Result<()> {

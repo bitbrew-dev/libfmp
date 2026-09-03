@@ -70,6 +70,8 @@ pub enum ConfigurationErrorKind {
     EmptyCredential,
     /// Direct FMP access was configured without an API credential.
     MissingCredential,
+    /// Authentication was configured over plaintext HTTP to a non-loopback host.
+    InsecureAuthentication,
     /// More than one authentication selection was supplied.
     ConflictingAuthentication,
     /// A caller attempted to replace a transport-owned field.

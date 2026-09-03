@@ -237,7 +237,8 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// Supplying `token` without `auth_mode` selects FMP's exact `apikey` header;
 /// omitting both selects no auth, which is valid only with a custom base URL.
 /// `timeout` and `connect_timeout` are positive finite numbers of seconds.
-/// `max_response_body_bytes` bounds each buffered response.
+/// `max_response_body_bytes` bounds each buffered response. Authenticated
+/// non-loopback HTTP requires `danger_allow_insecure_authentication=True`.
 /// Redirects are either disabled or restricted to the same origin.
 #[pyclass(module = "fmp.client", frozen)]
 pub(crate) struct FmpClient {
@@ -247,7 +248,7 @@ pub(crate) struct FmpClient {
 #[pymethods]
 impl FmpClient {
     #[new]
-    #[pyo3(signature = (*, token=None, base_url=None, path_prefix=None, auth_mode=None, auth_name=None, auth_prefix=None, headers=None, timeout=None, connect_timeout=None, max_response_body_bytes=None, follow_redirects=None))]
+    #[pyo3(signature = (*, token=None, base_url=None, path_prefix=None, auth_mode=None, auth_name=None, auth_prefix=None, headers=None, timeout=None, connect_timeout=None, max_response_body_bytes=None, danger_allow_insecure_authentication=false, follow_redirects=None))]
     #[allow(clippy::too_many_arguments)]
     fn new(
         token: Option<String>,
@@ -260,6 +261,7 @@ impl FmpClient {
         timeout: Option<f64>,
         connect_timeout: Option<f64>,
         max_response_body_bytes: Option<usize>,
+        danger_allow_insecure_authentication: bool,
         follow_redirects: Option<bool>,
     ) -> PyResult<Self> {
         let auth = authentication(auth_mode, token, auth_name, auth_prefix)?;
@@ -287,6 +289,8 @@ impl FmpClient {
         if let Some(max_response_body_bytes) = max_response_body_bytes {
             builder = builder.max_response_body_bytes(max_response_body_bytes);
         }
+        builder =
+            builder.danger_allow_insecure_authentication(danger_allow_insecure_authentication);
         if let Some(follow_redirects) = follow_redirects {
             builder = builder.redirect_policy(if follow_redirects {
                 RedirectPolicy::SameOrigin
