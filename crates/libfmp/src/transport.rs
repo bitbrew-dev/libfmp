@@ -98,6 +98,7 @@ pub struct TransportResponse {
     status: u16,
     headers: HeaderMap,
     body: Bytes,
+    body_limit_exceeded: bool,
 }
 
 impl TransportResponse {
@@ -112,6 +113,16 @@ impl TransportResponse {
             status,
             headers,
             body,
+            body_limit_exceeded: false,
+        }
+    }
+
+    fn too_large(status: u16, headers: HeaderMap) -> Self {
+        Self {
+            status,
+            headers,
+            body: Bytes::new(),
+            body_limit_exceeded: true,
         }
     }
 
@@ -134,6 +145,10 @@ impl TransportResponse {
     pub fn body_bytes(&self) -> Bytes {
         self.body.clone()
     }
+
+    pub(crate) fn body_limit_exceeded(&self) -> bool {
+        self.body_limit_exceeded
+    }
 }
 
 impl fmt::Debug for TransportResponse {
@@ -151,34 +166,12 @@ impl fmt::Debug for TransportResponse {
 /// Provider URLs and lower-level error strings are not retained because they
 /// can contain query credentials.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct ExecutorError {
-    kind: ExecutorErrorKind,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum ExecutorErrorKind {
-    Other,
-    ResponseTooLarge,
-}
+pub struct ExecutorError;
 
 impl ExecutorError {
     /// Creates an opaque execution failure.
     pub const fn new() -> Self {
-        Self {
-            kind: ExecutorErrorKind::Other,
-        }
-    }
-
-    /// Creates a safe failure indicating the configured body limit was exceeded.
-    pub const fn response_too_large() -> Self {
-        Self {
-            kind: ExecutorErrorKind::ResponseTooLarge,
-        }
-    }
-
-    /// Reports whether response buffering exceeded the request's byte limit.
-    pub const fn is_response_too_large(self) -> bool {
-        matches!(self.kind, ExecutorErrorKind::ResponseTooLarge)
+        Self
     }
 }
 
@@ -246,7 +239,7 @@ impl HttpExecutor for ReqwestExecutor {
                 .content_length()
                 .is_some_and(|length| length > max_body_bytes as u64)
             {
-                return Err(ExecutorError::response_too_large());
+                return Ok(TransportResponse::too_large(status, headers));
             }
             let mut body = BytesMut::with_capacity(initial_response_capacity(
                 response.content_length(),
@@ -258,7 +251,7 @@ impl HttpExecutor for ReqwestExecutor {
                     .checked_add(chunk.len())
                     .is_none_or(|length| length > max_body_bytes)
                 {
-                    return Err(ExecutorError::response_too_large());
+                    return Ok(TransportResponse::too_large(status, headers));
                 }
                 body.extend_from_slice(&chunk);
             }
