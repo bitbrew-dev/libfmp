@@ -4,7 +4,18 @@ mod exact_json;
 use libfmp::responses::chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar};
 use serde::{Serialize, de::DeserializeOwned};
 
-use exact_json::assert_json_wire_equivalent;
+use exact_json::assert_json_wire_equivalent_with_f64_fields;
+
+const CHART_F64_FIELDS: &[&str] = &[
+    "price",
+    "open",
+    "high",
+    "low",
+    "close",
+    "change",
+    "changePercent",
+    "vwap",
+];
 
 const COMMODITY_LIGHT: &[u8] = include_bytes!("fixtures/commodity_chart_light.json");
 const COMMODITY_FULL: &[u8] = include_bytes!("fixtures/commodity_chart_full.json");
@@ -68,5 +79,9 @@ where
 {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let rows: Vec<T> = serde_json::from_slice(fixture).unwrap();
-    assert_json_wire_equivalent(&serde_json::to_value(rows).unwrap(), &source);
+    assert_json_wire_equivalent_with_f64_fields(
+        &serde_json::to_value(rows).unwrap(),
+        &source,
+        CHART_F64_FIELDS,
+    );
 }

@@ -18,7 +18,21 @@ use libfmp::{
     types::Date,
 };
 
-use exact_json::assert_json_wire_equivalent;
+use exact_json::{assert_json_wire_equivalent, assert_json_wire_equivalent_with_f64_fields};
+
+const QUOTE_F64_FIELDS: &[&str] = &[
+    "price",
+    "changePercentage",
+    "change",
+    "dayLow",
+    "dayHigh",
+    "yearHigh",
+    "yearLow",
+    "priceAvg50",
+    "priceAvg200",
+    "open",
+    "previousClose",
+];
 
 const COMMODITIES_LIST: &[u8] = include_bytes!("fixtures/commodities_list.json");
 const COMMODITY_QUOTE: &[u8] = include_bytes!("fixtures/commodities_quote.json");
@@ -58,37 +72,68 @@ where
 {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let rows: Vec<T> = serde_json::from_slice(fixture).unwrap();
-    assert_json_wire_equivalent(&serde_json::to_value(rows).unwrap(), &source);
+    assert_json_wire_equivalent_with_f64_fields(
+        &serde_json::to_value(rows).unwrap(),
+        &source,
+        QUOTE_F64_FIELDS,
+    );
 }
 
 #[test]
 fn exact_wire_comparison_preserves_f64_semantics_without_masking_precision_loss() {
-    assert_json_wire_equivalent(&json!(1.0), &json!(1));
-
-    let rounded_integer = json!(9_007_199_254_740_992_u64);
-    let adjacent_integer = json!(9_007_199_254_740_993_u64);
+    let integer_kind = json!({"volume": 1});
+    let float_kind = json!({"volume": 1.0});
     assert!(
         std::panic::catch_unwind(|| {
-            assert_json_wire_equivalent(&rounded_integer, &adjacent_integer);
+            assert_json_wire_equivalent(&float_kind, &integer_kind);
         })
         .is_err()
     );
 
-    let rounded_float: serde_json::Value = serde_json::from_str("9007199254740992.0").unwrap();
+    assert_json_wire_equivalent_with_f64_fields(
+        &json!({"price": 1.0}),
+        &json!({"price": 1}),
+        QUOTE_F64_FIELDS,
+    );
+
+    let rounded_integer = json!({"price": 9_007_199_254_740_992_u64});
+    let adjacent_integer = json!({"price": 9_007_199_254_740_993_u64});
     assert!(
         std::panic::catch_unwind(|| {
-            assert_json_wire_equivalent(&rounded_float, &adjacent_integer);
+            assert_json_wire_equivalent_with_f64_fields(
+                &rounded_integer,
+                &adjacent_integer,
+                QUOTE_F64_FIELDS,
+            );
         })
         .is_err()
     );
 
-    let out_of_range_float: serde_json::Value = serde_json::from_str("1e400").unwrap();
-    let different_out_of_range_float: serde_json::Value = serde_json::from_str("2e400").unwrap();
-    assert_eq!(out_of_range_float.as_f64(), None);
-    assert_eq!(different_out_of_range_float.as_f64(), None);
+    let rounded_float: serde_json::Value =
+        serde_json::from_str(r#"{"price":9007199254740992.0}"#).unwrap();
     assert!(
         std::panic::catch_unwind(|| {
-            assert_json_wire_equivalent(&out_of_range_float, &different_out_of_range_float);
+            assert_json_wire_equivalent_with_f64_fields(
+                &rounded_float,
+                &adjacent_integer,
+                QUOTE_F64_FIELDS,
+            );
+        })
+        .is_err()
+    );
+
+    let out_of_range_float: serde_json::Value = serde_json::from_str(r#"{"price":1e400}"#).unwrap();
+    let different_out_of_range_float: serde_json::Value =
+        serde_json::from_str(r#"{"price":2e400}"#).unwrap();
+    assert_eq!(out_of_range_float["price"].as_f64(), None);
+    assert_eq!(different_out_of_range_float["price"].as_f64(), None);
+    assert!(
+        std::panic::catch_unwind(|| {
+            assert_json_wire_equivalent_with_f64_fields(
+                &out_of_range_float,
+                &different_out_of_range_float,
+                QUOTE_F64_FIELDS,
+            );
         })
         .is_err()
     );
