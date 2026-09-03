@@ -1,6 +1,13 @@
 //! Shared async client and proxy-ready request transport.
 
-use std::{collections::BTreeSet, fmt, sync::Arc, time::Duration};
+use std::{
+    collections::BTreeSet,
+    fmt,
+    future::{Future, poll_fn},
+    sync::Arc,
+    task::Poll,
+    time::Duration,
+};
 
 use http::header::{
     CONTENT_DISPOSITION, CONTENT_TYPE, HeaderMap, HeaderName, HeaderValue, LOCATION, USER_AGENT,
@@ -356,12 +363,12 @@ impl Client {
             redactor.add_secret(&SecretString::new((*value).to_owned()));
         }
 
-        tokio::time::timeout(
+        with_timeout(
             self.inner.timeout,
             self.execute_redirects(endpoint, url, headers, &redactor),
         )
         .await
-        .map_err(|_| Error::transport(Some(endpoint.id()), "request deadline exceeded"))?
+        .ok_or_else(|| Error::transport(Some(endpoint.id()), "request deadline exceeded"))?
     }
 
     async fn execute_redirects<Q, R>(
@@ -483,6 +490,25 @@ impl Client {
             "redirect processing ended unexpectedly",
         ))
     }
+}
+
+async fn with_timeout<F>(duration: Duration, future: F) -> Option<F::Output>
+where
+    F: Future,
+{
+    let mut future = Box::pin(future);
+    let mut deadline = Box::pin(futures_timer::Delay::new(duration));
+    poll_fn(move |context| {
+        if let Poll::Ready(output) = future.as_mut().poll(context) {
+            return Poll::Ready(Some(output));
+        }
+        if deadline.as_mut().poll(context).is_ready() {
+            Poll::Ready(None)
+        } else {
+            Poll::Pending
+        }
+    })
+    .await
 }
 
 fn parse_base_url(value: &str) -> Result<Url> {

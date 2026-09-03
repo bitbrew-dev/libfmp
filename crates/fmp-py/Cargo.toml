@@ -20,4 +20,4 @@ extension-module = ["pyo3/extension-module"]
 [dependencies]
 libfmp.workspace = true
 pyo3.workspace = true
-tokio = { workspace = true, features = ["rt-multi-thread"] }
+tokio.workspace = true
