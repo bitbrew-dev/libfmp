@@ -62,7 +62,7 @@ where
 }
 
 #[test]
-fn exact_wire_comparison_preserves_f64_semantics_but_rejects_unsafe_integer_rounding() {
+fn exact_wire_comparison_preserves_f64_semantics_without_masking_precision_loss() {
     assert_json_wire_equivalent(&json!(1.0), &json!(1));
 
     let rounded_integer = json!(9_007_199_254_740_992_u64);
@@ -78,6 +78,17 @@ fn exact_wire_comparison_preserves_f64_semantics_but_rejects_unsafe_integer_roun
     assert!(
         std::panic::catch_unwind(|| {
             assert_json_wire_equivalent(&rounded_float, &adjacent_integer);
+        })
+        .is_err()
+    );
+
+    let out_of_range_float: serde_json::Value = serde_json::from_str("1e400").unwrap();
+    let different_out_of_range_float: serde_json::Value = serde_json::from_str("2e400").unwrap();
+    assert_eq!(out_of_range_float.as_f64(), None);
+    assert_eq!(different_out_of_range_float.as_f64(), None);
+    assert!(
+        std::panic::catch_unwind(|| {
+            assert_json_wire_equivalent(&out_of_range_float, &different_out_of_range_float);
         })
         .is_err()
     );

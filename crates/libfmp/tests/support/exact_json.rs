@@ -12,7 +12,7 @@ pub fn assert_json_wire_equivalent(actual: &Value, expected: &Value) {
             const MAX_SAFE_INTEGER: u64 = 9_007_199_254_740_991;
 
             let safely_comparable_as_f64 = |number: &serde_json::Number| {
-                number.is_f64()
+                (number.is_f64() && number.as_f64().is_some())
                     || number
                         .as_i64()
                         .is_some_and(|value| value.unsigned_abs() <= MAX_SAFE_INTEGER)
@@ -28,7 +28,13 @@ pub fn assert_json_wire_equivalent(actual: &Value, expected: &Value) {
                 && safely_comparable_as_f64(actual)
                 && safely_comparable_as_f64(expected)
             {
-                assert_eq!(actual.as_f64(), expected.as_f64());
+                if let (Some(actual_float), Some(expected_float)) =
+                    (actual.as_f64(), expected.as_f64())
+                {
+                    assert_eq!(actual_float, expected_float);
+                } else {
+                    assert_eq!(actual, expected);
+                }
             } else {
                 assert_eq!(actual, expected);
             }
