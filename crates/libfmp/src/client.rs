@@ -19,7 +19,10 @@ pub use crate::endpoints::{EndpointSpec, QueryParameters};
 
 const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
-/// Default maximum bytes buffered for each HTTP response.
+/// Default maximum bytes buffered for each HTTP response (64 MiB).
+///
+/// This finite default also applies to bulk and XLSX convenience methods.
+/// Callers expecting a larger response can raise the client limit explicitly.
 pub const DEFAULT_MAX_RESPONSE_BODY_BYTES: usize = 64 * 1024 * 1024;
 const MAX_REDIRECTS: usize = 10;
 
@@ -154,7 +157,8 @@ impl ClientBuilder {
     ///
     /// The limit is enforced for success, error, and redirect responses. An
     /// endpoint can replace it with
-    /// [`EndpointSpec::with_max_response_body_bytes`].
+    /// [`EndpointSpec::with_max_response_body_bytes`]. Bulk and XLSX
+    /// convenience methods inherit this client-wide value.
     pub fn max_response_body_bytes(mut self, max_bytes: usize) -> Self {
         self.max_response_body_bytes = max_bytes;
         self
@@ -871,6 +875,15 @@ mod tests {
         assert_eq!(
             url.as_str(),
             "https://example.test/gateway/stable/quote-short"
+        );
+    }
+
+    #[test]
+    fn default_response_limit_is_the_documented_finite_value() {
+        assert_eq!(DEFAULT_MAX_RESPONSE_BODY_BYTES, 64 * 1024 * 1024);
+        assert_eq!(
+            ClientBuilder::default().max_response_body_bytes,
+            DEFAULT_MAX_RESPONSE_BODY_BYTES
         );
     }
 }

@@ -7,6 +7,8 @@ use http::{Method, header::HeaderMap};
 use reqwest::redirect::Policy;
 use url::Url;
 
+const INITIAL_RESPONSE_CAPACITY: usize = 8 * 1024;
+
 /// HTTP methods understood by endpoint descriptors.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[non_exhaustive]
@@ -237,19 +239,19 @@ impl HttpExecutor for ReqwestExecutor {
                 .map_err(|_| ExecutorError::new())?;
             let status = response.status().as_u16();
             let headers = response.headers().clone();
+            if is_redirect_status(status) {
+                return Ok(TransportResponse::from_bytes(status, headers, Bytes::new()));
+            }
             if response
                 .content_length()
                 .is_some_and(|length| length > max_body_bytes as u64)
             {
                 return Err(ExecutorError::response_too_large());
             }
-            let mut body = BytesMut::with_capacity(
-                response
-                    .content_length()
-                    .and_then(|length| usize::try_from(length).ok())
-                    .unwrap_or(0)
-                    .min(max_body_bytes),
-            );
+            let mut body = BytesMut::with_capacity(initial_response_capacity(
+                response.content_length(),
+                max_body_bytes,
+            ));
             while let Some(chunk) = response.chunk().await.map_err(|_| ExecutorError::new())? {
                 if body
                     .len()
@@ -266,5 +268,33 @@ impl HttpExecutor for ReqwestExecutor {
                 body.freeze(),
             ))
         })
+    }
+}
+
+fn is_redirect_status(status: u16) -> bool {
+    matches!(status, 301 | 302 | 303 | 307 | 308)
+}
+
+fn initial_response_capacity(content_length: Option<u64>, max_body_bytes: usize) -> usize {
+    content_length
+        .and_then(|length| usize::try_from(length).ok())
+        .unwrap_or(0)
+        .min(max_body_bytes)
+        .min(INITIAL_RESPONSE_CAPACITY)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{INITIAL_RESPONSE_CAPACITY, initial_response_capacity};
+
+    #[test]
+    fn declared_lengths_only_seed_a_small_bounded_allocation() {
+        assert_eq!(initial_response_capacity(None, usize::MAX), 0);
+        assert_eq!(initial_response_capacity(Some(17), usize::MAX), 17);
+        assert_eq!(initial_response_capacity(Some(17), 8), 8);
+        assert_eq!(
+            initial_response_capacity(Some(64 * 1024 * 1024), usize::MAX),
+            INITIAL_RESPONSE_CAPACITY
+        );
     }
 }

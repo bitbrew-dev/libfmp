@@ -2,6 +2,10 @@
 //!
 //! A future Python binding reserves the matching `FmpClient` methods with
 //! response models under `fmp.bulk`. This crate does not implement those bindings.
+//!
+//! Bulk descriptors and convenience methods inherit the client's finite
+//! response-body limit. Raise [`crate::client::ClientBuilder::max_response_body_bytes`]
+//! when a known provider response will exceed that configured limit.
 
 use crate::{
     Client, Result,
@@ -476,5 +480,12 @@ mod tests {
         assert_eq!(query.date(), date);
         assert_eq!(encoded(&query), [("date".into(), "2024-10-22".into())]);
         assert_eq!(BulkEodQuery::from(date), query);
+    }
+
+    #[test]
+    fn bulk_descriptors_inherit_the_finite_client_response_limit() {
+        assert_eq!(bulk_stock_ratings().max_response_body_bytes(), None);
+        assert_eq!(bulk_key_metrics_ttm().max_response_body_bytes(), None);
+        assert_eq!(bulk_financial_ratios_ttm().max_response_body_bytes(), None);
     }
 }
