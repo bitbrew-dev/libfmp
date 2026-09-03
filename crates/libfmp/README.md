@@ -2,7 +2,12 @@
 
 `libfmp` is an async, typed Rust client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API.
 
-Version 0.1 is deliberately a small walking skeleton. It supports only the documented `GET /stable/quote-short?symbol=...` endpoint and does not claim broad endpoint coverage.
+The crate implements all 276 endpoint entries in the repository's captured API
+documentation oracle through transport-independent descriptors, typed queries,
+response models, and `Client` methods. This is coverage of that pinned oracle,
+not a claim that every endpoint currently or historically offered by the
+provider is covered. The separately distributed synchronous Python facade
+currently exposes 1 of those 276 entries.
 
 ```rust
 use std::env;
