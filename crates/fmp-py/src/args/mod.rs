@@ -23,10 +23,15 @@
 //! enums with a derived `FromPyObject` and a `PyStubType`, so they can appear
 //! directly in `#[gen_stub_pymethods]` signatures.
 
+mod numeric;
 mod text;
 
 use pyo3::prelude::*;
 
+pub use numeric::{
+    calendar_quarter, calendar_year, finite_decimal, limit, market_capitalization, page,
+    period_length, quarter, true_false_flag, volume, year,
+};
 pub use text::{
     SymbolsArg, benchmark_year, bulk_part, cik, congressional_member_id, country_code,
     currency_code, cusip, exchange_code, form_type, industry, isin, lei, market_hours_timestamp,
@@ -51,10 +56,16 @@ pub(crate) mod testing {
 
     use crate::errors::FmpValidationError;
 
+    /// Initializes the interpreter. Every test that can build a `PyErr` must
+    /// call this first because error construction attaches to Python.
+    pub(crate) fn init() {
+        Python::initialize();
+    }
+
     /// Asserts that `error` is an `FmpValidationError` carrying the
     /// validation category, and returns its message for text assertions.
     pub(crate) fn validation_message(error: PyErr) -> String {
-        Python::initialize();
+        init();
         Python::attach(|py| {
             assert!(
                 error.is_instance_of::<FmpValidationError>(py),
@@ -74,7 +85,7 @@ pub(crate) mod testing {
 
     /// Runs `body` with an initialized interpreter attached.
     pub(crate) fn with_py<R>(body: impl FnOnce(Python<'_>) -> R) -> R {
-        Python::initialize();
+        init();
         Python::attach(body)
     }
 }
@@ -93,18 +104,21 @@ mod tests {
 
     #[test]
     fn optional_passes_none_through() {
+        crate::args::testing::init();
         let converted = optional("limit", None::<i64>, limit).expect("none is fine");
         assert_eq!(converted, None);
     }
 
     #[test]
     fn optional_converts_some() {
+        crate::args::testing::init();
         let converted = optional("limit", Some(5), limit).expect("valid limit");
         assert_eq!(converted, Some(Limit(5)));
     }
 
     #[test]
     fn optional_propagates_errors() {
+        crate::args::testing::init();
         let error = optional("limit", Some(-1), limit).expect_err("negative rejected");
         assert_eq!(testing::validation_message(error), "limit: negative");
     }
