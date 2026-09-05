@@ -31,6 +31,7 @@
 //! setters = [{ arg = "limit" }]
 //! ```
 
+pub mod expand;
 mod kinds;
 mod schema;
 
