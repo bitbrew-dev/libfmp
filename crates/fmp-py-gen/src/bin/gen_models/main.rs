@@ -3,7 +3,8 @@
 //! Parses every response struct under `crates/libfmp/src/responses`, classifies
 //! each field by its libfmp newtype, and emits a typed `pyo3` `pyclass` model
 //! that unwraps the newtype into a Python-native value. Run it with
-//! `cargo run -p fmp-py --bin gen_models --features gen`.
+//! `cargo run -p fmp-py-gen --bin gen_models`. The generator lives in its own
+//! crate so it builds even when `fmp-py` does not compile.
 
 mod classify;
 mod emit;
@@ -31,7 +32,7 @@ pub(crate) type BoxError = Box<dyn std::error::Error>;
 fn main() -> Result<(), BoxError> {
     let manifest = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let responses_root = manifest.join("../libfmp/src/responses").canonicalize()?;
-    let models_root = manifest.join("src/models");
+    let models_root = manifest.join("../fmp-py/src/models");
 
     let mut files = Vec::new();
     collect_rust_files(&responses_root, &mut files)?;

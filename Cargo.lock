@@ -225,8 +225,14 @@ dependencies = [
  "pyo3",
  "pyo3-stub-gen",
  "serde_json",
- "syn 2.0.118",
  "tokio",
+]
+
+[[package]]
+name = "fmp-py-gen"
+version = "0.5.0"
+dependencies = [
+ "syn 2.0.118",
 ]
 
 [[package]]
