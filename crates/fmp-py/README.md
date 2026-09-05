@@ -86,4 +86,24 @@ report says whether each entry was verified directly, through a macro, or
 trusted because its constructor could not be seen. Pass a directory argument
 to check a different registry tree.
 
+## Regenerating the endpoint namespaces
+
+The namespace classes under `crates/fmp-py/src/namespaces/` (`QuoteNamespace`
+for `client.quote`) are generated from the same registry by the
+`gen_namespaces` binary, which validates the registry first and emits nothing
+on any error. Run it from the repository root:
+
+```console
+cargo run -p fmp-py-gen --bin gen_namespaces
+```
+
+Flat domains become `namespaces/<domain>.rs`; a nested path such as
+`statements.income` becomes `namespaces/statements/mod.rs` (the parent with a
+getter per sub-namespace) plus `namespaces/statements/income.rs`. Required
+arguments are positional, optional ones keyword-only, and an argument named
+after a Python keyword (`from`) is spelled with a trailing underscore
+(`from_`) on the Python side while the `libfmp` setter keeps its name.
+Entries marked `binary = true` are skipped with a notice until the binary
+response path lands. The top-level `namespaces/mod.rs` is still hand-written.
+
 This project is available under the [MIT License](LICENSE).
