@@ -179,7 +179,7 @@ fn setter_drift_reports_every_problem_at_once() {
 
 #[test]
 fn malformed_toml_names_the_file() {
-    let dir = manifest().join("target/registry-tests/malformed");
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("registry-tests/malformed");
     std::fs::create_dir_all(&dir).expect("temp dir");
     std::fs::write(dir.join("quote.toml"), "[[endpoint]]\nname = \n").expect("write");
     let error = Registry::load(&dir).expect_err("parse failure");
@@ -189,7 +189,7 @@ fn malformed_toml_names_the_file() {
 
 #[test]
 fn structural_problems_are_collected_per_entry() {
-    let dir = manifest().join("target/registry-tests/structural");
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("registry-tests/structural");
     std::fs::create_dir_all(&dir).expect("temp dir");
     std::fs::write(
         dir.join("quote.toml"),
