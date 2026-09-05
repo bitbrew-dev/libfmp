@@ -35,11 +35,13 @@ pub mod expand;
 mod kinds;
 pub mod scan;
 mod schema;
+mod validate;
 
 use std::fmt;
 use std::path::{Path, PathBuf};
 
 pub use kinds::{ArgKind, UnknownKind};
+pub use validate::{Report, Trusted, Verified};
 
 /// Every domain file found in a registry directory.
 #[derive(Debug, Clone, PartialEq, Eq)]
