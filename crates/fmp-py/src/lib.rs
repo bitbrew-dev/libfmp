@@ -2,7 +2,9 @@
 
 mod client;
 mod errors;
-mod quote;
+mod models;
+mod namespaces;
+mod runtime;
 
 use pyo3::prelude::*;
 
@@ -13,10 +15,47 @@ mod _native {
     #[pymodule_init]
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
         module.add("__version__", libfmp::VERSION)?;
-        let py = module.py();
-        module.add("_FmpClient", py.get_type::<super::client::FmpClient>())?;
+        module.add_class::<super::client::FmpClient>()?;
         super::errors::register(module)?;
-        module.add("_QuoteShort", py.get_type::<super::quote::QuoteShort>())?;
+        super::register_namespaces(module)?;
         Ok(())
     }
 }
+
+/// Registers the domain submodules (for example `fmp._native.quote`) under the
+/// extension and publishes each in `sys.modules` so `import fmp._native.quote`
+/// resolves. Phase 2 extends this to every domain; Phase 1 wires `quote`.
+fn register_namespaces(parent: &Bound<'_, PyModule>) -> PyResult<()> {
+    let py = parent.py();
+
+    let quote = PyModule::new(py, "quote")?;
+    quote.add_class::<models::quote::Quote>()?;
+    quote.add_class::<models::quote::QuoteShort>()?;
+    quote.add_class::<namespaces::quote::QuoteNamespace>()?;
+    add_submodule(parent, "fmp._native.quote", &quote)?;
+
+    let chart = PyModule::new(py, "chart")?;
+    chart.add_class::<models::chart::StockChartLightBar>()?;
+    chart.add_class::<models::chart::StockChartIntradayBar>()?;
+    add_submodule(parent, "fmp._native.chart", &chart)?;
+
+    Ok(())
+}
+
+/// Attaches `submodule` to `parent` and publishes it in `sys.modules` under
+/// `path` so `import <path>` resolves at runtime.
+fn add_submodule(
+    parent: &Bound<'_, PyModule>,
+    path: &str,
+    submodule: &Bound<'_, PyModule>,
+) -> PyResult<()> {
+    parent.add_submodule(submodule)?;
+    parent
+        .py()
+        .import("sys")?
+        .getattr("modules")?
+        .set_item(path, submodule)?;
+    Ok(())
+}
+
+pyo3_stub_gen::define_stub_info_gatherer!(stub_info);
