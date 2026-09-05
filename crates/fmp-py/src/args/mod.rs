@@ -124,6 +124,18 @@ mod tests {
     }
 
     #[test]
+    fn optional_composes_with_borrowed_str_inputs() {
+        crate::args::testing::init();
+        let converted = optional("exchange", Some("nyse"), exchange_code).expect("valid");
+        assert_eq!(converted.map(|code| code.to_string()), Some("nyse".into()));
+        let error = optional("exchange", Some(""), exchange_code).expect_err("empty");
+        assert_eq!(
+            testing::validation_message(error),
+            "exchange: value must not be empty or whitespace-only"
+        );
+    }
+
+    #[test]
     fn optional_propagates_errors() {
         crate::args::testing::init();
         let error = optional("limit", Some(-1), limit).expect_err("negative rejected");
