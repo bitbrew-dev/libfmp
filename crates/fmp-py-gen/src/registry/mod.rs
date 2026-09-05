@@ -33,6 +33,7 @@
 
 pub mod expand;
 mod kinds;
+pub mod scan;
 mod schema;
 
 use std::fmt;

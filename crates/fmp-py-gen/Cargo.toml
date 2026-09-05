@@ -10,6 +10,7 @@ publish = false
 
 [dependencies]
 proc-macro2.workspace = true
+quote.workspace = true
 serde.workspace = true
 syn.workspace = true
 thiserror.workspace = true

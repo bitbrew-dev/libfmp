@@ -1,0 +1,338 @@
+//! The `libfmp` surface the registry is checked against: every
+//! `pub async fn` on `impl Client` and every query type's constructor and
+//! `with_*` setters, read with `syn` from `crates/libfmp/src/endpoints/**`.
+//!
+//! Query types emitted by `macro_rules!` are recovered through
+//! [`expand`](super::expand); invocations the expander cannot handle are
+//! listed in [`Surface::unexpanded`] so the validator can report the affected
+//! query types as trusted rather than verified.
+
+use std::collections::BTreeMap;
+use std::fs;
+use std::path::{Path, PathBuf};
+
+use proc_macro2::TokenStream;
+use syn::{FnArg, GenericArgument, ImplItem, Item, PathArguments, ReturnType, Type, Visibility};
+
+use super::expand;
+
+/// How a query type's definition was found.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Origin {
+    /// Written out directly in the source file.
+    Direct,
+    /// Recovered by expanding the named `macro_rules!` invocation.
+    Macro(String),
+}
+
+/// One parameter of a constructor or setter, reduced to the base type ident
+/// after peeling `impl Into<T>`, `Option<T>`, and references.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Param {
+    pub name: String,
+    pub base_type: String,
+}
+
+/// The constructor and setters of one query type.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct QueryApi {
+    pub file: PathBuf,
+    pub origin: Origin,
+    /// Parameters of `pub fn new`, or `None` when no public `new` exists.
+    pub ctor: Option<Vec<Param>>,
+    /// Public `with_*` builder methods keyed by name.
+    pub setters: BTreeMap<String, Param>,
+}
+
+/// What a client method returns.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Returns {
+    /// `Result<Vec<R>>`, carrying the row type name.
+    Rows(String),
+    /// `Result<BinaryResponse>`.
+    Binary,
+    /// Anything else, carried verbatim for the error message.
+    Other(String),
+}
+
+/// One `pub async fn` on `impl Client`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ClientMethod {
+    pub file: PathBuf,
+    /// The query type name, whether taken as `Q` or `impl Into<Q>`.
+    pub query: Option<String>,
+    pub returns: Returns,
+}
+
+/// A macro invocation the expander could not turn into items.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Unexpanded {
+    pub file: PathBuf,
+    pub macro_name: String,
+    pub reason: String,
+}
+
+/// Everything the validator needs from `libfmp`.
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
+pub struct Surface {
+    pub methods: BTreeMap<String, ClientMethod>,
+    pub queries: BTreeMap<String, QueryApi>,
+    pub unexpanded: Vec<Unexpanded>,
+}
+
+/// Why the endpoint tree could not be read.
+#[derive(Debug, thiserror::Error)]
+pub enum ScanError {
+    #[error("cannot read {path}: {source}")]
+    Io {
+        path: PathBuf,
+        #[source]
+        source: std::io::Error,
+    },
+    #[error("{path}: {source}")]
+    Syntax {
+        path: PathBuf,
+        #[source]
+        source: syn::Error,
+    },
+}
+
+impl Surface {
+    /// Parses every `.rs` file under `endpoints_root`.
+    pub fn scan(endpoints_root: &Path) -> Result<Surface, ScanError> {
+        let mut files = Vec::new();
+        collect_rust_files(endpoints_root, &mut files)?;
+        files.sort();
+        let mut surface = Surface::default();
+        for file in &files {
+            let content = fs::read_to_string(file).map_err(|source| ScanError::Io {
+                path: file.clone(),
+                source,
+            })?;
+            let parsed = syn::parse_file(&content).map_err(|source| ScanError::Syntax {
+                path: file.clone(),
+                source,
+            })?;
+            surface.absorb_file(file, &parsed);
+        }
+        Ok(surface)
+    }
+
+    fn absorb_file(&mut self, file: &Path, parsed: &syn::File) {
+        let mut definitions: BTreeMap<String, TokenStream> = BTreeMap::new();
+        let mut invocations = Vec::new();
+        for item in &parsed.items {
+            match item {
+                Item::Macro(item) => match expand::definition(item) {
+                    Some((name, body)) => {
+                        definitions.insert(name, body);
+                    }
+                    None => invocations.push(item),
+                },
+                other => self.absorb_item(file, other, &Origin::Direct),
+            }
+        }
+        for invocation in invocations {
+            let Some(name) = invocation.mac.path.get_ident().map(ToString::to_string) else {
+                continue;
+            };
+            let Some(body) = definitions.get(&name) else {
+                continue;
+            };
+            match expand::expand(body, &invocation.mac.tokens) {
+                Ok(expanded) => {
+                    let origin = Origin::Macro(name);
+                    for item in &expanded.items {
+                        self.absorb_item(file, item, &origin);
+                    }
+                }
+                Err(reason) => self.unexpanded.push(Unexpanded {
+                    file: file.to_path_buf(),
+                    macro_name: name,
+                    reason: reason.to_string(),
+                }),
+            }
+        }
+    }
+
+    fn absorb_item(&mut self, file: &Path, item: &Item, origin: &Origin) {
+        let Item::Impl(item) = item else { return };
+        if item.trait_.is_some() {
+            return;
+        }
+        let Some(self_ty) = base_ident(&item.self_ty) else {
+            return;
+        };
+        if self_ty == "Client" {
+            for method in &item.items {
+                if let ImplItem::Fn(method) = method
+                    && is_public(&method.vis)
+                    && method.sig.asyncness.is_some()
+                {
+                    self.methods.insert(
+                        method.sig.ident.to_string(),
+                        client_method(file, &method.sig),
+                    );
+                }
+            }
+            return;
+        }
+        let api = self.queries.entry(self_ty).or_insert_with(|| QueryApi {
+            file: file.to_path_buf(),
+            origin: origin.clone(),
+            ctor: None,
+            setters: BTreeMap::new(),
+        });
+        for method in &item.items {
+            let ImplItem::Fn(method) = method else {
+                continue;
+            };
+            if !is_public(&method.vis) {
+                continue;
+            }
+            let name = method.sig.ident.to_string();
+            let params = typed_params(&method.sig);
+            if name == "new" {
+                api.ctor = Some(params);
+            } else if name.starts_with("with_")
+                && let [param] = params.as_slice()
+            {
+                api.setters.insert(name, param.clone());
+            }
+        }
+    }
+}
+
+fn client_method(file: &Path, sig: &syn::Signature) -> ClientMethod {
+    let query = typed_params(sig).into_iter().next().map(|p| p.base_type);
+    let returns = match &sig.output {
+        ReturnType::Type(_, ty) => classify_return(ty),
+        ReturnType::Default => Returns::Other("()".to_owned()),
+    };
+    ClientMethod {
+        file: file.to_path_buf(),
+        query,
+        returns,
+    }
+}
+
+/// Reads `Result<Vec<R>>` and `Result<BinaryResponse>`.
+fn classify_return(ty: &Type) -> Returns {
+    let verbatim = || Returns::Other(quote_type(ty));
+    let Some((head, inner)) = generic_head(ty) else {
+        return verbatim();
+    };
+    if head != "Result" {
+        return verbatim();
+    }
+    match generic_head(inner) {
+        Some((head, row)) if head == "Vec" => base_ident(row).map_or_else(verbatim, Returns::Rows),
+        None if base_ident(inner).as_deref() == Some("BinaryResponse") => Returns::Binary,
+        _ => verbatim(),
+    }
+}
+
+/// The named (non-`self`) parameters of a signature.
+fn typed_params(sig: &syn::Signature) -> Vec<Param> {
+    sig.inputs
+        .iter()
+        .filter_map(|input| match input {
+            FnArg::Typed(pat) => Some(Param {
+                name: quote_pat(&pat.pat),
+                base_type: peel_base(&pat.ty),
+            }),
+            FnArg::Receiver(_) => None,
+        })
+        .collect()
+}
+
+/// Peels `impl Into<T>`, `Option<T>`, and `&T` down to the base type ident.
+fn peel_base(ty: &Type) -> String {
+    match ty {
+        Type::Reference(reference) => peel_base(&reference.elem),
+        Type::ImplTrait(impl_trait) => impl_trait
+            .bounds
+            .iter()
+            .find_map(|bound| match bound {
+                syn::TypeParamBound::Trait(bound) => bound.path.segments.last(),
+                _ => None,
+            })
+            .and_then(|segment| match &segment.arguments {
+                PathArguments::AngleBracketed(args) if segment.ident == "Into" => {
+                    args.args.iter().find_map(|arg| match arg {
+                        GenericArgument::Type(inner) => Some(peel_base(inner)),
+                        _ => None,
+                    })
+                }
+                _ => None,
+            })
+            .unwrap_or_else(|| quote_type(ty)),
+        _ => match generic_head(ty) {
+            Some((head, inner)) if head == "Option" => peel_base(inner),
+            _ => base_ident(ty).unwrap_or_else(|| quote_type(ty)),
+        },
+    }
+}
+
+/// Splits `Head<Inner>` into its head ident and first type argument.
+fn generic_head(ty: &Type) -> Option<(String, &Type)> {
+    let Type::Path(path) = ty else { return None };
+    let segment = path.path.segments.last()?;
+    let PathArguments::AngleBracketed(args) = &segment.arguments else {
+        return None;
+    };
+    let inner = args.args.iter().find_map(|arg| match arg {
+        GenericArgument::Type(inner) => Some(inner),
+        _ => None,
+    })?;
+    Some((segment.ident.to_string(), inner))
+}
+
+/// The last path-segment identifier of a type, ignoring generics.
+fn base_ident(ty: &Type) -> Option<String> {
+    match ty {
+        Type::Path(path) => path.path.segments.last().map(|s| s.ident.to_string()),
+        _ => None,
+    }
+}
+
+fn quote_type(ty: &Type) -> String {
+    quote_tokens(ty)
+}
+
+fn quote_pat(pat: &syn::Pat) -> String {
+    match pat {
+        syn::Pat::Ident(ident) => ident.ident.to_string(),
+        other => quote_tokens(other),
+    }
+}
+
+fn quote_tokens(tokens: &impl quote::ToTokens) -> String {
+    tokens.to_token_stream().to_string().replace(' ', "")
+}
+
+fn is_public(vis: &Visibility) -> bool {
+    matches!(vis, Visibility::Public(_))
+}
+
+/// Recursively collects every `.rs` file under a directory.
+fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) -> Result<(), ScanError> {
+    let entries = fs::read_dir(dir).map_err(|source| ScanError::Io {
+        path: dir.to_path_buf(),
+        source,
+    })?;
+    for entry in entries {
+        let path = entry
+            .map_err(|source| ScanError::Io {
+                path: dir.to_path_buf(),
+                source,
+            })?
+            .path();
+        if path.is_dir() {
+            collect_rust_files(&path, out)?;
+        } else if path.extension().is_some_and(|ext| ext == "rs") {
+            out.push(path);
+        }
+    }
+    Ok(())
+}
