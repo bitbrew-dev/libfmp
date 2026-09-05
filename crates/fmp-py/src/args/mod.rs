@@ -23,12 +23,17 @@
 //! enums with a derived `FromPyObject` and a `PyStubType`, so they can appear
 //! directly in `#[gen_stub_pymethods]` signatures.
 
+mod enums;
 mod numeric;
 mod temporal;
 mod text;
 
 use pyo3::prelude::*;
 
+pub use enums::{
+    chart_timeframe, economic_indicator, fiscal_period, open_economic_indicator,
+    retrieval_frequency, segmentation_structure, statement_period,
+};
 pub use numeric::{
     calendar_quarter, calendar_year, finite_decimal, limit, market_capitalization, page,
     period_length, quarter, true_false_flag, volume, year,
