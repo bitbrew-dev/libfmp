@@ -596,6 +596,11 @@ impl UsDate {
             .map(Self)
             .map_err(|_| InvalidTemporalValue::new(EXPECTED))
     }
+
+    /// Returns the inner calendar date.
+    pub const fn into_inner(self) -> NaiveDate {
+        self.0
+    }
 }
 
 impl fmt::Display for UsDate {
