@@ -78,6 +78,19 @@ fn shipped_quote_registry_is_fully_verified() {
             None,
         ]
     );
+    let modules: Vec<Option<Vec<String>>> = report
+        .verified
+        .iter()
+        .map(|entry| entry.query_module.clone())
+        .collect();
+    assert_eq!(
+        modules,
+        [
+            Some(vec!["quote".to_owned()]),
+            Some(vec!["quote".to_owned()]),
+            None
+        ]
+    );
 }
 
 #[test]
@@ -109,6 +122,31 @@ fn nested_namespace_with_setters_and_binary_verifies() {
     assert_eq!(
         report.verified[1].query_origin,
         Some(Origin::Macro("financial_report_query".to_owned()))
+    );
+    assert_eq!(
+        report.verified[0].query_module,
+        Some(vec!["statements".to_owned()])
+    );
+    assert_eq!(
+        report.verified[1].query_module,
+        Some(vec!["statements".to_owned(), "reports".to_owned()])
+    );
+}
+
+#[test]
+fn keyword_arg_names_get_python_safe_spellings() {
+    let registry = Registry::load(&fixture("keyword_args")).expect("fixture loads");
+    let endpoint = &registry.domains[0].namespaces[0].endpoints[0];
+    let names: Vec<String> = endpoint.args.iter().map(|arg| arg.python_name()).collect();
+    assert_eq!(names, ["symbol", "from_", "to"]);
+    assert_eq!(endpoint.setters[0].method, "with_from");
+    let report = registry
+        .validate(&endpoints_root(), &models_root())
+        .expect("keyword fixture validates");
+    assert_eq!(report.verified.len(), 1);
+    assert_eq!(
+        report.verified[0].query_module,
+        Some(vec!["chart".to_owned()])
     );
 }
 
