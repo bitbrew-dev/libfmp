@@ -1,5 +1,6 @@
 //! Thin Python facade for `libfmp`.
 
+pub mod args;
 mod client;
 mod errors;
 mod models;

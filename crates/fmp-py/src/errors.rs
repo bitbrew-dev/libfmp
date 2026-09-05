@@ -1,3 +1,5 @@
+use std::fmt;
+
 use pyo3::{
     create_exception,
     exceptions::{PyBaseException, PyException},
@@ -67,6 +69,34 @@ pub(crate) fn to_py_error(error: libfmp::Error) -> PyErr {
             Err(attribute_error) => attribute_error,
         }
     })
+}
+
+/// Build a `FmpValidationError` for a Python argument that failed local
+/// validation, naming the keyword so the caller can tell which input to fix.
+///
+/// The message reads `"{argument}: {reason}"` and the exception carries the
+/// same attributes `to_py_error` sets on a libfmp validation error.
+pub(crate) fn validation_error(argument: &str, reason: impl fmt::Display) -> PyErr {
+    Python::attach(|py| {
+        let exception = FmpValidationError::new_err(format!("{argument}: {reason}"));
+        match set_validation_attributes(exception.value(py)) {
+            Ok(()) => exception,
+            Err(attribute_error) => attribute_error,
+        }
+    })
+}
+
+fn set_validation_attributes(exception: &Bound<'_, PyBaseException>) -> PyResult<()> {
+    let py = exception.py();
+    exception.setattr(
+        "category",
+        libfmp::error::ErrorCategory::Validation.as_str(),
+    )?;
+    exception.setattr("endpoint", py.None())?;
+    exception.setattr("status", py.None())?;
+    exception.setattr("body", py.None())?;
+    exception.setattr("body_truncated", py.None())?;
+    Ok(())
 }
 
 fn set_error_attributes(

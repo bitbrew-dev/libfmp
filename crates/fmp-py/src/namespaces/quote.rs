@@ -6,19 +6,14 @@
 
 use std::sync::Arc;
 
-use libfmp::{ClientBuilder, types::Ticker};
+use libfmp::ClientBuilder;
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
+use crate::args;
 use crate::errors::to_py_error;
 use crate::models::quote::{Quote, QuoteShort};
 use crate::runtime::block_on;
-
-fn ticker(symbol: &str) -> PyResult<Ticker> {
-    Ticker::new(symbol)
-        .map_err(libfmp::Error::from)
-        .map_err(to_py_error)
-}
 
 /// Quote endpoints for a single client, exposed as `client.quote`.
 #[gen_stub_pyclass]
@@ -38,7 +33,7 @@ impl QuoteNamespace {
 impl QuoteNamespace {
     /// The full quote for a symbol.
     fn full(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<Quote>> {
-        let query = ticker(symbol)?;
+        let query = args::ticker("symbol", symbol)?;
         let builder = self.builder.clone();
         let rows = py
             .detach(move || block_on(builder, |client| async move { client.quote(query).await }))?;
@@ -48,7 +43,7 @@ impl QuoteNamespace {
 
     /// The compact quote array for a symbol.
     fn short(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<QuoteShort>> {
-        let query = ticker(symbol)?;
+        let query = args::ticker("symbol", symbol)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(
