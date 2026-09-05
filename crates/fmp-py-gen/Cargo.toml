@@ -5,8 +5,12 @@ edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 license.workspace = true
-description = "Committed-source generator for the fmp-py response models"
+description = "Committed-source generators and endpoint registry for fmp-py"
 publish = false
 
 [dependencies]
+proc-macro2.workspace = true
+serde.workspace = true
 syn.workspace = true
+thiserror.workspace = true
+toml.workspace = true
