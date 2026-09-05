@@ -42,7 +42,7 @@ pub use temporal::{DateArg, DateTimeArg, api_datetime, date, date_range};
 pub use text::{
     SymbolsArg, benchmark_year, bulk_part, cik, congressional_member_id, country_code,
     currency_code, cusip, exchange_code, form_type, industry, isin, lei, market_hours_timestamp,
-    search_term, sector, ticker, ticker_list, tipranks_expert_uid, transaction_type_code,
+    search_term, sector, text, ticker, ticker_list, tipranks_expert_uid, transaction_type_code,
 };
 
 /// Applies a conversion to an optional keyword argument.

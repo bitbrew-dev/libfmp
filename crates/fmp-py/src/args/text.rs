@@ -63,6 +63,19 @@ string_arg! {
     form_type => FormType,
 }
 
+const EMPTY_TEXT: &str = "value must not be empty or whitespace-only";
+
+/// Passes a free-text Python `str` through to a plain `String`, for query
+/// setters that take `impl Into<String>` (name and position filters).
+///
+/// Rejects empty or whitespace-only values; no other validation applies.
+pub fn text(name: &str, value: &str) -> PyResult<String> {
+    if value.trim().is_empty() {
+        return Err(validation_error(name, EMPTY_TEXT));
+    }
+    Ok(value.to_owned())
+}
+
 /// A `str | list[str]` symbols argument.
 ///
 /// A bare `str` is a single ticker; it is not split on commas because
@@ -149,6 +162,28 @@ mod tests {
         assert_eq!(
             lei("lei", "5493001KJTIIGC8Y1R12").expect("valid").as_str(),
             "5493001KJTIIGC8Y1R12"
+        );
+    }
+
+    #[test]
+    fn text_passes_content_through_unchanged() {
+        crate::args::testing::init();
+        assert_eq!(text("party", "Democrat").expect("valid"), "Democrat");
+        assert_eq!(text("party", " a b ").expect("valid"), " a b ");
+    }
+
+    #[test]
+    fn text_rejects_empty_and_whitespace_only_values() {
+        crate::args::testing::init();
+        let error = text("party", "").expect_err("empty rejected");
+        assert_eq!(
+            validation_message(error),
+            "party: value must not be empty or whitespace-only"
+        );
+        let error = text("party", " \t ").expect_err("whitespace rejected");
+        assert_eq!(
+            validation_message(error),
+            "party: value must not be empty or whitespace-only"
         );
     }
 

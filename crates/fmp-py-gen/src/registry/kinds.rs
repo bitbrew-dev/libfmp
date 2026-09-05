@@ -67,6 +67,7 @@ arg_kinds! {
     Isin => ("isin", "Isin", "&str", "str"),
     Lei => ("lei", "Lei", "&str", "str"),
     FormType => ("form_type", "FormType", "&str", "str"),
+    Text => ("text", "String", "&str", "str"),
     Limit => ("limit", "Limit", "i64", "int"),
     Page => ("page", "Page", "i64", "int"),
     Year => ("year", "Year", "i64", "int"),
