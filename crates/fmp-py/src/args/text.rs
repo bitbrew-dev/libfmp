@@ -101,12 +101,14 @@ mod tests {
 
     #[test]
     fn ticker_accepts_plain_symbol() {
+        crate::args::testing::init();
         let converted = ticker("symbol", "AAPL").expect("valid ticker");
         assert_eq!(converted.as_str(), "AAPL");
     }
 
     #[test]
     fn ticker_rejects_comma_with_argument_name() {
+        crate::args::testing::init();
         let error = ticker("symbol", "AAPL,MSFT").expect_err("comma rejected");
         assert_eq!(
             validation_message(error),
@@ -116,6 +118,7 @@ mod tests {
 
     #[test]
     fn string_newtypes_reject_empty_values() {
+        crate::args::testing::init();
         let error = cik("cik", "   ").expect_err("whitespace rejected");
         assert_eq!(
             validation_message(error),
@@ -130,6 +133,7 @@ mod tests {
 
     #[test]
     fn string_newtypes_preserve_representation() {
+        crate::args::testing::init();
         assert_eq!(
             cik("cik", "0000320193").expect("valid").as_str(),
             "0000320193"
@@ -150,12 +154,14 @@ mod tests {
 
     #[test]
     fn ticker_list_accepts_one_symbol() {
+        crate::args::testing::init();
         let converted = ticker_list("symbols", SymbolsArg::One("AAPL".into())).expect("valid");
         assert_eq!(converted.to_string(), "AAPL");
     }
 
     #[test]
     fn ticker_list_accepts_many_symbols() {
+        crate::args::testing::init();
         let symbols = SymbolsArg::Many(vec!["AAPL".into(), "MSFT".into()]);
         let converted = ticker_list("symbols", symbols).expect("valid");
         assert_eq!(converted.to_string(), "AAPL,MSFT");
@@ -163,6 +169,7 @@ mod tests {
 
     #[test]
     fn ticker_list_rejects_empty_list() {
+        crate::args::testing::init();
         let error = ticker_list("symbols", SymbolsArg::Many(vec![])).expect_err("empty");
         assert_eq!(
             validation_message(error),
@@ -172,6 +179,7 @@ mod tests {
 
     #[test]
     fn ticker_list_names_offending_index() {
+        crate::args::testing::init();
         let symbols = SymbolsArg::Many(vec!["AAPL".into(), "".into()]);
         let error = ticker_list("symbols", symbols).expect_err("empty element");
         assert_eq!(
@@ -182,6 +190,7 @@ mod tests {
 
     #[test]
     fn symbols_arg_extracts_str_and_list() {
+        crate::args::testing::init();
         with_py(|py| {
             let one: SymbolsArg = PyString::new(py, "AAPL").extract().expect("str");
             assert_eq!(one, SymbolsArg::One("AAPL".into()));
