@@ -1,0 +1,24 @@
+# Endpoint registry for the `quote` domain, reached from Python as
+# `client.quote`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "full"
+method = "quote"
+query = "QuoteQuery"
+response = "quote::Quote"
+doc = "The full quote for a symbol."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "short"
+method = "quote_short"
+query = "QuoteShortQuery"
+response = "quote::QuoteShort"
+doc = "The compact quote array for a symbol."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "mutual_funds"
+method = "mutual_fund_quotes"
+response = "quote::QuoteShort"
+doc = "Compact quotes for every mutual fund, without a query."

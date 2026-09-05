@@ -65,4 +65,25 @@ runs when `fmp-py` fails to compile against a changed `libfmp`. Regeneration
 must be idempotent: `git status crates/fmp-py/src/models` is clean after a
 second run.
 
+## Validating the endpoint registry
+
+The Python namespaces are described by one TOML file per domain under
+`crates/fmp-py-gen/registry/` (`quote.toml` for `client.quote`). Each entry
+names the Python method, the `libfmp` `Client` method, its query type, the
+constructor arguments and optional `with_*` setters with their arg kinds, and
+the generated response model. Validate the registry against the real `libfmp`
+signatures and the generated models from the repository root:
+
+```console
+cargo run -p fmp-py-gen --bin registry_check
+```
+
+The check parses `crates/libfmp/src/endpoints/**` with `syn`, so an unknown
+method, a mismatched query type, an unknown arg kind, a setter that does not
+exist, or a missing model file fails with the file and entry named. Query
+types emitted by `macro_rules!` are recovered by expanding the macro; the
+report says whether each entry was verified directly, through a macro, or
+trusted because its constructor could not be seen. Pass a directory argument
+to check a different registry tree.
+
 This project is available under the [MIT License](LICENSE).
