@@ -360,6 +360,11 @@ impl Date {
             .map(Self)
             .map_err(|_| InvalidTemporalValue { expected: EXPECTED })
     }
+
+    /// Returns the inner calendar date.
+    pub const fn into_inner(self) -> NaiveDate {
+        self.0
+    }
 }
 
 impl FromStr for Date {
@@ -409,6 +414,11 @@ impl ApiDateTime {
         NaiveDateTime::parse_from_str(value, "%Y-%m-%d %H:%M:%S")
             .map(Self)
             .map_err(|_| InvalidTemporalValue { expected: EXPECTED })
+    }
+
+    /// Returns the inner naive datetime.
+    pub const fn into_inner(self) -> NaiveDateTime {
+        self.0
     }
 }
 
