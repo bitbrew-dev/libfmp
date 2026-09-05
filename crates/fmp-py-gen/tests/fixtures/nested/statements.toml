@@ -1,0 +1,30 @@
+[[namespace]]
+path = "statements.income"
+
+[[namespace.endpoint]]
+name = "statement"
+method = "income_statement"
+query = "IncomeStatementQuery"
+response = "statements::income::IncomeStatement"
+doc = "Income statements for a symbol."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace]]
+path = "statements.reports"
+
+[[namespace.endpoint]]
+name = "financial_reports_xlsx"
+method = "financial_reports_xlsx"
+query = "FinancialReportsXlsxQuery"
+binary = true
+doc = "Downloads one financial report as an XLSX workbook."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "period", kind = "fiscal_period" },
+]

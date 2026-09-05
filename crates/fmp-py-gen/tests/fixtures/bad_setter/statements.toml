@@ -1,0 +1,15 @@
+[[namespace]]
+path = "statements.income"
+
+[[namespace.endpoint]]
+name = "statement"
+method = "income_statement"
+query = "IncomeStatementQuery"
+response = "statements::income::IncomeStatement"
+doc = "Declares a setter kind that does not match the builder parameter."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "page", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period", method = "with_periods" }]

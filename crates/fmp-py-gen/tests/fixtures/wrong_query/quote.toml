@@ -1,0 +1,7 @@
+[[endpoint]]
+name = "full"
+method = "quote"
+query = "QuoteShortQuery"
+response = "quote::Quote"
+doc = "Declares the wrong query type for Client::quote."
+args = [{ name = "symbol", kind = "ticker" }]
