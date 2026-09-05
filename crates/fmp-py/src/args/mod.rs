@@ -24,6 +24,7 @@
 //! directly in `#[gen_stub_pymethods]` signatures.
 
 mod numeric;
+mod temporal;
 mod text;
 
 use pyo3::prelude::*;
@@ -32,6 +33,7 @@ pub use numeric::{
     calendar_quarter, calendar_year, finite_decimal, limit, market_capitalization, page,
     period_length, quarter, true_false_flag, volume, year,
 };
+pub use temporal::{DateArg, DateTimeArg, api_datetime, date, date_range};
 pub use text::{
     SymbolsArg, benchmark_year, bulk_part, cik, congressional_member_id, country_code,
     currency_code, cusip, exchange_code, form_type, industry, isin, lei, market_hours_timestamp,
