@@ -232,7 +232,11 @@ dependencies = [
 name = "fmp-py-gen"
 version = "0.5.0"
 dependencies = [
+ "proc-macro2",
+ "serde",
  "syn 2.0.118",
+ "thiserror",
+ "toml",
 ]
 
 [[package]]
