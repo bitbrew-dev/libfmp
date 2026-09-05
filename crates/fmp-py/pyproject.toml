@@ -5,7 +5,7 @@ build-backend = "maturin"
 [project]
 name = "fmp-py-sdk"
 dynamic = ["version"]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 description = "Typed Python bindings for Financial Modeling Prep, powered by libfmp"
 readme = "README.md"
 license = "MIT"
@@ -17,7 +17,6 @@ classifiers = [
   "Operating System :: OS Independent",
   "Programming Language :: Rust",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
