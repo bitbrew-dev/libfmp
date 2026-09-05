@@ -336,3 +336,60 @@ fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) -> Result<(), ScanErro
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn surface() -> Surface {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../libfmp/src/endpoints");
+        Surface::scan(&root).expect("endpoints parse")
+    }
+
+    #[test]
+    fn finds_every_client_method() {
+        let surface = surface();
+        assert_eq!(surface.methods.len(), 271);
+        let quote = &surface.methods["quote"];
+        assert_eq!(quote.query.as_deref(), Some("QuoteQuery"));
+        assert_eq!(quote.returns, Returns::Rows("Quote".to_owned()));
+        assert_eq!(surface.methods["mutual_fund_quotes"].query, None);
+        assert_eq!(
+            surface.methods["financial_reports_xlsx"].returns,
+            Returns::Binary
+        );
+    }
+
+    #[test]
+    fn recovers_macro_emitted_queries() {
+        let surface = surface();
+        let quote = &surface.queries["QuoteQuery"];
+        assert_eq!(quote.origin, Origin::Macro("symbol_query".to_owned()));
+        assert_eq!(
+            quote.ctor.as_deref(),
+            Some(
+                &[Param {
+                    name: "symbol".to_owned(),
+                    base_type: "Ticker".to_owned()
+                }][..]
+            )
+        );
+        let income = &surface.queries["IncomeStatementQuery"];
+        assert_eq!(income.setters["with_limit"].base_type, "Limit");
+        assert_eq!(income.setters["with_period"].base_type, "StatementPeriod");
+    }
+
+    #[test]
+    fn unexpanded_macros_are_listed_not_fatal() {
+        let surface = surface();
+        for entry in &surface.unexpanded {
+            eprintln!(
+                "{}: {}: {}",
+                entry.file.display(),
+                entry.macro_name,
+                entry.reason
+            );
+        }
+        assert!(surface.unexpanded.iter().all(|e| !e.reason.is_empty()));
+    }
+}
