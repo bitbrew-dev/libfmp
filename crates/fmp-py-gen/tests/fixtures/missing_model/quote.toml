@@ -1,0 +1,7 @@
+[[endpoint]]
+name = "full"
+method = "quote"
+query = "QuoteQuery"
+response = "crypto::Quote"
+doc = "Points at a model module that has no Quote struct."
+args = [{ name = "symbol", kind = "ticker" }]

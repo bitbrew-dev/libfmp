@@ -1,0 +1,7 @@
+[[endpoint]]
+name = "full"
+method = "quote_full"
+query = "QuoteQuery"
+response = "quote::Quote"
+doc = "Names a Client method that does not exist."
+args = [{ name = "symbol", kind = "ticker" }]

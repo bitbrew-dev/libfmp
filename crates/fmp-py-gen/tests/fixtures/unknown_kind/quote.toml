@@ -1,0 +1,7 @@
+[[endpoint]]
+name = "full"
+method = "quote"
+query = "QuoteQuery"
+response = "quote::Quote"
+doc = "Uses an arg kind that has no args:: conversion."
+args = [{ name = "symbol", kind = "tickers" }]
