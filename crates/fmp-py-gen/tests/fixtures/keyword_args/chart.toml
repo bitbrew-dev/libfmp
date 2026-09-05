@@ -1,0 +1,15 @@
+# Synthetic fixture: an arg named after a Python keyword (`from`) feeding
+# the `with_from` setter. The emitter spells it `from_` on the Python side.
+
+[[endpoint]]
+name = "light"
+method = "stock_chart_light"
+query = "StockChartEodQuery"
+response = "chart::StockChartLightBar"
+doc = "Light end-of-day bars for a symbol."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]

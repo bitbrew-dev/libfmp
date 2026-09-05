@@ -33,6 +33,7 @@
 
 pub mod expand;
 mod kinds;
+pub mod naming;
 pub mod scan;
 mod schema;
 mod validate;
@@ -124,6 +125,14 @@ impl Endpoint {
     /// The argument a setter consumes. Loading guarantees it exists.
     pub fn setter_arg(&self, setter: &Setter) -> Option<&Arg> {
         self.args.iter().find(|arg| arg.name == setter.arg)
+    }
+}
+
+impl Arg {
+    /// The parameter name as Python sees it: the registry name with a
+    /// trailing `_` when that name is a Python keyword (`from` -> `from_`).
+    pub fn python_name(&self) -> String {
+        naming::python_safe_ident(&self.name)
     }
 }
 

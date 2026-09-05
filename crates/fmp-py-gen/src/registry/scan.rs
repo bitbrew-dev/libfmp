@@ -80,6 +80,23 @@ pub struct Surface {
     pub unexpanded: Vec<Unexpanded>,
 }
 
+/// The `libfmp::endpoints` module path of a source file, as segments:
+/// `statements.rs` and `statements/mod.rs` both give `["statements"]`,
+/// `statements/reports.rs` gives `["statements", "reports"]`, and the root
+/// `mod.rs` gives an empty path.
+pub fn module_path(endpoints_root: &Path, file: &Path) -> Vec<String> {
+    let relative = file.strip_prefix(endpoints_root).unwrap_or(file);
+    let mut segments: Vec<String> = relative
+        .with_extension("")
+        .components()
+        .map(|component| component.as_os_str().to_string_lossy().into_owned())
+        .collect();
+    if segments.last().is_some_and(|last| last == "mod") {
+        segments.pop();
+    }
+    segments
+}
+
 /// Why the endpoint tree could not be read.
 #[derive(Debug, thiserror::Error)]
 pub enum ScanError {

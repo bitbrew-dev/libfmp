@@ -9,7 +9,7 @@
 use std::fs;
 use std::path::Path;
 
-use super::scan::{Origin, QueryApi, Returns, Surface};
+use super::scan::{Origin, QueryApi, Returns, Surface, module_path};
 use super::{Arg, Endpoint, ModelPath, Registry, ValidationError};
 
 /// One entry that passed every check.
@@ -19,6 +19,10 @@ pub struct Verified {
     pub method: String,
     /// How the query type was found, or `None` for query-less methods.
     pub query_origin: Option<Origin>,
+    /// Where the query type is defined, as segments under
+    /// `libfmp::endpoints` (`["statements"]` for `IncomeStatementQuery`);
+    /// `None` for query-less methods and for trusted entries.
+    pub query_module: Option<Vec<String>>,
 }
 
 /// One entry whose query constructor or setters could not be checked.
@@ -88,6 +92,7 @@ impl Registry {
                         entry: &entry,
                         endpoint,
                         surface: &surface,
+                        endpoints_root,
                         models_root,
                         errors: &mut errors,
                         report: &mut report,
@@ -109,6 +114,7 @@ struct Checker<'a> {
     entry: &'a str,
     endpoint: &'a Endpoint,
     surface: &'a Surface,
+    endpoints_root: &'a Path,
     models_root: &'a Path,
     errors: &'a mut Vec<ValidationError>,
     report: &'a mut Report,
@@ -131,12 +137,13 @@ impl Checker<'_> {
         let before = self.errors.len();
         self.check_query_type(method.query.as_deref());
         self.check_returns(&method.returns);
-        let query_origin = self.check_query_api();
+        let (query_origin, query_module) = self.check_query_api().unzip();
         if self.errors.len() == before {
             self.report.verified.push(Verified {
                 entry: self.entry.to_owned(),
                 method: method_name.clone(),
                 query_origin,
+                query_module,
             });
         }
     }
@@ -217,8 +224,9 @@ impl Checker<'_> {
     }
 
     /// Checks constructor arguments and setters against the query type's
-    /// API, returning how the type was found when it could be checked.
-    fn check_query_api(&mut self) -> Option<Origin> {
+    /// API, returning how and where the type was found when it could be
+    /// checked.
+    fn check_query_api(&mut self) -> Option<(Origin, Vec<String>)> {
         let query = self.endpoint.query_type.as_deref()?;
         let Some(api) = self.surface.queries.get(query).cloned() else {
             self.trust(format!(
@@ -228,7 +236,7 @@ impl Checker<'_> {
         };
         self.check_ctor(query, &api);
         self.check_setters(query, &api);
-        Some(api.origin)
+        Some((api.origin, module_path(self.endpoints_root, &api.file)))
     }
 
     fn check_ctor(&mut self, query: &str, api: &QueryApi) {
