@@ -32,6 +32,7 @@
 //! ```
 
 mod kinds;
+mod schema;
 
 use std::fmt;
 use std::path::{Path, PathBuf};
