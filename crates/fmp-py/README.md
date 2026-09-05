@@ -50,4 +50,19 @@ hand-maintained `.pyi` contracts, plus a `py.typed` marker for type checkers.
 Transport, configuration, and runtime internals are intentionally not exposed
 as Python modules.
 
+## Regenerating the response models
+
+The `pyo3` response models under `crates/fmp-py/src/models/` are generated
+from the `libfmp` response structs by the `gen_models` binary in the sibling
+`crates/fmp-py-gen` crate. Run it from the repository root:
+
+```console
+cargo run -p fmp-py-gen --bin gen_models
+```
+
+The generator only depends on `syn`, not on `fmp-py`, so it still builds and
+runs when `fmp-py` fails to compile against a changed `libfmp`. Regeneration
+must be idempotent: `git status crates/fmp-py/src/models` is clean after a
+second run.
+
 This project is available under the [MIT License](LICENSE).
