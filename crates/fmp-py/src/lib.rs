@@ -3,6 +3,7 @@
 pub mod args;
 mod client;
 mod errors;
+mod facade;
 mod models;
 mod namespaces;
 mod runtime;

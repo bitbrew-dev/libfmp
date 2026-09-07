@@ -37,6 +37,9 @@ features = ["extension-module"]
 module-name = "fmp._native"
 python-source = "python"
 
+[tool.pyo3-stub-gen]
+generate-init-py = true
+
 [tool.ruff]
 line-length = 120
 target-version = "py313"
