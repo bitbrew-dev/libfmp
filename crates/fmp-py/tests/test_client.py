@@ -1,145 +1,88 @@
-import json
-import threading
-from contextlib import contextmanager
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import parse_qs, urlsplit
+"""Runtime contract of ``FmpClient`` and the ``client.quote`` namespace."""
+
+import pickle
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+from conftest import FixtureServer, load_fixture
+from fmp import FmpClient
+from fmp.quote import Quote, QuoteShort
+
+QUOTE_SHORT_PATH = "/quote-short"
+QUOTE_FULL_PATH = "/quote"
+MUTUAL_FUNDS_PATH = "/batch-mutualfund-quotes"
 
 
-SINGLE_QUOTE = [
-    {"symbol": "AAPL", "price": 331.85501, "change": -6.33498, "volume": 28718014}
-]
-MULTIPLE_QUOTES = [
-    {"symbol": "000001.SZ", "price": 14.02, "change": 0.12, "volume": 4294967296},
-    {"symbol": "^VIX", "price": 15.25, "change": -0.5, "volume": 0},
-]
-
-
-@contextmanager
-def fixture_server():
-    requests = []
-
-    class Handler(BaseHTTPRequestHandler):
-        protocol_version = "HTTP/1.1"
-
-        def do_GET(self):
-            requests.append(
-                {
-                    "connection": self.client_address,
-                    "path": self.path,
-                    "headers": {name.lower(): value for name, value in self.headers.items()},
-                }
-            )
-            symbol = parse_qs(urlsplit(self.path).query).get("symbol", [""])[0]
-            if symbol == "EMPTY":
-                status, body, content_type = 200, [], "application/json"
-            elif symbol == "MULTI":
-                status, body, content_type = 200, MULTIPLE_QUOTES, "application/json"
-            elif symbol == "DENIED":
-                status, body, content_type = 401, {"error": "denied"}, "application/json"
-            elif symbol == "SECRET_DENIED":
-                status, body, content_type = (
-                    401,
-                    b"denied?apikey=query-secret",
-                    "text/plain",
-                )
-            elif symbol == "INVALID_JSON":
-                status, body, content_type = 200, b"not-json", "application/json"
-            else:
-                status, body, content_type = 200, SINGLE_QUOTE, "application/json"
-
-            payload = body if isinstance(body, bytes) else json.dumps(body).encode("utf-8")
-            self.send_response(status)
-            self.send_header("Content-Type", content_type)
-            self.send_header("Content-Length", str(len(payload)))
-            self.end_headers()
-            self.wfile.write(payload)
-
-        def log_message(self, _format, *_args):
-            pass
-
-    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    try:
-        yield f"http://127.0.0.1:{server.server_port}/gateway", requests
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=5)
-
-
-def test_direct_and_proxy_construction_and_call_shape():
-    from fmp import FmpClient
-    from fmp import _native
-    from fmp.client import FmpClient as DomainFmpClient
-
-    direct = FmpClient(token="direct-secret")
-    assert type(direct).__name__ == "FmpClient"
-    assert FmpClient is DomainFmpClient
-    assert FmpClient.__module__ == "fmp.client"
-    assert not hasattr(_native, "FmpClient")
-
-    with fixture_server() as (base_url, requests):
-        proxy = FmpClient(
-            base_url=base_url,
-            path_prefix="router/stable",
-            auth_mode="none",
-            headers={"X-Tenant": "blue", "X-Mode": "first", "x-mode": "second"},
-            timeout=5.0,
-            connect_timeout=2.0,
-            follow_redirects=False,
-        )
-        rows = proxy.quote_short("AAPL")
-
-    assert isinstance(rows, list)
-    assert len(rows) == 1
-    assert rows[0].symbol == "AAPL"
-    assert rows[0].price == 331.85501
-    assert rows[0].change == -6.33498
-    assert rows[0].volume == 28718014
-    try:
-        rows[0].price = 0.0
-    except AttributeError:
-        pass
-    else:
-        raise AssertionError("QuoteShort attributes must remain read-only")
-    assert requests[0]["path"] == "/gateway/router/stable/quote-short?symbol=AAPL"
-    assert requests[0]["headers"]["x-tenant"] == "blue"
-    assert requests[0]["headers"]["x-mode"] == "second"
-
-    try:
+def test_constructor_is_keyword_only() -> None:
+    """Positional configuration is rejected; the keyword form builds a client."""
+    with pytest.raises(TypeError):
         FmpClient("positional-is-not-supported")
-    except TypeError:
-        pass
-    else:
-        raise AssertionError("FmpClient configuration must remain keyword-only")
+    assert type(FmpClient(token="direct-secret")).__name__ == "FmpClient"
 
 
-def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
-    import pickle
-    import sys
-    from types import ModuleType
+def test_proxy_configuration_shapes_the_request(fixture_server: FixtureServer) -> None:
+    """Base URL, path prefix, and default headers all reach the wire."""
+    fixture_server.route("/gateway/router/stable/quote-short", load_fixture("quote_short.json"))
+    proxy = FmpClient(
+        base_url=f"{fixture_server.base_url}/gateway",
+        path_prefix="router/stable",
+        auth_mode="none",
+        headers={"X-Tenant": "blue", "X-Mode": "first", "x-mode": "second"},
+        timeout=5.0,
+        connect_timeout=2.0,
+        follow_redirects=False,
+    )
+    rows = proxy.quote.short("AAPL")
 
-    import fmp.quote
-    from fmp import FmpClient, QuoteShort
-    from fmp import _native
+    assert [row.symbol for row in rows] == ["AAPL"]
+    request = fixture_server.requests[0]
+    assert request.target == "/gateway/router/stable/quote-short?symbol=AAPL"
+    assert request.headers["x-tenant"] == "blue"
+    assert request.headers["x-mode"] == "second"
 
-    with fixture_server() as (base_url, _requests):
-        client = FmpClient(base_url=base_url, path_prefix="", auth_mode="none")
-        empty = client.quote_short("EMPTY")
-        multiple = client.quote_short("MULTI")
 
-    assert empty == []
-    assert isinstance(multiple, list)
+def test_quote_full_decodes_documented_fixture(client: Any, fixture_server: FixtureServer) -> None:
+    """``quote.full`` maps the documented wire fixture to ``Quote`` exactly."""
+    fixture_server.route(QUOTE_FULL_PATH, load_fixture("quote.json"))
+    rows = client.quote.full("AAPL")
+
+    assert fixture_server.requests[0].target == "/quote?symbol=AAPL"
+    assert len(rows) == 1
+    quote = rows[0]
+    assert isinstance(quote, Quote)
+    assert quote.symbol == "AAPL"
+    assert quote.name == "Apple Inc."
+    assert quote.price == 331.85501
+    assert quote.change_percentage == -1.8732
+    assert quote.change == -6.33498
+    assert quote.volume == 28_718_014
+    assert quote.day_low == 329.59
+    assert quote.day_high == 334.48
+    assert quote.year_high == 344.57
+    assert quote.year_low == 201.5
+    assert quote.market_cap == 4_874_072_686_740
+    assert quote.price_avg_50 == 308.5888
+    assert quote.price_avg_200 == 277.21344
+    assert quote.exchange == "NASDAQ"
+    assert quote.open == 333.13
+    assert quote.previous_close == 338.18999
+    assert quote.timestamp == 1_785_430_812
+
+
+def test_quote_short_rows_are_frozen_and_picklable(client: Any, fixture_server: FixtureServer) -> None:
+    """Empty and multi-row bodies stay lists in provider order; rows are immutable values."""
+    fixture_server.route(f"{QUOTE_SHORT_PATH}?symbol=EMPTY", load_fixture("quote_short_empty.json"))
+    fixture_server.route(f"{QUOTE_SHORT_PATH}?symbol=MULTI", load_fixture("quote_short_multiple.json"))
+
+    assert client.quote.short("EMPTY") == []
+    multiple = client.quote.short("MULTI")
+
     assert all(isinstance(row, QuoteShort) for row in multiple)
-    assert QuoteShort is fmp.quote.QuoteShort
-    assert isinstance(fmp.quote, ModuleType)
-    assert fmp.quote is sys.modules["fmp.quote"]
-    assert not hasattr(_native, "QuoteShort")
-    assert fmp.quote.__file__ is not None
-    assert QuoteShort.__module__ == "fmp.quote"
     assert [row.symbol for row in multiple] == ["000001.SZ", "^VIX"]
-    assert multiple[0].volume == 4294967296
+    assert multiple[0].volume == 4_294_967_296
+    with pytest.raises(AttributeError):
+        multiple[0].price = 0.0
     restored = pickle.loads(pickle.dumps(multiple[0]))
     assert isinstance(restored, QuoteShort)
     assert (restored.symbol, restored.price, restored.change, restored.volume) == (
@@ -150,140 +93,109 @@ def test_empty_and_multiple_arrays_remain_lists_in_provider_order():
     )
 
 
-def test_sequential_calls_reuse_one_http_connection():
-    from fmp import FmpClient
+def test_mutual_funds_uses_the_batch_path_with_the_short_flag(client: Any, fixture_server: FixtureServer) -> None:
+    """``quote.mutual_funds`` takes no arguments; libfmp adds the compact-quote flag."""
+    fixture_server.route(MUTUAL_FUNDS_PATH, load_fixture("quote_short_multiple.json"))
+    rows = client.quote.mutual_funds()
 
-    with fixture_server() as (base_url, requests):
-        client = FmpClient(base_url=base_url, path_prefix="", auth_mode="none")
-        for _ in range(10):
-            assert client.quote_short("AAPL")[0].symbol == "AAPL"
-
-        assert len(requests) == 10
-        assert len({request["connection"] for request in requests}) == 1
+    assert fixture_server.requests[0].path == MUTUAL_FUNDS_PATH
+    assert fixture_server.requests[0].query == {"short": ["true"]}
+    assert [row.symbol for row in rows] == ["000001.SZ", "^VIX"]
 
 
-def test_auth_modes_and_default_headers_reach_the_same_endpoint():
-    from fmp import FmpClient
+def test_sequential_calls_reuse_one_http_connection(client: Any, fixture_server: FixtureServer) -> None:
+    """Repeated calls on one client share a keep-alive connection."""
+    fixture_server.route(QUOTE_SHORT_PATH, load_fixture("quote_short.json"))
+    for _ in range(10):
+        assert client.quote.short("AAPL")[0].symbol == "AAPL"
 
-    configurations = [
-        ({"auth_mode": "none"}, None, None),
-        (
-            {"token": "inferred-header-secret"},
-            ("apikey", "inferred-header-secret"),
-            None,
-        ),
-        (
-            {"auth_mode": "fmp_header", "token": "header-secret"},
-            ("apikey", "header-secret"),
-            None,
-        ),
-        (
-            {"auth_mode": "fmp_query", "token": "query-secret"},
-            None,
-            ("apikey", "query-secret"),
-        ),
-        (
-            {"auth_mode": "bearer", "token": "bearer-secret"},
-            ("authorization", "Bearer bearer-secret"),
-            None,
-        ),
-        (
-            {
-                "auth_mode": "custom_header",
-                "auth_name": "X-Router-Token",
-                "auth_prefix": "Token ",
-                "token": "proxy-secret",
-            },
-            ("x-router-token", "Token proxy-secret"),
-            None,
-        ),
-        (
-            {
-                "auth_mode": "custom_header",
-                "auth_name": "X-Router-Key",
-                "token": "unprefixed-secret",
-            },
-            ("x-router-key", "unprefixed-secret"),
-            None,
-        ),
-        (
-            {
-                "auth_mode": "custom_query",
-                "auth_name": "router_token",
-                "token": "query-proxy-secret",
-            },
-            None,
-            ("router_token", "query-proxy-secret"),
-        ),
-    ]
-
-    with fixture_server() as (base_url, requests):
-        for configuration, _expected_header, _expected_query in configurations:
-            client = FmpClient(
-                base_url=base_url,
-                path_prefix="stable",
-                headers={"X-Shared": "yes"},
-                **configuration,
-            )
-            assert len(client.quote_short("AAPL")) == 1
-
-    for request, (_configuration, expected_header, expected_query) in zip(
-        requests, configurations
-    ):
-        assert request["headers"]["x-shared"] == "yes"
-        if expected_header is not None:
-            name, value = expected_header
-            assert request["headers"][name] == value
-        if expected_query is not None:
-            name, value = expected_query
-            assert parse_qs(urlsplit(request["path"]).query)[name] == [value]
+    assert len(fixture_server.requests) == 10
+    assert len({request.connection for request in fixture_server.requests}) == 1
 
 
-def test_invalid_configuration_and_call_errors_are_structured():
-    from fmp import (
-        FmpClient,
-        FmpConfigError,
-        FmpDecodeError,
-        FmpStatusError,
-        FmpTransportError,
-        FmpValidationError,
+AUTH_CONFIGURATIONS = [
+    pytest.param({"auth_mode": "none"}, None, None, id="none"),
+    pytest.param({"token": "inferred-header-secret"}, ("apikey", "inferred-header-secret"), None, id="inferred"),
+    pytest.param({"auth_mode": "fmp_header", "token": "header-secret"}, ("apikey", "header-secret"), None, id="header"),
+    pytest.param({"auth_mode": "fmp_query", "token": "query-secret"}, None, ("apikey", "query-secret"), id="query"),
+    pytest.param(
+        {"auth_mode": "bearer", "token": "bearer-secret"}, ("authorization", "Bearer bearer-secret"), None, id="bearer"
+    ),
+    pytest.param(
+        {"auth_mode": "custom_header", "auth_name": "X-Router-Token", "auth_prefix": "Token ", "token": "proxy-secret"},
+        ("x-router-token", "Token proxy-secret"),
+        None,
+        id="custom-header-prefixed",
+    ),
+    pytest.param(
+        {"auth_mode": "custom_header", "auth_name": "X-Router-Key", "token": "unprefixed-secret"},
+        ("x-router-key", "unprefixed-secret"),
+        None,
+        id="custom-header",
+    ),
+    pytest.param(
+        {"auth_mode": "custom_query", "auth_name": "router_token", "token": "query-proxy-secret"},
+        None,
+        ("router_token", "query-proxy-secret"),
+        id="custom-query",
+    ),
+]
+
+
+@pytest.mark.parametrize(("configuration", "expected_header", "expected_query"), AUTH_CONFIGURATIONS)
+def test_auth_modes_and_default_headers_reach_the_same_endpoint(
+    fixture_server: FixtureServer,
+    configuration: dict[str, str],
+    expected_header: tuple[str, str] | None,
+    expected_query: tuple[str, str] | None,
+) -> None:
+    """Every authentication mode sends its credential alongside the shared headers."""
+    fixture_server.route("/stable/quote-short", load_fixture("quote_short.json"))
+    client = FmpClient(
+        base_url=fixture_server.base_url, path_prefix="stable", headers={"X-Shared": "yes"}, **configuration
     )
 
-    invalid_configurations = [
-        {},
-        {"auth_mode": "unknown"},
-        {"auth_mode": "bearer"},
-        {"auth_mode": "none", "token": "conflict"},
-        {"auth_mode": "custom_header", "token": "missing-name"},
-        {
-            "auth_mode": "custom_query",
-            "auth_name": "key",
-            "auth_prefix": "Token ",
-            "token": "secret",
-        },
-        {"base_url": "https://proxy.example", "timeout": 0.0},
-        {"base_url": "https://proxy.example", "timeout": float("nan")},
-        {"base_url": "https://proxy.example", "connect_timeout": 1e300},
-        {"base_url": "https://proxy.example", "headers": {"bad name": "value"}},
-    ]
-    for configuration in invalid_configurations:
-        try:
-            FmpClient(**configuration)
-        except FmpConfigError as error:
-            assert error.category == "configuration"
-            assert error.endpoint is None
-            assert error.status is None
-            assert error.body is None
-        else:
-            raise AssertionError(f"configuration unexpectedly succeeded: {configuration!r}")
+    assert len(client.quote.short("AAPL")) == 1
+    request = fixture_server.requests[0]
+    assert request.headers["x-shared"] == "yes"
+    if expected_header is not None:
+        name, value = expected_header
+        assert request.headers[name] == value
+    if expected_query is not None:
+        name, value = expected_query
+        assert request.query[name] == [value]
 
-    try:
-        FmpClient(token="secret", base_url="http://proxy.example")
-    except FmpConfigError as error:
-        assert error.category == "configuration"
-    else:
-        raise AssertionError("authenticated non-loopback HTTP unexpectedly succeeded")
 
+INVALID_CONFIGURATIONS = [
+    pytest.param({}, id="no-auth-no-base-url"),
+    pytest.param({"auth_mode": "unknown"}, id="unknown-mode"),
+    pytest.param({"auth_mode": "bearer"}, id="bearer-without-token"),
+    pytest.param({"auth_mode": "none", "token": "conflict"}, id="none-with-token"),
+    pytest.param({"auth_mode": "custom_header", "token": "missing-name"}, id="custom-header-without-name"),
+    pytest.param(
+        {"auth_mode": "custom_query", "auth_name": "key", "auth_prefix": "Token ", "token": "secret"},
+        id="custom-query-with-prefix",
+    ),
+    pytest.param({"base_url": "https://proxy.example", "timeout": 0.0}, id="zero-timeout"),
+    pytest.param({"base_url": "https://proxy.example", "timeout": float("nan")}, id="nan-timeout"),
+    pytest.param({"base_url": "https://proxy.example", "connect_timeout": 1e300}, id="huge-connect-timeout"),
+    pytest.param({"base_url": "https://proxy.example", "headers": {"bad name": "value"}}, id="bad-header-name"),
+    pytest.param({"token": "secret", "base_url": "http://proxy.example"}, id="insecure-authenticated-http"),
+]
+
+
+@pytest.mark.parametrize("configuration", INVALID_CONFIGURATIONS)
+def test_invalid_configuration_raises_config_error(errors: SimpleNamespace, configuration: dict[str, Any]) -> None:
+    """Invalid construction raises ``FmpConfigError`` with no request context."""
+    with pytest.raises(errors.FmpConfigError) as raised:
+        FmpClient(**configuration)
+    error = raised.value
+    assert error.category == "configuration"
+    assert (error.endpoint, error.status, error.body) == (None, None, None)
+
+
+def test_insecure_authenticated_http_needs_explicit_opt_in() -> None:
+    """The danger flag unlocks authenticated plain HTTP off loopback."""
     FmpClient(
         token="secret",
         base_url="http://proxy.example",
@@ -291,78 +203,75 @@ def test_invalid_configuration_and_call_errors_are_structured():
         danger_allow_insecure_authentication=True,
     )
 
-    with fixture_server() as (base_url, _requests):
-        client = FmpClient(base_url=base_url, path_prefix="", auth_mode="none")
 
-        for symbol in ("", "BAD,SYMBOL"):
-            try:
-                client.quote_short(symbol)
-            except FmpValidationError as error:
-                assert error.category == "validation"
-                assert error.endpoint is None
-            else:
-                raise AssertionError(f"symbol unexpectedly succeeded: {symbol!r}")
+@pytest.mark.parametrize(
+    ("symbol", "message"),
+    [
+        pytest.param("", "symbol: value must not be empty or whitespace-only", id="empty"),
+        pytest.param("   ", "symbol: value must not be empty or whitespace-only", id="whitespace"),
+        pytest.param("BAD,SYMBOL", "symbol: ticker must not contain a comma", id="comma"),
+    ],
+)
+def test_validation_errors_name_the_argument(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace, symbol: str, message: str
+) -> None:
+    """Local validation fails before any request and names the keyword."""
+    with pytest.raises(errors.FmpValidationError) as raised:
+        client.quote.short(symbol)
+    error = raised.value
+    assert str(error) == message
+    assert error.category == "validation"
+    assert error.endpoint is None
+    assert fixture_server.requests == []
 
-        try:
-            client.quote_short("DENIED")
-        except FmpStatusError as error:
-            assert error.category == "status"
-            assert error.endpoint == "quote-short"
-            assert error.status == 401
-            assert error.body == '{"error": "denied"}'
-            assert error.body_truncated is False
-        else:
-            raise AssertionError("non-success response did not raise FmpStatusError")
 
-        try:
-            client.quote_short("INVALID_JSON")
-        except FmpDecodeError as error:
-            assert error.category == "decode"
-            assert error.endpoint == "quote-short"
-            assert error.status == 200
-            assert error.body == "not-json"
-            assert error.body_truncated is False
-        else:
-            raise AssertionError("invalid JSON did not raise FmpDecodeError")
+def test_status_error_is_structured(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
+    """A non-success status surfaces the endpoint id, status, and body."""
+    fixture_server.route(QUOTE_SHORT_PATH, {"error": "denied"}, status=401)
+    with pytest.raises(errors.FmpStatusError) as raised:
+        client.quote.short("DENIED")
+    error = raised.value
+    assert error.category == "status"
+    assert error.endpoint == "quote-short"
+    assert error.status == 401
+    assert error.body == '{"error": "denied"}'
+    assert error.body_truncated is False
 
-    transport_client = FmpClient(
-        base_url="http://127.0.0.1:0",
-        path_prefix="",
-        auth_mode="none",
-        timeout=1.0,
-        connect_timeout=0.25,
+
+def test_decode_error_is_structured(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
+    """A 200 with an undecodable body raises ``FmpDecodeError``."""
+    fixture_server.route(QUOTE_SHORT_PATH, b"not-json")
+    with pytest.raises(errors.FmpDecodeError) as raised:
+        client.quote.short("INVALID_JSON")
+    error = raised.value
+    assert error.category == "decode"
+    assert error.endpoint == "quote-short"
+    assert error.status == 200
+    assert error.body == "not-json"
+    assert error.body_truncated is False
+
+
+def test_transport_error_is_structured(errors: SimpleNamespace) -> None:
+    """A connection failure raises ``FmpTransportError`` without a response."""
+    client = FmpClient(
+        base_url="http://127.0.0.1:0", path_prefix="", auth_mode="none", timeout=1.0, connect_timeout=0.25
     )
-    try:
-        transport_client.quote_short("AAPL")
-    except FmpTransportError as error:
-        assert error.category == "transport"
-        assert error.endpoint == "quote-short"
-        assert error.status is None
-        assert error.body is None
-        assert error.body_truncated is None
-    else:
-        raise AssertionError("connection failure did not raise FmpTransportError")
+    with pytest.raises(errors.FmpTransportError) as raised:
+        client.quote.short("AAPL")
+    error = raised.value
+    assert error.category == "transport"
+    assert error.endpoint == "quote-short"
+    assert (error.status, error.body, error.body_truncated) == (None, None, None)
 
 
-def test_status_error_redacts_configured_query_secret():
-    from fmp import FmpClient, FmpStatusError
-
-    with fixture_server() as (base_url, _requests):
-        client = FmpClient(
-            token="query-secret",
-            base_url=base_url,
-            path_prefix="",
-            auth_mode="fmp_query",
-        )
-        try:
-            client.quote_short("SECRET_DENIED")
-        except FmpStatusError as error:
-            assert error.category == "status"
-            assert error.endpoint == "quote-short"
-            assert error.status == 401
-            assert error.body == "denied?apikey=[REDACTED]"
-            assert error.body_truncated is False
-            diagnostic = f"{error!s} {error!r} {error.body}"
-            assert "query-secret" not in diagnostic
-        else:
-            raise AssertionError("non-success response did not raise FmpStatusError")
+def test_status_error_redacts_configured_query_secret(fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
+    """The query credential never appears in a status error's body or repr."""
+    fixture_server.route(QUOTE_SHORT_PATH, b"denied?apikey=query-secret", status=401, content_type="text/plain")
+    client = FmpClient(token="query-secret", base_url=fixture_server.base_url, path_prefix="", auth_mode="fmp_query")
+    with pytest.raises(errors.FmpStatusError) as raised:
+        client.quote.short("SECRET_DENIED")
+    error = raised.value
+    assert error.status == 401
+    assert error.body == "denied?apikey=[REDACTED]"
+    assert error.body_truncated is False
+    assert "query-secret" not in f"{error!s} {error!r} {error.body}"
