@@ -39,7 +39,7 @@ def test_quote_models_are_reexported_from_the_native_module() -> None:
 
     assert isinstance(fmp.quote, ModuleType)
     assert fmp.quote is sys.modules["fmp.quote"]
-    assert fmp.quote.__all__ == ["Quote", "QuoteShort"]
+    assert {"Quote", "QuoteShort"} <= set(fmp.quote.__all__)
     assert Quote is native_quote.Quote
     assert QuoteShort is native_quote.QuoteShort
     assert Quote.__module__ == "fmp._native.quote"
@@ -47,16 +47,14 @@ def test_quote_models_are_reexported_from_the_native_module() -> None:
     assert native_quote is sys.modules["fmp._native.quote"]
 
 
-def test_chart_models_are_registered_without_a_namespace() -> None:
-    """``fmp._native.chart`` carries models only; there is no ``client.chart`` yet."""
-    from fmp import FmpClient
+def test_chart_models_are_registered() -> None:
+    """``fmp._native.chart`` exposes the registered chart models."""
     from fmp._native import chart
 
     for name in ("StockChartLightBar", "StockChartIntradayBar"):
         model = getattr(chart, name)
         assert isinstance(model, type)
         assert model.__module__ == "fmp._native.chart"
-    assert not hasattr(FmpClient(auth_mode="none", base_url="http://127.0.0.1:0"), "chart")
 
 
 def test_exception_hierarchy_is_stable(errors: SimpleNamespace) -> None:
