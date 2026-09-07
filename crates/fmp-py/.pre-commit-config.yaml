@@ -6,13 +6,13 @@ repos:
           name: isort
           args:
             - --settings-path=.isort.cfg
-          exclude: "^(tests/|scripts/|python/fmp/_native/)"
+          exclude: "^(tests/|scripts/|python/fmp/_native/|python/fmp/(.*/)?__init__\\.py$)"
     - repo: https://github.com/astral-sh/ruff-pre-commit
       rev: v0.15.12
       hooks:
         - id: ruff
           args:
             - --fix
-          exclude: "^(tests/|scripts/|python/fmp/_native/)"
+          exclude: "^(tests/|scripts/|python/fmp/_native/|python/fmp/(.*/)?__init__\\.py$)"
         - id: ruff-format
-          exclude: "^(tests/|scripts/|python/fmp/_native/)"
+          exclude: "^(tests/|scripts/|python/fmp/_native/|python/fmp/(.*/)?__init__\\.py$)"
