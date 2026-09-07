@@ -1,24 +1,22 @@
-"""Static-only contract exercised by mypy and pyright."""
-
-from typing import Optional
+"""Static-only contract exercised by pyright and mypy against the shipped stubs."""
 
 import fmp
-from fmp import _native
-from fmp import FmpClient, FmpError, QuoteShort
-from fmp.client import FmpClient as DomainFmpClient
-from fmp.errors import FmpStatusError
-from fmp.quote import QuoteShort as DomainQuoteShort
+from fmp import FmpClient
+from fmp.quote import Quote, QuoteShort
 
 
-def check_public_contract(client: FmpClient, error: FmpError) -> None:
-    domain_client: DomainFmpClient = client
-    rows: list[QuoteShort] = domain_client.quote_short("AAPL")
-    domain_row: DomainQuoteShort = rows[0]
-    symbol: str = domain_row.symbol
-    status: Optional[int] = error.status
+def check_public_contract(client: FmpClient) -> None:
+    """Type-check the namespaced call shapes and the model fields."""
+    short_rows: list[QuoteShort] = client.quote.short("AAPL")
+    full_rows: list[Quote] = client.quote.full("AAPL")
+    fund_rows: list[QuoteShort] = client.quote.mutual_funds()
+    symbol: str = short_rows[0].symbol
+    price: float = full_rows[0].price
+    volume: int = fund_rows[0].volume
+    market_cap: int | None = full_rows[0].market_cap
     exports: list[str] = fmp.__all__
     version: str = fmp.__version__
-    _ = (symbol, status, exports, version)
+    _ = (symbol, price, volume, market_cap, exports, version)
 
 
 FmpClient(
@@ -27,12 +25,9 @@ FmpClient(
     auth_mode="custom_header",
     auth_name="X-Proxy-Token",
     headers={"X-Tenant": "blue"},
+    timeout=5.0,
+    connect_timeout=2.0,
     max_response_body_bytes=67_108_864,
     danger_allow_insecure_authentication=False,
+    follow_redirects=False,
 )
-
-status_error: FmpError = FmpStatusError("denied")
-
-native_client_type: type[FmpClient] = _native._FmpClient
-native_error_type: type[FmpError] = _native._FmpError
-native_quote_type: type[QuoteShort] = _native._QuoteShort

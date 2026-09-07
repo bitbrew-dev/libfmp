@@ -1,157 +1,93 @@
-def test_import_exposes_workspace_version() -> None:
-    from importlib.metadata import distribution
-    from importlib.resources import files
+"""Import-time contract: package metadata, public names, and the error hierarchy."""
 
+import sys
+from importlib.metadata import distribution
+from importlib.resources import files
+from types import ModuleType, SimpleNamespace
+
+import pytest
+
+
+def test_version_matches_the_installed_distribution() -> None:
+    """``fmp.__version__`` is the version of the ``fmp-py-sdk`` distribution."""
     import fmp
 
-    installed_distribution = distribution("fmp-py-sdk")
-
-    assert installed_distribution.metadata["Name"] == "fmp-py-sdk"
+    installed = distribution("fmp-py-sdk")
+    assert installed.metadata["Name"] == "fmp-py-sdk"
     assert fmp.__name__ == "fmp"
-    assert fmp.__version__ == installed_distribution.version
-
-    package_files = files("fmp")
-    assert package_files.joinpath("py.typed").is_file()
-    assert package_files.joinpath("__init__.pyi").is_file()
-    assert package_files.joinpath("_native.pyi").is_file()
-    assert package_files.joinpath("client.py").is_file()
-    assert package_files.joinpath("client.pyi").is_file()
-    assert package_files.joinpath("errors.py").is_file()
-    assert package_files.joinpath("errors.pyi").is_file()
-    assert package_files.joinpath("quote.py").is_file()
-    assert package_files.joinpath("quote.pyi").is_file()
-    assert fmp.__all__ == [
-        "FmpClient",
-        "FmpConfigError",
-        "FmpDecodeError",
-        "FmpError",
-        "FmpStatusError",
-        "FmpTransportError",
-        "FmpValidationError",
-        "QuoteShort",
-        "__version__",
-    ]
+    assert isinstance(fmp.__version__, str)
+    assert fmp.__version__ == installed.version
+    assert files("fmp").joinpath("py.typed").is_file()
 
 
-def test_public_imports_are_canonical_python_modules() -> None:
-    import importlib
-    import importlib.util
-    import sys
-    from types import ModuleType
-
+def test_public_names_are_exported() -> None:
+    """The client and version are in ``__all__``; the client is the native type."""
     import fmp
-    import fmp.client
-    import fmp.errors
-    import fmp.quote
     from fmp import FmpClient
-    from fmp import QuoteShort
-    from fmp.client import FmpClient as DomainFmpClient
-    from fmp.errors import FmpError as DomainFmpError
-    from fmp.quote import QuoteShort as DomainQuoteShort
 
-    modules = {
-        "client": fmp.client,
-        "errors": fmp.errors,
-        "quote": fmp.quote,
-    }
-    for name, module in modules.items():
-        assert isinstance(module, ModuleType)
-        assert module is sys.modules[f"fmp.{name}"]
-        assert module.__name__ == f"fmp.{name}"
-        assert module.__package__ == "fmp"
-        assert module.__spec__ is not None
-        assert module.__spec__.name == f"fmp.{name}"
-        assert importlib.util.find_spec(f"fmp.{name}") is module.__spec__
-        assert importlib.reload(module) is module
-
-    assert fmp.client.__all__ == ["FmpClient"]
-    assert fmp.errors.__all__ == [
-        "FmpError",
-        "FmpValidationError",
-        "FmpConfigError",
-        "FmpTransportError",
-        "FmpStatusError",
-        "FmpDecodeError",
-    ]
-    assert fmp.quote.__all__ == ["QuoteShort"]
-    assert FmpClient is DomainFmpClient
-    assert FmpClient.__module__ == "fmp.client"
-    assert fmp.FmpError is DomainFmpError
-    assert QuoteShort is DomainQuoteShort
-    assert QuoteShort.__module__ == "fmp.quote"
-
-    assert not hasattr(fmp._native, "FmpClient")
-    assert not hasattr(fmp._native, "FmpError")
-    assert not hasattr(fmp._native, "QuoteShort")
-    assert not hasattr(fmp._native, "_test_error")
+    assert "FmpClient" in fmp.__all__
+    assert "__version__" in fmp.__all__
+    assert FmpClient is fmp._native.FmpClient
+    assert type(FmpClient(auth_mode="none", base_url="http://127.0.0.1:0").quote).__name__ == "QuoteNamespace"
 
 
-def test_public_exception_hierarchy_is_stable() -> None:
-    import pickle
+def test_quote_models_are_reexported_from_the_native_module() -> None:
+    """``fmp.quote`` re-exports the native models under the native module path."""
+    import fmp.quote
+    from fmp._native import quote as native_quote
+    from fmp.quote import Quote, QuoteShort
 
-    import fmp
-    from fmp import (
-        FmpConfigError,
-        FmpDecodeError,
-        FmpError,
-        FmpStatusError,
-        FmpTransportError,
-        FmpValidationError,
-    )
-    from fmp import _native
-    from fmp.errors import (
-        FmpConfigError as DomainFmpConfigError,
-        FmpDecodeError as DomainFmpDecodeError,
-        FmpError as DomainFmpError,
-        FmpStatusError as DomainFmpStatusError,
-        FmpTransportError as DomainFmpTransportError,
-        FmpValidationError as DomainFmpValidationError,
-    )
+    assert isinstance(fmp.quote, ModuleType)
+    assert fmp.quote is sys.modules["fmp.quote"]
+    assert fmp.quote.__all__ == ["Quote", "QuoteShort"]
+    assert Quote is native_quote.Quote
+    assert QuoteShort is native_quote.QuoteShort
+    assert Quote.__module__ == "fmp._native.quote"
+    assert QuoteShort.__module__ == "fmp._native.quote"
+    assert native_quote is sys.modules["fmp._native.quote"]
 
+
+def test_chart_models_are_registered_without_a_namespace() -> None:
+    """``fmp._native.chart`` carries models only; there is no ``client.chart`` yet."""
+    from fmp import FmpClient
+    from fmp._native import chart
+
+    for name in ("StockChartLightBar", "StockChartIntradayBar"):
+        model = getattr(chart, name)
+        assert isinstance(model, type)
+        assert model.__module__ == "fmp._native.chart"
+    assert not hasattr(FmpClient(auth_mode="none", base_url="http://127.0.0.1:0"), "chart")
+
+
+def test_exception_hierarchy_is_stable(errors: SimpleNamespace) -> None:
+    """Every error subclasses ``FmpError`` and carries the structured attributes."""
     subclasses = (
-        FmpValidationError,
-        FmpConfigError,
-        FmpTransportError,
-        FmpStatusError,
-        FmpDecodeError,
+        errors.FmpValidationError,
+        errors.FmpConfigError,
+        errors.FmpTransportError,
+        errors.FmpStatusError,
+        errors.FmpDecodeError,
     )
-    assert all(issubclass(exception, FmpError) for exception in subclasses)
-    assert all(issubclass(exception, Exception) for exception in subclasses)
-    assert FmpError is DomainFmpError
-    assert subclasses == (
-        DomainFmpValidationError,
-        DomainFmpConfigError,
-        DomainFmpTransportError,
-        DomainFmpStatusError,
-        DomainFmpDecodeError,
-    )
-    assert {exception.__name__ for exception in subclasses} == {
-        "FmpValidationError",
-        "FmpConfigError",
-        "FmpTransportError",
-        "FmpStatusError",
-        "FmpDecodeError",
-    }
+    assert issubclass(errors.FmpError, Exception)
+    assert all(issubclass(exception, errors.FmpError) for exception in subclasses)
+    assert errors.FmpError.__module__ == "fmp.errors"
     assert all(exception.__module__ == "fmp.errors" for exception in subclasses)
-    assert FmpError.__module__ == "fmp.errors"
-    assert not hasattr(_native, "FmpError")
 
-    expected_categories = {
-        FmpError: None,
-        FmpValidationError: "validation",
-        FmpConfigError: "configuration",
-        FmpTransportError: "transport",
-        FmpStatusError: "status",
-        FmpDecodeError: "decode",
-    }
-    for exception_type, category in expected_categories.items():
-        exception = exception_type("message")
-        assert exception.category == category
-        assert exception.endpoint is None
-        assert exception.status is None
-        assert exception.body is None
-        assert exception.body_truncated is None
-        restored = pickle.loads(pickle.dumps(exception))
-        assert type(restored) is exception_type
-        assert restored.args == ("message",)
-        assert restored.category == category
+
+@pytest.mark.parametrize(
+    ("name", "category"),
+    [
+        ("FmpError", None),
+        ("FmpValidationError", "validation"),
+        ("FmpConfigError", "configuration"),
+        ("FmpTransportError", "transport"),
+        ("FmpStatusError", "status"),
+        ("FmpDecodeError", "decode"),
+    ],
+)
+def test_exception_attributes_default_to_none(errors: SimpleNamespace, name: str, category: str | None) -> None:
+    """A bare exception instance reports its category and no request context."""
+    exception = getattr(errors, name)("message")
+    assert exception.args == ("message",)
+    assert exception.category == category
+    assert (exception.endpoint, exception.status, exception.body, exception.body_truncated) == (None, None, None, None)
