@@ -1,3 +1,7 @@
+//! The hand-written `FmpClient` core: construction and transport
+//! configuration. The per-domain getters (`client.quote`) are generated into
+//! `client_namespaces.rs`, a second `#[pymethods]` block on the same class.
+
 use std::{sync::Arc, time::Duration};
 
 use libfmp::{
@@ -7,7 +11,7 @@ use libfmp::{
 use pyo3::{prelude::*, types::PyDict};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
-use crate::{errors::to_py_error, namespaces::quote::QuoteNamespace};
+use crate::errors::to_py_error;
 
 fn invalid_configuration(message: &'static str) -> PyErr {
     to_py_error(libfmp::Error::configuration(message))
@@ -118,7 +122,7 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native", frozen)]
 pub(crate) struct FmpClient {
-    builder: Arc<ClientBuilder>,
+    pub(crate) builder: Arc<ClientBuilder>,
 }
 
 #[gen_stub_pymethods]
@@ -180,11 +184,5 @@ impl FmpClient {
         Ok(Self {
             builder: Arc::new(builder),
         })
-    }
-
-    /// The quote endpoints, reached as `client.quote`.
-    #[getter]
-    fn quote(&self) -> QuoteNamespace {
-        QuoteNamespace::new(self.builder.clone())
     }
 }
