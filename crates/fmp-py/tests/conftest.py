@@ -59,19 +59,25 @@ def load_fixture(name: str) -> Any:
 def _errors_namespace() -> SimpleNamespace:
     """Expose the exception hierarchy under its public names.
 
-    Until the ``fmp.errors`` package lands (#172) the types only exist as
-    private attributes of ``fmp._native``. This is the single place to update
-    once ``from fmp.errors import FmpError, ...`` becomes available.
+    The types come from the ``fmp.errors`` package (#172); the namespace keeps
+    the fixture shape stable so per-domain tests never import ``fmp._native``.
     """
-    from fmp import _native
+    from fmp.errors import (
+        FmpConfigError,
+        FmpDecodeError,
+        FmpError,
+        FmpStatusError,
+        FmpTransportError,
+        FmpValidationError,
+    )
 
     return SimpleNamespace(
-        FmpError=_native._FmpError,
-        FmpValidationError=_native._FmpValidationError,
-        FmpConfigError=_native._FmpConfigError,
-        FmpTransportError=_native._FmpTransportError,
-        FmpStatusError=_native._FmpStatusError,
-        FmpDecodeError=_native._FmpDecodeError,
+        FmpError=FmpError,
+        FmpValidationError=FmpValidationError,
+        FmpConfigError=FmpConfigError,
+        FmpTransportError=FmpTransportError,
+        FmpStatusError=FmpStatusError,
+        FmpDecodeError=FmpDecodeError,
     )
 
 
