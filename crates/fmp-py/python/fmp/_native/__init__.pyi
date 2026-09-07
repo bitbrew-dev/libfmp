@@ -88,7 +88,7 @@ class FmpClient:
     @property
     def quote(self) -> quote.QuoteNamespace:
         r"""
-        The quote endpoints, reached as `client.quote`.
+        The `quote` endpoints, reached as `client.quote`.
         """
 
     def __new__(
