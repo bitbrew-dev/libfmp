@@ -67,6 +67,8 @@ __all__ = [
     "transcripts",
 ]
 
+__version__: builtins.str
+
 
 @typing.final
 class FmpClient:
