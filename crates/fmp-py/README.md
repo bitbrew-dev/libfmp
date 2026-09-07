@@ -104,6 +104,35 @@ arguments are positional, optional ones keyword-only, and an argument named
 after a Python keyword (`from`) is spelled with a trailing underscore
 (`from_`) on the Python side while the `libfmp` setter keeps its name.
 Entries marked `binary = true` are skipped with a notice until the binary
-response path lands. The top-level `namespaces/mod.rs` is still hand-written.
+response path lands.
+
+The same run emits the wiring that binds the generated code into the
+extension, so adding a domain never edits `lib.rs` or `client.rs`:
+
+| File | Contents |
+|------|----------|
+| `src/namespaces/mod.rs` | one `mod` declaration per domain |
+| `src/registration.rs` | `register_namespaces`: every `fmp._native.<path>` submodule with its models (read back from `src/models/**` with `syn`) and namespace classes, published in `sys.modules` |
+| `src/client_namespaces.rs` | one `FmpClient` getter per domain, a second `#[pymethods]` block (pyo3's `multiple-pymethods` feature) |
+| `src/facade_domains.rs` | a wildcard `reexport_module_members!` per `fmp._native.<path>`, which is what writes the public `python/fmp/<path>/__init__.py` packages |
+
+The hand-written `src/facade.rs` keeps only the top-level `fmp` surface.
+
+## Regenerating the stubs and public packages
+
+The `.pyi` stubs under `python/fmp/_native/` and the public
+`python/fmp/<path>/__init__.py` packages are written by `pyo3-stub-gen`
+through the `stub_gen` binary, from the repository root:
+
+```console
+cargo run -p fmp-py --bin stub_gen
+```
+
+`stub_gen` post-processes each `__init__.pyi` (absolute imports, no
+`# ruff: noqa` header, `ruff format --isolated --line-length 88` in `.py`
+mode) so a run on an unchanged tree leaves `git status` clean. It needs
+`ruff` at the version pinned in `.pre-commit-config.yaml` (currently
+0.15.12): either that exact `ruff` on `PATH` or `uvx`, which fetches it. Run
+it after `gen_models` or `gen_namespaces`, and commit the result.
 
 This project is available under the [MIT License](LICENSE).
