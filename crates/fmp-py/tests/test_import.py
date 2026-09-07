@@ -1,5 +1,6 @@
 """Import-time contract: package metadata, public names, and the error hierarchy."""
 
+import pickle
 import sys
 from importlib.metadata import distribution
 from importlib.resources import files
@@ -27,6 +28,7 @@ def test_public_names_are_exported() -> None:
 
     assert "FmpClient" in fmp.__all__
     assert "__version__" in fmp.__all__
+    assert {"FmpError", "FmpStatusError"} <= set(fmp.__all__)
     assert FmpClient is fmp._native.FmpClient
     assert type(FmpClient(auth_mode="none", base_url="http://127.0.0.1:0").quote).__name__ == "QuoteNamespace"
 
@@ -57,6 +59,16 @@ def test_chart_models_are_registered() -> None:
         assert model.__module__ == "fmp._native.chart"
 
 
+ERROR_NAMES = (
+    "FmpError",
+    "FmpValidationError",
+    "FmpConfigError",
+    "FmpTransportError",
+    "FmpStatusError",
+    "FmpDecodeError",
+)
+
+
 def test_exception_hierarchy_is_stable(errors: SimpleNamespace) -> None:
     """Every error subclasses ``FmpError`` and carries the structured attributes."""
     subclasses = (
@@ -70,6 +82,39 @@ def test_exception_hierarchy_is_stable(errors: SimpleNamespace) -> None:
     assert all(issubclass(exception, errors.FmpError) for exception in subclasses)
     assert errors.FmpError.__module__ == "fmp.errors"
     assert all(exception.__module__ == "fmp.errors" for exception in subclasses)
+
+
+def test_errors_package_reexports_the_native_hierarchy() -> None:
+    """``fmp.errors`` and the top-level ``fmp`` expose the same native exception types."""
+    import fmp
+    import fmp.errors
+    from fmp import FmpError, FmpStatusError
+    from fmp._native import errors as native_errors
+
+    assert isinstance(fmp.errors, ModuleType)
+    assert fmp.errors is sys.modules["fmp.errors"]
+    assert native_errors is sys.modules["fmp._native.errors"]
+    assert set(ERROR_NAMES) <= set(fmp.errors.__all__)
+    assert FmpError is fmp.errors.FmpError is native_errors.FmpError
+    assert FmpStatusError is fmp.errors.FmpStatusError is native_errors.FmpStatusError
+    for name in ERROR_NAMES:
+        assert getattr(fmp, name) is getattr(fmp.errors, name)
+
+
+@pytest.mark.parametrize("name", ERROR_NAMES)
+def test_exceptions_survive_a_pickle_round_trip(errors: SimpleNamespace, name: str) -> None:
+    """Pickling resolves the class through ``fmp.errors`` and keeps the attributes."""
+    cls = getattr(errors, name)
+    exception = cls("message")
+    exception.endpoint = "/quote"
+    exception.status = 401
+
+    restored = pickle.loads(pickle.dumps(exception))
+
+    assert type(restored) is cls
+    assert restored.args == ("message",)
+    assert restored.category == cls.category
+    assert (restored.endpoint, restored.status) == ("/quote", 401)
 
 
 @pytest.mark.parametrize(

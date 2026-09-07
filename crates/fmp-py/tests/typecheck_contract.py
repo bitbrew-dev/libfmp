@@ -1,7 +1,8 @@
 """Static-only contract exercised by pyright and mypy against the shipped stubs."""
 
 import fmp
-from fmp import FmpClient
+from fmp import FmpClient, FmpError
+from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.quote import Quote, QuoteShort
 
 
@@ -17,6 +18,25 @@ def check_public_contract(client: FmpClient) -> None:
     exports: list[str] = fmp.__all__
     version: str = fmp.__version__
     _ = (symbol, price, volume, market_cap, exports, version)
+
+
+def check_error_contract(client: FmpClient) -> None:
+    """Type-check the exception hierarchy and its structured attributes."""
+    try:
+        client.quote.short("AAPL")
+    except FmpStatusError as error:
+        status: int | None = error.status
+        endpoint: str | None = error.endpoint
+        body: str | None = error.body
+        body_truncated: bool | None = error.body_truncated
+        _ = (status, endpoint, body, body_truncated)
+    except FmpValidationError as error:
+        category: str | None = error.category
+        _ = category
+    except FmpError as error:
+        base: FmpError = error
+        top_level: fmp.FmpError = error
+        _ = (base, top_level)
 
 
 FmpClient(
