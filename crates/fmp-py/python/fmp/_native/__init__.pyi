@@ -14,6 +14,7 @@ from fmp._native import crypto
 from fmp._native import dcf
 from fmp._native import directory
 from fmp._native import economics
+from fmp._native import errors
 from fmp._native import esg
 from fmp._native import forex
 from fmp._native import fundraising
@@ -47,6 +48,7 @@ __all__ = [
     "dcf",
     "directory",
     "economics",
+    "errors",
     "esg",
     "forex",
     "fundraising",
