@@ -82,10 +82,6 @@ jobs:
   python-bindings:
     name: python bindings (${{ matrix.python-version }})
     runs-on: ubuntu-latest
-    # Advisory until #173 (test-harness rewrite) lands: 11 of the current
-    # tests still target the old flat API. Remove this line and add the job
-    # to branch protection once #173 merges.
-    continue-on-error: true
     permissions:
       contents: read
     strategy:
