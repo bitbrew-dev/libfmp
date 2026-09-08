@@ -23,6 +23,7 @@ pub(crate) fn emit_struct(
 
     let mut kept: Vec<KeptField> = Vec::new();
     let mut skip_notes: Vec<String> = Vec::new();
+    let mut secret_notes: Vec<String> = Vec::new();
     for field in &def.fields {
         let (wraps, base) = peel(&field.ty);
         let Some(base_ident) = base else {
@@ -36,16 +37,17 @@ pub(crate) fn emit_struct(
         match classify(&base_ident, registry, 0) {
             Class::Skip(reason) => {
                 skip_notes.push(format!("{} ({reason})", field.name));
-                if base_ident == "SecretUrl" {
-                    report
-                        .secret_skipped
-                        .push(format!("{}::{}", def.name, field.name));
-                } else {
-                    report.unclassified.push(format!(
-                        "{}::{}: {} ({reason})",
-                        def.name, field.name, base_ident
-                    ));
-                }
+                report.unclassified.push(format!(
+                    "{}::{}: {} ({reason})",
+                    def.name, field.name, base_ident
+                ));
+            }
+            Class::SecretUrl => {
+                secret_notes.push(field.name.clone());
+                report
+                    .secret_fields
+                    .push(format!("{}::{}", def.name, field.name));
+                kept.push(KeptField::secret(field.name.clone(), wraps));
             }
             Class::Passthrough(pass) => {
                 if wraps.len() > 1 || wraps.first() == Some(&Wrap::Vec) {
@@ -84,6 +86,12 @@ pub(crate) fn emit_struct(
     for note in &skip_notes {
         out.push_str(&format!(
             "/// NOTE: field `{note}` omitted from this model.\n"
+        ));
+    }
+    for note in &secret_notes {
+        out.push_str(&format!(
+            "/// NOTE: field `{note}` is a secret URL: it is stored privately and is only \
+             readable through its explicit `expose_secret_*` accessor.\n"
         ));
     }
     out.push_str("#[gen_stub_pyclass]\n");
@@ -242,6 +250,7 @@ fn base_transform(transform: &Transform, inner: &str) -> String {
         Transform::Dot0 => format!("{inner}.0"),
         Transform::Get => format!("{inner}.get()"),
         Transform::ToString => format!("{inner}.to_string()"),
+        Transform::ExposeSecret => format!("{inner}.expose_secret().to_owned()"),
         Transform::Nested(path) => format!("{path}::from({inner})"),
     }
 }
