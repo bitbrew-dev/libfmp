@@ -115,9 +115,6 @@ fn generate(
     for node in tree.values() {
         let file = node.file(namespaces_root);
         let rendered = render_node(node, &query_modules)?;
-        for entry in &rendered.skipped {
-            println!("skipped {entry}: binary entries are not emitted by the sync arm");
-        }
         write_file(&file, &rendered.source, &mut written)?;
     }
 

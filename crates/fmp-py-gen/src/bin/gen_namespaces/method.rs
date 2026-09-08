@@ -1,9 +1,11 @@
 //! Rendering one endpoint: the `#[pymethods]` wrapper and the free
 //! `<name>_query` builder it calls.
 //!
-//! The wrapper holds only the runtime hand-off (detach, `block_on`, row
+//! The wrapper holds only the runtime hand-off (detach, `block_on`, result
 //! mapping); argument conversion and query construction live in the builder
-//! so an async twin can reuse them without touching this template.
+//! so an async twin can reuse them without touching this template. A
+//! `binary = true` entry returns one `BinaryPayload` instead of a `Vec` of
+//! models, with the same hand-off.
 
 use std::fmt::Write as _;
 
@@ -91,16 +93,13 @@ pub(crate) fn render_method(out: &mut String, endpoint: &Endpoint) {
     if args.len() + 2 > MAX_PARAMS {
         out.push_str("    #[allow(clippy::too_many_arguments)]\n");
     }
-    let model = endpoint
-        .response_model
-        .as_ref()
-        .map_or_else(|| "()".to_owned(), |model| model.name.clone());
+    let (result, binding, mapping) = result_shape(endpoint);
     let mut decl = String::from("&self, py: Python<'_>");
     if !args.is_empty() {
         decl.push_str(", ");
         decl.push_str(&param_list(endpoint));
     }
-    let _ = writeln!(out, "    fn {name}({decl}) -> PyResult<Vec<{model}>> {{");
+    let _ = writeln!(out, "    fn {name}({decl}) -> PyResult<{result}> {{");
     let call = if endpoint.query_type.is_some() {
         let _ = writeln!(
             out,
@@ -114,13 +113,33 @@ pub(crate) fn render_method(out: &mut String, endpoint: &Endpoint) {
     out.push_str("        let builder = self.builder.clone();\n");
     let _ = writeln!(
         out,
-        "        let rows = py.detach(move || block_on(builder, |client| async move {{ {call} }}))?;"
+        "        let {binding} = py.detach(move || block_on(builder, |client| async move {{ {call} }}))?;"
     );
-    let _ = writeln!(
-        out,
-        "        rows.map(|items| items.into_iter().map({model}::from).collect()).map_err(to_py_error)"
-    );
+    let _ = writeln!(out, "        {mapping}");
     out.push_str("    }\n");
+}
+
+/// The Python return type, the local the detached call binds, and the
+/// expression mapping that local into the return type.
+fn result_shape(endpoint: &Endpoint) -> (String, &'static str, String) {
+    if endpoint.binary {
+        return (
+            "BinaryPayload".to_owned(),
+            "response",
+            "response.map(BinaryPayload::from).map_err(to_py_error)".to_owned(),
+        );
+    }
+    let model = endpoint
+        .response_model
+        .as_ref()
+        .map_or_else(|| "()".to_owned(), |model| model.name.clone());
+    (
+        format!("Vec<{model}>"),
+        "rows",
+        format!(
+            "rows.map(|items| items.into_iter().map({model}::from).collect()).map_err(to_py_error)"
+        ),
+    )
 }
 
 pub(crate) fn render_query_fn(out: &mut String, endpoint: &Endpoint, struct_name: &str) {
