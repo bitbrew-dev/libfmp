@@ -1,6 +1,7 @@
 //! Thin Python facade for `libfmp`.
 
 pub mod args;
+mod binary;
 mod client;
 mod client_namespaces;
 mod errors;
@@ -21,6 +22,7 @@ mod _native {
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
         module.add("__version__", libfmp::VERSION)?;
         module.add_class::<super::client::FmpClient>()?;
+        module.add_class::<super::binary::BinaryPayload>()?;
         super::errors::register(module)?;
         super::registration::register_namespaces(module)?;
         Ok(())
