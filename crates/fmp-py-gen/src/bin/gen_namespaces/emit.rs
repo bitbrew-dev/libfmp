@@ -4,7 +4,8 @@
 //! a free `<name>_query` function converts the Python arguments and builds
 //! the `libfmp` query (the part an async twin will share), and the
 //! `#[pymethods]` body only detaches from the interpreter, runs the call on
-//! the shared runtime, and maps rows into the generated models.
+//! the shared runtime, and maps rows into the generated models (or a
+//! `BinaryResponse` into the hand-written `BinaryPayload`).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
@@ -29,27 +30,17 @@ pub(crate) enum EmitError {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct Rendered {
     pub(crate) source: String,
-    /// Binary entries left out of the runtime path, as dotted entries.
-    pub(crate) skipped: Vec<String>,
 }
 
 /// Renders `node` as the contents of its namespace file (unformatted).
 pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Rendered, EmitError> {
     let dotted = node.dotted();
     let struct_name = node.struct_name();
-    let mut methods = Vec::new();
-    let mut skipped = Vec::new();
-    for endpoint in &node.endpoints {
-        if endpoint.binary {
-            skipped.push(format!("{dotted}.{}", endpoint.python_name));
-        } else {
-            methods.push(endpoint);
-        }
-    }
+    let methods = &node.endpoints;
 
     let mut query_uses: BTreeMap<Vec<String>, BTreeSet<String>> = BTreeMap::new();
     let mut model_uses: BTreeMap<Vec<String>, BTreeSet<String>> = BTreeMap::new();
-    for endpoint in &methods {
+    for endpoint in methods {
         let entry = format!("{dotted}.{}", endpoint.python_name);
         if let Some(query) = &endpoint.query_type {
             let module = query_modules
@@ -91,6 +82,9 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     if methods.iter().any(|endpoint| !endpoint.args.is_empty()) {
         out.push_str("use crate::args;\n");
     }
+    if methods.iter().any(|endpoint| endpoint.binary) {
+        out.push_str("use crate::binary::BinaryPayload;\n");
+    }
     if !methods.is_empty() {
         out.push_str("use crate::errors::to_py_error;\n");
     }
@@ -128,7 +122,7 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     out.push_str("#[gen_stub_pymethods]\n#[pymethods]\n");
     let _ = writeln!(out, "impl {struct_name} {{");
     let mut first = true;
-    for endpoint in &methods {
+    for endpoint in methods {
         if !first {
             out.push('\n');
         }
@@ -155,17 +149,14 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     }
     out.push_str("}\n");
 
-    for endpoint in &methods {
+    for endpoint in methods {
         if endpoint.query_type.is_some() {
             out.push('\n');
             render_query_fn(&mut out, endpoint, &struct_name);
         }
     }
 
-    Ok(Rendered {
-        source: out,
-        skipped,
-    })
+    Ok(Rendered { source: out })
 }
 
 /// `use <prefix>::<module>::{A, B};` with the braces dropped for one name.

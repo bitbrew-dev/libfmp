@@ -1,6 +1,7 @@
 //! Emitter contract: the shipped quote registry renders the drop-in
-//! `QuoteNamespace`, nested fixtures render parents with getters, keyword
-//! arg names are sanitized, and every rendered file parses as Rust.
+//! `QuoteNamespace`, nested fixtures render parents with getters and binary
+//! entries as `BinaryPayload` methods, keyword arg names are sanitized, and
+//! every rendered file parses as Rust.
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -78,6 +79,7 @@ fn quote_registry_renders_the_drop_in_namespace() {
         assert!(quote.contains(needle), "missing {needle:?} in:\n{quote}");
     }
     assert!(!quote.contains("#[getter]"));
+    assert!(!quote.contains("BinaryPayload"));
 }
 
 #[test]
@@ -125,23 +127,27 @@ fn nested_fixture_renders_parent_getters_and_children() {
         assert!(income.contains(needle), "missing {needle:?} in:\n{income}");
     }
 
-    let reports = &files[Path::new("statements/reports.rs")];
-    assert_eq!(
-        reports.skipped,
-        ["statements.reports.financial_reports_xlsx"]
-    );
-    assert!(
-        reports
-            .source
-            .contains("pub(crate) struct StatementsReportsNamespace {")
-    );
-    assert!(
-        reports
-            .source
-            .contains("impl StatementsReportsNamespace {\n}")
-    );
-    assert!(!reports.source.contains("financial_reports_xlsx"));
-    assert!(!reports.source.contains("use crate::"));
+    let reports = source(&files, "statements/reports.rs");
+    for needle in [
+        "use libfmp::endpoints::statements::reports::FinancialReportsXlsxQuery;",
+        "use crate::args;\nuse crate::binary::BinaryPayload;\nuse crate::errors::to_py_error;\nuse crate::runtime::block_on;\n",
+        "pub(crate) struct StatementsReportsNamespace {",
+        "    /// Downloads one financial report as an XLSX workbook.\n    #[pyo3(signature = (symbol, year, period))]\n    fn financial_reports_xlsx(&self, py: Python<'_>, symbol: &str, year: i64, period: &str) -> PyResult<BinaryPayload> {",
+        "let query = financial_reports_xlsx_query(symbol, year, period)?;",
+        "let response = py.detach(move || block_on(builder, |client| async move { client.financial_reports_xlsx(query).await }))?;",
+        "        response.map(BinaryPayload::from).map_err(to_py_error)\n    }",
+        "fn financial_reports_xlsx_query(symbol: &str, year: i64, period: &str) -> PyResult<FinancialReportsXlsxQuery> {",
+        "let period = args::fiscal_period(\"period\", period)?;",
+        "Ok(FinancialReportsXlsxQuery::new(symbol, year, period))",
+    ] {
+        assert!(
+            reports.contains(needle),
+            "missing {needle:?} in:\n{reports}"
+        );
+    }
+    assert!(!reports.contains("Vec<"));
+    assert!(!reports.contains("use crate::models"));
+    assert!(!reports.contains("rows"));
 }
 
 #[test]

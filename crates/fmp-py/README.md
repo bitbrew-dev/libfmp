@@ -103,8 +103,12 @@ getter per sub-namespace) plus `namespaces/statements/income.rs`. Required
 arguments are positional, optional ones keyword-only, and an argument named
 after a Python keyword (`from`) is spelled with a trailing underscore
 (`from_`) on the Python side while the `libfmp` setter keeps its name.
-Entries marked `binary = true` are skipped with a notice until the binary
-response path lands.
+Entries marked `binary = true` (the endpoints whose `libfmp` method returns
+`BinaryResponse`, such as the XLSX financial report download) return a single
+`BinaryPayload` instead of a list of models: `data` is the body as `bytes`,
+alongside `content_type`, `content_disposition`, and `byte_len`.
+`BinaryPayload` is hand-written in `src/binary.rs` and exported from the
+package root as `fmp.BinaryPayload`.
 
 The same run emits the wiring that binds the generated code into the
 extension, so adding a domain never edits `lib.rs` or `client.rs`:
