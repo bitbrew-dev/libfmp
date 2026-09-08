@@ -1,7 +1,7 @@
 """Static-only contract exercised by pyright and mypy against the shipped stubs."""
 
 import fmp
-from fmp import FmpClient, FmpError
+from fmp import BinaryPayload, FmpClient, FmpError
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.quote import Quote, QuoteShort
 
@@ -18,6 +18,16 @@ def check_public_contract(client: FmpClient) -> None:
     exports: list[str] = fmp.__all__
     version: str = fmp.__version__
     _ = (symbol, price, volume, market_cap, exports, version)
+
+
+def check_binary_contract() -> None:
+    """Type-check the binary payload fields."""
+    payload: BinaryPayload = BinaryPayload(b"", "application/octet-stream")
+    data: bytes = payload.data
+    content_type: str = payload.content_type
+    disposition: str | None = payload.content_disposition
+    byte_len: int = payload.byte_len
+    _ = (data, content_type, disposition, byte_len)
 
 
 def check_error_contract(client: FmpClient) -> None:
