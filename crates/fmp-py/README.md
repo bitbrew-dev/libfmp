@@ -50,6 +50,24 @@ hand-maintained `.pyi` contracts, plus a `py.typed` marker for type checkers.
 Transport, configuration, and runtime internals are intentionally not exposed
 as Python modules.
 
+## Secret URLs
+
+`FinancialReportDate.link_json` / `link_xlsx` (the `fmp.statements.reports` model
+listing available financial reports) are download links that embed your API key. The Python model treats them the
+way `FmpClient` treats `danger_allow_insecure_authentication`: the unsafe path
+exists, but it is conspicuous.
+
+- The links are not attributes. Read one with `row.expose_secret_url_json()` or
+  `row.expose_secret_url_xlsx()` and treat the value as a credential.
+- `repr(row)` and `str(row)` print `link_json=[REDACTED URL]`, so a stray
+  `print` or log line never leaks the key.
+- For local debugging only, `fmp.set_reveal_secret_urls(True)` reveals the URLs
+  in `repr()` process-wide (`fmp.reveal_secret_urls()` reads the flag back).
+  Setting `FMP_REVEAL_SECRET_URLS=1` (also `true` / `yes`, case-insensitive)
+  before the first use turns it on at start-up.
+- Pickles of the model contain the real URLs: `pickle.dumps` must round-trip
+  the value, so store them as carefully as the key itself.
+
 ## Regenerating the response models
 
 The `pyo3` response models under `crates/fmp-py/src/models/` are generated
