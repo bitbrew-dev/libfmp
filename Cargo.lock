@@ -220,6 +220,7 @@ name = "fmp-py"
 version = "0.5.0"
 dependencies = [
  "chrono",
+ "http",
  "libc",
  "libfmp",
  "pyo3",
