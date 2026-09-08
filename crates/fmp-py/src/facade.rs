@@ -16,7 +16,7 @@ pyo3_stub_gen::module_variable!("fmp._native", "__version__", String);
 
 pyo3_stub_gen::reexport_module_members!(
     "fmp" from "fmp._native";
-    "FmpClient", "BinaryPayload", "__version__"
+    "FmpClient", "BinaryPayload", "__version__", "reveal_secret_urls", "set_reveal_secret_urls"
 );
 pyo3_stub_gen::reexport_module_members!("fmp" from "fmp._native.quote"; "QuoteShort");
 pyo3_stub_gen::reexport_module_members!(

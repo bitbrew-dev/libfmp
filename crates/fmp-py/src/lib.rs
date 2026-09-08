@@ -11,6 +11,7 @@ mod models;
 mod namespaces;
 mod registration;
 mod runtime;
+mod secrets;
 
 use pyo3::prelude::*;
 
@@ -24,6 +25,7 @@ mod _native {
         module.add_class::<super::client::FmpClient>()?;
         module.add_class::<super::binary::BinaryPayload>()?;
         super::errors::register(module)?;
+        super::secrets::register(module)?;
         super::registration::register_namespaces(module)?;
         Ok(())
     }
