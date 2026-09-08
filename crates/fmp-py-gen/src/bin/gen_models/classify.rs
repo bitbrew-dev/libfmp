@@ -70,7 +70,7 @@ pub(crate) fn classify(ident: &str, registry: &Registry, depth: usize) -> Class 
         return classify(target, registry, depth + 1);
     }
     if ident == "SecretUrl" {
-        return Class::Skip("SecretUrl is redaction-protected".to_string());
+        return Class::SecretUrl;
     }
     Class::Skip("unclassified type".to_string())
 }

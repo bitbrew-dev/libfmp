@@ -36,6 +36,7 @@ pub(crate) enum Class {
         transform: Transform,
     },
     Passthrough(Pass),
+    SecretUrl,
     Skip(String),
 }
 
@@ -48,6 +49,7 @@ pub(crate) enum Transform {
     Dot0,
     Get,
     ToString,
+    ExposeSecret,
     Nested(String),
 }
 
@@ -93,6 +95,9 @@ enum KeptKind {
         pass: Pass,
         optional: bool,
     },
+    Secret {
+        wraps: Vec<Wrap>,
+    },
 }
 
 impl KeptField {
@@ -131,6 +136,18 @@ impl KeptField {
         }
     }
 
+    /// A `SecretUrl` field: stored as a crate-visible `String` with no
+    /// `#[pyo3(get)]`, so only a hand-written accessor can read it.
+    pub(crate) fn secret(name: String, wraps: Vec<Wrap>) -> Self {
+        let model_ty = wrap_type(&wraps, "String");
+        Self {
+            field_ident: python_safe_ident(&name),
+            source_name: name,
+            model_ty,
+            kind: KeptKind::Secret { wraps },
+        }
+    }
+
     pub(crate) fn is_passthrough(&self) -> bool {
         matches!(self.kind, KeptKind::Passthrough { .. })
     }
@@ -143,6 +160,9 @@ impl KeptField {
         match &self.kind {
             KeptKind::Passthrough { .. } => {
                 format!("    {}: {},\n", self.field_ident, self.model_ty)
+            }
+            KeptKind::Secret { .. } => {
+                format!("    pub(crate) {}: {},\n", self.field_ident, self.model_ty)
             }
             KeptKind::Scalar { .. } => {
                 format!(
@@ -163,7 +183,9 @@ impl KeptField {
                 };
                 format!("{}: {ty}", self.field_ident)
             }
-            KeptKind::Scalar { .. } => format!("{}: {}", self.field_ident, self.model_ty),
+            KeptKind::Scalar { .. } | KeptKind::Secret { .. } => {
+                format!("{}: {}", self.field_ident, self.model_ty)
+            }
         }
     }
 
@@ -212,7 +234,7 @@ impl KeptField {
                     )
                 }
             }
-            KeptKind::Scalar { .. } => {
+            KeptKind::Scalar { .. } | KeptKind::Secret { .. } => {
                 format!("self.{}.clone().into_bound_py_any(py)?", self.field_ident)
             }
         }
@@ -251,6 +273,7 @@ impl KeptField {
             KeptKind::Scalar {
                 wraps, transform, ..
             } => convert_expr(&src, wraps, transform),
+            KeptKind::Secret { wraps } => convert_expr(&src, wraps, &Transform::ExposeSecret),
         };
         format!("{}: {expr}", self.field_ident)
     }
@@ -263,7 +286,7 @@ pub(crate) struct Report {
     pub(crate) passthrough: BTreeSet<String>,
     pub(crate) number_fields: usize,
     pub(crate) enums: BTreeSet<String>,
-    pub(crate) secret_skipped: Vec<String>,
+    pub(crate) secret_fields: Vec<String>,
     pub(crate) unclassified: Vec<String>,
 }
 
@@ -275,7 +298,7 @@ impl Report {
         println!("  enums -> str:       {:?}", self.enums);
         println!("  passthrough structs: {:?}", self.passthrough);
         println!("  serde_json::Number fields: {}", self.number_fields);
-        println!("  SecretUrl fields skipped: {:?}", self.secret_skipped);
+        println!("  SecretUrl fields (private): {:?}", self.secret_fields);
         println!("  unclassified (skipped): {:?}", self.unclassified);
     }
 }
