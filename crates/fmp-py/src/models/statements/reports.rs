@@ -5,8 +5,8 @@ use pyo3::prelude::*;
 use pyo3::types::PyTuple;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
-/// NOTE: field `link_json (SecretUrl is redaction-protected)` omitted from this model.
-/// NOTE: field `link_xlsx (SecretUrl is redaction-protected)` omitted from this model.
+/// NOTE: field `link_json` is a secret URL: it is stored privately and is only readable through its explicit `expose_secret_*` accessor.
+/// NOTE: field `link_xlsx` is a secret URL: it is stored privately and is only readable through its explicit `expose_secret_*` accessor.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.reports", frozen, from_py_object)]
 #[derive(Clone)]
@@ -17,6 +17,8 @@ pub(crate) struct FinancialReportDate {
     pub fiscal_year: u32,
     #[pyo3(get)]
     pub period: String,
+    pub(crate) link_json: String,
+    pub(crate) link_xlsx: String,
 }
 
 #[gen_stub_pymethods]
@@ -25,12 +27,20 @@ impl FinancialReportDate {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, fiscal_year, period))]
-    fn new(symbol: String, fiscal_year: u32, period: String) -> Self {
+    #[pyo3(signature = (symbol, fiscal_year, period, link_json, link_xlsx))]
+    fn new(
+        symbol: String,
+        fiscal_year: u32,
+        period: String,
+        link_json: String,
+        link_xlsx: String,
+    ) -> Self {
         Self {
             symbol,
             fiscal_year,
             period,
+            link_json,
+            link_xlsx,
         }
     }
 
@@ -40,6 +50,8 @@ impl FinancialReportDate {
             self.symbol.clone().into_bound_py_any(py)?,
             self.fiscal_year.clone().into_bound_py_any(py)?,
             self.period.clone().into_bound_py_any(py)?,
+            self.link_json.clone().into_bound_py_any(py)?,
+            self.link_xlsx.clone().into_bound_py_any(py)?,
         ];
         PyTuple::new(py, members)
     }
@@ -51,6 +63,8 @@ impl From<libfmp::responses::statements::reports::FinancialReportDate> for Finan
             symbol: value.symbol.into_inner(),
             fiscal_year: value.fiscal_year.get(),
             period: value.period.to_string(),
+            link_json: value.link_json.expose_secret().to_owned(),
+            link_xlsx: value.link_xlsx.expose_secret().to_owned(),
         }
     }
 }
