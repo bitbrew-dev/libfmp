@@ -12,8 +12,8 @@ __all__ = [
 @typing.final
 class FinancialReportDate:
     r"""
-    NOTE: field `link_json (SecretUrl is redaction-protected)` omitted from this model.
-    NOTE: field `link_xlsx (SecretUrl is redaction-protected)` omitted from this model.
+    NOTE: field `link_json` is a secret URL: it is stored privately and is only readable through its explicit `expose_secret_*` accessor.
+    NOTE: field `link_xlsx` is a secret URL: it is stored privately and is only readable through its explicit `expose_secret_*` accessor.
     """
 
     @property
@@ -23,9 +23,31 @@ class FinancialReportDate:
     @property
     def period(self) -> builtins.str: ...
     def __new__(
-        cls, symbol: builtins.str, fiscal_year: builtins.int, period: builtins.str
+        cls,
+        symbol: builtins.str,
+        fiscal_year: builtins.int,
+        period: builtins.str,
+        link_json: builtins.str,
+        link_xlsx: builtins.str,
     ) -> FinancialReportDate: ...
     def __getnewargs__(self) -> tuple: ...
+    def expose_secret_url_json(self) -> builtins.str:
+        r"""
+        Returns the JSON report download URL. The URL embeds the API key:
+        treat the value as a credential and never log it.
+        """
+
+    def expose_secret_url_xlsx(self) -> builtins.str:
+        r"""
+        Returns the XLSX report download URL. The URL embeds the API key:
+        treat the value as a credential and never log it.
+        """
+
+    def __repr__(self) -> builtins.str:
+        r"""
+        Prints every field; the secret URLs show as `[REDACTED URL]` unless
+        `set_reveal_secret_urls(True)` (or `FMP_REVEAL_SECRET_URLS`) is on.
+        """
 
 
 @typing.final
