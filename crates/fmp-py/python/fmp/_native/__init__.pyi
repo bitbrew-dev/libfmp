@@ -61,9 +61,11 @@ __all__ = [
     "market_hours",
     "news",
     "quote",
+    "reveal_secret_urls",
     "screener",
     "search",
     "sec_filings",
+    "set_reveal_secret_urls",
     "statements",
     "technical_indicators",
     "tipranks",
@@ -159,3 +161,19 @@ class FmpClient:
         danger_allow_insecure_authentication: builtins.bool = False,
         follow_redirects: typing.Optional[builtins.bool] = None,
     ) -> FmpClient: ...
+
+
+def reveal_secret_urls() -> builtins.bool:
+    r"""
+    Reports whether secret URLs are currently revealed in `repr()` / `str()`.
+    """
+
+
+def set_reveal_secret_urls(enabled: builtins.bool) -> None:
+    r"""
+    Turns revealing of secret URLs in `repr()` / `str()` on or off for the
+    whole process.
+
+    Off by default. Enable only for local debugging: while on, every
+    `FinancialReportDate` repr prints download links that embed the API key.
+    """
