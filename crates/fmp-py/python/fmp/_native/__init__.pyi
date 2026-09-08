@@ -35,6 +35,7 @@ from fmp._native import tipranks
 from fmp._native import transcripts
 
 __all__ = [
+    "BinaryPayload",
     "FmpClient",
     "analyst",
     "bulk",
@@ -70,6 +71,57 @@ __all__ = [
 ]
 
 __version__: builtins.str
+
+
+@typing.final
+class BinaryPayload:
+    r"""
+    A binary endpoint response, such as an XLSX workbook.
+
+    `data` is the body as `bytes`, `content_type` the exact validated
+    `Content-Type` header value, and `content_disposition` the
+    `Content-Disposition` header (an attachment filename hint) when the
+    provider sent a valid one. Instances are immutable and picklable.
+    """
+
+    @property
+    def data(self) -> bytes:
+        r"""
+        The response body.
+        """
+
+    @property
+    def content_type(self) -> builtins.str:
+        r"""
+        The exact validated `Content-Type` header value.
+        """
+
+    @property
+    def content_disposition(self) -> typing.Optional[builtins.str]:
+        r"""
+        The `Content-Disposition` header value when the provider sent a valid one.
+        """
+
+    @property
+    def byte_len(self) -> builtins.int:
+        r"""
+        The body length in bytes.
+        """
+
+    def __new__(
+        cls,
+        data: bytes,
+        content_type: builtins.str,
+        content_disposition: typing.Optional[builtins.str] = None,
+    ) -> BinaryPayload: ...
+    def __len__(self) -> builtins.int: ...
+    def __repr__(self) -> builtins.str:
+        r"""
+        Reports the size and media type only: the disposition is
+        provider-controlled text and the body is opaque.
+        """
+
+    def __getnewargs__(self) -> tuple: ...
 
 
 @typing.final
