@@ -109,6 +109,14 @@ pub fn true_false_flag(_name: &str, value: bool) -> PyResult<TrueFalseFlag> {
     })
 }
 
+/// Passes a Python `bool` through to a query setter that takes a bare `bool`.
+///
+/// Infallible; the `PyResult` keeps the signature uniform with the other
+/// conversions so it composes with [`optional`](crate::args::optional).
+pub fn boolean(_name: &str, value: bool) -> PyResult<bool> {
+    Ok(value)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -225,5 +233,12 @@ mod tests {
                 .as_str(),
             "false"
         );
+    }
+
+    #[test]
+    fn boolean_passes_bool_through() {
+        crate::args::testing::init();
+        assert!(boolean("invalid", true).expect("infallible"));
+        assert!(!boolean("invalid", false).expect("infallible"));
     }
 }

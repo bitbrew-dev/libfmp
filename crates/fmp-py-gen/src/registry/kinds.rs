@@ -79,6 +79,7 @@ arg_kinds! {
     Volume => ("volume", "Volume", "i64", "int"),
     FiniteDecimal => ("finite_decimal", "FiniteDecimal", "f64", "float"),
     TrueFalseFlag => ("true_false_flag", "TrueFalseFlag", "bool", "bool"),
+    Boolean => ("boolean", "bool", "bool", "bool"),
     Date => ("date", "Date", "DateArg", "datetime.date | str"),
     ApiDatetime => ("api_datetime", "ApiDateTime", "DateTimeArg", "datetime.datetime | str"),
     DateRange => ("date_range", "DateRange", "(DateArg, DateArg)", "tuple[datetime.date | str, datetime.date | str]"),
