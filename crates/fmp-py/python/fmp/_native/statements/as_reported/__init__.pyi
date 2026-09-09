@@ -6,6 +6,7 @@ import typing
 
 __all__ = [
     "AsReportedFinancialStatement",
+    "StatementsAsReportedNamespace",
 ]
 
 
@@ -33,3 +34,54 @@ class AsReportedFinancialStatement:
         data: builtins.str,
     ) -> AsReportedFinancialStatement: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsAsReportedNamespace:
+    r"""
+    Statements as_reported endpoints for a single client, exposed as `client.statements.as_reported`.
+    """
+
+    def income(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves income statements as reported by one company.
+        """
+
+    def balance_sheet(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves balance sheets as reported by one company.
+        """
+
+    def cash_flow(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves cash-flow statements as reported by one company.
+        """
+
+    def full(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves complete financial statements as reported by one company.
+        """

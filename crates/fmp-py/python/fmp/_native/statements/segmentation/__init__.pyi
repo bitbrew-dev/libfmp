@@ -6,6 +6,7 @@ import typing
 
 __all__ = [
     "RevenueSegmentation",
+    "StatementsSegmentationNamespace",
 ]
 
 
@@ -33,3 +34,32 @@ class RevenueSegmentation:
         data: builtins.str,
     ) -> RevenueSegmentation: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsSegmentationNamespace:
+    r"""
+    Statements segmentation endpoints for a single client, exposed as `client.statements.segmentation`.
+    """
+
+    def revenue_product(
+        self,
+        symbol: builtins.str,
+        *,
+        period: typing.Optional[builtins.str] = None,
+        structure: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[RevenueSegmentation]:
+        r"""
+        Retrieves product revenue segmentation for one company.
+        """
+
+    def revenue_geographic(
+        self,
+        symbol: builtins.str,
+        *,
+        period: typing.Optional[builtins.str] = None,
+        structure: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[RevenueSegmentation]:
+        r"""
+        Retrieves geographic revenue segmentation for one company.
+        """

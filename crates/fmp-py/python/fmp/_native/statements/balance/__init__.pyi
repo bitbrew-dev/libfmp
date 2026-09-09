@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "BalanceSheetStatement",
     "BalanceSheetStatementTtm",
+    "StatementsBalanceNamespace",
 ]
 
 
@@ -387,3 +388,28 @@ class BalanceSheetStatementTtm:
         net_debt: builtins.int,
     ) -> BalanceSheetStatementTtm: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsBalanceNamespace:
+    r"""
+    Statements balance endpoints for a single client, exposed as `client.statements.balance`.
+    """
+
+    def statement(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[BalanceSheetStatement]:
+        r"""
+        Retrieves historical worldwide balance sheets for one company.
+        """
+
+    def statement_ttm(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[BalanceSheetStatementTtm]:
+        r"""
+        Retrieves trailing-twelve-month worldwide balance sheets for one company.
+        """

@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "FinancialRatios",
     "FinancialRatiosTtm",
+    "StatementsRatiosNamespace",
 ]
 
 
@@ -408,3 +409,28 @@ class FinancialRatiosTtm:
         dividend_per_share_ttm: builtins.float,
     ) -> FinancialRatiosTtm: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsRatiosNamespace:
+    r"""
+    Statements ratios endpoints for a single client, exposed as `client.statements.ratios`.
+    """
+
+    def financial_ratios(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[FinancialRatios]:
+        r"""
+        Retrieves historical worldwide financial ratios for one company.
+        """
+
+    def financial_ratios_ttm(
+        self, symbol: builtins.str
+    ) -> builtins.list[FinancialRatiosTtm]:
+        r"""
+        Retrieves trailing-twelve-month worldwide financial ratios for one company.
+        """
