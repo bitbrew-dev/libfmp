@@ -346,6 +346,7 @@ fn register_sec_filings(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 
 fn register_statements(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "statements")?;
+    module.add_class::<crate::namespaces::statements::StatementsNamespace>()?;
     register_statements_as_reported(&module)?;
     register_statements_balance(&module)?;
     register_statements_cash_flow(&module)?;
@@ -362,6 +363,8 @@ fn register_statements(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 fn register_statements_as_reported(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "as_reported")?;
     module.add_class::<crate::models::statements::as_reported::AsReportedFinancialStatement>()?;
+    module
+        .add_class::<crate::namespaces::statements::as_reported::StatementsAsReportedNamespace>()?;
     add_submodule(parent, "fmp._native.statements.as_reported", &module)
 }
 
@@ -369,17 +372,20 @@ fn register_statements_balance(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "balance")?;
     module.add_class::<crate::models::statements::balance::BalanceSheetStatement>()?;
     module.add_class::<crate::models::statements::balance::BalanceSheetStatementTtm>()?;
+    module.add_class::<crate::namespaces::statements::balance::StatementsBalanceNamespace>()?;
     add_submodule(parent, "fmp._native.statements.balance", &module)
 }
 
 fn register_statements_cash_flow(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "cash_flow")?;
     module.add_class::<crate::models::statements::cash_flow::CashFlowStatement>()?;
+    module.add_class::<crate::namespaces::statements::cash_flow::StatementsCashFlowNamespace>()?;
     add_submodule(parent, "fmp._native.statements.cash_flow", &module)
 }
 
 fn register_statements_growth(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "growth")?;
+    module.add_class::<crate::namespaces::statements::growth::StatementsGrowthNamespace>()?;
     register_statements_growth_balance(&module)?;
     register_statements_growth_cash_flow(&module)?;
     register_statements_growth_combined(&module)?;
@@ -415,6 +421,7 @@ fn register_statements_growth_income(parent: &Bound<'_, PyModule>) -> PyResult<(
 fn register_statements_income(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "income")?;
     module.add_class::<crate::models::statements::income::IncomeStatement>()?;
+    module.add_class::<crate::namespaces::statements::income::StatementsIncomeNamespace>()?;
     add_submodule(parent, "fmp._native.statements.income", &module)
 }
 
@@ -422,6 +429,7 @@ fn register_statements_metrics(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "metrics")?;
     module.add_class::<crate::models::statements::metrics::KeyMetrics>()?;
     module.add_class::<crate::models::statements::metrics::KeyMetricsTtm>()?;
+    module.add_class::<crate::namespaces::statements::metrics::StatementsMetricsNamespace>()?;
     add_submodule(parent, "fmp._native.statements.metrics", &module)
 }
 
@@ -429,6 +437,7 @@ fn register_statements_ratios(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "ratios")?;
     module.add_class::<crate::models::statements::ratios::FinancialRatios>()?;
     module.add_class::<crate::models::statements::ratios::FinancialRatiosTtm>()?;
+    module.add_class::<crate::namespaces::statements::ratios::StatementsRatiosNamespace>()?;
     add_submodule(parent, "fmp._native.statements.ratios", &module)
 }
 
@@ -436,12 +445,16 @@ fn register_statements_reports(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "reports")?;
     module.add_class::<crate::models::statements::reports::FinancialReportDate>()?;
     module.add_class::<crate::models::statements::reports::FinancialReportJson>()?;
+    module.add_class::<crate::namespaces::statements::reports::StatementsReportsNamespace>()?;
     add_submodule(parent, "fmp._native.statements.reports", &module)
 }
 
 fn register_statements_segmentation(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "segmentation")?;
     module.add_class::<crate::models::statements::segmentation::RevenueSegmentation>()?;
+    module
+        .add_class::<crate::namespaces::statements::segmentation::StatementsSegmentationNamespace>(
+        )?;
     add_submodule(parent, "fmp._native.statements.segmentation", &module)
 }
 
@@ -451,6 +464,7 @@ fn register_statements_summaries(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::statements::summaries::FinancialScore>()?;
     module.add_class::<crate::models::statements::summaries::LatestFinancialStatement>()?;
     module.add_class::<crate::models::statements::summaries::OwnerEarnings>()?;
+    module.add_class::<crate::namespaces::statements::summaries::StatementsSummariesNamespace>()?;
     add_submodule(parent, "fmp._native.statements.summaries", &module)
 }
 
