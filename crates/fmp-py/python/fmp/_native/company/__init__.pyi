@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "AllSharesFloatRecord",
     "CompanyExecutive",
+    "CompanyNamespace",
     "CompanyNote",
     "CompanyProfile",
     "CompanyShareFloat",
@@ -73,6 +74,134 @@ class CompanyExecutive:
         active: builtins.bool,
     ) -> CompanyExecutive: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class CompanyNamespace:
+    r"""
+    Company endpoints for a single client, exposed as `client.company`.
+    """
+
+    def profile(self, symbol: builtins.str) -> builtins.list[CompanyProfile]:
+        r"""
+        Retrieves worldwide company profiles by provider ticker.
+        """
+
+    def profile_by_cik(self, cik: builtins.str) -> builtins.list[CompanyProfile]:
+        r"""
+        Retrieves US company profiles by representation-preserving CIK.
+        """
+
+    def notes(self, symbol: builtins.str) -> builtins.list[CompanyNote]:
+        r"""
+        Retrieves company-issued notes for a US company.
+        """
+
+    def stock_peers(self, symbol: builtins.str) -> builtins.list[StockPeer]:
+        r"""
+        Retrieves worldwide stock peers for a company.
+        """
+
+    def delisted_companies(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[DelistedCompany]:
+        r"""
+        Retrieves delisted US companies with optional provider pagination.
+        """
+
+    def employee_count(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[EmployeeCount]:
+        r"""
+        Retrieves current employee-count filings for a US company.
+        """
+
+    def historical_employee_count(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[EmployeeCount]:
+        r"""
+        Retrieves historical employee-count filings for a US company.
+        """
+
+    def market_capitalization(
+        self, symbol: builtins.str
+    ) -> builtins.list[MarketCapitalizationRecord]:
+        r"""
+        Retrieves current worldwide market capitalization for one company.
+        """
+
+    def market_capitalization_batch(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[MarketCapitalizationRecord]:
+        r"""
+        Retrieves current worldwide market capitalization for multiple companies.
+        """
+
+    def historical_market_capitalization(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[MarketCapitalizationRecord]:
+        r"""
+        Retrieves historical worldwide market capitalization for one company.
+        """
+
+    def shares_float(self, symbol: builtins.str) -> builtins.list[CompanyShareFloat]:
+        r"""
+        Retrieves current worldwide share-float data for one company.
+        """
+
+    def shares_float_all(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[AllSharesFloatRecord]:
+        r"""
+        Retrieves paginated worldwide share-float data for all companies.
+        """
+
+    def mergers_acquisitions_latest(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[MergerAcquisition]:
+        r"""
+        Retrieves the latest US mergers and acquisitions with optional pagination.
+        """
+
+    def mergers_acquisitions_search(
+        self, name: builtins.str
+    ) -> builtins.list[MergerAcquisition]:
+        r"""
+        Searches US mergers and acquisitions by representation-preserving company name.
+        """
+
+    def key_executives(self, symbol: builtins.str) -> builtins.list[CompanyExecutive]:
+        r"""
+        Retrieves worldwide company executives by provider ticker.
+        """
+
+    def executive_compensation(
+        self, symbol: builtins.str
+    ) -> builtins.list[ExecutiveCompensation]:
+        r"""
+        Retrieves executive compensation for a US company.
+        """
+
+    def executive_compensation_benchmark(
+        self, *, year: typing.Optional[builtins.str] = None
+    ) -> builtins.list[ExecutiveCompensationBenchmark]:
+        r"""
+        Retrieves US executive-compensation benchmarks with an optional year.
+        """
 
 
 @typing.final

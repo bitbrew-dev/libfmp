@@ -158,6 +158,12 @@ class FmpClient:
         """
 
     @property
+    def company(self) -> company.CompanyNamespace:
+        r"""
+        The `company` endpoints, reached as `client.company`.
+        """
+
+    @property
     def quote(self) -> quote.QuoteNamespace:
         r"""
         The `quote` endpoints, reached as `client.quote`.
