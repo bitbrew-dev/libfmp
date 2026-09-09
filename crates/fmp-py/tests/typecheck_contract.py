@@ -9,8 +9,10 @@ from fmp.bulk.eod import BulkEodBar
 from fmp.bulk.income import BulkIncomeStatement
 from fmp.bulk.metrics import BulkEarningsSurprise
 from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
+from fmp.chart import StockChartFullBar, StockChartIntradayBar
 from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
 from fmp.errors import FmpStatusError, FmpValidationError
+from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
 from fmp.statements import StatementsNamespace
@@ -76,6 +78,20 @@ def check_company_contract(client: FmpClient) -> None:
     benchmarks: list[ExecutiveCompensationBenchmark] = client.company.executive_compensation_benchmark(year="2024")
     average: float = benchmarks[0].average_compensation
     _ = (ipo_date, market_cap, batch, average)
+def check_indexes_contract(client: FmpClient) -> None:
+    """Type-check the indexes namespace, its keyword-only date filters, and the cross-module rows."""
+    indexes: IndexesNamespace = client.indexes
+    listings: list[IndexListing] = indexes.list()
+    currency: str = listings[0].currency
+    bars: list[StockChartFullBar] = indexes.chart_full("^VIX", from_=datetime.date(2026, 1, 27), to="2026-04-27")
+    bar_date: datetime.date = bars[0].date
+    vwap: float = bars[0].vwap
+    intraday: list[StockChartIntradayBar] = client.indexes.chart_one_minute("^VIX", to=datetime.date(2024, 3, 1))
+    bar_time: datetime.datetime = intraday[0].date
+    members: list[IndexConstituent] = client.indexes.sp500_constituents()
+    first_added: datetime.date | None = members[0].date_first_added
+    founded: datetime.date = members[0].founded
+    _ = (currency, bar_date, vwap, bar_time, first_added, founded)
 
 
 def check_screener_contract(client: FmpClient) -> None:
