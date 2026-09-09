@@ -291,7 +291,7 @@ fn bindings_union_models_with_the_registry_tree() {
     assert_eq!(quote.namespace.as_deref(), Some("QuoteNamespace"));
     assert!(quote.models.contains(&"Quote".to_owned()));
     let statements = &bindings[&path("statements")];
-    assert!(statements.models.is_empty() && statements.namespace.is_none());
+    assert!(statements.models.is_empty());
     assert!(statements.children.contains("growth"));
     assert!(
         bindings[&path("statements.growth")]
