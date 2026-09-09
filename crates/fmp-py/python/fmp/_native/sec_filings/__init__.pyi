@@ -8,6 +8,7 @@ __all__ = [
     "SecCompanyProfile",
     "SecCompanySearchResult",
     "SecFiling",
+    "SecFilingsNamespace",
     "SicClassification",
 ]
 
@@ -184,6 +185,124 @@ class SecFiling:
         final_link: builtins.str,
     ) -> SecFiling: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class SecFilingsNamespace:
+    r"""
+    Sec_filings endpoints for a single client, exposed as `client.sec_filings`.
+    """
+
+    def latest_8k(
+        self,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves the latest US 8-K SEC filings within the required date range.
+        """
+
+    def latest(
+        self,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves the latest US financial SEC filings within the required date range.
+        """
+
+    def by_form_type(
+        self,
+        form_type: builtins.str,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves US SEC filings by their open form type.
+        """
+
+    def by_symbol(
+        self,
+        symbol: builtins.str,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves US SEC filings for a ticker.
+        """
+
+    def by_cik(
+        self,
+        cik: builtins.str,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves US SEC filings for a string-backed CIK.
+        """
+
+    def search_companies_by_name(
+        self, company: builtins.str
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Searches US SEC companies by company-name text.
+        """
+
+    def search_companies_by_symbol(
+        self, symbol: builtins.str
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Searches US SEC companies by ticker.
+        """
+
+    def search_companies_by_cik(
+        self, cik: builtins.str
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Searches US SEC companies by string-backed CIK.
+        """
+
+    def company_profile(
+        self, symbol: builtins.str, *, cik_a: typing.Optional[builtins.str] = None
+    ) -> builtins.list[SecCompanyProfile]:
+        r"""
+        Retrieves the full US SEC company profile for a ticker.
+        """
+
+    def industry_classifications(
+        self,
+        *,
+        industry_title: typing.Optional[builtins.str] = None,
+        sic_code: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[SicClassification]:
+        r"""
+        Retrieves the US Standard Industrial Classification directory.
+        """
+
+    def all_industry_classifications(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Retrieves the paginated US company industry-classification feed.
+        """
 
 
 @typing.final

@@ -182,6 +182,12 @@ class FmpClient:
         """
 
     @property
+    def sec_filings(self) -> sec_filings.SecFilingsNamespace:
+        r"""
+        The `sec_filings` endpoints, reached as `client.sec_filings`.
+        """
+
+    @property
     def statements(self) -> statements.StatementsNamespace:
         r"""
         The `statements` endpoints, reached as `client.statements`.

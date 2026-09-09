@@ -6,4 +6,5 @@ pub(crate) mod company;
 pub(crate) mod indexes;
 pub(crate) mod quote;
 pub(crate) mod screener;
+pub(crate) mod sec_filings;
 pub(crate) mod statements;

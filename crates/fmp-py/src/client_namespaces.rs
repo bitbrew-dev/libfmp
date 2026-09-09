@@ -10,6 +10,7 @@ use crate::namespaces::company::CompanyNamespace;
 use crate::namespaces::indexes::IndexesNamespace;
 use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::screener::ScreenerNamespace;
+use crate::namespaces::sec_filings::SecFilingsNamespace;
 use crate::namespaces::statements::StatementsNamespace;
 
 #[gen_stub_pymethods]
@@ -49,6 +50,12 @@ impl FmpClient {
     #[getter]
     fn screener(&self) -> ScreenerNamespace {
         ScreenerNamespace::new(self.builder.clone())
+    }
+
+    /// The `sec_filings` endpoints, reached as `client.sec_filings`.
+    #[getter]
+    fn sec_filings(&self) -> SecFilingsNamespace {
+        SecFilingsNamespace::new(self.builder.clone())
     }
 
     /// The `statements` endpoints, reached as `client.statements`.
