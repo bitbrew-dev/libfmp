@@ -146,6 +146,12 @@ class FmpClient:
     """
 
     @property
+    def bulk(self) -> bulk.BulkNamespace:
+        r"""
+        The `bulk` endpoints, reached as `client.bulk`.
+        """
+
+    @property
     def calendar(self) -> calendar.CalendarNamespace:
         r"""
         The `calendar` endpoints, reached as `client.calendar`.
