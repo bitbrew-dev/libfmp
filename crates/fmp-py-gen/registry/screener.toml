@@ -1,0 +1,53 @@
+# Endpoint registry for the `screener` domain, reached from Python as
+# `client.screener`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "companies"
+method = "company_screener"
+query = "CompanyScreenerQuery"
+response = "screener::CompanyScreenerEntry"
+doc = "Screens worldwide companies using the supplied optional filters."
+args = [
+    { name = "market_cap_more_than", kind = "market_capitalization", required = false },
+    { name = "market_cap_lower_than", kind = "market_capitalization", required = false },
+    { name = "sector", kind = "sector", required = false },
+    { name = "industry", kind = "industry", required = false },
+    { name = "beta_more_than", kind = "finite_decimal", required = false },
+    { name = "beta_lower_than", kind = "finite_decimal", required = false },
+    { name = "price_more_than", kind = "finite_decimal", required = false },
+    { name = "price_lower_than", kind = "finite_decimal", required = false },
+    { name = "dividend_more_than", kind = "finite_decimal", required = false },
+    { name = "dividend_lower_than", kind = "finite_decimal", required = false },
+    { name = "volume_more_than", kind = "volume", required = false },
+    { name = "volume_lower_than", kind = "volume", required = false },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "country", kind = "country_code", required = false },
+    { name = "is_etf", kind = "boolean", required = false },
+    { name = "is_fund", kind = "boolean", required = false },
+    { name = "is_actively_trading", kind = "boolean", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "include_all_share_classes", kind = "boolean", required = false },
+]
+setters = [
+    { arg = "market_cap_more_than" },
+    { arg = "market_cap_lower_than" },
+    { arg = "sector" },
+    { arg = "industry" },
+    { arg = "beta_more_than" },
+    { arg = "beta_lower_than" },
+    { arg = "price_more_than" },
+    { arg = "price_lower_than" },
+    { arg = "dividend_more_than" },
+    { arg = "dividend_lower_than" },
+    { arg = "volume_more_than" },
+    { arg = "volume_lower_than" },
+    { arg = "exchange" },
+    { arg = "country" },
+    { arg = "is_etf" },
+    { arg = "is_fund" },
+    { arg = "is_actively_trading" },
+    { arg = "page" },
+    { arg = "limit" },
+    { arg = "include_all_share_classes" },
+]
