@@ -133,3 +133,225 @@ query = "FinancialRatiosTtmQuery"
 response = "statements::ratios::FinancialRatiosTtm"
 doc = "Retrieves trailing-twelve-month worldwide financial ratios for one company."
 args = [{ name = "symbol", kind = "ticker" }]
+
+[[namespace]]
+path = "statements.growth"
+
+[[namespace.endpoint]]
+name = "income_statement"
+method = "income_statement_growth"
+query = "IncomeStatementGrowthQuery"
+response = "statements::growth::income::IncomeStatementGrowth"
+doc = "Retrieves worldwide income-statement growth for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "balance_sheet_statement"
+method = "balance_sheet_statement_growth"
+query = "BalanceSheetStatementGrowthQuery"
+response = "statements::growth::balance::BalanceSheetStatementGrowth"
+doc = "Retrieves worldwide balance-sheet-statement growth for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "cash_flow_statement"
+method = "cash_flow_statement_growth"
+query = "CashFlowStatementGrowthQuery"
+response = "statements::growth::cash_flow::CashFlowStatementGrowth"
+doc = "Retrieves worldwide cash-flow-statement growth for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "financial_statement"
+method = "financial_statement_growth"
+query = "FinancialStatementGrowthQuery"
+response = "statements::growth::combined::FinancialStatementGrowth"
+doc = "Retrieves combined worldwide financial-statement growth for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace]]
+path = "statements.as_reported"
+
+[[namespace.endpoint]]
+name = "income"
+method = "income_statement_as_reported"
+query = "IncomeStatementAsReportedQuery"
+response = "statements::as_reported::AsReportedFinancialStatement"
+doc = "Retrieves income statements as reported by one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "retrieval_frequency", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "balance_sheet"
+method = "balance_sheet_statement_as_reported"
+query = "BalanceSheetStatementAsReportedQuery"
+response = "statements::as_reported::AsReportedFinancialStatement"
+doc = "Retrieves balance sheets as reported by one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "retrieval_frequency", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "cash_flow"
+method = "cash_flow_statement_as_reported"
+query = "CashFlowStatementAsReportedQuery"
+response = "statements::as_reported::AsReportedFinancialStatement"
+doc = "Retrieves cash-flow statements as reported by one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "retrieval_frequency", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "full"
+method = "financial_statement_full_as_reported"
+query = "FinancialStatementFullAsReportedQuery"
+response = "statements::as_reported::AsReportedFinancialStatement"
+doc = "Retrieves complete financial statements as reported by one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "retrieval_frequency", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace]]
+path = "statements.reports"
+
+[[namespace.endpoint]]
+name = "dates"
+method = "financial_reports_dates"
+query = "FinancialReportsDatesQuery"
+response = "statements::reports::FinancialReportDate"
+doc = "Retrieves available financial-report periods and protected download links."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[namespace.endpoint]]
+name = "json"
+method = "financial_reports_json"
+query = "FinancialReportsJsonQuery"
+response = "statements::reports::FinancialReportJson"
+doc = "Retrieves one dynamic JSON financial report as a bare array."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "period", kind = "fiscal_period" },
+]
+
+[[namespace.endpoint]]
+name = "xlsx"
+method = "financial_reports_xlsx"
+query = "FinancialReportsXlsxQuery"
+binary = true
+doc = "Downloads one financial report using the endpoint's XLSX MIME policy."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "period", kind = "fiscal_period" },
+]
+
+[[namespace]]
+path = "statements.segmentation"
+
+[[namespace.endpoint]]
+name = "revenue_product"
+method = "revenue_product_segmentation"
+query = "RevenueProductSegmentationQuery"
+response = "statements::segmentation::RevenueSegmentation"
+doc = "Retrieves product revenue segmentation for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period", kind = "retrieval_frequency", required = false },
+    { name = "structure", kind = "segmentation_structure", required = false },
+]
+setters = [{ arg = "period" }, { arg = "structure" }]
+
+[[namespace.endpoint]]
+name = "revenue_geographic"
+method = "revenue_geographic_segmentation"
+query = "RevenueGeographicSegmentationQuery"
+response = "statements::segmentation::RevenueSegmentation"
+doc = "Retrieves geographic revenue segmentation for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period", kind = "retrieval_frequency", required = false },
+    { name = "structure", kind = "segmentation_structure", required = false },
+]
+setters = [{ arg = "period" }, { arg = "structure" }]
+
+[[namespace]]
+path = "statements.summaries"
+
+[[namespace.endpoint]]
+name = "latest_financial_statements"
+method = "latest_financial_statements"
+query = "LatestFinancialStatementsQuery"
+response = "statements::summaries::LatestFinancialStatement"
+doc = "Retrieves the latest worldwide financial-statement filings."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[namespace.endpoint]]
+name = "financial_scores"
+method = "financial_scores"
+query = "FinancialScoresQuery"
+response = "statements::summaries::FinancialScore"
+doc = "Retrieves worldwide financial-health scores for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[namespace.endpoint]]
+name = "owner_earnings"
+method = "owner_earnings"
+query = "OwnerEarningsQuery"
+response = "statements::summaries::OwnerEarnings"
+doc = "Retrieves worldwide owner earnings for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[namespace.endpoint]]
+name = "enterprise_values"
+method = "enterprise_values"
+query = "EnterpriseValuesQuery"
+response = "statements::summaries::EnterpriseValue"
+doc = "Retrieves worldwide enterprise values for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
