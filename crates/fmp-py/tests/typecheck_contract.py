@@ -7,6 +7,7 @@ from fmp import BinaryPayload, FmpClient, FmpError
 from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
+from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
 from fmp.statements import StatementsNamespace
 from fmp.statements.income import IncomeStatement, StatementsIncomeNamespace
 from fmp.statements.reports import FinancialReportDate
@@ -41,6 +42,23 @@ def check_calendar_contract(client: FmpClient) -> None:
     ipos: list[IpoCalendarEvent] = calendar.ipos_calendar(from_="2026-03-06", to=datetime.date(2026, 6, 6))
     ipo_date: datetime.date = ipos[0].date
     _ = (yield_, declared, eps_actual, ipo_date)
+
+
+def check_screener_contract(client: FmpClient) -> None:
+    """Type-check the keyword-only filter surface and the screener row type."""
+    screener: ScreenerNamespace = client.screener
+    everything: list[CompanyScreenerEntry] = screener.companies()
+    filtered: list[CompanyScreenerEntry] = client.screener.companies(
+        market_cap_more_than=1_000_000_000,
+        sector="Technology",
+        beta_lower_than=1.5,
+        is_etf=False,
+        limit=100,
+    )
+    market_cap: int = filtered[0].market_cap
+    beta: float = everything[0].beta
+    is_fund: bool = filtered[0].is_fund
+    _ = (market_cap, beta, is_fund)
 
 
 def check_public_contract(client: FmpClient) -> None:
