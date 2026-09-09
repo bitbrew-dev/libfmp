@@ -304,6 +304,17 @@ class SecFilingsNamespace:
         Retrieves the paginated US company industry-classification feed.
         """
 
+    def search_industry_classifications(
+        self,
+        *,
+        symbol: typing.Optional[builtins.str] = None,
+        cik: typing.Optional[builtins.str] = None,
+        sic_code: typing.Optional[builtins.str] = None,
+    ) -> list[dict[str, typing.Any]]:
+        r"""
+        Searches US industry classifications while preserving raw documented rows.
+        """
+
 
 @typing.final
 class SicClassification:
