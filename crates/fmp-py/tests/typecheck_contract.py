@@ -9,7 +9,7 @@ from fmp.bulk.eod import BulkEodBar
 from fmp.bulk.income import BulkIncomeStatement
 from fmp.bulk.metrics import BulkEarningsSurprise
 from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
-from fmp.company import CompanyProfile
+from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
@@ -63,6 +63,19 @@ def check_bulk_contract(client: FmpClient) -> None:
     more_bars: list[BulkEodBar] = client.bulk.eod(date="2024-10-22")
     close: str = bars[0].close
     _ = (ipo_date, accepted, revenue, eps_actual, close, more_bars)
+def check_company_contract(client: FmpClient) -> None:
+    """Type-check the flat company namespace, its date keywords, and the batch list input."""
+    company: CompanyNamespace = client.company
+    profiles: list[CompanyProfile] = company.profile("AAPL")
+    ipo_date: datetime.date = profiles[0].ipo_date
+    history: list[MarketCapitalizationRecord] = client.company.historical_market_capitalization(
+        "AAPL", limit=5001, from_=datetime.date(2026, 4, 16), to="2026-07-16"
+    )
+    market_cap: int = history[0].market_cap
+    batch: list[MarketCapitalizationRecord] = client.company.market_capitalization_batch(["AAPL", "MSFT"])
+    benchmarks: list[ExecutiveCompensationBenchmark] = client.company.executive_compensation_benchmark(year="2024")
+    average: float = benchmarks[0].average_compensation
+    _ = (ipo_date, market_cap, batch, average)
 
 
 def check_screener_contract(client: FmpClient) -> None:
