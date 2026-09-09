@@ -32,6 +32,11 @@ one failure route (``status=401`` or ``body=b"not-json"``) per namespace to
 prove the error mapping stays structured. The ``client`` fixture targets the
 server with ``path_prefix=""`` and ``auth_mode="none"``; build your own
 ``FmpClient(base_url=fixture_server.base_url, ...)`` for other configurations.
+
+``FMP_API_KEY`` is removed from the environment for every test (the autouse
+``isolated_api_key_env`` fixture), so a key exported in the developer's shell
+cannot change which precedence row a constructor call lands on. Tests that
+exercise the pickup call ``monkeypatch.setenv`` themselves.
 """
 
 import json
@@ -201,6 +206,12 @@ class FixtureServer:
                 """Silence the default stderr access log."""
 
         return Handler
+
+
+@pytest.fixture(autouse=True)
+def isolated_api_key_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Unset ``FMP_API_KEY`` so the developer's shell cannot leak into the suite."""
+    monkeypatch.delenv("FMP_API_KEY", raising=False)
 
 
 @pytest.fixture

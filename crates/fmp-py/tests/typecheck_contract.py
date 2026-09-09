@@ -111,6 +111,7 @@ def check_error_contract(client: FmpClient) -> None:
         _ = (base, top_level)
 
 
+FmpClient()
 FmpClient(
     token="proxy-token",
     base_url="https://proxy.example",
