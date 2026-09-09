@@ -3,6 +3,8 @@
 //! Lowering performs every check that needs no knowledge of `libfmp`:
 //! identifier validity, namespace path prefixes, duplicate names, setter to
 //! argument references, and the `binary` versus `response` exclusivity.
+//! `response = "dynamic"` marks an endpoint whose rows carry no typed model
+//! (`Vec<DynamicObject>`) and reach Python as plain `dict`s.
 //! Problems are collected per file so one load reports them all.
 
 use std::fs;
@@ -38,6 +40,8 @@ struct EndpointEntry {
     name: String,
     method: String,
     query: Option<String>,
+    /// A `<module>::<Struct>` model path, or the literal `dynamic` for rows
+    /// that have no typed model and are returned as `dict`s.
     response: Option<String>,
     doc: String,
     #[serde(default)]
@@ -205,16 +209,21 @@ fn lower_endpoint(
     if entry.query.is_none() && !(entry.args.is_empty() && entry.setters.is_empty()) {
         fail("args and setters need a `query` type".to_owned());
     }
+    let dynamic = entry.response.as_deref() == Some(DYNAMIC_RESPONSE) && !entry.binary;
     let response_model = match (&entry.response, entry.binary) {
         (Some(_), true) => {
             fail("`binary = true` entries must not name a `response` model".to_owned());
             None
         }
         (None, false) => {
-            fail("a `response` model is required unless `binary = true`".to_owned());
+            fail(
+                "a `response` model (or `response = \"dynamic\"`) is required unless `binary = true`"
+                    .to_owned(),
+            );
             None
         }
         (None, true) => None,
+        (Some(_), false) if dynamic => None,
         (Some(response), false) => match parse_model_path(response) {
             Some(path) => Some(path),
             None => {
@@ -289,8 +298,12 @@ fn lower_endpoint(
         args,
         setters,
         binary: entry.binary,
+        dynamic,
     }
 }
+
+/// The `response` spelling for endpoints returning untyped `dict` rows.
+const DYNAMIC_RESPONSE: &str = "dynamic";
 
 /// Parses `a::b::Name` into module segments and a struct name.
 fn parse_model_path(value: &str) -> Option<ModelPath> {

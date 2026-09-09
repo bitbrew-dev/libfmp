@@ -5,7 +5,8 @@
 //! mapping); argument conversion and query construction live in the builder
 //! so an async twin can reuse them without touching this template. A
 //! `binary = true` entry returns one `BinaryPayload` instead of a `Vec` of
-//! models, with the same hand-off.
+//! models, with the same hand-off; a `response = "dynamic"` entry returns
+//! each untyped row as a Python `dict` through `crate::convert`.
 
 use std::fmt::Write as _;
 
@@ -13,6 +14,10 @@ use fmp_py_gen::registry::{Arg, Endpoint};
 
 /// Clippy's `too_many_arguments` threshold.
 const MAX_PARAMS: usize = 7;
+
+/// The stub annotation for a dynamic-row method, whose Rust return type
+/// (`Vec<Py<PyAny>>`) would otherwise stub as `list[typing.Any]`.
+const DYNAMIC_STUB_OVERRIDE: &str = "    #[gen_stub(override_return_type(type_repr = \"list[dict[str, typing.Any]]\", imports = (\"typing\")))]";
 
 /// The Python parameters in signature order: required first, then optional.
 fn params(endpoint: &Endpoint) -> Vec<&Arg> {
@@ -90,6 +95,10 @@ pub(crate) fn render_method(out: &mut String, endpoint: &Endpoint) {
         }
         let _ = writeln!(out, "    #[pyo3(signature = ({}))]", signature.join(", "));
     }
+    if endpoint.dynamic {
+        out.push_str(DYNAMIC_STUB_OVERRIDE);
+        out.push('\n');
+    }
     if args.len() + 2 > MAX_PARAMS {
         out.push_str("    #[allow(clippy::too_many_arguments)]\n");
     }
@@ -127,6 +136,13 @@ fn result_shape(endpoint: &Endpoint) -> (String, &'static str, String) {
             "BinaryPayload".to_owned(),
             "response",
             "response.map(BinaryPayload::from).map_err(to_py_error)".to_owned(),
+        );
+    }
+    if endpoint.dynamic {
+        return (
+            "Vec<Py<PyAny>>".to_owned(),
+            "rows",
+            "rows.map_err(to_py_error)?.iter().map(|row| convert::dynamic_object_to_py(py, row).map(Bound::unbind)).collect()".to_owned(),
         );
     }
     let model = endpoint

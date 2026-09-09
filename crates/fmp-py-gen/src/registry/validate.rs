@@ -109,6 +109,9 @@ impl Registry {
     }
 }
 
+/// The `libfmp` row type behind `response = "dynamic"`.
+const DYNAMIC_ROW: &str = "DynamicObject";
+
 struct Checker<'a> {
     file: &'a Path,
     entry: &'a str,
@@ -174,6 +177,16 @@ impl Checker<'_> {
             )),
             Returns::Rows(_) if self.endpoint.binary => self.fail(format!(
                 "`Client::{method}` returns rows, not `BinaryResponse`; drop `binary = true`"
+            )),
+            Returns::Rows(row) if row == DYNAMIC_ROW => {
+                if !self.endpoint.dynamic {
+                    self.fail(format!(
+                        "`Client::{method}` returns `Vec<{DYNAMIC_ROW}>`; set `response = \"dynamic\"`"
+                    ));
+                }
+            }
+            Returns::Rows(row) if self.endpoint.dynamic => self.fail(format!(
+                "`Client::{method}` returns `Vec<{row}>`, not `Vec<{DYNAMIC_ROW}>`; name a `response` model instead of `dynamic`"
             )),
             Returns::Rows(row) => {
                 if let Some(model) = self.endpoint.response_model.clone() {

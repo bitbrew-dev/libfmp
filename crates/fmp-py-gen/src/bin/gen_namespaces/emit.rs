@@ -85,6 +85,9 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     if methods.iter().any(|endpoint| endpoint.binary) {
         out.push_str("use crate::binary::BinaryPayload;\n");
     }
+    if methods.iter().any(|endpoint| endpoint.dynamic) {
+        out.push_str("use crate::convert;\n");
+    }
     if !methods.is_empty() {
         out.push_str("use crate::errors::to_py_error;\n");
     }
