@@ -10,6 +10,37 @@ pub const DEFAULT_BASE_URL: &str = "https://financialmodelingprep.com";
 /// The default path prefix used by the stable FMP API.
 pub const DEFAULT_PATH_PREFIX: &str = "stable";
 
+/// The process environment variable that [`fmp_api_key_from_env`] reads.
+pub const FMP_API_KEY_ENV: &str = "FMP_API_KEY";
+
+/// Reads the FMP API key from the `FMP_API_KEY` process environment variable.
+///
+/// Surrounding whitespace is trimmed; an unset, empty, or whitespace-only
+/// value yields `None`. Callers that want the key applied as FMP header
+/// authentication can use [`Authentication::fmp_header_from_env`] instead.
+///
+/// ```
+/// use libfmp::config::{FMP_API_KEY_ENV, fmp_api_key_from_env};
+///
+/// let expected = std::env::var(FMP_API_KEY_ENV)
+///     .ok()
+///     .map(|value| value.trim().to_owned())
+///     .filter(|value| !value.is_empty());
+/// assert_eq!(fmp_api_key_from_env(), expected);
+/// ```
+pub fn fmp_api_key_from_env() -> Option<String> {
+    fmp_api_key_from_value(std::env::var(FMP_API_KEY_ENV).ok().as_deref())
+}
+
+fn fmp_api_key_from_value(value: Option<&str>) -> Option<String> {
+    let trimmed = value?.trim();
+    if trimmed.is_empty() {
+        None
+    } else {
+        Some(trimmed.to_owned())
+    }
+}
+
 /// Redirect behavior for requests that may carry credentials.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 #[non_exhaustive]
@@ -56,6 +87,29 @@ impl Authentication {
     /// Creates FMP's exact `apikey` header authentication.
     pub fn fmp_header(api_key: impl Into<String>) -> Self {
         Self::FmpHeader(SecretString::new(api_key))
+    }
+
+    /// Creates FMP's exact `apikey` header authentication from the
+    /// `FMP_API_KEY` process environment variable.
+    ///
+    /// Returns `None` when the variable is unset, empty, or whitespace-only;
+    /// see [`fmp_api_key_from_env`] for the exact normalization. The
+    /// [`crate::ClientBuilder`] never reads the environment on its own, so
+    /// Rust callers opt in explicitly:
+    ///
+    /// ```no_run
+    /// use libfmp::{Client, config::Authentication};
+    ///
+    /// # fn main() -> libfmp::Result<()> {
+    /// let auth = Authentication::fmp_header_from_env()
+    ///     .ok_or_else(|| libfmp::Error::configuration("FMP_API_KEY is not set"))?;
+    /// let client = Client::builder().authentication(auth).build()?;
+    /// # let _ = client;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn fmp_header_from_env() -> Option<Self> {
+        fmp_api_key_from_env().map(Self::fmp_header)
     }
 
     /// Creates FMP's `apikey` query authentication.
@@ -109,5 +163,39 @@ impl fmt::Debug for Authentication {
                 .field("secret", &"[REDACTED]")
                 .finish(),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn env_key_is_absent_when_unset_empty_or_blank() {
+        assert_eq!(fmp_api_key_from_value(None), None);
+        assert_eq!(fmp_api_key_from_value(Some("")), None);
+        assert_eq!(fmp_api_key_from_value(Some("   \t\n")), None);
+    }
+
+    #[test]
+    fn env_key_is_trimmed_when_set() {
+        assert_eq!(
+            fmp_api_key_from_value(Some("shell-secret")).as_deref(),
+            Some("shell-secret")
+        );
+        assert_eq!(
+            fmp_api_key_from_value(Some("  shell-secret\n")).as_deref(),
+            Some("shell-secret")
+        );
+    }
+
+    #[test]
+    fn env_helpers_agree_with_the_process_environment() {
+        let expected = fmp_api_key_from_value(std::env::var(FMP_API_KEY_ENV).ok().as_deref());
+        assert_eq!(fmp_api_key_from_env(), expected);
+        assert_eq!(
+            Authentication::fmp_header_from_env(),
+            expected.map(Authentication::fmp_header)
+        );
     }
 }
