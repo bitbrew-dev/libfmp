@@ -5,7 +5,7 @@ import datetime
 import fmp
 from fmp import BinaryPayload, FmpClient, FmpError
 from fmp.errors import FmpStatusError, FmpValidationError
-from fmp.quote import Quote, QuoteShort
+from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.statements import StatementsNamespace
 from fmp.statements.income import IncomeStatement, StatementsIncomeNamespace
 from fmp.statements.reports import FinancialReportDate
@@ -32,6 +32,12 @@ def check_public_contract(client: FmpClient) -> None:
     short_rows: list[QuoteShort] = client.quote.short("AAPL")
     full_rows: list[Quote] = client.quote.full("AAPL")
     fund_rows: list[QuoteShort] = client.quote.mutual_funds()
+    batch_rows: list[Quote] = client.quote.batch_quote(["AAPL", "MSFT"])
+    trades: list[AftermarketTrade] = client.quote.batch_aftermarket_trade("AAPL")
+    changes: list[StockPriceChange] = client.quote.stock_price_change("AAPL")
+    exchange_rows: list[QuoteShort] = client.quote.exchange("NASDAQ")
+    trade_size: int = trades[0].trade_size
+    ten_years: float = changes[0].ten_years
     symbol: str = short_rows[0].symbol
     price: float = full_rows[0].price
     volume: int = fund_rows[0].volume
@@ -39,6 +45,7 @@ def check_public_contract(client: FmpClient) -> None:
     exports: list[str] = fmp.__all__
     version: str = fmp.__version__
     _ = (symbol, price, volume, market_cap, exports, version)
+    _ = (batch_rows, exchange_rows, trade_size, ten_years)
 
 
 def check_binary_contract() -> None:
