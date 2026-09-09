@@ -4,7 +4,12 @@ import datetime
 
 import fmp
 from fmp import BinaryPayload, FmpClient, FmpError
+from fmp.bulk import BulkNamespace
+from fmp.bulk.eod import BulkEodBar
+from fmp.bulk.income import BulkIncomeStatement
+from fmp.bulk.metrics import BulkEarningsSurprise
 from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
+from fmp.company import CompanyProfile
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
@@ -42,6 +47,22 @@ def check_calendar_contract(client: FmpClient) -> None:
     ipos: list[IpoCalendarEvent] = calendar.ipos_calendar(from_="2026-03-06", to=datetime.date(2026, 6, 6))
     ipo_date: datetime.date = ipos[0].date
     _ = (yield_, declared, eps_actual, ipo_date)
+
+
+def check_bulk_contract(client: FmpClient) -> None:
+    """Type-check the constructor-only bulk arguments and the cross-domain profile rows."""
+    bulk: BulkNamespace = client.bulk
+    profiles: list[CompanyProfile] = bulk.company_profiles("0")
+    ipo_date: datetime.date = profiles[0].ipo_date
+    statements: list[BulkIncomeStatement] = client.bulk.income_statements(2026, "Q1")
+    accepted: datetime.datetime = statements[0].accepted_date
+    revenue: str = statements[0].revenue
+    surprises: list[BulkEarningsSurprise] = client.bulk.earnings_surprises(year=2026)
+    eps_actual: str = surprises[0].eps_actual
+    bars: list[BulkEodBar] = client.bulk.eod(datetime.date(2024, 10, 22))
+    more_bars: list[BulkEodBar] = client.bulk.eod(date="2024-10-22")
+    close: str = bars[0].close
+    _ = (ipo_date, accepted, revenue, eps_actual, close, more_bars)
 
 
 def check_screener_contract(client: FmpClient) -> None:
