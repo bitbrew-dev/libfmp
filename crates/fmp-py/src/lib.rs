@@ -4,6 +4,7 @@ pub mod args;
 mod binary;
 mod client;
 mod client_namespaces;
+pub mod convert;
 mod errors;
 mod facade;
 mod facade_domains;
