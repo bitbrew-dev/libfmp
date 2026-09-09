@@ -4,6 +4,7 @@ import datetime
 
 import fmp
 from fmp import BinaryPayload, FmpClient, FmpError
+from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.statements import StatementsNamespace
@@ -25,6 +26,21 @@ def check_statements_contract(client: FmpClient) -> None:
     latest: list[LatestFinancialStatement] = client.statements.summaries.latest_financial_statements(page=0, limit=10)
     added: datetime.datetime = latest[0].date_added
     _ = (reported_on, revenue, link, workbook.data, added)
+
+
+def check_calendar_contract(client: FmpClient) -> None:
+    """Type-check the flat calendar namespace, its date keywords, and the renamed fields."""
+    calendar: CalendarNamespace = client.calendar
+    dividends: list[DividendEvent] = calendar.dividends("AAPL", limit=5)
+    yield_: float = dividends[0].yield_
+    declared: datetime.date | None = dividends[0].declaration_date
+    earnings: list[EarningsEvent] = calendar.earnings_calendar(
+        from_=datetime.date(2026, 4, 27), to="2026-07-26", page=0, include_report_times=True
+    )
+    eps_actual: float | None = earnings[0].eps_actual
+    ipos: list[IpoCalendarEvent] = calendar.ipos_calendar(from_="2026-03-06", to=datetime.date(2026, 6, 6))
+    ipo_date: datetime.date = ipos[0].date
+    _ = (yield_, declared, eps_actual, ipo_date)
 
 
 def check_public_contract(client: FmpClient) -> None:
