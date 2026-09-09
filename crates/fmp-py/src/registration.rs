@@ -260,6 +260,7 @@ fn register_indexes(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::indexes::HistoricalIndexConstituent>()?;
     module.add_class::<crate::models::indexes::IndexConstituent>()?;
     module.add_class::<crate::models::indexes::IndexListing>()?;
+    module.add_class::<crate::namespaces::indexes::IndexesNamespace>()?;
     add_submodule(parent, "fmp._native.indexes", &module)
 }
 

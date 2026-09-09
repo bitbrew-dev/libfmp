@@ -2,12 +2,15 @@
 
 import builtins
 import datetime
+from fmp._native import chart
+from fmp._native import quote
 import typing
 
 __all__ = [
     "HistoricalIndexConstituent",
     "IndexConstituent",
     "IndexListing",
+    "IndexesNamespace",
 ]
 
 
@@ -90,3 +93,116 @@ class IndexListing:
         currency: builtins.str,
     ) -> IndexListing: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class IndexesNamespace:
+    r"""
+    Indexes endpoints for a single client, exposed as `client.indexes`.
+    """
+
+    def list(self) -> builtins.list[IndexListing]:
+        r"""
+        Lists worldwide stock-market indexes.
+        """
+
+    def quote(self, symbol: builtins.str) -> builtins.list[quote.Quote]:
+        r"""
+        Retrieves a detailed quote for one stock-market index.
+        """
+
+    def quote_short(self, symbol: builtins.str) -> builtins.list[quote.QuoteShort]:
+        r"""
+        Retrieves a compact quote for one stock-market index.
+        """
+
+    def chart_light(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartLightBar]:
+        r"""
+        Retrieves compact end-of-day history for one stock-market index.
+        """
+
+    def chart_full(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartFullBar]:
+        r"""
+        Retrieves detailed end-of-day history for one stock-market index.
+        """
+
+    def chart_one_minute(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-minute history for one stock-market index.
+        """
+
+    def chart_five_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartIntradayBar]:
+        r"""
+        Retrieves five-minute history for one stock-market index.
+        """
+
+    def chart_one_hour(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-hour history for one stock-market index.
+        """
+
+    def sp500_constituents(self) -> builtins.list[IndexConstituent]:
+        r"""
+        Lists the current S&P 500 constituents.
+        """
+
+    def nasdaq_constituents(self) -> builtins.list[IndexConstituent]:
+        r"""
+        Lists the current Nasdaq constituents.
+        """
+
+    def dow_jones_constituents(self) -> builtins.list[IndexConstituent]:
+        r"""
+        Lists the current Dow Jones constituents.
+        """
+
+    def historical_sp500_constituents(
+        self,
+    ) -> builtins.list[HistoricalIndexConstituent]:
+        r"""
+        Lists historical S&P 500 constituent changes.
+        """
+
+    def historical_nasdaq_constituents(
+        self,
+    ) -> builtins.list[HistoricalIndexConstituent]:
+        r"""
+        Lists historical Nasdaq constituent changes.
+        """
+
+    def historical_dow_jones_constituents(
+        self,
+    ) -> builtins.list[HistoricalIndexConstituent]:
+        r"""
+        Lists historical Dow Jones constituent changes.
+        """
