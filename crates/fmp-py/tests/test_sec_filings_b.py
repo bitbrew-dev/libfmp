@@ -1,7 +1,8 @@
 """Runtime contract of ``client.sec_filings`` for lookups and classifications.
 
-Covers the three company searches, ``company_profile``, the two typed
-industry-classification methods, and the negative cases: one test per method
+Covers the three company searches, ``company_profile``, the three
+industry-classification methods (one of which returns untyped ``dict`` rows),
+and the negative cases: one test per method
 routes the documented fixture body, calls the method with one argument shape,
 and asserts the exact request target plus a few typed fields. The expected
 targets are the ones the Rust ``sec_company_lookup_endpoints.rs`` and
@@ -141,6 +142,50 @@ def test_industry_classifications_with_sic_code_only(client: Any, fixture_server
     assert fixture_server.requests[0].target == "/standard-industrial-classification-list?sicCode=07371"
 
 
+def test_search_industry_classifications_with_every_filter(client: Any, fixture_server: FixtureServer) -> None:
+    """``search_industry_classifications`` encodes ``symbol``, ``cik``, ``sicCode`` and returns raw ``dict`` rows."""
+    fixture_server.route("/industry-classification-search", load_fixture("industry_classification_search.json"))
+    rows = client.sec_filings.search_industry_classifications(symbol="BRK.B / Class A", cik="0000320193", sic_code="07371")
+
+    assert (
+        fixture_server.requests[0].target
+        == "/industry-classification-search?symbol=BRK.B+%2F+Class+A&cik=0000320193&sicCode=07371"
+    )
+    assert rows == [{}]
+    assert type(rows[0]) is dict
+
+
+def test_search_industry_classifications_returns_native_values(client: Any, fixture_server: FixtureServer) -> None:
+    """Dynamic rows keep every JSON shape native, with integer literals exact at any size."""
+    fixture_server.route(
+        "/industry-classification-search",
+        [
+            {
+                "symbol": "AAPL",
+                "cik": 320193,
+                "sicCode": "3571",
+                "active": True,
+                "ratio": 0.25,
+                "big": 123456789012345678901234567890,
+                "nested": {"tags": ["a", None], "count": -1},
+            }
+        ],
+    )
+    rows = client.sec_filings.search_industry_classifications()
+
+    assert fixture_server.requests[0].target == "/industry-classification-search"
+    assert len(rows) == 1
+    row = rows[0]
+    assert isinstance(row, dict)
+    assert row["symbol"] == "AAPL"
+    assert row["cik"] == 320193 and type(row["cik"]) is int
+    assert row["sicCode"] == "3571"
+    assert row["active"] is True
+    assert row["ratio"] == pytest.approx(0.25)
+    assert row["big"] == 123456789012345678901234567890
+    assert row["nested"] == {"tags": ["a", None], "count": -1}
+
+
 def test_all_industry_classifications_with_pagination(client: Any, fixture_server: FixtureServer) -> None:
     """``all_industry_classifications`` encodes ``page`` then ``limit`` and shares the search row type."""
     fixture_server.route("/all-industry-classification", load_fixture("all_industry_classifications.json"))
@@ -225,6 +270,16 @@ def test_blank_optional_cik_a_names_the_argument(
     with pytest.raises(errors.FmpValidationError) as raised:
         client.sec_filings.company_profile("AAPL", cik_a=" ")
     assert str(raised.value).startswith("cik_a: ")
+    assert fixture_server.requests == []
+
+
+def test_blank_dynamic_filter_names_the_argument(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """A blank optional filter on the dynamic-row method is rejected under its keyword."""
+    with pytest.raises(errors.FmpValidationError) as raised:
+        client.sec_filings.search_industry_classifications(sic_code=" ")
+    assert str(raised.value) == "sic_code: value must not be empty or whitespace-only"
     assert fixture_server.requests == []
 
 
