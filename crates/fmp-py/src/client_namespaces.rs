@@ -4,12 +4,19 @@ use pyo3::prelude::*;
 use pyo3_stub_gen::derive::gen_stub_pymethods;
 
 use crate::client::FmpClient;
+use crate::namespaces::calendar::CalendarNamespace;
 use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::statements::StatementsNamespace;
 
 #[gen_stub_pymethods]
 #[pymethods]
 impl FmpClient {
+    /// The `calendar` endpoints, reached as `client.calendar`.
+    #[getter]
+    fn calendar(&self) -> CalendarNamespace {
+        CalendarNamespace::new(self.builder.clone())
+    }
+
     /// The `quote` endpoints, reached as `client.quote`.
     #[getter]
     fn quote(&self) -> QuoteNamespace {

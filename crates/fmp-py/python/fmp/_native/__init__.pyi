@@ -140,6 +140,12 @@ class FmpClient:
     """
 
     @property
+    def calendar(self) -> calendar.CalendarNamespace:
+        r"""
+        The `calendar` endpoints, reached as `client.calendar`.
+        """
+
+    @property
     def quote(self) -> quote.QuoteNamespace:
         r"""
         The `quote` endpoints, reached as `client.quote`.

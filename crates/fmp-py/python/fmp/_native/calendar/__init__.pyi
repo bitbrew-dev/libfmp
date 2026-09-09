@@ -5,6 +5,7 @@ import datetime
 import typing
 
 __all__ = [
+    "CalendarNamespace",
     "DividendEvent",
     "EarningsEvent",
     "IpoCalendarEvent",
@@ -12,6 +13,102 @@ __all__ = [
     "IpoProspectus",
     "StockSplitEvent",
 ]
+
+
+@typing.final
+class CalendarNamespace:
+    r"""
+    Calendar endpoints for a single client, exposed as `client.calendar`.
+    """
+
+    def dividends(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[DividendEvent]:
+        r"""
+        Retrieves worldwide dividend events for one company.
+        """
+
+    def dividends_calendar(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[DividendEvent]:
+        r"""
+        Retrieves the worldwide dividend calendar.
+        """
+
+    def earnings(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        include_report_times: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[EarningsEvent]:
+        r"""
+        Retrieves worldwide earnings events for one company.
+        """
+
+    def earnings_calendar(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        include_report_times: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[EarningsEvent]:
+        r"""
+        Retrieves the worldwide earnings calendar.
+        """
+
+    def ipos_calendar(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[IpoCalendarEvent]:
+        r"""
+        Retrieves the worldwide IPO calendar.
+        """
+
+    def ipos_disclosure(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[IpoDisclosure]:
+        r"""
+        Retrieves US IPO disclosure filings.
+        """
+
+    def ipos_prospectus(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[IpoProspectus]:
+        r"""
+        Retrieves US IPO prospectus filings and documented offering values.
+        """
+
+    def stock_splits(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[StockSplitEvent]:
+        r"""
+        Retrieves worldwide stock-split events for one company.
+        """
+
+    def stock_splits_calendar(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[StockSplitEvent]:
+        r"""
+        Retrieves the worldwide stock-splits calendar.
+        """
 
 
 @typing.final
