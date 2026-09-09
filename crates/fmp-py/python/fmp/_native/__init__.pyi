@@ -131,8 +131,14 @@ class FmpClient:
     r"""
     A synchronous FMP client with proxy-ready transport configuration.
 
-    Supplying `token` without `auth_mode` selects FMP's exact `apikey` header;
-    omitting both selects no auth, which is valid only with a custom base URL.
+    When `token` is omitted, the `FMP_API_KEY` environment variable is read
+    instead (unset, empty, or whitespace-only counts as absent); an explicit
+    `token` always wins, and `auth_mode="none"` ignores the variable. A
+    credential without `auth_mode` selects FMP's exact `apikey` header; the
+    other modes combine with the variable as they do with `token`. Omitting
+    both selects no auth, which is valid only with a custom base URL: against
+    the default host the constructor raises `FmpConfigError` naming
+    `FMP_API_KEY`.
     `timeout` and `connect_timeout` are positive finite numbers of seconds.
     `max_response_body_bytes` bounds each buffered response. Authenticated
     non-loopback HTTP requires `danger_allow_insecure_authentication=True`.
