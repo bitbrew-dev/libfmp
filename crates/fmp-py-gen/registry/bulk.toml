@@ -1,0 +1,133 @@
+# Endpoint registry for the `bulk` domain, reached from Python as
+# `client.bulk`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+#
+# Every bulk query is constructor-only: the provider documents no optional
+# parameters, so no entry declares setters.
+
+[[endpoint]]
+name = "company_profiles"
+method = "bulk_company_profiles"
+query = "BulkPartQuery"
+response = "company::CompanyProfile"
+doc = "Retrieves one provider partition of worldwide company profiles."
+args = [{ name = "part", kind = "bulk_part" }]
+
+[[endpoint]]
+name = "stock_ratings"
+method = "bulk_stock_ratings"
+response = "bulk::snapshots::BulkStockRating"
+doc = "Retrieves worldwide stock ratings in one provider bulk response."
+
+[[endpoint]]
+name = "dcf_valuations"
+method = "bulk_dcf_valuations"
+response = "bulk::snapshots::BulkDcfValuation"
+doc = "Retrieves worldwide discounted-cash-flow valuations in one provider bulk response."
+
+[[endpoint]]
+name = "financial_scores"
+method = "bulk_financial_scores"
+response = "bulk::snapshots::BulkFinancialScore"
+doc = "Retrieves worldwide financial scores in one provider bulk response."
+
+[[endpoint]]
+name = "price_target_summaries"
+method = "bulk_price_target_summaries"
+response = "bulk::snapshots::BulkPriceTargetSummary"
+doc = "Retrieves US price-target summaries in one provider bulk response."
+
+[[endpoint]]
+name = "etf_holdings"
+method = "bulk_etf_holdings"
+query = "BulkPartQuery"
+response = "bulk::snapshots::BulkEtfHolding"
+doc = "Retrieves one provider partition of worldwide ETF holdings."
+args = [{ name = "part", kind = "bulk_part" }]
+
+[[endpoint]]
+name = "upgrades_downgrades_consensus"
+method = "bulk_upgrades_downgrades_consensus"
+response = "bulk::snapshots::BulkUpgradesDowngradesConsensus"
+doc = "Retrieves worldwide upgrades/downgrades consensus in one provider bulk response."
+
+[[endpoint]]
+name = "key_metrics_ttm"
+method = "bulk_key_metrics_ttm"
+response = "bulk::metrics::BulkKeyMetricsTtm"
+doc = "Retrieves worldwide trailing-twelve-month key metrics in one bulk response."
+
+[[endpoint]]
+name = "financial_ratios_ttm"
+method = "bulk_financial_ratios_ttm"
+response = "bulk::metrics::BulkFinancialRatiosTtm"
+doc = "Retrieves worldwide trailing-twelve-month financial ratios in one bulk response."
+
+[[endpoint]]
+name = "stock_peers"
+method = "bulk_stock_peers"
+response = "bulk::metrics::BulkStockPeers"
+doc = "Retrieves worldwide stock peers in one provider bulk response."
+
+[[endpoint]]
+name = "earnings_surprises"
+method = "bulk_earnings_surprises"
+query = "BulkYearQuery"
+response = "bulk::metrics::BulkEarningsSurprise"
+doc = "Retrieves worldwide annual earnings surprises for one required provider year."
+args = [{ name = "year", kind = "year" }]
+
+[[endpoint]]
+name = "income_statements"
+method = "bulk_income_statements"
+query = "BulkStatementQuery"
+response = "bulk::income::BulkIncomeStatement"
+doc = "Retrieves worldwide bulk income statements for one year and fiscal period."
+args = [{ name = "year", kind = "year" }, { name = "period", kind = "fiscal_period" }]
+
+[[endpoint]]
+name = "income_statement_growth"
+method = "bulk_income_statement_growth"
+query = "BulkStatementQuery"
+response = "bulk::income::BulkIncomeStatementGrowth"
+doc = "Retrieves worldwide bulk income-statement growth for one year and fiscal period."
+args = [{ name = "year", kind = "year" }, { name = "period", kind = "fiscal_period" }]
+
+[[endpoint]]
+name = "balance_sheet_statements"
+method = "bulk_balance_sheet_statements"
+query = "BulkStatementQuery"
+response = "bulk::balance::BulkBalanceSheetStatement"
+doc = "Retrieves worldwide bulk balance sheets for one year and fiscal period."
+args = [{ name = "year", kind = "year" }, { name = "period", kind = "fiscal_period" }]
+
+[[endpoint]]
+name = "balance_sheet_statement_growth"
+method = "bulk_balance_sheet_statement_growth"
+query = "BulkStatementQuery"
+response = "bulk::balance::BulkBalanceSheetStatementGrowth"
+doc = "Retrieves worldwide bulk balance-sheet growth for one year and fiscal period."
+args = [{ name = "year", kind = "year" }, { name = "period", kind = "fiscal_period" }]
+
+[[endpoint]]
+name = "cash_flow_statements"
+method = "bulk_cash_flow_statements"
+query = "BulkStatementQuery"
+response = "bulk::cash_flow::BulkCashFlowStatement"
+doc = "Retrieves worldwide bulk cash-flow statements for one year and fiscal period."
+args = [{ name = "year", kind = "year" }, { name = "period", kind = "fiscal_period" }]
+
+[[endpoint]]
+name = "cash_flow_statement_growth"
+method = "bulk_cash_flow_statement_growth"
+query = "BulkStatementQuery"
+response = "bulk::cash_flow::BulkCashFlowStatementGrowth"
+doc = "Retrieves worldwide bulk cash-flow growth for one year and fiscal period."
+args = [{ name = "year", kind = "year" }, { name = "period", kind = "fiscal_period" }]
+
+[[endpoint]]
+name = "eod"
+method = "bulk_eod"
+query = "BulkEodQuery"
+response = "bulk::eod::BulkEodBar"
+doc = "Retrieves worldwide bulk end-of-day prices for one required date."
+args = [{ name = "date", kind = "date" }]
