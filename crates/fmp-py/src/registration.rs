@@ -121,6 +121,7 @@ fn register_calendar(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::calendar::IpoDisclosure>()?;
     module.add_class::<crate::models::calendar::IpoProspectus>()?;
     module.add_class::<crate::models::calendar::StockSplitEvent>()?;
+    module.add_class::<crate::namespaces::calendar::CalendarNamespace>()?;
     add_submodule(parent, "fmp._native.calendar", &module)
 }
 
