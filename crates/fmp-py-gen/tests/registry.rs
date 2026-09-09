@@ -4,7 +4,7 @@
 
 use std::path::{Path, PathBuf};
 
-use fmp_py_gen::registry::scan::Origin;
+use fmp_py_gen::registry::scan::{Origin, Surface};
 use fmp_py_gen::registry::{ArgKind, Registry, RegistryError, ValidationError};
 
 fn manifest() -> PathBuf {
@@ -164,6 +164,51 @@ fn nested_namespace_with_setters_and_binary_verifies() {
     assert_eq!(
         report.verified[1].query_module,
         Some(vec!["statements".to_owned(), "reports".to_owned()])
+    );
+}
+
+#[test]
+fn impl_level_macro_setters_verify_as_direct() {
+    let registry = Registry::load(&fixture("impl_macros")).expect("fixture loads");
+    let companies = &registry.domains[0].namespaces[0].endpoints[0];
+    assert_eq!(companies.ctor_args().count(), 0);
+    assert_eq!(companies.setters.len(), 20);
+    let booleans: Vec<&str> = companies
+        .args
+        .iter()
+        .filter(|arg| arg.kind == ArgKind::Boolean)
+        .map(|arg| arg.name.as_str())
+        .collect();
+    assert_eq!(
+        booleans,
+        [
+            "is_etf",
+            "is_fund",
+            "is_actively_trading",
+            "include_all_share_classes"
+        ]
+    );
+
+    let report = registry
+        .validate(&endpoints_root(), &models_root())
+        .expect("impl-level macro setters verify");
+    assert!(report.trusted.is_empty(), "{:?}", report.trusted);
+    assert_eq!(report.verified.len(), 1);
+    assert_eq!(report.verified[0].entry, "screener.companies");
+    assert_eq!(report.verified[0].query_origin, Some(Origin::Direct));
+    assert_eq!(
+        report.verified[0].query_module,
+        Some(vec!["screener".to_owned()])
+    );
+
+    let surface = Surface::scan(&endpoints_root()).expect("endpoints scan");
+    let assumptions = &surface.queries["DcfAssumptions"];
+    assert_eq!(assumptions.origin, Origin::Direct);
+    assert_eq!(assumptions.setters.len(), 18);
+    assert_eq!(assumptions.setters["with_beta"].base_type, "FiniteDecimal");
+    assert_eq!(
+        assumptions.setters["with_risk_free_rate"].base_type,
+        "FiniteDecimal"
     );
 }
 
