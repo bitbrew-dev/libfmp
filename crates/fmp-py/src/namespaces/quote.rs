@@ -3,13 +3,19 @@
 use std::sync::Arc;
 
 use libfmp::ClientBuilder;
-use libfmp::endpoints::quote::{QuoteQuery, QuoteShortQuery};
+use libfmp::endpoints::quote::{
+    AftermarketQuoteQuery, AftermarketTradeQuery, BatchAftermarketQuoteQuery,
+    BatchAftermarketTradeQuery, BatchQuoteQuery, BatchQuoteShortQuery, ExchangeQuotesQuery,
+    QuoteQuery, QuoteShortQuery, StockPriceChangeQuery,
+};
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::args;
 use crate::errors::to_py_error;
-use crate::models::quote::{Quote, QuoteShort};
+use crate::models::quote::{
+    AftermarketQuote, AftermarketTrade, Quote, QuoteShort, StockPriceChange,
+};
 use crate::runtime::block_on;
 
 /// Quote endpoints for a single client, exposed as `client.quote`.
@@ -65,6 +71,185 @@ impl QuoteNamespace {
         rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
             .map_err(to_py_error)
     }
+
+    /// Retrieves US aftermarket trades for one ticker.
+    #[pyo3(signature = (symbol))]
+    fn aftermarket_trade(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<AftermarketTrade>> {
+        let query = aftermarket_trade_query(symbol)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.aftermarket_trade(query).await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(AftermarketTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US aftermarket bid-and-ask quotes for one ticker.
+    #[pyo3(signature = (symbol))]
+    fn aftermarket_quote(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<AftermarketQuote>> {
+        let query = aftermarket_quote_query(symbol)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.aftermarket_quote(query).await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(AftermarketQuote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide percentage price changes for one stock.
+    #[pyo3(signature = (symbol))]
+    fn stock_price_change(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<StockPriceChange>> {
+        let query = stock_price_change_query(symbol)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.stock_price_change(query).await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(StockPriceChange::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves detailed worldwide stock quotes for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    fn batch_quote(&self, py: Python<'_>, symbols: args::SymbolsArg) -> PyResult<Vec<Quote>> {
+        let query = batch_quote_query(symbols)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(
+                builder,
+                |client| async move { client.batch_quote(query).await },
+            )
+        })?;
+        rows.map(|items| items.into_iter().map(Quote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact worldwide stock quotes for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    fn batch_quote_short(
+        &self,
+        py: Python<'_>,
+        symbols: args::SymbolsArg,
+    ) -> PyResult<Vec<QuoteShort>> {
+        let query = batch_quote_short_query(symbols)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.batch_quote_short(query).await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US aftermarket trades for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    fn batch_aftermarket_trade(
+        &self,
+        py: Python<'_>,
+        symbols: args::SymbolsArg,
+    ) -> PyResult<Vec<AftermarketTrade>> {
+        let query = batch_aftermarket_trade_query(symbols)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.batch_aftermarket_trade(query).await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(AftermarketTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US aftermarket bid-and-ask quotes for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    fn batch_aftermarket_quote(
+        &self,
+        py: Python<'_>,
+        symbols: args::SymbolsArg,
+    ) -> PyResult<Vec<AftermarketQuote>> {
+        let query = batch_aftermarket_quote_query(symbols)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.batch_aftermarket_quote(query).await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(AftermarketQuote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for every stock on one exchange.
+    #[pyo3(signature = (exchange))]
+    fn exchange(&self, py: Python<'_>, exchange: &str) -> PyResult<Vec<QuoteShort>> {
+        let query = exchange_query(exchange)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.exchange_quotes(query).await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented ETF universe.
+    fn etfs(&self, py: Python<'_>) -> PyResult<Vec<QuoteShort>> {
+        let builder = self.builder.clone();
+        let rows = py
+            .detach(move || block_on(builder, |client| async move { client.etf_quotes().await }))?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented commodity universe.
+    fn commodities(&self, py: Python<'_>) -> PyResult<Vec<QuoteShort>> {
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(
+                builder,
+                |client| async move { client.commodity_quotes().await },
+            )
+        })?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented cryptocurrency universe.
+    fn cryptocurrencies(&self, py: Python<'_>) -> PyResult<Vec<QuoteShort>> {
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.cryptocurrency_quotes().await
+            })
+        })?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented forex universe.
+    fn forex(&self, py: Python<'_>) -> PyResult<Vec<QuoteShort>> {
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move { client.forex_quotes().await })
+        })?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented index universe.
+    fn indexes(&self, py: Python<'_>) -> PyResult<Vec<QuoteShort>> {
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move { client.index_quotes().await })
+        })?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
 }
 
 /// Builds the `QuoteQuery` for `QuoteNamespace::full` from validated Python arguments.
@@ -77,4 +262,56 @@ fn full_query(symbol: &str) -> PyResult<QuoteQuery> {
 fn short_query(symbol: &str) -> PyResult<QuoteShortQuery> {
     let symbol = args::ticker("symbol", symbol)?;
     Ok(QuoteShortQuery::new(symbol))
+}
+
+/// Builds the `AftermarketTradeQuery` for `QuoteNamespace::aftermarket_trade` from validated Python arguments.
+fn aftermarket_trade_query(symbol: &str) -> PyResult<AftermarketTradeQuery> {
+    let symbol = args::ticker("symbol", symbol)?;
+    Ok(AftermarketTradeQuery::new(symbol))
+}
+
+/// Builds the `AftermarketQuoteQuery` for `QuoteNamespace::aftermarket_quote` from validated Python arguments.
+fn aftermarket_quote_query(symbol: &str) -> PyResult<AftermarketQuoteQuery> {
+    let symbol = args::ticker("symbol", symbol)?;
+    Ok(AftermarketQuoteQuery::new(symbol))
+}
+
+/// Builds the `StockPriceChangeQuery` for `QuoteNamespace::stock_price_change` from validated Python arguments.
+fn stock_price_change_query(symbol: &str) -> PyResult<StockPriceChangeQuery> {
+    let symbol = args::ticker("symbol", symbol)?;
+    Ok(StockPriceChangeQuery::new(symbol))
+}
+
+/// Builds the `BatchQuoteQuery` for `QuoteNamespace::batch_quote` from validated Python arguments.
+fn batch_quote_query(symbols: args::SymbolsArg) -> PyResult<BatchQuoteQuery> {
+    let symbols = args::ticker_list("symbols", symbols)?;
+    Ok(BatchQuoteQuery::new(symbols))
+}
+
+/// Builds the `BatchQuoteShortQuery` for `QuoteNamespace::batch_quote_short` from validated Python arguments.
+fn batch_quote_short_query(symbols: args::SymbolsArg) -> PyResult<BatchQuoteShortQuery> {
+    let symbols = args::ticker_list("symbols", symbols)?;
+    Ok(BatchQuoteShortQuery::new(symbols))
+}
+
+/// Builds the `BatchAftermarketTradeQuery` for `QuoteNamespace::batch_aftermarket_trade` from validated Python arguments.
+fn batch_aftermarket_trade_query(
+    symbols: args::SymbolsArg,
+) -> PyResult<BatchAftermarketTradeQuery> {
+    let symbols = args::ticker_list("symbols", symbols)?;
+    Ok(BatchAftermarketTradeQuery::new(symbols))
+}
+
+/// Builds the `BatchAftermarketQuoteQuery` for `QuoteNamespace::batch_aftermarket_quote` from validated Python arguments.
+fn batch_aftermarket_quote_query(
+    symbols: args::SymbolsArg,
+) -> PyResult<BatchAftermarketQuoteQuery> {
+    let symbols = args::ticker_list("symbols", symbols)?;
+    Ok(BatchAftermarketQuoteQuery::new(symbols))
+}
+
+/// Builds the `ExchangeQuotesQuery` for `QuoteNamespace::exchange` from validated Python arguments.
+fn exchange_query(exchange: &str) -> PyResult<ExchangeQuotesQuery> {
+    let exchange = args::exchange_code("exchange", exchange)?;
+    Ok(ExchangeQuotesQuery::new(exchange))
 }

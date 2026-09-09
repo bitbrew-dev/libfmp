@@ -142,6 +142,85 @@ class QuoteNamespace:
         Compact quotes for every mutual fund, without a query.
         """
 
+    def aftermarket_trade(
+        self, symbol: builtins.str
+    ) -> builtins.list[AftermarketTrade]:
+        r"""
+        Retrieves US aftermarket trades for one ticker.
+        """
+
+    def aftermarket_quote(
+        self, symbol: builtins.str
+    ) -> builtins.list[AftermarketQuote]:
+        r"""
+        Retrieves US aftermarket bid-and-ask quotes for one ticker.
+        """
+
+    def stock_price_change(
+        self, symbol: builtins.str
+    ) -> builtins.list[StockPriceChange]:
+        r"""
+        Retrieves worldwide percentage price changes for one stock.
+        """
+
+    def batch_quote(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[Quote]:
+        r"""
+        Retrieves detailed worldwide stock quotes for multiple tickers.
+        """
+
+    def batch_quote_short(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact worldwide stock quotes for multiple tickers.
+        """
+
+    def batch_aftermarket_trade(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[AftermarketTrade]:
+        r"""
+        Retrieves US aftermarket trades for multiple tickers.
+        """
+
+    def batch_aftermarket_quote(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[AftermarketQuote]:
+        r"""
+        Retrieves US aftermarket bid-and-ask quotes for multiple tickers.
+        """
+
+    def exchange(self, exchange: builtins.str) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for every stock on one exchange.
+        """
+
+    def etfs(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented ETF universe.
+        """
+
+    def commodities(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented commodity universe.
+        """
+
+    def cryptocurrencies(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented cryptocurrency universe.
+        """
+
+    def forex(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented forex universe.
+        """
+
+    def indexes(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented index universe.
+        """
+
 
 @typing.final
 class QuoteShort:
