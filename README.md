@@ -25,6 +25,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+The Rust builder never reads the environment on its own. When the key lives in
+`FMP_API_KEY`, `Authentication::fmp_header_from_env()` returns the same header
+authentication as `Option<Authentication>` (`None` when the variable is unset,
+empty, or whitespace-only), so the `env::var` line above is the explicit form.
+
 The Rust client is async. Endpoint descriptors, typed queries, response models,
 and `Client` methods cover all 276 documented oracle entries. `quote_short`,
 for example, preserves FMP's bare-array response as `Vec<QuoteShort>`, including
@@ -39,14 +44,17 @@ python -m pip install fmp-py-sdk
 ```
 
 ```python
-import os
-
 from fmp import FmpClient
 
-client = FmpClient(token=os.environ["FMP_API_KEY"])
+client = FmpClient()
 rows = client.quote_short("AAPL")
 print(rows)
 ```
+
+`FmpClient()` reads the `FMP_API_KEY` environment variable when `token` is
+omitted; pass `token=...` to override it, or `auth_mode="none"` to ignore it.
+With neither a token nor the variable, the default host raises
+`FmpConfigError` naming `FMP_API_KEY`.
 
 The Python facade is synchronous and currently implements only the documented
 `quote_short` endpoint (1/276). It returns `list[QuoteShort]`; while waiting for
