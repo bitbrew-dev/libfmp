@@ -56,7 +56,27 @@ fn shipped_quote_registry_is_fully_verified() {
         .iter()
         .map(|endpoint| endpoint.python_name.as_str())
         .collect();
-    assert_eq!(names, ["full", "short", "mutual_funds"]);
+    assert_eq!(
+        names,
+        [
+            "full",
+            "short",
+            "mutual_funds",
+            "aftermarket_trade",
+            "aftermarket_quote",
+            "stock_price_change",
+            "batch_quote",
+            "batch_quote_short",
+            "batch_aftermarket_trade",
+            "batch_aftermarket_quote",
+            "exchange",
+            "etfs",
+            "commodities",
+            "cryptocurrencies",
+            "forex",
+            "indexes",
+        ]
+    );
     let full = &quote.namespaces[0].endpoints[0];
     assert_eq!(full.args[0].kind, ArgKind::Ticker);
     assert!(full.args[0].required);
@@ -74,26 +94,34 @@ fn shipped_quote_registry_is_fully_verified() {
         .iter()
         .map(|entry| entry.query_origin.clone())
         .collect();
-    assert_eq!(
-        origins,
-        [
-            Some(Origin::Macro("symbol_query".to_owned())),
-            Some(Origin::Macro("symbol_query".to_owned())),
-            None,
-        ]
-    );
+    let symbol = Some(Origin::Macro("symbol_query".to_owned()));
+    let symbols = Some(Origin::Macro("symbols_query".to_owned()));
+    let expected_origins: Vec<Option<Origin>> = [
+        symbol.clone(),
+        symbol.clone(),
+        None,
+        symbol.clone(),
+        symbol.clone(),
+        symbol,
+        symbols.clone(),
+        symbols.clone(),
+        symbols.clone(),
+        symbols,
+        Some(Origin::Direct),
+    ]
+    .into_iter()
+    .chain(std::iter::repeat_n(None, 5))
+    .collect();
+    assert_eq!(origins, expected_origins);
     let modules: Vec<Option<Vec<String>>> = quote_entries
         .iter()
         .map(|entry| entry.query_module.clone())
         .collect();
-    assert_eq!(
-        modules,
-        [
-            Some(vec!["quote".to_owned()]),
-            Some(vec!["quote".to_owned()]),
-            None
-        ]
-    );
+    let expected_modules: Vec<Option<Vec<String>>> = origins
+        .iter()
+        .map(|origin| origin.as_ref().map(|_| vec!["quote".to_owned()]))
+        .collect();
+    assert_eq!(modules, expected_modules);
 }
 
 #[test]
