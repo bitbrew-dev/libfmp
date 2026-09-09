@@ -48,8 +48,11 @@ fn assert_names(errors: &[ValidationError], file: &str, entry: &str, needle: &st
 #[test]
 fn shipped_quote_registry_is_fully_verified() {
     let registry = Registry::load(&manifest().join("registry")).expect("registry loads");
-    let quote = &registry.domains[0];
-    assert_eq!(quote.name, "quote");
+    let quote = registry
+        .domains
+        .iter()
+        .find(|domain| domain.name == "quote")
+        .expect("the shipped registry has a quote domain");
     assert_eq!(quote.namespaces[0].path, ["quote"]);
     let names: Vec<&str> = quote.namespaces[0]
         .endpoints
