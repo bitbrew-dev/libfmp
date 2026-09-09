@@ -35,7 +35,7 @@ pub use enums::{
     retrieval_frequency, segmentation_structure, statement_period,
 };
 pub use numeric::{
-    calendar_quarter, calendar_year, finite_decimal, limit, market_capitalization, page,
+    boolean, calendar_quarter, calendar_year, finite_decimal, limit, market_capitalization, page,
     period_length, quarter, true_false_flag, volume, year,
 };
 pub use temporal::{DateArg, DateTimeArg, api_datetime, date, date_range};
