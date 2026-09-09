@@ -1,0 +1,125 @@
+# Endpoint registry for the `indexes` domain, reached from Python as
+# `client.indexes`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "list"
+method = "index_list"
+response = "indexes::IndexListing"
+doc = "Lists worldwide stock-market indexes."
+
+[[endpoint]]
+name = "quote"
+method = "index_quote"
+query = "QuoteQuery"
+response = "quote::Quote"
+doc = "Retrieves a detailed quote for one stock-market index."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "quote_short"
+method = "index_quote_short"
+query = "QuoteShortQuery"
+response = "quote::QuoteShort"
+doc = "Retrieves a compact quote for one stock-market index."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "chart_light"
+method = "index_chart_light"
+query = "IndexChartQuery"
+response = "chart::StockChartLightBar"
+doc = "Retrieves compact end-of-day history for one stock-market index."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_full"
+method = "index_chart_full"
+query = "IndexChartQuery"
+response = "chart::StockChartFullBar"
+doc = "Retrieves detailed end-of-day history for one stock-market index."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_one_minute"
+method = "index_chart_one_minute"
+query = "IndexChartQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves one-minute history for one stock-market index."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_five_minutes"
+method = "index_chart_five_minutes"
+query = "IndexChartQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves five-minute history for one stock-market index."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_one_hour"
+method = "index_chart_one_hour"
+query = "IndexChartQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves one-hour history for one stock-market index."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "sp500_constituents"
+method = "sp500_constituents"
+response = "indexes::IndexConstituent"
+doc = "Lists the current S&P 500 constituents."
+
+[[endpoint]]
+name = "nasdaq_constituents"
+method = "nasdaq_constituents"
+response = "indexes::IndexConstituent"
+doc = "Lists the current Nasdaq constituents."
+
+[[endpoint]]
+name = "dow_jones_constituents"
+method = "dow_jones_constituents"
+response = "indexes::IndexConstituent"
+doc = "Lists the current Dow Jones constituents."
+
+[[endpoint]]
+name = "historical_sp500_constituents"
+method = "historical_sp500_constituents"
+response = "indexes::HistoricalIndexConstituent"
+doc = "Lists historical S&P 500 constituent changes."
+
+[[endpoint]]
+name = "historical_nasdaq_constituents"
+method = "historical_nasdaq_constituents"
+response = "indexes::HistoricalIndexConstituent"
+doc = "Lists historical Nasdaq constituent changes."
+
+[[endpoint]]
+name = "historical_dow_jones_constituents"
+method = "historical_dow_jones_constituents"
+response = "indexes::HistoricalIndexConstituent"
+doc = "Lists historical Dow Jones constituent changes."
