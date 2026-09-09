@@ -163,6 +163,7 @@ fn register_company(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::company::MarketCapitalizationRecord>()?;
     module.add_class::<crate::models::company::MergerAcquisition>()?;
     module.add_class::<crate::models::company::StockPeer>()?;
+    module.add_class::<crate::namespaces::company::CompanyNamespace>()?;
     add_submodule(parent, "fmp._native.company", &module)
 }
 
