@@ -1,0 +1,135 @@
+# Endpoint registry for the `sec_filings` domain, reached from Python as
+# `client.sec_filings`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "latest_8k"
+method = "latest_8k_sec_filings"
+query = "Latest8kSecFilingsQuery"
+response = "sec_filings::SecFiling"
+doc = "Retrieves the latest US 8-K SEC filings within the required date range."
+args = [
+    { name = "from", kind = "date" },
+    { name = "to", kind = "date" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "latest"
+method = "latest_sec_filings"
+query = "LatestSecFilingsQuery"
+response = "sec_filings::SecFiling"
+doc = "Retrieves the latest US financial SEC filings within the required date range."
+args = [
+    { name = "from", kind = "date" },
+    { name = "to", kind = "date" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "by_form_type"
+method = "sec_filings_by_form_type"
+query = "SecFilingsByFormTypeQuery"
+response = "sec_filings::SecFiling"
+doc = "Retrieves US SEC filings by their open form type."
+args = [
+    { name = "form_type", kind = "form_type" },
+    { name = "from", kind = "date" },
+    { name = "to", kind = "date" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "by_symbol"
+method = "sec_filings_by_symbol"
+query = "SecFilingsBySymbolQuery"
+response = "sec_filings::SecFiling"
+doc = "Retrieves US SEC filings for a ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date" },
+    { name = "to", kind = "date" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "by_cik"
+method = "sec_filings_by_cik"
+query = "SecFilingsByCikQuery"
+response = "sec_filings::SecFiling"
+doc = "Retrieves US SEC filings for a string-backed CIK."
+args = [
+    { name = "cik", kind = "cik" },
+    { name = "from", kind = "date" },
+    { name = "to", kind = "date" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "search_companies_by_name"
+method = "search_sec_companies_by_name"
+query = "SecCompaniesByNameQuery"
+response = "sec_filings::SecCompanySearchResult"
+doc = "Searches US SEC companies by company-name text."
+args = [{ name = "company", kind = "search_term" }]
+
+[[endpoint]]
+name = "search_companies_by_symbol"
+method = "search_sec_companies_by_symbol"
+query = "SecCompaniesBySymbolQuery"
+response = "sec_filings::SecCompanySearchResult"
+doc = "Searches US SEC companies by ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "search_companies_by_cik"
+method = "search_sec_companies_by_cik"
+query = "SecCompaniesByCikQuery"
+response = "sec_filings::SecCompanySearchResult"
+doc = "Searches US SEC companies by string-backed CIK."
+args = [{ name = "cik", kind = "cik" }]
+
+[[endpoint]]
+name = "company_profile"
+method = "sec_company_profile"
+query = "SecCompanyProfileQuery"
+response = "sec_filings::SecCompanyProfile"
+doc = "Retrieves the full US SEC company profile for a ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "cik_a", kind = "cik", required = false },
+]
+setters = [{ arg = "cik_a" }]
+
+[[endpoint]]
+name = "industry_classifications"
+method = "industry_classifications"
+query = "IndustryClassificationsQuery"
+response = "sec_filings::SicClassification"
+doc = "Retrieves the US Standard Industrial Classification directory."
+args = [
+    { name = "industry_title", kind = "search_term", required = false },
+    { name = "sic_code", kind = "search_term", required = false },
+]
+setters = [{ arg = "industry_title" }, { arg = "sic_code" }]
+
+[[endpoint]]
+name = "all_industry_classifications"
+method = "all_industry_classifications"
+query = "AllIndustryClassificationsQuery"
+response = "sec_filings::SecCompanySearchResult"
+doc = "Retrieves the paginated US company industry-classification feed."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
