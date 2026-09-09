@@ -4,15 +4,17 @@ use std::sync::Arc;
 
 use libfmp::ClientBuilder;
 use libfmp::endpoints::sec_filings::{
-    AllIndustryClassificationsQuery, IndustryClassificationsQuery, Latest8kSecFilingsQuery,
-    LatestSecFilingsQuery, SecCompaniesByCikQuery, SecCompaniesByNameQuery,
-    SecCompaniesBySymbolQuery, SecCompanyProfileQuery, SecFilingsByCikQuery,
-    SecFilingsByFormTypeQuery, SecFilingsBySymbolQuery,
+    AllIndustryClassificationsQuery, IndustryClassificationSearchQuery,
+    IndustryClassificationsQuery, Latest8kSecFilingsQuery, LatestSecFilingsQuery,
+    SecCompaniesByCikQuery, SecCompaniesByNameQuery, SecCompaniesBySymbolQuery,
+    SecCompanyProfileQuery, SecFilingsByCikQuery, SecFilingsByFormTypeQuery,
+    SecFilingsBySymbolQuery,
 };
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::args;
+use crate::convert;
 use crate::errors::to_py_error;
 use crate::models::sec_filings::{
     SecCompanyProfile, SecCompanySearchResult, SecFiling, SicClassification,
@@ -273,6 +275,29 @@ impl SecFilingsNamespace {
         })
         .map_err(to_py_error)
     }
+
+    /// Searches US industry classifications while preserving raw documented rows.
+    #[pyo3(signature = (*, symbol=None, cik=None, sic_code=None))]
+    #[gen_stub(override_return_type(type_repr = "list[dict[str, typing.Any]]", imports = ("typing")))]
+    fn search_industry_classifications(
+        &self,
+        py: Python<'_>,
+        symbol: Option<&str>,
+        cik: Option<&str>,
+        sic_code: Option<&str>,
+    ) -> PyResult<Vec<Py<PyAny>>> {
+        let query = search_industry_classifications_query(symbol, cik, sic_code)?;
+        let builder = self.builder.clone();
+        let rows = py.detach(move || {
+            block_on(builder, |client| async move {
+                client.search_industry_classifications(query).await
+            })
+        })?;
+        rows.map_err(to_py_error)?
+            .iter()
+            .map(|row| convert::dynamic_object_to_py(py, row).map(Bound::unbind))
+            .collect()
+    }
 }
 
 /// Builds the `Latest8kSecFilingsQuery` for `SecFilingsNamespace::latest_8k` from validated Python arguments.
@@ -445,6 +470,28 @@ fn all_industry_classifications_query(
     }
     if let Some(limit) = limit {
         query = query.with_limit(limit);
+    }
+    Ok(query)
+}
+
+/// Builds the `IndustryClassificationSearchQuery` for `SecFilingsNamespace::search_industry_classifications` from validated Python arguments.
+fn search_industry_classifications_query(
+    symbol: Option<&str>,
+    cik: Option<&str>,
+    sic_code: Option<&str>,
+) -> PyResult<IndustryClassificationSearchQuery> {
+    let symbol = args::optional("symbol", symbol, args::ticker)?;
+    let cik = args::optional("cik", cik, args::cik)?;
+    let sic_code = args::optional("sic_code", sic_code, args::search_term)?;
+    let mut query = IndustryClassificationSearchQuery::new();
+    if let Some(symbol) = symbol {
+        query = query.with_symbol(symbol);
+    }
+    if let Some(cik) = cik {
+        query = query.with_cik(cik);
+    }
+    if let Some(sic_code) = sic_code {
+        query = query.with_sic_code(sic_code);
     }
     Ok(query)
 }
