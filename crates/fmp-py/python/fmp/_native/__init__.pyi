@@ -152,6 +152,12 @@ class FmpClient:
         """
 
     @property
+    def screener(self) -> screener.ScreenerNamespace:
+        r"""
+        The `screener` endpoints, reached as `client.screener`.
+        """
+
+    @property
     def statements(self) -> statements.StatementsNamespace:
         r"""
         The `statements` endpoints, reached as `client.statements`.
