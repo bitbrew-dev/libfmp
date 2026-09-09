@@ -6,7 +6,8 @@ use std::{sync::Arc, time::Duration};
 
 use libfmp::{
     ClientBuilder,
-    config::{Authentication, RedirectPolicy},
+    config::{Authentication, RedirectPolicy, fmp_api_key_from_env},
+    error::ConfigurationErrorKind,
 };
 use pyo3::{prelude::*, types::PyDict};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -15,6 +16,33 @@ use crate::errors::to_py_error;
 
 fn invalid_configuration(message: &'static str) -> PyErr {
     to_py_error(libfmp::Error::configuration(message))
+}
+
+/// The message raised when neither `token` nor `FMP_API_KEY` supplies a
+/// credential for the default FMP host.
+const MISSING_TOKEN_MESSAGE: &str = "no token given and FMP_API_KEY is not set";
+
+/// Resolves the credential: an explicit `token` always wins, `auth_mode="none"`
+/// never consults the environment, and every other mode falls back to
+/// `FMP_API_KEY`.
+fn resolve_token(mode: Option<&str>, token: Option<String>) -> Option<String> {
+    match (mode, token) {
+        (_, Some(token)) => Some(token),
+        (Some("none"), None) => None,
+        (_, None) => fmp_api_key_from_env(),
+    }
+}
+
+/// Names `FMP_API_KEY` when the default host was left without a credential
+/// and the caller did not select `auth_mode="none"` explicitly.
+fn build_error(auth_mode: Option<&str>, error: libfmp::Error) -> PyErr {
+    if auth_mode.is_none()
+        && error.configuration_kind() == Some(ConfigurationErrorKind::MissingCredential)
+    {
+        invalid_configuration(MISSING_TOKEN_MESSAGE)
+    } else {
+        to_py_error(error)
+    }
 }
 
 fn required_token(token: Option<String>) -> PyResult<String> {
@@ -51,6 +79,7 @@ fn authentication(
     name: Option<String>,
     prefix: Option<String>,
 ) -> PyResult<Authentication> {
+    let token = resolve_token(mode, token);
     let mode = mode.unwrap_or(if token.is_some() {
         "fmp_header"
     } else {
@@ -113,8 +142,14 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 
 /// A synchronous FMP client with proxy-ready transport configuration.
 ///
-/// Supplying `token` without `auth_mode` selects FMP's exact `apikey` header;
-/// omitting both selects no auth, which is valid only with a custom base URL.
+/// When `token` is omitted, the `FMP_API_KEY` environment variable is read
+/// instead (unset, empty, or whitespace-only counts as absent); an explicit
+/// `token` always wins, and `auth_mode="none"` ignores the variable. A
+/// credential without `auth_mode` selects FMP's exact `apikey` header; the
+/// other modes combine with the variable as they do with `token`. Omitting
+/// both selects no auth, which is valid only with a custom base URL: against
+/// the default host the constructor raises `FmpConfigError` naming
+/// `FMP_API_KEY`.
 /// `timeout` and `connect_timeout` are positive finite numbers of seconds.
 /// `max_response_body_bytes` bounds each buffered response. Authenticated
 /// non-loopback HTTP requires `danger_allow_insecure_authentication=True`.
@@ -180,7 +215,10 @@ impl FmpClient {
             });
         }
 
-        builder.clone().build().map_err(to_py_error)?;
+        builder
+            .clone()
+            .build()
+            .map_err(|error| build_error(auth_mode, error))?;
         Ok(Self {
             builder: Arc::new(builder),
         })
