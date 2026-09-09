@@ -1,0 +1,12 @@
+[[endpoint]]
+name = "search_industry_classifications"
+method = "search_industry_classifications"
+query = "IndustryClassificationSearchQuery"
+response = "dynamic"
+doc = "Searches US industry classifications while preserving raw documented rows."
+args = [
+    { name = "symbol", kind = "ticker", required = false },
+    { name = "cik", kind = "cik", required = false },
+    { name = "sic_code", kind = "search_term", required = false },
+]
+setters = [{ arg = "symbol" }, { arg = "cik" }, { arg = "sic_code" }]

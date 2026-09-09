@@ -230,6 +230,40 @@ fn keyword_arg_names_get_python_safe_spellings() {
 }
 
 #[test]
+fn dynamic_response_verifies_only_against_dynamic_object_rows() {
+    let registry = Registry::load(&fixture("dynamic_rows")).expect("fixture loads");
+    let search = &registry.domains[0].namespaces[0].endpoints[0];
+    assert!(search.dynamic);
+    assert!(!search.binary);
+    assert_eq!(search.response_model, None);
+    let report = registry
+        .validate(&endpoints_root(), &models_root())
+        .expect("dynamic fixture validates");
+    assert!(report.trusted.is_empty(), "{:?}", report.trusted);
+    assert_eq!(report.verified.len(), 1);
+    assert_eq!(
+        report.verified[0].entry,
+        "sec_filings.search_industry_classifications"
+    );
+    assert_eq!(report.verified[0].query_origin, Some(Origin::Direct));
+
+    let errors = validate(&fixture("dynamic_mismatch"));
+    assert_names(
+        &errors,
+        "dynamic_mismatch/sec_filings.toml",
+        "sec_filings.search_industry_classifications",
+        "returns `Vec<DynamicObject>`; set `response = \"dynamic\"`",
+    );
+    assert_names(
+        &errors,
+        "dynamic_mismatch/sec_filings.toml",
+        "sec_filings.industry_classifications",
+        "returns `Vec<SicClassification>`, not `Vec<DynamicObject>`; name a `response` model instead of `dynamic`",
+    );
+    assert_eq!(errors.len(), 2);
+}
+
+#[test]
 fn unknown_method_is_a_hard_error() {
     let errors = validate(&fixture("unknown_method"));
     assert_names(

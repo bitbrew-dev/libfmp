@@ -84,6 +84,9 @@ pub struct Endpoint {
     pub setters: Vec<Setter>,
     /// Whether the client method returns `BinaryResponse` rather than rows.
     pub binary: bool,
+    /// Whether the rows are untyped `DynamicObject`s handed to Python as
+    /// `dict`s (registry `response = "dynamic"`); no model is involved.
+    pub dynamic: bool,
 }
 
 /// A generated model, for example `statements::income::IncomeStatement`.

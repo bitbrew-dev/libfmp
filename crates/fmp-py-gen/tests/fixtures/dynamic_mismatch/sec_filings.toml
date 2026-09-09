@@ -1,0 +1,13 @@
+[[endpoint]]
+name = "search_industry_classifications"
+method = "search_industry_classifications"
+query = "IndustryClassificationSearchQuery"
+response = "sec_filings::SicClassification"
+doc = "Names a typed model for a method that returns untyped rows."
+
+[[endpoint]]
+name = "industry_classifications"
+method = "industry_classifications"
+query = "IndustryClassificationsQuery"
+response = "dynamic"
+doc = "Marks a typed-row method as dynamic."

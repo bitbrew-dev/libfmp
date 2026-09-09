@@ -169,6 +169,25 @@ fn keyword_arg_names_are_sanitized_while_setters_keep_theirs() {
 }
 
 #[test]
+fn dynamic_fixture_renders_dict_rows_with_the_stub_override() {
+    let files = render_all(&manifest().join("tests/fixtures/dynamic_rows"));
+    let sec = source(&files, "sec_filings.rs");
+    for needle in [
+        "use crate::args;\nuse crate::convert;\nuse crate::errors::to_py_error;\nuse crate::runtime::block_on;\n",
+        "#[pyo3(signature = (*, symbol=None, cik=None, sic_code=None))]\n    #[gen_stub(override_return_type(type_repr = \"list[dict[str, typing.Any]]\", imports = (\"typing\")))]\n    fn search_industry_classifications(",
+        "sic_code: Option<&str>) -> PyResult<Vec<Py<PyAny>>> {",
+        "let query = search_industry_classifications_query(symbol, cik, sic_code)?;",
+        "let rows = py.detach(move || block_on(builder, |client| async move { client.search_industry_classifications(query).await }))?;",
+        "        rows.map_err(to_py_error)?.iter().map(|row| convert::dynamic_object_to_py(py, row).map(Bound::unbind)).collect()\n    }",
+        "let mut query = IndustryClassificationSearchQuery::new();",
+    ] {
+        assert!(sec.contains(needle), "missing {needle:?} in:\n{sec}");
+    }
+    assert!(!sec.contains("use crate::models"));
+    assert!(!sec.contains("::from)"));
+}
+
+#[test]
 fn unresolved_query_type_is_an_error() {
     let (registry, _) = load(&manifest().join("registry"));
     let tree = build_tree(&registry);
@@ -200,6 +219,7 @@ fn synthetic(args: Vec<Arg>) -> Node {
             args,
             setters: Vec::new(),
             binary: false,
+            dynamic: false,
         }],
         children: Default::default(),
     }
