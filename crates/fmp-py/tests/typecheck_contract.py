@@ -1,6 +1,7 @@
 """Static-only contract exercised by pyright and mypy against the shipped stubs."""
 
 import datetime
+from typing import Any
 
 import fmp
 from fmp import BinaryPayload, FmpClient, FmpError
@@ -122,7 +123,10 @@ def check_sec_filings_contract(client: FmpClient) -> None:
     cik: str = companies[0].cik
     profiles: list[SecCompanyProfile] = client.sec_filings.company_profile("AAPL", cik_a="0000320193")
     ipo_date: datetime.date = profiles[0].ipo_date
-    _ = (accepted, has_financials, cik, ipo_date)
+    raw: list[dict[str, Any]] = client.sec_filings.search_industry_classifications(
+        symbol="AAPL", cik="0000320193", sic_code="3571"
+    )
+    _ = (accepted, has_financials, cik, ipo_date, raw)
 
 
 def check_public_contract(client: FmpClient) -> None:
