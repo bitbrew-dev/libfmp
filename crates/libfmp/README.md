@@ -25,6 +25,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+The Rust builder never reads the environment on its own. When the key lives in
+`FMP_API_KEY`, `Authentication::fmp_header_from_env()` returns the same header
+authentication as `Option<Authentication>` (`None` when the variable is unset,
+empty, or whitespace-only), so the `env::var` line above is the explicit form.
+
 The documented bare JSON array remains a `Vec<QuoteShort>`; empty and multi-row responses keep their original shape.
 
 ## Custom router or proxy

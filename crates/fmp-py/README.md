@@ -12,14 +12,18 @@ python -m pip install fmp-py-sdk
 ```
 
 ```python
-import os
-
 from fmp import FmpClient
 
-client = FmpClient(token=os.environ["FMP_API_KEY"])
+client = FmpClient()
 rows = client.quote_short("AAPL")
 print(rows)
 ```
+
+`FmpClient()` reads the `FMP_API_KEY` environment variable when `token` is
+omitted (unset, empty, or whitespace-only counts as absent); an explicit
+`token=...` always wins, and `auth_mode="none"` ignores the variable. With
+neither a token nor the variable, the default host raises `FmpConfigError`
+naming `FMP_API_KEY`, while a custom `base_url` selects no auth.
 
 `quote_short` returns `list[QuoteShort]`, preserving empty and multi-row provider responses. The public native modules follow a conventional HTTP SDK surface: `FmpClient` lives in `fmp.client`, the exception hierarchy lives in `fmp.errors`, and response models live in endpoint domains such as `fmp.quote`. Every public type also remains available from the package root. `FmpClient` is synchronous; it releases the Python GIL while its async Rust transport waits.
 
