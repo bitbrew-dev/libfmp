@@ -1,9 +1,30 @@
 """Static-only contract exercised by pyright and mypy against the shipped stubs."""
 
+import datetime
+
 import fmp
 from fmp import BinaryPayload, FmpClient, FmpError
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.quote import Quote, QuoteShort
+from fmp.statements import StatementsNamespace
+from fmp.statements.income import IncomeStatement, StatementsIncomeNamespace
+from fmp.statements.reports import FinancialReportDate
+from fmp.statements.summaries import LatestFinancialStatement
+
+
+def check_statements_contract(client: FmpClient) -> None:
+    """Type-check the two-level nested namespace and its bespoke result types."""
+    statements: StatementsNamespace = client.statements
+    income: StatementsIncomeNamespace = statements.income
+    rows: list[IncomeStatement] = income.statement("AAPL", period="annual", limit=5)
+    reported_on: datetime.date = rows[0].date
+    revenue: int = rows[0].revenue
+    dates: list[FinancialReportDate] = client.statements.reports.dates("AAPL")
+    link: str = dates[0].expose_secret_url_json()
+    workbook: BinaryPayload = client.statements.reports.xlsx("AAPL", 2024, "FY")
+    latest: list[LatestFinancialStatement] = client.statements.summaries.latest_financial_statements(page=0, limit=10)
+    added: datetime.datetime = latest[0].date_added
+    _ = (reported_on, revenue, link, workbook.data, added)
 
 
 def check_public_contract(client: FmpClient) -> None:
