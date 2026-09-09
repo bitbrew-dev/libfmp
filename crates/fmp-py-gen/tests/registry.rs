@@ -65,8 +65,12 @@ fn shipped_quote_registry_is_fully_verified() {
         .validate(&endpoints_root(), &models_root())
         .expect("shipped registry validates");
     assert!(report.trusted.is_empty(), "{:?}", report.trusted);
-    let origins: Vec<Option<Origin>> = report
+    let quote_entries: Vec<_> = report
         .verified
+        .iter()
+        .filter(|entry| entry.entry.starts_with("quote."))
+        .collect();
+    let origins: Vec<Option<Origin>> = quote_entries
         .iter()
         .map(|entry| entry.query_origin.clone())
         .collect();
@@ -78,8 +82,7 @@ fn shipped_quote_registry_is_fully_verified() {
             None,
         ]
     );
-    let modules: Vec<Option<Vec<String>>> = report
-        .verified
+    let modules: Vec<Option<Vec<String>>> = quote_entries
         .iter()
         .map(|entry| entry.query_module.clone())
         .collect();
