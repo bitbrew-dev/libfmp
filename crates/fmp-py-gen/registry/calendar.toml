@@ -1,0 +1,115 @@
+# Endpoint registry for the `calendar` domain, reached from Python as
+# `client.calendar`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "dividends"
+method = "dividends"
+query = "DividendsQuery"
+response = "calendar::DividendEvent"
+doc = "Retrieves worldwide dividend events for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "dividends_calendar"
+method = "dividends_calendar"
+query = "DividendsCalendarQuery"
+response = "calendar::DividendEvent"
+doc = "Retrieves the worldwide dividend calendar."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }]
+
+[[endpoint]]
+name = "earnings"
+method = "earnings"
+query = "EarningsQuery"
+response = "calendar::EarningsEvent"
+doc = "Retrieves worldwide earnings events for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "include_report_times", kind = "boolean", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "include_report_times" }]
+
+[[endpoint]]
+name = "earnings_calendar"
+method = "earnings_calendar"
+query = "EarningsCalendarQuery"
+response = "calendar::EarningsEvent"
+doc = "Retrieves the worldwide earnings calendar."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "include_report_times", kind = "boolean", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "include_report_times" }]
+
+[[endpoint]]
+name = "ipos_calendar"
+method = "ipos_calendar"
+query = "IposCalendarQuery"
+response = "calendar::IpoCalendarEvent"
+doc = "Retrieves the worldwide IPO calendar."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "ipos_disclosure"
+method = "ipos_disclosure"
+query = "IposDisclosureQuery"
+response = "calendar::IpoDisclosure"
+doc = "Retrieves US IPO disclosure filings."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "ipos_prospectus"
+method = "ipos_prospectus"
+query = "IposProspectusQuery"
+response = "calendar::IpoProspectus"
+doc = "Retrieves US IPO prospectus filings and documented offering values."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "stock_splits"
+method = "stock_splits"
+query = "StockSplitsQuery"
+response = "calendar::StockSplitEvent"
+doc = "Retrieves worldwide stock-split events for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "stock_splits_calendar"
+method = "stock_splits_calendar"
+query = "StockSplitsCalendarQuery"
+response = "calendar::StockSplitEvent"
+doc = "Retrieves the worldwide stock-splits calendar."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }]
