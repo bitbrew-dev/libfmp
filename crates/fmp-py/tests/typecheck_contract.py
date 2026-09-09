@@ -15,6 +15,7 @@ from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
+from fmp.sec_filings import SecCompanyProfile, SecCompanySearchResult, SecFiling, SecFilingsNamespace
 from fmp.statements import StatementsNamespace
 from fmp.statements.income import IncomeStatement, StatementsIncomeNamespace
 from fmp.statements.reports import FinancialReportDate
@@ -109,6 +110,19 @@ def check_screener_contract(client: FmpClient) -> None:
     beta: float = everything[0].beta
     is_fund: bool = filtered[0].is_fund
     _ = (market_cap, beta, is_fund)
+
+
+def check_sec_filings_contract(client: FmpClient) -> None:
+    """Type-check the date-keyed filing feeds, the lookups, and the profile row."""
+    sec_filings: SecFilingsNamespace = client.sec_filings
+    filings: list[SecFiling] = sec_filings.by_form_type("8-K", datetime.date(2024, 1, 1), "2024-03-01", page=0, limit=100)
+    accepted: datetime.datetime = filings[0].accepted_date
+    has_financials: bool | None = filings[0].has_financials
+    companies: list[SecCompanySearchResult] = client.sec_filings.search_companies_by_cik("0000320193")
+    cik: str = companies[0].cik
+    profiles: list[SecCompanyProfile] = client.sec_filings.company_profile("AAPL", cik_a="0000320193")
+    ipo_date: datetime.date = profiles[0].ipo_date
+    _ = (accepted, has_financials, cik, ipo_date)
 
 
 def check_public_contract(client: FmpClient) -> None:
