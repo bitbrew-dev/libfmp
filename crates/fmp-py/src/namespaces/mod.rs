@@ -2,4 +2,5 @@
 
 pub(crate) mod calendar;
 pub(crate) mod quote;
+pub(crate) mod screener;
 pub(crate) mod statements;

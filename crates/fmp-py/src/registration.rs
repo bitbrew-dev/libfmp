@@ -322,6 +322,7 @@ fn register_quote(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 fn register_screener(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "screener")?;
     module.add_class::<crate::models::screener::CompanyScreenerEntry>()?;
+    module.add_class::<crate::namespaces::screener::ScreenerNamespace>()?;
     add_submodule(parent, "fmp._native.screener", &module)
 }
 

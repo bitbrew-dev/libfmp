@@ -6,6 +6,7 @@ use pyo3_stub_gen::derive::gen_stub_pymethods;
 use crate::client::FmpClient;
 use crate::namespaces::calendar::CalendarNamespace;
 use crate::namespaces::quote::QuoteNamespace;
+use crate::namespaces::screener::ScreenerNamespace;
 use crate::namespaces::statements::StatementsNamespace;
 
 #[gen_stub_pymethods]
@@ -21,6 +22,12 @@ impl FmpClient {
     #[getter]
     fn quote(&self) -> QuoteNamespace {
         QuoteNamespace::new(self.builder.clone())
+    }
+
+    /// The `screener` endpoints, reached as `client.screener`.
+    #[getter]
+    fn screener(&self) -> ScreenerNamespace {
+        ScreenerNamespace::new(self.builder.clone())
     }
 
     /// The `statements` endpoints, reached as `client.statements`.
