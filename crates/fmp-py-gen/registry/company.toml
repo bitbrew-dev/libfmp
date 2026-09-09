@@ -1,0 +1,165 @@
+# Endpoint registry for the `company` domain, reached from Python as
+# `client.company`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "profile"
+method = "profile"
+query = "ProfileQuery"
+response = "company::CompanyProfile"
+doc = "Retrieves worldwide company profiles by provider ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "profile_by_cik"
+method = "profile_by_cik"
+query = "ProfileByCikQuery"
+response = "company::CompanyProfile"
+doc = "Retrieves US company profiles by representation-preserving CIK."
+args = [{ name = "cik", kind = "cik" }]
+
+[[endpoint]]
+name = "notes"
+method = "company_notes"
+query = "CompanyNotesQuery"
+response = "company::CompanyNote"
+doc = "Retrieves company-issued notes for a US company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "stock_peers"
+method = "stock_peers"
+query = "StockPeersQuery"
+response = "company::StockPeer"
+doc = "Retrieves worldwide stock peers for a company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "delisted_companies"
+method = "delisted_companies"
+query = "DelistedCompaniesQuery"
+response = "company::DelistedCompany"
+doc = "Retrieves delisted US companies with optional provider pagination."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "employee_count"
+method = "employee_count"
+query = "EmployeeCountQuery"
+response = "company::EmployeeCount"
+doc = "Retrieves current employee-count filings for a US company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "historical_employee_count"
+method = "historical_employee_count"
+query = "HistoricalEmployeeCountQuery"
+response = "company::EmployeeCount"
+doc = "Retrieves historical employee-count filings for a US company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "market_capitalization"
+method = "market_capitalization"
+query = "MarketCapitalizationQuery"
+response = "company::MarketCapitalizationRecord"
+doc = "Retrieves current worldwide market capitalization for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "market_capitalization_batch"
+method = "market_capitalization_batch"
+query = "MarketCapitalizationBatchQuery"
+response = "company::MarketCapitalizationRecord"
+doc = "Retrieves current worldwide market capitalization for multiple companies."
+args = [{ name = "symbols", kind = "ticker_list" }]
+
+[[endpoint]]
+name = "historical_market_capitalization"
+method = "historical_market_capitalization"
+query = "HistoricalMarketCapitalizationQuery"
+response = "company::MarketCapitalizationRecord"
+doc = "Retrieves historical worldwide market capitalization for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "shares_float"
+method = "shares_float"
+query = "SharesFloatQuery"
+response = "company::CompanyShareFloat"
+doc = "Retrieves current worldwide share-float data for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "shares_float_all"
+method = "shares_float_all"
+query = "SharesFloatAllQuery"
+response = "company::AllSharesFloatRecord"
+doc = "Retrieves paginated worldwide share-float data for all companies."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "mergers_acquisitions_latest"
+method = "mergers_acquisitions_latest"
+query = "MergersAcquisitionsLatestQuery"
+response = "company::MergerAcquisition"
+doc = "Retrieves the latest US mergers and acquisitions with optional pagination."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "mergers_acquisitions_search"
+method = "mergers_acquisitions_search"
+query = "MergersAcquisitionsSearchQuery"
+response = "company::MergerAcquisition"
+doc = "Searches US mergers and acquisitions by representation-preserving company name."
+args = [{ name = "name", kind = "search_term" }]
+
+[[endpoint]]
+name = "key_executives"
+method = "key_executives"
+query = "KeyExecutivesQuery"
+response = "company::CompanyExecutive"
+doc = "Retrieves worldwide company executives by provider ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "executive_compensation"
+method = "executive_compensation"
+query = "ExecutiveCompensationQuery"
+response = "company::ExecutiveCompensation"
+doc = "Retrieves executive compensation for a US company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "executive_compensation_benchmark"
+method = "executive_compensation_benchmark"
+query = "ExecutiveCompensationBenchmarkQuery"
+response = "company::ExecutiveCompensationBenchmark"
+doc = "Retrieves US executive-compensation benchmarks with an optional year."
+args = [{ name = "year", kind = "benchmark_year", required = false }]
+setters = [{ arg = "year" }]
