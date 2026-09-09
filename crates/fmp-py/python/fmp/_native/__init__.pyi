@@ -145,6 +145,12 @@ class FmpClient:
         The `quote` endpoints, reached as `client.quote`.
         """
 
+    @property
+    def statements(self) -> statements.StatementsNamespace:
+        r"""
+        The `statements` endpoints, reached as `client.statements`.
+        """
+
     def __new__(
         cls,
         *,

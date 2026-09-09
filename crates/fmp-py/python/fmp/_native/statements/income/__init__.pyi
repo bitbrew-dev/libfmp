@@ -6,6 +6,7 @@ import typing
 
 __all__ = [
     "IncomeStatement",
+    "StatementsIncomeNamespace",
 ]
 
 
@@ -132,3 +133,28 @@ class IncomeStatement:
         weighted_average_shs_out_dil: builtins.int,
     ) -> IncomeStatement: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsIncomeNamespace:
+    r"""
+    Statements income endpoints for a single client, exposed as `client.statements.income`.
+    """
+
+    def statement(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[IncomeStatement]:
+        r"""
+        Retrieves historical worldwide income statements for one company.
+        """
+
+    def statement_ttm(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[IncomeStatement]:
+        r"""
+        Retrieves trailing-twelve-month worldwide income statements for one company.
+        """

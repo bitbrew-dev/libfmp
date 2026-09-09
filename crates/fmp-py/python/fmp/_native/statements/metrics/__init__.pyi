@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "KeyMetrics",
     "KeyMetricsTtm",
+    "StatementsMetricsNamespace",
 ]
 
 
@@ -294,3 +295,26 @@ class KeyMetricsTtm:
         net_current_asset_value_ttm: builtins.int,
     ) -> KeyMetricsTtm: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsMetricsNamespace:
+    r"""
+    Statements metrics endpoints for a single client, exposed as `client.statements.metrics`.
+    """
+
+    def key_metrics(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[KeyMetrics]:
+        r"""
+        Retrieves historical worldwide key metrics for one company.
+        """
+
+    def key_metrics_ttm(self, symbol: builtins.str) -> builtins.list[KeyMetricsTtm]:
+        r"""
+        Retrieves worldwide trailing-twelve-month key metrics for one company.
+        """

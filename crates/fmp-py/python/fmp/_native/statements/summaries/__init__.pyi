@@ -9,6 +9,7 @@ __all__ = [
     "FinancialScore",
     "LatestFinancialStatement",
     "OwnerEarnings",
+    "StatementsSummariesNamespace",
 ]
 
 
@@ -144,3 +145,43 @@ class OwnerEarnings:
         owners_earnings_per_share: builtins.float,
     ) -> OwnerEarnings: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsSummariesNamespace:
+    r"""
+    Statements summaries endpoints for a single client, exposed as `client.statements.summaries`.
+    """
+
+    def latest_financial_statements(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[LatestFinancialStatement]:
+        r"""
+        Retrieves the latest worldwide financial-statement filings.
+        """
+
+    def financial_scores(self, symbol: builtins.str) -> builtins.list[FinancialScore]:
+        r"""
+        Retrieves worldwide financial-health scores for one company.
+        """
+
+    def owner_earnings(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[OwnerEarnings]:
+        r"""
+        Retrieves worldwide owner earnings for one company.
+        """
+
+    def enterprise_values(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[EnterpriseValue]:
+        r"""
+        Retrieves worldwide enterprise values for one company.
+        """

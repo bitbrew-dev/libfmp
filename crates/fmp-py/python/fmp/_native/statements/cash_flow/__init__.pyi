@@ -6,6 +6,7 @@ import typing
 
 __all__ = [
     "CashFlowStatement",
+    "StatementsCashFlowNamespace",
 ]
 
 
@@ -156,3 +157,28 @@ class CashFlowStatement:
         interest_paid: builtins.int,
     ) -> CashFlowStatement: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class StatementsCashFlowNamespace:
+    r"""
+    Statements cash_flow endpoints for a single client, exposed as `client.statements.cash_flow`.
+    """
+
+    def statement(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[CashFlowStatement]:
+        r"""
+        Retrieves historical worldwide cash-flow statements for one company.
+        """
+
+    def statement_ttm(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[CashFlowStatement]:
+        r"""
+        Retrieves trailing-twelve-month worldwide cash-flow statements for one company.
+        """
