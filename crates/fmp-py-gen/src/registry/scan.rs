@@ -3,9 +3,10 @@
 //! `with_*` setters, read with `syn` from `crates/libfmp/src/endpoints/**`.
 //!
 //! Query types emitted by `macro_rules!` are recovered through
-//! [`expand`](super::expand); invocations the expander cannot handle are
-//! listed in [`Surface::unexpanded`] so the validator can report the affected
-//! query types as trusted rather than verified.
+//! [`expand`](super::expand), and so are setters emitted by a macro invoked
+//! inside a query type's `impl` block; invocations the expander cannot
+//! handle are listed in [`Surface::unexpanded`] so the validator can report
+//! the affected query types as trusted rather than verified.
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -136,17 +137,22 @@ impl Surface {
     }
 
     fn absorb_file(&mut self, file: &Path, parsed: &syn::File) {
-        let mut definitions: BTreeMap<String, TokenStream> = BTreeMap::new();
+        let definitions: Definitions = parsed
+            .items
+            .iter()
+            .filter_map(|item| match item {
+                Item::Macro(item) => expand::definition(item),
+                _ => None,
+            })
+            .collect();
         let mut invocations = Vec::new();
         for item in &parsed.items {
             match item {
-                Item::Macro(item) => match expand::definition(item) {
-                    Some((name, body)) => {
-                        definitions.insert(name, body);
-                    }
-                    None => invocations.push(item),
-                },
-                other => self.absorb_item(file, other, &Origin::Direct),
+                Item::Macro(item) if expand::definition(item).is_none() => {
+                    invocations.push(item);
+                }
+                Item::Macro(_) => {}
+                other => self.absorb_item(file, other, &Origin::Direct, &definitions),
             }
         }
         for invocation in invocations {
@@ -160,7 +166,7 @@ impl Surface {
                 Ok(expanded) => {
                     let origin = Origin::Macro(name);
                     for item in &expanded.items {
-                        self.absorb_item(file, item, &origin);
+                        self.absorb_item(file, item, &origin, &definitions);
                     }
                 }
                 Err(reason) => self.unexpanded.push(Unexpanded {
@@ -172,7 +178,13 @@ impl Surface {
         }
     }
 
-    fn absorb_item(&mut self, file: &Path, item: &Item, origin: &Origin) {
+    fn absorb_item(
+        &mut self,
+        file: &Path,
+        item: &Item,
+        origin: &Origin,
+        definitions: &Definitions,
+    ) {
         let Item::Impl(item) = item else { return };
         if item.trait_.is_some() {
             return;
@@ -200,23 +212,56 @@ impl Surface {
             ctor: None,
             setters: BTreeMap::new(),
         });
+        let mut unexpanded = Vec::new();
         for method in &item.items {
-            let ImplItem::Fn(method) = method else {
-                continue;
-            };
-            if !is_public(&method.vis) {
-                continue;
-            }
-            let name = method.sig.ident.to_string();
-            let params = typed_params(&method.sig);
-            if name == "new" {
-                api.ctor = Some(params);
-            } else if name.starts_with("with_")
-                && let [param] = params.as_slice()
-            {
-                api.setters.insert(name, param.clone());
+            match method {
+                ImplItem::Fn(method) => absorb_query_method(api, method),
+                ImplItem::Macro(invocation) => {
+                    let Some(name) = invocation.mac.path.get_ident().map(ToString::to_string)
+                    else {
+                        continue;
+                    };
+                    let Some(body) = definitions.get(&name) else {
+                        continue;
+                    };
+                    match expand::expand_impl_items(body, &invocation.mac.tokens) {
+                        Ok(expanded) => {
+                            for method in &expanded {
+                                if let ImplItem::Fn(method) = method {
+                                    absorb_query_method(api, method);
+                                }
+                            }
+                        }
+                        Err(reason) => unexpanded.push(Unexpanded {
+                            file: file.to_path_buf(),
+                            macro_name: name,
+                            reason: reason.to_string(),
+                        }),
+                    }
+                }
+                _ => {}
             }
         }
+        self.unexpanded.extend(unexpanded);
+    }
+}
+
+/// The `macro_rules!` definitions of one file, keyed by macro name.
+type Definitions = BTreeMap<String, TokenStream>;
+
+/// Records a public `new` constructor or single-parameter `with_*` setter.
+fn absorb_query_method(api: &mut QueryApi, method: &syn::ImplItemFn) {
+    if !is_public(&method.vis) {
+        return;
+    }
+    let name = method.sig.ident.to_string();
+    let params = typed_params(&method.sig);
+    if name == "new" {
+        api.ctor = Some(params);
+    } else if name.starts_with("with_")
+        && let [param] = params.as_slice()
+    {
+        api.setters.insert(name, param.clone());
     }
 }
 
@@ -394,6 +439,33 @@ mod tests {
         let income = &surface.queries["IncomeStatementQuery"];
         assert_eq!(income.setters["with_limit"].base_type, "Limit");
         assert_eq!(income.setters["with_period"].base_type, "StatementPeriod");
+    }
+
+    #[test]
+    fn recovers_setters_emitted_by_impl_level_macros() {
+        let surface = surface();
+        let screener = &surface.queries["CompanyScreenerQuery"];
+        assert_eq!(screener.origin, Origin::Direct);
+        assert_eq!(screener.ctor.as_deref(), Some(&[][..]));
+        assert_eq!(screener.setters.len(), 20);
+        assert_eq!(
+            screener.setters["with_market_cap_more_than"].base_type,
+            "MarketCapitalization"
+        );
+        assert_eq!(screener.setters["with_sector"].base_type, "Sector");
+        assert_eq!(screener.setters["with_is_etf"].base_type, "bool");
+        assert_eq!(screener.setters["with_limit"].base_type, "Limit");
+        let dcf = &surface.queries["DcfAssumptions"];
+        assert_eq!(dcf.setters["with_beta"].base_type, "FiniteDecimal");
+        assert!(
+            surface
+                .unexpanded
+                .iter()
+                .all(|e| !["value_filter", "string_filter", "assumption"]
+                    .contains(&e.macro_name.as_str())),
+            "setter macros must expand: {:?}",
+            surface.unexpanded
+        );
     }
 
     #[test]
