@@ -136,3 +136,30 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/labeler.yml
+
+  workflow-success:
+    name: workflow-success
+    needs:
+      - pre-commit
+      - rust-ci
+      - python-bindings
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: report required job results
+        env:
+          PRE_COMMIT_RESULT: ${{ needs.pre-commit.result }}
+          RUST_CI_RESULT: ${{ needs.rust-ci.result }}
+          PYTHON_BINDINGS_RESULT: ${{ needs.python-bindings.result }}
+        run: |
+          echo "pre-commit: $PRE_COMMIT_RESULT"
+          echo "rust ci: $RUST_CI_RESULT"
+          echo "python bindings: $PYTHON_BINDINGS_RESULT"
+
+          for result in \
+            "$PRE_COMMIT_RESULT" \
+            "$RUST_CI_RESULT" \
+            "$PYTHON_BINDINGS_RESULT"
+          do
+            test "$result" = "success" || test "$result" = "skipped"
+          done
