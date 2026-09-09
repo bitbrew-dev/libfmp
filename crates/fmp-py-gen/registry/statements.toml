@@ -1,0 +1,135 @@
+# Endpoint registry for the `statements` domain, reached from Python as
+# `client.statements.<sub>`. Validate with
+# `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[namespace]]
+path = "statements.income"
+
+[[namespace.endpoint]]
+name = "statement"
+method = "income_statement"
+query = "IncomeStatementQuery"
+response = "statements::income::IncomeStatement"
+doc = "Retrieves historical worldwide income statements for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "statement_ttm"
+method = "income_statement_ttm"
+query = "IncomeStatementTtmQuery"
+response = "statements::income::IncomeStatement"
+doc = "Retrieves trailing-twelve-month worldwide income statements for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[namespace]]
+path = "statements.balance"
+
+[[namespace.endpoint]]
+name = "statement"
+method = "balance_sheet_statement"
+query = "BalanceSheetStatementQuery"
+response = "statements::balance::BalanceSheetStatement"
+doc = "Retrieves historical worldwide balance sheets for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "statement_ttm"
+method = "balance_sheet_statement_ttm"
+query = "BalanceSheetStatementTtmQuery"
+response = "statements::balance::BalanceSheetStatementTtm"
+doc = "Retrieves trailing-twelve-month worldwide balance sheets for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[namespace]]
+path = "statements.cash_flow"
+
+[[namespace.endpoint]]
+name = "statement"
+method = "cash_flow_statement"
+query = "CashFlowStatementQuery"
+response = "statements::cash_flow::CashFlowStatement"
+doc = "Retrieves historical worldwide cash-flow statements for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "statement_ttm"
+method = "cash_flow_statement_ttm"
+query = "CashFlowStatementTtmQuery"
+response = "statements::cash_flow::CashFlowStatement"
+doc = "Retrieves trailing-twelve-month worldwide cash-flow statements for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[namespace]]
+path = "statements.metrics"
+
+[[namespace.endpoint]]
+name = "key_metrics"
+method = "key_metrics"
+query = "KeyMetricsQuery"
+response = "statements::metrics::KeyMetrics"
+doc = "Retrieves historical worldwide key metrics for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "key_metrics_ttm"
+method = "key_metrics_ttm"
+query = "KeyMetricsTtmQuery"
+response = "statements::metrics::KeyMetricsTtm"
+doc = "Retrieves worldwide trailing-twelve-month key metrics for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[namespace]]
+path = "statements.ratios"
+
+[[namespace.endpoint]]
+name = "financial_ratios"
+method = "financial_ratios"
+query = "FinancialRatiosQuery"
+response = "statements::ratios::FinancialRatios"
+doc = "Retrieves historical worldwide financial ratios for one company."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "period", kind = "statement_period", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "period" }]
+
+[[namespace.endpoint]]
+name = "financial_ratios_ttm"
+method = "financial_ratios_ttm"
+query = "FinancialRatiosTtmQuery"
+response = "statements::ratios::FinancialRatiosTtm"
+doc = "Retrieves trailing-twelve-month worldwide financial ratios for one company."
+args = [{ name = "symbol", kind = "ticker" }]
