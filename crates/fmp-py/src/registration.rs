@@ -346,6 +346,7 @@ fn register_sec_filings(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::sec_filings::SecCompanySearchResult>()?;
     module.add_class::<crate::models::sec_filings::SecFiling>()?;
     module.add_class::<crate::models::sec_filings::SicClassification>()?;
+    module.add_class::<crate::namespaces::sec_filings::SecFilingsNamespace>()?;
     add_submodule(parent, "fmp._native.sec_filings", &module)
 }
 
