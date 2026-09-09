@@ -57,6 +57,7 @@ fn register_analyst(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 
 fn register_bulk(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "bulk")?;
+    module.add_class::<crate::namespaces::bulk::BulkNamespace>()?;
     register_bulk_balance(&module)?;
     register_bulk_cash_flow(&module)?;
     register_bulk_eod(&module)?;
