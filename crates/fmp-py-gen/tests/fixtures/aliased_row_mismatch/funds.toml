@@ -1,0 +1,7 @@
+[[endpoint]]
+name = "fund_disclosure_dates"
+method = "fund_disclosure_dates"
+query = "FundDisclosureDatesQuery"
+response = "funds::FundDisclosure"
+doc = "Names a model that is neither the aliased row nor its target struct."
+args = [{ name = "symbol", kind = "ticker" }]

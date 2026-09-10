@@ -200,7 +200,7 @@ impl Checker<'_> {
     }
 
     fn check_model(&mut self, row: &str, model: &ModelPath) {
-        if model.name != row {
+        if model.name != row && self.alias_target(row).as_deref() != Some(model.name.as_str()) {
             self.fail(format!(
                 "`Client::{}` returns `Vec<{row}>` but the response model is `{model}`",
                 self.endpoint.libfmp_method
@@ -234,6 +234,29 @@ impl Checker<'_> {
                 "model file `{relative}.rs` has no `pub(crate) struct {name}`; regenerate with `cargo run -p fmp-py-gen --bin gen_models`"
             ));
         }
+    }
+
+    /// Resolves a `pub type {row} = path::Target;` alias declared anywhere
+    /// under `crates/libfmp/src/responses` to the last segment of its target,
+    /// so an endpoint returning an aliased row verifies against the model of
+    /// the struct behind the alias.
+    fn alias_target(&self, row: &str) -> Option<String> {
+        let responses_root = self.endpoints_root.parent()?.join("responses");
+        let mut files = Vec::new();
+        collect_rust_files(&responses_root, &mut files);
+        files.iter().find_map(|path| {
+            let source = fs::read_to_string(path).ok()?;
+            let file = syn::parse_file(&source).ok()?;
+            file.items.into_iter().find_map(|item| match item {
+                syn::Item::Type(alias) if alias.ident == row => match *alias.ty {
+                    syn::Type::Path(target) => {
+                        target.path.segments.last().map(|s| s.ident.to_string())
+                    }
+                    _ => None,
+                },
+                _ => None,
+            })
+        })
     }
 
     /// Checks constructor arguments and setters against the query type's
@@ -320,5 +343,21 @@ impl Checker<'_> {
             entry: self.entry.to_owned(),
             reason,
         });
+    }
+}
+
+/// Appends every `.rs` file under `dir`, recursively, in directory order.
+fn collect_rust_files(dir: &Path, out: &mut Vec<std::path::PathBuf>) {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
+    let mut paths: Vec<_> = entries.flatten().map(|entry| entry.path()).collect();
+    paths.sort();
+    for path in paths {
+        if path.is_dir() {
+            collect_rust_files(&path, out);
+        } else if path.extension().is_some_and(|ext| ext == "rs") {
+            out.push(path);
+        }
     }
 }

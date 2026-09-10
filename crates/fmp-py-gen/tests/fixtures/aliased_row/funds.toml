@@ -1,0 +1,11 @@
+[[endpoint]]
+name = "fund_disclosure_dates"
+method = "fund_disclosure_dates"
+query = "FundDisclosureDatesQuery"
+response = "institutional_ownership::Form13fFilingDate"
+doc = "Returns the aliased FundDisclosureDate row, whose struct lives in another model module."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "cik", kind = "cik", required = false },
+]
+setters = [{ arg = "cik" }]
