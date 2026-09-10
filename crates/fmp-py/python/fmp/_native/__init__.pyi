@@ -182,6 +182,14 @@ class FmpClient:
         """
 
     @property
+    def institutional_ownership(
+        self,
+    ) -> institutional_ownership.InstitutionalOwnershipNamespace:
+        r"""
+        The `institutional_ownership` endpoints, reached as `client.institutional_ownership`.
+        """
+
+    @property
     def market(self) -> market.MarketNamespace:
         r"""
         The `market` endpoints, reached as `client.market`.

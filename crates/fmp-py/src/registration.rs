@@ -286,6 +286,9 @@ fn register_institutional_ownership(parent: &Bound<'_, PyModule>) -> PyResult<()
     module.add_class::<crate::models::institutional_ownership::InstitutionalIndustrySummary>()?;
     module.add_class::<crate::models::institutional_ownership::InstitutionalOwnershipFiling>()?;
     module.add_class::<crate::models::institutional_ownership::InstitutionalPositionSummary>()?;
+    module
+        .add_class::<crate::namespaces::institutional_ownership::InstitutionalOwnershipNamespace>(
+        )?;
     add_submodule(parent, "fmp._native.institutional_ownership", &module)
 }
 

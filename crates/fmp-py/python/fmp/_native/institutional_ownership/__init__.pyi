@@ -12,6 +12,7 @@ __all__ = [
     "InstitutionalHolding",
     "InstitutionalIndustrySummary",
     "InstitutionalOwnershipFiling",
+    "InstitutionalOwnershipNamespace",
     "InstitutionalPositionSummary",
 ]
 
@@ -405,6 +406,78 @@ class InstitutionalOwnershipFiling:
         final_link: builtins.str,
     ) -> InstitutionalOwnershipFiling: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class InstitutionalOwnershipNamespace:
+    r"""
+    Institutional_ownership endpoints for a single client, exposed as `client.institutional_ownership`.
+    """
+
+    def latest_filings(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[InstitutionalOwnershipFiling]:
+        r"""
+        Retrieves the latest US institutional-ownership filings.
+        """
+
+    def extract(
+        self, cik: builtins.str, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[InstitutionalHolding]:
+        r"""
+        Extracts the positions from one US institutional-ownership filing period.
+        """
+
+    def form_13f_filing_dates(
+        self, cik: builtins.str
+    ) -> builtins.list[Form13fFilingDate]:
+        r"""
+        Retrieves available Form 13F filing dates for one US institutional holder.
+        """
+
+    def holder_analytics(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        quarter: builtins.int,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[InstitutionalHolderAnalytics]:
+        r"""
+        Retrieves holder-level analytics for one US security and filing period.
+        """
+
+    def holder_performance_summary(
+        self, cik: builtins.str, *, page: typing.Optional[builtins.int] = None
+    ) -> builtins.list[HolderPerformanceSummary]:
+        r"""
+        Retrieves a US institutional holder's portfolio performance summary.
+        """
+
+    def holder_industry_breakdown(
+        self, cik: builtins.str, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[HolderIndustryBreakdown]:
+        r"""
+        Retrieves a US institutional holder's industry breakdown for one period.
+        """
+
+    def positions_summary(
+        self, symbol: builtins.str, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[InstitutionalPositionSummary]:
+        r"""
+        Retrieves the US institutional position summary for one security and period.
+        """
+
+    def industry_summary(
+        self, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[InstitutionalIndustrySummary]:
+        r"""
+        Retrieves US institutional industry values for one reporting period.
+        """
 
 
 @typing.final
