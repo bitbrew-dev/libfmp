@@ -164,9 +164,27 @@ class FmpClient:
         """
 
     @property
+    def congressional(self) -> congressional.CongressionalNamespace:
+        r"""
+        The `congressional` endpoints, reached as `client.congressional`.
+        """
+
+    @property
+    def directory(self) -> directory.DirectoryNamespace:
+        r"""
+        The `directory` endpoints, reached as `client.directory`.
+        """
+
+    @property
     def indexes(self) -> indexes.IndexesNamespace:
         r"""
         The `indexes` endpoints, reached as `client.indexes`.
+        """
+
+    @property
+    def market(self) -> market.MarketNamespace:
+        r"""
+        The `market` endpoints, reached as `client.market`.
         """
 
     @property
