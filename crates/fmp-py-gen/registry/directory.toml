@@ -1,0 +1,83 @@
+# Endpoint registry for the `directory` domain, reached from Python as
+# `client.directory`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "company_symbols"
+method = "company_symbols"
+response = "directory::CompanySymbol"
+doc = "Lists worldwide company and instrument symbols."
+
+[[endpoint]]
+name = "financial_statement_symbols"
+method = "financial_statement_symbols"
+response = "directory::FinancialStatementSymbol"
+doc = "Lists worldwide companies with financial statements available."
+
+[[endpoint]]
+name = "cik_list"
+method = "cik_list"
+query = "CikListQuery"
+response = "directory::CikEntry"
+doc = "Lists US SEC entities with optional provider pagination."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "symbol_changes"
+method = "symbol_changes"
+query = "SymbolChangesQuery"
+response = "directory::SymbolChange"
+doc = "Lists US symbol changes without interpreting the provider's `invalid` flag."
+args = [
+    { name = "invalid", kind = "true_false_flag", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "invalid" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "etf_symbols"
+method = "etf_symbols"
+response = "directory::EtfSymbol"
+doc = "Lists worldwide exchange-traded fund symbols."
+
+[[endpoint]]
+name = "actively_trading"
+method = "actively_trading"
+response = "directory::ActivelyTradingSymbol"
+doc = "Lists worldwide actively trading companies and instruments."
+
+[[endpoint]]
+name = "earnings_transcript_list"
+method = "earnings_transcript_list"
+response = "directory::EarningsTranscriptAvailability"
+doc = "Lists US companies with their available earnings-transcript counts."
+
+[[endpoint]]
+name = "available_exchanges"
+method = "available_exchanges"
+query = "AvailableExchangesQuery"
+response = "directory::AvailableExchange"
+doc = "Lists supported worldwide stock exchanges."
+args = [{ name = "extended", kind = "boolean", required = false }]
+setters = [{ arg = "extended" }]
+
+[[endpoint]]
+name = "available_sectors"
+method = "available_sectors"
+response = "directory::AvailableSector"
+doc = "Lists the provider's available sectors."
+
+[[endpoint]]
+name = "available_industries"
+method = "available_industries"
+response = "directory::AvailableIndustry"
+doc = "Lists the provider's available industries."
+
+[[endpoint]]
+name = "available_countries"
+method = "available_countries"
+response = "directory::AvailableCountry"
+doc = "Lists the provider's available countries."
