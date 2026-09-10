@@ -1,0 +1,128 @@
+# Endpoint registry for the `market` domain, reached from Python as
+# `client.market`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "sector_performance_snapshot"
+method = "sector_performance_snapshot"
+query = "SectorPerformanceSnapshotQuery"
+response = "market::SectorPerformance"
+doc = "Retrieves a worldwide dated sector-performance snapshot."
+args = [
+    { name = "date", kind = "date" },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "sector", kind = "sector", required = false },
+]
+setters = [{ arg = "exchange" }, { arg = "sector" }]
+
+[[endpoint]]
+name = "industry_performance_snapshot"
+method = "industry_performance_snapshot"
+query = "IndustryPerformanceSnapshotQuery"
+response = "market::IndustryPerformance"
+doc = "Retrieves a worldwide dated industry-performance snapshot."
+args = [
+    { name = "date", kind = "date" },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "industry", kind = "industry", required = false },
+]
+setters = [{ arg = "exchange" }, { arg = "industry" }]
+
+[[endpoint]]
+name = "sector_pe_snapshot"
+method = "sector_pe_snapshot"
+query = "SectorPeSnapshotQuery"
+response = "market::SectorPe"
+doc = "Retrieves a worldwide dated sector P/E snapshot."
+args = [
+    { name = "date", kind = "date" },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "sector", kind = "sector", required = false },
+]
+setters = [{ arg = "exchange" }, { arg = "sector" }]
+
+[[endpoint]]
+name = "industry_pe_snapshot"
+method = "industry_pe_snapshot"
+query = "IndustryPeSnapshotQuery"
+response = "market::IndustryPe"
+doc = "Retrieves a worldwide dated industry P/E snapshot."
+args = [
+    { name = "date", kind = "date" },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "industry", kind = "industry", required = false },
+]
+setters = [{ arg = "exchange" }, { arg = "industry" }]
+
+[[endpoint]]
+name = "historical_sector_performance"
+method = "historical_sector_performance"
+query = "HistoricalSectorPerformanceQuery"
+response = "market::SectorPerformance"
+doc = "Retrieves worldwide historical sector performance."
+args = [
+    { name = "sector", kind = "sector" },
+    { name = "from", kind = "date", required = false },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "exchange" }, { arg = "to" }]
+
+[[endpoint]]
+name = "historical_industry_performance"
+method = "historical_industry_performance"
+query = "HistoricalIndustryPerformanceQuery"
+response = "market::IndustryPerformance"
+doc = "Retrieves worldwide historical industry performance."
+args = [
+    { name = "industry", kind = "industry" },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "exchange" }, { arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "historical_sector_pe"
+method = "historical_sector_pe"
+query = "HistoricalSectorPeQuery"
+response = "market::SectorPe"
+doc = "Retrieves worldwide historical sector P/E ratios."
+args = [
+    { name = "sector", kind = "sector" },
+    { name = "from", kind = "date", required = false },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "exchange" }, { arg = "to" }]
+
+[[endpoint]]
+name = "historical_industry_pe"
+method = "historical_industry_pe"
+query = "HistoricalIndustryPeQuery"
+response = "market::IndustryPe"
+doc = "Retrieves worldwide historical industry P/E ratios."
+args = [
+    { name = "industry", kind = "industry" },
+    { name = "exchange", kind = "exchange_code", required = false },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "exchange" }, { arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "biggest_gainers"
+method = "biggest_gainers"
+response = "market::MarketMover"
+doc = "Retrieves the US-only list of biggest stock gainers."
+
+[[endpoint]]
+name = "biggest_losers"
+method = "biggest_losers"
+response = "market::MarketMover"
+doc = "Retrieves the US-only list of biggest stock losers."
+
+[[endpoint]]
+name = "most_actives"
+method = "most_actives"
+response = "market::MarketMover"
+doc = "Retrieves the US-only list of most actively traded stocks."
