@@ -23,6 +23,12 @@ from fmp.congressional import (
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
+from fmp.institutional_ownership import (
+    HolderPerformanceSummary,
+    InstitutionalHolderAnalytics,
+    InstitutionalOwnershipFiling,
+    InstitutionalOwnershipNamespace,
+)
 from fmp.market import IndustryPe, MarketMover, MarketNamespace, SectorPerformance
 from fmp.news import FmpArticle, NewsArticle, NewsNamespace
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
@@ -143,6 +149,24 @@ def check_indexes_contract(client: FmpClient) -> None:
     first_added: datetime.date | None = members[0].date_first_added
     founded: datetime.date = members[0].founded
     _ = (currency, bar_date, vwap, bar_time, first_added, founded)
+
+
+def check_institutional_ownership_contract(client: FmpClient) -> None:
+    """Type-check the flat institutional-ownership namespace, its period arguments, and the datetime rows."""
+    institutional_ownership: InstitutionalOwnershipNamespace = client.institutional_ownership
+    filings: list[InstitutionalOwnershipFiling] = institutional_ownership.latest_filings(page=0, limit=100)
+    accepted: datetime.datetime = filings[0].accepted_date
+    reported_on: datetime.date = filings[0].date
+    analytics: list[InstitutionalHolderAnalytics] = client.institutional_ownership.holder_analytics(
+        "AAPL", 2023, 3, page=0, limit=10
+    )
+    first_added: datetime.date = analytics[0].first_added
+    is_new: bool = analytics[0].is_new
+    summaries: list[HolderPerformanceSummary] = client.institutional_ownership.holder_performance_summary(
+        "0001067983", page=0
+    )
+    turnover: float = summaries[0].turnover
+    _ = (accepted, reported_on, first_added, is_new, turnover)
 
 
 def check_market_contract(client: FmpClient) -> None:
