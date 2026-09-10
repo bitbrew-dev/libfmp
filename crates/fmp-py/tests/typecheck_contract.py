@@ -12,6 +12,14 @@ from fmp.bulk.metrics import BulkEarningsSurprise
 from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
 from fmp.chart import StockChartFullBar, StockChartIntradayBar
 from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
+from fmp.congressional import (
+    CongressionalMemberNetWorthAggregate,
+    CongressionalMemberNetWorthEntry,
+    CongressionalMemberProfile,
+    CongressionalNamespace,
+    CongressionalNetWorthRange,
+    CongressionalTrade,
+)
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
@@ -97,6 +105,26 @@ def check_directory_contract(client: FmpClient) -> None:
     transcripts: list[EarningsTranscriptAvailability] = client.directory.earnings_transcript_list()
     count: str = transcripts[0].no_of_transcripts
     _ = (changed_on, suffix, cik, count)
+
+
+def check_congressional_contract(client: FmpClient) -> None:
+    """Type-check the keyword-only filters, the required member ID, and the nested net-worth rows."""
+    congressional: CongressionalNamespace = client.congressional
+    trades: list[CongressionalTrade] = congressional.senate_trades("AAPL", page=0, limit=250)
+    disclosed: datetime.date = trades[0].disclosure_date
+    gains: str | None = trades[0].capital_gains_over_200_usd
+    profiles: list[CongressionalMemberProfile] = client.congressional.profiles(
+        active=True, member_id="P000197", latest_party="Democrat", latest_position="Senator", page=0, limit=20
+    )
+    born: datetime.date = profiles[0].birth_date
+    years_active: float = profiles[0].years_active
+    entries: list[CongressionalMemberNetWorthEntry] = client.congressional.net_worth("P000197", limit=100)
+    value_range: CongressionalNetWorthRange | None = entries[0].value_range
+    totals: list[CongressionalMemberNetWorthAggregate] = client.congressional.net_worth_aggregated(
+        "P000197", totals_col="stock"
+    )
+    total: int = totals[0].total
+    _ = (disclosed, gains, born, years_active, value_range, total)
 
 
 def check_indexes_contract(client: FmpClient) -> None:
