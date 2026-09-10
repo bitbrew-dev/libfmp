@@ -1,0 +1,163 @@
+# Endpoint registry for the `congressional` domain, reached from Python as
+# `client.congressional`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "latest_senate_disclosures"
+method = "latest_senate_disclosures"
+query = "LatestCongressionalDisclosuresQuery"
+response = "congressional::CongressionalTrade"
+doc = "Retrieves the latest Senate financial disclosures."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "latest_house_disclosures"
+method = "latest_house_disclosures"
+query = "LatestCongressionalDisclosuresQuery"
+response = "congressional::CongressionalTrade"
+doc = "Retrieves the latest House financial disclosures."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "senate_trades"
+method = "senate_trades"
+query = "CongressionalTradesQuery"
+response = "congressional::CongressionalTrade"
+doc = "Retrieves Senate trades for one ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "senate_trades_by_name"
+method = "senate_trades_by_name"
+query = "CongressionalTradesByNameQuery"
+response = "congressional::CongressionalTrade"
+doc = "Searches Senate trades by member name."
+args = [{ name = "name", kind = "search_term" }]
+
+[[endpoint]]
+name = "senate_trades_by_member_id"
+method = "senate_trades_by_member_id"
+query = "CongressionalTradesByMemberIdQuery"
+response = "congressional::CongressionalTrade"
+doc = "Looks up Senate trades by an optional member ID and pagination."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "member_id", kind = "congressional_member_id", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }, { arg = "member_id" }]
+
+[[endpoint]]
+name = "house_trades"
+method = "house_trades"
+query = "CongressionalTradesQuery"
+response = "congressional::CongressionalTrade"
+doc = "Retrieves House trades for one ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "house_trades_by_name"
+method = "house_trades_by_name"
+query = "CongressionalTradesByNameQuery"
+response = "congressional::CongressionalTrade"
+doc = "Searches House trades by member name."
+args = [{ name = "name", kind = "search_term" }]
+
+[[endpoint]]
+name = "house_trades_by_member_id"
+method = "house_trades_by_member_id"
+query = "CongressionalTradesByMemberIdQuery"
+response = "congressional::CongressionalTrade"
+doc = "Looks up House trades by an optional member ID and pagination."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "member_id", kind = "congressional_member_id", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }, { arg = "member_id" }]
+
+[[endpoint]]
+name = "profiles"
+method = "congressional_profiles"
+query = "CongressionalProfilesQuery"
+response = "congressional::CongressionalMemberProfile"
+doc = "Retrieves congressional profiles using optional provider filters."
+args = [
+    { name = "active", kind = "boolean", required = false },
+    { name = "member_id", kind = "congressional_member_id", required = false },
+    { name = "latest_party", kind = "text", required = false },
+    { name = "latest_position", kind = "text", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [
+    { arg = "active" },
+    { arg = "member_id" },
+    { arg = "latest_party" },
+    { arg = "latest_position" },
+    { arg = "page" },
+    { arg = "limit" },
+]
+
+[[endpoint]]
+name = "positions"
+method = "congressional_positions"
+query = "CongressionalPositionsQuery"
+response = "congressional::CongressionalMemberPosition"
+doc = "Retrieves congressional position history using optional provider filters."
+args = [
+    { name = "member_id", kind = "congressional_member_id", required = false },
+    { name = "party", kind = "text", required = false },
+    { name = "position", kind = "text", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [
+    { arg = "member_id" },
+    { arg = "party" },
+    { arg = "position" },
+    { arg = "page" },
+    { arg = "limit" },
+]
+
+[[endpoint]]
+name = "net_worth"
+method = "congressional_net_worth"
+query = "CongressionalNetWorthQuery"
+response = "congressional::CongressionalMemberNetWorthEntry"
+doc = "Retrieves itemized congressional net-worth disclosures."
+args = [
+    { name = "member_id", kind = "congressional_member_id" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "net_worth_aggregated"
+method = "congressional_net_worth_aggregated"
+query = "CongressionalNetWorthAggregatedQuery"
+response = "congressional::CongressionalMemberNetWorthAggregate"
+doc = "Retrieves aggregated congressional net-worth totals by year."
+args = [
+    { name = "member_id", kind = "congressional_member_id" },
+    { name = "totals_col", kind = "text", required = false },
+]
+setters = [{ arg = "totals_col" }]
