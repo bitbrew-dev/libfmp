@@ -158,6 +158,12 @@ class FmpClient:
         """
 
     @property
+    def chart(self) -> chart.ChartNamespace:
+        r"""
+        The `chart` endpoints, reached as `client.chart`.
+        """
+
+    @property
     def company(self) -> company.CompanyNamespace:
         r"""
         The `company` endpoints, reached as `client.company`.

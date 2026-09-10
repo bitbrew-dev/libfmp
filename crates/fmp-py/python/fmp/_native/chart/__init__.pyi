@@ -5,11 +5,141 @@ import datetime
 import typing
 
 __all__ = [
+    "ChartNamespace",
     "StockChartAdjustedBar",
     "StockChartFullBar",
     "StockChartIntradayBar",
     "StockChartLightBar",
 ]
+
+
+@typing.final
+class ChartNamespace:
+    r"""
+    Chart endpoints for a single client, exposed as `client.chart`.
+    """
+
+    def light(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[StockChartLightBar]:
+        r"""
+        Retrieves compact worldwide end-of-day stock chart rows.
+        """
+
+    def full(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[StockChartFullBar]:
+        r"""
+        Retrieves detailed worldwide end-of-day stock chart rows.
+        """
+
+    def non_split_adjusted(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[StockChartAdjustedBar]:
+        r"""
+        Retrieves split-unadjusted worldwide end-of-day stock chart rows.
+        """
+
+    def dividend_adjusted(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[StockChartAdjustedBar]:
+        r"""
+        Retrieves dividend-adjusted worldwide end-of-day stock chart rows.
+        """
+
+    def one_minute(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+        extended: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[StockChartIntradayBar]:
+        r"""
+        Retrieves one-minute worldwide intraday stock chart rows.
+        """
+
+    def five_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+        extended: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[StockChartIntradayBar]:
+        r"""
+        Retrieves five-minute worldwide intraday stock chart rows.
+        """
+
+    def fifteen_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+        extended: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[StockChartIntradayBar]:
+        r"""
+        Retrieves fifteen-minute worldwide intraday stock chart rows.
+        """
+
+    def thirty_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+        extended: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[StockChartIntradayBar]:
+        r"""
+        Retrieves thirty-minute worldwide intraday stock chart rows.
+        """
+
+    def one_hour(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+        extended: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[StockChartIntradayBar]:
+        r"""
+        Retrieves one-hour worldwide intraday stock chart rows.
+        """
+
+    def four_hours(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+        extended: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[StockChartIntradayBar]:
+        r"""
+        Retrieves four-hour worldwide intraday stock chart rows.
+        """
 
 
 @typing.final
