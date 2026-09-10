@@ -28,8 +28,10 @@ from fmp.congressional import (
 )
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
+from fmp.funds import EtfFundHolding, EtfFundInfo, FundDisclosure, FundsNamespace
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
 from fmp.institutional_ownership import (
+    Form13fFilingDate,
     HolderPerformanceSummary,
     InstitutionalHolderAnalytics,
     InstitutionalOwnershipFiling,
@@ -145,6 +147,21 @@ def check_congressional_contract(client: FmpClient) -> None:
     )
     total: int = totals[0].total
     _ = (disclosed, gains, born, years_active, value_range, total)
+
+
+def check_funds_contract(client: FmpClient) -> None:
+    """Type-check the funds namespace, the required period ints, the keyword-only CIK, and the aliased date row."""
+    funds: FundsNamespace = client.funds
+    holdings: list[EtfFundHolding] = funds.etf_holdings("SPY")
+    updated: datetime.datetime = holdings[0].updated_at
+    info: list[EtfFundInfo] = client.funds.etf_info("SPY")
+    inception: datetime.date = info[0].inception_date
+    exposure: float = info[0].sectors_list[0].exposure
+    positions: list[FundDisclosure] = client.funds.fund_disclosures("VWO", 2023, 4, cik="0000857489")
+    accepted: datetime.datetime = positions[0].accepted_date
+    dates: list[Form13fFilingDate] = client.funds.fund_disclosure_dates("VWO", cik="0000036405")
+    quarter: int = dates[0].quarter
+    _ = (updated, inception, exposure, accepted, quarter)
 
 
 def check_indexes_contract(client: FmpClient) -> None:
