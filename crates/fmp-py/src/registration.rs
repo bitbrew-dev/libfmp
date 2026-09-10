@@ -132,6 +132,7 @@ fn register_chart(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::chart::StockChartFullBar>()?;
     module.add_class::<crate::models::chart::StockChartIntradayBar>()?;
     module.add_class::<crate::models::chart::StockChartLightBar>()?;
+    module.add_class::<crate::namespaces::chart::ChartNamespace>()?;
     add_submodule(parent, "fmp._native.chart", &module)
 }
 
