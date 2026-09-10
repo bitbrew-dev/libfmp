@@ -23,6 +23,7 @@ from fmp.congressional import (
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
+from fmp.market import IndustryPe, MarketMover, MarketNamespace, SectorPerformance
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
 from fmp.sec_filings import SecCompanyProfile, SecCompanySearchResult, SecFiling, SecFilingsNamespace
@@ -141,6 +142,23 @@ def check_indexes_contract(client: FmpClient) -> None:
     first_added: datetime.date | None = members[0].date_first_added
     founded: datetime.date = members[0].founded
     _ = (currency, bar_date, vwap, bar_time, first_added, founded)
+
+
+def check_market_contract(client: FmpClient) -> None:
+    """Type-check the market namespace, its required date or sector, the keyword-only filters, and the mover rows."""
+    market: MarketNamespace = client.market
+    snapshot: list[SectorPerformance] = market.sector_performance_snapshot(
+        datetime.date(2024, 2, 1), exchange="NASDAQ", sector="Energy"
+    )
+    snapshot_date: datetime.date = snapshot[0].date
+    average_change: float = snapshot[0].average_change
+    history: list[IndustryPe] = client.market.historical_industry_pe(
+        "Biotechnology", exchange="NASDAQ", from_=datetime.date(2024, 2, 1), to="2024-03-01"
+    )
+    pe: float = history[0].pe
+    movers: list[MarketMover] = client.market.biggest_gainers()
+    changes_percentage: float = movers[0].changes_percentage
+    _ = (snapshot_date, average_change, pe, changes_percentage)
 
 
 def check_screener_contract(client: FmpClient) -> None:
