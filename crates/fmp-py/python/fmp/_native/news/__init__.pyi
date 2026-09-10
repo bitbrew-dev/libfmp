@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "FmpArticle",
     "NewsArticle",
+    "NewsNamespace",
 ]
 
 
@@ -72,3 +73,132 @@ class NewsArticle:
         url: builtins.str,
     ) -> NewsArticle: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class NewsNamespace:
+    r"""
+    News endpoints for a single client, exposed as `client.news`.
+    """
+
+    def fmp_articles(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[FmpArticle]:
+        r"""
+        Retrieves US-authored Financial Modeling Prep articles.
+        """
+
+    def latest_general_news(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Retrieves the latest worldwide general-news articles.
+        """
+
+    def latest_press_releases(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Retrieves the latest US press releases.
+        """
+
+    def latest_stock_news(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Retrieves the latest stock-news articles.
+        """
+
+    def latest_crypto_news(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Retrieves the latest cryptocurrency-news articles.
+        """
+
+    def latest_forex_news(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Retrieves the latest foreign-exchange-news articles.
+        """
+
+    def search_press_releases(
+        self,
+        symbols: builtins.str | typing.Sequence[builtins.str],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Searches US press releases for an ordered non-empty ticker list.
+        """
+
+    def search_stock_news(
+        self,
+        symbols: builtins.str | typing.Sequence[builtins.str],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Searches stock news for an ordered non-empty ticker list.
+        """
+
+    def search_crypto_news(
+        self,
+        symbols: builtins.str | typing.Sequence[builtins.str],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Searches cryptocurrency news for an ordered non-empty ticker list.
+        """
+
+    def search_forex_news(
+        self,
+        symbols: builtins.str | typing.Sequence[builtins.str],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[NewsArticle]:
+        r"""
+        Searches foreign-exchange news for an ordered non-empty ticker list.
+        """

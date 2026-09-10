@@ -7,10 +7,8 @@ use crate::client::FmpClient;
 use crate::namespaces::bulk::BulkNamespace;
 use crate::namespaces::calendar::CalendarNamespace;
 use crate::namespaces::company::CompanyNamespace;
-use crate::namespaces::congressional::CongressionalNamespace;
-use crate::namespaces::directory::DirectoryNamespace;
 use crate::namespaces::indexes::IndexesNamespace;
-use crate::namespaces::market::MarketNamespace;
+use crate::namespaces::news::NewsNamespace;
 use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::screener::ScreenerNamespace;
 use crate::namespaces::sec_filings::SecFilingsNamespace;
@@ -37,28 +35,16 @@ impl FmpClient {
         CompanyNamespace::new(self.builder.clone())
     }
 
-    /// The `congressional` endpoints, reached as `client.congressional`.
-    #[getter]
-    fn congressional(&self) -> CongressionalNamespace {
-        CongressionalNamespace::new(self.builder.clone())
-    }
-
-    /// The `directory` endpoints, reached as `client.directory`.
-    #[getter]
-    fn directory(&self) -> DirectoryNamespace {
-        DirectoryNamespace::new(self.builder.clone())
-    }
-
     /// The `indexes` endpoints, reached as `client.indexes`.
     #[getter]
     fn indexes(&self) -> IndexesNamespace {
         IndexesNamespace::new(self.builder.clone())
     }
 
-    /// The `market` endpoints, reached as `client.market`.
+    /// The `news` endpoints, reached as `client.news`.
     #[getter]
-    fn market(&self) -> MarketNamespace {
-        MarketNamespace::new(self.builder.clone())
+    fn news(&self) -> NewsNamespace {
+        NewsNamespace::new(self.builder.clone())
     }
 
     /// The `quote` endpoints, reached as `client.quote`.
