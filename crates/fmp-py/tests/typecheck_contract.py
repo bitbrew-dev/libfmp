@@ -12,6 +12,7 @@ from fmp.bulk.metrics import BulkEarningsSurprise
 from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
 from fmp.chart import StockChartFullBar, StockChartIntradayBar
 from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
+from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
@@ -67,6 +68,8 @@ def check_bulk_contract(client: FmpClient) -> None:
     more_bars: list[BulkEodBar] = client.bulk.eod(date="2024-10-22")
     close: str = bars[0].close
     _ = (ipo_date, accepted, revenue, eps_actual, close, more_bars)
+
+
 def check_company_contract(client: FmpClient) -> None:
     """Type-check the flat company namespace, its date keywords, and the batch list input."""
     company: CompanyNamespace = client.company
@@ -80,6 +83,22 @@ def check_company_contract(client: FmpClient) -> None:
     benchmarks: list[ExecutiveCompensationBenchmark] = client.company.executive_compensation_benchmark(year="2024")
     average: float = benchmarks[0].average_compensation
     _ = (ipo_date, market_cap, batch, average)
+
+
+def check_directory_contract(client: FmpClient) -> None:
+    """Type-check the keyword-only directory queries, the bool-typed flags, and the date row."""
+    directory: DirectoryNamespace = client.directory
+    changes: list[SymbolChange] = directory.symbol_changes(invalid=False, limit=100)
+    changed_on: datetime.date = changes[0].date
+    exchanges: list[AvailableExchange] = client.directory.available_exchanges(extended=True)
+    suffix: str = exchanges[0].symbol_suffix
+    entries: list[CikEntry] = client.directory.cik_list(page=0, limit=1000)
+    cik: str = entries[0].cik
+    transcripts: list[EarningsTranscriptAvailability] = client.directory.earnings_transcript_list()
+    count: str = transcripts[0].no_of_transcripts
+    _ = (changed_on, suffix, cik, count)
+
+
 def check_indexes_contract(client: FmpClient) -> None:
     """Type-check the indexes namespace, its keyword-only date filters, and the cross-module rows."""
     indexes: IndexesNamespace = client.indexes
@@ -116,7 +135,9 @@ def check_screener_contract(client: FmpClient) -> None:
 def check_sec_filings_contract(client: FmpClient) -> None:
     """Type-check the date-keyed filing feeds, the lookups, and the profile row."""
     sec_filings: SecFilingsNamespace = client.sec_filings
-    filings: list[SecFiling] = sec_filings.by_form_type("8-K", datetime.date(2024, 1, 1), "2024-03-01", page=0, limit=100)
+    filings: list[SecFiling] = sec_filings.by_form_type(
+        "8-K", datetime.date(2024, 1, 1), "2024-03-01", page=0, limit=100
+    )
     accepted: datetime.datetime = filings[0].accepted_date
     has_financials: bool | None = filings[0].has_financials
     companies: list[SecCompanySearchResult] = client.sec_filings.search_companies_by_cik("0000320193")
