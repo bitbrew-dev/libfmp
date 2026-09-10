@@ -10,6 +10,7 @@ use crate::namespaces::chart::ChartNamespace;
 use crate::namespaces::company::CompanyNamespace;
 use crate::namespaces::congressional::CongressionalNamespace;
 use crate::namespaces::directory::DirectoryNamespace;
+use crate::namespaces::funds::FundsNamespace;
 use crate::namespaces::indexes::IndexesNamespace;
 use crate::namespaces::institutional_ownership::InstitutionalOwnershipNamespace;
 use crate::namespaces::market::MarketNamespace;
@@ -57,6 +58,12 @@ impl FmpClient {
     #[getter]
     fn directory(&self) -> DirectoryNamespace {
         DirectoryNamespace::new(self.builder.clone())
+    }
+
+    /// The `funds` endpoints, reached as `client.funds`.
+    #[getter]
+    fn funds(&self) -> FundsNamespace {
+        FundsNamespace::new(self.builder.clone())
     }
 
     /// The `indexes` endpoints, reached as `client.indexes`.

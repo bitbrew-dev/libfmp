@@ -182,6 +182,12 @@ class FmpClient:
         """
 
     @property
+    def funds(self) -> funds.FundsNamespace:
+        r"""
+        The `funds` endpoints, reached as `client.funds`.
+        """
+
+    @property
     def indexes(self) -> indexes.IndexesNamespace:
         r"""
         The `indexes` endpoints, reached as `client.indexes`.

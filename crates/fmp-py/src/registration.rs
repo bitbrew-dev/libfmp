@@ -255,6 +255,7 @@ fn register_funds(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::funds::FundDisclosure>()?;
     module.add_class::<crate::models::funds::FundDisclosureHolder>()?;
     module.add_class::<crate::models::funds::FundDisclosureSearchResult>()?;
+    module.add_class::<crate::namespaces::funds::FundsNamespace>()?;
     add_submodule(parent, "fmp._native.funds", &module)
 }
 
