@@ -4,6 +4,7 @@ pub(crate) mod bulk;
 pub(crate) mod calendar;
 pub(crate) mod company;
 pub(crate) mod congressional;
+pub(crate) mod directory;
 pub(crate) mod indexes;
 pub(crate) mod quote;
 pub(crate) mod screener;
