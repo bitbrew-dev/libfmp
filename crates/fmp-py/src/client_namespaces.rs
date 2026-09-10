@@ -7,7 +7,7 @@ use crate::client::FmpClient;
 use crate::namespaces::bulk::BulkNamespace;
 use crate::namespaces::calendar::CalendarNamespace;
 use crate::namespaces::company::CompanyNamespace;
-use crate::namespaces::directory::DirectoryNamespace;
+use crate::namespaces::congressional::CongressionalNamespace;
 use crate::namespaces::indexes::IndexesNamespace;
 use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::screener::ScreenerNamespace;
@@ -35,10 +35,10 @@ impl FmpClient {
         CompanyNamespace::new(self.builder.clone())
     }
 
-    /// The `directory` endpoints, reached as `client.directory`.
+    /// The `congressional` endpoints, reached as `client.congressional`.
     #[getter]
-    fn directory(&self) -> DirectoryNamespace {
-        DirectoryNamespace::new(self.builder.clone())
+    fn congressional(&self) -> CongressionalNamespace {
+        CongressionalNamespace::new(self.builder.clone())
     }
 
     /// The `indexes` endpoints, reached as `client.indexes`.

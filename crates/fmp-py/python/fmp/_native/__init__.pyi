@@ -164,9 +164,9 @@ class FmpClient:
         """
 
     @property
-    def directory(self) -> directory.DirectoryNamespace:
+    def congressional(self) -> congressional.CongressionalNamespace:
         r"""
-        The `directory` endpoints, reached as `client.directory`.
+        The `congressional` endpoints, reached as `client.congressional`.
         """
 
     @property

@@ -10,6 +10,7 @@ __all__ = [
     "CongressionalMemberNetWorthEntry",
     "CongressionalMemberPosition",
     "CongressionalMemberProfile",
+    "CongressionalNamespace",
     "CongressionalNetWorthRange",
     "CongressionalTrade",
 ]
@@ -200,6 +201,139 @@ class CongressionalMemberProfile:
         years_active: builtins.float,
     ) -> CongressionalMemberProfile: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class CongressionalNamespace:
+    r"""
+    Congressional endpoints for a single client, exposed as `client.congressional`.
+    """
+
+    def latest_senate_disclosures(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Retrieves the latest Senate financial disclosures.
+        """
+
+    def latest_house_disclosures(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Retrieves the latest House financial disclosures.
+        """
+
+    def senate_trades(
+        self,
+        symbol: builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Retrieves Senate trades for one ticker.
+        """
+
+    def senate_trades_by_name(
+        self, name: builtins.str
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Searches Senate trades by member name.
+        """
+
+    def senate_trades_by_member_id(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        member_id: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Looks up Senate trades by an optional member ID and pagination.
+        """
+
+    def house_trades(
+        self,
+        symbol: builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Retrieves House trades for one ticker.
+        """
+
+    def house_trades_by_name(
+        self, name: builtins.str
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Searches House trades by member name.
+        """
+
+    def house_trades_by_member_id(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        member_id: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[CongressionalTrade]:
+        r"""
+        Looks up House trades by an optional member ID and pagination.
+        """
+
+    def profiles(
+        self,
+        *,
+        active: typing.Optional[builtins.bool] = None,
+        member_id: typing.Optional[builtins.str] = None,
+        latest_party: typing.Optional[builtins.str] = None,
+        latest_position: typing.Optional[builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CongressionalMemberProfile]:
+        r"""
+        Retrieves congressional profiles using optional provider filters.
+        """
+
+    def positions(
+        self,
+        *,
+        member_id: typing.Optional[builtins.str] = None,
+        party: typing.Optional[builtins.str] = None,
+        position: typing.Optional[builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CongressionalMemberPosition]:
+        r"""
+        Retrieves congressional position history using optional provider filters.
+        """
+
+    def net_worth(
+        self,
+        member_id: builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CongressionalMemberNetWorthEntry]:
+        r"""
+        Retrieves itemized congressional net-worth disclosures.
+        """
+
+    def net_worth_aggregated(
+        self,
+        member_id: builtins.str,
+        *,
+        totals_col: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[CongressionalMemberNetWorthAggregate]:
+        r"""
+        Retrieves aggregated congressional net-worth totals by year.
+        """
 
 
 @typing.final
