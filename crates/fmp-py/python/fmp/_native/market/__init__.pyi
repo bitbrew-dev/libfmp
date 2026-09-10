@@ -8,6 +8,7 @@ __all__ = [
     "IndustryPe",
     "IndustryPerformance",
     "MarketMover",
+    "MarketNamespace",
     "SectorPe",
     "SectorPerformance",
 ]
@@ -77,6 +78,120 @@ class MarketMover:
         exchange: builtins.str,
     ) -> MarketMover: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class MarketNamespace:
+    r"""
+    Market endpoints for a single client, exposed as `client.market`.
+    """
+
+    def sector_performance_snapshot(
+        self,
+        date: datetime.date | builtins.str,
+        *,
+        exchange: typing.Optional[builtins.str] = None,
+        sector: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[SectorPerformance]:
+        r"""
+        Retrieves a worldwide dated sector-performance snapshot.
+        """
+
+    def industry_performance_snapshot(
+        self,
+        date: datetime.date | builtins.str,
+        *,
+        exchange: typing.Optional[builtins.str] = None,
+        industry: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[IndustryPerformance]:
+        r"""
+        Retrieves a worldwide dated industry-performance snapshot.
+        """
+
+    def sector_pe_snapshot(
+        self,
+        date: datetime.date | builtins.str,
+        *,
+        exchange: typing.Optional[builtins.str] = None,
+        sector: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[SectorPe]:
+        r"""
+        Retrieves a worldwide dated sector P/E snapshot.
+        """
+
+    def industry_pe_snapshot(
+        self,
+        date: datetime.date | builtins.str,
+        *,
+        exchange: typing.Optional[builtins.str] = None,
+        industry: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[IndustryPe]:
+        r"""
+        Retrieves a worldwide dated industry P/E snapshot.
+        """
+
+    def historical_sector_performance(
+        self,
+        sector: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        exchange: typing.Optional[builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[SectorPerformance]:
+        r"""
+        Retrieves worldwide historical sector performance.
+        """
+
+    def historical_industry_performance(
+        self,
+        industry: builtins.str,
+        *,
+        exchange: typing.Optional[builtins.str] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[IndustryPerformance]:
+        r"""
+        Retrieves worldwide historical industry performance.
+        """
+
+    def historical_sector_pe(
+        self,
+        sector: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        exchange: typing.Optional[builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[SectorPe]:
+        r"""
+        Retrieves worldwide historical sector P/E ratios.
+        """
+
+    def historical_industry_pe(
+        self,
+        industry: builtins.str,
+        *,
+        exchange: typing.Optional[builtins.str] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[IndustryPe]:
+        r"""
+        Retrieves worldwide historical industry P/E ratios.
+        """
+
+    def biggest_gainers(self) -> builtins.list[MarketMover]:
+        r"""
+        Retrieves the US-only list of biggest stock gainers.
+        """
+
+    def biggest_losers(self) -> builtins.list[MarketMover]:
+        r"""
+        Retrieves the US-only list of biggest stock losers.
+        """
+
+    def most_actives(self) -> builtins.list[MarketMover]:
+        r"""
+        Retrieves the US-only list of most actively traded stocks.
+        """
 
 
 @typing.final
