@@ -24,6 +24,7 @@ from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, Earni
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
 from fmp.market import IndustryPe, MarketMover, MarketNamespace, SectorPerformance
+from fmp.news import FmpArticle, NewsArticle, NewsNamespace
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
 from fmp.sec_filings import SecCompanyProfile, SecCompanySearchResult, SecFiling, SecFilingsNamespace
@@ -194,6 +195,23 @@ def check_sec_filings_contract(client: FmpClient) -> None:
         symbol="AAPL", cik="0000320193", sic_code="3571"
     )
     _ = (accepted, has_financials, cik, ipo_date, raw)
+
+
+def check_news_contract(client: FmpClient) -> None:
+    """Type-check the keyword-only news feeds, the ticker-list searches, and the two row types."""
+    news: NewsNamespace = client.news
+    articles: list[FmpArticle] = news.fmp_articles(page=0, limit=20)
+    authored_on: datetime.datetime = articles[0].date
+    tickers: str = articles[0].tickers
+    general: list[NewsArticle] = client.news.latest_general_news(
+        from_=datetime.date(2026, 1, 27), to="2026-04-28", page=100, limit=251
+    )
+    symbol: str | None = general[0].symbol
+    published: datetime.datetime = general[0].published_date
+    searched: list[NewsArticle] = client.news.search_stock_news(["AAPL", "MSFT"], from_="2026-01-27")
+    single: list[NewsArticle] = client.news.search_forex_news("EURUSD", limit=0)
+    publisher: str = searched[0].publisher
+    _ = (authored_on, tickers, symbol, published, single, publisher)
 
 
 def check_public_contract(client: FmpClient) -> None:
