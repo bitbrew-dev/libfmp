@@ -176,6 +176,7 @@ fn register_congressional(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::congressional::CongressionalMemberProfile>()?;
     module.add_class::<crate::models::congressional::CongressionalNetWorthRange>()?;
     module.add_class::<crate::models::congressional::CongressionalTrade>()?;
+    module.add_class::<crate::namespaces::congressional::CongressionalNamespace>()?;
     add_submodule(parent, "fmp._native.congressional", &module)
 }
 
