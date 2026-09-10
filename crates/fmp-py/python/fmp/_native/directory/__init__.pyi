@@ -12,6 +12,7 @@ __all__ = [
     "AvailableSector",
     "CikEntry",
     "CompanySymbol",
+    "DirectoryNamespace",
     "EarningsTranscriptAvailability",
     "EtfSymbol",
     "FinancialStatementSymbol",
@@ -101,6 +102,80 @@ class CompanySymbol:
         cls, symbol: builtins.str, company_name: builtins.str
     ) -> CompanySymbol: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class DirectoryNamespace:
+    r"""
+    Directory endpoints for a single client, exposed as `client.directory`.
+    """
+
+    def company_symbols(self) -> builtins.list[CompanySymbol]:
+        r"""
+        Lists worldwide company and instrument symbols.
+        """
+
+    def financial_statement_symbols(self) -> builtins.list[FinancialStatementSymbol]:
+        r"""
+        Lists worldwide companies with financial statements available.
+        """
+
+    def cik_list(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CikEntry]:
+        r"""
+        Lists US SEC entities with optional provider pagination.
+        """
+
+    def symbol_changes(
+        self,
+        *,
+        invalid: typing.Optional[builtins.bool] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SymbolChange]:
+        r"""
+        Lists US symbol changes without interpreting the provider's `invalid` flag.
+        """
+
+    def etf_symbols(self) -> builtins.list[EtfSymbol]:
+        r"""
+        Lists worldwide exchange-traded fund symbols.
+        """
+
+    def actively_trading(self) -> builtins.list[ActivelyTradingSymbol]:
+        r"""
+        Lists worldwide actively trading companies and instruments.
+        """
+
+    def earnings_transcript_list(self) -> builtins.list[EarningsTranscriptAvailability]:
+        r"""
+        Lists US companies with their available earnings-transcript counts.
+        """
+
+    def available_exchanges(
+        self, *, extended: typing.Optional[builtins.bool] = None
+    ) -> builtins.list[AvailableExchange]:
+        r"""
+        Lists supported worldwide stock exchanges.
+        """
+
+    def available_sectors(self) -> builtins.list[AvailableSector]:
+        r"""
+        Lists the provider's available sectors.
+        """
+
+    def available_industries(self) -> builtins.list[AvailableIndustry]:
+        r"""
+        Lists the provider's available industries.
+        """
+
+    def available_countries(self) -> builtins.list[AvailableCountry]:
+        r"""
+        Lists the provider's available countries.
+        """
 
 
 @typing.final
