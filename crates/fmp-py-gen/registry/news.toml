@@ -1,0 +1,144 @@
+# Endpoint registry for the `news` domain, reached from Python as
+# `client.news`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "fmp_articles"
+method = "fmp_articles"
+query = "FmpArticlesQuery"
+response = "news::FmpArticle"
+doc = "Retrieves US-authored Financial Modeling Prep articles."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "latest_general_news"
+method = "latest_general_news"
+query = "LatestGeneralNewsQuery"
+response = "news::NewsArticle"
+doc = "Retrieves the latest worldwide general-news articles."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "latest_press_releases"
+method = "latest_press_releases"
+query = "LatestPressReleasesQuery"
+response = "news::NewsArticle"
+doc = "Retrieves the latest US press releases."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "latest_stock_news"
+method = "latest_stock_news"
+query = "LatestStockNewsQuery"
+response = "news::NewsArticle"
+doc = "Retrieves the latest stock-news articles."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "latest_crypto_news"
+method = "latest_crypto_news"
+query = "LatestCryptoNewsQuery"
+response = "news::NewsArticle"
+doc = "Retrieves the latest cryptocurrency-news articles."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "latest_forex_news"
+method = "latest_forex_news"
+query = "LatestForexNewsQuery"
+response = "news::NewsArticle"
+doc = "Retrieves the latest foreign-exchange-news articles."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "search_press_releases"
+method = "search_press_releases"
+query = "SearchPressReleasesQuery"
+response = "news::NewsArticle"
+doc = "Searches US press releases for an ordered non-empty ticker list."
+args = [
+    { name = "symbols", kind = "ticker_list" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "search_stock_news"
+method = "search_stock_news"
+query = "SearchStockNewsQuery"
+response = "news::NewsArticle"
+doc = "Searches stock news for an ordered non-empty ticker list."
+args = [
+    { name = "symbols", kind = "ticker_list" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "search_crypto_news"
+method = "search_crypto_news"
+query = "SearchCryptoNewsQuery"
+response = "news::NewsArticle"
+doc = "Searches cryptocurrency news for an ordered non-empty ticker list."
+args = [
+    { name = "symbols", kind = "ticker_list" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "search_forex_news"
+method = "search_forex_news"
+query = "SearchForexNewsQuery"
+response = "news::NewsArticle"
+doc = "Searches foreign-exchange news for an ordered non-empty ticker list."
+args = [
+    { name = "symbols", kind = "ticker_list" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "page" }, { arg = "limit" }]
