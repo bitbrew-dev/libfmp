@@ -10,7 +10,13 @@ from fmp.bulk.eod import BulkEodBar
 from fmp.bulk.income import BulkIncomeStatement
 from fmp.bulk.metrics import BulkEarningsSurprise
 from fmp.calendar import CalendarNamespace, DividendEvent, EarningsEvent, IpoCalendarEvent
-from fmp.chart import StockChartFullBar, StockChartIntradayBar
+from fmp.chart import (
+    ChartNamespace,
+    StockChartAdjustedBar,
+    StockChartFullBar,
+    StockChartIntradayBar,
+    StockChartLightBar,
+)
 from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
 from fmp.congressional import (
     CongressionalMemberNetWorthAggregate,
@@ -167,6 +173,22 @@ def check_institutional_ownership_contract(client: FmpClient) -> None:
     )
     turnover: float = summaries[0].turnover
     _ = (accepted, reported_on, first_added, is_new, turnover)
+
+
+def check_chart_contract(client: FmpClient) -> None:
+    """Type-check the flat chart namespace, its keyword-only dates and flags, and the three row shapes."""
+    chart: ChartNamespace = client.chart
+    light: list[StockChartLightBar] = chart.light("AAPL", from_=datetime.date(2026, 4, 30), to="2026-07-30")
+    traded_on: datetime.date = light[0].date
+    price: float = light[0].price
+    adjusted: list[StockChartAdjustedBar] = client.chart.dividend_adjusted("AAPL", to=datetime.date(2026, 7, 30))
+    adj_close: float = adjusted[0].adj_close
+    intraday: list[StockChartIntradayBar] = client.chart.one_minute(
+        "AAPL", from_="2024-01-01", to=datetime.date(2024, 3, 1), nonadjusted=False, extended=True
+    )
+    bar_time: datetime.datetime = intraday[0].date
+    volume: int = intraday[0].volume
+    _ = (traded_on, price, adj_close, bar_time, volume)
 
 
 def check_market_contract(client: FmpClient) -> None:
