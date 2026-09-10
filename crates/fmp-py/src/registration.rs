@@ -206,6 +206,7 @@ fn register_directory(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::directory::EtfSymbol>()?;
     module.add_class::<crate::models::directory::FinancialStatementSymbol>()?;
     module.add_class::<crate::models::directory::SymbolChange>()?;
+    module.add_class::<crate::namespaces::directory::DirectoryNamespace>()?;
     add_submodule(parent, "fmp._native.directory", &module)
 }
 
