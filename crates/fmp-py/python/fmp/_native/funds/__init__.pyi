@@ -2,6 +2,7 @@
 
 import builtins
 import datetime
+from fmp._native import institutional_ownership
 import typing
 
 __all__ = [
@@ -14,6 +15,7 @@ __all__ = [
     "FundDisclosure",
     "FundDisclosureHolder",
     "FundDisclosureSearchResult",
+    "FundsNamespace",
 ]
 
 
@@ -332,3 +334,74 @@ class FundDisclosureSearchResult:
         state: builtins.str,
     ) -> FundDisclosureSearchResult: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class FundsNamespace:
+    r"""
+    Funds endpoints for a single client, exposed as `client.funds`.
+    """
+
+    def etf_holdings(self, symbol: builtins.str) -> builtins.list[EtfFundHolding]:
+        r"""
+        Retrieves the worldwide holdings of one ETF or mutual fund.
+        """
+
+    def etf_info(self, symbol: builtins.str) -> builtins.list[EtfFundInfo]:
+        r"""
+        Retrieves worldwide descriptive and trading information for one fund.
+        """
+
+    def etf_country_weightings(
+        self, symbol: builtins.str
+    ) -> builtins.list[EtfCountryWeighting]:
+        r"""
+        Retrieves the worldwide country allocation for one ETF or mutual fund.
+        """
+
+    def etf_asset_exposure(
+        self, symbol: builtins.str
+    ) -> builtins.list[EtfAssetExposure]:
+        r"""
+        Retrieves the worldwide ETF exposure to one requested asset.
+        """
+
+    def etf_sector_weightings(
+        self, symbol: builtins.str
+    ) -> builtins.list[EtfSectorWeighting]:
+        r"""
+        Retrieves the worldwide sector allocation for one ETF or mutual fund.
+        """
+
+    def latest_fund_disclosure_holders(
+        self, symbol: builtins.str
+    ) -> builtins.list[FundDisclosureHolder]:
+        r"""
+        Retrieves the latest US fund disclosures holding one requested asset.
+        """
+
+    def fund_disclosures(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        quarter: builtins.int,
+        *,
+        cik: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[FundDisclosure]:
+        r"""
+        Retrieves positions from one US mutual-fund disclosure period.
+        """
+
+    def search_fund_disclosure_holders(
+        self, name: builtins.str
+    ) -> builtins.list[FundDisclosureSearchResult]:
+        r"""
+        Searches US mutual-fund and ETF disclosure holders by exact name text.
+        """
+
+    def fund_disclosure_dates(
+        self, symbol: builtins.str, *, cik: typing.Optional[builtins.str] = None
+    ) -> builtins.list[institutional_ownership.Form13fFilingDate]:
+        r"""
+        Retrieves available US fund-disclosure reporting dates.
+        """
