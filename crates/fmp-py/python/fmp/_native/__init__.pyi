@@ -231,6 +231,12 @@ class FmpClient:
         The `statements` endpoints, reached as `client.statements`.
         """
 
+    @property
+    def technical_indicators(self) -> technical_indicators.TechnicalIndicatorsNamespace:
+        r"""
+        The `technical_indicators` endpoints, reached as `client.technical_indicators`.
+        """
+
     def __new__(
         cls,
         *,

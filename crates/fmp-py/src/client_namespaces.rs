@@ -18,6 +18,7 @@ use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::screener::ScreenerNamespace;
 use crate::namespaces::sec_filings::SecFilingsNamespace;
 use crate::namespaces::statements::StatementsNamespace;
+use crate::namespaces::technical_indicators::TechnicalIndicatorsNamespace;
 
 #[gen_stub_pymethods]
 #[pymethods]
@@ -104,5 +105,11 @@ impl FmpClient {
     #[getter]
     fn statements(&self) -> StatementsNamespace {
         StatementsNamespace::new(self.builder.clone())
+    }
+
+    /// The `technical_indicators` endpoints, reached as `client.technical_indicators`.
+    #[getter]
+    fn technical_indicators(&self) -> TechnicalIndicatorsNamespace {
+        TechnicalIndicatorsNamespace::new(self.builder.clone())
     }
 }
