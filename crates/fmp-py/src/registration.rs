@@ -493,6 +493,7 @@ fn register_technical_indicators(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::technical_indicators::TripleExponentialMovingAverageBar>()?;
     module.add_class::<crate::models::technical_indicators::WeightedMovingAverageBar>()?;
     module.add_class::<crate::models::technical_indicators::WilliamsBar>()?;
+    module.add_class::<crate::namespaces::technical_indicators::TechnicalIndicatorsNamespace>()?;
     add_submodule(parent, "fmp._native.technical_indicators", &module)
 }
 
