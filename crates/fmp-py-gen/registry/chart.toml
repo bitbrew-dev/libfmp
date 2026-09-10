@@ -1,0 +1,144 @@
+# Endpoint registry for the `chart` domain, reached from Python as
+# `client.chart`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "light"
+method = "stock_chart_light"
+query = "StockChartEodQuery"
+response = "chart::StockChartLightBar"
+doc = "Retrieves compact worldwide end-of-day stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "full"
+method = "stock_chart_full"
+query = "StockChartEodQuery"
+response = "chart::StockChartFullBar"
+doc = "Retrieves detailed worldwide end-of-day stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "non_split_adjusted"
+method = "stock_chart_non_split_adjusted"
+query = "StockChartEodQuery"
+response = "chart::StockChartAdjustedBar"
+doc = "Retrieves split-unadjusted worldwide end-of-day stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "dividend_adjusted"
+method = "stock_chart_dividend_adjusted"
+query = "StockChartEodQuery"
+response = "chart::StockChartAdjustedBar"
+doc = "Retrieves dividend-adjusted worldwide end-of-day stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "one_minute"
+method = "stock_chart_one_minute"
+query = "StockChartIntradayQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves one-minute worldwide intraday stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+    { name = "extended", kind = "boolean", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "nonadjusted" }, { arg = "extended" }]
+
+[[endpoint]]
+name = "five_minutes"
+method = "stock_chart_five_minutes"
+query = "StockChartIntradayQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves five-minute worldwide intraday stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+    { name = "extended", kind = "boolean", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "nonadjusted" }, { arg = "extended" }]
+
+[[endpoint]]
+name = "fifteen_minutes"
+method = "stock_chart_fifteen_minutes"
+query = "StockChartIntradayQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves fifteen-minute worldwide intraday stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+    { name = "extended", kind = "boolean", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "nonadjusted" }, { arg = "extended" }]
+
+[[endpoint]]
+name = "thirty_minutes"
+method = "stock_chart_thirty_minutes"
+query = "StockChartIntradayQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves thirty-minute worldwide intraday stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+    { name = "extended", kind = "boolean", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "nonadjusted" }, { arg = "extended" }]
+
+[[endpoint]]
+name = "one_hour"
+method = "stock_chart_one_hour"
+query = "StockChartIntradayQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves one-hour worldwide intraday stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+    { name = "extended", kind = "boolean", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "nonadjusted" }, { arg = "extended" }]
+
+[[endpoint]]
+name = "four_hours"
+method = "stock_chart_four_hours"
+query = "StockChartIntradayQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves four-hour worldwide intraday stock chart rows."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+    { name = "extended", kind = "boolean", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }, { arg = "nonadjusted" }, { arg = "extended" }]
