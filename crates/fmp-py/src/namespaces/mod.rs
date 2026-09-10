@@ -6,6 +6,7 @@ pub(crate) mod company;
 pub(crate) mod congressional;
 pub(crate) mod directory;
 pub(crate) mod indexes;
+pub(crate) mod institutional_ownership;
 pub(crate) mod market;
 pub(crate) mod news;
 pub(crate) mod quote;
