@@ -1,0 +1,142 @@
+# Endpoint registry for the `technical_indicators` domain, reached from Python
+# as `client.technical_indicators`. Validate with
+# `cargo run -p fmp-py-gen --bin registry_check`.
+#
+# All nine methods share `TechnicalIndicatorQuery`: a required ticker, a
+# strictly positive look-back period length, a chart timeframe, and the two
+# optional independent dates.
+
+[[endpoint]]
+name = "simple_moving_average"
+method = "simple_moving_average"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::SimpleMovingAverageBar"
+doc = "Retrieves worldwide simple-moving-average bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "exponential_moving_average"
+method = "exponential_moving_average"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::ExponentialMovingAverageBar"
+doc = "Retrieves worldwide exponential-moving-average bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "weighted_moving_average"
+method = "weighted_moving_average"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::WeightedMovingAverageBar"
+doc = "Retrieves worldwide weighted-moving-average bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "double_exponential_moving_average"
+method = "double_exponential_moving_average"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::DoubleExponentialMovingAverageBar"
+doc = "Retrieves worldwide double-exponential-moving-average bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "triple_exponential_moving_average"
+method = "triple_exponential_moving_average"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::TripleExponentialMovingAverageBar"
+doc = "Retrieves worldwide triple-exponential-moving-average bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "relative_strength_index"
+method = "relative_strength_index"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::RelativeStrengthIndexBar"
+doc = "Retrieves worldwide relative-strength-index bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "standard_deviation"
+method = "standard_deviation"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::StandardDeviationBar"
+doc = "Retrieves worldwide standard-deviation bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "williams"
+method = "williams"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::WilliamsBar"
+doc = "Retrieves worldwide Williams bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "average_directional_index"
+method = "average_directional_index"
+query = "TechnicalIndicatorQuery"
+response = "technical_indicators::AverageDirectionalIndexBar"
+doc = "Retrieves worldwide average-directional-index bars."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period_length", kind = "period_length" },
+    { name = "timeframe", kind = "chart_timeframe" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
