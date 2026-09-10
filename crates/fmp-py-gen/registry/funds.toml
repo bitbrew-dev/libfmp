@@ -1,0 +1,84 @@
+# Endpoint registry for the `funds` domain, reached from Python as
+# `client.funds`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "etf_holdings"
+method = "etf_holdings"
+query = "EtfHoldingsQuery"
+response = "funds::EtfFundHolding"
+doc = "Retrieves the worldwide holdings of one ETF or mutual fund."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "etf_info"
+method = "etf_info"
+query = "EtfInfoQuery"
+response = "funds::EtfFundInfo"
+doc = "Retrieves worldwide descriptive and trading information for one fund."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "etf_country_weightings"
+method = "etf_country_weightings"
+query = "EtfCountryWeightingsQuery"
+response = "funds::EtfCountryWeighting"
+doc = "Retrieves the worldwide country allocation for one ETF or mutual fund."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "etf_asset_exposure"
+method = "etf_asset_exposure"
+query = "EtfAssetExposureQuery"
+response = "funds::EtfAssetExposure"
+doc = "Retrieves the worldwide ETF exposure to one requested asset."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "etf_sector_weightings"
+method = "etf_sector_weightings"
+query = "EtfSectorWeightingsQuery"
+response = "funds::EtfSectorWeighting"
+doc = "Retrieves the worldwide sector allocation for one ETF or mutual fund."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "latest_fund_disclosure_holders"
+method = "latest_fund_disclosure_holders"
+query = "LatestFundDisclosureHoldersQuery"
+response = "funds::FundDisclosureHolder"
+doc = "Retrieves the latest US fund disclosures holding one requested asset."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "fund_disclosures"
+method = "fund_disclosures"
+query = "FundDisclosureQuery"
+response = "funds::FundDisclosure"
+doc = "Retrieves positions from one US mutual-fund disclosure period."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "quarter", kind = "quarter" },
+    { name = "cik", kind = "cik", required = false },
+]
+setters = [{ arg = "cik" }]
+
+[[endpoint]]
+name = "search_fund_disclosure_holders"
+method = "search_fund_disclosure_holders"
+query = "FundDisclosureHolderSearchQuery"
+response = "funds::FundDisclosureSearchResult"
+doc = "Searches US mutual-fund and ETF disclosure holders by exact name text."
+args = [{ name = "name", kind = "search_term" }]
+
+[[endpoint]]
+name = "fund_disclosure_dates"
+method = "fund_disclosure_dates"
+query = "FundDisclosureDatesQuery"
+response = "institutional_ownership::Form13fFilingDate"
+doc = "Retrieves available US fund-disclosure reporting dates."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "cik", kind = "cik", required = false },
+]
+setters = [{ arg = "cik" }]
