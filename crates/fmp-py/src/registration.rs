@@ -311,6 +311,7 @@ fn register_news(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "news")?;
     module.add_class::<crate::models::news::FmpArticle>()?;
     module.add_class::<crate::models::news::NewsArticle>()?;
+    module.add_class::<crate::namespaces::news::NewsNamespace>()?;
     add_submodule(parent, "fmp._native.news", &module)
 }
 
