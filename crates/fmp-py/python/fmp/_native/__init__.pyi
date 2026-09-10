@@ -182,6 +182,12 @@ class FmpClient:
         """
 
     @property
+    def market(self) -> market.MarketNamespace:
+        r"""
+        The `market` endpoints, reached as `client.market`.
+        """
+
+    @property
     def quote(self) -> quote.QuoteNamespace:
         r"""
         The `quote` endpoints, reached as `client.quote`.

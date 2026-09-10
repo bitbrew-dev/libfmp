@@ -296,6 +296,7 @@ fn register_market(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::market::MarketMover>()?;
     module.add_class::<crate::models::market::SectorPe>()?;
     module.add_class::<crate::models::market::SectorPerformance>()?;
+    module.add_class::<crate::namespaces::market::MarketNamespace>()?;
     add_submodule(parent, "fmp._native.market", &module)
 }
 

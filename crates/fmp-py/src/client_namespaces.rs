@@ -10,6 +10,7 @@ use crate::namespaces::company::CompanyNamespace;
 use crate::namespaces::congressional::CongressionalNamespace;
 use crate::namespaces::directory::DirectoryNamespace;
 use crate::namespaces::indexes::IndexesNamespace;
+use crate::namespaces::market::MarketNamespace;
 use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::screener::ScreenerNamespace;
 use crate::namespaces::sec_filings::SecFilingsNamespace;
@@ -52,6 +53,12 @@ impl FmpClient {
     #[getter]
     fn indexes(&self) -> IndexesNamespace {
         IndexesNamespace::new(self.builder.clone())
+    }
+
+    /// The `market` endpoints, reached as `client.market`.
+    #[getter]
+    fn market(&self) -> MarketNamespace {
+        MarketNamespace::new(self.builder.clone())
     }
 
     /// The `quote` endpoints, reached as `client.quote`.
