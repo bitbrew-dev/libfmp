@@ -170,6 +170,12 @@ class FmpClient:
         """
 
     @property
+    def directory(self) -> directory.DirectoryNamespace:
+        r"""
+        The `directory` endpoints, reached as `client.directory`.
+        """
+
+    @property
     def indexes(self) -> indexes.IndexesNamespace:
         r"""
         The `indexes` endpoints, reached as `client.indexes`.
