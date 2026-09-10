@@ -300,6 +300,26 @@ fn unknown_arg_kind_fails_at_load() {
 }
 
 #[test]
+fn aliased_row_verifies_against_the_target_struct_model() {
+    let registry = Registry::load(&fixture("aliased_row")).expect("fixture loads");
+    let report = registry
+        .validate(&endpoints_root(), &models_root())
+        .expect("aliased fixture validates");
+    assert!(report.trusted.is_empty(), "{:?}", report.trusted);
+    assert_eq!(report.verified.len(), 1);
+    assert_eq!(report.verified[0].entry, "funds.fund_disclosure_dates");
+
+    let errors = validate(&fixture("aliased_row_mismatch"));
+    assert_names(
+        &errors,
+        "aliased_row_mismatch/funds.toml",
+        "funds.fund_disclosure_dates",
+        "returns `Vec<FundDisclosureDate>` but the response model is `funds::FundDisclosure`",
+    );
+    assert_eq!(errors.len(), 1);
+}
+
+#[test]
 fn missing_model_is_a_hard_error() {
     let errors = validate(&fixture("missing_model"));
     assert_names(
