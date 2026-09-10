@@ -1,0 +1,97 @@
+# Endpoint registry for the `institutional_ownership` domain, reached from
+# Python as `client.institutional_ownership`. Validate with
+# `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "latest_filings"
+method = "latest_institutional_ownership_filings"
+query = "LatestInstitutionalOwnershipFilingsQuery"
+response = "institutional_ownership::InstitutionalOwnershipFiling"
+doc = "Retrieves the latest US institutional-ownership filings."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "extract"
+method = "institutional_ownership_extract"
+query = "InstitutionalOwnershipExtractQuery"
+response = "institutional_ownership::InstitutionalHolding"
+doc = "Extracts the positions from one US institutional-ownership filing period."
+args = [
+    { name = "cik", kind = "cik" },
+    { name = "year", kind = "year" },
+    { name = "quarter", kind = "quarter" },
+]
+
+[[endpoint]]
+name = "form_13f_filing_dates"
+method = "form_13f_filing_dates"
+query = "Form13fFilingDatesQuery"
+response = "institutional_ownership::Form13fFilingDate"
+doc = "Retrieves available Form 13F filing dates for one US institutional holder."
+args = [{ name = "cik", kind = "cik" }]
+
+[[endpoint]]
+name = "holder_analytics"
+method = "institutional_holder_analytics"
+query = "InstitutionalHolderAnalyticsQuery"
+response = "institutional_ownership::InstitutionalHolderAnalytics"
+doc = "Retrieves holder-level analytics for one US security and filing period."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "quarter", kind = "quarter" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "holder_performance_summary"
+method = "holder_performance_summary"
+query = "HolderPerformanceSummaryQuery"
+response = "institutional_ownership::HolderPerformanceSummary"
+doc = "Retrieves a US institutional holder's portfolio performance summary."
+args = [
+    { name = "cik", kind = "cik" },
+    { name = "page", kind = "page", required = false },
+]
+setters = [{ arg = "page" }]
+
+[[endpoint]]
+name = "holder_industry_breakdown"
+method = "holder_industry_breakdown"
+query = "HolderIndustryBreakdownQuery"
+response = "institutional_ownership::HolderIndustryBreakdown"
+doc = "Retrieves a US institutional holder's industry breakdown for one period."
+args = [
+    { name = "cik", kind = "cik" },
+    { name = "year", kind = "year" },
+    { name = "quarter", kind = "quarter" },
+]
+
+[[endpoint]]
+name = "positions_summary"
+method = "institutional_positions_summary"
+query = "InstitutionalPositionsSummaryQuery"
+response = "institutional_ownership::InstitutionalPositionSummary"
+doc = "Retrieves the US institutional position summary for one security and period."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "quarter", kind = "quarter" },
+]
+
+[[endpoint]]
+name = "industry_summary"
+method = "institutional_industry_summary"
+query = "InstitutionalIndustrySummaryQuery"
+response = "institutional_ownership::InstitutionalIndustrySummary"
+doc = "Retrieves US institutional industry values for one reporting period."
+args = [
+    { name = "year", kind = "year" },
+    { name = "quarter", kind = "quarter" },
+]
