@@ -44,6 +44,12 @@ from fmp.statements import StatementsNamespace
 from fmp.statements.income import IncomeStatement, StatementsIncomeNamespace
 from fmp.statements.reports import FinancialReportDate
 from fmp.statements.summaries import LatestFinancialStatement
+from fmp.technical_indicators import (
+    RelativeStrengthIndexBar,
+    SimpleMovingAverageBar,
+    TechnicalIndicatorsNamespace,
+    WilliamsBar,
+)
 
 
 def check_statements_contract(client: FmpClient) -> None:
@@ -258,6 +264,24 @@ def check_news_contract(client: FmpClient) -> None:
     single: list[NewsArticle] = client.news.search_forex_news("EURUSD", limit=0)
     publisher: str = searched[0].publisher
     _ = (authored_on, tickers, symbol, published, single, publisher)
+
+
+def check_technical_indicators_contract(client: FmpClient) -> None:
+    """Type-check the shared indicator signature, its keyword-only dates, and the bar row fields."""
+    technical_indicators: TechnicalIndicatorsNamespace = client.technical_indicators
+    sma: list[SimpleMovingAverageBar] = technical_indicators.simple_moving_average(
+        "AAPL", 10, "1day", from_=datetime.date(2026, 3, 1), to="2026-06-01"
+    )
+    bar_time: datetime.datetime = sma[0].date
+    volume: int = sma[0].volume
+    average: float = sma[0].sma
+    rsi: list[RelativeStrengthIndexBar] = client.technical_indicators.relative_strength_index("AAPL", 14, "1hour")
+    strength: float = rsi[0].rsi
+    williams: list[WilliamsBar] = client.technical_indicators.williams(
+        "AAPL", 14, "15min", to=datetime.date(2026, 6, 1)
+    )
+    oscillator: float = williams[0].williams
+    _ = (bar_time, volume, average, strength, oscillator)
 
 
 def check_public_contract(client: FmpClient) -> None:
