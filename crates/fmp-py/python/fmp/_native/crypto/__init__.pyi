@@ -2,11 +2,91 @@
 
 import builtins
 import datetime
+from fmp._native import chart
+from fmp._native import quote
 import typing
 
 __all__ = [
+    "CryptoNamespace",
     "CryptocurrencyListing",
 ]
+
+
+@typing.final
+class CryptoNamespace:
+    r"""
+    Crypto endpoints for a single client, exposed as `client.crypto`.
+    """
+
+    def list(self) -> builtins.list[CryptocurrencyListing]:
+        r"""
+        Lists the provider's documented cryptocurrency catalog.
+        """
+
+    def quote(self, symbol: builtins.str) -> builtins.list[quote.Quote]:
+        r"""
+        Retrieves a detailed quote for one cryptocurrency.
+        """
+
+    def quote_short(self, symbol: builtins.str) -> builtins.list[quote.QuoteShort]:
+        r"""
+        Retrieves a compact quote for one cryptocurrency.
+        """
+
+    def chart_light(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartLightBar]:
+        r"""
+        Retrieves compact end-of-day cryptocurrency history.
+        """
+
+    def chart_full(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartFullBar]:
+        r"""
+        Retrieves detailed end-of-day cryptocurrency history.
+        """
+
+    def chart_one_minute(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-minute cryptocurrency history.
+        """
+
+    def chart_five_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartIntradayBar]:
+        r"""
+        Retrieves five-minute cryptocurrency history.
+        """
+
+    def chart_one_hour(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-hour cryptocurrency history.
+        """
 
 
 @typing.final

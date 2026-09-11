@@ -182,6 +182,12 @@ class FmpClient:
         """
 
     @property
+    def crypto(self) -> crypto.CryptoNamespace:
+        r"""
+        The `crypto` endpoints, reached as `client.crypto`.
+        """
+
+    @property
     def directory(self) -> directory.DirectoryNamespace:
         r"""
         The `directory` endpoints, reached as `client.directory`.
