@@ -7,6 +7,7 @@ use crate::client::FmpClient;
 use crate::namespaces::bulk::BulkNamespace;
 use crate::namespaces::calendar::CalendarNamespace;
 use crate::namespaces::chart::ChartNamespace;
+use crate::namespaces::commodities::CommoditiesNamespace;
 use crate::namespaces::company::CompanyNamespace;
 use crate::namespaces::congressional::CongressionalNamespace;
 use crate::namespaces::directory::DirectoryNamespace;
@@ -40,6 +41,12 @@ impl FmpClient {
     #[getter]
     fn chart(&self) -> ChartNamespace {
         ChartNamespace::new(self.builder.clone())
+    }
+
+    /// The `commodities` endpoints, reached as `client.commodities`.
+    #[getter]
+    fn commodities(&self) -> CommoditiesNamespace {
+        CommoditiesNamespace::new(self.builder.clone())
     }
 
     /// The `company` endpoints, reached as `client.company`.
