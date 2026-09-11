@@ -1,0 +1,80 @@
+# Endpoint registry for the `analyst` domain, reached from Python as
+# `client.analyst`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "financial_estimates"
+method = "financial_estimates"
+query = "FinancialEstimatesQuery"
+response = "analyst::FinancialEstimate"
+doc = "Retrieves worldwide analyst financial estimates for one ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "period", kind = "retrieval_frequency" },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "ratings_snapshot"
+method = "ratings_snapshot"
+query = "RatingsSnapshotQuery"
+response = "analyst::RatingSnapshot"
+doc = "Retrieves the worldwide financial-rating snapshot for one ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "historical_ratings"
+method = "historical_ratings"
+query = "HistoricalRatingsQuery"
+response = "analyst::HistoricalRating"
+doc = "Retrieves worldwide historical financial ratings for one ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "price_target_summary"
+method = "price_target_summary"
+query = "PriceTargetSummaryQuery"
+response = "analyst::PriceTargetSummary"
+doc = "Retrieves the US-only price-target summary for one ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "price_target_consensus"
+method = "price_target_consensus"
+query = "PriceTargetConsensusQuery"
+response = "analyst::PriceTargetConsensus"
+doc = "Retrieves the US-only price-target consensus for one ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "stock_grades"
+method = "stock_grades"
+query = "StockGradesQuery"
+response = "analyst::StockGrade"
+doc = "Retrieves current worldwide stock-grade actions for one ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "historical_stock_grades"
+method = "historical_stock_grades"
+query = "HistoricalStockGradesQuery"
+response = "analyst::HistoricalStockGrade"
+doc = "Retrieves worldwide historical stock-grade counts for one ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "stock_grades_summary"
+method = "stock_grades_summary"
+query = "StockGradesSummaryQuery"
+response = "analyst::StockGradesSummary"
+doc = "Retrieves the worldwide stock-grades summary for one ticker."
+args = [{ name = "symbol", kind = "ticker" }]
