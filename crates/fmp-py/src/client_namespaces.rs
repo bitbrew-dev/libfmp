@@ -4,6 +4,7 @@ use pyo3::prelude::*;
 use pyo3_stub_gen::derive::gen_stub_pymethods;
 
 use crate::client::FmpClient;
+use crate::namespaces::analyst::AnalystNamespace;
 use crate::namespaces::bulk::BulkNamespace;
 use crate::namespaces::calendar::CalendarNamespace;
 use crate::namespaces::chart::ChartNamespace;
@@ -26,6 +27,12 @@ use crate::namespaces::technical_indicators::TechnicalIndicatorsNamespace;
 #[gen_stub_pymethods]
 #[pymethods]
 impl FmpClient {
+    /// The `analyst` endpoints, reached as `client.analyst`.
+    #[getter]
+    fn analyst(&self) -> AnalystNamespace {
+        AnalystNamespace::new(self.builder.clone())
+    }
+
     /// The `bulk` endpoints, reached as `client.bulk`.
     #[getter]
     fn bulk(&self) -> BulkNamespace {

@@ -52,6 +52,7 @@ fn register_analyst(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::analyst::RatingSnapshot>()?;
     module.add_class::<crate::models::analyst::StockGrade>()?;
     module.add_class::<crate::models::analyst::StockGradesSummary>()?;
+    module.add_class::<crate::namespaces::analyst::AnalystNamespace>()?;
     add_submodule(parent, "fmp._native.analyst", &module)
 }
 

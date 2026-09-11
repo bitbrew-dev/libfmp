@@ -146,6 +146,12 @@ class FmpClient:
     """
 
     @property
+    def analyst(self) -> analyst.AnalystNamespace:
+        r"""
+        The `analyst` endpoints, reached as `client.analyst`.
+        """
+
+    @property
     def bulk(self) -> bulk.BulkNamespace:
         r"""
         The `bulk` endpoints, reached as `client.bulk`.
