@@ -147,6 +147,7 @@ fn register_commitment_of_traders(parent: &Bound<'_, PyModule>) -> PyResult<()> 
 fn register_commodities(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "commodities")?;
     module.add_class::<crate::models::commodities::CommodityListing>()?;
+    module.add_class::<crate::namespaces::commodities::CommoditiesNamespace>()?;
     add_submodule(parent, "fmp._native.commodities", &module)
 }
 

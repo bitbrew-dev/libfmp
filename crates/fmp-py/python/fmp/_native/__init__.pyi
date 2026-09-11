@@ -164,6 +164,12 @@ class FmpClient:
         """
 
     @property
+    def commodities(self) -> commodities.CommoditiesNamespace:
+        r"""
+        The `commodities` endpoints, reached as `client.commodities`.
+        """
+
+    @property
     def company(self) -> company.CompanyNamespace:
         r"""
         The `company` endpoints, reached as `client.company`.

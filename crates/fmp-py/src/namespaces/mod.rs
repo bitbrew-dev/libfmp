@@ -3,6 +3,7 @@
 pub(crate) mod bulk;
 pub(crate) mod calendar;
 pub(crate) mod chart;
+pub(crate) mod commodities;
 pub(crate) mod company;
 pub(crate) mod congressional;
 pub(crate) mod directory;
