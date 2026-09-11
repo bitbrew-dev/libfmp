@@ -27,6 +27,7 @@ from fmp.congressional import (
     CongressionalNetWorthRange,
     CongressionalTrade,
 )
+from fmp.crypto import CryptocurrencyListing, CryptoNamespace
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.funds import EtfFundHolding, EtfFundInfo, FundDisclosure, FundsNamespace
@@ -316,6 +317,23 @@ def check_commodities_contract(client: FmpClient) -> None:
     intraday: list[StockChartIntradayBar] = client.commodities.chart_one_hour("GCUSD", to=datetime.date(2024, 3, 1))
     bar_time: datetime.datetime = intraday[0].date
     _ = (exchange, trade_month, market_cap, bar_date, vwap, bar_time)
+
+
+def check_crypto_contract(client: FmpClient) -> None:
+    """Type-check the crypto namespace, its keyword-only date filters, and the cross-module rows."""
+    crypto: CryptoNamespace = client.crypto
+    listings: list[CryptocurrencyListing] = crypto.list()
+    ico_date: datetime.date = listings[0].ico_date
+    total_supply: int = listings[0].total_supply
+    quotes: list[Quote] = client.crypto.quote("BTCUSD")
+    market_cap: int | None = quotes[0].market_cap
+    bars: list[StockChartFullBar] = client.crypto.chart_full(
+        "BTCUSD", from_=datetime.date(2026, 1, 27), to="2026-04-27"
+    )
+    bar_date: datetime.date = bars[0].date
+    intraday: list[StockChartIntradayBar] = client.crypto.chart_one_hour("BTCUSD", to=datetime.date(2024, 3, 1))
+    bar_time: datetime.datetime = intraday[0].date
+    _ = (ico_date, total_supply, market_cap, bar_date, bar_time)
 
 
 def check_public_contract(client: FmpClient) -> None:
