@@ -1,0 +1,89 @@
+# Endpoint registry for the `commodities` domain, reached from Python as
+# `client.commodities`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "list"
+method = "commodities_list"
+response = "commodities::CommodityListing"
+doc = "Lists the provider's documented commodity catalog."
+
+[[endpoint]]
+name = "quote"
+method = "commodity_quote"
+query = "QuoteQuery"
+response = "quote::Quote"
+doc = "Retrieves a detailed US-only quote for one commodity."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "quote_short"
+method = "commodity_quote_short"
+query = "QuoteShortQuery"
+response = "quote::QuoteShort"
+doc = "Retrieves a compact US-only quote for one commodity."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "chart_light"
+method = "commodity_chart_light"
+query = "AssetChartQuery"
+response = "chart::StockChartLightBar"
+doc = "Retrieves compact end-of-day commodity history."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_full"
+method = "commodity_chart_full"
+query = "AssetChartQuery"
+response = "chart::StockChartFullBar"
+doc = "Retrieves detailed end-of-day commodity history."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_one_minute"
+method = "commodity_chart_one_minute"
+query = "AssetChartQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves one-minute commodity history."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_five_minutes"
+method = "commodity_chart_five_minutes"
+query = "AssetChartQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves five-minute commodity history."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "chart_one_hour"
+method = "commodity_chart_one_hour"
+query = "AssetChartQuery"
+response = "chart::StockChartIntradayBar"
+doc = "Retrieves one-hour commodity history."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
