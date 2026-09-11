@@ -80,7 +80,9 @@
     [
       "@semantic-release/github",
       {
-        "githubUrl": "https://api.github.com"
+        "githubUrl": "https://api.github.com",
+        "releasedLabels": false,
+        "successComment": false
       }
     ]
   ],
