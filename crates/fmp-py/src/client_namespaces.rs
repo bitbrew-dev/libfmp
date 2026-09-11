@@ -13,6 +13,7 @@ use crate::namespaces::company::CompanyNamespace;
 use crate::namespaces::congressional::CongressionalNamespace;
 use crate::namespaces::crypto::CryptoNamespace;
 use crate::namespaces::directory::DirectoryNamespace;
+use crate::namespaces::forex::ForexNamespace;
 use crate::namespaces::funds::FundsNamespace;
 use crate::namespaces::indexes::IndexesNamespace;
 use crate::namespaces::institutional_ownership::InstitutionalOwnershipNamespace;
@@ -79,6 +80,12 @@ impl FmpClient {
     #[getter]
     fn directory(&self) -> DirectoryNamespace {
         DirectoryNamespace::new(self.builder.clone())
+    }
+
+    /// The `forex` endpoints, reached as `client.forex`.
+    #[getter]
+    fn forex(&self) -> ForexNamespace {
+        ForexNamespace::new(self.builder.clone())
     }
 
     /// The `funds` endpoints, reached as `client.funds`.

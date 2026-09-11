@@ -235,6 +235,7 @@ fn register_esg(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 fn register_forex(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "forex")?;
     module.add_class::<crate::models::forex::ForexPair>()?;
+    module.add_class::<crate::namespaces::forex::ForexNamespace>()?;
     add_submodule(parent, "fmp._native.forex", &module)
 }
 
