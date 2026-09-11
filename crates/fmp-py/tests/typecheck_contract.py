@@ -17,6 +17,7 @@ from fmp.chart import (
     StockChartIntradayBar,
     StockChartLightBar,
 )
+from fmp.commodities import CommoditiesNamespace, CommodityListing
 from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
 from fmp.congressional import (
     CongressionalMemberNetWorthAggregate,
@@ -299,6 +300,22 @@ def check_technical_indicators_contract(client: FmpClient) -> None:
     )
     oscillator: float = williams[0].williams
     _ = (bar_time, volume, average, strength, oscillator)
+
+
+def check_commodities_contract(client: FmpClient) -> None:
+    """Type-check the commodities namespace, its keyword-only date filters, and the cross-module rows."""
+    commodities: CommoditiesNamespace = client.commodities
+    listings: list[CommodityListing] = commodities.list()
+    exchange: str | None = listings[0].exchange
+    trade_month: str = listings[0].trade_month
+    quotes: list[Quote] = client.commodities.quote("GCUSD")
+    market_cap: int | None = quotes[0].market_cap
+    bars: list[StockChartFullBar] = commodities.chart_full("GCUSD", from_=datetime.date(2026, 1, 27), to="2026-04-27")
+    bar_date: datetime.date = bars[0].date
+    vwap: float = bars[0].vwap
+    intraday: list[StockChartIntradayBar] = client.commodities.chart_one_hour("GCUSD", to=datetime.date(2024, 3, 1))
+    bar_time: datetime.datetime = intraday[0].date
+    _ = (exchange, trade_month, market_cap, bar_date, vwap, bar_time)
 
 
 def check_public_contract(client: FmpClient) -> None:
