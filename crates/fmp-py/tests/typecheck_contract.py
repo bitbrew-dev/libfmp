@@ -5,6 +5,7 @@ from typing import Any
 
 import fmp
 from fmp import BinaryPayload, FmpClient, FmpError
+from fmp.analyst import AnalystNamespace, FinancialEstimate, PriceTargetConsensus, StockGrade
 from fmp.bulk import BulkNamespace
 from fmp.bulk.eod import BulkEodBar
 from fmp.bulk.income import BulkIncomeStatement
@@ -334,6 +335,21 @@ def check_crypto_contract(client: FmpClient) -> None:
     intraday: list[StockChartIntradayBar] = client.crypto.chart_one_hour("BTCUSD", to=datetime.date(2024, 3, 1))
     bar_time: datetime.datetime = intraday[0].date
     _ = (ico_date, total_supply, market_cap, bar_date, bar_time)
+
+
+def check_analyst_contract(client: FmpClient) -> None:
+    """Type-check the flat analyst namespace, its required period, the keyword-only paging, and the date rows."""
+    analyst: AnalystNamespace = client.analyst
+    estimates: list[FinancialEstimate] = analyst.financial_estimates("AAPL", "quarter", page=0, limit=10)
+    estimated_on: datetime.date = estimates[0].date
+    revenue_high: int = estimates[0].revenue_high
+    eps_avg: float = estimates[0].eps_avg
+    consensus: list[PriceTargetConsensus] = client.analyst.price_target_consensus("AAPL")
+    target_high: float = consensus[0].target_high
+    grades: list[StockGrade] = client.analyst.stock_grades("AAPL")
+    graded_on: datetime.date = grades[0].date
+    action: str = grades[0].action
+    _ = (estimated_on, revenue_high, eps_avg, target_high, graded_on, action)
 
 
 def check_public_contract(client: FmpClient) -> None:
