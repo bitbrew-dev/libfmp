@@ -31,6 +31,7 @@ from fmp.congressional import (
 from fmp.crypto import CryptocurrencyListing, CryptoNamespace
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
+from fmp.forex import ForexNamespace, ForexPair
 from fmp.funds import EtfFundHolding, EtfFundInfo, FundDisclosure, FundsNamespace
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
 from fmp.institutional_ownership import (
@@ -181,6 +182,24 @@ def check_indexes_contract(client: FmpClient) -> None:
     first_added: datetime.date | None = members[0].date_first_added
     founded: datetime.date = members[0].founded
     _ = (currency, bar_date, vwap, bar_time, first_added, founded)
+
+
+def check_forex_contract(client: FmpClient) -> None:
+    """Type-check the flat forex namespace, its keyword-only date filters, and the cross-module rows."""
+    forex: ForexNamespace = client.forex
+    pairs: list[ForexPair] = forex.list()
+    from_currency: str = pairs[0].from_currency
+    quotes: list[Quote] = client.forex.quote("EURUSD")
+    market_cap: int | None = quotes[0].market_cap
+    compact: list[QuoteShort] = client.forex.quote_short("EURUSD")
+    price: float = compact[0].price
+    bars: list[StockChartFullBar] = forex.chart_full("EURUSD", from_=datetime.date(2026, 1, 27), to="2026-04-27")
+    bar_date: datetime.date = bars[0].date
+    vwap: float = bars[0].vwap
+    light: list[StockChartLightBar] = client.forex.chart_light("EURUSD", from_="2026-01-27")
+    intraday: list[StockChartIntradayBar] = client.forex.chart_one_hour("EURUSD", to=datetime.date(2024, 3, 1))
+    bar_time: datetime.datetime = intraday[0].date
+    _ = (from_currency, market_cap, price, bar_date, vwap, light, bar_time)
 
 
 def check_institutional_ownership_contract(client: FmpClient) -> None:
