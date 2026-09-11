@@ -6,6 +6,7 @@ pub(crate) mod chart;
 pub(crate) mod commodities;
 pub(crate) mod company;
 pub(crate) mod congressional;
+pub(crate) mod crypto;
 pub(crate) mod directory;
 pub(crate) mod funds;
 pub(crate) mod indexes;

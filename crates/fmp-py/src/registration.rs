@@ -185,6 +185,7 @@ fn register_congressional(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 fn register_crypto(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "crypto")?;
     module.add_class::<crate::models::crypto::CryptocurrencyListing>()?;
+    module.add_class::<crate::namespaces::crypto::CryptoNamespace>()?;
     add_submodule(parent, "fmp._native.crypto", &module)
 }
 
