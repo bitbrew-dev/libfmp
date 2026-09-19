@@ -45,6 +45,7 @@ from fmp.market import IndustryPe, MarketMover, MarketNamespace, SectorPerforman
 from fmp.news import FmpArticle, NewsArticle, NewsNamespace
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
+from fmp.search import CikSearchResult, ExchangeVariant, SearchNamespace, SymbolSearchResult
 from fmp.sec_filings import SecCompanyProfile, SecCompanySearchResult, SecFiling, SecFilingsNamespace
 from fmp.statements import StatementsNamespace
 from fmp.statements.income import IncomeStatement, StatementsIncomeNamespace
@@ -402,6 +403,20 @@ def check_tipranks_contract(client: FmpClient) -> None:
     profiles: list[TipRanksAnalystProfile] = client.tipranks.analysts(page=0, limit=1000, firm_name="Roth MKM")
     stars: int = profiles[0].num_of_stars
     _ = (recommended_on, currency, beat_target, last_recommended_on, summarised_from, buys, stars)
+
+
+def check_search_contract(client: FmpClient) -> None:
+    """Type-check the flat search namespace, its keyword-only filters, and the single-identifier methods."""
+    search: SearchNamespace = client.search
+    matches: list[SymbolSearchResult] = search.symbol("Apple / Class A", limit=50, exchange="NASDAQ Global")
+    exchange_full_name: str = matches[0].exchange_full_name
+    entities: list[CikSearchResult] = client.search.cik("0000320193", limit=50)
+    cik: str = entities[0].cik
+    variants: list[ExchangeVariant] = client.search.exchange_variants("^VIX")
+    ipo_date: datetime.date = variants[0].ipo_date
+    market_cap: int = variants[0].market_cap
+    is_etf: bool = variants[0].is_etf
+    _ = (exchange_full_name, cik, ipo_date, market_cap, is_etf)
 
 
 def check_public_contract(client: FmpClient) -> None:
