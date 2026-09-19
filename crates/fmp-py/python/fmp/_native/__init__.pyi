@@ -200,6 +200,12 @@ class FmpClient:
         """
 
     @property
+    def economics(self) -> economics.EconomicsNamespace:
+        r"""
+        The `economics` endpoints, reached as `client.economics`.
+        """
+
+    @property
     def forex(self) -> forex.ForexNamespace:
         r"""
         The `forex` endpoints, reached as `client.forex`.

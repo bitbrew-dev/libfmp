@@ -221,6 +221,7 @@ fn register_economics(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::economics::EconomicIndicatorObservation>()?;
     module.add_class::<crate::models::economics::MarketRiskPremium>()?;
     module.add_class::<crate::models::economics::TreasuryRate>()?;
+    module.add_class::<crate::namespaces::economics::EconomicsNamespace>()?;
     add_submodule(parent, "fmp._native.economics", &module)
 }
 
