@@ -1,0 +1,64 @@
+# Endpoint registry for the `search` domain, reached from Python as
+# `client.search`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "symbol"
+method = "search_symbol"
+query = "SymbolSearchQuery"
+response = "search::SymbolSearchResult"
+doc = "Searches worldwide companies and instruments by symbol."
+args = [
+    { name = "query", kind = "search_term" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "exchange", kind = "exchange_code", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "exchange" }]
+
+[[endpoint]]
+name = "name"
+method = "search_name"
+query = "NameSearchQuery"
+response = "search::NameSearchResult"
+doc = "Searches worldwide companies and instruments by name."
+args = [
+    { name = "query", kind = "search_term" },
+    { name = "limit", kind = "limit", required = false },
+    { name = "exchange", kind = "exchange_code", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "exchange" }]
+
+[[endpoint]]
+name = "cik"
+method = "search_cik"
+query = "CikSearchQuery"
+response = "search::CikSearchResult"
+doc = "Searches US companies by Central Index Key."
+args = [
+    { name = "cik", kind = "cik" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "cusip"
+method = "search_cusip"
+query = "CusipSearchQuery"
+response = "search::CusipSearchResult"
+doc = "Searches worldwide securities by CUSIP without constraining its length."
+args = [{ name = "cusip", kind = "cusip" }]
+
+[[endpoint]]
+name = "isin"
+method = "search_isin"
+query = "IsinSearchQuery"
+response = "search::IsinSearchResult"
+doc = "Searches worldwide securities by ISIN without constraining its length."
+args = [{ name = "isin", kind = "isin" }]
+
+[[endpoint]]
+name = "exchange_variants"
+method = "search_exchange_variants"
+query = "ExchangeVariantsQuery"
+response = "search::ExchangeVariant"
+doc = "Finds worldwide exchange listings for a provider ticker."
+args = [{ name = "symbol", kind = "ticker" }]
