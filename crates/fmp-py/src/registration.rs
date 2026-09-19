@@ -512,6 +512,7 @@ fn register_tipranks(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::tipranks::TipRanksRatingSearchResult>()?;
     module.add_class::<crate::models::tipranks::TipRanksRecommendationCounts>()?;
     module.add_class::<crate::models::tipranks::TipRanksSymbolSummary>()?;
+    module.add_class::<crate::namespaces::tipranks::TipranksNamespace>()?;
     add_submodule(parent, "fmp._native.tipranks", &module)
 }
 

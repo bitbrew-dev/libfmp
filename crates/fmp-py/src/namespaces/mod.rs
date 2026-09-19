@@ -20,3 +20,4 @@ pub(crate) mod screener;
 pub(crate) mod sec_filings;
 pub(crate) mod statements;
 pub(crate) mod technical_indicators;
+pub(crate) mod tipranks;
