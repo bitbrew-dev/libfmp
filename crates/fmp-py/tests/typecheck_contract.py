@@ -56,6 +56,14 @@ from fmp.technical_indicators import (
     TechnicalIndicatorsNamespace,
     WilliamsBar,
 )
+from fmp.tipranks import (
+    TipRanksAnalystProfile,
+    TipRanksAnalystSummary,
+    TipranksNamespace,
+    TipRanksPointInTimeRating,
+    TipRanksRatingSearchResult,
+    TipRanksRecommendationCounts,
+)
 
 
 def check_statements_contract(client: FmpClient) -> None:
@@ -369,6 +377,31 @@ def check_analyst_contract(client: FmpClient) -> None:
     graded_on: datetime.date = grades[0].date
     action: str = grades[0].action
     _ = (estimated_on, revenue_high, eps_avg, target_high, graded_on, action)
+
+
+def check_tipranks_contract(client: FmpClient) -> None:
+    """Type-check the flat tipranks namespace, its keyword-only filters and flag, and the nested count rows."""
+    tipranks: TipranksNamespace = client.tipranks
+    ratings: list[TipRanksRatingSearchResult] = tipranks.ratings_search(
+        expert_uid="expert", symbol="RR.L", from_=datetime.date(2025, 6, 10), to="2026-06-10", limit=5000, page=0
+    )
+    recommended_on: datetime.date = ratings[0].recommendation_date
+    currency: str = ratings[0].price_target_currency
+    coverage: list[TipRanksPointInTimeRating] = client.tipranks.point_in_time_ratings_by_analyst(
+        analyst_name="Keegan Cox", date=datetime.date(2026, 6, 10), nonadjusted=False
+    )
+    beat_target: bool | None = coverage[0].beat_target
+    snapshot: list[TipRanksPointInTimeRating] = client.tipranks.point_in_time_ratings_by_symbol(
+        "AAPL", date="2026-06-10"
+    )
+    last_recommended_on: datetime.date = snapshot[0].last_recommendation_date
+    summaries: list[TipRanksAnalystSummary] = client.tipranks.analyst_summary("expert", from_="2025-06-10")
+    summarised_from: datetime.date = summaries[0].from_
+    counts: TipRanksRecommendationCounts = summaries[0].recommendations
+    buys: int = counts.buy
+    profiles: list[TipRanksAnalystProfile] = client.tipranks.analysts(page=0, limit=1000, firm_name="Roth MKM")
+    stars: int = profiles[0].num_of_stars
+    _ = (recommended_on, currency, beat_target, last_recommended_on, summarised_from, buys, stars)
 
 
 def check_public_contract(client: FmpClient) -> None:
