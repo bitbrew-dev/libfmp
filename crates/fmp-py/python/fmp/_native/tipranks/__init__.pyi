@@ -13,6 +13,7 @@ __all__ = [
     "TipRanksRatingSearchResult",
     "TipRanksRecommendationCounts",
     "TipRanksSymbolSummary",
+    "TipranksNamespace",
 ]
 
 
@@ -351,3 +352,97 @@ class TipRanksSymbolSummary:
         worst_return: builtins.str,
     ) -> TipRanksSymbolSummary: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class TipranksNamespace:
+    r"""
+    Tipranks endpoints for a single client, exposed as `client.tipranks`.
+    """
+
+    def ratings_search(
+        self,
+        *,
+        expert_uid: typing.Optional[builtins.str] = None,
+        symbol: typing.Optional[builtins.str] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+        limit: typing.Optional[builtins.int] = None,
+        page: typing.Optional[builtins.int] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[TipRanksRatingSearchResult]:
+        r"""
+        Retrieves individual analyst ratings from the TipRanks add-on.
+        """
+
+    def point_in_time_ratings_by_symbol(
+        self,
+        symbol: builtins.str,
+        *,
+        date: typing.Optional[datetime.date | builtins.str] = None,
+        limit: typing.Optional[builtins.int] = None,
+        page: typing.Optional[builtins.int] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[TipRanksPointInTimeRating]:
+        r"""
+        Retrieves a ticker's analyst ratings as of an optional snapshot date.
+        """
+
+    def point_in_time_ratings_by_analyst(
+        self,
+        *,
+        expert_uid: typing.Optional[builtins.str] = None,
+        analyst_name: typing.Optional[builtins.str] = None,
+        date: typing.Optional[datetime.date | builtins.str] = None,
+        limit: typing.Optional[builtins.int] = None,
+        page: typing.Optional[builtins.int] = None,
+        nonadjusted: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[TipRanksPointInTimeRating]:
+        r"""
+        Retrieves an analyst's active coverage as of an optional snapshot date.
+        """
+
+    def symbol_summary(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[TipRanksSymbolSummary]:
+        r"""
+        Retrieves a ticker's aggregate TipRanks ratings summary.
+        """
+
+    def analyst_summary(
+        self,
+        expert_uid: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[TipRanksAnalystSummary]:
+        r"""
+        Retrieves an analyst's aggregate TipRanks ratings summary.
+        """
+
+    def firm_summary(
+        self,
+        firm_name: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[TipRanksFirmSummary]:
+        r"""
+        Retrieves a firm's aggregate TipRanks ratings summary.
+        """
+
+    def analysts(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        firm_name: typing.Optional[builtins.str] = None,
+        analyst_name: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[TipRanksAnalystProfile]:
+        r"""
+        Retrieves analyst profiles from the TipRanks directory.
+        """

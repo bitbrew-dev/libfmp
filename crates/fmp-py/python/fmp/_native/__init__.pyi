@@ -267,6 +267,12 @@ class FmpClient:
         The `technical_indicators` endpoints, reached as `client.technical_indicators`.
         """
 
+    @property
+    def tipranks(self) -> tipranks.TipranksNamespace:
+        r"""
+        The `tipranks` endpoints, reached as `client.tipranks`.
+        """
+
     def __new__(
         cls,
         *,
