@@ -350,6 +350,7 @@ fn register_search(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::search::IsinSearchResult>()?;
     module.add_class::<crate::models::search::NameSearchResult>()?;
     module.add_class::<crate::models::search::SymbolSearchResult>()?;
+    module.add_class::<crate::namespaces::search::SearchNamespace>()?;
     add_submodule(parent, "fmp._native.search", &module)
 }
 

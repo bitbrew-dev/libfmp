@@ -250,6 +250,12 @@ class FmpClient:
         """
 
     @property
+    def search(self) -> search.SearchNamespace:
+        r"""
+        The `search` endpoints, reached as `client.search`.
+        """
+
+    @property
     def sec_filings(self) -> sec_filings.SecFilingsNamespace:
         r"""
         The `sec_filings` endpoints, reached as `client.sec_filings`.

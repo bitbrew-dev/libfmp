@@ -21,6 +21,7 @@ use crate::namespaces::market::MarketNamespace;
 use crate::namespaces::news::NewsNamespace;
 use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::screener::ScreenerNamespace;
+use crate::namespaces::search::SearchNamespace;
 use crate::namespaces::sec_filings::SecFilingsNamespace;
 use crate::namespaces::statements::StatementsNamespace;
 use crate::namespaces::technical_indicators::TechnicalIndicatorsNamespace;
@@ -129,6 +130,12 @@ impl FmpClient {
     #[getter]
     fn screener(&self) -> ScreenerNamespace {
         ScreenerNamespace::new(self.builder.clone())
+    }
+
+    /// The `search` endpoints, reached as `client.search`.
+    #[getter]
+    fn search(&self) -> SearchNamespace {
+        SearchNamespace::new(self.builder.clone())
     }
 
     /// The `sec_filings` endpoints, reached as `client.sec_filings`.

@@ -10,6 +10,7 @@ __all__ = [
     "ExchangeVariant",
     "IsinSearchResult",
     "NameSearchResult",
+    "SearchNamespace",
     "SymbolSearchResult",
 ]
 
@@ -217,6 +218,57 @@ class NameSearchResult:
         exchange: builtins.str,
     ) -> NameSearchResult: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class SearchNamespace:
+    r"""
+    Search endpoints for a single client, exposed as `client.search`.
+    """
+
+    def symbol(
+        self,
+        query: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        exchange: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[SymbolSearchResult]:
+        r"""
+        Searches worldwide companies and instruments by symbol.
+        """
+
+    def name(
+        self,
+        query: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        exchange: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[NameSearchResult]:
+        r"""
+        Searches worldwide companies and instruments by name.
+        """
+
+    def cik(
+        self, cik: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[CikSearchResult]:
+        r"""
+        Searches US companies by Central Index Key.
+        """
+
+    def cusip(self, cusip: builtins.str) -> builtins.list[CusipSearchResult]:
+        r"""
+        Searches worldwide securities by CUSIP without constraining its length.
+        """
+
+    def isin(self, isin: builtins.str) -> builtins.list[IsinSearchResult]:
+        r"""
+        Searches worldwide securities by ISIN without constraining its length.
+        """
+
+    def exchange_variants(self, symbol: builtins.str) -> builtins.list[ExchangeVariant]:
+        r"""
+        Finds worldwide exchange listings for a provider ticker.
+        """
 
 
 @typing.final
