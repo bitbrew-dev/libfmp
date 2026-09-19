@@ -30,6 +30,13 @@ from fmp.congressional import (
 )
 from fmp.crypto import CryptocurrencyListing, CryptoNamespace
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
+from fmp.economics import (
+    EconomicCalendarEvent,
+    EconomicIndicatorObservation,
+    EconomicsNamespace,
+    MarketRiskPremium,
+    TreasuryRate,
+)
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.forex import ForexNamespace, ForexPair
 from fmp.fundraising import (
@@ -481,6 +488,25 @@ def check_fundraising_contract(client: FmpClient) -> None:
     issuer_rows: list[RegulationDOffering] = client.fundraising.regulation_d_offerings_by_cik("0001547416")
     sold: int = issuer_rows[0].total_amount_sold
     _ = (deadline, accepted, price, other_description, campaign_name, matched_at, first_sale, recent, sold)
+
+
+def check_economics_contract(client: FmpClient) -> None:
+    """Type-check the flat economics namespace, its required indicator name, the keyword-only filters, and the rows."""
+    economics: EconomicsNamespace = client.economics
+    rates: list[TreasuryRate] = economics.treasury_rates(from_=datetime.date(2026, 1, 27), to="2026-04-27")
+    observed_on: datetime.date = rates[0].date
+    year_30: float = rates[0].year_30
+    observations: list[EconomicIndicatorObservation] = client.economics.indicators("GDP", from_="2025-04-27")
+    name: str = observations[0].name
+    value: float = observations[0].value
+    events: list[EconomicCalendarEvent] = client.economics.calendar(
+        country="US", from_="2026-01-27", to=datetime.date(2026, 4, 27)
+    )
+    event_time: datetime.datetime = events[0].date
+    impact: str = events[0].impact
+    premiums: list[MarketRiskPremium] = client.economics.market_risk_premium()
+    premium: float = premiums[0].country_risk_premium
+    _ = (observed_on, year_30, name, value, event_time, impact, premium)
 
 
 def check_public_contract(client: FmpClient) -> None:
