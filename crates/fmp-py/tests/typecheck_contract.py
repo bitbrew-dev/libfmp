@@ -32,6 +32,13 @@ from fmp.crypto import CryptocurrencyListing, CryptoNamespace
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.forex import ForexNamespace, ForexPair
+from fmp.fundraising import (
+    CrowdfundingOffering,
+    CrowdfundingOfferingSearchResult,
+    FundraisingNamespace,
+    RegulationDOffering,
+    RegulationDOfferingSearchResult,
+)
 from fmp.funds import EtfFundHolding, EtfFundInfo, FundDisclosure, FundsNamespace
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
 from fmp.insider_trading import (
@@ -451,6 +458,29 @@ def check_insider_trading_contract(client: FmpClient) -> None:
     accepted_on: datetime.date = filings[0].accepted_date
     percent: str = filings[0].percent_of_class
     _ = (filed_on, price, traded_on, code, ratio, accepted_on, percent)
+
+
+def check_fundraising_contract(client: FmpClient) -> None:
+    """Type-check the flat fundraising namespace, its keyword-only filters, and the nullable date rows."""
+    fundraising: FundraisingNamespace = client.fundraising
+    crowdfunding: list[CrowdfundingOffering] = fundraising.latest_crowdfunding_offerings(page=0, limit=100)
+    deadline: datetime.date = crowdfunding[0].offering_deadline_date
+    accepted: datetime.datetime = crowdfunding[0].accepted_date
+    price: Any = crowdfunding[0].offering_price
+    by_cik: list[CrowdfundingOffering] = client.fundraising.crowdfunding_offerings_by_cik("0001916078")
+    other_description: str | None = by_cik[0].security_offered_other_description
+    campaigns: list[CrowdfundingOfferingSearchResult] = client.fundraising.search_crowdfunding_offerings("enotap")
+    campaign_name: str = campaigns[0].name
+    matches: list[RegulationDOfferingSearchResult] = client.fundraising.search_regulation_d_offerings("NJOY")
+    matched_at: datetime.datetime = matches[0].date
+    offerings: list[RegulationDOffering] = client.fundraising.latest_regulation_d_offerings(
+        page=0, limit=10, cik="0002013736"
+    )
+    first_sale: datetime.date | None = offerings[0].date_of_first_sale
+    recent: bool | None = offerings[0].incorporated_within_five_years
+    issuer_rows: list[RegulationDOffering] = client.fundraising.regulation_d_offerings_by_cik("0001547416")
+    sold: int = issuer_rows[0].total_amount_sold
+    _ = (deadline, accepted, price, other_description, campaign_name, matched_at, first_sale, recent, sold)
 
 
 def check_public_contract(client: FmpClient) -> None:
