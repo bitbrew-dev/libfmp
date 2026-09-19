@@ -1,0 +1,73 @@
+# Endpoint registry for the `insider_trading` domain, reached from Python as
+# `client.insider_trading`. Validate with
+# `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "latest_trades"
+method = "latest_insider_trades"
+query = "LatestInsiderTradesQuery"
+response = "insider_trading::InsiderTrade"
+doc = "Retrieves the latest US insider trades with optional date and pagination filters."
+args = [
+    { name = "date", kind = "date", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "date" }, { arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "search_trades"
+method = "search_insider_trades"
+query = "InsiderTradesSearchQuery"
+response = "insider_trading::InsiderTrade"
+doc = "Searches US insider trades using independently optional filters."
+args = [
+    { name = "symbol", kind = "ticker", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "reporting_cik", kind = "cik", required = false },
+    { name = "company_cik", kind = "cik", required = false },
+    { name = "transaction_type", kind = "transaction_type_code", required = false },
+]
+setters = [
+    { arg = "symbol" },
+    { arg = "page" },
+    { arg = "limit" },
+    { arg = "reporting_cik" },
+    { arg = "company_cik" },
+    { arg = "transaction_type" },
+]
+
+[[endpoint]]
+name = "search_reporting_names"
+method = "search_insider_reporting_names"
+query = "InsiderReportingNameSearchQuery"
+response = "insider_trading::InsiderReportingName"
+doc = "Searches US insider-reporting identities by name."
+args = [{ name = "name", kind = "search_term" }]
+
+[[endpoint]]
+name = "transaction_types"
+method = "insider_transaction_types"
+response = "insider_trading::InsiderTransactionType"
+doc = "Retrieves the US insider transaction-type taxonomy."
+
+[[endpoint]]
+name = "trade_statistics"
+method = "insider_trade_statistics"
+query = "InsiderTradeStatisticsQuery"
+response = "insider_trading::InsiderTradeStatistics"
+doc = "Retrieves quarterly US insider-trade statistics for one ticker."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "beneficial_ownership_acquisitions"
+method = "beneficial_ownership_acquisitions"
+query = "BeneficialOwnershipAcquisitionsQuery"
+response = "insider_trading::BeneficialOwnershipAcquisition"
+doc = "Retrieves US beneficial-ownership acquisition filings for one ticker."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
