@@ -1,0 +1,46 @@
+# Endpoint registry for the `economics` domain, reached from Python as
+# `client.economics`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "treasury_rates"
+method = "treasury_rates"
+query = "TreasuryRatesQuery"
+response = "economics::TreasuryRate"
+doc = "Retrieves Treasury-rate observations."
+args = [
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "indicators"
+method = "economic_indicators"
+query = "EconomicIndicatorsQuery"
+response = "economics::EconomicIndicatorObservation"
+doc = "Retrieves observations for one economic indicator."
+args = [
+    { name = "name", kind = "economic_indicator" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "calendar"
+method = "economic_calendar"
+query = "EconomicCalendarQuery"
+response = "economics::EconomicCalendarEvent"
+doc = "Retrieves economic-calendar events."
+args = [
+    { name = "country", kind = "country_code", required = false },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "country" }, { arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "market_risk_premium"
+method = "market_risk_premium"
+response = "economics::MarketRiskPremium"
+doc = "Retrieves the provider's queryless country risk-premium rows."
