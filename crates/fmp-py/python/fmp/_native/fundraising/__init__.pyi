@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "CrowdfundingOffering",
     "CrowdfundingOfferingSearchResult",
+    "FundraisingNamespace",
     "RegulationDOffering",
     "RegulationDOfferingSearchResult",
 ]
@@ -176,6 +177,62 @@ class CrowdfundingOfferingSearchResult:
         cls, cik: builtins.str, name: builtins.str, date: typing.Optional[builtins.str]
     ) -> CrowdfundingOfferingSearchResult: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class FundraisingNamespace:
+    r"""
+    Fundraising endpoints for a single client, exposed as `client.fundraising`.
+    """
+
+    def latest_crowdfunding_offerings(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CrowdfundingOffering]:
+        r"""
+        Retrieves the latest US crowdfunding offerings.
+        """
+
+    def crowdfunding_offerings_by_cik(
+        self, cik: builtins.str
+    ) -> builtins.list[CrowdfundingOffering]:
+        r"""
+        Retrieves US crowdfunding offerings for one issuer CIK.
+        """
+
+    def search_crowdfunding_offerings(
+        self, name: builtins.str
+    ) -> builtins.list[CrowdfundingOfferingSearchResult]:
+        r"""
+        Searches US crowdfunding offerings by company, campaign, or platform text.
+        """
+
+    def search_regulation_d_offerings(
+        self, name: builtins.str
+    ) -> builtins.list[RegulationDOfferingSearchResult]:
+        r"""
+        Searches US Regulation D offerings by company name or stock symbol.
+        """
+
+    def latest_regulation_d_offerings(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        cik: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[RegulationDOffering]:
+        r"""
+        Retrieves the latest US Regulation D offerings.
+        """
+
+    def regulation_d_offerings_by_cik(
+        self, cik: builtins.str
+    ) -> builtins.list[RegulationDOffering]:
+        r"""
+        Retrieves US Regulation D offerings for one issuer CIK.
+        """
 
 
 @typing.final
