@@ -206,6 +206,12 @@ class FmpClient:
         """
 
     @property
+    def fundraising(self) -> fundraising.FundraisingNamespace:
+        r"""
+        The `fundraising` endpoints, reached as `client.fundraising`.
+        """
+
+    @property
     def funds(self) -> funds.FundsNamespace:
         r"""
         The `funds` endpoints, reached as `client.funds`.

@@ -245,6 +245,7 @@ fn register_fundraising(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::fundraising::CrowdfundingOfferingSearchResult>()?;
     module.add_class::<crate::models::fundraising::RegulationDOffering>()?;
     module.add_class::<crate::models::fundraising::RegulationDOfferingSearchResult>()?;
+    module.add_class::<crate::namespaces::fundraising::FundraisingNamespace>()?;
     add_submodule(parent, "fmp._native.fundraising", &module)
 }
 
