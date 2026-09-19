@@ -34,6 +34,13 @@ from fmp.errors import FmpStatusError, FmpValidationError
 from fmp.forex import ForexNamespace, ForexPair
 from fmp.funds import EtfFundHolding, EtfFundInfo, FundDisclosure, FundsNamespace
 from fmp.indexes import IndexConstituent, IndexesNamespace, IndexListing
+from fmp.insider_trading import (
+    BeneficialOwnershipAcquisition,
+    InsiderTrade,
+    InsiderTradeStatistics,
+    InsiderTradingNamespace,
+    InsiderTransactionType,
+)
 from fmp.institutional_ownership import (
     Form13fFilingDate,
     HolderPerformanceSummary,
@@ -417,6 +424,33 @@ def check_search_contract(client: FmpClient) -> None:
     market_cap: int = variants[0].market_cap
     is_etf: bool = variants[0].is_etf
     _ = (exchange_full_name, cik, ipo_date, market_cap, is_etf)
+
+
+def check_insider_trading_contract(client: FmpClient) -> None:
+    """Type-check the flat insider-trading namespace, its keyword-only filters, and the date rows."""
+    insider_trading: InsiderTradingNamespace = client.insider_trading
+    trades: list[InsiderTrade] = insider_trading.search_trades(
+        symbol="AAPL",
+        page=0,
+        limit=100,
+        reporting_cik="0001496686",
+        company_cik="0000320193",
+        transaction_type="S-Sale",
+    )
+    filed_on: datetime.date = trades[0].filing_date
+    price: float = trades[0].price
+    latest: list[InsiderTrade] = client.insider_trading.latest_trades(date=datetime.date(2026, 1, 27), page=0)
+    traded_on: datetime.date = latest[0].transaction_date
+    types: list[InsiderTransactionType] = client.insider_trading.transaction_types()
+    code: str = types[0].transaction_type
+    statistics: list[InsiderTradeStatistics] = client.insider_trading.trade_statistics("AAPL")
+    ratio: float = statistics[0].acquired_disposed_ratio
+    filings: list[BeneficialOwnershipAcquisition] = client.insider_trading.beneficial_ownership_acquisitions(
+        "AAPL", limit=10
+    )
+    accepted_on: datetime.date = filings[0].accepted_date
+    percent: str = filings[0].percent_of_class
+    _ = (filed_on, price, traded_on, code, ratio, accepted_on, percent)
 
 
 def check_public_contract(client: FmpClient) -> None:
