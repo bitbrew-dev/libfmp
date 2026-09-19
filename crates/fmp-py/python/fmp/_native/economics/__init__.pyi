@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "EconomicCalendarEvent",
     "EconomicIndicatorObservation",
+    "EconomicsNamespace",
     "MarketRiskPremium",
     "TreasuryRate",
 ]
@@ -65,6 +66,50 @@ class EconomicIndicatorObservation:
         cls, name: builtins.str, date: datetime.date, value: builtins.float
     ) -> EconomicIndicatorObservation: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class EconomicsNamespace:
+    r"""
+    Economics endpoints for a single client, exposed as `client.economics`.
+    """
+
+    def treasury_rates(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[TreasuryRate]:
+        r"""
+        Retrieves Treasury-rate observations.
+        """
+
+    def indicators(
+        self,
+        name: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[EconomicIndicatorObservation]:
+        r"""
+        Retrieves observations for one economic indicator.
+        """
+
+    def calendar(
+        self,
+        *,
+        country: typing.Optional[builtins.str] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[EconomicCalendarEvent]:
+        r"""
+        Retrieves economic-calendar events.
+        """
+
+    def market_risk_premium(self) -> builtins.list[MarketRiskPremium]:
+        r"""
+        Retrieves the provider's queryless country risk-premium rows.
+        """
 
 
 @typing.final
