@@ -9,6 +9,7 @@ __all__ = [
     "InsiderReportingName",
     "InsiderTrade",
     "InsiderTradeStatistics",
+    "InsiderTradingNamespace",
     "InsiderTransactionType",
 ]
 
@@ -179,6 +180,64 @@ class InsiderTradeStatistics:
         total_sales: builtins.int,
     ) -> InsiderTradeStatistics: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class InsiderTradingNamespace:
+    r"""
+    Insider_trading endpoints for a single client, exposed as `client.insider_trading`.
+    """
+
+    def latest_trades(
+        self,
+        *,
+        date: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[InsiderTrade]:
+        r"""
+        Retrieves the latest US insider trades with optional date and pagination filters.
+        """
+
+    def search_trades(
+        self,
+        *,
+        symbol: typing.Optional[builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        reporting_cik: typing.Optional[builtins.str] = None,
+        company_cik: typing.Optional[builtins.str] = None,
+        transaction_type: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[InsiderTrade]:
+        r"""
+        Searches US insider trades using independently optional filters.
+        """
+
+    def search_reporting_names(
+        self, name: builtins.str
+    ) -> builtins.list[InsiderReportingName]:
+        r"""
+        Searches US insider-reporting identities by name.
+        """
+
+    def transaction_types(self) -> builtins.list[InsiderTransactionType]:
+        r"""
+        Retrieves the US insider transaction-type taxonomy.
+        """
+
+    def trade_statistics(
+        self, symbol: builtins.str
+    ) -> builtins.list[InsiderTradeStatistics]:
+        r"""
+        Retrieves quarterly US insider-trade statistics for one ticker.
+        """
+
+    def beneficial_ownership_acquisitions(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[BeneficialOwnershipAcquisition]:
+        r"""
+        Retrieves US beneficial-ownership acquisition filings for one ticker.
+        """
 
 
 @typing.final

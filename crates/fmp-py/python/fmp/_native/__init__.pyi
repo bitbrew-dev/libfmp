@@ -218,6 +218,12 @@ class FmpClient:
         """
 
     @property
+    def insider_trading(self) -> insider_trading.InsiderTradingNamespace:
+        r"""
+        The `insider_trading` endpoints, reached as `client.insider_trading`.
+        """
+
+    @property
     def institutional_ownership(
         self,
     ) -> institutional_ownership.InstitutionalOwnershipNamespace:

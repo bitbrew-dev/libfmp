@@ -12,6 +12,7 @@ pub(crate) mod directory;
 pub(crate) mod forex;
 pub(crate) mod funds;
 pub(crate) mod indexes;
+pub(crate) mod insider_trading;
 pub(crate) mod institutional_ownership;
 pub(crate) mod market;
 pub(crate) mod news;

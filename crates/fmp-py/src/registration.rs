@@ -279,6 +279,7 @@ fn register_insider_trading(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::insider_trading::InsiderTrade>()?;
     module.add_class::<crate::models::insider_trading::InsiderTradeStatistics>()?;
     module.add_class::<crate::models::insider_trading::InsiderTransactionType>()?;
+    module.add_class::<crate::namespaces::insider_trading::InsiderTradingNamespace>()?;
     add_submodule(parent, "fmp._native.insider_trading", &module)
 }
 

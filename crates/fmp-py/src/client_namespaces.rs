@@ -16,6 +16,7 @@ use crate::namespaces::directory::DirectoryNamespace;
 use crate::namespaces::forex::ForexNamespace;
 use crate::namespaces::funds::FundsNamespace;
 use crate::namespaces::indexes::IndexesNamespace;
+use crate::namespaces::insider_trading::InsiderTradingNamespace;
 use crate::namespaces::institutional_ownership::InstitutionalOwnershipNamespace;
 use crate::namespaces::market::MarketNamespace;
 use crate::namespaces::news::NewsNamespace;
@@ -100,6 +101,12 @@ impl FmpClient {
     #[getter]
     fn indexes(&self) -> IndexesNamespace {
         IndexesNamespace::new(self.builder.clone())
+    }
+
+    /// The `insider_trading` endpoints, reached as `client.insider_trading`.
+    #[getter]
+    fn insider_trading(&self) -> InsiderTradingNamespace {
+        InsiderTradingNamespace::new(self.builder.clone())
     }
 
     /// The `institutional_ownership` endpoints, reached as `client.institutional_ownership`.
