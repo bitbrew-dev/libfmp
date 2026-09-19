@@ -1,0 +1,118 @@
+# Endpoint registry for the `tipranks` domain, reached from Python as
+# `client.tipranks`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "ratings_search"
+method = "tipranks_ratings_search"
+query = "TipRanksSearchQuery"
+response = "tipranks::TipRanksRatingSearchResult"
+doc = "Retrieves individual analyst ratings from the TipRanks add-on."
+args = [
+    { name = "expert_uid", kind = "tipranks_expert_uid", required = false },
+    { name = "symbol", kind = "ticker", required = false },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+]
+setters = [
+    { arg = "expert_uid" },
+    { arg = "symbol" },
+    { arg = "from" },
+    { arg = "to" },
+    { arg = "limit" },
+    { arg = "page" },
+    { arg = "nonadjusted" },
+]
+
+[[endpoint]]
+name = "point_in_time_ratings_by_symbol"
+method = "tipranks_point_in_time_ratings_by_symbol"
+query = "PointInTimeRatingsBySymbolQuery"
+response = "tipranks::TipRanksPointInTimeRating"
+doc = "Retrieves a ticker's analyst ratings as of an optional snapshot date."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "date", kind = "date", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+]
+setters = [{ arg = "date" }, { arg = "limit" }, { arg = "page" }, { arg = "nonadjusted" }]
+
+[[endpoint]]
+name = "point_in_time_ratings_by_analyst"
+method = "tipranks_point_in_time_ratings_by_analyst"
+query = "PointInTimeRatingsByAnalystQuery"
+response = "tipranks::TipRanksPointInTimeRating"
+doc = "Retrieves an analyst's active coverage as of an optional snapshot date."
+args = [
+    { name = "expert_uid", kind = "tipranks_expert_uid", required = false },
+    { name = "analyst_name", kind = "search_term", required = false },
+    { name = "date", kind = "date", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "page", kind = "page", required = false },
+    { name = "nonadjusted", kind = "boolean", required = false },
+]
+setters = [
+    { arg = "expert_uid" },
+    { arg = "analyst_name" },
+    { arg = "date" },
+    { arg = "limit" },
+    { arg = "page" },
+    { arg = "nonadjusted" },
+]
+
+[[endpoint]]
+name = "symbol_summary"
+method = "tipranks_symbol_summary"
+query = "TipRanksSymbolSummaryQuery"
+response = "tipranks::TipRanksSymbolSummary"
+doc = "Retrieves a ticker's aggregate TipRanks ratings summary."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "analyst_summary"
+method = "tipranks_analyst_summary"
+query = "TipRanksAnalystSummaryQuery"
+response = "tipranks::TipRanksAnalystSummary"
+doc = "Retrieves an analyst's aggregate TipRanks ratings summary."
+args = [
+    { name = "expert_uid", kind = "tipranks_expert_uid" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "firm_summary"
+method = "tipranks_firm_summary"
+query = "TipRanksFirmSummaryQuery"
+response = "tipranks::TipRanksFirmSummary"
+doc = "Retrieves a firm's aggregate TipRanks ratings summary."
+args = [
+    { name = "firm_name", kind = "search_term" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "analysts"
+method = "tipranks_analysts"
+query = "TipRanksAnalystsQuery"
+response = "tipranks::TipRanksAnalystProfile"
+doc = "Retrieves analyst profiles from the TipRanks directory."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "firm_name", kind = "search_term", required = false },
+    { name = "analyst_name", kind = "search_term", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }, { arg = "firm_name" }, { arg = "analyst_name" }]
