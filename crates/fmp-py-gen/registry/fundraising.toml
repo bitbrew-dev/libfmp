@@ -1,0 +1,59 @@
+# Endpoint registry for the `fundraising` domain, reached from Python as
+# `client.fundraising`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "latest_crowdfunding_offerings"
+method = "latest_crowdfunding_offerings"
+query = "LatestCrowdfundingOfferingsQuery"
+response = "fundraising::CrowdfundingOffering"
+doc = "Retrieves the latest US crowdfunding offerings."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }]
+
+[[endpoint]]
+name = "crowdfunding_offerings_by_cik"
+method = "crowdfunding_offerings_by_cik"
+query = "OfferingByCikQuery"
+response = "fundraising::CrowdfundingOffering"
+doc = "Retrieves US crowdfunding offerings for one issuer CIK."
+args = [{ name = "cik", kind = "cik" }]
+
+[[endpoint]]
+name = "search_crowdfunding_offerings"
+method = "search_crowdfunding_offerings"
+query = "OfferingSearchQuery"
+response = "fundraising::CrowdfundingOfferingSearchResult"
+doc = "Searches US crowdfunding offerings by company, campaign, or platform text."
+args = [{ name = "name", kind = "search_term" }]
+
+[[endpoint]]
+name = "search_regulation_d_offerings"
+method = "search_regulation_d_offerings"
+query = "OfferingSearchQuery"
+response = "fundraising::RegulationDOfferingSearchResult"
+doc = "Searches US Regulation D offerings by company name or stock symbol."
+args = [{ name = "name", kind = "search_term" }]
+
+[[endpoint]]
+name = "latest_regulation_d_offerings"
+method = "latest_regulation_d_offerings"
+query = "LatestRegulationDOfferingsQuery"
+response = "fundraising::RegulationDOffering"
+doc = "Retrieves the latest US Regulation D offerings."
+args = [
+    { name = "page", kind = "page", required = false },
+    { name = "limit", kind = "limit", required = false },
+    { name = "cik", kind = "cik", required = false },
+]
+setters = [{ arg = "page" }, { arg = "limit" }, { arg = "cik" }]
+
+[[endpoint]]
+name = "regulation_d_offerings_by_cik"
+method = "regulation_d_offerings_by_cik"
+query = "OfferingByCikQuery"
+response = "fundraising::RegulationDOffering"
+doc = "Retrieves US Regulation D offerings for one issuer CIK."
+args = [{ name = "cik", kind = "cik" }]
