@@ -6,11 +6,12 @@
 //! entries in the [`Report`] instead of failing, so the reader can tell a
 //! proven entry from an assumed one.
 
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::Path;
 
 use super::scan::{Origin, QueryApi, Returns, Surface, module_path};
-use super::{Arg, Endpoint, ModelPath, Registry, ValidationError};
+use super::{CtorArg, Endpoint, ModelPath, Registry, Setter, ValidationError};
 
 /// One entry that passed every check.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -23,6 +24,9 @@ pub struct Verified {
     /// `libfmp::endpoints` (`["statements"]` for `IncomeStatementQuery`);
     /// `None` for query-less methods and for trusted entries.
     pub query_module: Option<Vec<String>>,
+    /// Where each verified nested builder type is defined, keyed by type
+    /// name, as segments under `libfmp::endpoints`.
+    pub nested_modules: BTreeMap<String, Vec<String>>,
 }
 
 /// One entry whose query constructor or setters could not be checked.
@@ -141,12 +145,14 @@ impl Checker<'_> {
         self.check_query_type(method.query.as_deref());
         self.check_returns(&method.returns);
         let (query_origin, query_module) = self.check_query_api().unzip();
+        let nested_modules = self.check_nested();
         if self.errors.len() == before {
             self.report.verified.push(Verified {
                 entry: self.entry.to_owned(),
                 method: method_name.clone(),
                 query_origin,
                 query_module,
+                nested_modules,
             });
         }
     }
@@ -270,13 +276,43 @@ impl Checker<'_> {
             ));
             return None;
         };
+        let endpoint = self.endpoint;
         self.check_ctor(query, &api);
-        self.check_setters(query, &api);
+        self.check_setters(query, &api, &endpoint.setters);
         Some((api.origin, module_path(self.endpoints_root, &api.file)))
     }
 
+    /// Checks every nested builder against its type under endpoints/: a
+    /// zero-parameter `new` and one `with_*` per flattened setter. Returns
+    /// the module of each builder that was found.
+    fn check_nested(&mut self) -> BTreeMap<String, Vec<String>> {
+        let endpoint = self.endpoint;
+        let mut modules = BTreeMap::new();
+        for builder in &endpoint.nested {
+            let type_name = builder.type_name.as_str();
+            let Some(api) = self.surface.queries.get(type_name).cloned() else {
+                self.trust(format!(
+                    "nested builder `{type_name}` is not defined under endpoints/; setters unverified"
+                ));
+                continue;
+            };
+            if api.ctor.as_deref().is_none_or(|params| !params.is_empty()) {
+                self.fail(format!(
+                    "nested builder `{type_name}` needs a zero-parameter `pub fn new`"
+                ));
+            }
+            self.check_setters(type_name, &api, &builder.setters);
+            modules.insert(
+                builder.type_name.clone(),
+                module_path(self.endpoints_root, &api.file),
+            );
+        }
+        modules
+    }
+
     fn check_ctor(&mut self, query: &str, api: &QueryApi) {
-        let declared: Vec<Arg> = self.endpoint.ctor_args().cloned().collect();
+        let endpoint = self.endpoint;
+        let declared = endpoint.ctor_args();
         let Some(params) = &api.ctor else {
             if declared.is_empty() {
                 self.trust(format!(
@@ -299,22 +335,31 @@ impl Checker<'_> {
             ));
             return;
         }
-        for (arg, param) in declared.iter().zip(params) {
-            if arg.kind.libfmp_type() != param.base_type {
-                self.fail(format!(
-                    "ctor arg `{}` has kind `{}` (a `{}`) but `{query}::new` parameter `{}` is `{}`",
-                    arg.name,
-                    arg.kind,
-                    arg.kind.libfmp_type(),
-                    param.name,
-                    param.base_type
-                ));
+        for (slot, param) in declared.iter().zip(params) {
+            if slot.libfmp_type() == param.base_type {
+                continue;
             }
+            let declared_as = match slot {
+                CtorArg::Plain(arg) => {
+                    format!("has kind `{}` (a `{}`)", arg.kind, arg.kind.libfmp_type())
+                }
+                CtorArg::Nested(builder) => {
+                    format!("is the nested builder `{}`", builder.type_name)
+                }
+            };
+            self.fail(format!(
+                "ctor arg `{}` {declared_as} but `{query}::new` parameter `{}` is `{}`",
+                slot.name(),
+                param.name,
+                param.base_type
+            ));
         }
     }
 
-    fn check_setters(&mut self, query: &str, api: &QueryApi) {
-        for setter in &self.endpoint.setters {
+    /// Checks `setters` against the `with_*` methods of `query`, the query
+    /// type or a nested builder type.
+    fn check_setters(&mut self, query: &str, api: &QueryApi, setters: &[Setter]) {
+        for setter in setters {
             let Some(arg) = self.endpoint.setter_arg(setter).cloned() else {
                 continue;
             };
