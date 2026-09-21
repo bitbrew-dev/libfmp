@@ -24,6 +24,11 @@ func TestQuoteFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[StockPriceChange](t, "stock_price_change.json")
 	assertFixtureParity[StockPriceChange](t, "stock_price_change_synthetic.json", "futureField")
 	assertFixtureParity[QuoteShort](t, "quote_exchange_short.json")
+	// The closed short-only universes (crates/libfmp/tests/quote_universe_endpoints.rs).
+	for _, name := range []string{"quote_mutual_fund_short.json", "quote_commodity_short.json",
+		"quote_crypto_short.json", "quote_forex_short.json", "quote_index_short.json"} {
+		assertFixtureParity[QuoteShort](t, name)
+	}
 }
 
 // Exact values copied from crates/libfmp/tests/quote_responses.rs for the

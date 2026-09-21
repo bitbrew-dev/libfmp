@@ -16,12 +16,17 @@ var quoteRoutes = map[string]struct {
 	query   string
 	fixture string
 }{
-	"/router/stable/quote":                {"symbol=%5EVIX", "quote.json"},
-	"/router/stable/quote-short":          {"symbol=%5EVIX", "quote_short.json"},
-	"/router/stable/batch-etf-quotes":     {"short=true", "quote_etf_short.json"},
-	"/router/stable/batch-quote-short":    {"symbols=AAPL%2C%5EVIX", "quote_short_multiple.json"},
-	"/router/stable/batch-exchange-quote": {"exchange=NASDAQ&short=true", "quote_exchange_short.json"},
-	"/router/stable/aftermarket-trade":    {"symbol=AAPL", "aftermarket_trade.json"},
+	"/router/stable/quote":                   {"symbol=%5EVIX", "quote.json"},
+	"/router/stable/quote-short":             {"symbol=%5EVIX", "quote_short.json"},
+	"/router/stable/batch-etf-quotes":        {"short=true", "quote_etf_short.json"},
+	"/router/stable/batch-quote-short":       {"symbols=AAPL%2C%5EVIX", "quote_short_multiple.json"},
+	"/router/stable/batch-exchange-quote":    {"exchange=NASDAQ&short=true", "quote_exchange_short.json"},
+	"/router/stable/aftermarket-trade":       {"symbol=AAPL", "aftermarket_trade.json"},
+	"/router/stable/batch-mutualfund-quotes": {"short=true", "quote_mutual_fund_short.json"},
+	"/router/stable/batch-commodity-quotes":  {"short=true", "quote_commodity_short.json"},
+	"/router/stable/batch-crypto-quotes":     {"short=true", "quote_crypto_short.json"},
+	"/router/stable/batch-forex-quotes":      {"short=true", "quote_forex_short.json"},
+	"/router/stable/batch-index-quotes":      {"short=true", "quote_index_short.json"},
 }
 
 func quoteRouter(t *testing.T) http.HandlerFunc {
@@ -81,9 +86,27 @@ func TestQuoteMethodsUseExactPathsQueriesAndHeaderAuthentication(t *testing.T) {
 	if err != nil || len(trades) != 1 || trades[0].TradeSize != 16 {
 		t.Fatalf("AftermarketTrade = %+v, %v", trades, err)
 	}
+	// The closed short-only universes always send short=true and decode the
+	// documented single row (crates/libfmp/tests/quote_universe_endpoints.rs).
+	for _, universe := range []struct {
+		name   string
+		call   func(context.Context) ([]QuoteShort, error)
+		symbol string
+	}{
+		{"MutualFunds", client.Quote.MutualFunds, "SVCT.L"},
+		{"Commodities", client.Quote.Commodities, "DCUSD"},
+		{"Cryptocurrencies", client.Quote.Cryptocurrencies, "00USD"},
+		{"Forex", client.Quote.Forex, "AEDAUD"},
+		{"Indexes", client.Quote.Indexes, "^SPROME10"},
+	} {
+		rows, err := universe.call(ctx)
+		if err != nil || len(rows) != 1 || rows[0].Symbol != universe.symbol {
+			t.Fatalf("%s = %+v, %v", universe.name, rows, err)
+		}
+	}
 
 	requests := rec.all()
-	if len(requests) != 6 {
+	if len(requests) != 11 {
 		t.Fatalf("requests = %d, want exactly one per call", len(requests))
 	}
 	for _, req := range requests {
