@@ -55,4 +55,33 @@
 // use FMP_LIVE_TESTS=1, FMP_API_KEY, FMP_PROXY_BASE_URL, FMP_PROXY_TOKEN,
 // FMP_PROXY_PATH_PREFIX, and FMP_TENANT; the Go module uses the same names
 // once its live tests exist. NewClient itself never reads the environment.
+//
+// # Endpoint surface
+//
+// Endpoint methods are generated from the registry that also drives the
+// Python binding, so the public names follow mechanical rules rather than a
+// hand-curated table. These are the decisions settled by the hand-written
+// quote domain (ADR 0030, phase 0):
+//
+//   - Namespaces: each registry domain is a struct named <Domain>Namespace,
+//     reached as a field of Client (client.Quote). A domain with nested
+//     namespaces nests the structs the same way (client.Statements.Income).
+//   - Method casing: the registry entry name in UpperCamelCase with mechanical
+//     casing and no initialism table: etfs is Etfs, batch_quote_short is
+//     BatchQuoteShort. Predictable generation wins over Go initialism style.
+//   - Queries: every endpoint with arguments takes a value type named after
+//     the Rust query (QuoteQuery) built by New<Query>(required args...), with
+//     one With<Setter>(value) builder method per Rust with_* setter. String
+//     kinds such as tickers are plain strings, validated when the request is
+//     built; a rejected argument returns a *Error of CategoryValidation whose
+//     message is "<argument>: <reason>". Endpoints without a query take only
+//     the context.
+//   - Signatures: func (n *QuoteNamespace) Full(ctx context.Context,
+//     q QuoteQuery) ([]Quote, error). The context comes first and bare-array
+//     endpoints return a slice of the model.
+//   - Models: one <domain>_models.go per domain with camelCase struct tags,
+//     pointer fields for optional members, and an UnmarshalJSONFrom that
+//     decodes through a pointer-field shadow struct and returns a *Error of
+//     CategoryDecode naming the first required member that is missing or
+//     null, matching serde. Unknown members are ignored.
 package fmp
