@@ -327,3 +327,42 @@ async fn unexpected_binary_content_has_bounded_token_safe_diagnostics() {
     assert!(!diagnostic.contains(AUTH_SECRET));
     assert!(!diagnostic.contains(BODY_SECRET));
 }
+
+#[tokio::test]
+async fn provider_status_families_are_structured_redacted_and_never_retried() {
+    const SECRET: &str = "status-family-secret";
+    for status in [401u16, 402, 403, 429, 500, 503] {
+        let body = format!("{{\"Error Message\":\"denied for {SECRET}\"}}");
+        let mut headers = HeaderMap::new();
+        headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+        let executor = Arc::new(FixtureExecutor::new([
+            libfmp::transport::TransportResponse::new(status, headers, body),
+        ]));
+        let client = Client::builder()
+            .base_url("https://proxy.example/router")
+            .path_prefix("stable")
+            .authentication(Authentication::bearer(SECRET))
+            .executor(executor.clone())
+            .build()
+            .unwrap();
+
+        let error = client
+            .execute(&contract_probe_descriptor("AAPL", None))
+            .await
+            .unwrap_err();
+
+        assert_eq!(error.category(), ErrorCategory::Status, "status {status}");
+        assert_eq!(error.status_code(), Some(status));
+        assert_eq!(error.endpoint(), Some("endpoint-contract-test"));
+        assert!(
+            !format!("{error:?} {error}").contains(SECRET),
+            "status {status} leaked the secret"
+        );
+        assert_eq!(
+            error.body().map(|body| body.as_str()),
+            Some("{\"Error Message\":\"denied for [REDACTED]\"}"),
+            "status {status} body"
+        );
+        assert_eq!(executor.requests().len(), 1, "status {status} was retried");
+    }
+}
