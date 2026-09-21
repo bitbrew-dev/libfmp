@@ -1,0 +1,36 @@
+# Endpoint registry for the `market_hours` domain, reached from Python as
+# `client.market_hours`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "exchange_market_hours"
+method = "exchange_market_hours"
+query = "ExchangeMarketHoursQuery"
+response = "market_hours::ExchangeMarketHours"
+doc = "Retrieves trading hours for one exchange."
+args = [
+    { name = "exchange", kind = "exchange_code" },
+    { name = "timestamp", kind = "market_hours_timestamp", required = false },
+]
+setters = [{ arg = "timestamp" }]
+
+[[endpoint]]
+name = "holidays_by_exchange"
+method = "holidays_by_exchange"
+query = "HolidaysByExchangeQuery"
+response = "market_hours::ExchangeHoliday"
+doc = "Retrieves holidays for one exchange."
+args = [
+    { name = "exchange", kind = "exchange_code" },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "all_exchange_market_hours"
+method = "all_exchange_market_hours"
+query = "AllExchangeMarketHoursQuery"
+response = "market_hours::ExchangeMarketHours"
+doc = "Retrieves trading hours for all exchanges."
+args = [{ name = "timestamp", kind = "market_hours_timestamp", required = false }]
+setters = [{ arg = "timestamp" }]
