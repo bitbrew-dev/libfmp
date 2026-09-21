@@ -137,3 +137,37 @@ func TestEnumeratedKindsAcceptOnlyDocumentedWireValues(t *testing.T) {
 		}
 	}
 }
+
+// Wire spellings copied from every_documented_indicator_and_other_reach_the_exact_wire_query
+// in crates/libfmp/tests/economics_rates_indicators_endpoints.rs.
+var documentedEconomicIndicatorWire = []string{
+	"GDP", "realGDP", "nominalPotentialGDP", "realGDPPerCapita", "federalFunds", "CPI",
+	"inflationRate", "inflation", "retailSales", "consumerSentiment", "durableGoods",
+	"unemploymentRate", "totalNonfarmPayroll", "initialClaims", "industrialProductionTotalIndex",
+	"newPrivatelyOwnedHousingUnitsStartedTotalUnits", "totalVehicleSales", "retailMoneyFunds",
+	"smoothedUSRecessionProbabilities", "3MonthOr90DayRatesAndYieldsCertificatesOfDeposit",
+	"commercialBankInterestRateOnCreditCardPlansAllAccounts", "30YearFixedRateMortgageAverage",
+	"15YearFixedRateMortgageAverage", "tradeBalanceGoodsAndServices",
+}
+
+func TestEconomicIndicatorKindIsOpenLikeTheRustEnum(t *testing.T) {
+	t.Parallel()
+	documented := DocumentedEconomicIndicators()
+	if len(documented) != 24 || len(documentedEconomicIndicatorWire) != 24 {
+		t.Fatalf("documented indicators = %d, wire table = %d, want 24", len(documented), len(documentedEconomicIndicatorWire))
+	}
+	for index, indicator := range documented {
+		got, err := economicIndicatorParam("name", indicator)
+		assertParam(t, got, err, "name", documentedEconomicIndicatorWire[index])
+	}
+	got, err := economicIndicatorParam("name", "futureProviderIndicator")
+	assertParam(t, got, err, "name", "futureProviderIndicator")
+	got, err = economicIndicatorParam("name", "open, with comma")
+	assertParam(t, got, err, "name", "open, with comma")
+	for _, value := range []EconomicIndicator{"", "   "} {
+		_, err = economicIndicatorParam("name", value)
+		assertRejected(t, err, "name", ErrEmptyValue)
+	}
+	_, err = economicIndicatorParam("name", "GDP\n")
+	assertRejected(t, err, "name", ErrControlCharacterValue)
+}
