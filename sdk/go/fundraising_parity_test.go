@@ -131,27 +131,6 @@ func TestDocumentedOfferingSearchResultsDecodeExactValues(t *testing.T) {
 	}
 }
 
-// fundraisingMutate returns the first fixture row with one member replaced,
-// or removed when value is nil, wrapped in a bare array.
-func fundraisingMutate(t *testing.T, fixture, member string, value jsontext.Value) []byte {
-	t.Helper()
-	var rows []map[string]jsontext.Value
-	if err := json.Unmarshal(readFixture(t, fixture), &rows); err != nil {
-		t.Fatal(err)
-	}
-	row := rows[0]
-	if value == nil {
-		delete(row, member)
-	} else {
-		row[member] = value
-	}
-	encoded, err := json.Marshal([]map[string]jsontext.Value{row})
-	if err != nil {
-		t.Fatal(err)
-	}
-	return encoded
-}
-
 // Required keys, the three required-present nullable members (a string, a
 // bool, and a raw value), the empty_date sentinel, and the number-kind check
 // are enforced as the Rust decoder enforces them.
@@ -203,7 +182,7 @@ func TestFundraisingRequiredMembersAndCodecsAreEnforcedLikeSerde(t *testing.T) {
 	for _, tc := range rejected {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			err := decode(t, tc.fixture, fundraisingMutate(t, tc.fixture, tc.member, tc.value))
+			err := decode(t, tc.fixture, mutateFixtureMember(t, tc.fixture, tc.member, tc.value))
 			var typed *Error
 			if !errors.As(err, &typed) || typed.Category != CategoryDecode || typed.Message != tc.message {
 				t.Fatalf("error = %v (%T), want CategoryDecode %q", err, err, tc.message)
@@ -225,7 +204,7 @@ func TestFundraisingRequiredMembersAndCodecsAreEnforcedLikeSerde(t *testing.T) {
 	for _, tc := range accepted {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			if err := decode(t, tc.fixture, fundraisingMutate(t, tc.fixture, tc.member, tc.value)); err != nil {
+			if err := decode(t, tc.fixture, mutateFixtureMember(t, tc.fixture, tc.member, tc.value)); err != nil {
 				t.Fatalf("rejected: %v", err)
 			}
 		})
@@ -236,7 +215,7 @@ func TestFundraisingRequiredMembersAndCodecsAreEnforcedLikeSerde(t *testing.T) {
 		}
 	}
 	var wrongFlag []CrowdfundingOffering
-	if err := json.Unmarshal(fundraisingMutate(t, crowdfunding, "overSubscriptionAccepted", jsontext.Value(`true`)), &wrongFlag); err == nil {
+	if err := json.Unmarshal(mutateFixtureMember(t, crowdfunding, "overSubscriptionAccepted", jsontext.Value(`true`)), &wrongFlag); err == nil {
 		t.Fatal("a JSON bool decoded into the Y/N string flag")
 	}
 }

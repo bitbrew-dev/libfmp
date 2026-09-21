@@ -68,27 +68,6 @@ func TestDocumentedExchangeHolidaysDecodeExactValues(t *testing.T) {
 	}
 }
 
-// marketHoursMutate returns the first fixture row with one member replaced,
-// or removed when value is nil, wrapped in a bare array.
-func marketHoursMutate(t *testing.T, fixture, member string, value jsontext.Value) []byte {
-	t.Helper()
-	var rows []map[string]jsontext.Value
-	if err := json.Unmarshal(readFixture(t, fixture), &rows); err != nil {
-		t.Fatal(err)
-	}
-	row := rows[0]
-	if value == nil {
-		delete(row, member)
-	} else {
-		row[member] = value
-	}
-	encoded, err := json.Marshal([]map[string]jsontext.Value{row})
-	if err != nil {
-		t.Fatal(err)
-	}
-	return encoded
-}
-
 // Mirrors adjusted_times_are_required_but_nullable_and_future_dynamic in
 // crates/libfmp/tests/market_hours_responses.rs: removing either adjusted
 // time is rejected, while a future string or object value is kept raw and
@@ -98,7 +77,7 @@ func TestExchangeHolidayAdjustedTimesAreRequiredButNullableAndFutureDynamic(t *t
 	const fixture = "holidays_by_exchange.json"
 	for _, member := range []string{"adjOpenTime", "adjCloseTime"} {
 		var rows []ExchangeHoliday
-		err := json.Unmarshal(marketHoursMutate(t, fixture, member, nil), &rows)
+		err := json.Unmarshal(mutateFixtureMember(t, fixture, member, nil), &rows)
 		var typed *Error
 		want := `required member "` + member + `" of ExchangeHoliday is missing or null`
 		if !errors.As(err, &typed) || typed.Category != CategoryDecode || typed.Message != want {
@@ -169,17 +148,17 @@ func TestMarketHoursRequiredMembersAndArrayRootsAreEnforcedLikeSerde(t *testing.
 	for _, tc := range rejected {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			err := decode(tc.fixture, marketHoursMutate(t, tc.fixture, tc.member, tc.value))
+			err := decode(tc.fixture, mutateFixtureMember(t, tc.fixture, tc.member, tc.value))
 			var typed *Error
 			if !errors.As(err, &typed) || typed.Category != CategoryDecode || typed.Message != tc.message {
 				t.Fatalf("error = %v (%T), want CategoryDecode %q", err, err, tc.message)
 			}
 		})
 	}
-	if err := decode(holidays, marketHoursMutate(t, holidays, "date", jsontext.Value(`"07/03/2026"`))); err == nil {
+	if err := decode(holidays, mutateFixtureMember(t, holidays, "date", jsontext.Value(`"07/03/2026"`))); err == nil {
 		t.Fatal("a non-ISO holiday date decoded")
 	}
-	if err := decode(hours, marketHoursMutate(t, hours, "isMarketOpen", jsontext.Value(`"true"`))); err == nil {
+	if err := decode(hours, mutateFixtureMember(t, hours, "isMarketOpen", jsontext.Value(`"true"`))); err == nil {
 		t.Fatal("a JSON string decoded into the bool open flag")
 	}
 

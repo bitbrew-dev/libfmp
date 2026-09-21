@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -143,4 +144,45 @@ func memberValues[T any](t *testing.T, row T) map[string]jsontext.Value {
 func memberSet[T any](t *testing.T, row T) []string {
 	t.Helper()
 	return slices.Sorted(maps.Keys(memberValues(t, row)))
+}
+
+// mutateFixtureMember returns the first row of a bare-array fixture with one
+// member replaced, or removed when value is nil, wrapped in a bare array. A
+// member spelled "outer.inner" targets a member of a nested object. Domain
+// tests use it to build the null and missing-member variants that the Rust
+// suites construct inline from the same documented row.
+func mutateFixtureMember(t *testing.T, fixture, member string, value jsontext.Value) []byte {
+	t.Helper()
+	var rows []map[string]jsontext.Value
+	if err := json.Unmarshal(readFixture(t, fixture), &rows); err != nil {
+		t.Fatal(err)
+	}
+	row := rows[0]
+	outer, inner, nested := strings.Cut(member, ".")
+	target := row
+	if nested {
+		var object map[string]jsontext.Value
+		if err := json.Unmarshal(row[outer], &object); err != nil {
+			t.Fatal(err)
+		}
+		target = object
+		member = inner
+	}
+	if value == nil {
+		delete(target, member)
+	} else {
+		target[member] = value
+	}
+	if nested {
+		encoded, err := json.Marshal(target)
+		if err != nil {
+			t.Fatal(err)
+		}
+		row[outer] = encoded
+	}
+	encoded, err := json.Marshal([]map[string]jsontext.Value{row})
+	if err != nil {
+		t.Fatal(err)
+	}
+	return encoded
 }
