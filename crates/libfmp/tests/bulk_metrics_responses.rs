@@ -50,6 +50,18 @@ fn every_documented_numeric_string_is_lexical_and_rejects_json_numbers() {
         ratios.gross_profit_margin_ttm.as_str(),
         "1.1622776732779352"
     );
+
+    let beyond_u64 = "18446744073709551616";
+    let high_precision = "-12345678901234567890123456789.123456789012345678901234567890";
+    let mut huge = source_row(KEY_METRICS);
+    huge.insert("marketCap".into(), json!(beyond_u64));
+    huge.insert("freeCashFlowToFirmTTM".into(), json!(high_precision));
+    let decoded: BulkKeyMetricsTtm = serde_json::from_value(Value::Object(huge)).unwrap();
+    assert_eq!(decoded.market_cap.as_str(), beyond_u64);
+    assert_eq!(decoded.free_cash_flow_to_firm_ttm.as_str(), high_precision);
+    let encoded = serde_json::to_value(&decoded).unwrap();
+    assert_eq!(encoded["marketCap"], beyond_u64);
+    assert_eq!(encoded["freeCashFlowToFirmTTM"], high_precision);
 }
 
 #[test]
