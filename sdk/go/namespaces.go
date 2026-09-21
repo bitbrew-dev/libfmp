@@ -43,6 +43,8 @@ type Namespaces struct {
 	News NewsNamespace
 	// Quote holds the quote endpoints.
 	Quote QuoteNamespace
+	// Screener holds the screener endpoints.
+	Screener ScreenerNamespace
 	// Search holds the search endpoints.
 	Search SearchNamespace
 }
@@ -66,5 +68,6 @@ func (c *Client) bindNamespaces() {
 	c.MarketHours = newMarketHoursNamespace(c)
 	c.News = newNewsNamespace(c)
 	c.Quote = newQuoteNamespace(c)
+	c.Screener = newScreenerNamespace(c)
 	c.Search = newSearchNamespace(c)
 }
