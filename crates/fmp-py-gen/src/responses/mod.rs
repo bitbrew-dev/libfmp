@@ -16,9 +16,10 @@ use std::path::{Path, PathBuf};
 
 use syn::{Fields, Item};
 
-pub use model::{FieldDef, StructDef, Wrap};
+pub use model::{FieldAttrs, FieldDef, StructDef, Wrap, apply_rename_rule};
 pub use parse::{
-    base_ident, collect_rust_files, is_public, module_path_for, peel, technical_indicator_structs,
+    base_ident, collect_rust_files, field_attrs, is_public, module_path_for, peel,
+    struct_rename_all, technical_indicator_structs,
 };
 
 /// Everything an emitter needs to know about the response surface.
@@ -59,6 +60,13 @@ pub enum DiscoverError {
         #[source]
         source: syn::Error,
     },
+    #[error("{path}: {item}: {source}")]
+    Attribute {
+        path: PathBuf,
+        item: String,
+        #[source]
+        source: syn::Error,
+    },
     #[error("responses directory {0} has no parent")]
     NoParent(PathBuf),
 }
@@ -89,19 +97,26 @@ pub fn discover(responses_root: &Path) -> Result<Discovery, DiscoverError> {
                 }
                 Item::Struct(item) if is_public(&item.vis) => {
                     if let Fields::Named(named) = &item.fields {
-                        let fields = named
-                            .named
-                            .iter()
-                            .filter_map(|field| {
-                                field.ident.as_ref().map(|ident| FieldDef {
-                                    name: ident.to_string(),
-                                    ty: field.ty.clone(),
-                                })
-                            })
-                            .collect();
+                        let name = item.ident.to_string();
+                        let attribute_error = |source| DiscoverError::Attribute {
+                            path: file.clone(),
+                            item: name.clone(),
+                            source,
+                        };
+                        let rename_all = struct_rename_all(&item.attrs).map_err(attribute_error)?;
+                        let mut fields = Vec::with_capacity(named.named.len());
+                        for field in &named.named {
+                            let Some(ident) = &field.ident else { continue };
+                            fields.push(FieldDef {
+                                name: ident.to_string(),
+                                ty: field.ty.clone(),
+                                attrs: field_attrs(&field.attrs).map_err(attribute_error)?,
+                            });
+                        }
                         discovery.structs.push(StructDef {
-                            name: item.ident.to_string(),
+                            name,
                             module_path: module_path.clone(),
+                            rename_all,
                             fields,
                         });
                     }
