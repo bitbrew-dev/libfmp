@@ -10,7 +10,7 @@
 
 use std::fmt::Write as _;
 
-use fmp_py_gen::registry::{Arg, Endpoint};
+use fmp_py_gen::registry::{Arg, CtorArg, Endpoint};
 
 /// Clippy's `too_many_arguments` threshold.
 const MAX_PARAMS: usize = 7;
@@ -190,7 +190,11 @@ pub(crate) fn render_query_fn(out: &mut String, endpoint: &Endpoint, struct_name
             );
         }
     }
-    let ctor: Vec<String> = endpoint.ctor_args().map(Arg::python_name).collect();
+    let ctor: Vec<String> = endpoint
+        .ctor_args()
+        .into_iter()
+        .map(CtorArg::local)
+        .collect();
     if endpoint.setters.is_empty() {
         let _ = writeln!(out, "    Ok({query}::new({}))\n}}", ctor.join(", "));
         return;

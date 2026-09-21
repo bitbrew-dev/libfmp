@@ -30,6 +30,20 @@
 //! ]
 //! setters = [{ arg = "limit" }]
 //! ```
+//!
+//! A constructor argument that is itself a builder type (`DcfAssumptions`
+//! for `CustomDcfQuery::new(symbol, assumptions)`) is declared `nested`: its
+//! setters become keyword-only parameters of the Python method and the
+//! emitter assembles the builder before calling the constructor.
+//!
+//! ```toml
+//! args = [
+//!     { name = "symbol", kind = "ticker" },
+//!     { name = "assumptions", nested = { type = "DcfAssumptions", setters = [
+//!         { arg = "beta", kind = "finite_decimal" },
+//!     ] } },
+//! ]
+//! ```
 
 pub mod expand;
 mod kinds;
@@ -78,10 +92,13 @@ pub struct Endpoint {
     /// The generated model the rows map into; `None` for binary responses.
     pub response_model: Option<ModelPath>,
     pub doc: String,
-    /// Every Python parameter, constructor arguments first in declaration order.
+    /// Every Python parameter in declaration order, the setter arguments of
+    /// a nested builder flattened in at the builder's position.
     pub args: Vec<Arg>,
     /// Optional parameters applied through `with_*` builder methods.
     pub setters: Vec<Setter>,
+    /// Builder types passed whole to the query constructor.
+    pub nested: Vec<NestedBuilder>,
     /// Whether the client method returns `BinaryResponse` rather than rows.
     pub binary: bool,
     /// Whether the rows are untyped `DynamicObject`s handed to Python as
@@ -116,13 +133,83 @@ pub struct Setter {
     pub method: String,
 }
 
+/// A builder type passed whole to the query constructor; its setters are
+/// flattened into keyword-only parameters of the Python method.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NestedBuilder {
+    /// The constructor parameter name, also the Rust local the emitter builds.
+    pub name: String,
+    /// The builder type, which needs a zero-parameter `pub fn new`.
+    pub type_name: String,
+    /// The index in [`Endpoint::args`] of the first flattened setter
+    /// argument: where the builder sits among the constructor arguments.
+    pub position: usize,
+    /// The builder's setters, each consuming one flattened entry of
+    /// [`Endpoint::args`].
+    pub setters: Vec<Setter>,
+}
+
+/// One value passed to the query constructor.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CtorArg<'a> {
+    Plain(&'a Arg),
+    Nested(&'a NestedBuilder),
+}
+
+impl<'a> CtorArg<'a> {
+    /// The registry name of the constructor slot.
+    pub fn name(self) -> &'a str {
+        match self {
+            CtorArg::Plain(arg) => &arg.name,
+            CtorArg::Nested(builder) => &builder.name,
+        }
+    }
+
+    /// The Rust local the emitter passes to the constructor.
+    pub fn local(self) -> String {
+        match self {
+            CtorArg::Plain(arg) => arg.python_name(),
+            CtorArg::Nested(builder) => builder.name.clone(),
+        }
+    }
+
+    /// The `libfmp` type the constructor parameter must have.
+    pub fn libfmp_type(self) -> &'a str {
+        match self {
+            CtorArg::Plain(arg) => arg.kind.libfmp_type(),
+            CtorArg::Nested(builder) => &builder.type_name,
+        }
+    }
+}
+
 impl Endpoint {
-    /// The arguments passed to the query constructor, in order: every
-    /// argument no setter consumes.
-    pub fn ctor_args(&self) -> impl Iterator<Item = &Arg> {
-        self.args
-            .iter()
-            .filter(|arg| !self.setters.iter().any(|setter| setter.arg == arg.name))
+    /// The values passed to the query constructor, in order: every argument
+    /// no setter consumes, with each nested builder at its position.
+    pub fn ctor_args(&self) -> Vec<CtorArg<'_>> {
+        let nested_at = |index: usize| {
+            self.nested
+                .iter()
+                .filter(move |builder| builder.position == index)
+                .map(CtorArg::Nested)
+        };
+        let mut out = Vec::new();
+        for (index, arg) in self.args.iter().enumerate() {
+            out.extend(nested_at(index));
+            if !self.consumed_by_setter(&arg.name) {
+                out.push(CtorArg::Plain(arg));
+            }
+        }
+        out.extend(nested_at(self.args.len()));
+        out
+    }
+
+    /// Whether a query setter or a nested builder setter consumes `arg`.
+    fn consumed_by_setter(&self, arg: &str) -> bool {
+        self.setters.iter().any(|setter| setter.arg == arg)
+            || self
+                .nested
+                .iter()
+                .any(|builder| builder.setters.iter().any(|setter| setter.arg == arg))
     }
 
     /// The argument a setter consumes. Loading guarantees it exists.

@@ -4,7 +4,9 @@
 //! identifier validity, namespace path prefixes, duplicate names, setter to
 //! argument references, and the `binary` versus `response` exclusivity.
 //! `response = "dynamic"` marks an endpoint whose rows carry no typed model
-//! (`Vec<DynamicObject>`) and reach Python as plain `dict`s.
+//! (`Vec<DynamicObject>`) and reach Python as plain `dict`s. An arg carrying
+//! `nested` instead of `kind` is a builder passed to the constructor; its
+//! setters are flattened into [`Endpoint::args`] as optional parameters.
 //! Problems are collected per file so one load reports them all.
 
 use std::fs;
@@ -13,8 +15,8 @@ use std::path::{Path, PathBuf};
 use serde::Deserialize;
 
 use super::{
-    Arg, ArgKind, Domain, Endpoint, ModelPath, Namespace, Registry, RegistryError, Setter,
-    ValidationError,
+    Arg, ArgKind, Domain, Endpoint, ModelPath, Namespace, NestedBuilder, Registry, RegistryError,
+    Setter, ValidationError,
 };
 
 #[derive(Debug, Deserialize)]
@@ -56,9 +58,28 @@ struct EndpointEntry {
 #[serde(deny_unknown_fields)]
 struct ArgEntry {
     name: String,
-    kind: String,
+    /// The conversion kind of a plain parameter; absent for a nested builder.
+    kind: Option<String>,
     #[serde(default = "default_true")]
     required: bool,
+    /// A builder type passed whole to the constructor.
+    nested: Option<NestedEntry>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct NestedEntry {
+    #[serde(rename = "type")]
+    type_name: String,
+    setters: Vec<NestedSetterEntry>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct NestedSetterEntry {
+    arg: String,
+    kind: String,
+    method: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -235,30 +256,93 @@ fn lower_endpoint(
         },
     };
 
-    let mut args = Vec::new();
+    let mut args: Vec<Arg> = Vec::new();
+    let mut nested: Vec<NestedBuilder> = Vec::new();
+    let mut taken: Vec<String> = Vec::new();
     for arg in entry.args {
         if !is_identifier(&arg.name) {
             fail(format!("arg `{}` is not a Python identifier", arg.name));
         }
-        if args.iter().any(|existing: &Arg| existing.name == arg.name) {
+        if taken.contains(&arg.name) {
             fail(format!("duplicate arg `{}`", arg.name));
         }
-        let kind = match arg.kind.parse::<ArgKind>() {
-            Ok(kind) => kind,
-            Err(error) => {
-                fail(format!("arg `{}`: {error}", arg.name));
-                ArgKind::Ticker
+        taken.push(arg.name.clone());
+        match (arg.kind, arg.nested) {
+            (Some(kind), None) => {
+                let kind = parse_kind(&arg.name, &kind).unwrap_or_else(|message| {
+                    fail(message);
+                    ArgKind::Ticker
+                });
+                args.push(Arg {
+                    name: arg.name,
+                    kind,
+                    required: arg.required,
+                });
             }
-        };
-        args.push(Arg {
-            name: arg.name,
-            kind,
-            required: arg.required,
-        });
+            (None, Some(builder)) => {
+                if !is_type_name(&builder.type_name) {
+                    fail(format!(
+                        "nested builder `{}`: `{}` is not a Rust type name",
+                        arg.name, builder.type_name
+                    ));
+                }
+                if builder.setters.is_empty() {
+                    fail(format!(
+                        "nested builder `{}` needs at least one setter",
+                        arg.name
+                    ));
+                }
+                let position = args.len();
+                let mut setters = Vec::new();
+                for setter in builder.setters {
+                    if !is_identifier(&setter.arg) {
+                        fail(format!("arg `{}` is not a Python identifier", setter.arg));
+                    }
+                    if taken.contains(&setter.arg) {
+                        fail(format!("duplicate arg `{}`", setter.arg));
+                    }
+                    taken.push(setter.arg.clone());
+                    let kind = parse_kind(&setter.arg, &setter.kind).unwrap_or_else(|message| {
+                        fail(message);
+                        ArgKind::Ticker
+                    });
+                    args.push(Arg {
+                        name: setter.arg.clone(),
+                        kind,
+                        required: false,
+                    });
+                    let method = setter
+                        .method
+                        .unwrap_or_else(|| format!("with_{}", setter.arg));
+                    if !is_identifier(&method) {
+                        fail(format!(
+                            "setter method `{method}` is not a Rust method name"
+                        ));
+                    }
+                    setters.push(Setter {
+                        arg: setter.arg,
+                        method,
+                    });
+                }
+                nested.push(NestedBuilder {
+                    name: arg.name,
+                    type_name: builder.type_name,
+                    position,
+                    setters,
+                });
+            }
+            _ => fail(format!(
+                "arg `{}` needs exactly one of `kind` or `nested`",
+                arg.name
+            )),
+        }
     }
 
     let mut setters = Vec::new();
     for setter in entry.setters {
+        let nested_setter = nested
+            .iter()
+            .any(|builder| builder.setters.iter().any(|s| s.arg == setter.arg));
         match args.iter().find(|arg| arg.name == setter.arg) {
             None => fail(format!("setter `{}` names no arg", setter.arg)),
             Some(arg) if arg.required => {
@@ -267,6 +351,10 @@ fn lower_endpoint(
                     arg.name
                 ));
             }
+            Some(_) if nested_setter => fail(format!(
+                "setter arg `{}` is already applied by a nested builder",
+                setter.arg
+            )),
             Some(_) => {}
         }
         if setters
@@ -297,9 +385,16 @@ fn lower_endpoint(
         doc: entry.doc,
         args,
         setters,
+        nested,
         binary: entry.binary,
         dynamic,
     }
+}
+
+/// Parses a registry `kind`, naming the argument in the error message.
+fn parse_kind(arg: &str, kind: &str) -> Result<ArgKind, String> {
+    kind.parse::<ArgKind>()
+        .map_err(|error| format!("arg `{arg}`: {error}"))
 }
 
 /// The `response` spelling for endpoints returning untyped `dict` rows.
@@ -309,15 +404,19 @@ const DYNAMIC_RESPONSE: &str = "dynamic";
 fn parse_model_path(value: &str) -> Option<ModelPath> {
     let mut segments: Vec<String> = value.split("::").map(str::to_owned).collect();
     let name = segments.pop()?;
-    let is_struct = name.starts_with(|c: char| c.is_ascii_uppercase())
-        && name.chars().all(|c| c.is_ascii_alphanumeric());
-    if segments.is_empty() || !is_struct || !segments.iter().all(|s| is_identifier(s)) {
+    if segments.is_empty() || !is_type_name(&name) || !segments.iter().all(|s| is_identifier(s)) {
         return None;
     }
     Some(ModelPath {
         module: segments,
         name,
     })
+}
+
+/// A CamelCase Rust struct name.
+fn is_type_name(value: &str) -> bool {
+    value.starts_with(|c: char| c.is_ascii_uppercase())
+        && value.chars().all(|c| c.is_ascii_alphanumeric())
 }
 
 /// A snake_case identifier valid in both Rust and Python.

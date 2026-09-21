@@ -218,6 +218,7 @@ fn synthetic(args: Vec<Arg>) -> Node {
             doc: "A wide method.\n\nSecond paragraph.".to_owned(),
             args,
             setters: Vec::new(),
+            nested: Vec::new(),
             binary: false,
             dynamic: false,
         }],

@@ -138,7 +138,7 @@ fn nested_namespace_with_setters_and_binary_verifies() {
         .collect();
     assert_eq!(paths, ["statements.income", "statements.reports"]);
     let statement = &statements.namespaces[0].endpoints[0];
-    let ctor: Vec<&str> = statement.ctor_args().map(|arg| arg.name.as_str()).collect();
+    let ctor: Vec<&str> = statement.ctor_args().iter().map(|arg| arg.name()).collect();
     assert_eq!(ctor, ["symbol"]);
     assert_eq!(statement.setters[1].method, "with_period");
     let xlsx = &statements.namespaces[1].endpoints[0];
@@ -171,7 +171,7 @@ fn nested_namespace_with_setters_and_binary_verifies() {
 fn impl_level_macro_setters_verify_as_direct() {
     let registry = Registry::load(&fixture("impl_macros")).expect("fixture loads");
     let companies = &registry.domains[0].namespaces[0].endpoints[0];
-    assert_eq!(companies.ctor_args().count(), 0);
+    assert!(companies.ctor_args().is_empty());
     assert_eq!(companies.setters.len(), 20);
     let booleans: Vec<&str> = companies
         .args
@@ -372,8 +372,13 @@ query = "QuoteQuery"
 response = "quote::Quote"
 binary = true
 doc = "Binary and response together."
-args = [{ name = "symbol", kind = "ticker" }, { name = "symbol", kind = "ticker" }]
-setters = [{ arg = "missing" }]
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "symbol", kind = "ticker" },
+    { name = "bare" },
+    { name = "inputs", nested = { type = "DcfAssumptions", setters = [{ arg = "symbol", kind = "finite_decimal" }] } },
+]
+setters = [{ arg = "missing" }, { arg = "symbol" }]
 
 [[namespace]]
 path = "other.sub"
@@ -396,6 +401,18 @@ path = "other.sub"
         "quote.toml",
         "quote.full",
         "setter `missing` names no arg",
+    );
+    assert_names(
+        &errors,
+        "quote.toml",
+        "quote.full",
+        "arg `bare` needs exactly one of `kind` or `nested`",
+    );
+    assert_names(
+        &errors,
+        "quote.toml",
+        "quote.full",
+        "setter arg `symbol` must be `required = false`",
     );
     assert_names(
         &errors,
