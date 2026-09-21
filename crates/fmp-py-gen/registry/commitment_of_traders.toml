@@ -1,0 +1,34 @@
+# Endpoint registry for the `commitment_of_traders` domain, reached from Python as
+# `client.commitment_of_traders`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "report"
+method = "cot_report"
+query = "CotQuery"
+response = "commitment_of_traders::CotReport"
+doc = "Retrieves detailed Commitment of Traders reports."
+args = [
+    { name = "symbol", kind = "ticker", required = false },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "symbol" }, { arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "analysis"
+method = "cot_analysis"
+query = "CotQuery"
+response = "commitment_of_traders::CotAnalysis"
+doc = "Retrieves derived Commitment of Traders market analysis."
+args = [
+    { name = "symbol", kind = "ticker", required = false },
+    { name = "from", kind = "date", required = false },
+    { name = "to", kind = "date", required = false },
+]
+setters = [{ arg = "symbol" }, { arg = "from" }, { arg = "to" }]
+
+[[endpoint]]
+name = "report_list"
+method = "cot_report_list"
+response = "commitment_of_traders::CotReportListing"
+doc = "Lists the Commitment of Traders reports available from the provider."
