@@ -137,45 +137,16 @@ impl Surface {
     }
 
     fn absorb_file(&mut self, file: &Path, parsed: &syn::File) {
-        let definitions: Definitions = parsed
-            .items
-            .iter()
-            .filter_map(|item| match item {
-                Item::Macro(item) => expand::definition(item),
-                _ => None,
-            })
-            .collect();
-        let mut invocations = Vec::new();
-        for item in &parsed.items {
-            match item {
-                Item::Macro(item) if expand::definition(item).is_none() => {
-                    invocations.push(item);
-                }
-                Item::Macro(_) => {}
-                other => self.absorb_item(file, other, &Origin::Direct, &definitions),
-            }
-        }
-        for invocation in invocations {
-            let Some(name) = invocation.mac.path.get_ident().map(ToString::to_string) else {
-                continue;
-            };
-            let Some(body) = definitions.get(&name) else {
-                continue;
-            };
-            match expand::expand(body, &invocation.mac.tokens) {
-                Ok(expanded) => {
-                    let origin = Origin::Macro(name);
-                    for item in &expanded.items {
-                        self.absorb_item(file, item, &origin, &definitions);
-                    }
-                }
-                Err(reason) => self.unexpanded.push(Unexpanded {
-                    file: file.to_path_buf(),
-                    macro_name: name,
-                    reason: reason.to_string(),
-                }),
-            }
-        }
+        let mut unexpanded = Vec::new();
+        visit_items(
+            file,
+            parsed,
+            &mut unexpanded,
+            |item, origin, definitions| {
+                self.absorb_item(file, item, origin, definitions);
+            },
+        );
+        self.unexpanded.extend(unexpanded);
     }
 
     fn absorb_item(
@@ -247,7 +218,58 @@ impl Surface {
 }
 
 /// The `macro_rules!` definitions of one file, keyed by macro name.
-type Definitions = BTreeMap<String, TokenStream>;
+pub(crate) type Definitions = BTreeMap<String, TokenStream>;
+
+/// Visits every item of a parsed file: the direct items first, then the
+/// items each file-level macro invocation expands to. Invocations the
+/// expander cannot handle are appended to `unexpanded`; definitions are
+/// passed along so visitors can expand `impl`-level invocations.
+pub(crate) fn visit_items(
+    file: &Path,
+    parsed: &syn::File,
+    unexpanded: &mut Vec<Unexpanded>,
+    mut visit: impl FnMut(&Item, &Origin, &Definitions),
+) {
+    let definitions: Definitions = parsed
+        .items
+        .iter()
+        .filter_map(|item| match item {
+            Item::Macro(item) => expand::definition(item),
+            _ => None,
+        })
+        .collect();
+    let mut invocations = Vec::new();
+    for item in &parsed.items {
+        match item {
+            Item::Macro(item) if expand::definition(item).is_none() => {
+                invocations.push(item);
+            }
+            Item::Macro(_) => {}
+            other => visit(other, &Origin::Direct, &definitions),
+        }
+    }
+    for invocation in invocations {
+        let Some(name) = invocation.mac.path.get_ident().map(ToString::to_string) else {
+            continue;
+        };
+        let Some(body) = definitions.get(&name) else {
+            continue;
+        };
+        match expand::expand(body, &invocation.mac.tokens) {
+            Ok(expanded) => {
+                let origin = Origin::Macro(name);
+                for item in &expanded.items {
+                    visit(item, &origin, &definitions);
+                }
+            }
+            Err(reason) => unexpanded.push(Unexpanded {
+                file: file.to_path_buf(),
+                macro_name: name,
+                reason: reason.to_string(),
+            }),
+        }
+    }
+}
 
 /// Records a public `new` constructor or single-parameter `with_*` setter.
 fn absorb_query_method(api: &mut QueryApi, method: &syn::ImplItemFn) {
@@ -295,7 +317,7 @@ fn classify_return(ty: &Type) -> Returns {
 }
 
 /// The named (non-`self`) parameters of a signature.
-fn typed_params(sig: &syn::Signature) -> Vec<Param> {
+pub(crate) fn typed_params(sig: &syn::Signature) -> Vec<Param> {
     sig.inputs
         .iter()
         .filter_map(|input| match input {
@@ -337,7 +359,7 @@ fn peel_base(ty: &Type) -> String {
 }
 
 /// Splits `Head<Inner>` into its head ident and first type argument.
-fn generic_head(ty: &Type) -> Option<(String, &Type)> {
+pub(crate) fn generic_head(ty: &Type) -> Option<(String, &Type)> {
     let Type::Path(path) = ty else { return None };
     let segment = path.path.segments.last()?;
     let PathArguments::AngleBracketed(args) = &segment.arguments else {
@@ -351,7 +373,7 @@ fn generic_head(ty: &Type) -> Option<(String, &Type)> {
 }
 
 /// The last path-segment identifier of a type, ignoring generics.
-fn base_ident(ty: &Type) -> Option<String> {
+pub(crate) fn base_ident(ty: &Type) -> Option<String> {
     match ty {
         Type::Path(path) => path.path.segments.last().map(|s| s.ident.to_string()),
         _ => None,
@@ -373,12 +395,12 @@ fn quote_tokens(tokens: &impl quote::ToTokens) -> String {
     tokens.to_token_stream().to_string().replace(' ', "")
 }
 
-fn is_public(vis: &Visibility) -> bool {
+pub(crate) fn is_public(vis: &Visibility) -> bool {
     matches!(vis, Visibility::Public(_))
 }
 
 /// Recursively collects every `.rs` file under a directory.
-fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) -> Result<(), ScanError> {
+pub(crate) fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) -> Result<(), ScanError> {
     let entries = fs::read_dir(dir).map_err(|source| ScanError::Io {
         path: dir.to_path_buf(),
         source,
