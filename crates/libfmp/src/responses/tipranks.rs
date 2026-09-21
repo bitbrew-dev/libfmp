@@ -1,6 +1,6 @@
 //! Response rows returned by TipRanks add-on endpoints.
 //!
-//! Future Python bindings reserve these models under `fmp.tipranks`.
+//! The Python binding exposes these models under `fmp.tipranks`.
 
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Number;
