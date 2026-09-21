@@ -1,6 +1,6 @@
 //! Rendering one namespace node into Rust source.
 //!
-//! Every method follows the shape of the Phase 1 hand-written `QuoteNamespace`:
+//! Every method follows the same shape:
 //! a free `<name>_query` function converts the Python arguments and builds
 //! the `libfmp` query (the part an async twin will share), and the
 //! `#[pymethods]` body only detaches from the interpreter, runs the call on
