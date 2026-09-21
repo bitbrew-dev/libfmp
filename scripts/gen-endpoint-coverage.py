@@ -25,6 +25,9 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import check_go_coverage as go_coverage
+
 ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = ROOT / "crates" / "fmp-py-gen" / "registry"
 DEFAULT_OUTPUT = ROOT / "docs" / "endpoint-coverage.md"
@@ -127,6 +130,16 @@ class Entry:
             return ANNOTATIONS[self.key][1]
         return NOTES.get(self.key, "")
 
+    @property
+    def go_key(self) -> tuple[str, str]:
+        """`(namespace struct, method)` the gen_go emitter produces for this entry."""
+        return (go_coverage.struct_name(self.path.split(".")), go_coverage.exported(self.name))
+
+
+def go_methods() -> set[tuple[str, str]]:
+    """The namespace methods declared in sdk/go, keyed like `Entry.go_key`."""
+    return {m.go_key for m in go_coverage.load_actual()}
+
 
 def load_entries(domain: str) -> list[Entry]:
     data = tomllib.loads((REGISTRY / f"{domain}.toml").read_text())
@@ -153,10 +166,12 @@ def oracle_counts(path: Path | None) -> Counter[str] | None:
     return counts
 
 
-def render(entries: list[Entry], oracle: Counter[str] | None) -> str:
+def render(entries: list[Entry], oracle: Counter[str] | None, go: set[tuple[str, str]]) -> str:
     by_domain = {d: [e for e in entries if e.domain == d] for d in DOMAIN_ORDER}
     states = Counter(e.state for e in entries)
     total_doc = sum(oracle.values()) if oracle else None
+    go_total = sum(e.go_key in go for e in entries)
+    go_namespaces = len(go_coverage.generated_domains(DOMAIN_ORDER))
     out: list[str] = []
     out += [
         "# Endpoint coverage",
@@ -172,6 +187,7 @@ def render(entries: list[Entry], oracle: Counter[str] | None) -> str:
         f"- Documented oracle entries: {total_doc if total_doc is not None else 'n/a'}",
         f"- Rust `Client` methods: {len(entries)} (`cargo run -p fmp-py-gen --bin registry_check` verifies each one)",
         f"- Python methods: {len(entries)} across {len(DOMAIN_ORDER)} namespaces",
+        f"- Go methods: {go_total} across {go_namespaces} namespaces (`python3 scripts/check_go_coverage.py` audits each one)",
         "- States: " + ", ".join(f"{s} {states[s]}" for s in ("supported", "raw", "gated", "deferred")),
         "",
         "| State | Meaning |",
@@ -183,8 +199,8 @@ def render(entries: list[Entry], oracle: Counter[str] | None) -> str:
         "",
         "## Domains",
         "",
-        "| Domain | Documented section | Documented entries | Rust methods | Python methods | States |",
-        "| --- | --- | --- | --- | --- | --- |",
+        "| Domain | Documented section | Documented entries | Rust methods | Python methods | Go methods | States |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ]
     for domain in DOMAIN_ORDER:
         rows = by_domain[domain]
@@ -199,7 +215,8 @@ def render(entries: list[Entry], oracle: Counter[str] | None) -> str:
             documented = str(oracle[section])
         domain_states = Counter(e.state for e in rows)
         state_text = ", ".join(f"{s} {n}" for s, n in sorted(domain_states.items()))
-        out.append(f"| `{domain}` | {section} | {documented} | {len(rows)} | {len(rows)} | {state_text} |")
+        go_rows = sum(e.go_key in go for e in rows)
+        out.append(f"| `{domain}` | {section} | {documented} | {len(rows)} | {len(rows)} | {go_rows} | {state_text} |")
     out += [
         "",
         f"The oracle lists {total_doc or 276} entries while the registry names {len(entries)} methods because the Search section holds",
@@ -212,12 +229,13 @@ def render(entries: list[Entry], oracle: Counter[str] | None) -> str:
         "",
         "## Endpoints",
         "",
-        "| Domain | Python method | Rust `Client` method | State | Notes |",
-        "| --- | --- | --- | --- | --- |",
+        "| Domain | Python method | Rust `Client` method | State | Go | Notes |",
+        "| --- | --- | --- | --- | --- | --- |",
     ]
     for domain in DOMAIN_ORDER:
         for e in by_domain[domain]:
-            out.append(f"| `{domain}` | `{e.key}` | `{e.method}` | {e.state} | {e.note} |")
+            go_state = "supported" if e.go_key in go else "pending"
+            out.append(f"| `{domain}` | `{e.key}` | `{e.method}` | {e.state} | {go_state} | {e.note} |")
     return "\n".join(out).rstrip() + "\n"
 
 
@@ -233,7 +251,7 @@ def main(argv: list[str]) -> int:
     unknown = [k for k in unknown if k not in {e.key for e in entries}]
     if unknown:
         parser.error("annotation names unknown registry entries: " + ", ".join(unknown))
-    args.output.write_text(render(entries, oracle_counts(args.oracle)))
+    args.output.write_text(render(entries, oracle_counts(args.oracle), go_methods()))
     print(f"wrote {args.output}: {len(entries)} methods", file=sys.stderr)
     return 0
 
