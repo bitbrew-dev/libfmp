@@ -35,6 +35,8 @@ type Namespaces struct {
 	InsiderTrading InsiderTradingNamespace
 	// Market holds the market endpoints.
 	Market MarketNamespace
+	// MarketHours holds the market_hours endpoints.
+	MarketHours MarketHoursNamespace
 	// Quote holds the quote endpoints.
 	Quote QuoteNamespace
 }
@@ -54,5 +56,6 @@ func (c *Client) bindNamespaces() {
 	c.Fundraising = newFundraisingNamespace(c)
 	c.InsiderTrading = newInsiderTradingNamespace(c)
 	c.Market = newMarketNamespace(c)
+	c.MarketHours = newMarketHoursNamespace(c)
 	c.Quote = newQuoteNamespace(c)
 }
