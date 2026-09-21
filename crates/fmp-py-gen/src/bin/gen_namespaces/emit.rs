@@ -130,7 +130,7 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     let _ = write!(
         out,
         "\n/// {} endpoints for a single client, exposed as `client.{dotted}`.\n",
-        capitalize(&node.path.join(" "))
+        humanize(&node.path)
     );
     out.push_str("#[gen_stub_pyclass]\n");
     let _ = writeln!(out, "#[pyclass(module = \"fmp._native.{dotted}\", frozen)]");
@@ -198,8 +198,12 @@ fn use_line(prefix: &str, module: &[String], names: &BTreeSet<String>) -> String
     }
 }
 
-fn capitalize(text: &str) -> String {
-    let mut chars = text.chars();
+/// Renders a namespace path as prose: segments are space-joined, underscores
+/// become spaces, and only the first letter is capitalised
+/// (`["insider_trading"]` -> `Insider trading`).
+pub(crate) fn humanize(path: &[String]) -> String {
+    let words = path.join(" ").replace('_', " ");
+    let mut chars = words.chars();
     match chars.next() {
         Some(first) => first.to_uppercase().chain(chars).collect(),
         None => String::new(),
