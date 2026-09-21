@@ -376,6 +376,11 @@ fn unsupported_arg_kinds_name_the_helper_to_add() {
         arg_kind_go(ArgKind::ExchangeCode).expect("code").helper,
         "stringParam"
     );
+    let frequency = arg_kind_go(ArgKind::RetrievalFrequency).expect("wire enum");
+    assert_eq!(
+        (frequency.go_type, frequency.helper),
+        ("RetrievalFrequency", "retrievalFrequencyParam")
+    );
     let error = arg_kind_go(ArgKind::DateRange).expect_err("date_range is deferred");
     assert!(
         error.contains("`date_range`") && error.contains("dateRangeParam"),

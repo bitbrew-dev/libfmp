@@ -310,10 +310,10 @@ pub(crate) fn arg_kind_go(kind: ArgKind) -> Result<ArgGo, String> {
         ArgKind::Boolean | ArgKind::TrueFalseFlag => ("bool", "boolParam"),
         ArgKind::Date => ("Date", "dateParam"),
         ArgKind::ApiDatetime => ("DateTime", "dateTimeParam"),
+        ArgKind::RetrievalFrequency => ("RetrievalFrequency", "retrievalFrequencyParam"),
         ArgKind::Quarter
         | ArgKind::DateRange
         | ArgKind::FiscalPeriod
-        | ArgKind::RetrievalFrequency
         | ArgKind::StatementPeriod
         | ArgKind::ChartTimeframe
         | ArgKind::SegmentationStructure
