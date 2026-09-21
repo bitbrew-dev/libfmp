@@ -85,11 +85,20 @@ ANNOTATIONS: dict[str, tuple[str, str]] = {
     "bulk.etf_holdings": (
         "deferred", "documented key `lastUpdated\"` is mirrored verbatim; upstream fix tracked in #40"),
 }
+REALTIME = "Nasdaq data is 15-minute delayed unless the real-time user declaration is on file"
 NOTES: dict[str, str] = {
     "statements.reports.json": "typed row whose `sections` are dynamic JSON",
     "statements.reports.xlsx": "binary payload (`BinaryResponse` / `fmp.BinaryPayload`)",
     "statements.reports.dates": "rows carry secret download links; redacted in Python `repr`",
-    "quote.full": "Nasdaq rows are 15-minute delayed unless the user declaration is on file",
+    "quote.full": REALTIME,
+    "quote.short": REALTIME,
+    "quote.aftermarket_trade": REALTIME,
+    "quote.aftermarket_quote": REALTIME,
+    "quote.batch_quote": REALTIME,
+    "quote.batch_quote_short": REALTIME,
+    "quote.batch_aftermarket_trade": REALTIME,
+    "quote.batch_aftermarket_quote": REALTIME,
+    "quote.exchange": REALTIME,
 }
 
 
