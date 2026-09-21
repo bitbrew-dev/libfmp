@@ -282,6 +282,7 @@ fn scalar(ident: &str) -> Option<&'static str> {
         "bool" | "WireBool" => "bool",
         "String" | "NumericString" | "PercentString" | "FiscalYearString" | "IsoTimestamp"
         | "DateOrDateTime" | "OpaqueDateText" => "string",
+        "SecretUrl" => "string",
         "Ticker"
         | "TipRanksExpertUid"
         | "BulkPart"
@@ -371,14 +372,13 @@ pub(crate) fn arg_kind_go(kind: ArgKind) -> Result<ArgGo, String> {
         ArgKind::Date => ("Date", "dateParam"),
         ArgKind::ApiDatetime => ("DateTime", "dateTimeParam"),
         ArgKind::RetrievalFrequency => ("RetrievalFrequency", "retrievalFrequencyParam"),
+        ArgKind::FiscalPeriod => ("FiscalPeriod", "fiscalPeriodParam"),
+        ArgKind::StatementPeriod => ("StatementPeriod", "statementPeriodParam"),
+        ArgKind::SegmentationStructure => ("SegmentationStructure", "segmentationStructureParam"),
         ArgKind::EconomicIndicator => ("EconomicIndicator", "economicIndicatorParam"),
         ArgKind::Quarter => ("Quarter", "quarterParam"),
         ArgKind::ChartTimeframe => ("ChartTimeframe", "chartTimeframeParam"),
-        ArgKind::DateRange
-        | ArgKind::FiscalPeriod
-        | ArgKind::StatementPeriod
-        | ArgKind::SegmentationStructure
-        | ArgKind::OpenEconomicIndicator => {
+        ArgKind::DateRange | ArgKind::OpenEconomicIndicator => {
             return Err(format!(
                 "arg kind `{kind}` has no Go helper yet: add `{}Param` to sdk/go/query.go \
                  (mirroring the libfmp `{}` validation) and its row to gen_go/types.rs",

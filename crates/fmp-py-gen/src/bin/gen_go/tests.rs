@@ -142,9 +142,9 @@ fn unmapped_types_fail_naming_the_struct_and_field() {
         ),
         (
             "link",
-            "SecretUrl",
+            "SecretString",
             FieldAttrs::default(),
-            "unmapped Rust type `SecretUrl`",
+            "unmapped Rust type `SecretString`",
         ),
         (
             "value",
@@ -560,9 +560,25 @@ fn unsupported_arg_kinds_name_the_helper_to_add() {
         error.contains("`date_range`") && error.contains("dateRangeParam"),
         "{error}"
     );
-    let error = arg_kind_go(ArgKind::FiscalPeriod).expect_err("enum kinds are deferred");
+    for (kind, go_type, helper) in [
+        (ArgKind::FiscalPeriod, "FiscalPeriod", "fiscalPeriodParam"),
+        (
+            ArgKind::StatementPeriod,
+            "StatementPeriod",
+            "statementPeriodParam",
+        ),
+        (
+            ArgKind::SegmentationStructure,
+            "SegmentationStructure",
+            "segmentationStructureParam",
+        ),
+    ] {
+        let mapped = arg_kind_go(kind).expect("statement enum kinds are mapped");
+        assert_eq!((mapped.go_type, mapped.helper), (go_type, helper), "{kind}");
+    }
+    let error = arg_kind_go(ArgKind::ChartTimeframe).expect_err("chart_timeframe is deferred");
     assert!(
-        error.contains("fiscalPeriodParam") && error.contains("FiscalPeriod"),
+        error.contains("chartTimeframeParam") && error.contains("ChartTimeframe"),
         "{error}"
     );
 }
