@@ -1,11 +1,17 @@
 //! Bulk endpoint contracts.
 //!
-//! A future Python binding reserves the matching `FmpClient` methods with
-//! response models under `fmp.bulk`. This crate does not implement those bindings.
+//! Every bulk route answers one `GET` with one bare JSON array, and each
+//! convenience method sends exactly one request: the client never paginates
+//! a `part`, retries, or fans out on the caller's behalf. Numeric cells arrive
+//! as strings on every route except `profile-bulk` and are preserved verbatim
+//! as [`crate::codecs::NumericString`].
 //!
 //! Bulk descriptors and convenience methods inherit the client's finite
-//! response-body limit. Raise [`crate::client::ClientBuilder::max_response_body_bytes`]
-//! when a known provider response will exceed that configured limit.
+//! response-body limit and its single logical timeout. Raise
+//! [`crate::client::ClientBuilder::max_response_body_bytes`] and, when needed,
+//! [`crate::client::ClientBuilder::timeout`] when a known provider response
+//! will exceed the configured limits. The Python binding exposes the same
+//! eighteen methods under `client.bulk`.
 
 use crate::{
     Client, Result,

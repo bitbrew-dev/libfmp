@@ -1,6 +1,12 @@
 //! Response rows returned by FMP bulk endpoints.
 //!
-//! Future Python bindings reserve these models under `fmp.bulk`.
+//! Provider numeric strings are kept verbatim as
+//! [`crate::codecs::NumericString`], so very large or high-precision values
+//! never pass through a float. Documented wire keys that look malformed are
+//! mirrored as explicit serde renames rather than corrected: `"Stock Price"`,
+//! `lastUpdated"`, the `growthOthertotalStockholdersEquity` casing, and the
+//! `Activites` spellings on cash-flow growth rows. The Python binding exposes
+//! these models under `fmp.bulk`.
 
 mod balance;
 mod cash_flow;
