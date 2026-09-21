@@ -154,45 +154,6 @@ func TestDocumentedTipranksAnalystProfilesDecodeAllNineFields(t *testing.T) {
 	}
 }
 
-// tipranksMutate returns the first fixture row with one member replaced, or
-// removed when value is nil, wrapped in a bare array. A member spelled
-// "outer.inner" targets a member of a nested object.
-func tipranksMutate(t *testing.T, fixture, member string, value jsontext.Value) []byte {
-	t.Helper()
-	var rows []map[string]jsontext.Value
-	if err := json.Unmarshal(readFixture(t, fixture), &rows); err != nil {
-		t.Fatal(err)
-	}
-	row := rows[0]
-	outer, inner, nested := strings.Cut(member, ".")
-	target := row
-	if nested {
-		var object map[string]jsontext.Value
-		if err := json.Unmarshal(row[outer], &object); err != nil {
-			t.Fatal(err)
-		}
-		target = object
-		member = inner
-	}
-	if value == nil {
-		delete(target, member)
-	} else {
-		target[member] = value
-	}
-	if nested {
-		encoded, err := json.Marshal(target)
-		if err != nil {
-			t.Fatal(err)
-		}
-		row[outer] = encoded
-	}
-	encoded, err := json.Marshal([]map[string]jsontext.Value{row})
-	if err != nil {
-		t.Fatal(err)
-	}
-	return encoded
-}
-
 // Required keys, the required-present nullable members (a number, a string,
 // and a bool), the number-kind check, and the nested count objects are
 // enforced as the Rust decoder enforces them, once for this domain.
@@ -252,7 +213,7 @@ func TestTipranksRequiredMembersAndCodecsAreEnforcedLikeSerde(t *testing.T) {
 	for _, tc := range rejected {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			err := decode(t, tc.fixture, tipranksMutate(t, tc.fixture, tc.member, tc.value))
+			err := decode(t, tc.fixture, mutateFixtureMember(t, tc.fixture, tc.member, tc.value))
 			var typed *Error
 			if !errors.As(err, &typed) || typed.Category != CategoryDecode || typed.Message != tc.message {
 				t.Fatalf("error = %v (%T), want CategoryDecode %q", err, err, tc.message)
@@ -276,7 +237,7 @@ func TestTipranksRequiredMembersAndCodecsAreEnforcedLikeSerde(t *testing.T) {
 	for _, tc := range accepted {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			if err := decode(t, tc.fixture, tipranksMutate(t, tc.fixture, tc.member, tc.value)); err != nil {
+			if err := decode(t, tc.fixture, mutateFixtureMember(t, tc.fixture, tc.member, tc.value)); err != nil {
 				t.Fatalf("rejected: %v", err)
 			}
 		})
@@ -296,7 +257,7 @@ func TestTipranksRequiredMembersAndCodecsAreEnforcedLikeSerde(t *testing.T) {
 	for _, tc := range wrongKinds {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			if err := decode(t, tc.fixture, tipranksMutate(t, tc.fixture, tc.member, tc.value)); err == nil {
+			if err := decode(t, tc.fixture, mutateFixtureMember(t, tc.fixture, tc.member, tc.value)); err == nil {
 				t.Fatalf("%s decoded into %s", tc.value, tc.member)
 			}
 		})
