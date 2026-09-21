@@ -60,7 +60,6 @@ def test_latest_earnings_transcripts_with_every_option(client: Any, fixture_serv
     [
         ({"limit": 100}, "/earning-call-transcript-latest?limit=100"),
         ({"page": 0}, "/earning-call-transcript-latest?page=0"),
-        ({"limit": 101, "page": 100}, "/earning-call-transcript-latest?limit=101&page=100"),
     ],
 )
 def test_latest_earnings_transcripts_options_are_independent(
@@ -71,6 +70,15 @@ def test_latest_earnings_transcripts_options_are_independent(
     rows = client.transcripts.latest_earnings_transcripts(**keywords)
 
     assert fixture_server.requests[0].target == target
+    assert len(rows) == 1
+
+
+def test_latest_earnings_transcripts_passes_bound_values_through(client: Any, fixture_server: FixtureServer) -> None:
+    """The documented page bound and a limit above the 100-row bound reach the wire unchanged."""
+    fixture_server.route("/earning-call-transcript-latest", load_fixture("latest_earnings_transcripts.json"))
+    rows = client.transcripts.latest_earnings_transcripts(limit=101, page=100)
+
+    assert fixture_server.requests[0].target == "/earning-call-transcript-latest?limit=101&page=100"
     assert len(rows) == 1
 
 
@@ -108,14 +116,11 @@ def test_earnings_transcript_accepts_the_u32_limit_boundary(client: Any, fixture
     client.transcripts.earnings_transcript("AAPL", 2020, 3, limit=4_294_967_295)
 
     assert (
-        fixture_server.requests[0].target
-        == "/earning-call-transcript?symbol=AAPL&year=2020&quarter=3&limit=4294967295"
+        fixture_server.requests[0].target == "/earning-call-transcript?symbol=AAPL&year=2020&quarter=3&limit=4294967295"
     )
 
 
-def test_earnings_transcript_accepts_keywords_for_the_required_trio(
-    client: Any, fixture_server: FixtureServer
-) -> None:
+def test_earnings_transcript_accepts_keywords_for_the_required_trio(client: Any, fixture_server: FixtureServer) -> None:
     """The required ``symbol``, ``year``, ``quarter`` may be passed as keywords in any order."""
     fixture_server.route("/earning-call-transcript", load_fixture("earnings_transcript.json"))
     rows = client.transcripts.earnings_transcript(quarter=3, year=2020, symbol="AAPL")
@@ -193,13 +198,11 @@ def test_out_of_range_year_names_the_argument(
 def test_out_of_range_quarter_names_the_argument(
     client: Any, fixture_server: FixtureServer, errors: SimpleNamespace, quarter: int
 ) -> None:
-    """A quarter outside 1 through 4 is rejected locally; a float quarter is a ``TypeError``."""
+    """A quarter outside 1 through 4 is rejected locally."""
     with pytest.raises(errors.FmpValidationError) as raised:
         client.transcripts.earnings_transcript("AAPL", 2020, quarter)
     assert str(raised.value) == "quarter: quarter must be an integer from 1 through 4"
     assert fixture_server.requests == []
-    with pytest.raises(TypeError):
-        client.transcripts.earnings_transcript("AAPL", 2020, 3.0)
 
 
 @pytest.mark.parametrize("keyword", ["limit", "page"])
@@ -227,11 +230,13 @@ def test_out_of_range_transcript_limit_names_the_argument(
 
 
 def test_wrong_shapes_are_type_errors(client: Any, fixture_server: FixtureServer) -> None:
-    """An ``int`` symbol, a ``str`` year, or a ``float`` limit is a shape error reported as ``TypeError``."""
+    """An ``int`` symbol, a ``str`` year, or a ``float`` quarter or limit is a shape error reported as ``TypeError``."""
     with pytest.raises(TypeError):
         client.transcripts.earnings_transcript_dates(123)
     with pytest.raises(TypeError):
         client.transcripts.earnings_transcript("AAPL", "2020", 3)
+    with pytest.raises(TypeError):
+        client.transcripts.earnings_transcript("AAPL", 2020, 3.0)
     with pytest.raises(TypeError):
         client.transcripts.latest_earnings_transcripts(limit=1.5)
     assert fixture_server.requests == []
