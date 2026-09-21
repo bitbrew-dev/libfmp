@@ -135,6 +135,7 @@ that no wire information is invented or lost:
 | `UnixSeconds`, `UnixMilliseconds` | `fmp.UnixSeconds`, `fmp.UnixMilliseconds` (`int64`) | `.Time()` helpers |
 | `WireBool` | `bool` | validated string flags stay `string` |
 | `DynamicJson`, `DynamicObject` | `jsontext.Value` | lossless raw bytes; no float64 round trip |
+| `serde_json::Number` (`Number`, `Option<Number>`) | `jsontext.Value` | raw digits kept, integer and decimal spellings preserved; a present value must be a JSON number |
 | `BinaryPayload` | `fmp.BinaryPayload{Data, ContentType, ContentDisposition}` | |
 | `#[serde(rename = "1D")]` | struct tag `json:"1D"` | |
 
