@@ -16,7 +16,7 @@ use crate::models::technical_indicators::{
 };
 use crate::runtime::block_on;
 
-/// Technical_indicators endpoints for a single client, exposed as `client.technical_indicators`.
+/// Technical indicators endpoints for a single client, exposed as `client.technical_indicators`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.technical_indicators", frozen)]
 pub(crate) struct TechnicalIndicatorsNamespace {

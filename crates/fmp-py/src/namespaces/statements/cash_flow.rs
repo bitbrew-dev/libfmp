@@ -12,7 +12,7 @@ use crate::errors::to_py_error;
 use crate::models::statements::cash_flow::CashFlowStatement;
 use crate::runtime::block_on;
 
-/// Statements cash_flow endpoints for a single client, exposed as `client.statements.cash_flow`.
+/// Statements cash flow endpoints for a single client, exposed as `client.statements.cash_flow`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.cash_flow", frozen)]
 pub(crate) struct StatementsCashFlowNamespace {

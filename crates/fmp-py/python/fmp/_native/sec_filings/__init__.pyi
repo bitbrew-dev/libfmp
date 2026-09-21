@@ -190,7 +190,7 @@ class SecFiling:
 @typing.final
 class SecFilingsNamespace:
     r"""
-    Sec_filings endpoints for a single client, exposed as `client.sec_filings`.
+    Sec filings endpoints for a single client, exposed as `client.sec_filings`.
     """
 
     def latest_8k(

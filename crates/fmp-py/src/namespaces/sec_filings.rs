@@ -21,7 +21,7 @@ use crate::models::sec_filings::{
 };
 use crate::runtime::block_on;
 
-/// Sec_filings endpoints for a single client, exposed as `client.sec_filings`.
+/// Sec filings endpoints for a single client, exposed as `client.sec_filings`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.sec_filings", frozen)]
 pub(crate) struct SecFilingsNamespace {

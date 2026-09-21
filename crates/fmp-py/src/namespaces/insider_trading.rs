@@ -18,7 +18,7 @@ use crate::models::insider_trading::{
 };
 use crate::runtime::block_on;
 
-/// Insider_trading endpoints for a single client, exposed as `client.insider_trading`.
+/// Insider trading endpoints for a single client, exposed as `client.insider_trading`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.insider_trading", frozen)]
 pub(crate) struct InsiderTradingNamespace {

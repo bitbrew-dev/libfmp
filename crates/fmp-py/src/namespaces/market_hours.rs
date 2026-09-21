@@ -14,7 +14,7 @@ use crate::errors::to_py_error;
 use crate::models::market_hours::{ExchangeHoliday, ExchangeMarketHours};
 use crate::runtime::block_on;
 
-/// Market_hours endpoints for a single client, exposed as `client.market_hours`.
+/// Market hours endpoints for a single client, exposed as `client.market_hours`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.market_hours", frozen)]
 pub(crate) struct MarketHoursNamespace {

@@ -12,7 +12,7 @@ use crate::errors::to_py_error;
 use crate::models::commitment_of_traders::{CotAnalysis, CotReport, CotReportListing};
 use crate::runtime::block_on;
 
-/// Commitment_of_traders endpoints for a single client, exposed as `client.commitment_of_traders`.
+/// Commitment of traders endpoints for a single client, exposed as `client.commitment_of_traders`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.commitment_of_traders", frozen)]
 pub(crate) struct CommitmentOfTradersNamespace {

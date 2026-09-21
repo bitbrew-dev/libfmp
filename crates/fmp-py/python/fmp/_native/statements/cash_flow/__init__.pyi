@@ -162,7 +162,7 @@ class CashFlowStatement:
 @typing.final
 class StatementsCashFlowNamespace:
     r"""
-    Statements cash_flow endpoints for a single client, exposed as `client.statements.cash_flow`.
+    Statements cash flow endpoints for a single client, exposed as `client.statements.cash_flow`.
     """
 
     def statement(

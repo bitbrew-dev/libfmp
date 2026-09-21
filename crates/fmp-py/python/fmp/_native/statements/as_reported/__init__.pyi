@@ -39,7 +39,7 @@ class AsReportedFinancialStatement:
 @typing.final
 class StatementsAsReportedNamespace:
     r"""
-    Statements as_reported endpoints for a single client, exposed as `client.statements.as_reported`.
+    Statements as reported endpoints for a single client, exposed as `client.statements.as_reported`.
     """
 
     def income(

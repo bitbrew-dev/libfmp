@@ -15,7 +15,7 @@ __all__ = [
 @typing.final
 class CommitmentOfTradersNamespace:
     r"""
-    Commitment_of_traders endpoints for a single client, exposed as `client.commitment_of_traders`.
+    Commitment of traders endpoints for a single client, exposed as `client.commitment_of_traders`.
     """
 
     def report(

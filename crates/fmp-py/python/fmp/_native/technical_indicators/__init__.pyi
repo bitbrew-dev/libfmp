@@ -195,7 +195,7 @@ class StandardDeviationBar:
 @typing.final
 class TechnicalIndicatorsNamespace:
     r"""
-    Technical_indicators endpoints for a single client, exposed as `client.technical_indicators`.
+    Technical indicators endpoints for a single client, exposed as `client.technical_indicators`.
     """
 
     def simple_moving_average(

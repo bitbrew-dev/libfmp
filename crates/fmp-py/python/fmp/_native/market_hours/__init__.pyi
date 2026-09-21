@@ -66,7 +66,7 @@ class ExchangeMarketHours:
 @typing.final
 class MarketHoursNamespace:
     r"""
-    Market_hours endpoints for a single client, exposed as `client.market_hours`.
+    Market hours endpoints for a single client, exposed as `client.market_hours`.
     """
 
     def exchange_market_hours(
