@@ -487,3 +487,36 @@ path = "other.sub"
         "namespace path must be `quote`",
     );
 }
+
+#[test]
+fn query_setter_on_a_nested_builder_arg_fails_at_load() {
+    let dir = Path::new(env!("CARGO_TARGET_TMPDIR")).join("registry-tests/nested-setter");
+    std::fs::create_dir_all(&dir).expect("temp dir");
+    std::fs::write(
+        dir.join("dcf.toml"),
+        r#"
+[[endpoint]]
+name = "custom"
+method = "custom_discounted_cash_flow"
+query = "CustomDcfQuery"
+response = "dcf::CustomDcfValuation"
+doc = "A query setter naming a flattened builder arg."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "assumptions", nested = { type = "DcfAssumptions", setters = [{ arg = "beta", kind = "finite_decimal" }] } },
+]
+setters = [{ arg = "beta" }]
+"#,
+    )
+    .expect("write");
+    let error = Registry::load(&dir).expect_err("nested setter clash");
+    let RegistryError::Invalid(errors) = error else {
+        panic!("expected RegistryError::Invalid, got {error}");
+    };
+    assert_names(
+        &errors,
+        "dcf.toml",
+        "dcf.custom",
+        "setter arg `beta` is already applied by a nested builder",
+    );
+}
