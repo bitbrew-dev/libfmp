@@ -18,6 +18,9 @@
 //! in [`WireSurface::unresolved`] with the reason, so `registry_check` can
 //! report it.
 
+mod collect;
+mod params;
+
 use std::collections::BTreeMap;
 use std::fmt;
 use std::path::PathBuf;
