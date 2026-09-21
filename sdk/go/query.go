@@ -226,6 +226,75 @@ func chartTimeframeParam(name string, value ChartTimeframe) (queryParam, error) 
 		string(ChartTimeframeOneDay))
 }
 
+// FiscalPeriod is a fiscal reporting period of the endpoints whose Rust
+// query takes a FiscalPeriod: the four quarters and the full year, without
+// the retrieval-frequency aliases. The constants carry the exact provider
+// wire spellings; any other value is rejected when the request is built.
+type FiscalPeriod string
+
+// The documented FiscalPeriod wire values.
+const (
+	FiscalPeriodQ1       FiscalPeriod = "Q1"
+	FiscalPeriodQ2       FiscalPeriod = "Q2"
+	FiscalPeriodQ3       FiscalPeriod = "Q3"
+	FiscalPeriodQ4       FiscalPeriod = "Q4"
+	FiscalPeriodFullYear FiscalPeriod = "FY"
+)
+
+// fiscalPeriodParam mirrors the libfmp FiscalPeriod wire enum: Q1 through
+// Q4 or FY, nothing else.
+func fiscalPeriodParam(name string, value FiscalPeriod) (queryParam, error) {
+	return wireEnumParam(name, string(value),
+		string(FiscalPeriodQ1), string(FiscalPeriodQ2), string(FiscalPeriodQ3),
+		string(FiscalPeriodQ4), string(FiscalPeriodFullYear))
+}
+
+// StatementPeriod is the seven-value period selector of the standard
+// statement endpoints: a FiscalPeriod or a RetrievalFrequency, as the libfmp
+// StatementPeriod union composes them. The constants repeat the wire
+// spellings of both families so a caller can pass either; any other value is
+// rejected when the request is built.
+type StatementPeriod string
+
+// The documented StatementPeriod wire values: the FiscalPeriod family first,
+// then the RetrievalFrequency family.
+const (
+	StatementPeriodQ1        StatementPeriod = "Q1"
+	StatementPeriodQ2        StatementPeriod = "Q2"
+	StatementPeriodQ3        StatementPeriod = "Q3"
+	StatementPeriodQ4        StatementPeriod = "Q4"
+	StatementPeriodFullYear  StatementPeriod = "FY"
+	StatementPeriodAnnual    StatementPeriod = "annual"
+	StatementPeriodQuarterly StatementPeriod = "quarter"
+)
+
+// statementPeriodParam mirrors the libfmp StatementPeriod union: one of the
+// five FiscalPeriod spellings or the two RetrievalFrequency spellings, in the
+// order the Rust decoder lists them.
+func statementPeriodParam(name string, value StatementPeriod) (queryParam, error) {
+	return wireEnumParam(name, string(value),
+		string(StatementPeriodQ1), string(StatementPeriodQ2), string(StatementPeriodQ3),
+		string(StatementPeriodQ4), string(StatementPeriodFullYear),
+		string(StatementPeriodAnnual), string(StatementPeriodQuarterly))
+}
+
+// SegmentationStructure is the documented response structure of the
+// revenue-segmentation endpoints. The provider documents only "flat"; the
+// libfmp SegmentationStructure is a closed enum with that one variant, so any
+// other value is rejected when the request is built.
+type SegmentationStructure string
+
+// The documented SegmentationStructure wire values.
+const (
+	SegmentationStructureFlat SegmentationStructure = "flat"
+)
+
+// segmentationStructureParam mirrors the libfmp SegmentationStructure wire
+// enum: "flat", nothing else.
+func segmentationStructureParam(name string, value SegmentationStructure) (queryParam, error) {
+	return wireEnumParam(name, string(value), string(SegmentationStructureFlat))
+}
+
 // EconomicIndicator is the indicator name of the economic-indicators
 // endpoint. The constants carry the 24 documented provider spellings, sent
 // verbatim. Unlike a closed wire enum, the libfmp EconomicIndicator is open:
