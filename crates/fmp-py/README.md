@@ -2,10 +2,10 @@
 
 `fmp-py-sdk` is the Python distribution for the Rust-backed `fmp` package, a typed client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API.
 
-The Python facade currently exposes 1 of the 276 endpoint entries in the
-repository's captured API documentation oracle: the documented
-`GET /stable/quote-short?symbol=...` endpoint. The remaining Python facades are
-planned work; Rust's broader endpoint coverage does not imply Python parity.
+The client exposes every `libfmp` endpoint method: 271 methods grouped into 30
+domain namespaces on `FmpClient`. Each namespace is generated from a registry
+that is validated against the real `libfmp` signatures, so the Python surface
+cannot drift from the Rust one.
 
 ```console
 python -m pip install fmp-py-sdk
@@ -15,8 +15,8 @@ python -m pip install fmp-py-sdk
 from fmp import FmpClient
 
 client = FmpClient()
-rows = client.quote_short("AAPL")
-print(rows)
+rows = client.quote.short("AAPL")
+print(rows[0].symbol, rows[0].price)
 ```
 
 `FmpClient()` reads the `FMP_API_KEY` environment variable when `token` is
@@ -25,7 +25,99 @@ omitted (unset, empty, or whitespace-only counts as absent); an explicit
 neither a token nor the variable, the default host raises `FmpConfigError`
 naming `FMP_API_KEY`, while a custom `base_url` selects no auth.
 
-`quote_short` returns `list[QuoteShort]`, preserving empty and multi-row provider responses. The public native modules follow a conventional HTTP SDK surface: `FmpClient` lives in `fmp.client`, the exception hierarchy lives in `fmp.errors`, and response models live in endpoint domains such as `fmp.quote`. Every public type also remains available from the package root. `FmpClient` is synchronous; it releases the Python GIL while its async Rust transport waits.
+`FmpClient` is synchronous: each call releases the Python GIL while the async
+Rust transport waits, so threads keep running. A Python async facade is not
+part of this release.
+
+## Requirements
+
+- CPython 3.10 or newer (`abi3-py310`: one wheel per platform covers every
+  supported interpreter).
+- Rust is only needed to build from source; the published wheels are
+  self-contained.
+
+## Namespaces
+
+Endpoints live under one attribute per domain, and nested domains such as
+`statements` group their sub-namespaces. Required arguments are positional,
+optional ones are keyword-only, and every name is snake_case: the FMP wire
+casing (`sicCode`, `linkXlsx`) never reaches Python.
+
+```python
+from fmp import FmpClient
+
+client = FmpClient()
+
+quotes = client.quote.short("AAPL")
+income = client.statements.income.statement("AAPL", period="annual", limit=5)
+valuation = client.dcf.custom_discounted_cash_flow(
+    "AAPL", beta=1.2, tax_rate=0.21, long_term_growth_rate=4.0
+)
+```
+
+| Namespace | Namespace | Namespace |
+|-----------|-----------|-----------|
+| `analyst` | `esg` | `market_hours` |
+| `bulk` | `forex` | `news` |
+| `calendar` | `fundraising` | `quote` |
+| `chart` | `funds` | `screener` |
+| `commitment_of_traders` | `indexes` | `search` |
+| `commodities` | `insider_trading` | `sec_filings` |
+| `company` | `institutional_ownership` | `statements` |
+| `congressional` | `market` | `technical_indicators` |
+| `crypto` | `dcf` | `tipranks` |
+| `directory` | `economics` | `transcripts` |
+
+`statements` nests `as_reported`, `balance`, `cash_flow`, `growth`, `income`,
+`metrics`, `ratios`, `reports`, `segmentation`, and `summaries`.
+
+## Responses
+
+- Typed rows: most methods return `list[Model]`, where each model is a
+  generated, immutable, picklable class living in the domain package (for
+  example `fmp.quote.QuoteShort` or `fmp.statements.income.IncomeStatement`).
+  Dates and timestamps are `datetime.date` and `datetime.datetime`. Shared
+  Rust response types map to one shared Python class rather than a copy per
+  endpoint.
+- Dynamic rows: endpoints whose documented shape is open-ended return
+  `list[dict[str, Any]]` with the raw provider keys, for example
+  `client.sec_filings.search_industry_classifications(symbol="AAPL")`. A
+  dynamic field inside a typed model (such as `FinancialReportJson.data`)
+  is exposed as `Any`.
+- Binary bodies: `client.statements.reports.xlsx("AAPL", 2022, "FY")` returns
+  a single `fmp.BinaryPayload` instead of a list. `data` is the body as
+  `bytes`, alongside `content_type`, `content_disposition`, and `byte_len`.
+
+## Validation and errors
+
+Arguments are validated locally before any request: an empty ticker, a
+malformed date, or a non-finite float raises `FmpValidationError` whose
+message starts with the argument name, and nothing is sent. The exception
+hierarchy lives in `fmp.errors` (every class is also exported from the
+package root):
+
+| Exception | Raised when |
+|-----------|-------------|
+| `FmpError` | base class; carries `category`, `endpoint`, `status`, `body`, `body_truncated` |
+| `FmpConfigError` | the client cannot be built (missing key, bad URL, insecure auth) |
+| `FmpValidationError` | an argument is rejected before the request |
+| `FmpTransportError` | the request never produced a response |
+| `FmpStatusError` | the provider answered with a non-success status |
+| `FmpDecodeError` | the body could not be decoded into the documented shape |
+
+```python
+from fmp import FmpClient
+from fmp.errors import FmpStatusError
+
+client = FmpClient()
+try:
+    client.quote.short("AAPL")
+except FmpStatusError as error:
+    print(error.status, error.endpoint, error.body)
+```
+
+Bodies attached to errors are redacted before they reach Python: an echoed
+`apikey` query value shows as `[REDACTED]`.
 
 ## Custom router or proxy
 
@@ -43,16 +135,21 @@ client = FmpClient(
     token=os.environ["FMP_PROXY_TOKEN"],
     headers={"X-Tenant": os.environ["FMP_TENANT"]},
 )
-rows = client.quote_short("AAPL")
+rows = client.quote.short("AAPL")
 ```
 
 Available auth modes are `none`, `fmp_header`, `fmp_query`, `bearer`, `custom_header`, and `custom_query`. `auth_mode="none"` supports credential-free local or trusted routers. Redirect following is either disabled or same-origin only.
 
-The package supports CPython 3.9 or newer through Python's stable ABI. Native
-public modules are paired with documentation/source `.py` shims and
-hand-maintained `.pyi` contracts, plus a `py.typed` marker for type checkers.
-Transport, configuration, and runtime internals are intentionally not exposed
-as Python modules.
+## Typing
+
+The package ships a `py.typed` marker, and every native module has a `.pyi`
+stub generated by `pyo3-stub-gen` from the Rust signatures, so `pyright` and
+`mypy` see the exact method names, keyword-only arguments, and return types.
+The public modules follow a conventional HTTP SDK layout: `FmpClient` lives in
+`fmp.client`, the exception hierarchy in `fmp.errors`, and the models and
+namespace classes in the domain packages such as `fmp.quote` and
+`fmp.statements.income`. Transport, configuration, and runtime internals are
+intentionally not exposed as Python modules.
 
 ## Secret URLs
 
@@ -105,8 +202,9 @@ method, a mismatched query type, an unknown arg kind, a setter that does not
 exist, or a missing model file fails with the file and entry named. Query
 types emitted by `macro_rules!` are recovered by expanding the macro; the
 report says whether each entry was verified directly, through a macro, or
-trusted because its constructor could not be seen. Pass a directory argument
-to check a different registry tree.
+trusted because its constructor could not be seen, and ends with the total
+(`registry ok: 271 verified, 0 trusted`). Pass a directory argument to check
+a different registry tree.
 
 ## Regenerating the endpoint namespaces
 
@@ -127,10 +225,10 @@ after a Python keyword (`from`) is spelled with a trailing underscore
 (`from_`) on the Python side while the `libfmp` setter keeps its name.
 Entries marked `binary = true` (the endpoints whose `libfmp` method returns
 `BinaryResponse`, such as the XLSX financial report download) return a single
-`BinaryPayload` instead of a list of models: `data` is the body as `bytes`,
-alongside `content_type`, `content_disposition`, and `byte_len`.
-`BinaryPayload` is hand-written in `src/binary.rs` and exported from the
-package root as `fmp.BinaryPayload`.
+`BinaryPayload` instead of a list of models; entries marked
+`response = "dynamic"` return `list[dict[str, Any]]`. `BinaryPayload` is
+hand-written in `src/binary.rs` and exported from the package root as
+`fmp.BinaryPayload`.
 
 The same run emits the wiring that binds the generated code into the
 extension, so adding a domain never edits `lib.rs` or `client.rs`:

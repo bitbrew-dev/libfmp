@@ -4,10 +4,13 @@
 
 The crate implements all 276 endpoint entries in the repository's captured API
 documentation oracle through transport-independent descriptors, typed queries,
-response models, and `Client` methods. This is coverage of that pinned oracle,
-not a claim that every endpoint currently or historically offered by the
-provider is covered. The separately distributed synchronous Python facade
-currently exposes 1 of those 276 entries.
+response models, and 271 `Client` methods (a few documented entries share one
+method). This is coverage of that pinned oracle, not a claim that every
+endpoint currently or historically offered by the provider is covered. The
+separately distributed synchronous Python client (`fmp-py-sdk`, imported as
+`fmp`) exposes all 271 methods as `client.<domain>.<method>(...)` namespaces
+generated from these signatures; see
+[crates/fmp-py/README.md](../fmp-py/README.md).
 
 ```rust
 use std::env;
