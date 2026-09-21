@@ -94,12 +94,14 @@ impl<'a> TypeTable<'a> {
             .as_deref()
             .or(field.attrs.deserialize_with.as_deref());
         let (codec, shadow_ty) = match (codec_attr, base.kind, wraps.as_slice()) {
-            (Some("required_option"), BaseKind::Scalar, [Wrap::Option, ..]) => {
-                (Codec::RequiredOption, "jsontext.Value".to_string())
-            }
+            (
+                Some("required_option"),
+                BaseKind::Scalar | BaseKind::DynamicJson,
+                [Wrap::Option, ..],
+            ) => (Codec::RequiredOption, "jsontext.Value".to_string()),
             (Some("required_option"), _, _) => {
                 return Err(fail(
-                    "required_option needs an Option<scalar> field".to_string(),
+                    "required_option needs an Option<scalar or DynamicJson> field".to_string(),
                 ));
             }
             (
