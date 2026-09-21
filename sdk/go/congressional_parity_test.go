@@ -48,8 +48,8 @@ func TestDocumentedCongressionalTradesDecodeExactValues(t *testing.T) {
 	flag := got.CapitalGainsOver200Usd
 	got.CapitalGainsOver200Usd = nil
 	want := CongressionalTrade{
-		Symbol: "", MemberId: "M000934", DisclosureDate: mustDate(t, "2026-07-21"),
-		TransactionDate: mustDate(t, "2026-06-23"), FirstName: "Jerry", LastName: "Moran", Office: "Jerry Moran",
+		Symbol: "", MemberId: "M000934", DisclosureDate: mustParseDate(t, "2026-07-21"),
+		TransactionDate: mustParseDate(t, "2026-06-23"), FirstName: "Jerry", LastName: "Moran", Office: "Jerry Moran",
 		District: "KS", Owner: "Self", AssetDescription: "Berkshire Hathaway Inc", AssetType: "Stock",
 		TransactionType: "Purchase", Amount: "$15,001 - $50,000", Comment: "",
 		Link: "https://efdsearch.senate.gov/search/view/ptr/cff197e2-b90b-4b53-b97d-eecf226a1980/",
@@ -74,7 +74,7 @@ func TestDocumentedCongressionalTradesDecodeExactValues(t *testing.T) {
 
 	house := assertFixtureParity[CongressionalTrade](t, "congress_house_latest.json")
 	if members := memberSet(t, house[0]); len(members) != 16 || house[0].District != "FL23" ||
-		house[0].TransactionDate != mustDate(t, "2026-06-17") {
+		house[0].TransactionDate != mustParseDate(t, "2026-06-17") {
 		t.Fatalf("congress_house_latest = %+v with members %v", house, members)
 	}
 	for _, name := range congressionalTradeFixtures[2:] {
@@ -91,7 +91,7 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	profiles := assertFixtureParity[CongressionalMemberProfile](t, "congress_senate_profile.json")
 	if want := (CongressionalMemberProfile{MemberId: "L000397", FirstName: "Zoe", LastName: "Lofgren",
-		BirthDate: mustDate(t, "1947-12-20"), LatestParty: "Democrat", LatestState: "CA", LatestPosition: "Representative",
+		BirthDate: mustParseDate(t, "1947-12-20"), LatestParty: "Democrat", LatestState: "CA", LatestPosition: "Representative",
 		Image: "https://images.financialmodelingprep.com/senate/L000397.jpg", Active: true,
 		YearsActive: 31.6}); len(profiles) != 1 || profiles[0] != want {
 		t.Fatalf("congress_senate_profile = %+v", profiles)
@@ -105,7 +105,7 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 	if position.EndDate != nil {
 		t.Fatalf("endDate = %v, want nil for null", position.EndDate)
 	}
-	if position.MemberId != "Z000018" || position.CongressNumber != 119 || position.StartDate != mustDate(t, "2025-01-02") ||
+	if position.MemberId != "Z000018" || position.CongressNumber != 119 || position.StartDate != mustParseDate(t, "2025-01-02") ||
 		position.Party != "Republican" || position.Position != "Representative" || position.State != "MT" ||
 		position.YearsInTerm != 0.7 {
 		t.Fatalf("congress_senate_positions = %+v", position)
@@ -120,7 +120,7 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 	}
 	entry := entries[0]
 	if entry.MemberId != "P000197" || entry.FormType != "House Report" || entry.Year != 2022 ||
-		entry.FilingDate != mustDate(t, "2023-05-15") || entry.Section != "Liabilities" ||
+		entry.FilingDate != mustParseDate(t, "2023-05-15") || entry.Section != "Liabilities" ||
 		entry.Category != "Mortgage & Real Estate Liability" || entry.Name != "Union Bank of California" ||
 		entry.AssetType != "Mortgage on 2640 Broadway, San Francisco, CA" || entry.Owner != "Joint" ||
 		entry.Value != 3_000_001 ||
@@ -199,7 +199,7 @@ func TestCongressionalRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 
 	var positions []CongressionalMemberPosition
 	if err := json.Unmarshal([]byte(`[`+position+`,"endDate":"2027-01-03"}]`), &positions); err != nil ||
-		len(positions) != 1 || positions[0].EndDate == nil || *positions[0].EndDate != mustDate(t, "2027-01-03") {
+		len(positions) != 1 || positions[0].EndDate == nil || *positions[0].EndDate != mustParseDate(t, "2027-01-03") {
 		t.Fatalf("position with a dated endDate = %+v, %v", positions, err)
 	}
 	var entries []CongressionalMemberNetWorthEntry
