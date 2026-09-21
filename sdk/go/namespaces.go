@@ -43,6 +43,8 @@ type Namespaces struct {
 	News NewsNamespace
 	// Quote holds the quote endpoints.
 	Quote QuoteNamespace
+	// Search holds the search endpoints.
+	Search SearchNamespace
 }
 
 // bindNamespaces points every namespace at its client.
@@ -64,4 +66,5 @@ func (c *Client) bindNamespaces() {
 	c.MarketHours = newMarketHoursNamespace(c)
 	c.News = newNewsNamespace(c)
 	c.Quote = newQuoteNamespace(c)
+	c.Search = newSearchNamespace(c)
 }
