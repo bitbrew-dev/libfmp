@@ -44,6 +44,7 @@ from fmp.economics import (
     TreasuryRate,
 )
 from fmp.errors import FmpStatusError, FmpValidationError
+from fmp.esg import EsgBenchmark, EsgDisclosure, EsgNamespace, EsgRating
 from fmp.forex import ForexNamespace, ForexPair
 from fmp.fundraising import (
     CrowdfundingOffering,
@@ -549,6 +550,23 @@ def check_commitment_of_traders_contract(client: FmpClient) -> None:
     listings: list[CotReportListing] = client.commitment_of_traders.report_list()
     listed_symbol: str = listings[0].symbol
     _ = (reported_on, spread_change, contract_units, net_position, net_change, reversal, listed_symbol)
+
+
+def check_esg_contract(client: FmpClient) -> None:
+    """Type-check the flat esg namespace, its required symbol, the keyword-only year, and the rows."""
+    esg: EsgNamespace = client.esg
+    disclosures: list[EsgDisclosure] = esg.disclosures("AAPL")
+    filed_on: datetime.date = disclosures[0].date
+    accepted_on: datetime.date = disclosures[0].accepted_date
+    esg_score: float = disclosures[0].esg_score
+    ratings: list[EsgRating] = client.esg.ratings("AAPL")
+    fiscal_year: int = ratings[0].fiscal_year
+    risk_rating: str = ratings[0].esg_risk_rating
+    benchmarks: list[EsgBenchmark] = client.esg.benchmark(year="FY 2024/25")
+    all_years: list[EsgBenchmark] = client.esg.benchmark()
+    sector: str = benchmarks[0].sector
+    governance: float = all_years[0].governance_score
+    _ = (filed_on, accepted_on, esg_score, fiscal_year, risk_rating, sector, governance)
 
 
 def check_public_contract(client: FmpClient) -> None:
