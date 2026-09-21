@@ -365,8 +365,8 @@ pub(crate) fn arg_kind_go(kind: ArgKind) -> Result<ArgGo, String> {
         ArgKind::ApiDatetime => ("DateTime", "dateTimeParam"),
         ArgKind::RetrievalFrequency => ("RetrievalFrequency", "retrievalFrequencyParam"),
         ArgKind::EconomicIndicator => ("EconomicIndicator", "economicIndicatorParam"),
-        ArgKind::Quarter
-        | ArgKind::DateRange
+        ArgKind::Quarter => ("Quarter", "quarterParam"),
+        ArgKind::DateRange
         | ArgKind::FiscalPeriod
         | ArgKind::StatementPeriod
         | ArgKind::ChartTimeframe
