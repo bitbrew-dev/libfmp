@@ -1,0 +1,18 @@
+# Fixture: the second constructor argument of `CustomDcfQuery::new` is a
+# nested builder (`DcfAssumptions`) whose setters flatten into keyword-only
+# parameters; the emitter assembles the builder before the constructor call.
+
+[[endpoint]]
+name = "custom_discounted_cash_flow"
+method = "custom_discounted_cash_flow"
+query = "CustomDcfQuery"
+response = "dcf::CustomDcfValuation"
+doc = "Retrieves a custom unlevered discounted-cash-flow valuation."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "assumptions", nested = { type = "DcfAssumptions", setters = [
+        { arg = "revenue_growth_pct", kind = "finite_decimal" },
+        { arg = "beta", kind = "finite_decimal" },
+        { arg = "risk_free_rate", kind = "finite_decimal" },
+    ] } },
+]

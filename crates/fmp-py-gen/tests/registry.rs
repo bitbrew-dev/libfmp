@@ -213,6 +213,66 @@ fn impl_level_macro_setters_verify_as_direct() {
 }
 
 #[test]
+fn nested_builder_flattens_setters_and_verifies_against_the_builder_type() {
+    let registry = Registry::load(&fixture("nested_builder")).expect("fixture loads");
+    let custom = &registry.domains[0].namespaces[0].endpoints[0];
+    let names: Vec<&str> = custom.args.iter().map(|arg| arg.name.as_str()).collect();
+    assert_eq!(
+        names,
+        ["symbol", "revenue_growth_pct", "beta", "risk_free_rate"]
+    );
+    assert!(custom.args[1..].iter().all(|arg| !arg.required));
+    assert_eq!(custom.nested.len(), 1);
+    assert_eq!(custom.nested[0].type_name, "DcfAssumptions");
+    assert_eq!(custom.nested[0].position, 1);
+    assert_eq!(custom.nested[0].setters[2].method, "with_risk_free_rate");
+    let ctor: Vec<&str> = custom.ctor_args().iter().map(|arg| arg.name()).collect();
+    assert_eq!(ctor, ["symbol", "assumptions"]);
+    assert_eq!(custom.ctor_args()[1].libfmp_type(), "DcfAssumptions");
+
+    let report = registry
+        .validate(&endpoints_root(), &models_root())
+        .expect("nested builder fixture validates");
+    assert!(report.trusted.is_empty(), "{:?}", report.trusted);
+    assert_eq!(report.verified.len(), 1);
+    assert_eq!(report.verified[0].query_origin, Some(Origin::Direct));
+    assert_eq!(
+        report.verified[0].nested_modules["DcfAssumptions"],
+        vec!["dcf".to_owned()]
+    );
+
+    let errors = validate(&fixture("nested_builder_mismatch"));
+    let file = "nested_builder_mismatch/dcf.toml";
+    let custom = "dcf.custom_discounted_cash_flow";
+    assert_names(
+        &errors,
+        file,
+        custom,
+        "setter arg `beta` has kind `limit` (a `Limit`) but `DcfAssumptions::with_beta` takes `FiniteDecimal`",
+    );
+    assert_names(
+        &errors,
+        file,
+        custom,
+        "`DcfAssumptions` has no single-parameter `pub fn with_betas` for arg `betas`",
+    );
+    let levered = "dcf.custom_levered_discounted_cash_flow";
+    assert_names(
+        &errors,
+        file,
+        levered,
+        "ctor arg `assumptions` is the nested builder `DcfAssumptions` but `CustomDcfQuery::new` parameter `symbol` is `Ticker`",
+    );
+    assert_names(
+        &errors,
+        file,
+        levered,
+        "ctor arg `symbol` has kind `ticker` (a `Ticker`) but `CustomDcfQuery::new` parameter `assumptions` is `DcfAssumptions`",
+    );
+    assert_eq!(errors.len(), 4);
+}
+
+#[test]
 fn keyword_arg_names_get_python_safe_spellings() {
     let registry = Registry::load(&fixture("keyword_args")).expect("fixture loads");
     let endpoint = &registry.domains[0].namespaces[0].endpoints[0];

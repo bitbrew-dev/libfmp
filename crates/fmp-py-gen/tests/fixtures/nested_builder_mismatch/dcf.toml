@@ -1,0 +1,30 @@
+# Fixture: nested builder drift. The first entry has a setter with the wrong
+# kind and one the builder does not define; the second places the builder
+# before the symbol, so both constructor slots disagree with `new`.
+
+[[endpoint]]
+name = "custom_discounted_cash_flow"
+method = "custom_discounted_cash_flow"
+query = "CustomDcfQuery"
+response = "dcf::CustomDcfValuation"
+doc = "Retrieves a custom unlevered discounted-cash-flow valuation."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "assumptions", nested = { type = "DcfAssumptions", setters = [
+        { arg = "beta", kind = "limit" },
+        { arg = "betas", kind = "finite_decimal" },
+    ] } },
+]
+
+[[endpoint]]
+name = "custom_levered_discounted_cash_flow"
+method = "custom_levered_discounted_cash_flow"
+query = "CustomDcfQuery"
+response = "dcf::CustomLeveredDcfValuation"
+doc = "Retrieves a custom levered discounted-cash-flow valuation."
+args = [
+    { name = "assumptions", nested = { type = "DcfAssumptions", setters = [
+        { arg = "beta", kind = "finite_decimal" },
+    ] } },
+    { name = "symbol", kind = "ticker" },
+]

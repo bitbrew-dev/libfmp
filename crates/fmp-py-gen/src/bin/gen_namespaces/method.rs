@@ -6,7 +6,9 @@
 //! so an async twin can reuse them without touching this template. A
 //! `binary = true` entry returns one `BinaryPayload` instead of a `Vec` of
 //! models, with the same hand-off; a `response = "dynamic"` entry returns
-//! each untyped row as a Python `dict` through `crate::convert`.
+//! each untyped row as a Python `dict` through `crate::convert`. A nested
+//! builder is assembled in the query builder from its flattened keyword
+//! arguments and passed whole to the query constructor.
 
 use std::fmt::Write as _;
 
@@ -187,6 +189,21 @@ pub(crate) fn render_query_fn(out: &mut String, endpoint: &Endpoint, struct_name
             let _ = writeln!(
                 out,
                 "    let {python} = args::optional(\"{python}\", {python}, args::{kind})?;"
+            );
+        }
+    }
+    for builder in &endpoint.nested {
+        let local = &builder.name;
+        let _ = writeln!(out, "    let mut {local} = {}::new();", builder.type_name);
+        for setter in &builder.setters {
+            let Some(arg) = endpoint.setter_arg(setter) else {
+                continue;
+            };
+            let python = arg.python_name();
+            let _ = writeln!(
+                out,
+                "    if let Some({python}) = {python} {{\n        {local} = {local}.{}({python});\n    }}",
+                setter.method
             );
         }
     }

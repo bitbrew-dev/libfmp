@@ -33,7 +33,7 @@ use crate::bindings::{
     build_bindings, render_client_namespaces, render_facade_domains, render_namespaces_mod,
     render_registration,
 };
-use crate::emit::{QueryModules, Rendered, render};
+use crate::emit::{EntryModules, QueryModules, Rendered, render};
 use crate::models::scan_models;
 use crate::plan::{Node, build_tree};
 
@@ -152,12 +152,19 @@ fn write_file(file: &Path, source: &str, written: &mut Vec<PathBuf>) -> Result<(
     Ok(())
 }
 
-/// The query module of every verified entry, keyed by dotted entry.
+/// The query and nested builder modules of every verified entry, keyed by
+/// dotted entry.
 pub(crate) fn query_modules(report: &Report) -> QueryModules {
     let mut modules = BTreeMap::new();
     for entry in &report.verified {
         if let Some(module) = &entry.query_module {
-            modules.insert(entry.entry.clone(), module.clone());
+            modules.insert(
+                entry.entry.clone(),
+                EntryModules {
+                    query: module.clone(),
+                    nested: entry.nested_modules.clone(),
+                },
+            );
         }
     }
     modules
