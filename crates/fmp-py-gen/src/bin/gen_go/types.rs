@@ -373,10 +373,10 @@ pub(crate) fn arg_kind_go(kind: ArgKind) -> Result<ArgGo, String> {
         ArgKind::RetrievalFrequency => ("RetrievalFrequency", "retrievalFrequencyParam"),
         ArgKind::EconomicIndicator => ("EconomicIndicator", "economicIndicatorParam"),
         ArgKind::Quarter => ("Quarter", "quarterParam"),
+        ArgKind::ChartTimeframe => ("ChartTimeframe", "chartTimeframeParam"),
         ArgKind::DateRange
         | ArgKind::FiscalPeriod
         | ArgKind::StatementPeriod
-        | ArgKind::ChartTimeframe
         | ArgKind::SegmentationStructure
         | ArgKind::OpenEconomicIndicator => {
             return Err(format!(
