@@ -35,6 +35,7 @@ from fmp.congressional import (
     CongressionalTrade,
 )
 from fmp.crypto import CryptocurrencyListing, CryptoNamespace
+from fmp.dcf import CustomDcfValuation, CustomLeveredDcfValuation, DcfNamespace, DcfValuation
 from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
 from fmp.economics import (
     EconomicCalendarEvent,
@@ -590,6 +591,25 @@ def check_transcripts_contract(client: FmpClient) -> None:
     quarter: int = dates[0].quarter
     available_on: datetime.date = dates[0].date
     _ = (latest_period, latest_fiscal_year, latest_date, year, content, held_on, quarter, available_on)
+
+
+def check_dcf_contract(client: FmpClient) -> None:
+    """Type-check the flat dcf namespace, the symbol-only methods, and the keyword-only flattened assumptions."""
+    dcf: DcfNamespace = client.dcf
+    standard: list[DcfValuation] = dcf.discounted_cash_flow("AAPL")
+    levered: list[DcfValuation] = client.dcf.levered_discounted_cash_flow("AAPL")
+    valued_on: datetime.date = standard[0].date
+    value: float = levered[0].dcf
+    custom: list[CustomDcfValuation] = client.dcf.custom_discounted_cash_flow(
+        "AAPL", revenue_growth_pct=0.109, tax_rate=0.149, long_term_growth_rate=4, beta=1.244
+    )
+    custom_levered: list[CustomLeveredDcfValuation] = client.dcf.custom_levered_discounted_cash_flow(
+        "AAPL", cost_of_debt=3.64, cost_of_equity=9.51168, risk_free_rate=3.64
+    )
+    year: str = custom[0].year
+    capital_expenditure: int = custom[0].capital_expenditure
+    per_share: float = custom_levered[0].equity_value_per_share
+    _ = (valued_on, value, year, capital_expenditure, per_share)
 
 
 def check_public_contract(client: FmpClient) -> None:
