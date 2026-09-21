@@ -140,6 +140,9 @@ that no wire information is invented or lost:
 | `SecretUrl` (`FinancialReportDate.link_json`, `link_xlsx`) | `string` | exact wire text; the SDK never formats a decoded row into an error, log, or body, so the only way the URL reaches output is a caller printing it, which is explicit (the Python binding exposes the same `str`) |
 | `#[serde(flatten)] DynamicObject`, or the single `DynamicObject` of a struct with a hand-written `Deserialize` (`FinancialReportJson.sections`) | `jsontext.Value` with struct tag `json:",embed"` | every member no named field claims, collected and re-emitted in place; a duplicate of a named member fails re-encoding, as the Rust serializer rejects reserved keys |
 | `#[serde(rename = "1D")]` | struct tag `json:"1D"` | |
+| `CalendarQuarter` on a response model (`u8`, validated 1 to 4 in Rust) | `uint8` | no range check on decode: Rust validates, Go parity tests prove the JSON kind only; accepted difference, same policy as `IsoTimestamp` |
+| `FiscalPeriod` on a response model (`bulk` statement rows) | `string` | the closed Rust enum is not mirrored on the response side; accepted difference, same policy as `IsoTimestamp`. The query-side `FiscalPeriod` stays a typed string |
+| `pub type` aliases of a model (`FundDisclosureDate = Form13fFilingDate`) | not emitted | the Go method returns the aliased model's Go type (`[]Form13fFilingDate`), so one Rust model is one Go type |
 
 Required-field fidelity is kept. serde rejects a missing non-optional field
 while `encoding/json` zero-fills silently, so the generator emits a shadow
