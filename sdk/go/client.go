@@ -148,11 +148,11 @@ func WithHTTPClient(client *http.Client) Option {
 
 // Client is the shared FMP client. It is safe for concurrent use. Formatting
 // it with any fmt verb never reveals a credential or a configured URL.
-// Endpoints are grouped by registry domain into namespace fields such as
-// Quote; see the "Endpoint surface" section of the package documentation.
+// Endpoints are grouped by registry domain into the namespace fields of the
+// embedded Namespaces (client.Quote.Full and so on); see the "Endpoint
+// surface" section of the package documentation.
 type Client struct {
-	// Quote holds the quote-domain endpoints (client.Quote.Full and so on).
-	Quote QuoteNamespace
+	Namespaces
 
 	baseURL              *url.URL
 	pathPrefix           string
@@ -250,7 +250,7 @@ func NewClient(opts ...Option) (*Client, error) {
 		maxResponseBodyBytes: cfg.maxResponseBodyBytes,
 		redirectPolicy:       cfg.redirectPolicy,
 	}
-	client.Quote = QuoteNamespace{client: client}
+	client.bindNamespaces()
 	return client, nil
 }
 
