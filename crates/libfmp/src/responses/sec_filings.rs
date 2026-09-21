@@ -1,6 +1,8 @@
 //! Response models for SEC filings, company lookup, profiles, and SIC data.
 //!
-//! Future Python bindings reserve these models under `fmp.sec_filings`.
+//! The provider documents every SEC-filings route as available for
+//! US-based companies only. The Python binding exposes these models under
+//! `fmp.sec_filings`.
 
 use serde::{Deserialize, Serialize};
 

@@ -1,4 +1,9 @@
 //! SEC filing, company lookup, profile, and industry-classification query contracts.
+//!
+//! The provider documents every SEC-filings route as available for US-based
+//! companies only, so each descriptor carries
+//! [`GeographicAvailability::UsOnly`]. The Python binding exposes the same
+//! twelve routes under `client.sec_filings`.
 
 use crate::{
     Client, Result,
