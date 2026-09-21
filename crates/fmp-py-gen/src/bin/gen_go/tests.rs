@@ -145,7 +145,13 @@ fn unmapped_types_fail_naming_the_struct_and_field() {
             "plain",
             "f64",
             deserialize_with("required_option"),
-            "Option<scalar>",
+            "Option<scalar or DynamicJson>",
+        ),
+        (
+            "object",
+            "Option<DynamicObject>",
+            deserialize_with("required_option"),
+            "Option<scalar or DynamicJson>",
         ),
         (
             "defaulted",
@@ -194,6 +200,11 @@ fn codec_fields_map_to_the_shadow_shapes_of_the_adr() {
         field("flag", "Option<YnFlag>", FieldAttrs::default()),
         field("ratio", "PercentageValue", FieldAttrs::default()),
         field("prices", "Vec<Option<Price>>", FieldAttrs::default()),
+        field(
+            "shares",
+            "Option<DynamicJson>",
+            deserialize_with("required_option"),
+        ),
     ]);
     let fields: Vec<_> = def
         .fields
@@ -319,6 +330,17 @@ fn codec_fields_map_to_the_shadow_shapes_of_the_adr() {
             "[]*float64",
             "*[]*float64",
             Codec::Plain,
+            true
+        )
+    );
+    assert_eq!(
+        shape(12),
+        (
+            "Shares",
+            "shares",
+            "*jsontext.Value",
+            "jsontext.Value",
+            Codec::RequiredOption,
             true
         )
     );
