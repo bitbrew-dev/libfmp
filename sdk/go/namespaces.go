@@ -37,6 +37,8 @@ type Namespaces struct {
 	Forex ForexNamespace
 	// Fundraising holds the fundraising endpoints.
 	Fundraising FundraisingNamespace
+	// Funds holds the funds endpoints.
+	Funds FundsNamespace
 	// Indexes holds the indexes endpoints.
 	Indexes IndexesNamespace
 	// InsiderTrading holds the insider_trading endpoints.
@@ -83,6 +85,7 @@ func (c *Client) bindNamespaces() {
 	c.Esg = newEsgNamespace(c)
 	c.Forex = newForexNamespace(c)
 	c.Fundraising = newFundraisingNamespace(c)
+	c.Funds = newFundsNamespace(c)
 	c.Indexes = newIndexesNamespace(c)
 	c.InsiderTrading = newInsiderTradingNamespace(c)
 	c.InstitutionalOwnership = newInstitutionalOwnershipNamespace(c)
