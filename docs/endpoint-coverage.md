@@ -6,7 +6,8 @@ This table records the coverage the `libfmp` crate and the `fmp-py-sdk` wheel sh
 entry in the captured FMP documentation oracle (`artifacts/documentations/outer.md`). It is the
 release deliverable planned for v0.2.0 (#41); that version was superseded before the table landed, and
 the coverage below has shipped through the 0.2.0 .. 0.7.0 releases (crates.io `libfmp` and PyPI
-`fmp-py-sdk` share the Cargo workspace version).
+`fmp-py-sdk` share the Cargo workspace version, and the Go module `sdk/go` shares it too, tagged
+`sdk/go/vX.Y.Z` at each release commit).
 
 - Documented oracle entries: 276
 - Rust `Client` methods: 271 (`cargo run -p fmp-py-gen --bin registry_check` verifies each one)
