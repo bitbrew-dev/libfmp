@@ -81,7 +81,7 @@ valuation = client.dcf.custom_discounted_cash_flow(
 - Dynamic rows: endpoints whose documented shape is open-ended return
   `list[dict[str, Any]]` with the raw provider keys, for example
   `client.sec_filings.search_industry_classifications(symbol="AAPL")`. A
-  dynamic field inside a typed model (such as `FinancialReportJson.data`)
+  dynamic field inside a typed model (such as `FinancialReportJson.sections`)
   is exposed as `Any`.
 - Binary bodies: `client.statements.reports.xlsx("AAPL", 2022, "FY")` returns
   a single `fmp.BinaryPayload` instead of a list. `data` is the body as
@@ -254,8 +254,9 @@ cargo run -p fmp-py --bin stub_gen
 `stub_gen` post-processes each `__init__.pyi` (absolute imports, no
 `# ruff: noqa` header, `ruff format --isolated --line-length 88` in `.py`
 mode) so a run on an unchanged tree leaves `git status` clean. It needs
-`ruff` at the version pinned in `.pre-commit-config.yaml` (currently
-0.15.12): either that exact `ruff` on `PATH` or `uvx`, which fetches it. Run
-it after `gen_models` or `gen_namespaces`, and commit the result.
+`ruff` at the version pinned in this crate's `.pre-commit-config.yaml` and as
+`RUFF_VERSION` in `src/bin/stub_gen.rs` (currently 0.15.12, the two must
+agree): either that exact `ruff` on `PATH` or `uvx`, which fetches it. Run it
+after `gen_models` or `gen_namespaces`, and commit the result.
 
 This project is available under the [MIT License](LICENSE).
