@@ -17,17 +17,27 @@ The module path ends in `go`, so import it with an alias:
 import fmp "github.com/bitbrew-dev/libfmp/sdk/go"
 ```
 
-Releases are tagged `sdk/go/vX.Y.Z` at the workspace version, and the install
-command is:
+The Go module shares the libfmp workspace version: every release tags
+`sdk/go/vX.Y.Z` at the release commit (the tag carries the subdirectory
+prefix that Go requires for a nested module, while the module version stays
+`vX.Y.Z`), so install a release with:
 
 ```sh
-go get github.com/bitbrew-dev/libfmp/sdk/go@sdk/go/vX.Y.Z
+go get github.com/bitbrew-dev/libfmp/sdk/go@vX.Y.Z
 ```
 
-**No Go tag exists yet.** The first `sdk/go/vX.Y.Z` tag is created by the
-release plumbing in a later phase and is user-triggered. Until then, use a
-source checkout of this repository and point your module at it with a
-`replace` directive:
+Because the version is shared, a `feat(sdk/go)` commit minor-bumps the
+workspace and republishes `libfmp` and `fmp-py` with no Rust change; ADR 0030
+accepts that consequence. Releases are user-triggered, and the first
+`sdk/go/v*` tag ships with the first release after the release plumbing
+landed. Check which versions have been published with:
+
+```sh
+go list -m -versions github.com/bitbrew-dev/libfmp/sdk/go
+```
+
+While that list is empty, use a source checkout of this repository and point
+your module at it with a `replace` directive:
 
 ```
 require github.com/bitbrew-dev/libfmp/sdk/go v0.0.0
