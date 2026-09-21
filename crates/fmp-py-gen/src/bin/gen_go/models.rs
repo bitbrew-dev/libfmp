@@ -113,15 +113,16 @@ fn render_model(model: &ModelPlan, out: &mut String) {
     let _ = writeln!(out, "\t*m = {}{{", model.name);
     for (field, rust_name) in model.fields.iter().zip(&model.rust_names) {
         let value = match field.codec {
-            Codec::Plain | Codec::DynamicObject if !field.optional => {
+            Codec::Plain | Codec::DynamicObject | Codec::Number if !field.optional => {
                 format!("*shadow.{}", field.name)
             }
-            Codec::Plain | Codec::DynamicObject | Codec::DynamicJson => {
+            Codec::Plain | Codec::DynamicObject | Codec::Number | Codec::DynamicJson => {
                 format!("shadow.{}", field.name)
             }
-            Codec::RequiredOption | Codec::EmptyDate | Codec::EmptyOrNullDate => {
-                local_name(rust_name)
-            }
+            Codec::RequiredOption
+            | Codec::RequiredNumber
+            | Codec::EmptyDate
+            | Codec::EmptyOrNullDate => local_name(rust_name),
         };
         let _ = writeln!(out, "\t\t{}: {value},", field.name);
     }
@@ -138,10 +139,13 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
     for field in required {
         let test = match field.codec {
             Codec::RequiredOption
+            | Codec::RequiredNumber
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate
             | Codec::DynamicJson => format!("len(shadow.{}) == 0", field.name),
-            Codec::Plain | Codec::DynamicObject => format!("shadow.{} == nil", field.name),
+            Codec::Plain | Codec::DynamicObject | Codec::Number => {
+                format!("shadow.{} == nil", field.name)
+            }
         };
         let _ = writeln!(
             out,
@@ -175,22 +179,37 @@ fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut Strin
                 field.wire, field.name
             );
         }
-        Codec::DynamicObject => {
-            let guard = if field.optional {
-                format!(
-                    "shadow.{} != nil && shadow.{}.Kind() != '{{'",
-                    field.name, field.name
-                )
-            } else {
-                format!("shadow.{}.Kind() != '{{'", field.name)
-            };
+        Codec::DynamicObject => render_kind_guard(model, field, '{', "object", out),
+        Codec::Number => render_kind_guard(model, field, '0', "number", out),
+        Codec::RequiredNumber => {
             let _ = writeln!(
                 out,
-                "\tif {guard} {{\n\t\treturn invalidMemberError({model:?}, {:?}, \"object\")\n\t}}",
-                field.wire
+                "\tvar {local} *jsontext.Value\n\tif shadow.{}.Kind() != 'n' {{\n\
+                 \t\tif shadow.{}.Kind() != '0' {{\n\
+                 \t\t\treturn invalidMemberError({model:?}, {:?}, \"number\")\n\t\t}}\n\
+                 \t\t{local} = &shadow.{}\n\t}}",
+                field.name, field.name, field.wire, field.name
             );
         }
     }
+}
+
+/// The kind check of a pointer-shadow raw member: a present value whose
+/// starting token is not `kind` is rejected the way serde rejects it.
+fn render_kind_guard(model: &str, field: &GoField, kind: char, expected: &str, out: &mut String) {
+    let guard = if field.optional {
+        format!(
+            "shadow.{} != nil && shadow.{}.Kind() != '{kind}'",
+            field.name, field.name
+        )
+    } else {
+        format!("shadow.{}.Kind() != '{kind}'", field.name)
+    };
+    let _ = writeln!(
+        out,
+        "\tif {guard} {{\n\t\treturn invalidMemberError({model:?}, {:?}, {expected:?})\n\t}}",
+        field.wire
+    );
 }
 
 /// A local variable name for a raw-decoded member that cannot collide with
