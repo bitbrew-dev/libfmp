@@ -56,11 +56,14 @@ The Python binding applies this conversion policy to public endpoint models
   carries the validated `content_type` and optional `content_disposition`
   alongside `data`.
 - Query enums are accepted as validated Python strings while Rust retains the
-  exact enum vocabulary. Matching is case-insensitive and `quarterly` is an
-  accepted alias, but the encoded wire value is always the documented spelling.
+  exact enum vocabulary. Closed enums match case-insensitively and `quarterly`
+  is an accepted alias, but the encoded wire value is always the documented
+  spelling. The open economic-indicator name matches the documented spellings
+  exactly and preserves any other non-empty value as `Other`.
 
-Amendment (2026-09-21, audit of issue #11): the timestamp, fiscal-year, binary,
-and query-enum bullets above were revised to describe the shipped binding. The
+Amendment (2026-09-21, audit of issue #11): the introduction and the integer,
+fiscal-year, timestamp, binary, and query-enum bullets above were revised to
+describe the shipped binding. The
 original text promised timezone-aware datetimes for RFC 3339 values and an
 `int | str` fiscal-year union; neither shipped, and the domain ADRs (0011,
 0018, 0029) together with the binding tests assert the representation-preserving
