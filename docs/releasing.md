@@ -53,8 +53,8 @@ An exact package response means the name is registered. A not-found response ind
 
 `semantic-release` generates the GitHub release notes from the conventional commit messages on `main`, and the same workflow publishes the crate and the wheels. Once the run finishes, edit the notes of the new release (`gh release edit <tag> --notes-file <file>`) so that every release states the following:
 
-- Breaking-name avoidance: confirm that no public Rust or Python name changed without a `!` or `BREAKING CHANGE` commit, and list any renamed or deprecated names with their replacements. The `type(fmp-py/artifact)` commits regenerate stubs and must not alter existing signatures.
-- Entitlement-limited endpoints: point at the `gated` rows of [endpoint-coverage.md](endpoint-coverage.md) (the TipRanks add-on, the fixed `short=true` quote universes, and the Nasdaq real-time user declaration) so users know which methods need more than the standard plan.
+- Breaking-name avoidance: confirm that no public Rust or Python name changed without a `!` or `BREAKING CHANGE` commit, and list any renamed or deprecated names with their replacements. Review the `fmp-py/artifact` regeneration commits for changed existing signatures, since regenerated stubs follow every Rust rename.
+- Entitlement-limited endpoints: point at the `gated` rows of [endpoint-coverage.md](endpoint-coverage.md) (the TipRanks add-on and the fixed `short=true` quote universes) so users know which methods need more than the standard plan, and at the quote rows whose note names the Nasdaq real-time user declaration.
 - Unresolved upstream response gaps: point at the `deferred` and `raw` rows of the same table and at the open hardening issue (#40) so users know which documented ambiguities are mirrored verbatim rather than corrected.
 
 Regenerate the coverage table before tagging when the registry changed (`python3 scripts/gen-endpoint-coverage.py --oracle artifacts/documentations/outer.md`) so the linked rows match the release.
