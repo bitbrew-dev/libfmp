@@ -8,6 +8,9 @@ coverage of that pinned oracle, not a claim that every endpoint currently or
 historically offered by the provider is covered. The Python client exposes all
 271 methods, grouped into 30 domain namespaces.
 
+[docs/endpoint-coverage.md](docs/endpoint-coverage.md) lists every endpoint with its
+supported, raw, gated, or deferred state.
+
 ## Rust
 
 ```rust
