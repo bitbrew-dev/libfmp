@@ -25,6 +25,13 @@ pub(crate) enum Codec {
     DynamicJson,
     /// `DynamicObject`: the value must be a JSON object.
     DynamicObject,
+    /// `serde_json::Number` or `Option<Number>`: the raw digits are kept
+    /// (integer and decimal spellings survive) and the value must be a JSON
+    /// number. A pointer shadow member: nil means missing or null.
+    Number,
+    /// `deserialize_with = "required_option"` on `Option<Number>`: the key
+    /// must be present, null is allowed, a present value must be a number.
+    RequiredNumber,
 }
 
 /// One Go struct member derived from a Rust field.
@@ -46,7 +53,15 @@ pub(crate) struct GoField {
 impl GoField {
     /// Whether the JSON key must be present, as serde enforces it.
     pub(crate) fn required_key(&self) -> bool {
-        !self.optional || self.codec != Codec::Plain
+        match self.codec {
+            Codec::Plain | Codec::Number => !self.optional,
+            Codec::RequiredOption
+            | Codec::RequiredNumber
+            | Codec::EmptyDate
+            | Codec::EmptyOrNullDate
+            | Codec::DynamicJson
+            | Codec::DynamicObject => true,
+        }
     }
 }
 
@@ -99,9 +114,13 @@ impl<'a> TypeTable<'a> {
                 BaseKind::Scalar | BaseKind::DynamicJson,
                 [Wrap::Option, ..],
             ) => (Codec::RequiredOption, "jsontext.Value".to_string()),
+            (Some("required_option"), BaseKind::Number, [Wrap::Option]) => {
+                (Codec::RequiredNumber, "jsontext.Value".to_string())
+            }
             (Some("required_option"), _, _) => {
                 return Err(fail(
-                    "required_option needs an Option<scalar or DynamicJson> field".to_string(),
+                    "required_option needs an Option<scalar, Number, or DynamicJson> field"
+                        .to_string(),
                 ));
             }
             (
@@ -129,6 +148,13 @@ impl<'a> TypeTable<'a> {
             (None, BaseKind::DynamicObject, _) => {
                 return Err(fail(
                     "DynamicObject inside Vec has no per-element object check".to_string(),
+                ));
+            }
+            (None, BaseKind::Number, []) => (Codec::Number, format!("*{public_ty}")),
+            (None, BaseKind::Number, [Wrap::Option]) => (Codec::Number, public_ty.clone()),
+            (None, BaseKind::Number, _) => {
+                return Err(fail(
+                    "Number inside Vec has no per-element number check".to_string(),
                 ));
             }
             (None, _, _) if optional => (Codec::Plain, public_ty.clone()),
@@ -171,6 +197,12 @@ impl<'a> TypeTable<'a> {
                     kind: BaseKind::DynamicObject,
                 });
             }
+            "Number" => {
+                return Ok(Base {
+                    go: "jsontext.Value".to_string(),
+                    kind: BaseKind::Number,
+                });
+            }
             _ => {}
         }
         if self.structs.contains(ident) {
@@ -190,6 +222,7 @@ enum BaseKind {
     Scalar,
     DynamicJson,
     DynamicObject,
+    Number,
 }
 
 struct Base {

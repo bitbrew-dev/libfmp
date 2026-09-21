@@ -140,9 +140,15 @@ fn unmapped_types_fail_naming_the_struct_and_field() {
         ),
         (
             "value",
-            "Option<Number>",
+            "Vec<Number>",
             FieldAttrs::default(),
-            "unmapped Rust type `Number`",
+            "Number inside Vec has no per-element number check",
+        ),
+        (
+            "counted",
+            "Number",
+            deserialize_with("required_option"),
+            "Option<scalar, Number, or DynamicJson>",
         ),
         (
             "twice",
@@ -161,13 +167,13 @@ fn unmapped_types_fail_naming_the_struct_and_field() {
             "plain",
             "f64",
             deserialize_with("required_option"),
-            "Option<scalar or DynamicJson>",
+            "Option<scalar, Number, or DynamicJson>",
         ),
         (
             "object",
             "Option<DynamicObject>",
             deserialize_with("required_option"),
-            "Option<scalar or DynamicJson>",
+            "Option<scalar, Number, or DynamicJson>",
         ),
         (
             "defaulted",
@@ -219,6 +225,13 @@ fn codec_fields_map_to_the_shadow_shapes_of_the_adr() {
         field(
             "shares",
             "Option<DynamicJson>",
+            deserialize_with("required_option"),
+        ),
+        field("pct_of_open_interest", "Number", FieldAttrs::default()),
+        field("price_target", "Option<Number>", FieldAttrs::default()),
+        field(
+            "stock_return",
+            "Option<Number>",
             deserialize_with("required_option"),
         ),
     ]);
@@ -357,6 +370,39 @@ fn codec_fields_map_to_the_shadow_shapes_of_the_adr() {
             "*jsontext.Value",
             "jsontext.Value",
             Codec::RequiredOption,
+            true
+        )
+    );
+    assert_eq!(
+        shape(13),
+        (
+            "PctOfOpenInterest",
+            "pctOfOpenInterest",
+            "jsontext.Value",
+            "*jsontext.Value",
+            Codec::Number,
+            true
+        )
+    );
+    assert_eq!(
+        shape(14),
+        (
+            "PriceTarget",
+            "priceTarget",
+            "*jsontext.Value",
+            "*jsontext.Value",
+            Codec::Number,
+            false
+        )
+    );
+    assert_eq!(
+        shape(15),
+        (
+            "StockReturn",
+            "stockReturn",
+            "*jsontext.Value",
+            "jsontext.Value",
+            Codec::RequiredNumber,
             true
         )
     );
