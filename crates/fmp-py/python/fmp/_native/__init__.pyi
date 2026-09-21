@@ -202,6 +202,12 @@ class FmpClient:
         """
 
     @property
+    def dcf(self) -> dcf.DcfNamespace:
+        r"""
+        The `dcf` endpoints, reached as `client.dcf`.
+        """
+
+    @property
     def directory(self) -> directory.DirectoryNamespace:
         r"""
         The `directory` endpoints, reached as `client.directory`.

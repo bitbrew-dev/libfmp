@@ -196,6 +196,7 @@ fn register_dcf(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::dcf::CustomDcfValuation>()?;
     module.add_class::<crate::models::dcf::CustomLeveredDcfValuation>()?;
     module.add_class::<crate::models::dcf::DcfValuation>()?;
+    module.add_class::<crate::namespaces::dcf::DcfNamespace>()?;
     add_submodule(parent, "fmp._native.dcf", &module)
 }
 
