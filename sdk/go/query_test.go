@@ -181,6 +181,51 @@ func TestEnumeratedKindsAcceptOnlyDocumentedWireValues(t *testing.T) {
 	}
 }
 
+// Wire spellings copied from the StatementPeriod decoder in
+// crates/libfmp/src/query.rs and from statements_segmentation_endpoints.rs.
+func TestStatementEnumKindsAcceptOnlyDocumentedWireValues(t *testing.T) {
+	t.Parallel()
+	for _, value := range []FiscalPeriod{FiscalPeriodQ1, FiscalPeriodQ2, FiscalPeriodQ3, FiscalPeriodQ4, FiscalPeriodFullYear} {
+		got, err := fiscalPeriodParam("period", value)
+		assertParam(t, got, err, "period", string(value))
+	}
+	for _, value := range []StatementPeriod{
+		StatementPeriodQ1, StatementPeriodQ2, StatementPeriodQ3, StatementPeriodQ4,
+		StatementPeriodFullYear, StatementPeriodAnnual, StatementPeriodQuarterly,
+	} {
+		got, err := statementPeriodParam("period", value)
+		assertParam(t, got, err, "period", string(value))
+	}
+	got, err := segmentationStructureParam("structure", SegmentationStructureFlat)
+	assertParam(t, got, err, "structure", "flat")
+
+	rejected := []struct {
+		name string
+		err  error
+		want string
+	}{
+		{"fiscal annual", queryHelperError(fiscalPeriodParam("period", "annual")), "period: " + ErrUnknownWireValue.Error() + ", expected one of Q1, Q2, Q3, Q4, FY"},
+		{"fiscal lowercase", queryHelperError(fiscalPeriodParam("period", "fy")), "period: " + ErrUnknownWireValue.Error() + ", expected one of Q1, Q2, Q3, Q4, FY"},
+		{"statement quarterly", queryHelperError(statementPeriodParam("period", "quarterly")), "period: " + ErrUnknownWireValue.Error() + ", expected one of Q1, Q2, Q3, Q4, FY, annual, quarter"},
+		{"statement empty", queryHelperError(statementPeriodParam("period", "")), "period: " + ErrUnknownWireValue.Error() + ", expected one of Q1, Q2, Q3, Q4, FY, annual, quarter"},
+		{"structure nested", queryHelperError(segmentationStructureParam("structure", "nested")), "structure: " + ErrUnknownWireValue.Error() + ", expected one of flat"},
+	}
+	for _, tc := range rejected {
+		var typed *Error
+		if !errors.As(tc.err, &typed) || typed.Category != CategoryValidation || !errors.Is(tc.err, ErrUnknownWireValue) {
+			t.Fatalf("%s: error = %v, want a CategoryValidation *Error wrapping ErrUnknownWireValue", tc.name, tc.err)
+		}
+		if typed.Message != tc.want {
+			t.Fatalf("%s: message = %q, want %q", tc.name, typed.Message, tc.want)
+		}
+	}
+}
+
+// queryHelperError returns the error of a helper call expected to reject its value.
+func queryHelperError(_ queryParam, err error) error {
+	return err
+}
+
 // Wire spellings copied from every_documented_indicator_and_other_reach_the_exact_wire_query
 // in crates/libfmp/tests/economics_rates_indicators_endpoints.rs.
 var documentedEconomicIndicatorWire = []string{
