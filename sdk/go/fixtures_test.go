@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"maps"
 	"os"
 	"path/filepath"
 	"slices"
@@ -43,6 +44,22 @@ func readFixture(t *testing.T, name string) []byte {
 // stale. The decoded rows are returned for exact-value assertions.
 func assertFixtureParity[T any](t *testing.T, name string, unknown ...string) []T {
 	t.Helper()
+	return fixtureParity[T](t, name, nil, unknown)
+}
+
+// assertFixtureParityNullWhenOmitted is assertFixtureParity for a fixture
+// that omits an optional member the model always re-encodes: serde reads a
+// missing Option member as None and writes None back as null, so the Go
+// model re-encodes the member as null. Every member in nullWhenOmitted must
+// be absent from at least one element, where it must re-encode as null, so
+// the list cannot go stale.
+func assertFixtureParityNullWhenOmitted[T any](t *testing.T, name string, nullWhenOmitted []string, unknown ...string) []T {
+	t.Helper()
+	return fixtureParity[T](t, name, nullWhenOmitted, unknown)
+}
+
+func fixtureParity[T any](t *testing.T, name string, nullWhenOmitted, unknown []string) []T {
+	t.Helper()
 	raw := readFixture(t, name)
 
 	var rows []T
@@ -58,6 +75,7 @@ func assertFixtureParity[T any](t *testing.T, name string, unknown ...string) []
 	}
 
 	seen := map[string]bool{}
+	omitted := map[string]bool{}
 	for index, row := range rows {
 		want := make([]string, 0, len(wire[index]))
 		for member := range wire[index] {
@@ -67,8 +85,19 @@ func assertFixtureParity[T any](t *testing.T, name string, unknown ...string) []
 			}
 			want = append(want, member)
 		}
+		members := memberValues(t, row)
+		for _, member := range nullWhenOmitted {
+			if _, present := wire[index][member]; present {
+				continue
+			}
+			omitted[member] = true
+			if value, ok := members[member]; !ok || value.Kind() != 'n' {
+				t.Fatalf("%s[%d]: omitted member %q re-encoded as %s, want null", name, index, member, value)
+			}
+			want = append(want, member)
+		}
 		slices.Sort(want)
-		if got := memberSet(t, row); !slices.Equal(got, want) {
+		if got := slices.Sorted(maps.Keys(members)); !slices.Equal(got, want) {
 			t.Fatalf("%s[%d]: re-encoded members %v, fixture members %v", name, index, got, want)
 		}
 
@@ -88,11 +117,16 @@ func assertFixtureParity[T any](t *testing.T, name string, unknown ...string) []
 			t.Fatalf("%s: expected unknown member %q is absent from every element", name, member)
 		}
 	}
+	for _, member := range nullWhenOmitted {
+		if !omitted[member] {
+			t.Fatalf("%s: member %q is present in every element, so it is not omitted", name, member)
+		}
+	}
 	return rows
 }
 
-// memberSet re-encodes one model value and returns its sorted member names.
-func memberSet[T any](t *testing.T, row T) []string {
+// memberValues re-encodes one model value and returns its members.
+func memberValues[T any](t *testing.T, row T) map[string]jsontext.Value {
 	t.Helper()
 	encoded, err := json.Marshal(row)
 	if err != nil {
@@ -102,10 +136,11 @@ func memberSet[T any](t *testing.T, row T) []string {
 	if err := json.Unmarshal(encoded, &members); err != nil {
 		t.Fatalf("re-encoded %T is not an object: %v", row, err)
 	}
-	names := make([]string, 0, len(members))
-	for name := range members {
-		names = append(names, name)
-	}
-	slices.Sort(names)
-	return names
+	return members
+}
+
+// memberSet re-encodes one model value and returns its sorted member names.
+func memberSet[T any](t *testing.T, row T) []string {
+	t.Helper()
+	return slices.Sorted(maps.Keys(memberValues(t, row)))
 }
