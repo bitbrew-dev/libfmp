@@ -47,6 +47,8 @@ type Namespaces struct {
 	Screener ScreenerNamespace
 	// Search holds the search endpoints.
 	Search SearchNamespace
+	// SecFilings holds the sec_filings endpoints.
+	SecFilings SecFilingsNamespace
 }
 
 // bindNamespaces points every namespace at its client.
@@ -70,4 +72,5 @@ func (c *Client) bindNamespaces() {
 	c.Quote = newQuoteNamespace(c)
 	c.Screener = newScreenerNamespace(c)
 	c.Search = newSearchNamespace(c)
+	c.SecFilings = newSecFilingsNamespace(c)
 }
