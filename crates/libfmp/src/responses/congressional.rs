@@ -1,6 +1,8 @@
 //! Response rows returned by congressional financial-disclosure endpoints.
 //!
-//! Future Python bindings reserve these models under `fmp.congressional`.
+//! The provider documents every congressional route as available for
+//! US-based companies only. The Python binding exposes these models under
+//! `fmp.congressional`.
 
 use serde::{Deserialize, Deserializer, Serialize};
 

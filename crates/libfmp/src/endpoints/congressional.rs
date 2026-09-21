@@ -1,4 +1,9 @@
 //! Congressional financial-disclosure endpoint query contracts.
+//!
+//! The provider documents every congressional route as available for
+//! US-based companies only, so each descriptor carries
+//! [`GeographicAvailability::UsOnly`]. The Python binding exposes the same
+//! twelve routes under `client.congressional`.
 
 use crate::{
     Client, Result,
@@ -412,6 +417,11 @@ impl QueryParameters for CongressionalPositionsQuery {
 }
 
 /// Required congressional member ID with optional provider pagination.
+///
+/// The provider's parameter table for `senate-net-worth` lists only `senateID`,
+/// while its example URL and notes include `page` and `limit` with 250-row and
+/// page-100 maxima. This query follows the example URL and notes, as recorded
+/// in ADR 0025, without injecting the example values as defaults.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CongressionalNetWorthQuery {
     member_id: CongressionalMemberId,
