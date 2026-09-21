@@ -317,6 +317,12 @@ class FmpClient:
         The `tipranks` endpoints, reached as `client.tipranks`.
         """
 
+    @property
+    def transcripts(self) -> transcripts.TranscriptsNamespace:
+        r"""
+        The `transcripts` endpoints, reached as `client.transcripts`.
+        """
+
     def __new__(
         cls,
         *,
