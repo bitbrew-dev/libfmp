@@ -15,6 +15,10 @@ pub struct StructDef {
     /// The container-level `#[serde(rename_all = "...")]` rule, if any.
     pub rename_all: Option<String>,
     pub fields: Vec<FieldDef>,
+    /// Whether the same file carries a hand-written
+    /// `impl<'de> Deserialize<'de> for <name>` instead of a derive, so the
+    /// field list alone does not describe the wire shape.
+    pub custom_deserialize: bool,
 }
 
 /// One named field of a response struct.

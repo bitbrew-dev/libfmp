@@ -32,6 +32,9 @@ pub(crate) fn plan_models(
                 .iter()
                 .map(|field| table.go_field(def, field))
                 .collect::<Result<Vec<_>, _>>()?;
+            if def.custom_deserialize {
+                check_custom_deserialize_shape(&def.name, &fields)?;
+            }
             let doc = match &def.doc {
                 Some(doc) => format!("{} is {}", def.name, lower_lead(doc)),
                 None => format!("{} is a response model of the {domain} domain.", def.name),
@@ -44,6 +47,29 @@ pub(crate) fn plan_models(
             })
         })
         .collect()
+}
+
+/// A struct with a hand-written `Deserialize` is supported in one shape
+/// only: named scalar members plus exactly one `DynamicObject` holding every
+/// other member (the FinancialReportJson shape). Anything else needs a
+/// decision, so it fails naming the struct.
+fn check_custom_deserialize_shape(name: &str, fields: &[GoField]) -> Result<(), String> {
+    let embedded = fields
+        .iter()
+        .filter(|field| field.codec == Codec::Embedded)
+        .count();
+    let plain = fields
+        .iter()
+        .all(|field| matches!(field.codec, Codec::Embedded | Codec::Plain));
+    if embedded == 1 && plain {
+        return Ok(());
+    }
+    Err(format!(
+        "{name}: a hand-written Deserialize is supported by gen_go only as plain members plus \
+         exactly one DynamicObject holding the remaining members; found {embedded} DynamicObject \
+         member(s) and {} other codec(s)",
+        if plain { "no" } else { "some" }
+    ))
 }
 
 /// Renders the whole models file (before `gofmt`).
@@ -72,8 +98,10 @@ fn render_model(model: &ModelPlan, out: &mut String) {
         let options = if field.omit_none { ",omitzero" } else { "" };
         let _ = writeln!(
             out,
-            "\t{} {} `json:\"{}{options}\"`",
-            field.name, field.public_ty, field.wire
+            "\t{} {} `json:\"{}\"`",
+            field.name,
+            field.public_ty,
+            member_tag(field, options)
         );
     }
     out.push_str("}\n\n");
@@ -88,7 +116,9 @@ fn render_model(model: &ModelPlan, out: &mut String) {
         let _ = writeln!(
             out,
             "\t{} {} `json:\"{}\"`",
-            field.name, field.shadow_ty, field.wire
+            field.name,
+            field.shadow_ty,
+            member_tag(field, "")
         );
     }
     out.push_str("}\n\n");
@@ -96,8 +126,18 @@ fn render_model(model: &ModelPlan, out: &mut String) {
     out.push_str(
         "// UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode\n\
          // error naming the first required member that is missing or null, as the\n\
-         // Rust decoder does. Unknown members are ignored.\n",
+         // Rust decoder does. ",
     );
+    match model.fields.iter().find(|f| f.codec == Codec::Embedded) {
+        Some(rest) => {
+            let _ = writeln!(
+                out,
+                "Every member no named field claims is kept in\n// {}.",
+                rest.name
+            );
+        }
+        None => out.push_str("Unknown members are ignored.\n"),
+    }
     let _ = writeln!(
         out,
         "func (m *{}) UnmarshalJSONFrom(dec *jsontext.Decoder) error {{",
@@ -117,7 +157,11 @@ fn render_model(model: &ModelPlan, out: &mut String) {
             Codec::Plain | Codec::DynamicObject | Codec::Number if !field.optional => {
                 format!("*shadow.{}", field.name)
             }
-            Codec::Plain | Codec::DynamicObject | Codec::Number | Codec::DynamicJson => {
+            Codec::Plain
+            | Codec::DynamicObject
+            | Codec::Number
+            | Codec::DynamicJson
+            | Codec::Embedded => {
                 format!("shadow.{}", field.name)
             }
             Codec::RequiredOption
@@ -147,6 +191,7 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
             Codec::Plain | Codec::DynamicObject | Codec::Number => {
                 format!("shadow.{} == nil", field.name)
             }
+            Codec::Embedded => unreachable!("embedded members are never required"),
         };
         let _ = writeln!(
             out,
@@ -161,6 +206,13 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
 fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut String) {
     match field.codec {
         Codec::Plain | Codec::DynamicJson => {}
+        Codec::Embedded => {
+            let _ = writeln!(
+                out,
+                "\tif len(shadow.{0}) == 0 {{\n\t\tshadow.{0} = jsontext.Value(\"{{}}\")\n\t}}",
+                field.name
+            );
+        }
         Codec::RequiredOption => {
             let inner = field.public_ty.trim_start_matches('*');
             let _ = writeln!(
@@ -211,6 +263,16 @@ fn render_kind_guard(model: &str, field: &GoField, kind: char, expected: &str, o
         "\tif {guard} {{\n\t\treturn invalidMemberError({model:?}, {:?}, {expected:?})\n\t}}",
         field.wire
     );
+}
+
+/// The `json` tag body of one member: the wire name plus options, or the
+/// `embed` option alone for the member that holds the remaining members.
+fn member_tag(field: &GoField, options: &str) -> String {
+    if field.codec == Codec::Embedded {
+        ",embed".to_string()
+    } else {
+        format!("{}{options}", field.wire)
+    }
 }
 
 /// A local variable name for a raw-decoded member that cannot collide with

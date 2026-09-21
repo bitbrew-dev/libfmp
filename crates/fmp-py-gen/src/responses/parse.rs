@@ -101,6 +101,7 @@ pub fn technical_indicator_structs(
             doc: None,
             rename_all: Some("camelCase".to_string()),
             fields,
+            custom_deserialize: false,
         });
     }
     Ok(defs)

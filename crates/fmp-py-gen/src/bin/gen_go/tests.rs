@@ -104,6 +104,7 @@ fn row(fields: Vec<FieldDef>) -> StructDef {
         doc: None,
         rename_all: Some("camelCase".to_string()),
         fields,
+        custom_deserialize: false,
     }
 }
 
@@ -514,6 +515,101 @@ fn skip_serializing_if_none_marks_only_the_public_tag_omitzero() {
         "{rendered}"
     );
     assert_eq!(rendered.matches("omitzero").count(), 1, "{rendered}");
+}
+
+fn flatten() -> FieldAttrs {
+    FieldAttrs {
+        flatten: true,
+        ..FieldAttrs::default()
+    }
+}
+
+#[test]
+fn embedded_dynamic_object_holds_the_remaining_members() {
+    let aliases = BTreeMap::new();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let mut def = row(vec![
+        field("symbol", "Ticker", FieldAttrs::default()),
+        field("sections", "DynamicObject", FieldAttrs::default()),
+    ]);
+    def.custom_deserialize = true;
+    let fields: Vec<_> = def
+        .fields
+        .iter()
+        .map(|f| table.go_field(&def, f).expect("maps"))
+        .collect();
+    assert_eq!(fields[0].codec, Codec::Plain);
+    assert_eq!(fields[1].codec, Codec::Embedded);
+    assert!(!fields[1].required_key());
+    assert_eq!(fields[1].wire, "");
+    assert_eq!(fields[1].public_ty, "jsontext.Value");
+
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    assert!(
+        rendered.contains("Sections jsontext.Value `json:\",embed\"`"),
+        "{rendered}"
+    );
+    assert_eq!(
+        rendered.matches("`json:\",embed\"`").count(),
+        2,
+        "{rendered}"
+    );
+    assert!(
+        rendered.contains(
+            "if len(shadow.Sections) == 0 {\n\t\tshadow.Sections = jsontext.Value(\"{}\")"
+        ),
+        "{rendered}"
+    );
+    assert_eq!(
+        rendered.matches("missingMemberError").count(),
+        1,
+        "{rendered}"
+    );
+    assert!(
+        rendered.contains("Sections: shadow.Sections,"),
+        "{rendered}"
+    );
+    assert!(
+        rendered.contains("Every member no named field claims is kept in\n// Sections."),
+        "{rendered}"
+    );
+    assert!(
+        !rendered.contains("Unknown members are ignored"),
+        "{rendered}"
+    );
+
+    let flattened = row(vec![field("data", "DynamicObject", flatten())]);
+    let mapped = table
+        .go_field(&flattened, &flattened.fields[0])
+        .expect("serde flatten on a map is the same shape");
+    assert_eq!(mapped.codec, Codec::Embedded);
+    let scalar = row(vec![field("data", "f64", flatten())]);
+    let error = table
+        .go_field(&scalar, &scalar.fields[0])
+        .expect_err("flatten of a scalar has no Go shape");
+    assert!(error.contains("only on a bare DynamicObject"), "{error}");
+    let optional = row(vec![field("data", "Option<DynamicObject>", flatten())]);
+    assert!(table.go_field(&optional, &optional.fields[0]).is_err());
+
+    let mut two = row(vec![
+        field("first", "DynamicObject", FieldAttrs::default()),
+        field("second", "DynamicObject", FieldAttrs::default()),
+    ]);
+    two.custom_deserialize = true;
+    let error = plan_models("test", &[&two], &table).expect_err("two rest members");
+    assert!(
+        error.starts_with("Row: ") && error.contains("found 2 DynamicObject"),
+        "{error}"
+    );
+    let mut mixed = row(vec![
+        field("count", "Number", FieldAttrs::default()),
+        field("sections", "DynamicObject", FieldAttrs::default()),
+    ]);
+    mixed.custom_deserialize = true;
+    let error = plan_models("test", &[&mixed], &table).expect_err("a raw codec beside the rest");
+    assert!(error.contains("some other codec"), "{error}");
 }
 
 #[test]
