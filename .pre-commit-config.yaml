@@ -29,6 +29,12 @@ repos:
             - --indent=2
     - repo: local
       hooks:
+        - id: go-sdk-tests
+          name: Go SDK validation
+          entry: bash scripts/check_go_sdk.sh
+          language: system
+          files: ^(sdk/go/|scripts/check_go_sdk\.sh$|\.github/workflows/go-sdk\.yml$|\.pre-commit-config\.yaml$)
+          pass_filenames: false
         - id: validate-commit-msg
           name: commit message is valid
           args:
