@@ -136,6 +136,21 @@ func TestEnumeratedKindsAcceptOnlyDocumentedWireValues(t *testing.T) {
 			t.Fatalf("%q: message = %q, want %q", value, typed.Message, want)
 		}
 	}
+
+	for index, quarter := range []Quarter{QuarterQ1, QuarterQ2, QuarterQ3, QuarterQ4} {
+		got, err = quarterParam("quarter", quarter)
+		assertParam(t, got, err, "quarter", string(rune('1'+index)))
+	}
+	for _, value := range []Quarter{"", "0", "5", "Q3", "3 ", "03"} {
+		_, err = quarterParam("quarter", value)
+		var typed *Error
+		if !errors.As(err, &typed) || typed.Category != CategoryValidation || !errors.Is(err, ErrUnknownWireValue) {
+			t.Fatalf("%q: error = %v, want a CategoryValidation *Error wrapping ErrUnknownWireValue", value, err)
+		}
+		if want := "quarter: " + ErrUnknownWireValue.Error() + ", expected one of 1, 2, 3, 4"; typed.Message != want {
+			t.Fatalf("%q: message = %q, want %q", value, typed.Message, want)
+		}
+	}
 }
 
 // Wire spellings copied from every_documented_indicator_and_other_reach_the_exact_wire_query
