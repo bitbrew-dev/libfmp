@@ -17,6 +17,8 @@ type Namespaces struct {
 	Chart ChartNamespace
 	// CommitmentOfTraders holds the commitment_of_traders endpoints.
 	CommitmentOfTraders CommitmentOfTradersNamespace
+	// Commodities holds the commodities endpoints.
+	Commodities CommoditiesNamespace
 	// Company holds the company endpoints.
 	Company CompanyNamespace
 	// Congressional holds the congressional endpoints.
@@ -59,6 +61,7 @@ func (c *Client) bindNamespaces() {
 	c.Calendar = newCalendarNamespace(c)
 	c.Chart = newChartNamespace(c)
 	c.CommitmentOfTraders = newCommitmentOfTradersNamespace(c)
+	c.Commodities = newCommoditiesNamespace(c)
 	c.Company = newCompanyNamespace(c)
 	c.Congressional = newCongressionalNamespace(c)
 	c.Dcf = newDcfNamespace(c)

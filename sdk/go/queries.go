@@ -5,6 +5,71 @@ package fmp
 // Query types shared by more than one registry domain (the union over every
 // generated domain), so each Rust query type has exactly one Go type.
 
+// AssetChartQuery holds the query parameters of the endpoints that take it:
+// NewAssetChartQuery takes the required arguments and each With method sets an
+// optional one. Values are validated when the request is built.
+type AssetChartQuery struct {
+	symbol string
+	from   *Date
+	to     *Date
+}
+
+// NewAssetChartQuery creates the query from its required arguments.
+func NewAssetChartQuery(symbol string) AssetChartQuery {
+	return AssetChartQuery{symbol: symbol}
+}
+
+// Symbol returns the symbol argument as given.
+func (q AssetChartQuery) Symbol() string {
+	return q.symbol
+}
+
+// WithFrom sets the optional from parameter and returns the updated query.
+func (q AssetChartQuery) WithFrom(from Date) AssetChartQuery {
+	q.from = &from
+	return q
+}
+
+// From returns the optional from parameter, or nil when it is unset.
+func (q AssetChartQuery) From() *Date {
+	return q.from
+}
+
+// WithTo sets the optional to parameter and returns the updated query.
+func (q AssetChartQuery) WithTo(to Date) AssetChartQuery {
+	q.to = &to
+	return q
+}
+
+// To returns the optional to parameter, or nil when it is unset.
+func (q AssetChartQuery) To() *Date {
+	return q.to
+}
+
+func (q AssetChartQuery) params() ([]queryParam, error) {
+	params := make([]queryParam, 0, 3)
+	symbol, err := tickerParam("symbol", q.symbol)
+	if err != nil {
+		return nil, err
+	}
+	params = append(params, symbol)
+	if q.from != nil {
+		from, err := dateParam("from", *q.from)
+		if err != nil {
+			return nil, err
+		}
+		params = append(params, from)
+	}
+	if q.to != nil {
+		to, err := dateParam("to", *q.to)
+		if err != nil {
+			return nil, err
+		}
+		params = append(params, to)
+	}
+	return params, nil
+}
+
 // QuoteQuery holds the query parameters of the endpoints that take it:
 // NewQuoteQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
