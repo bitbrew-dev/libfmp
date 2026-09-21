@@ -2,7 +2,9 @@ package fmp
 
 import (
 	"errors"
+	"fmt"
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -139,4 +141,38 @@ func dateTimeParam(name string, value DateTime) (queryParam, error) {
 		return queryParam{}, validationError(name, ErrZeroTemporalValue)
 	}
 	return queryParam{Name: name, Value: value.String()}, nil
+}
+
+// RetrievalFrequency is the annual or quarterly retrieval frequency of the
+// endpoints whose Rust query takes a RetrievalFrequency. The constants carry
+// the exact provider wire spellings; any other value is rejected when the
+// request is built.
+type RetrievalFrequency string
+
+// The documented RetrievalFrequency wire values.
+const (
+	RetrievalFrequencyAnnual    RetrievalFrequency = "annual"
+	RetrievalFrequencyQuarterly RetrievalFrequency = "quarter"
+)
+
+// ErrUnknownWireValue is returned when an enumerated argument is not one of
+// its documented wire values. The Rust crate makes this unrepresentable with
+// a closed enum; the Go SDK checks it when the request is built.
+var ErrUnknownWireValue = errors.New("value is not a documented wire value")
+
+// wireEnumParam encodes an enumerated argument after checking that the value
+// is one of the documented wire spellings, which are sent verbatim.
+func wireEnumParam(name, value string, documented ...string) (queryParam, error) {
+	if !slices.Contains(documented, value) {
+		return queryParam{}, validationError(name, fmt.Errorf("%w, expected one of %s",
+			ErrUnknownWireValue, strings.Join(documented, ", ")))
+	}
+	return queryParam{Name: name, Value: value}, nil
+}
+
+// retrievalFrequencyParam mirrors the libfmp RetrievalFrequency wire enum:
+// "annual" or "quarter", nothing else.
+func retrievalFrequencyParam(name string, value RetrievalFrequency) (queryParam, error) {
+	return wireEnumParam(name, string(value),
+		string(RetrievalFrequencyAnnual), string(RetrievalFrequencyQuarterly))
 }
