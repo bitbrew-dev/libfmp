@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 //! The raw facts the wire resolver evaluates, captured per parsed file:
 //! free functions (descriptor functions and their helpers), the descriptor
 //! call inside every `Client` method, every `QueryParameters::encode` body,
