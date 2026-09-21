@@ -126,6 +126,24 @@ func configurationError(kind ConfigurationKind, message string) *Error {
 	return &Error{Category: CategoryConfiguration, Message: message, ConfigurationKind: kind}
 }
 
+// validationError reports a query argument that failed local validation. The
+// message is "<argument>: <reason>", the shape the Python binding uses.
+func validationError(argument string, reason error) *Error {
+	return &Error{Category: CategoryValidation, Message: argument + ": " + reason.Error(), cause: reason}
+}
+
+// missingMemberError reports a JSON object that omitted a required member or
+// carried null for it. serde rejects both for a non-optional field; the
+// generated UnmarshalJSONFrom of every model returns this for the first
+// required member it cannot find. The endpoint id is filled in by getJSON,
+// which wraps the decoder failure.
+func missingMemberError(model, member string) *Error {
+	return &Error{
+		Category: CategoryDecode,
+		Message:  fmt.Sprintf("required member %q of %s is missing or null", member, model),
+	}
+}
+
 func transportError(endpoint, message string, cause error) *Error {
 	return &Error{Category: CategoryTransport, Message: message, Endpoint: endpoint, cause: cause}
 }
