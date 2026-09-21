@@ -98,6 +98,7 @@ pub fn technical_indicator_structs(
         defs.push(StructDef {
             name,
             module_path: module_path.to_vec(),
+            doc: None,
             rename_all: Some("camelCase".to_string()),
             fields,
         });
@@ -110,6 +111,41 @@ fn parse_type(text: &str) -> Result<Type, DiscoverError> {
         text: text.to_string(),
         source,
     })
+}
+
+/// Reads the first paragraph of an item's `///` doc comment: consecutive
+/// non-blank `#[doc = "..."]` lines, trimmed and joined with one space.
+/// Returns `None` when the item has no doc comment.
+pub fn doc_paragraph(attrs: &[Attribute]) -> Option<String> {
+    let mut lines = Vec::new();
+    for attr in attrs {
+        if !attr.path().is_ident("doc") {
+            continue;
+        }
+        let syn::Meta::NameValue(meta) = &attr.meta else {
+            continue;
+        };
+        let Expr::Lit(syn::ExprLit {
+            lit: syn::Lit::Str(text),
+            ..
+        }) = &meta.value
+        else {
+            continue;
+        };
+        let line = text.value().trim().to_string();
+        if line.is_empty() {
+            if !lines.is_empty() {
+                break;
+            }
+            continue;
+        }
+        lines.push(line);
+    }
+    if lines.is_empty() {
+        None
+    } else {
+        Some(lines.join(" "))
+    }
 }
 
 /// Reads the container-level `rename_all` rule from a struct's attributes.
@@ -285,6 +321,26 @@ mod tests {
         assert_eq!(both.rename.as_deref(), Some("in"));
         assert!(both.default);
         assert_eq!(attrs_of(&item, 6), FieldAttrs::default());
+    }
+
+    #[test]
+    fn doc_paragraph_joins_the_first_paragraph_only() {
+        let item = parse_struct(
+            r#"
+            /// A detailed
+            ///   real-time quote.
+            ///
+            /// Second paragraph is ignored.
+            #[derive(Deserialize)]
+            pub struct Row { pub price: f64 }
+            "#,
+        );
+        assert_eq!(
+            doc_paragraph(&item.attrs).as_deref(),
+            Some("A detailed real-time quote.")
+        );
+        let bare = parse_struct("pub struct Row { pub price: f64 }");
+        assert_eq!(doc_paragraph(&bare.attrs), None);
     }
 
     #[test]
