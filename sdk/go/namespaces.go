@@ -51,6 +51,8 @@ type Namespaces struct {
 	Search SearchNamespace
 	// SecFilings holds the sec_filings endpoints.
 	SecFilings SecFilingsNamespace
+	// TechnicalIndicators holds the technical_indicators endpoints.
+	TechnicalIndicators TechnicalIndicatorsNamespace
 	// Tipranks holds the tipranks endpoints.
 	Tipranks TipranksNamespace
 	// Transcripts holds the transcripts endpoints.
@@ -80,6 +82,7 @@ func (c *Client) bindNamespaces() {
 	c.Screener = newScreenerNamespace(c)
 	c.Search = newSearchNamespace(c)
 	c.SecFilings = newSecFilingsNamespace(c)
+	c.TechnicalIndicators = newTechnicalIndicatorsNamespace(c)
 	c.Tipranks = newTipranksNamespace(c)
 	c.Transcripts = newTranscriptsNamespace(c)
 }
