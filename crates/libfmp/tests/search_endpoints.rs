@@ -109,7 +109,11 @@ async fn proxy_client_executes_all_search_paths_with_exact_query_order_and_encod
         .await
         .unwrap();
     client
-        .search_name(NameSearchQuery::new(SearchTerm::new("AA").unwrap()))
+        .search_name(
+            NameSearchQuery::new(SearchTerm::new("AA").unwrap())
+                .with_limit(Limit(0))
+                .with_exchange(ExchangeCode::new("CRYPTO").unwrap()),
+        )
         .await
         .unwrap();
     client
@@ -138,7 +142,7 @@ async fn proxy_client_executes_all_search_paths_with_exact_query_order_and_encod
         urls,
         [
             "https://proxy.example/router/stable/search-symbol?query=Apple+%2F+Class+A&limit=4294967295&exchange=NASDAQ+Global",
-            "https://proxy.example/router/stable/search-name?query=AA",
+            "https://proxy.example/router/stable/search-name?query=AA&limit=0&exchange=CRYPTO",
             "https://proxy.example/router/stable/search-cik?cik=0000320193&limit=50",
             "https://proxy.example/router/stable/search-cusip?cusip=037833100",
             "https://proxy.example/router/stable/search-isin?isin=US0378331005",
