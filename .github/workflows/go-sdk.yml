@@ -9,6 +9,10 @@ on:
       - 'scripts/check_go_sdk.sh'
       - '.github/workflows/go-sdk.yml'
       - 'crates/libfmp/tests/fixtures/**'
+      - 'crates/fmp-py-gen/**'
+      - 'crates/libfmp/src/responses/**'
+      - 'crates/libfmp/src/endpoints/**'
+      - 'rust-toolchain.toml'
   push:
     branches: [main]
     paths:
@@ -16,6 +20,10 @@ on:
       - 'scripts/check_go_sdk.sh'
       - '.github/workflows/go-sdk.yml'
       - 'crates/libfmp/tests/fixtures/**'
+      - 'crates/fmp-py-gen/**'
+      - 'crates/libfmp/src/responses/**'
+      - 'crates/libfmp/src/endpoints/**'
+      - 'rust-toolchain.toml'
 
 permissions:
   contents: read
@@ -47,6 +55,14 @@ jobs:
         with:
           version: v2.13.2
           install-only: true
+
+      - name: install the toolchain pinned in rust-toolchain.toml
+        run: |
+          rustup toolchain install
+          rustup show active-toolchain
+
+      - name: cache cargo artifacts
+        uses: Swatinem/rust-cache@v2
 
       - name: run the go sdk checks
         run: bash scripts/check_go_sdk.sh
