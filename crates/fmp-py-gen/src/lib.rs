@@ -4,6 +4,8 @@
 //! `src/bin/gen_models`), `registry_check` (endpoint registry validation),
 //! and `gen_namespaces` (namespace classes, see `src/bin/gen_namespaces`).
 //! This library holds the pieces the binaries share, so the registry has one
-//! typed reader and one validator.
+//! typed reader and one validator, and the response structs have one `syn`
+//! reader (`responses`) that the future `gen_go` binary reuses.
 
 pub mod registry;
+pub mod responses;

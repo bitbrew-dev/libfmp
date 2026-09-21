@@ -1,33 +1,11 @@
-//! Shared data types for the model generator: discovered structs, the
-//! classification vocabulary, the surviving-field representation, and the run
-//! report.
+//! Python-side data types for the model generator: the classification
+//! vocabulary, the surviving-field representation, and the run report.
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use syn::Type;
+use fmp_py_gen::responses::Wrap;
 
 use crate::emit::{convert_expr, wrap_type};
-use crate::parse::python_safe_ident;
-
-/// A single response struct discovered in libfmp.
-pub(crate) struct StructDef {
-    pub(crate) name: String,
-    pub(crate) module_path: Vec<String>,
-    pub(crate) fields: Vec<FieldDef>,
-}
-
-/// One named field of a response struct.
-pub(crate) struct FieldDef {
-    pub(crate) name: String,
-    pub(crate) ty: Type,
-}
-
-/// The composition wrappers peeled from a field type, outermost first.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub(crate) enum Wrap {
-    Option,
-    Vec,
-}
 
 /// How a base (non-composed) field type maps into the Python model.
 pub(crate) enum Class {
@@ -301,4 +279,40 @@ impl Report {
         println!("  SecretUrl fields (private): {:?}", self.secret_fields);
         println!("  unclassified (skipped): {:?}", self.unclassified);
     }
+}
+
+/// Maps a libfmp field name to a valid, non-reserved Python identifier.
+///
+/// The libfmp name may be a Rust raw identifier (`r#yield`); the `r#` prefix is
+/// stripped first, then a trailing underscore is appended when the base collides
+/// with a Python keyword or is not a valid Python identifier. The original name
+/// is retained separately for libfmp field access.
+pub(crate) fn python_safe_ident(name: &str) -> String {
+    let base = name.strip_prefix("r#").unwrap_or(name);
+    if is_python_keyword(base) || !is_valid_python_ident(base) {
+        format!("{base}_")
+    } else {
+        base.to_string()
+    }
+}
+
+/// Reports whether a name is a Python hard or soft keyword.
+fn is_python_keyword(name: &str) -> bool {
+    const KEYWORDS: &[&str] = &[
+        "False", "None", "True", "and", "as", "assert", "async", "await", "break", "class",
+        "continue", "def", "del", "elif", "else", "except", "finally", "for", "from", "global",
+        "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return",
+        "try", "while", "with", "yield", "match", "case", "type",
+    ];
+    KEYWORDS.contains(&name)
+}
+
+/// Reports whether a name is a syntactically valid Python identifier.
+fn is_valid_python_ident(name: &str) -> bool {
+    let mut chars = name.chars();
+    match chars.next() {
+        Some(first) if first == '_' || first.is_ascii_alphabetic() => {}
+        _ => return false,
+    }
+    chars.all(|c| c == '_' || c.is_ascii_alphanumeric())
 }

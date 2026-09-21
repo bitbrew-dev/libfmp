@@ -6,9 +6,10 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+use fmp_py_gen::responses::{StructDef, Wrap, peel};
+
 use crate::classify::classify;
-use crate::model::{Class, KeptField, Registry, StructDef, Transform, Wrap};
-use crate::parse::peel;
+use crate::model::{Class, KeptField, Registry, Transform};
 use crate::{BoxError, GENERATED_HEADER, RUST_EDITION};
 
 /// Emits one model struct, its `pymethods` impl, and its `From` conversion.
