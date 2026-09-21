@@ -45,6 +45,20 @@ fn fiscal_year_rejects_a_numeric_json_value() {
     assert!(error.to_string().contains("string"));
 }
 
+#[test]
+fn statement_amounts_and_share_counts_preserve_i64_and_u64_extremes() {
+    for (field, extreme) in [
+        ("revenue", serde_json::json!(i64::MAX)),
+        ("totalOtherIncomeExpensesNet", serde_json::json!(i64::MIN)),
+        ("weightedAverageShsOutDil", serde_json::json!(u64::MAX)),
+    ] {
+        let mut value: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+        value[0][field] = extreme.clone();
+        let rows: Vec<IncomeStatement> = serde_json::from_value(value).unwrap();
+        assert_eq!(serde_json::to_value(rows).unwrap()[0][field], extreme);
+    }
+}
+
 fn historical_expected() -> IncomeStatement {
     IncomeStatement {
         date: Date::from_str("2025-09-27").unwrap(),
