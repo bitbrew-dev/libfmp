@@ -137,6 +137,8 @@ that no wire information is invented or lost:
 | `DynamicJson`, `DynamicObject` | `jsontext.Value` | lossless raw bytes; no float64 round trip |
 | `serde_json::Number` (`Number`, `Option<Number>`) | `jsontext.Value` | raw digits kept, integer and decimal spellings preserved; a present value must be a JSON number |
 | `BinaryPayload` | `fmp.BinaryPayload{Data, ContentType, ContentDisposition}` | |
+| `SecretUrl` (`FinancialReportDate.link_json`, `link_xlsx`) | `string` | exact wire text; the SDK never formats a decoded row into an error, log, or body, so the only way the URL reaches output is a caller printing it, which is explicit (the Python binding exposes the same `str`) |
+| `#[serde(flatten)] DynamicObject`, or the single `DynamicObject` of a struct with a hand-written `Deserialize` (`FinancialReportJson.sections`) | `jsontext.Value` with struct tag `json:",embed"` | every member no named field claims, collected and re-emitted in place; a duplicate of a named member fails re-encoding, as the Rust serializer rejects reserved keys |
 | `#[serde(rename = "1D")]` | struct tag `json:"1D"` | |
 
 Required-field fidelity is kept. serde rejects a missing non-optional field
@@ -145,16 +147,21 @@ struct with pointer fields for every required member and an `UnmarshalJSON`
 that reports a `Decode` error naming the first missing field. Unknown members
 are ignored, as in Rust (no `deny_unknown_fields` exists in the crate).
 
-Three field codecs need more than a pointer, because json/v2 sets a pointer
+Four field codecs need more than a pointer, because json/v2 sets a pointer
 to nil for both a missing key and a JSON null. Their shadow member is the raw
 `jsontext.Value` (empty means missing) and the generated decoder finishes the
 job: `deserialize_with = "required_option"` (key required, null allowed,
 public field `*T`), `with = "empty_date"` and `with = "empty_or_null_date"`
 (`""` is absent, null rejected or absent respectively, public field
 `*fmp.Date`; the marshal side never re-emits `""` since the SDK is read-only),
-and `DynamicObject` (the value must be a JSON object). `FiscalYear` has no Go
-codec on purpose: no public model uses it, and the generator fails if one
-appears rather than widening it to `NumberOrString`.
+`DynamicObject` (the value must be a JSON object), and the embedded rest
+member (`json:",embed"`, never required, normalised to `{}` when no member is
+left over). The discovery reader flags a struct whose file carries a
+hand-written `impl Deserialize`; the generator accepts exactly one shape for
+it, plain members plus one `DynamicObject` holding the rest, and fails naming
+the struct otherwise. `FiscalYear` has no Go codec on purpose: no public model
+uses it, and the generator fails if one appears rather than widening it to
+`NumberOrString`.
 
 ### Generator placement
 
