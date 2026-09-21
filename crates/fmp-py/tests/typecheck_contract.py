@@ -94,6 +94,12 @@ from fmp.tipranks import (
     TipRanksRatingSearchResult,
     TipRanksRecommendationCounts,
 )
+from fmp.transcripts import (
+    EarningsTranscript,
+    EarningsTranscriptDate,
+    LatestEarningsTranscript,
+    TranscriptsNamespace,
+)
 
 
 def check_statements_contract(client: FmpClient) -> None:
@@ -567,6 +573,23 @@ def check_esg_contract(client: FmpClient) -> None:
     sector: str = benchmarks[0].sector
     governance: float = all_years[0].governance_score
     _ = (filed_on, accepted_on, esg_score, fiscal_year, risk_rating, sector, governance)
+
+
+def check_transcripts_contract(client: FmpClient) -> None:
+    """Type-check the flat transcripts namespace, its required trio, the keyword-only options, and the rows."""
+    transcripts: TranscriptsNamespace = client.transcripts
+    latest: list[LatestEarningsTranscript] = transcripts.latest_earnings_transcripts(limit=100, page=0)
+    latest_period: str = latest[0].period
+    latest_fiscal_year: int = latest[0].fiscal_year
+    latest_date: datetime.date = latest[0].date
+    full: list[EarningsTranscript] = client.transcripts.earnings_transcript("AAPL", 2020, 3, limit=1)
+    year: int = full[0].year
+    content: str = full[0].content
+    held_on: datetime.date = full[0].date
+    dates: list[EarningsTranscriptDate] = client.transcripts.earnings_transcript_dates("AAPL")
+    quarter: int = dates[0].quarter
+    available_on: datetime.date = dates[0].date
+    _ = (latest_period, latest_fiscal_year, latest_date, year, content, held_on, quarter, available_on)
 
 
 def check_public_contract(client: FmpClient) -> None:
