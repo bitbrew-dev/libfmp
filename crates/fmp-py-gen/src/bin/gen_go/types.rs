@@ -344,13 +344,13 @@ pub(crate) fn arg_kind_go(kind: ArgKind) -> Result<ArgGo, String> {
         ArgKind::Date => ("Date", "dateParam"),
         ArgKind::ApiDatetime => ("DateTime", "dateTimeParam"),
         ArgKind::RetrievalFrequency => ("RetrievalFrequency", "retrievalFrequencyParam"),
+        ArgKind::EconomicIndicator => ("EconomicIndicator", "economicIndicatorParam"),
         ArgKind::Quarter
         | ArgKind::DateRange
         | ArgKind::FiscalPeriod
         | ArgKind::StatementPeriod
         | ArgKind::ChartTimeframe
         | ArgKind::SegmentationStructure
-        | ArgKind::EconomicIndicator
         | ArgKind::OpenEconomicIndicator => {
             return Err(format!(
                 "arg kind `{kind}` has no Go helper yet: add `{}Param` to sdk/go/query.go \
