@@ -3,8 +3,9 @@
 The Go module is a pure Go client for the Financial Modeling Prep API. It
 mirrors the Rust crate `libfmp` one-for-one: the same client options, the same
 authentication modes, the same error categories, and the same transport rules.
-Endpoint models and methods will be generated from the Rust contract, so the
-two SDKs decode the same fixtures. It requires **Go 1.27.1** and builds with
+Endpoint models and methods are generated from the Rust contract by
+`cargo run -p fmp-py-gen --bin gen_go`, so the two SDKs decode the same
+fixtures; the generated files carry a `DO NOT EDIT` header. It requires **Go 1.27.1** and builds with
 `CGO_ENABLED=0`; there is no cgo and no native library. The design is recorded
 in [ADR 0030](../../docs/adr/0030-go-sdk-architecture.md).
 

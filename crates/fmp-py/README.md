@@ -242,6 +242,28 @@ extension, so adding a domain never edits `lib.rs` or `client.rs`:
 
 The hand-written `src/facade.rs` keeps only the top-level `fmp` surface.
 
+## Regenerating the Go SDK
+
+The Go module at `sdk/go` (ADR 0030) is generated from the same registry, the
+wire contract read from `crates/libfmp/src/endpoints/**`, and the response
+structs, by the `gen_go` binary. The three generators, from the repository
+root:
+
+```console
+cargo run -p fmp-py-gen --bin gen_models      # fmp-py response models
+cargo run -p fmp-py-gen --bin gen_namespaces  # fmp-py endpoint namespaces
+cargo run -p fmp-py-gen --bin gen_go          # sdk/go, every generated domain
+```
+
+`gen_go --domain <name>` (repeatable) generates the named domains; with no
+argument it regenerates every domain that already carries the generated
+header; `--all` regenerates all 30. It writes `sdk/go/<domain>_models.go`,
+`sdk/go/<domain>.go`, and the shared `queries.go` and `namespaces.go`, all
+through `gofmt`, so a second run leaves `git status` clean; the
+`scripts/check_go_sdk.sh` gate proves it. A Rust type or argument kind the
+generator does not know fails the run naming the struct and field (or the
+`query.go` helper to add); nothing is emitted in that case.
+
 ## Regenerating the stubs and public packages
 
 The `.pyi` stubs under `python/fmp/_native/` and the public
