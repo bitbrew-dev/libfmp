@@ -23,6 +23,8 @@ type Namespaces struct {
 	Company CompanyNamespace
 	// Congressional holds the congressional endpoints.
 	Congressional CongressionalNamespace
+	// Crypto holds the crypto endpoints.
+	Crypto CryptoNamespace
 	// Dcf holds the dcf endpoints.
 	Dcf DcfNamespace
 	// Directory holds the directory endpoints.
@@ -68,6 +70,7 @@ func (c *Client) bindNamespaces() {
 	c.Commodities = newCommoditiesNamespace(c)
 	c.Company = newCompanyNamespace(c)
 	c.Congressional = newCongressionalNamespace(c)
+	c.Crypto = newCryptoNamespace(c)
 	c.Dcf = newDcfNamespace(c)
 	c.Directory = newDirectoryNamespace(c)
 	c.Economics = newEconomicsNamespace(c)
