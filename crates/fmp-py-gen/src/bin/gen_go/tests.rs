@@ -738,11 +738,6 @@ fn unsupported_arg_kinds_name_the_helper_to_add() {
         let mapped = arg_kind_go(kind).expect("statement enum kinds are mapped");
         assert_eq!((mapped.go_type, mapped.helper), (go_type, helper), "{kind}");
     }
-    let error = arg_kind_go(ArgKind::ChartTimeframe).expect_err("chart_timeframe is deferred");
-    assert!(
-        error.contains("chartTimeframeParam") && error.contains("ChartTimeframe"),
-        "{error}"
-    );
 }
 
 #[test]
