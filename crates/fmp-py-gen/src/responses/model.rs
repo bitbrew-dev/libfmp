@@ -40,6 +40,9 @@ pub struct FieldAttrs {
     pub flatten: bool,
     /// `skip` or `skip_deserializing`: the field is never read from JSON.
     pub skip: bool,
+    /// `skip_serializing_if = "path"`: the predicate that omits the member
+    /// when serializing (`Option::is_none` is the only one gen_go knows).
+    pub skip_serializing_if: Option<String>,
 }
 
 /// The composition wrappers peeled from a field type, outermost first.
