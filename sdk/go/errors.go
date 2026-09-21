@@ -144,6 +144,15 @@ func missingMemberError(model, member string) *Error {
 	}
 }
 
+// invalidMemberError reports a JSON member whose kind the Rust decoder would
+// reject, such as a non-object value for a DynamicObject field.
+func invalidMemberError(model, member, expected string) *Error {
+	return &Error{
+		Category: CategoryDecode,
+		Message:  fmt.Sprintf("member %q of %s must be a JSON %s", member, model, expected),
+	}
+}
+
 func transportError(endpoint, message string, cause error) *Error {
 	return &Error{Category: CategoryTransport, Message: message, Endpoint: endpoint, cause: cause}
 }
