@@ -151,6 +151,34 @@ func TestEnumeratedKindsAcceptOnlyDocumentedWireValues(t *testing.T) {
 			t.Fatalf("%q: message = %q, want %q", value, typed.Message, want)
 		}
 	}
+
+	// Wire spellings copied from the ChartTimeframe wire_enum in
+	// crates/libfmp/src/query.rs, in the same order.
+	timeframes := []struct {
+		value ChartTimeframe
+		wire  string
+	}{
+		{ChartTimeframeOneMinute, "1min"}, {ChartTimeframeFiveMinutes, "5min"},
+		{ChartTimeframeFifteenMinutes, "15min"}, {ChartTimeframeThirtyMinutes, "30min"},
+		{ChartTimeframeOneHour, "1hour"}, {ChartTimeframeFourHours, "4hour"},
+		{ChartTimeframeOneDay, "1day"},
+	}
+	for _, tc := range timeframes {
+		got, err = chartTimeframeParam("timeframe", tc.value)
+		assertParam(t, got, err, "timeframe", tc.wire)
+	}
+	for _, value := range []ChartTimeframe{"", "1Min", "1day ", "daily", "60min", "1 min"} {
+		_, err = chartTimeframeParam("timeframe", value)
+		var typed *Error
+		if !errors.As(err, &typed) || typed.Category != CategoryValidation || !errors.Is(err, ErrUnknownWireValue) {
+			t.Fatalf("%q: error = %v, want a CategoryValidation *Error wrapping ErrUnknownWireValue", value, err)
+		}
+		want := "timeframe: " + ErrUnknownWireValue.Error() +
+			", expected one of 1min, 5min, 15min, 30min, 1hour, 4hour, 1day"
+		if typed.Message != want {
+			t.Fatalf("%q: message = %q, want %q", value, typed.Message, want)
+		}
+	}
 }
 
 // Wire spellings copied from every_documented_indicator_and_other_reach_the_exact_wire_query

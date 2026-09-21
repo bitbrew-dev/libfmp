@@ -199,6 +199,33 @@ func quarterParam(name string, value Quarter) (queryParam, error) {
 		string(QuarterQ1), string(QuarterQ2), string(QuarterQ3), string(QuarterQ4))
 }
 
+// ChartTimeframe is the bar timeframe taken by the technical-indicator
+// endpoints. The constants carry the exact provider wire spellings of the
+// libfmp ChartTimeframe wire enum, in its order; any other value is rejected
+// when the request is built.
+type ChartTimeframe string
+
+// The documented ChartTimeframe wire values.
+const (
+	ChartTimeframeOneMinute      ChartTimeframe = "1min"
+	ChartTimeframeFiveMinutes    ChartTimeframe = "5min"
+	ChartTimeframeFifteenMinutes ChartTimeframe = "15min"
+	ChartTimeframeThirtyMinutes  ChartTimeframe = "30min"
+	ChartTimeframeOneHour        ChartTimeframe = "1hour"
+	ChartTimeframeFourHours      ChartTimeframe = "4hour"
+	ChartTimeframeOneDay         ChartTimeframe = "1day"
+)
+
+// chartTimeframeParam mirrors the libfmp ChartTimeframe wire enum: one of
+// the seven documented spellings, nothing else.
+func chartTimeframeParam(name string, value ChartTimeframe) (queryParam, error) {
+	return wireEnumParam(name, string(value),
+		string(ChartTimeframeOneMinute), string(ChartTimeframeFiveMinutes),
+		string(ChartTimeframeFifteenMinutes), string(ChartTimeframeThirtyMinutes),
+		string(ChartTimeframeOneHour), string(ChartTimeframeFourHours),
+		string(ChartTimeframeOneDay))
+}
+
 // EconomicIndicator is the indicator name of the economic-indicators
 // endpoint. The constants carry the 24 documented provider spellings, sent
 // verbatim. Unlike a closed wire enum, the libfmp EconomicIndicator is open:
