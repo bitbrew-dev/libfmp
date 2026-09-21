@@ -1,7 +1,12 @@
 //! TipRanks add-on endpoint and query contracts.
 //!
-//! A future Python binding reserves matching `FmpClient` methods with response
-//! models under `fmp.tipranks`. This crate does not implement those bindings.
+//! Every route requires the provider's paid TipRanks add-on, so each descriptor
+//! carries [`AccessRequirement::NamedAddOn`] with the name `TipRanks`. The
+//! search and point-in-time routes also record the documented three-year
+//! ratings-history window as a [`ConditionalPlanRequirement`] for the
+//! Enterprise plan. Both facts are advisory metadata: the client neither gates
+//! nor rejects a request locally. The Python binding exposes the same seven
+//! methods under `client.tipranks`.
 
 use crate::{
     Client, Result,
