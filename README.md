@@ -3,11 +3,10 @@
 `libfmp` is a Rust-first client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API, with synchronous Python bindings distributed as `fmp-py-sdk` and imported as `fmp`.
 
 The Rust client implements all 276 endpoint entries in the repository's
-captured API documentation oracle through 271 `Client` methods (a few
-documented entries share one method). This is coverage of that pinned oracle,
-not a claim that every endpoint currently or historically offered by the
-provider is covered. The Python client exposes all 271 methods, grouped into
-30 domain namespaces.
+captured API documentation oracle through 271 `Client` methods. This is
+coverage of that pinned oracle, not a claim that every endpoint currently or
+historically offered by the provider is covered. The Python client exposes all
+271 methods, grouped into 30 domain namespaces.
 
 ## Rust
 
