@@ -75,9 +75,10 @@ valuation = client.dcf.custom_discounted_cash_flow(
 - Typed rows: most methods return `list[Model]`, where each model is a
   generated, immutable, picklable class living in the domain package (for
   example `fmp.quote.QuoteShort` or `fmp.statements.income.IncomeStatement`).
-  Dates and timestamps are `datetime.date` and `datetime.datetime`. Shared
-  Rust response types map to one shared Python class rather than a copy per
-  endpoint.
+  Dates and naive timestamps are `datetime.date` and `datetime.datetime`;
+  RFC 3339 timestamps (for example `TipRanksRatingSearchResult.date`) stay
+  `str` with the exact wire text. Shared Rust response types map to one shared
+  Python class rather than a copy per endpoint.
 - Dynamic rows: endpoints whose documented shape is open-ended return
   `list[dict[str, Any]]` with the raw provider keys, for example
   `client.sec_filings.search_industry_classifications(symbol="AAPL")`. A
