@@ -100,4 +100,12 @@
 //   - Nested namespaces: a domain with [[namespace]] sub-groups nests one
 //     struct per group as an exported field of the domain struct, so the
 //     statements domain is reached as client.Statements.Income.Statement.
+//   - Accepted response-side differences: a CalendarQuarter member decodes
+//     as a plain uint8 with no 1 to 4 range check (Rust validates; the Go
+//     parity tests prove the JSON kind only), and a FiscalPeriod member
+//     decodes as a plain string rather than the closed FiscalPeriod type the
+//     queries use, in the same way IsoTimestamp members stay exact strings.
+//   - Type aliases: a Rust alias of a model (FundDisclosureDate for
+//     Form13fFilingDate) has no Go type of its own; the method returns the
+//     aliased model's Go type, so one Rust model is one Go type.
 package fmp
