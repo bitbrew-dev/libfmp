@@ -11,6 +11,8 @@ package fmp
 type Namespaces struct {
 	// Analyst holds the analyst endpoints.
 	Analyst AnalystNamespace
+	// Bulk holds the bulk endpoints.
+	Bulk BulkNamespace
 	// Calendar holds the calendar endpoints.
 	Calendar CalendarNamespace
 	// Chart holds the chart endpoints.
@@ -72,6 +74,7 @@ type Namespaces struct {
 // bindNamespaces points every namespace at its client.
 func (c *Client) bindNamespaces() {
 	c.Analyst = newAnalystNamespace(c)
+	c.Bulk = newBulkNamespace(c)
 	c.Calendar = newCalendarNamespace(c)
 	c.Chart = newChartNamespace(c)
 	c.CommitmentOfTraders = newCommitmentOfTradersNamespace(c)
