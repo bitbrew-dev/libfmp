@@ -11,6 +11,8 @@ package fmp
 type Namespaces struct {
 	// Calendar holds the calendar endpoints.
 	Calendar CalendarNamespace
+	// Chart holds the chart endpoints.
+	Chart ChartNamespace
 	// Company holds the company endpoints.
 	Company CompanyNamespace
 	// Quote holds the quote endpoints.
@@ -20,6 +22,7 @@ type Namespaces struct {
 // bindNamespaces points every namespace at its client.
 func (c *Client) bindNamespaces() {
 	c.Calendar = newCalendarNamespace(c)
+	c.Chart = newChartNamespace(c)
 	c.Company = newCompanyNamespace(c)
 	c.Quote = newQuoteNamespace(c)
 }
