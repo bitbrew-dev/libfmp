@@ -177,82 +177,24 @@ func retrievalFrequencyParam(name string, value RetrievalFrequency) (queryParam,
 		string(RetrievalFrequencyAnnual), string(RetrievalFrequencyQuarterly))
 }
 
-// EconomicIndicator is the indicator name of the economic-indicators
-// endpoint. The constants carry the 24 documented provider spellings, sent
-// verbatim. Unlike a closed wire enum, the libfmp EconomicIndicator is open:
-// any other non-empty name free of control characters is forwarded as a
-// provider value, so a name the documentation gained later still works.
-type EconomicIndicator string
+// Quarter is the textual calendar quarter taken by the endpoints whose Rust
+// query takes a Quarter. The constants carry the exact provider wire
+// spellings "1" through "4"; any other value is rejected when the request is
+// built. It is distinct from the numeric CalendarQuarter of the response
+// models, which is decoded from a JSON integer.
+type Quarter string
 
-// The documented EconomicIndicator wire values, in the order the libfmp
-// EconomicIndicator::DOCUMENTED table lists them.
+// The documented Quarter wire values.
 const (
-	EconomicIndicatorGdp                                                      EconomicIndicator = "GDP"
-	EconomicIndicatorRealGdp                                                  EconomicIndicator = "realGDP"
-	EconomicIndicatorNominalPotentialGdp                                      EconomicIndicator = "nominalPotentialGDP"
-	EconomicIndicatorRealGdpPerCapita                                         EconomicIndicator = "realGDPPerCapita"
-	EconomicIndicatorFederalFunds                                             EconomicIndicator = "federalFunds"
-	EconomicIndicatorCpi                                                      EconomicIndicator = "CPI"
-	EconomicIndicatorInflationRate                                            EconomicIndicator = "inflationRate"
-	EconomicIndicatorInflation                                                EconomicIndicator = "inflation"
-	EconomicIndicatorRetailSales                                              EconomicIndicator = "retailSales"
-	EconomicIndicatorConsumerSentiment                                        EconomicIndicator = "consumerSentiment"
-	EconomicIndicatorDurableGoods                                             EconomicIndicator = "durableGoods"
-	EconomicIndicatorUnemploymentRate                                         EconomicIndicator = "unemploymentRate"
-	EconomicIndicatorTotalNonfarmPayroll                                      EconomicIndicator = "totalNonfarmPayroll"
-	EconomicIndicatorInitialClaims                                            EconomicIndicator = "initialClaims"
-	EconomicIndicatorIndustrialProductionTotalIndex                           EconomicIndicator = "industrialProductionTotalIndex"
-	EconomicIndicatorNewPrivatelyOwnedHousingUnitsStartedTotalUnits           EconomicIndicator = "newPrivatelyOwnedHousingUnitsStartedTotalUnits"
-	EconomicIndicatorTotalVehicleSales                                        EconomicIndicator = "totalVehicleSales"
-	EconomicIndicatorRetailMoneyFunds                                         EconomicIndicator = "retailMoneyFunds"
-	EconomicIndicatorSmoothedUsRecessionProbabilities                         EconomicIndicator = "smoothedUSRecessionProbabilities"
-	EconomicIndicatorThreeMonthOrNinetyDayRatesAndYieldsCertificatesOfDeposit EconomicIndicator = "3MonthOr90DayRatesAndYieldsCertificatesOfDeposit"
-	EconomicIndicatorCommercialBankInterestRateOnCreditCardPlansAllAccounts   EconomicIndicator = "commercialBankInterestRateOnCreditCardPlansAllAccounts"
-	EconomicIndicatorThirtyYearFixedRateMortgageAverage                       EconomicIndicator = "30YearFixedRateMortgageAverage"
-	EconomicIndicatorFifteenYearFixedRateMortgageAverage                      EconomicIndicator = "15YearFixedRateMortgageAverage"
-	EconomicIndicatorTradeBalanceGoodsAndServices                             EconomicIndicator = "tradeBalanceGoodsAndServices"
+	QuarterQ1 Quarter = "1"
+	QuarterQ2 Quarter = "2"
+	QuarterQ3 Quarter = "3"
+	QuarterQ4 Quarter = "4"
 )
 
-// DocumentedEconomicIndicators lists the 24 documented indicator names, as
-// the libfmp EconomicIndicator::DOCUMENTED table does. Callers must not
-// modify the returned slice.
-func DocumentedEconomicIndicators() []EconomicIndicator {
-	return documentedEconomicIndicators[:]
-}
-
-var documentedEconomicIndicators = [...]EconomicIndicator{
-	EconomicIndicatorGdp,
-	EconomicIndicatorRealGdp,
-	EconomicIndicatorNominalPotentialGdp,
-	EconomicIndicatorRealGdpPerCapita,
-	EconomicIndicatorFederalFunds,
-	EconomicIndicatorCpi,
-	EconomicIndicatorInflationRate,
-	EconomicIndicatorInflation,
-	EconomicIndicatorRetailSales,
-	EconomicIndicatorConsumerSentiment,
-	EconomicIndicatorDurableGoods,
-	EconomicIndicatorUnemploymentRate,
-	EconomicIndicatorTotalNonfarmPayroll,
-	EconomicIndicatorInitialClaims,
-	EconomicIndicatorIndustrialProductionTotalIndex,
-	EconomicIndicatorNewPrivatelyOwnedHousingUnitsStartedTotalUnits,
-	EconomicIndicatorTotalVehicleSales,
-	EconomicIndicatorRetailMoneyFunds,
-	EconomicIndicatorSmoothedUsRecessionProbabilities,
-	EconomicIndicatorThreeMonthOrNinetyDayRatesAndYieldsCertificatesOfDeposit,
-	EconomicIndicatorCommercialBankInterestRateOnCreditCardPlansAllAccounts,
-	EconomicIndicatorThirtyYearFixedRateMortgageAverage,
-	EconomicIndicatorFifteenYearFixedRateMortgageAverage,
-	EconomicIndicatorTradeBalanceGoodsAndServices,
-}
-
-// economicIndicatorParam mirrors EconomicIndicator::new in the Rust crate: a
-// documented name or any open provider name that passes the open-string rule
-// (non-empty, no control characters, commas allowed) is sent verbatim.
-func economicIndicatorParam(name string, value EconomicIndicator) (queryParam, error) {
-	if err := validateStringValue(string(value), false); err != nil {
-		return queryParam{}, validationError(name, err)
-	}
-	return queryParam{Name: name, Value: string(value)}, nil
+// quarterParam mirrors the libfmp Quarter wire enum: "1" through "4",
+// nothing else.
+func quarterParam(name string, value Quarter) (queryParam, error) {
+	return wireEnumParam(name, string(value),
+		string(QuarterQ1), string(QuarterQ2), string(QuarterQ3), string(QuarterQ4))
 }
