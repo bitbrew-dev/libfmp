@@ -7,6 +7,8 @@ on:
     paths:
       - 'sdk/go/**'
       - 'scripts/check_go_sdk.sh'
+      - 'scripts/check_go_coverage.py'
+      - 'scripts/check_go_coverage_test.py'
       - '.github/workflows/go-sdk.yml'
       - 'crates/libfmp/tests/fixtures/**'
       - 'crates/fmp-py-gen/**'
@@ -18,6 +20,8 @@ on:
     paths:
       - 'sdk/go/**'
       - 'scripts/check_go_sdk.sh'
+      - 'scripts/check_go_coverage.py'
+      - 'scripts/check_go_coverage_test.py'
       - '.github/workflows/go-sdk.yml'
       - 'crates/libfmp/tests/fixtures/**'
       - 'crates/fmp-py-gen/**'

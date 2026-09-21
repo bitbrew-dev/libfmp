@@ -33,7 +33,7 @@ repos:
           name: Go SDK validation
           entry: bash scripts/check_go_sdk.sh
           language: system
-          files: ^(sdk/go/|scripts/check_go_sdk\.sh$|\.github/workflows/go-sdk\.yml$|\.pre-commit-config\.yaml$|crates/fmp-py-gen/|crates/libfmp/src/responses/|crates/libfmp/src/endpoints/)
+          files: ^(sdk/go/|scripts/check_go_sdk\.sh$|scripts/check_go_coverage\.py$|scripts/check_go_coverage_test\.py$|\.github/workflows/go-sdk\.yml$|\.pre-commit-config\.yaml$|crates/fmp-py-gen/|crates/libfmp/src/responses/|crates/libfmp/src/endpoints/)
           pass_filenames: false
         - id: validate-commit-msg
           name: commit message is valid
