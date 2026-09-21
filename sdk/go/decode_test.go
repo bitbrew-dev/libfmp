@@ -48,6 +48,26 @@ func TestDecodeEmptyDateMirrorsTheRustSentinelCodecs(t *testing.T) {
 	}
 }
 
+func TestRawMemberTreatsMissingAndNullAlike(t *testing.T) {
+	t.Parallel()
+	members := map[string]jsontext.Value{
+		"lastUpdated\"": jsontext.Value(`"2024-09-06\""`),
+		"nulled":        jsontext.Value(`null`),
+	}
+	if got := rawMember(members, "lastUpdated\""); string(got) != `"2024-09-06\""` {
+		t.Fatalf("present member = %s, want its raw value", got)
+	}
+	if got := rawMember(members, "nulled"); got != nil {
+		t.Fatalf("null member = %s, want nil", got)
+	}
+	if got := rawMember(members, "absent"); got != nil {
+		t.Fatalf("absent member = %s, want nil", got)
+	}
+	if got := rawMember(nil, "lastUpdated\""); got != nil {
+		t.Fatalf("nil map = %s, want nil", got)
+	}
+}
+
 func TestRequireObjectRowsRejectsNonObjectRows(t *testing.T) {
 	t.Parallel()
 	rows := []jsontext.Value{jsontext.Value(`{"a":1}`), jsontext.Value(`{}`)}

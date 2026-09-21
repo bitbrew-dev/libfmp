@@ -39,6 +39,19 @@ func decodeEmptyDate(model, member string, raw jsontext.Value, allowNull bool) (
 	}
 }
 
+// rawMember returns the value of a member that the shadow struct's embedded
+// fallback collected because encoding/json/v2 cannot spell its wire name in a
+// struct tag (the name contains a comma, a backslash, or a quote). A missing
+// member and a JSON null both return nil, as a nil pointer shadow member
+// does, so the generated required-member switch treats them alike.
+func rawMember(members map[string]jsontext.Value, name string) jsontext.Value {
+	value, ok := members[name]
+	if !ok || value.Kind() == 'n' {
+		return nil
+	}
+	return value
+}
+
 // requireObjectRows enforces the Vec<DynamicObject> contract of a dynamic
 // endpoint: every row must be a JSON object, as serde_json::Map requires.
 func requireObjectRows(endpointID string, rows []jsontext.Value) error {
