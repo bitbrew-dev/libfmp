@@ -155,6 +155,47 @@ async fn client_preserves_empty_multiple_unknown_and_large_number_arrays() {
     assert_eq!(unknown.len(), 1);
 }
 
+#[tokio::test]
+async fn direct_fmp_auth_uses_the_same_company_screener_contract() {
+    for (authentication, expected_url, expected_header) in [
+        (
+            Authentication::fmp_header("header-secret"),
+            "https://financialmodelingprep.com/stable/company-screener?sector=Technology&limit=1000",
+            Some(("apikey", "header-secret")),
+        ),
+        (
+            Authentication::fmp_query("query-secret"),
+            "https://financialmodelingprep.com/stable/company-screener?sector=Technology&limit=1000&apikey=query-secret",
+            None,
+        ),
+    ] {
+        let executor = Arc::new(FixtureExecutor::new([json_fixture(SCREENER)]));
+        let client = Client::builder()
+            .authentication(authentication)
+            .executor(executor.clone())
+            .build()
+            .unwrap();
+
+        let rows = client
+            .company_screener(
+                CompanyScreenerQuery::new()
+                    .with_sector(Sector::new("Technology").unwrap())
+                    .with_limit(Limit(1_000)),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(rows.len(), 1);
+        let requests = executor.requests();
+        assert_eq!(requests[0].expose_url().as_str(), expected_url);
+        assert_eq!(requests[0].method(), HttpMethod::Get);
+        match expected_header {
+            Some((name, value)) => assert_eq!(requests[0].expose_headers()[name], value),
+            None => assert!(!requests[0].expose_headers().contains_key("apikey")),
+        }
+    }
+}
+
 fn all_filters() -> CompanyScreenerQuery {
     CompanyScreenerQuery::new()
         .with_market_cap_more_than(9_007_199_254_740_993)
