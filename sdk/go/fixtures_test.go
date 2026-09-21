@@ -186,3 +186,47 @@ func mutateFixtureMember(t *testing.T, fixture, member string, value jsontext.Va
 	}
 	return encoded
 }
+
+// TestEveryFixtureIsReferencedByAGoTest enforces the ADR 0030 acceptance
+// check that every shared fixture decodes through a Go model: each .json
+// file under the fixture directory must be named, as a quoted literal, in at
+// least one *_test.go file of this package. The fixture README is not a
+// fixture and is the only file the scan skips. Every unreferenced fixture is
+// listed, so a newly recorded fixture fails here until a domain test uses it.
+func TestEveryFixtureIsReferencedByAGoTest(t *testing.T) {
+	t.Parallel()
+	entries, err := os.ReadDir(fixturesDir)
+	if err != nil {
+		t.Fatalf("fixture directory: %v", err)
+	}
+	tests, err := filepath.Glob("*_test.go")
+	if err != nil || len(tests) == 0 {
+		t.Fatalf("test sources: %v, %v", tests, err)
+	}
+	var sources []string
+	for _, test := range tests {
+		source, err := os.ReadFile(test)
+		if err != nil {
+			t.Fatalf("%s: %v", test, err)
+		}
+		sources = append(sources, string(source))
+	}
+	var fixtures, unreferenced []string
+	for _, entry := range entries {
+		if entry.IsDir() || filepath.Ext(entry.Name()) != ".json" {
+			continue
+		}
+		fixtures = append(fixtures, entry.Name())
+		literal := `"` + entry.Name() + `"`
+		if !slices.ContainsFunc(sources, func(source string) bool { return strings.Contains(source, literal) }) {
+			unreferenced = append(unreferenced, entry.Name())
+		}
+	}
+	if len(fixtures) == 0 {
+		t.Fatalf("no .json fixture under %s", fixturesDir)
+	}
+	if len(unreferenced) > 0 {
+		t.Fatalf("%d of %d fixtures are not referenced by any *_test.go:\n  %s",
+			len(unreferenced), len(fixtures), strings.Join(unreferenced, "\n  "))
+	}
+}
