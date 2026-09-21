@@ -250,6 +250,12 @@ class FmpClient:
         """
 
     @property
+    def market_hours(self) -> market_hours.MarketHoursNamespace:
+        r"""
+        The `market_hours` endpoints, reached as `client.market_hours`.
+        """
+
+    @property
     def news(self) -> news.NewsNamespace:
         r"""
         The `news` endpoints, reached as `client.news`.

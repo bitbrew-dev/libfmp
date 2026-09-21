@@ -21,6 +21,7 @@ use crate::namespaces::indexes::IndexesNamespace;
 use crate::namespaces::insider_trading::InsiderTradingNamespace;
 use crate::namespaces::institutional_ownership::InstitutionalOwnershipNamespace;
 use crate::namespaces::market::MarketNamespace;
+use crate::namespaces::market_hours::MarketHoursNamespace;
 use crate::namespaces::news::NewsNamespace;
 use crate::namespaces::quote::QuoteNamespace;
 use crate::namespaces::screener::ScreenerNamespace;
@@ -133,6 +134,12 @@ impl FmpClient {
     #[getter]
     fn market(&self) -> MarketNamespace {
         MarketNamespace::new(self.builder.clone())
+    }
+
+    /// The `market_hours` endpoints, reached as `client.market_hours`.
+    #[getter]
+    fn market_hours(&self) -> MarketHoursNamespace {
+        MarketHoursNamespace::new(self.builder.clone())
     }
 
     /// The `news` endpoints, reached as `client.news`.

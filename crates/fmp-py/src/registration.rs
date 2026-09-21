@@ -316,6 +316,7 @@ fn register_market_hours(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "market_hours")?;
     module.add_class::<crate::models::market_hours::ExchangeHoliday>()?;
     module.add_class::<crate::models::market_hours::ExchangeMarketHours>()?;
+    module.add_class::<crate::namespaces::market_hours::MarketHoursNamespace>()?;
     add_submodule(parent, "fmp._native.market_hours", &module)
 }
 
