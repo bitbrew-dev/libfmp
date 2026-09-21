@@ -185,7 +185,7 @@ class InsiderTradeStatistics:
 @typing.final
 class InsiderTradingNamespace:
     r"""
-    Insider_trading endpoints for a single client, exposed as `client.insider_trading`.
+    Insider trading endpoints for a single client, exposed as `client.insider_trading`.
     """
 
     def latest_trades(

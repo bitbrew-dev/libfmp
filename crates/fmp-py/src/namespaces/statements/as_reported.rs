@@ -15,7 +15,7 @@ use crate::errors::to_py_error;
 use crate::models::statements::as_reported::AsReportedFinancialStatement;
 use crate::runtime::block_on;
 
-/// Statements as_reported endpoints for a single client, exposed as `client.statements.as_reported`.
+/// Statements as reported endpoints for a single client, exposed as `client.statements.as_reported`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.as_reported", frozen)]
 pub(crate) struct StatementsAsReportedNamespace {

@@ -21,7 +21,7 @@ use crate::models::institutional_ownership::{
 };
 use crate::runtime::block_on;
 
-/// Institutional_ownership endpoints for a single client, exposed as `client.institutional_ownership`.
+/// Institutional ownership endpoints for a single client, exposed as `client.institutional_ownership`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.institutional_ownership", frozen)]
 pub(crate) struct InstitutionalOwnershipNamespace {

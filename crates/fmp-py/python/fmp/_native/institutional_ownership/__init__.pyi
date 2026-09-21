@@ -411,7 +411,7 @@ class InstitutionalOwnershipFiling:
 @typing.final
 class InstitutionalOwnershipNamespace:
     r"""
-    Institutional_ownership endpoints for a single client, exposed as `client.institutional_ownership`.
+    Institutional ownership endpoints for a single client, exposed as `client.institutional_ownership`.
     """
 
     def latest_filings(
