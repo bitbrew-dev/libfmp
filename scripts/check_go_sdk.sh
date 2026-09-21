@@ -69,10 +69,9 @@ if ! git diff --exit-code --stat -- sdk/go || [[ -n "$untracked" ]]; then
   exit 1
 fi
 
-# 6. Coverage audit (ADR 0030, "Verification gates"). Reports how many
-#    registry methods have a generated Go method. Structural errors (a
-#    <domain>.go without the generated header, a namespace method the
-#    registry does not name) fail here; missing methods only print until
-#    phase 3 generates every domain, when #282 flips this to --strict.
-python3 scripts/check_go_coverage.py
+# 6. Coverage audit (ADR 0030, "Verification gates"). Every registry method
+#    must have a generated Go method (--strict, since phase 3 generated all
+#    30 domains); structural errors (a <domain>.go without the generated
+#    header, a namespace method the registry does not name) fail here too.
+python3 scripts/check_go_coverage.py --strict
 python3 -m unittest discover -s scripts -p 'check_go_coverage_test.py'
