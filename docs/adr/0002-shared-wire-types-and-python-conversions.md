@@ -26,28 +26,45 @@ TipRanks access can require the TipRanks add-on generally while only history
 older than three years requires the Enterprise plan. There is no global limit,
 page, or nonzero rule.
 
-The Python binding will apply this conversion policy when these Rust contracts
-reach public endpoint models:
+The Python binding applies this conversion policy to public endpoint models
+(the mapping lives in `crates/fmp-py-gen/src/bin/gen_models/classify.rs` and
+`crates/fmp-py/src/convert.rs`):
 
 - JSON integers remain Python `int`; values are never routed through `f64`.
+  Integer literals beyond `u64` stay exact through the dynamic path.
 - Fractional JSON numbers become Python `float`.
 - Numeric strings and percent-suffixed strings remain Python `str` and are not
   scaled.
-- A fiscal year becomes `int | str`, matching its wire representation.
+- A fiscal year matches its wire representation per field: `FiscalYearString`
+  fields become `str` and `CalendarYear` fields become `int`. The
+  `FiscalYear` union is not used by any public model, and the generator has no
+  mapping for it; a model that needs it would also need generator work.
 - Native JSON booleans become Python `bool`; `Y`/`N`, `Yes`/`No`, lowercase
   `true`/`false`, and title-case `True`/`False` forms remain validated strings
   unless a field's public model deliberately exposes its typed flag enum.
 - `YYYY-MM-DD` values become `datetime.date`; naive
-  `YYYY-MM-DD HH:MM:SS` values become naive `datetime.datetime`; RFC 3339 values
-  become timezone-aware `datetime.datetime`. Date-or-datetime fields preserve
-  which of those two documented forms was received. Empty and null optional
-  dates become `None`. Opaque human or partial date text remains `str`.
+  `YYYY-MM-DD HH:MM:SS` values become naive `datetime.datetime`; RFC 3339
+  `IsoTimestamp` values remain `str` holding the exact wire text, so the
+  offset spelling and millisecond precision are preserved rather than
+  normalised into a timezone-aware `datetime.datetime`. Date-or-datetime
+  fields remain `str`, preserving which of the two documented forms was
+  received. Empty and null optional dates become `None`. Opaque human or
+  partial date text remains `str`.
 - Dynamic JSON recursively becomes native Python dictionaries, lists, strings,
   integers, floats, booleans, and `None`.
-- Binary response bytes become Python `bytes`; a future binding facade must
-  carry the validated content metadata alongside those bytes.
-- Query enums may initially be accepted as validated Python strings while Rust
-  retains the exact enum vocabulary.
+- Binary response bytes become Python `bytes` on `fmp.BinaryPayload`, which
+  carries the validated `content_type` and optional `content_disposition`
+  alongside `data`.
+- Query enums are accepted as validated Python strings while Rust retains the
+  exact enum vocabulary. Matching is case-insensitive and `quarterly` is an
+  accepted alias, but the encoded wire value is always the documented spelling.
+
+Amendment (2026-09-21, audit of issue #11): the timestamp, fiscal-year, binary,
+and query-enum bullets above were revised to describe the shipped binding. The
+original text promised timezone-aware datetimes for RFC 3339 values and an
+`int | str` fiscal-year union; neither shipped, and the domain ADRs (0011,
+0018, 0029) together with the binding tests assert the representation-preserving
+`str` behaviour instead.
 
 Dynamic object-root payloads use `DynamicObject`. It preserves arbitrary member
 names and recursively lossless JSON data, including arbitrary-precision integer
