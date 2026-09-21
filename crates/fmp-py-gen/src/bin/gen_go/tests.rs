@@ -7,6 +7,7 @@ use fmp_py_gen::registry::{ArgKind, Registry};
 use fmp_py_gen::responses::{FieldAttrs, FieldDef, StructDef, discover};
 
 use super::{Selection, generate, generated_domains, parse_args};
+use crate::models::{plan_models, render_models};
 use crate::types::{Codec, TypeTable, arg_kind_go};
 
 fn manifest() -> PathBuf {
@@ -120,6 +121,13 @@ fn deserialize_with(attr: &str) -> FieldAttrs {
     }
 }
 
+fn skip_serializing_if(predicate: &str) -> FieldAttrs {
+    FieldAttrs {
+        skip_serializing_if: Some(predicate.to_string()),
+        ..FieldAttrs::default()
+    }
+}
+
 #[test]
 fn unmapped_types_fail_naming_the_struct_and_field() {
     let aliases = BTreeMap::new();
@@ -183,6 +191,18 @@ fn unmapped_types_fail_naming_the_struct_and_field() {
                 ..FieldAttrs::default()
             },
             "default",
+        ),
+        (
+            "never_none",
+            "f64",
+            skip_serializing_if("Option::is_none"),
+            "needs an Option<_> field",
+        ),
+        (
+            "custom_skip",
+            "Option<f64>",
+            skip_serializing_if("Vec::is_empty"),
+            "skip_serializing_if `Vec::is_empty`",
         ),
     ];
     for (name, ty, attrs, expected) in cases {
@@ -406,6 +426,45 @@ fn codec_fields_map_to_the_shadow_shapes_of_the_adr() {
             true
         )
     );
+}
+
+#[test]
+fn skip_serializing_if_none_marks_only_the_public_tag_omitzero() {
+    let aliases = BTreeMap::new();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let def = row(vec![
+        field("symbol", "String", FieldAttrs::default()),
+        field(
+            "capital_gains",
+            "Option<TitleCaseBoolFlag>",
+            skip_serializing_if("Option::is_none"),
+        ),
+        field("comment", "Option<String>", FieldAttrs::default()),
+    ]);
+    let fields: Vec<_> = def
+        .fields
+        .iter()
+        .map(|f| table.go_field(&def, f).expect("maps"))
+        .collect();
+    assert_eq!(
+        fields.iter().map(|f| f.omit_none).collect::<Vec<_>>(),
+        [false, true, false]
+    );
+    assert_eq!(fields[1].codec, Codec::Plain);
+    assert!(!fields[1].required_key());
+
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    assert!(
+        rendered.contains("CapitalGains *string `json:\"capitalGains,omitzero\"`"),
+        "{rendered}"
+    );
+    assert!(
+        rendered.contains("Comment *string `json:\"comment\"`"),
+        "{rendered}"
+    );
+    assert_eq!(rendered.matches("omitzero").count(), 1, "{rendered}");
 }
 
 #[test]

@@ -182,6 +182,8 @@ pub fn field_attrs(attrs: &[Attribute]) -> syn::Result<FieldAttrs> {
                 out.flatten = true;
             } else if meta.path.is_ident("skip") || meta.path.is_ident("skip_deserializing") {
                 out.skip = true;
+            } else if meta.path.is_ident("skip_serializing_if") {
+                out.skip_serializing_if = string_value(&meta)?;
             } else {
                 skip_payload(&meta)?;
             }
@@ -296,6 +298,8 @@ mod tests {
                 pub extra: Extra,
                 #[serde(rename(serialize = "out", deserialize = "in"), default = "zero")]
                 pub both: u32,
+                #[serde(rename = "flagUSD", skip_serializing_if = "Option::is_none")]
+                pub flag: Option<Flag>,
                 #[doc = "no serde"]
                 pub plain: String,
             }
@@ -320,7 +324,10 @@ mod tests {
         let both = attrs_of(&item, 5);
         assert_eq!(both.rename.as_deref(), Some("in"));
         assert!(both.default);
-        assert_eq!(attrs_of(&item, 6), FieldAttrs::default());
+        let flag = attrs_of(&item, 6);
+        assert_eq!(flag.rename.as_deref(), Some("flagUSD"));
+        assert_eq!(flag.skip_serializing_if.as_deref(), Some("Option::is_none"));
+        assert_eq!(attrs_of(&item, 7), FieldAttrs::default());
     }
 
     #[test]

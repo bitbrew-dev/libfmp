@@ -69,9 +69,10 @@ fn render_model(model: &ModelPlan, out: &mut String) {
     out.push_str(&doc_comment(&model.doc));
     let _ = writeln!(out, "type {} struct {{", model.name);
     for field in &model.fields {
+        let options = if field.omit_none { ",omitzero" } else { "" };
         let _ = writeln!(
             out,
-            "\t{} {} `json:\"{}\"`",
+            "\t{} {} `json:\"{}{options}\"`",
             field.name, field.public_ty, field.wire
         );
     }

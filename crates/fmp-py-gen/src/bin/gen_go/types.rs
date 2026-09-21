@@ -48,6 +48,10 @@ pub(crate) struct GoField {
     /// Whether the Rust type is `Option<_>` at the outermost level.
     pub(crate) optional: bool,
     pub(crate) codec: Codec,
+    /// `skip_serializing_if = "Option::is_none"`: the public struct tag
+    /// carries `omitzero` so a nil member is omitted when re-encoded, as
+    /// serde omits `None`.
+    pub(crate) omit_none: bool,
 }
 
 impl GoField {
@@ -98,6 +102,21 @@ impl<'a> TypeTable<'a> {
             return Err(fail("nested Option<Option<_>> has no Go shape".to_string()));
         }
         let optional = wraps.first() == Some(&Wrap::Option);
+        let omit_none = match field.attrs.skip_serializing_if.as_deref() {
+            None => false,
+            Some("Option::is_none") if optional => true,
+            Some("Option::is_none") => {
+                return Err(fail(
+                    "skip_serializing_if = \"Option::is_none\" needs an Option<_> field"
+                        .to_string(),
+                ));
+            }
+            Some(predicate) => {
+                return Err(fail(format!(
+                    "skip_serializing_if `{predicate}` is not in the gen_go table"
+                )));
+            }
+        };
         let base = self.base(&ident, 0).map_err(fail)?;
         let name = exported(&field.name);
         let wire = field.wire_name(def.rename_all.as_deref());
@@ -167,6 +186,7 @@ impl<'a> TypeTable<'a> {
             shadow_ty,
             optional,
             codec,
+            omit_none,
         })
     }
 
