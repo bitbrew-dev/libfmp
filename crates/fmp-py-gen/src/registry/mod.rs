@@ -51,6 +51,7 @@ pub mod naming;
 pub mod scan;
 mod schema;
 mod validate;
+pub mod wire;
 
 use std::fmt;
 use std::path::{Path, PathBuf};
