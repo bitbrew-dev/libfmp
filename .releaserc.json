@@ -72,7 +72,8 @@
       {
         "assets": [
           "Cargo.toml",
-          "Cargo.lock"
+          "Cargo.lock",
+          "sdk/go/version.go"
         ],
         "message": "chore(release): update version to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
