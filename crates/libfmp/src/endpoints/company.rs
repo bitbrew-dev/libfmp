@@ -1,16 +1,11 @@
 //! Company profile, note, peer, delisting, workforce, market-cap, share-float,
 //! merger-and-acquisition, and company-governance endpoints.
 //!
-//! A future Python binding reserves the matching `FmpClient` method names:
-//! `profile`, `profile_by_cik`, `company_notes`, `stock_peers`,
-//! `delisted_companies`, `employee_count`, `historical_employee_count`,
-//! `market_capitalization`, `market_capitalization_batch`,
-//! `historical_market_capitalization`, `shares_float`, `shares_float_all`,
-//! `mergers_acquisitions_latest`, `mergers_acquisitions_search`,
-//! `key_executives`, `executive_compensation`, and
-//! `executive_compensation_benchmark`.
-//! The typed query structs below are Rust-only contracts, not reserved Python
-//! public classes. This crate does not implement those Python bindings.
+//! Geographic availability varies per route and is carried by each
+//! descriptor's [`GeographicAvailability`]. The Python binding exposes the
+//! same seventeen routes under `client.company`; the only renamed method is
+//! `company_notes`, reached from Python as `client.company.notes`. The typed
+//! query structs below are Rust-only contracts and have no Python classes.
 
 use crate::{
     Client, Result,

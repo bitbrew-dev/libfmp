@@ -1,13 +1,8 @@
 //! Response models returned by company profile, note, peer, delisting, workforce,
 //! market-cap, share-float, merger-and-acquisition, and governance endpoints.
 //!
-//! Future Python bindings should expose these models from `fmp.company` as
-//! `CompanyProfile`, `CompanyNote`, `StockPeer`, `DelistedCompany`, and
-//! `EmployeeCount`, plus `MarketCapitalizationRecord`, `CompanyShareFloat`, and
-//! `AllSharesFloatRecord` and `MergerAcquisition`. This crate does not implement
-//! those Python bindings. The governance additions reserve `CompanyExecutive`,
-//! `ExecutiveCompensation`, and `ExecutiveCompensationBenchmark` in the same
-//! future `fmp.company` module.
+//! The Python binding exposes these thirteen models under `fmp.company` with
+//! the same names.
 
 use serde::{Deserialize, Serialize};
 
