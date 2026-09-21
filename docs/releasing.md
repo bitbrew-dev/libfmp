@@ -37,9 +37,9 @@ python -m venv .venv-release-check
 
 ## Check names immediately before publishing
 
-As of 2026-08-26, both registry APIs returned HTTP 404 for their exact package lookup, and `cargo search libfmp --limit 10` returned no matches. This indicates that `libfmp` and `fmp-py-sdk` were unregistered at check time; it is not a reservation.
+As of 2026-08-26, both registry APIs returned HTTP 404 for their exact package lookup, and `cargo search libfmp --limit 10` returned no matches, so the names were unregistered at that time. Since the first releases on 2026-08-27 (0.1.0 on crates.io, 0.1.1 on PyPI) this project owns both names, and every release publishes the same workspace version to crates.io and PyPI (0.7.0 on 2026-09-21).
 
-Repeat these checks immediately before publishing:
+Repeat these checks immediately before publishing to confirm the registries still report this project's latest version:
 
 ```console
 cargo search libfmp --limit 10
@@ -48,3 +48,13 @@ curl --fail-with-body https://pypi.org/pypi/fmp-py-sdk/json
 ```
 
 An exact package response means the name is registered. A not-found response indicates only current availability. Never include registry tokens or FMP credentials in validation commands, build logs, or documentation.
+
+## Release notes checklist
+
+`semantic-release` generates the GitHub release notes from the conventional commit messages on `main`, and the same workflow publishes the crate and the wheels. Once the run finishes, edit the notes of the new release (`gh release edit <tag> --notes-file <file>`) so that every release states the following:
+
+- Breaking-name avoidance: confirm that no public Rust or Python name changed without a `!` or `BREAKING CHANGE` commit, and list any renamed or deprecated names with their replacements. The `type(fmp-py/artifact)` commits regenerate stubs and must not alter existing signatures.
+- Entitlement-limited endpoints: point at the `gated` rows of [endpoint-coverage.md](endpoint-coverage.md) (the TipRanks add-on, the fixed `short=true` quote universes, and the Nasdaq real-time user declaration) so users know which methods need more than the standard plan.
+- Unresolved upstream response gaps: point at the `deferred` and `raw` rows of the same table and at the open hardening issue (#40) so users know which documented ambiguities are mirrored verbatim rather than corrected.
+
+Regenerate the coverage table before tagging when the registry changed (`python3 scripts/gen-endpoint-coverage.py --oracle artifacts/documentations/outer.md`) so the linked rows match the release.
