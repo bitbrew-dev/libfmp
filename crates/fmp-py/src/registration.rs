@@ -142,6 +142,7 @@ fn register_commitment_of_traders(parent: &Bound<'_, PyModule>) -> PyResult<()> 
     module.add_class::<crate::models::commitment_of_traders::CotAnalysis>()?;
     module.add_class::<crate::models::commitment_of_traders::CotReport>()?;
     module.add_class::<crate::models::commitment_of_traders::CotReportListing>()?;
+    module.add_class::<crate::namespaces::commitment_of_traders::CommitmentOfTradersNamespace>()?;
     add_submodule(parent, "fmp._native.commitment_of_traders", &module)
 }
 

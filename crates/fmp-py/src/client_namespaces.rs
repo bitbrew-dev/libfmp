@@ -8,6 +8,7 @@ use crate::namespaces::analyst::AnalystNamespace;
 use crate::namespaces::bulk::BulkNamespace;
 use crate::namespaces::calendar::CalendarNamespace;
 use crate::namespaces::chart::ChartNamespace;
+use crate::namespaces::commitment_of_traders::CommitmentOfTradersNamespace;
 use crate::namespaces::commodities::CommoditiesNamespace;
 use crate::namespaces::company::CompanyNamespace;
 use crate::namespaces::congressional::CongressionalNamespace;
@@ -56,6 +57,12 @@ impl FmpClient {
     #[getter]
     fn chart(&self) -> ChartNamespace {
         ChartNamespace::new(self.builder.clone())
+    }
+
+    /// The `commitment_of_traders` endpoints, reached as `client.commitment_of_traders`.
+    #[getter]
+    fn commitment_of_traders(&self) -> CommitmentOfTradersNamespace {
+        CommitmentOfTradersNamespace::new(self.builder.clone())
     }
 
     /// The `commodities` endpoints, reached as `client.commodities`.

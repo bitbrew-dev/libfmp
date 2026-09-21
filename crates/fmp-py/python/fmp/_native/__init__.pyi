@@ -170,6 +170,14 @@ class FmpClient:
         """
 
     @property
+    def commitment_of_traders(
+        self,
+    ) -> commitment_of_traders.CommitmentOfTradersNamespace:
+        r"""
+        The `commitment_of_traders` endpoints, reached as `client.commitment_of_traders`.
+        """
+
+    @property
     def commodities(self) -> commodities.CommoditiesNamespace:
         r"""
         The `commodities` endpoints, reached as `client.commodities`.
