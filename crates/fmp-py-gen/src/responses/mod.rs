@@ -162,3 +162,67 @@ fn parse_file(path: &Path) -> Result<syn::File, DiscoverError> {
         source,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn responses_root() -> PathBuf {
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../libfmp/src/responses")
+    }
+
+    fn count_emitted_models(dir: &Path) -> usize {
+        let mut files = Vec::new();
+        collect_rust_files(dir, &mut files).expect("models tree is readable");
+        files
+            .iter()
+            .filter(|file| file.file_name().is_some_and(|name| name != "convert.rs"))
+            .map(|file| {
+                let content = fs::read_to_string(file).expect("model file is readable");
+                content.matches("\npub(crate) struct ").count()
+            })
+            .sum()
+    }
+
+    #[test]
+    fn discover_sees_every_struct_gen_models_emits() {
+        let discovery = discover(&responses_root()).expect("responses discover");
+        let models_root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../fmp-py/src/models");
+        let emitted = count_emitted_models(&models_root);
+        assert_eq!(
+            discovery.structs.len(),
+            emitted,
+            "gen_models emits one model per discovered struct (175 at the time of writing)"
+        );
+        assert!(discovery.aliases.contains_key("DynamicJson"));
+        assert!(!discovery.module_public.is_empty());
+    }
+
+    #[test]
+    fn discover_captures_serde_facts() {
+        let discovery = discover(&responses_root()).expect("responses discover");
+        let bar = discovery
+            .structs
+            .iter()
+            .find(|def| def.name == "StandardDeviationBar")
+            .expect("macro-generated indicator row is discovered");
+        assert_eq!(bar.rename_all.as_deref(), Some("camelCase"));
+        let metric = bar.fields.last().expect("metric field");
+        assert_eq!(
+            metric.wire_name(bar.rename_all.as_deref()),
+            "standardDeviation"
+        );
+        assert!(metric.required());
+        let with_rename = discovery
+            .structs
+            .iter()
+            .flat_map(|def| def.fields.iter().map(move |field| (def, field)))
+            .find(|(_, field)| field.attrs.rename.is_some())
+            .expect("some field carries a serde rename");
+        let (def, field) = with_rename;
+        assert_eq!(
+            field.wire_name(def.rename_all.as_deref()).as_str(),
+            field.attrs.rename.as_deref().expect("rename")
+        );
+    }
+}

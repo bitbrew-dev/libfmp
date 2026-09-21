@@ -227,3 +227,81 @@ pub fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) -> Result<(), Disc
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn parse_struct(source: &str) -> syn::ItemStruct {
+        syn::parse_str(source).expect("valid struct")
+    }
+
+    fn attrs_of(item: &syn::ItemStruct, index: usize) -> FieldAttrs {
+        let field = item.fields.iter().nth(index).expect("field exists");
+        field_attrs(&field.attrs).expect("attributes parse")
+    }
+
+    #[test]
+    fn captures_rename_default_with_and_deserialize_with() {
+        let item = parse_struct(
+            r#"
+            #[derive(Deserialize)]
+            #[serde(rename_all = "camelCase")]
+            pub struct Row {
+                #[serde(rename = "1D")]
+                pub one_day: f64,
+                #[serde(default)]
+                pub notes: Vec<String>,
+                #[serde(with = "empty_date")]
+                pub filed: Option<Date>,
+                #[serde(deserialize_with = "required_option")]
+                pub price: Option<Price>,
+                #[serde(flatten, skip_deserializing, bound = "T: Clone")]
+                pub extra: Extra,
+                #[serde(rename(serialize = "out", deserialize = "in"), default = "zero")]
+                pub both: u32,
+                #[doc = "no serde"]
+                pub plain: String,
+            }
+            "#,
+        );
+        assert_eq!(
+            struct_rename_all(&item.attrs).expect("rename_all parses"),
+            Some("camelCase".to_string())
+        );
+        let one_day = attrs_of(&item, 0);
+        assert_eq!(one_day.rename.as_deref(), Some("1D"));
+        assert!(!one_day.default);
+        assert!(attrs_of(&item, 1).default);
+        assert_eq!(attrs_of(&item, 2).with.as_deref(), Some("empty_date"));
+        assert_eq!(
+            attrs_of(&item, 3).deserialize_with.as_deref(),
+            Some("required_option")
+        );
+        let extra = attrs_of(&item, 4);
+        assert!(extra.flatten);
+        assert!(extra.skip);
+        let both = attrs_of(&item, 5);
+        assert_eq!(both.rename.as_deref(), Some("in"));
+        assert!(both.default);
+        assert_eq!(attrs_of(&item, 6), FieldAttrs::default());
+    }
+
+    #[test]
+    fn peel_strips_option_and_vec_outermost_first() {
+        let ty: Type = syn::parse_str("Option<Vec<Price>>").expect("valid type");
+        assert_eq!(
+            peel(&ty),
+            (vec![Wrap::Option, Wrap::Vec], Some("Price".into()))
+        );
+        let ty: Type = syn::parse_str("Option<Option<f64>>").expect("valid type");
+        assert_eq!(
+            peel(&ty),
+            (vec![Wrap::Option, Wrap::Option], Some("f64".into()))
+        );
+        let ty: Type = syn::parse_str("libfmp::types::Ticker").expect("valid type");
+        assert_eq!(peel(&ty), (Vec::new(), Some("Ticker".into())));
+        let ty: Type = syn::parse_str("(u8, u8)").expect("valid type");
+        assert_eq!(peel(&ty), (Vec::new(), None));
+    }
+}
