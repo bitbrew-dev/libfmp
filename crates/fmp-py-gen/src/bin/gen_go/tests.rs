@@ -550,6 +550,11 @@ fn unsupported_arg_kinds_name_the_helper_to_add() {
         (quarter.go_type, quarter.helper),
         ("Quarter", "quarterParam")
     );
+    let timeframe = arg_kind_go(ArgKind::ChartTimeframe).expect("wire enum");
+    assert_eq!(
+        (timeframe.go_type, timeframe.helper),
+        ("ChartTimeframe", "chartTimeframeParam")
+    );
     let error = arg_kind_go(ArgKind::DateRange).expect_err("date_range is deferred");
     assert!(
         error.contains("`date_range`") && error.contains("dateRangeParam"),
