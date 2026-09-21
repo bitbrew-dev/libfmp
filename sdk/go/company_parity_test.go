@@ -57,7 +57,7 @@ func TestDocumentedCompanyProfileNoteAndPeerDecodeExactValues(t *testing.T) {
 		Industry: "Consumer Electronics", Website: "https://www.apple.com", Description: profile.Description,
 		Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US", FullTimeEmployees: "166000",
 		Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino", State: "CA", Zip: "95014",
-		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IpoDate: mustDate(t, "1980-12-12"),
+		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IpoDate: mustParseDate(t, "1980-12-12"),
 		DefaultImage: false, IsEtf: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
 	}
 	if profile != want {
@@ -107,20 +107,20 @@ func TestDocumentedWorkforceAndMarketDataFixturesDecodeExactValues(t *testing.T)
 	t.Parallel()
 	delisted := assertFixtureParity[DelistedCompany](t, "company_delisted.json")
 	if want := (DelistedCompany{Symbol: "CCIX", CompanyName: "Churchill Capital Corp IX Ordinary Shares", Exchange: "NASDAQ",
-		IpoDate: mustDate(t, "2007-03-01"), DelistedDate: mustDate(t, "2026-07-28")}); len(delisted) != 1 || delisted[0] != want {
+		IpoDate: mustParseDate(t, "2007-03-01"), DelistedDate: mustParseDate(t, "2026-07-28")}); len(delisted) != 1 || delisted[0] != want {
 		t.Fatalf("company_delisted = %+v", delisted)
 	}
 	employees := assertFixtureParity[EmployeeCount](t, "company_employee_count.json")
-	if want := (EmployeeCount{Symbol: "AAPL", Cik: "0000320193", AcceptanceTime: mustDateTime(t, "2025-10-31 06:01:26"),
-		PeriodOfReport: mustDate(t, "2025-09-27"), CompanyName: "Apple Inc.", FormType: "10-K",
-		FilingDate: mustDate(t, "2025-10-31"), EmployeeCount: 166_000,
+	if want := (EmployeeCount{Symbol: "AAPL", Cik: "0000320193", AcceptanceTime: mustParseDateTime(t, "2025-10-31 06:01:26"),
+		PeriodOfReport: mustParseDate(t, "2025-09-27"), CompanyName: "Apple Inc.", FormType: "10-K",
+		FilingDate: mustParseDate(t, "2025-10-31"), EmployeeCount: 166_000,
 		Source: "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm"}); len(employees) != 1 ||
 		employees[0] != want {
 		t.Fatalf("company_employee_count = %+v", employees)
 	}
 
 	caps := assertFixtureParity[MarketCapitalizationRecord](t, "company_market_capitalization.json")
-	if want := (MarketCapitalizationRecord{Symbol: "AAPL", Date: mustDate(t, "2026-07-30"), MarketCap: 4_874_072_686_740}); len(caps) != 1 ||
+	if want := (MarketCapitalizationRecord{Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), MarketCap: 4_874_072_686_740}); len(caps) != 1 ||
 		caps[0] != want {
 		t.Fatalf("company_market_capitalization = %+v", caps)
 	}
@@ -129,14 +129,14 @@ func TestDocumentedWorkforceAndMarketDataFixturesDecodeExactValues(t *testing.T)
 		t.Fatalf("company_historical_market_capitalization = %+v", historical)
 	}
 	floats := assertFixtureParity[CompanyShareFloat](t, "company_shares_float.json")
-	if want := (CompanyShareFloat{Symbol: "AAPL", Date: mustDateTime(t, "2026-07-30 15:48:00"), FreeFloat: 99.83000000136171,
+	if want := (CompanyShareFloat{Symbol: "AAPL", Date: mustParseDateTime(t, "2026-07-30 15:48:00"), FreeFloat: 99.83000000136171,
 		FloatShares: 14_662_387_495, OutstandingShares: 14_687_356_000,
 		Source: "https://www.sec.gov/Archives/edgar/data/320193/000032019326000013/aapl-20260328.htm"}); len(floats) != 1 ||
 		floats[0] != want {
 		t.Fatalf("company_shares_float = %+v", floats)
 	}
 	all := assertFixtureParity[AllSharesFloatRecord](t, "company_shares_float_all.json")
-	if want := (AllSharesFloatRecord{Symbol: "000001.SZ", Date: mustDateTime(t, "2026-07-29 14:23:30"), FreeFloat: 41.40900000201062,
+	if want := (AllSharesFloatRecord{Symbol: "000001.SZ", Date: mustParseDateTime(t, "2026-07-29 14:23:30"), FreeFloat: 41.40900000201062,
 		FloatShares: 8_035_796_667, OutstandingShares: 19_405_918_198}); len(all) != 1 || all[0] != want {
 		t.Fatalf("company_shares_float_all = %+v", all)
 	}
@@ -149,14 +149,14 @@ func TestDocumentedMergerAndGovernanceFixturesDecodeExactValues(t *testing.T) {
 	latest := assertFixtureParity[MergerAcquisition](t, "company_mergers_acquisitions_latest.json")
 	if want := (MergerAcquisition{Symbol: "AGH", CompanyName: "Aureus Greenway Holdings Inc", Cik: "0002009312",
 		TargetedCompanyName: "Aureus Greenway Holdings, Inc.", TargetedCik: "0002009312", TargetedSymbol: "PUSA",
-		TransactionDate: mustDate(t, "2026-07-29"), AcceptedDate: mustDateTime(t, "2026-07-29 16:00:46"),
+		TransactionDate: mustParseDate(t, "2026-07-29"), AcceptedDate: mustParseDateTime(t, "2026-07-29 16:00:46"),
 		Link: "https://www.sec.gov/Archives/edgar/data/2009312/000149315226035181/forms-4.htm"}); len(latest) != 1 ||
 		latest[0] != want {
 		t.Fatalf("company_mergers_acquisitions_latest = %+v", latest)
 	}
 	search := assertFixtureParity[MergerAcquisition](t, "company_mergers_acquisitions_search.json")
 	if len(search) != 1 || search[0].Symbol != "PEGY" || search[0].Cik != "0000022701" || search[0].TargetedSymbol != "JCS" ||
-		search[0].TransactionDate != mustDate(t, "2021-11-12") {
+		search[0].TransactionDate != mustParseDate(t, "2021-11-12") {
 		t.Fatalf("company_mergers_acquisitions_search = %+v", search)
 	}
 	multiple := assertFixtureParity[MergerAcquisition](t, "company_mergers_acquisitions_multiple.json")
@@ -183,7 +183,7 @@ func TestDocumentedMergerAndGovernanceFixturesDecodeExactValues(t *testing.T) {
 
 	compensation := assertFixtureParity[ExecutiveCompensation](t, "company_executive_compensation.json")
 	if want := (ExecutiveCompensation{Cik: "0000320193", Symbol: "AAPL", CompanyName: "Apple Inc.",
-		FilingDate: mustDate(t, "2026-01-08"), AcceptedDate: mustDateTime(t, "2026-01-08 16:31:36"),
+		FilingDate: mustParseDate(t, "2026-01-08"), AcceptedDate: mustParseDateTime(t, "2026-01-08 16:31:36"),
 		NameAndPosition: "Luca Maestri Former Senior Vice President, Chief Financial Officer", Year: 2025, Salary: 819_231,
 		Bonus: 0, StockAward: 13_003_031, OptionAward: 0, IncentivePlanCompensation: 1_638_462,
 		AllOtherCompensation: 22_204, Total: 15_482_928,
@@ -261,22 +261,4 @@ func assertCanonicalJSON(t *testing.T, got *jsontext.Value, want string) {
 	if string(canonical) != want {
 		t.Fatalf("dynamic member = %s, want %s", canonical, want)
 	}
-}
-
-func mustDate(t *testing.T, value string) Date {
-	t.Helper()
-	date, err := ParseDate(value)
-	if err != nil {
-		t.Fatalf("ParseDate(%q): %v", value, err)
-	}
-	return date
-}
-
-func mustDateTime(t *testing.T, value string) DateTime {
-	t.Helper()
-	dt, err := ParseDateTime(value)
-	if err != nil {
-		t.Fatalf("ParseDateTime(%q): %v", value, err)
-	}
-	return dt
 }
