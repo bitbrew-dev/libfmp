@@ -16,9 +16,12 @@ var quoteRoutes = map[string]struct {
 	query   string
 	fixture string
 }{
-	"/router/stable/quote":            {"symbol=%5EVIX", "quote.json"},
-	"/router/stable/quote-short":      {"symbol=%5EVIX", "quote_short.json"},
-	"/router/stable/batch-etf-quotes": {"short=true", "quote_etf_short.json"},
+	"/router/stable/quote":                {"symbol=%5EVIX", "quote.json"},
+	"/router/stable/quote-short":          {"symbol=%5EVIX", "quote_short.json"},
+	"/router/stable/batch-etf-quotes":     {"short=true", "quote_etf_short.json"},
+	"/router/stable/batch-quote-short":    {"symbols=AAPL%2C%5EVIX", "quote_short_multiple.json"},
+	"/router/stable/batch-exchange-quote": {"exchange=NASDAQ&short=true", "quote_exchange_short.json"},
+	"/router/stable/aftermarket-trade":    {"symbol=AAPL", "aftermarket_trade.json"},
 }
 
 func quoteRouter(t *testing.T) http.HandlerFunc {
@@ -66,8 +69,21 @@ func TestQuoteMethodsUseExactPathsQueriesAndHeaderAuthentication(t *testing.T) {
 		t.Fatalf("Etfs = %+v, %v", etfs, err)
 	}
 
+	batch, err := client.Quote.BatchQuoteShort(ctx, NewBatchQuoteShortQuery([]string{"AAPL", "^VIX"}))
+	if err != nil || len(batch) != 2 || batch[1].Symbol != "^VIX" {
+		t.Fatalf("BatchQuoteShort = %+v, %v", batch, err)
+	}
+	exchange, err := client.Quote.Exchange(ctx, NewExchangeQuotesQuery("NASDAQ"))
+	if err != nil || len(exchange) == 0 {
+		t.Fatalf("Exchange = %+v, %v", exchange, err)
+	}
+	trades, err := client.Quote.AftermarketTrade(ctx, NewAftermarketTradeQuery("AAPL"))
+	if err != nil || len(trades) != 1 || trades[0].TradeSize != 16 {
+		t.Fatalf("AftermarketTrade = %+v, %v", trades, err)
+	}
+
 	requests := rec.all()
-	if len(requests) != 3 {
+	if len(requests) != 6 {
 		t.Fatalf("requests = %d, want exactly one per call", len(requests))
 	}
 	for _, req := range requests {
@@ -137,6 +153,21 @@ func TestQuoteQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	}
 	if q := NewQuoteQuery(" AAPL "); q.Symbol() != " AAPL " {
 		t.Fatalf("Symbol() normalized the ticker: %q", q.Symbol())
+	}
+
+	_, err := client.Quote.BatchQuoteShort(context.Background(), NewBatchQuoteShortQuery(nil))
+	if typed := assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrEmptyTickerList) ||
+		typed.Message != "symbols: "+ErrEmptyTickerList.Error() {
+		t.Fatalf("empty ticker list: %v", err)
+	}
+	symbols := []string{"AAPL", "MSFT"}
+	q := NewBatchQuoteShortQuery(symbols)
+	symbols[0] = "GOOG"
+	if got := q.Symbols(); got[0] != "AAPL" {
+		t.Fatalf("Symbols() aliased the caller's slice: %v", got)
+	}
+	if rec.count() != 0 {
+		t.Fatalf("validation failures sent %d requests", rec.count())
 	}
 }
 
