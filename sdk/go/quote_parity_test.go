@@ -17,6 +17,37 @@ func TestQuoteFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 		assertFixtureParity[QuoteShort](t, name)
 	}
 	assertFixtureParity[QuoteShort](t, "quote_short_unknown.json", "futureProviderField")
+	assertFixtureParity[AftermarketQuote](t, "aftermarket_quote.json")
+	assertFixtureParity[AftermarketQuote](t, "aftermarket_quote_synthetic.json", "futureField")
+	assertFixtureParity[AftermarketTrade](t, "aftermarket_trade.json")
+	assertFixtureParity[AftermarketTrade](t, "aftermarket_trade_synthetic.json", "futureField")
+	assertFixtureParity[StockPriceChange](t, "stock_price_change.json")
+	assertFixtureParity[StockPriceChange](t, "stock_price_change_synthetic.json", "futureField")
+	assertFixtureParity[QuoteShort](t, "quote_exchange_short.json")
+}
+
+// Exact values copied from crates/libfmp/tests/quote_responses.rs for the
+// documented aftermarket and price-change fixtures.
+func TestDocumentedAftermarketAndPriceChangeFixturesDecodeExactValues(t *testing.T) {
+	t.Parallel()
+	trades := assertFixtureParity[AftermarketTrade](t, "aftermarket_trade.json")
+	if want := (AftermarketTrade{Symbol: "AAPL", Price: 331.85999, TradeSize: 16,
+		Timestamp: UnixMilliseconds(1_785_430_813_000)}); len(trades) != 1 || trades[0] != want {
+		t.Fatalf("aftermarket_trade = %+v", trades)
+	}
+	if got := trades[0].Timestamp.Time().UnixMilli(); got != 1_785_430_813_000 {
+		t.Fatalf("timestamp.Time().UnixMilli() = %d", got)
+	}
+	quotes := assertFixtureParity[AftermarketQuote](t, "aftermarket_quote.json")
+	if want := (AftermarketQuote{Symbol: "AAPL", BidSize: 16, BidPrice: 331.85, AskSize: 40, AskPrice: 331.88,
+		Volume: 28_718_455, Timestamp: UnixMilliseconds(1_785_430_813_000)}); len(quotes) != 1 || quotes[0] != want {
+		t.Fatalf("aftermarket_quote = %+v", quotes)
+	}
+	changes := assertFixtureParity[StockPriceChange](t, "stock_price_change.json")
+	if len(changes) != 1 || changes[0].Symbol != "AAPL" || changes[0].OneDay != -1.8732 ||
+		changes[0].TenYears != 1151.81068 || changes[0].YearToDate != 22.06835 || changes[0].Max != 258454.74094 {
+		t.Fatalf("stock_price_change = %+v", changes)
+	}
 }
 
 // Exact values copied from crates/libfmp/tests/quote_responses.rs.
