@@ -105,6 +105,24 @@ fn fiscal_year_rejects_a_numeric_json_value_in_both_contracts() {
     assert!(error.to_string().contains("string"));
 }
 
+#[test]
+fn statement_amounts_preserve_i64_extremes_in_both_contracts() {
+    for (field, extreme) in [
+        ("totalAssets", serde_json::json!(i64::MAX)),
+        ("retainedEarnings", serde_json::json!(i64::MIN)),
+    ] {
+        let mut historical: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+        historical[0][field] = extreme.clone();
+        let rows: Vec<BalanceSheetStatement> = serde_json::from_value(historical).unwrap();
+        assert_eq!(serde_json::to_value(rows).unwrap()[0][field], extreme);
+
+        let mut ttm: serde_json::Value = serde_json::from_slice(TTM).unwrap();
+        ttm[0][field] = extreme.clone();
+        let rows: Vec<BalanceSheetStatementTtm> = serde_json::from_value(ttm).unwrap();
+        assert_eq!(serde_json::to_value(rows).unwrap()[0][field], extreme);
+    }
+}
+
 fn historical_expected() -> BalanceSheetStatement {
     BalanceSheetStatement {
         date: Date::from_str("2025-09-27").unwrap(),

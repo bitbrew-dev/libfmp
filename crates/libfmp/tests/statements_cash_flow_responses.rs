@@ -77,6 +77,24 @@ fn fiscal_year_rejects_a_numeric_json_value_for_both_endpoints() {
     }
 }
 
+#[test]
+fn statement_amounts_preserve_i64_extremes_for_both_endpoints() {
+    for fixture in [HISTORICAL, TTM] {
+        for (field, extreme) in [
+            ("freeCashFlow", serde_json::json!(i64::MAX)),
+            (
+                "netCashProvidedByFinancingActivities",
+                serde_json::json!(i64::MIN),
+            ),
+        ] {
+            let mut value: serde_json::Value = serde_json::from_slice(fixture).unwrap();
+            value[0][field] = extreme.clone();
+            let rows: Vec<CashFlowStatement> = serde_json::from_value(value).unwrap();
+            assert_eq!(serde_json::to_value(rows).unwrap()[0][field], extreme);
+        }
+    }
+}
+
 fn historical_expected() -> CashFlowStatement {
     CashFlowStatement {
         date: Date::from_str("2025-09-27").unwrap(),
