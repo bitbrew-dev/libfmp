@@ -81,6 +81,72 @@ fn committed_domains_regenerate_to_the_committed_files() {
     assert!(file("namespaces.go").contains("Quote QuoteNamespace"));
 }
 
+/// The statements domain is the first with nested `[[namespace]]` entries,
+/// a hand-written Deserialize (FinancialReportJson), and a binary endpoint.
+#[test]
+fn nested_namespaces_embed_children_by_registry_path() {
+    let files = generate_domains(&domain_set(&["statements"])).expect("statements generates");
+    let file = |wanted: &str| {
+        files
+            .iter()
+            .find(|(name, _)| name == wanted)
+            .map(|(_, source)| source.as_str())
+            .unwrap_or_else(|| panic!("{wanted} is rendered"))
+    };
+    let domain = file("statements.go");
+    assert!(
+        domain.contains(
+            "// AsReported groups the statements.as_reported endpoints of the statements domain.\n\
+             \tAsReported StatementsAsReportedNamespace"
+        ),
+        "{domain}"
+    );
+    assert!(
+        domain.contains("AsReported: newStatementsAsReportedNamespace(client),"),
+        "{domain}"
+    );
+    assert!(
+        domain.contains("reached as Client.Statements.Income and is valid"),
+        "{domain}"
+    );
+    assert!(
+        domain.contains("func (n *StatementsIncomeNamespace) Statement(ctx context.Context, q IncomeStatementQuery) ([]IncomeStatement, error)"),
+        "{domain}"
+    );
+    assert_eq!(domain.matches("Namespace struct {").count(), 11, "{domain}");
+    assert_eq!(
+        domain.matches("\nfunc (n *Statements").count(),
+        27,
+        "{domain}"
+    );
+    assert!(
+        domain.contains(
+            "return n.client.getBinary(ctx, \"financial-reports-xlsx\", \"financial-reports-xlsx\", params, \
+             []string{\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\", \"application/octet-stream\"})"
+        ),
+        "{domain}"
+    );
+    assert!(
+        domain.contains("statementPeriodParam(\"period\", *q.period)")
+            && domain.contains("fiscalPeriodParam(\"period\", q.period)")
+            && domain.contains("segmentationStructureParam(\"structure\", *q.structure)"),
+        "{domain}"
+    );
+    let models = file("statements_models.go");
+    assert!(
+        models.contains("Sections jsontext.Value `json:\",embed\"`"),
+        "{models}"
+    );
+    assert!(
+        models.contains("LinkJson string `json:\"linkJson\"`"),
+        "{models}"
+    );
+    assert!(
+        file("namespaces.go").contains("Statements StatementsNamespace"),
+        "namespaces.go"
+    );
+}
+
 #[test]
 fn cross_domain_models_require_their_owner_to_be_generated() {
     let error =

@@ -123,11 +123,11 @@ fn render_namespace(namespace: &NamespacePlan, domain: &str, out: &mut String) {
         "type {} struct {{\n\tclient *Client",
         namespace.struct_name
     );
-    for (field, child) in &namespace.children {
+    for child in &namespace.children {
         let _ = writeln!(
             out,
-            "\t// {field} groups the {dotted}.{} endpoints of the {domain} domain.\n\t{field} {child}",
-            field.to_lowercase()
+            "\t// {0} groups the {dotted}.{1} endpoints of the {domain} domain.\n\t{0} {2}",
+            child.field, child.segment, child.struct_name
         );
     }
     let _ = writeln!(
@@ -136,8 +136,12 @@ fn render_namespace(namespace: &NamespacePlan, domain: &str, out: &mut String) {
         namespace.struct_name
     );
     out.push_str("\t\tclient: client,\n");
-    for (field, child) in &namespace.children {
-        let _ = writeln!(out, "\t\t{field}: new{child}(client),");
+    for child in &namespace.children {
+        let _ = writeln!(
+            out,
+            "\t\t{}: new{}(client),",
+            child.field, child.struct_name
+        );
     }
     out.push_str("\t}\n}\n\n");
 }

@@ -84,13 +84,23 @@ pub(crate) struct MethodPlan {
     pub(crate) response: ResponseKind,
 }
 
+/// One nested `[[namespace]]` reached through a field of its parent.
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub(crate) struct ChildPlan {
+    /// The exported field on the parent struct (`AsReported`).
+    pub(crate) field: String,
+    pub(crate) struct_name: String,
+    /// The registry path segment (`as_reported`), for the field doc.
+    pub(crate) segment: String,
+}
+
 /// One namespace struct: the domain root or a nested `[[namespace]]`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct NamespacePlan {
     pub(crate) path: Vec<String>,
     pub(crate) struct_name: String,
-    /// `(field, struct name)` of every direct child, sorted by field.
-    pub(crate) children: Vec<(String, String)>,
+    /// Every direct child, sorted by field.
+    pub(crate) children: Vec<ChildPlan>,
     pub(crate) methods: Vec<MethodPlan>,
 }
 
@@ -205,9 +215,13 @@ impl Context<'_> {
                 let parent = namespace.path[..depth].to_vec();
                 let child = &namespace.path[depth];
                 let entry = nodes.entry(parent.clone()).or_insert_with(|| node(parent));
-                let pair = (exported(child), struct_name(&namespace.path[..=depth]));
-                if !entry.children.contains(&pair) {
-                    entry.children.push(pair);
+                let plan = ChildPlan {
+                    field: exported(child),
+                    struct_name: struct_name(&namespace.path[..=depth]),
+                    segment: child.clone(),
+                };
+                if !entry.children.contains(&plan) {
+                    entry.children.push(plan);
                 }
             }
             let entry = nodes
