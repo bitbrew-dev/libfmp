@@ -14,9 +14,18 @@ use crate::GENERATED_HEADER;
 use crate::method::{render_method, render_query_fn};
 use crate::plan::{Node, struct_name_for};
 
-/// Where each verified entry's query type lives: dotted entry
-/// (`statements.income.statement`) to segments under `libfmp::endpoints`.
-pub(crate) type QueryModules = BTreeMap<String, Vec<String>>;
+/// Where the types of one verified entry live, as segments under
+/// `libfmp::endpoints`: the query type's module and each nested builder's
+/// module keyed by type name.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct EntryModules {
+    pub(crate) query: Vec<String>,
+    pub(crate) nested: BTreeMap<String, Vec<String>>,
+}
+
+/// The [`EntryModules`] of every verified entry, keyed by dotted entry
+/// (`statements.income.statement`).
+pub(crate) type QueryModules = BTreeMap<String, EntryModules>;
 
 #[derive(Debug, thiserror::Error)]
 pub(crate) enum EmitError {
@@ -43,16 +52,28 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     for endpoint in methods {
         let entry = format!("{dotted}.{}", endpoint.python_name);
         if let Some(query) = &endpoint.query_type {
-            let module = query_modules
+            let modules = query_modules
                 .get(&entry)
                 .ok_or_else(|| EmitError::UnresolvedQuery {
                     entry: entry.clone(),
                     query: query.clone(),
                 })?;
             query_uses
-                .entry(module.clone())
+                .entry(modules.query.clone())
                 .or_default()
                 .insert(query.clone());
+            for builder in &endpoint.nested {
+                let module = modules.nested.get(&builder.type_name).ok_or_else(|| {
+                    EmitError::UnresolvedQuery {
+                        entry: entry.clone(),
+                        query: builder.type_name.clone(),
+                    }
+                })?;
+                query_uses
+                    .entry(module.clone())
+                    .or_default()
+                    .insert(builder.type_name.clone());
+            }
         }
         if let Some(model) = &endpoint.response_model {
             model_uses

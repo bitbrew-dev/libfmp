@@ -12,7 +12,7 @@ use crate::bindings::{
     Binding, build_bindings, render_client_namespaces, render_facade_domains,
     render_namespaces_mod, render_registration,
 };
-use crate::emit::{EmitError, QueryModules, Rendered, render};
+use crate::emit::{EmitError, EntryModules, QueryModules, Rendered, render};
 use crate::models::scan_models;
 use crate::plan::{Node, build_tree, struct_name_for};
 use crate::query_modules;
@@ -188,6 +188,27 @@ fn dynamic_fixture_renders_dict_rows_with_the_stub_override() {
 }
 
 #[test]
+fn nested_builder_fixture_flattens_keywords_and_assembles_the_builder() {
+    let files = render_all(&manifest().join("tests/fixtures/nested_builder"));
+    let dcf = source(&files, "dcf.rs");
+    for needle in [
+        "use libfmp::endpoints::dcf::{CustomDcfQuery, DcfAssumptions};",
+        "#[pyo3(signature = (symbol, *, revenue_growth_pct=None, beta=None, risk_free_rate=None))]",
+        "fn custom_discounted_cash_flow(&self, py: Python<'_>, symbol: &str, revenue_growth_pct: Option<f64>, beta: Option<f64>, risk_free_rate: Option<f64>) -> PyResult<Vec<CustomDcfValuation>> {",
+        "let query = custom_discounted_cash_flow_query(symbol, revenue_growth_pct, beta, risk_free_rate)?;",
+        "fn custom_discounted_cash_flow_query(symbol: &str, revenue_growth_pct: Option<f64>, beta: Option<f64>, risk_free_rate: Option<f64>) -> PyResult<CustomDcfQuery> {",
+        "let beta = args::optional(\"beta\", beta, args::finite_decimal)?;",
+        "    let mut assumptions = DcfAssumptions::new();\n    if let Some(revenue_growth_pct) = revenue_growth_pct {\n        assumptions = assumptions.with_revenue_growth_pct(revenue_growth_pct);\n    }",
+        "if let Some(beta) = beta {\n        assumptions = assumptions.with_beta(beta);\n    }",
+        "    Ok(CustomDcfQuery::new(symbol, assumptions))\n}",
+    ] {
+        assert!(dcf.contains(needle), "missing {needle:?} in:\n{dcf}");
+    }
+    assert!(!dcf.contains("assumptions: Option"));
+    assert!(!dcf.contains("let mut query"));
+}
+
+#[test]
 fn unresolved_query_type_is_an_error() {
     let (registry, _) = load(&manifest().join("registry"));
     let tree = build_tree(&registry);
@@ -236,9 +257,15 @@ fn arg(name: &str, kind: ArgKind, required: bool) -> Arg {
 
 #[test]
 fn wide_signatures_get_the_clippy_allow_and_prefixed_input_types() {
-    let modules: QueryModules = [("calendar.wide".to_owned(), vec!["calendar".to_owned()])]
-        .into_iter()
-        .collect();
+    let modules: QueryModules = [(
+        "calendar.wide".to_owned(),
+        EntryModules {
+            query: vec!["calendar".to_owned()],
+            nested: BTreeMap::new(),
+        },
+    )]
+    .into_iter()
+    .collect();
     let six = synthetic(vec![
         arg("symbols", ArgKind::TickerList, true),
         arg("range", ArgKind::DateRange, true),
