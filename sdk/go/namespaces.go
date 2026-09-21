@@ -23,6 +23,8 @@ type Namespaces struct {
 	Dcf DcfNamespace
 	// Directory holds the directory endpoints.
 	Directory DirectoryNamespace
+	// Esg holds the esg endpoints.
+	Esg EsgNamespace
 	// Quote holds the quote endpoints.
 	Quote QuoteNamespace
 }
@@ -36,5 +38,6 @@ func (c *Client) bindNamespaces() {
 	c.Company = newCompanyNamespace(c)
 	c.Dcf = newDcfNamespace(c)
 	c.Directory = newDirectoryNamespace(c)
+	c.Esg = newEsgNamespace(c)
 	c.Quote = newQuoteNamespace(c)
 }
