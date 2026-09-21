@@ -119,3 +119,21 @@ func TestTemporalKindsEncodeExactWireTextAndRejectZero(t *testing.T) {
 	_, err = dateTimeParam("to", DateTime{})
 	assertRejected(t, err, "to", ErrZeroTemporalValue)
 }
+
+func TestEnumeratedKindsAcceptOnlyDocumentedWireValues(t *testing.T) {
+	t.Parallel()
+	got, err := retrievalFrequencyParam("period", RetrievalFrequencyAnnual)
+	assertParam(t, got, err, "period", "annual")
+	got, err = retrievalFrequencyParam("period", RetrievalFrequencyQuarterly)
+	assertParam(t, got, err, "period", "quarter")
+	for _, value := range []RetrievalFrequency{"", "Annual", "quarterly", "annual "} {
+		_, err = retrievalFrequencyParam("period", value)
+		var typed *Error
+		if !errors.As(err, &typed) || typed.Category != CategoryValidation || !errors.Is(err, ErrUnknownWireValue) {
+			t.Fatalf("%q: error = %v, want a CategoryValidation *Error wrapping ErrUnknownWireValue", value, err)
+		}
+		if want := "period: " + ErrUnknownWireValue.Error() + ", expected one of annual, quarter"; typed.Message != want {
+			t.Fatalf("%q: message = %q, want %q", value, typed.Message, want)
+		}
+	}
+}
