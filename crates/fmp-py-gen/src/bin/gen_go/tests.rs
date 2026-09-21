@@ -427,6 +427,16 @@ fn unsupported_arg_kinds_name_the_helper_to_add() {
         (frequency.go_type, frequency.helper),
         ("RetrievalFrequency", "retrievalFrequencyParam")
     );
+    let indicator = arg_kind_go(ArgKind::EconomicIndicator).expect("open enum");
+    assert_eq!(
+        (indicator.go_type, indicator.helper),
+        ("EconomicIndicator", "economicIndicatorParam")
+    );
+    let error = arg_kind_go(ArgKind::OpenEconomicIndicator).expect_err("open kind is deferred");
+    assert!(
+        error.contains("`open_economic_indicator`") && error.contains("openEconomicIndicatorParam"),
+        "{error}"
+    );
     let error = arg_kind_go(ArgKind::DateRange).expect_err("date_range is deferred");
     assert!(
         error.contains("`date_range`") && error.contains("dateRangeParam"),
