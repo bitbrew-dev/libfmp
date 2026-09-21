@@ -11,6 +11,7 @@ the coverage below has shipped through the 0.2.0 .. 0.7.0 releases (crates.io `l
 - Documented oracle entries: 276
 - Rust `Client` methods: 271 (`cargo run -p fmp-py-gen --bin registry_check` verifies each one)
 - Python methods: 271 across 30 namespaces
+- Go methods: 16 across 1 namespaces (`python3 scripts/check_go_coverage.py` audits each one)
 - States: supported 255, raw 1, gated 13, deferred 2
 
 | State | Meaning |
@@ -22,38 +23,38 @@ the coverage below has shipped through the 0.2.0 .. 0.7.0 releases (crates.io `l
 
 ## Domains
 
-| Domain | Documented section | Documented entries | Rust methods | Python methods | States |
-| --- | --- | --- | --- | --- | --- |
-| `search` | Search | 7 (includes screener) | 6 | 6 | supported 6 |
-| `directory` | Directory | 11 | 11 | 11 | supported 11 |
-| `company` | Company | 17 | 17 | 17 | supported 17 |
-| `screener` | Search | counted under Search | 1 | 1 | supported 1 |
-| `quote` | Quote | 16 | 16 | 16 | gated 6, supported 10 |
-| `statements` | Statements | 27 | 27 | 27 | supported 27 |
-| `chart` | Chart | 10 | 10 | 10 | supported 10 |
-| `economics` | Economics | 4 | 4 | 4 | deferred 1, supported 3 |
-| `calendar` | Calendar | 9 | 9 | 9 | supported 9 |
-| `transcripts` | Earnings Transcript | 4 | 3 | 3 | supported 3 |
-| `news` | News | 10 | 10 | 10 | supported 10 |
-| `institutional_ownership` | Form 13F | 8 | 8 | 8 | supported 8 |
-| `analyst` | Analyst | 8 | 8 | 8 | supported 8 |
-| `market` | Market Performance | 11 | 11 | 11 | supported 11 |
-| `technical_indicators` | Technical Indicators | 9 | 9 | 9 | supported 9 |
-| `funds` | ETF & Mutual Funds | 9 | 9 | 9 | supported 9 |
-| `sec_filings` | SEC Filings | 12 | 12 | 12 | raw 1, supported 11 |
-| `insider_trading` | Insider Trades | 6 | 6 | 6 | supported 6 |
-| `indexes` | Indexes | 15 | 14 | 14 | supported 14 |
-| `market_hours` | Market Hours | 3 | 3 | 3 | supported 3 |
-| `commodities` | Commodity | 9 | 8 | 8 | supported 8 |
-| `dcf` | Discounted Cash Flow | 4 | 4 | 4 | supported 4 |
-| `forex` | Forex | 9 | 8 | 8 | supported 8 |
-| `crypto` | Crypto | 9 | 8 | 8 | supported 8 |
-| `congressional` | Senate | 12 | 12 | 12 | supported 12 |
-| `esg` | ESG | 3 | 3 | 3 | supported 3 |
-| `commitment_of_traders` | Commitment Of Traders | 3 | 3 | 3 | supported 3 |
-| `fundraising` | Fundraisers | 6 | 6 | 6 | supported 6 |
-| `bulk` | Bulk | 18 | 18 | 18 | deferred 1, supported 17 |
-| `tipranks` | TipRanks | 7 | 7 | 7 | gated 7 |
+| Domain | Documented section | Documented entries | Rust methods | Python methods | Go methods | States |
+| --- | --- | --- | --- | --- | --- | --- |
+| `search` | Search | 7 (includes screener) | 6 | 6 | 0 | supported 6 |
+| `directory` | Directory | 11 | 11 | 11 | 0 | supported 11 |
+| `company` | Company | 17 | 17 | 17 | 0 | supported 17 |
+| `screener` | Search | counted under Search | 1 | 1 | 0 | supported 1 |
+| `quote` | Quote | 16 | 16 | 16 | 16 | gated 6, supported 10 |
+| `statements` | Statements | 27 | 27 | 27 | 0 | supported 27 |
+| `chart` | Chart | 10 | 10 | 10 | 0 | supported 10 |
+| `economics` | Economics | 4 | 4 | 4 | 0 | deferred 1, supported 3 |
+| `calendar` | Calendar | 9 | 9 | 9 | 0 | supported 9 |
+| `transcripts` | Earnings Transcript | 4 | 3 | 3 | 0 | supported 3 |
+| `news` | News | 10 | 10 | 10 | 0 | supported 10 |
+| `institutional_ownership` | Form 13F | 8 | 8 | 8 | 0 | supported 8 |
+| `analyst` | Analyst | 8 | 8 | 8 | 0 | supported 8 |
+| `market` | Market Performance | 11 | 11 | 11 | 0 | supported 11 |
+| `technical_indicators` | Technical Indicators | 9 | 9 | 9 | 0 | supported 9 |
+| `funds` | ETF & Mutual Funds | 9 | 9 | 9 | 0 | supported 9 |
+| `sec_filings` | SEC Filings | 12 | 12 | 12 | 0 | raw 1, supported 11 |
+| `insider_trading` | Insider Trades | 6 | 6 | 6 | 0 | supported 6 |
+| `indexes` | Indexes | 15 | 14 | 14 | 0 | supported 14 |
+| `market_hours` | Market Hours | 3 | 3 | 3 | 0 | supported 3 |
+| `commodities` | Commodity | 9 | 8 | 8 | 0 | supported 8 |
+| `dcf` | Discounted Cash Flow | 4 | 4 | 4 | 0 | supported 4 |
+| `forex` | Forex | 9 | 8 | 8 | 0 | supported 8 |
+| `crypto` | Crypto | 9 | 8 | 8 | 0 | supported 8 |
+| `congressional` | Senate | 12 | 12 | 12 | 0 | supported 12 |
+| `esg` | ESG | 3 | 3 | 3 | 0 | supported 3 |
+| `commitment_of_traders` | Commitment Of Traders | 3 | 3 | 3 | 0 | supported 3 |
+| `fundraising` | Fundraisers | 6 | 6 | 6 | 0 | supported 6 |
+| `bulk` | Bulk | 18 | 18 | 18 | 0 | deferred 1, supported 17 |
+| `tipranks` | TipRanks | 7 | 7 | 7 | 0 | gated 7 |
 
 The oracle lists 276 entries while the registry names 271 methods because the Search section holds
 the screener entry (`screener.companies`) and five entries are documented twice. Each duplicate is
@@ -67,276 +68,276 @@ served by the single method that owns the path:
 
 ## Endpoints
 
-| Domain | Python method | Rust `Client` method | State | Notes |
-| --- | --- | --- | --- | --- |
-| `search` | `search.symbol` | `search_symbol` | supported |  |
-| `search` | `search.name` | `search_name` | supported |  |
-| `search` | `search.cik` | `search_cik` | supported |  |
-| `search` | `search.cusip` | `search_cusip` | supported |  |
-| `search` | `search.isin` | `search_isin` | supported |  |
-| `search` | `search.exchange_variants` | `search_exchange_variants` | supported |  |
-| `directory` | `directory.company_symbols` | `company_symbols` | supported |  |
-| `directory` | `directory.financial_statement_symbols` | `financial_statement_symbols` | supported |  |
-| `directory` | `directory.cik_list` | `cik_list` | supported |  |
-| `directory` | `directory.symbol_changes` | `symbol_changes` | supported |  |
-| `directory` | `directory.etf_symbols` | `etf_symbols` | supported |  |
-| `directory` | `directory.actively_trading` | `actively_trading` | supported |  |
-| `directory` | `directory.earnings_transcript_list` | `earnings_transcript_list` | supported |  |
-| `directory` | `directory.available_exchanges` | `available_exchanges` | supported |  |
-| `directory` | `directory.available_sectors` | `available_sectors` | supported |  |
-| `directory` | `directory.available_industries` | `available_industries` | supported |  |
-| `directory` | `directory.available_countries` | `available_countries` | supported |  |
-| `company` | `company.profile` | `profile` | supported |  |
-| `company` | `company.profile_by_cik` | `profile_by_cik` | supported |  |
-| `company` | `company.notes` | `company_notes` | supported |  |
-| `company` | `company.stock_peers` | `stock_peers` | supported |  |
-| `company` | `company.delisted_companies` | `delisted_companies` | supported |  |
-| `company` | `company.employee_count` | `employee_count` | supported |  |
-| `company` | `company.historical_employee_count` | `historical_employee_count` | supported |  |
-| `company` | `company.market_capitalization` | `market_capitalization` | supported |  |
-| `company` | `company.market_capitalization_batch` | `market_capitalization_batch` | supported |  |
-| `company` | `company.historical_market_capitalization` | `historical_market_capitalization` | supported |  |
-| `company` | `company.shares_float` | `shares_float` | supported |  |
-| `company` | `company.shares_float_all` | `shares_float_all` | supported |  |
-| `company` | `company.mergers_acquisitions_latest` | `mergers_acquisitions_latest` | supported |  |
-| `company` | `company.mergers_acquisitions_search` | `mergers_acquisitions_search` | supported |  |
-| `company` | `company.key_executives` | `key_executives` | supported |  |
-| `company` | `company.executive_compensation` | `executive_compensation` | supported |  |
-| `company` | `company.executive_compensation_benchmark` | `executive_compensation_benchmark` | supported |  |
-| `screener` | `screener.companies` | `company_screener` | supported |  |
-| `quote` | `quote.full` | `quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.short` | `quote_short` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.mutual_funds` | `mutual_fund_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
-| `quote` | `quote.aftermarket_trade` | `aftermarket_trade` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.aftermarket_quote` | `aftermarket_quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.stock_price_change` | `stock_price_change` | supported |  |
-| `quote` | `quote.batch_quote` | `batch_quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.batch_quote_short` | `batch_quote_short` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.batch_aftermarket_trade` | `batch_aftermarket_trade` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.batch_aftermarket_quote` | `batch_aftermarket_quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.exchange` | `exchange_quotes` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.etfs` | `etf_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
-| `quote` | `quote.commodities` | `commodity_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
-| `quote` | `quote.cryptocurrencies` | `cryptocurrency_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
-| `quote` | `quote.forex` | `forex_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
-| `quote` | `quote.indexes` | `index_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
-| `statements` | `statements.income.statement` | `income_statement` | supported |  |
-| `statements` | `statements.income.statement_ttm` | `income_statement_ttm` | supported |  |
-| `statements` | `statements.balance.statement` | `balance_sheet_statement` | supported |  |
-| `statements` | `statements.balance.statement_ttm` | `balance_sheet_statement_ttm` | supported |  |
-| `statements` | `statements.cash_flow.statement` | `cash_flow_statement` | supported |  |
-| `statements` | `statements.cash_flow.statement_ttm` | `cash_flow_statement_ttm` | supported |  |
-| `statements` | `statements.metrics.key_metrics` | `key_metrics` | supported |  |
-| `statements` | `statements.metrics.key_metrics_ttm` | `key_metrics_ttm` | supported |  |
-| `statements` | `statements.ratios.financial_ratios` | `financial_ratios` | supported |  |
-| `statements` | `statements.ratios.financial_ratios_ttm` | `financial_ratios_ttm` | supported |  |
-| `statements` | `statements.growth.income_statement` | `income_statement_growth` | supported |  |
-| `statements` | `statements.growth.balance_sheet_statement` | `balance_sheet_statement_growth` | supported |  |
-| `statements` | `statements.growth.cash_flow_statement` | `cash_flow_statement_growth` | supported |  |
-| `statements` | `statements.growth.financial_statement` | `financial_statement_growth` | supported |  |
-| `statements` | `statements.as_reported.income` | `income_statement_as_reported` | supported |  |
-| `statements` | `statements.as_reported.balance_sheet` | `balance_sheet_statement_as_reported` | supported |  |
-| `statements` | `statements.as_reported.cash_flow` | `cash_flow_statement_as_reported` | supported |  |
-| `statements` | `statements.as_reported.full` | `financial_statement_full_as_reported` | supported |  |
-| `statements` | `statements.reports.dates` | `financial_reports_dates` | supported | rows carry secret download links; redacted in Python `repr` |
-| `statements` | `statements.reports.json` | `financial_reports_json` | supported | typed row whose `sections` are dynamic JSON |
-| `statements` | `statements.reports.xlsx` | `financial_reports_xlsx` | supported | binary payload (`BinaryResponse` / `fmp.BinaryPayload`) |
-| `statements` | `statements.segmentation.revenue_product` | `revenue_product_segmentation` | supported |  |
-| `statements` | `statements.segmentation.revenue_geographic` | `revenue_geographic_segmentation` | supported |  |
-| `statements` | `statements.summaries.latest_financial_statements` | `latest_financial_statements` | supported |  |
-| `statements` | `statements.summaries.financial_scores` | `financial_scores` | supported |  |
-| `statements` | `statements.summaries.owner_earnings` | `owner_earnings` | supported |  |
-| `statements` | `statements.summaries.enterprise_values` | `enterprise_values` | supported |  |
-| `chart` | `chart.light` | `stock_chart_light` | supported |  |
-| `chart` | `chart.full` | `stock_chart_full` | supported |  |
-| `chart` | `chart.non_split_adjusted` | `stock_chart_non_split_adjusted` | supported |  |
-| `chart` | `chart.dividend_adjusted` | `stock_chart_dividend_adjusted` | supported |  |
-| `chart` | `chart.one_minute` | `stock_chart_one_minute` | supported |  |
-| `chart` | `chart.five_minutes` | `stock_chart_five_minutes` | supported |  |
-| `chart` | `chart.fifteen_minutes` | `stock_chart_fifteen_minutes` | supported |  |
-| `chart` | `chart.thirty_minutes` | `stock_chart_thirty_minutes` | supported |  |
-| `chart` | `chart.one_hour` | `stock_chart_one_hour` | supported |  |
-| `chart` | `chart.four_hours` | `stock_chart_four_hours` | supported |  |
-| `economics` | `economics.treasury_rates` | `treasury_rates` | supported |  |
-| `economics` | `economics.indicators` | `economic_indicators` | supported |  |
-| `economics` | `economics.calendar` | `economic_calendar` | deferred | `previous`/`estimate`/`actual` are documented non-null `f64`; live nulls tracked in #40 |
-| `economics` | `economics.market_risk_premium` | `market_risk_premium` | supported |  |
-| `calendar` | `calendar.dividends` | `dividends` | supported |  |
-| `calendar` | `calendar.dividends_calendar` | `dividends_calendar` | supported |  |
-| `calendar` | `calendar.earnings` | `earnings` | supported |  |
-| `calendar` | `calendar.earnings_calendar` | `earnings_calendar` | supported |  |
-| `calendar` | `calendar.ipos_calendar` | `ipos_calendar` | supported |  |
-| `calendar` | `calendar.ipos_disclosure` | `ipos_disclosure` | supported |  |
-| `calendar` | `calendar.ipos_prospectus` | `ipos_prospectus` | supported |  |
-| `calendar` | `calendar.stock_splits` | `stock_splits` | supported |  |
-| `calendar` | `calendar.stock_splits_calendar` | `stock_splits_calendar` | supported |  |
-| `transcripts` | `transcripts.latest_earnings_transcripts` | `latest_earnings_transcripts` | supported |  |
-| `transcripts` | `transcripts.earnings_transcript` | `earnings_transcript` | supported |  |
-| `transcripts` | `transcripts.earnings_transcript_dates` | `earnings_transcript_dates` | supported |  |
-| `news` | `news.fmp_articles` | `fmp_articles` | supported |  |
-| `news` | `news.latest_general_news` | `latest_general_news` | supported |  |
-| `news` | `news.latest_press_releases` | `latest_press_releases` | supported |  |
-| `news` | `news.latest_stock_news` | `latest_stock_news` | supported |  |
-| `news` | `news.latest_crypto_news` | `latest_crypto_news` | supported |  |
-| `news` | `news.latest_forex_news` | `latest_forex_news` | supported |  |
-| `news` | `news.search_press_releases` | `search_press_releases` | supported |  |
-| `news` | `news.search_stock_news` | `search_stock_news` | supported |  |
-| `news` | `news.search_crypto_news` | `search_crypto_news` | supported |  |
-| `news` | `news.search_forex_news` | `search_forex_news` | supported |  |
-| `institutional_ownership` | `institutional_ownership.latest_filings` | `latest_institutional_ownership_filings` | supported |  |
-| `institutional_ownership` | `institutional_ownership.extract` | `institutional_ownership_extract` | supported |  |
-| `institutional_ownership` | `institutional_ownership.form_13f_filing_dates` | `form_13f_filing_dates` | supported |  |
-| `institutional_ownership` | `institutional_ownership.holder_analytics` | `institutional_holder_analytics` | supported |  |
-| `institutional_ownership` | `institutional_ownership.holder_performance_summary` | `holder_performance_summary` | supported |  |
-| `institutional_ownership` | `institutional_ownership.holder_industry_breakdown` | `holder_industry_breakdown` | supported |  |
-| `institutional_ownership` | `institutional_ownership.positions_summary` | `institutional_positions_summary` | supported |  |
-| `institutional_ownership` | `institutional_ownership.industry_summary` | `institutional_industry_summary` | supported |  |
-| `analyst` | `analyst.financial_estimates` | `financial_estimates` | supported |  |
-| `analyst` | `analyst.ratings_snapshot` | `ratings_snapshot` | supported |  |
-| `analyst` | `analyst.historical_ratings` | `historical_ratings` | supported |  |
-| `analyst` | `analyst.price_target_summary` | `price_target_summary` | supported |  |
-| `analyst` | `analyst.price_target_consensus` | `price_target_consensus` | supported |  |
-| `analyst` | `analyst.stock_grades` | `stock_grades` | supported |  |
-| `analyst` | `analyst.historical_stock_grades` | `historical_stock_grades` | supported |  |
-| `analyst` | `analyst.stock_grades_summary` | `stock_grades_summary` | supported |  |
-| `market` | `market.sector_performance_snapshot` | `sector_performance_snapshot` | supported |  |
-| `market` | `market.industry_performance_snapshot` | `industry_performance_snapshot` | supported |  |
-| `market` | `market.sector_pe_snapshot` | `sector_pe_snapshot` | supported |  |
-| `market` | `market.industry_pe_snapshot` | `industry_pe_snapshot` | supported |  |
-| `market` | `market.historical_sector_performance` | `historical_sector_performance` | supported |  |
-| `market` | `market.historical_industry_performance` | `historical_industry_performance` | supported |  |
-| `market` | `market.historical_sector_pe` | `historical_sector_pe` | supported |  |
-| `market` | `market.historical_industry_pe` | `historical_industry_pe` | supported |  |
-| `market` | `market.biggest_gainers` | `biggest_gainers` | supported |  |
-| `market` | `market.biggest_losers` | `biggest_losers` | supported |  |
-| `market` | `market.most_actives` | `most_actives` | supported |  |
-| `technical_indicators` | `technical_indicators.simple_moving_average` | `simple_moving_average` | supported |  |
-| `technical_indicators` | `technical_indicators.exponential_moving_average` | `exponential_moving_average` | supported |  |
-| `technical_indicators` | `technical_indicators.weighted_moving_average` | `weighted_moving_average` | supported |  |
-| `technical_indicators` | `technical_indicators.double_exponential_moving_average` | `double_exponential_moving_average` | supported |  |
-| `technical_indicators` | `technical_indicators.triple_exponential_moving_average` | `triple_exponential_moving_average` | supported |  |
-| `technical_indicators` | `technical_indicators.relative_strength_index` | `relative_strength_index` | supported |  |
-| `technical_indicators` | `technical_indicators.standard_deviation` | `standard_deviation` | supported |  |
-| `technical_indicators` | `technical_indicators.williams` | `williams` | supported |  |
-| `technical_indicators` | `technical_indicators.average_directional_index` | `average_directional_index` | supported |  |
-| `funds` | `funds.etf_holdings` | `etf_holdings` | supported |  |
-| `funds` | `funds.etf_info` | `etf_info` | supported |  |
-| `funds` | `funds.etf_country_weightings` | `etf_country_weightings` | supported |  |
-| `funds` | `funds.etf_asset_exposure` | `etf_asset_exposure` | supported |  |
-| `funds` | `funds.etf_sector_weightings` | `etf_sector_weightings` | supported |  |
-| `funds` | `funds.latest_fund_disclosure_holders` | `latest_fund_disclosure_holders` | supported |  |
-| `funds` | `funds.fund_disclosures` | `fund_disclosures` | supported |  |
-| `funds` | `funds.search_fund_disclosure_holders` | `search_fund_disclosure_holders` | supported |  |
-| `funds` | `funds.fund_disclosure_dates` | `fund_disclosure_dates` | supported |  |
-| `sec_filings` | `sec_filings.latest_8k` | `latest_8k_sec_filings` | supported |  |
-| `sec_filings` | `sec_filings.latest` | `latest_sec_filings` | supported |  |
-| `sec_filings` | `sec_filings.by_form_type` | `sec_filings_by_form_type` | supported |  |
-| `sec_filings` | `sec_filings.by_symbol` | `sec_filings_by_symbol` | supported |  |
-| `sec_filings` | `sec_filings.by_cik` | `sec_filings_by_cik` | supported |  |
-| `sec_filings` | `sec_filings.search_companies_by_name` | `search_sec_companies_by_name` | supported |  |
-| `sec_filings` | `sec_filings.search_companies_by_symbol` | `search_sec_companies_by_symbol` | supported |  |
-| `sec_filings` | `sec_filings.search_companies_by_cik` | `search_sec_companies_by_cik` | supported |  |
-| `sec_filings` | `sec_filings.company_profile` | `sec_company_profile` | supported |  |
-| `sec_filings` | `sec_filings.industry_classifications` | `industry_classifications` | supported |  |
-| `sec_filings` | `sec_filings.all_industry_classifications` | `all_industry_classifications` | supported |  |
-| `sec_filings` | `sec_filings.search_industry_classifications` | `search_industry_classifications` | raw | documented as `[{}]`; Rust `Vec<DynamicObject>`, Python `list[dict]` |
-| `insider_trading` | `insider_trading.latest_trades` | `latest_insider_trades` | supported |  |
-| `insider_trading` | `insider_trading.search_trades` | `search_insider_trades` | supported |  |
-| `insider_trading` | `insider_trading.search_reporting_names` | `search_insider_reporting_names` | supported |  |
-| `insider_trading` | `insider_trading.transaction_types` | `insider_transaction_types` | supported |  |
-| `insider_trading` | `insider_trading.trade_statistics` | `insider_trade_statistics` | supported |  |
-| `insider_trading` | `insider_trading.beneficial_ownership_acquisitions` | `beneficial_ownership_acquisitions` | supported |  |
-| `indexes` | `indexes.list` | `index_list` | supported |  |
-| `indexes` | `indexes.quote` | `index_quote` | supported |  |
-| `indexes` | `indexes.quote_short` | `index_quote_short` | supported |  |
-| `indexes` | `indexes.chart_light` | `index_chart_light` | supported |  |
-| `indexes` | `indexes.chart_full` | `index_chart_full` | supported |  |
-| `indexes` | `indexes.chart_one_minute` | `index_chart_one_minute` | supported |  |
-| `indexes` | `indexes.chart_five_minutes` | `index_chart_five_minutes` | supported |  |
-| `indexes` | `indexes.chart_one_hour` | `index_chart_one_hour` | supported |  |
-| `indexes` | `indexes.sp500_constituents` | `sp500_constituents` | supported |  |
-| `indexes` | `indexes.nasdaq_constituents` | `nasdaq_constituents` | supported |  |
-| `indexes` | `indexes.dow_jones_constituents` | `dow_jones_constituents` | supported |  |
-| `indexes` | `indexes.historical_sp500_constituents` | `historical_sp500_constituents` | supported |  |
-| `indexes` | `indexes.historical_nasdaq_constituents` | `historical_nasdaq_constituents` | supported |  |
-| `indexes` | `indexes.historical_dow_jones_constituents` | `historical_dow_jones_constituents` | supported |  |
-| `market_hours` | `market_hours.exchange_market_hours` | `exchange_market_hours` | supported |  |
-| `market_hours` | `market_hours.holidays_by_exchange` | `holidays_by_exchange` | supported |  |
-| `market_hours` | `market_hours.all_exchange_market_hours` | `all_exchange_market_hours` | supported |  |
-| `commodities` | `commodities.list` | `commodities_list` | supported |  |
-| `commodities` | `commodities.quote` | `commodity_quote` | supported |  |
-| `commodities` | `commodities.quote_short` | `commodity_quote_short` | supported |  |
-| `commodities` | `commodities.chart_light` | `commodity_chart_light` | supported |  |
-| `commodities` | `commodities.chart_full` | `commodity_chart_full` | supported |  |
-| `commodities` | `commodities.chart_one_minute` | `commodity_chart_one_minute` | supported |  |
-| `commodities` | `commodities.chart_five_minutes` | `commodity_chart_five_minutes` | supported |  |
-| `commodities` | `commodities.chart_one_hour` | `commodity_chart_one_hour` | supported |  |
-| `dcf` | `dcf.discounted_cash_flow` | `discounted_cash_flow` | supported |  |
-| `dcf` | `dcf.levered_discounted_cash_flow` | `levered_discounted_cash_flow` | supported |  |
-| `dcf` | `dcf.custom_discounted_cash_flow` | `custom_discounted_cash_flow` | supported |  |
-| `dcf` | `dcf.custom_levered_discounted_cash_flow` | `custom_levered_discounted_cash_flow` | supported |  |
-| `forex` | `forex.list` | `forex_list` | supported |  |
-| `forex` | `forex.quote` | `forex_quote` | supported |  |
-| `forex` | `forex.quote_short` | `forex_quote_short` | supported |  |
-| `forex` | `forex.chart_light` | `forex_chart_light` | supported |  |
-| `forex` | `forex.chart_full` | `forex_chart_full` | supported |  |
-| `forex` | `forex.chart_one_minute` | `forex_chart_one_minute` | supported |  |
-| `forex` | `forex.chart_five_minutes` | `forex_chart_five_minutes` | supported |  |
-| `forex` | `forex.chart_one_hour` | `forex_chart_one_hour` | supported |  |
-| `crypto` | `crypto.list` | `cryptocurrency_list` | supported |  |
-| `crypto` | `crypto.quote` | `cryptocurrency_quote` | supported |  |
-| `crypto` | `crypto.quote_short` | `cryptocurrency_quote_short` | supported |  |
-| `crypto` | `crypto.chart_light` | `cryptocurrency_chart_light` | supported |  |
-| `crypto` | `crypto.chart_full` | `cryptocurrency_chart_full` | supported |  |
-| `crypto` | `crypto.chart_one_minute` | `cryptocurrency_chart_one_minute` | supported |  |
-| `crypto` | `crypto.chart_five_minutes` | `cryptocurrency_chart_five_minutes` | supported |  |
-| `crypto` | `crypto.chart_one_hour` | `cryptocurrency_chart_one_hour` | supported |  |
-| `congressional` | `congressional.latest_senate_disclosures` | `latest_senate_disclosures` | supported |  |
-| `congressional` | `congressional.latest_house_disclosures` | `latest_house_disclosures` | supported |  |
-| `congressional` | `congressional.senate_trades` | `senate_trades` | supported |  |
-| `congressional` | `congressional.senate_trades_by_name` | `senate_trades_by_name` | supported |  |
-| `congressional` | `congressional.senate_trades_by_member_id` | `senate_trades_by_member_id` | supported |  |
-| `congressional` | `congressional.house_trades` | `house_trades` | supported |  |
-| `congressional` | `congressional.house_trades_by_name` | `house_trades_by_name` | supported |  |
-| `congressional` | `congressional.house_trades_by_member_id` | `house_trades_by_member_id` | supported |  |
-| `congressional` | `congressional.profiles` | `congressional_profiles` | supported |  |
-| `congressional` | `congressional.positions` | `congressional_positions` | supported |  |
-| `congressional` | `congressional.net_worth` | `congressional_net_worth` | supported |  |
-| `congressional` | `congressional.net_worth_aggregated` | `congressional_net_worth_aggregated` | supported |  |
-| `esg` | `esg.disclosures` | `esg_disclosures` | supported |  |
-| `esg` | `esg.ratings` | `esg_ratings` | supported |  |
-| `esg` | `esg.benchmark` | `esg_benchmark` | supported |  |
-| `commitment_of_traders` | `commitment_of_traders.report` | `cot_report` | supported |  |
-| `commitment_of_traders` | `commitment_of_traders.analysis` | `cot_analysis` | supported |  |
-| `commitment_of_traders` | `commitment_of_traders.report_list` | `cot_report_list` | supported |  |
-| `fundraising` | `fundraising.latest_crowdfunding_offerings` | `latest_crowdfunding_offerings` | supported |  |
-| `fundraising` | `fundraising.crowdfunding_offerings_by_cik` | `crowdfunding_offerings_by_cik` | supported |  |
-| `fundraising` | `fundraising.search_crowdfunding_offerings` | `search_crowdfunding_offerings` | supported |  |
-| `fundraising` | `fundraising.search_regulation_d_offerings` | `search_regulation_d_offerings` | supported |  |
-| `fundraising` | `fundraising.latest_regulation_d_offerings` | `latest_regulation_d_offerings` | supported |  |
-| `fundraising` | `fundraising.regulation_d_offerings_by_cik` | `regulation_d_offerings_by_cik` | supported |  |
-| `bulk` | `bulk.company_profiles` | `bulk_company_profiles` | supported |  |
-| `bulk` | `bulk.stock_ratings` | `bulk_stock_ratings` | supported |  |
-| `bulk` | `bulk.dcf_valuations` | `bulk_dcf_valuations` | supported |  |
-| `bulk` | `bulk.financial_scores` | `bulk_financial_scores` | supported |  |
-| `bulk` | `bulk.price_target_summaries` | `bulk_price_target_summaries` | supported |  |
-| `bulk` | `bulk.etf_holdings` | `bulk_etf_holdings` | deferred | documented key `lastUpdated"` is mirrored verbatim; upstream fix tracked in #40 |
-| `bulk` | `bulk.upgrades_downgrades_consensus` | `bulk_upgrades_downgrades_consensus` | supported |  |
-| `bulk` | `bulk.key_metrics_ttm` | `bulk_key_metrics_ttm` | supported |  |
-| `bulk` | `bulk.financial_ratios_ttm` | `bulk_financial_ratios_ttm` | supported |  |
-| `bulk` | `bulk.stock_peers` | `bulk_stock_peers` | supported |  |
-| `bulk` | `bulk.earnings_surprises` | `bulk_earnings_surprises` | supported |  |
-| `bulk` | `bulk.income_statements` | `bulk_income_statements` | supported |  |
-| `bulk` | `bulk.income_statement_growth` | `bulk_income_statement_growth` | supported |  |
-| `bulk` | `bulk.balance_sheet_statements` | `bulk_balance_sheet_statements` | supported |  |
-| `bulk` | `bulk.balance_sheet_statement_growth` | `bulk_balance_sheet_statement_growth` | supported |  |
-| `bulk` | `bulk.cash_flow_statements` | `bulk_cash_flow_statements` | supported |  |
-| `bulk` | `bulk.cash_flow_statement_growth` | `bulk_cash_flow_statement_growth` | supported |  |
-| `bulk` | `bulk.eod` | `bulk_eod` | supported |  |
-| `tipranks` | `tipranks.ratings_search` | `tipranks_ratings_search` | gated | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`); Enterprise plan for history older than 3 years |
-| `tipranks` | `tipranks.point_in_time_ratings_by_symbol` | `tipranks_point_in_time_ratings_by_symbol` | gated | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
-| `tipranks` | `tipranks.point_in_time_ratings_by_analyst` | `tipranks_point_in_time_ratings_by_analyst` | gated | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
-| `tipranks` | `tipranks.symbol_summary` | `tipranks_symbol_summary` | gated | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
-| `tipranks` | `tipranks.analyst_summary` | `tipranks_analyst_summary` | gated | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
-| `tipranks` | `tipranks.firm_summary` | `tipranks_firm_summary` | gated | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
-| `tipranks` | `tipranks.analysts` | `tipranks_analysts` | gated | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
+| Domain | Python method | Rust `Client` method | State | Go | Notes |
+| --- | --- | --- | --- | --- | --- |
+| `search` | `search.symbol` | `search_symbol` | supported | pending |  |
+| `search` | `search.name` | `search_name` | supported | pending |  |
+| `search` | `search.cik` | `search_cik` | supported | pending |  |
+| `search` | `search.cusip` | `search_cusip` | supported | pending |  |
+| `search` | `search.isin` | `search_isin` | supported | pending |  |
+| `search` | `search.exchange_variants` | `search_exchange_variants` | supported | pending |  |
+| `directory` | `directory.company_symbols` | `company_symbols` | supported | pending |  |
+| `directory` | `directory.financial_statement_symbols` | `financial_statement_symbols` | supported | pending |  |
+| `directory` | `directory.cik_list` | `cik_list` | supported | pending |  |
+| `directory` | `directory.symbol_changes` | `symbol_changes` | supported | pending |  |
+| `directory` | `directory.etf_symbols` | `etf_symbols` | supported | pending |  |
+| `directory` | `directory.actively_trading` | `actively_trading` | supported | pending |  |
+| `directory` | `directory.earnings_transcript_list` | `earnings_transcript_list` | supported | pending |  |
+| `directory` | `directory.available_exchanges` | `available_exchanges` | supported | pending |  |
+| `directory` | `directory.available_sectors` | `available_sectors` | supported | pending |  |
+| `directory` | `directory.available_industries` | `available_industries` | supported | pending |  |
+| `directory` | `directory.available_countries` | `available_countries` | supported | pending |  |
+| `company` | `company.profile` | `profile` | supported | pending |  |
+| `company` | `company.profile_by_cik` | `profile_by_cik` | supported | pending |  |
+| `company` | `company.notes` | `company_notes` | supported | pending |  |
+| `company` | `company.stock_peers` | `stock_peers` | supported | pending |  |
+| `company` | `company.delisted_companies` | `delisted_companies` | supported | pending |  |
+| `company` | `company.employee_count` | `employee_count` | supported | pending |  |
+| `company` | `company.historical_employee_count` | `historical_employee_count` | supported | pending |  |
+| `company` | `company.market_capitalization` | `market_capitalization` | supported | pending |  |
+| `company` | `company.market_capitalization_batch` | `market_capitalization_batch` | supported | pending |  |
+| `company` | `company.historical_market_capitalization` | `historical_market_capitalization` | supported | pending |  |
+| `company` | `company.shares_float` | `shares_float` | supported | pending |  |
+| `company` | `company.shares_float_all` | `shares_float_all` | supported | pending |  |
+| `company` | `company.mergers_acquisitions_latest` | `mergers_acquisitions_latest` | supported | pending |  |
+| `company` | `company.mergers_acquisitions_search` | `mergers_acquisitions_search` | supported | pending |  |
+| `company` | `company.key_executives` | `key_executives` | supported | pending |  |
+| `company` | `company.executive_compensation` | `executive_compensation` | supported | pending |  |
+| `company` | `company.executive_compensation_benchmark` | `executive_compensation_benchmark` | supported | pending |  |
+| `screener` | `screener.companies` | `company_screener` | supported | pending |  |
+| `quote` | `quote.full` | `quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.short` | `quote_short` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.mutual_funds` | `mutual_fund_quotes` | gated | supported | fixed `short=true`; the undocumented `short=false` universe is not exposed |
+| `quote` | `quote.aftermarket_trade` | `aftermarket_trade` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.aftermarket_quote` | `aftermarket_quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.stock_price_change` | `stock_price_change` | supported | supported |  |
+| `quote` | `quote.batch_quote` | `batch_quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch_quote_short` | `batch_quote_short` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch_aftermarket_trade` | `batch_aftermarket_trade` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch_aftermarket_quote` | `batch_aftermarket_quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.exchange` | `exchange_quotes` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.etfs` | `etf_quotes` | gated | supported | fixed `short=true`; the undocumented `short=false` universe is not exposed |
+| `quote` | `quote.commodities` | `commodity_quotes` | gated | supported | fixed `short=true`; the undocumented `short=false` universe is not exposed |
+| `quote` | `quote.cryptocurrencies` | `cryptocurrency_quotes` | gated | supported | fixed `short=true`; the undocumented `short=false` universe is not exposed |
+| `quote` | `quote.forex` | `forex_quotes` | gated | supported | fixed `short=true`; the undocumented `short=false` universe is not exposed |
+| `quote` | `quote.indexes` | `index_quotes` | gated | supported | fixed `short=true`; the undocumented `short=false` universe is not exposed |
+| `statements` | `statements.income.statement` | `income_statement` | supported | pending |  |
+| `statements` | `statements.income.statement_ttm` | `income_statement_ttm` | supported | pending |  |
+| `statements` | `statements.balance.statement` | `balance_sheet_statement` | supported | pending |  |
+| `statements` | `statements.balance.statement_ttm` | `balance_sheet_statement_ttm` | supported | pending |  |
+| `statements` | `statements.cash_flow.statement` | `cash_flow_statement` | supported | pending |  |
+| `statements` | `statements.cash_flow.statement_ttm` | `cash_flow_statement_ttm` | supported | pending |  |
+| `statements` | `statements.metrics.key_metrics` | `key_metrics` | supported | pending |  |
+| `statements` | `statements.metrics.key_metrics_ttm` | `key_metrics_ttm` | supported | pending |  |
+| `statements` | `statements.ratios.financial_ratios` | `financial_ratios` | supported | pending |  |
+| `statements` | `statements.ratios.financial_ratios_ttm` | `financial_ratios_ttm` | supported | pending |  |
+| `statements` | `statements.growth.income_statement` | `income_statement_growth` | supported | pending |  |
+| `statements` | `statements.growth.balance_sheet_statement` | `balance_sheet_statement_growth` | supported | pending |  |
+| `statements` | `statements.growth.cash_flow_statement` | `cash_flow_statement_growth` | supported | pending |  |
+| `statements` | `statements.growth.financial_statement` | `financial_statement_growth` | supported | pending |  |
+| `statements` | `statements.as_reported.income` | `income_statement_as_reported` | supported | pending |  |
+| `statements` | `statements.as_reported.balance_sheet` | `balance_sheet_statement_as_reported` | supported | pending |  |
+| `statements` | `statements.as_reported.cash_flow` | `cash_flow_statement_as_reported` | supported | pending |  |
+| `statements` | `statements.as_reported.full` | `financial_statement_full_as_reported` | supported | pending |  |
+| `statements` | `statements.reports.dates` | `financial_reports_dates` | supported | pending | rows carry secret download links; redacted in Python `repr` |
+| `statements` | `statements.reports.json` | `financial_reports_json` | supported | pending | typed row whose `sections` are dynamic JSON |
+| `statements` | `statements.reports.xlsx` | `financial_reports_xlsx` | supported | pending | binary payload (`BinaryResponse` / `fmp.BinaryPayload`) |
+| `statements` | `statements.segmentation.revenue_product` | `revenue_product_segmentation` | supported | pending |  |
+| `statements` | `statements.segmentation.revenue_geographic` | `revenue_geographic_segmentation` | supported | pending |  |
+| `statements` | `statements.summaries.latest_financial_statements` | `latest_financial_statements` | supported | pending |  |
+| `statements` | `statements.summaries.financial_scores` | `financial_scores` | supported | pending |  |
+| `statements` | `statements.summaries.owner_earnings` | `owner_earnings` | supported | pending |  |
+| `statements` | `statements.summaries.enterprise_values` | `enterprise_values` | supported | pending |  |
+| `chart` | `chart.light` | `stock_chart_light` | supported | pending |  |
+| `chart` | `chart.full` | `stock_chart_full` | supported | pending |  |
+| `chart` | `chart.non_split_adjusted` | `stock_chart_non_split_adjusted` | supported | pending |  |
+| `chart` | `chart.dividend_adjusted` | `stock_chart_dividend_adjusted` | supported | pending |  |
+| `chart` | `chart.one_minute` | `stock_chart_one_minute` | supported | pending |  |
+| `chart` | `chart.five_minutes` | `stock_chart_five_minutes` | supported | pending |  |
+| `chart` | `chart.fifteen_minutes` | `stock_chart_fifteen_minutes` | supported | pending |  |
+| `chart` | `chart.thirty_minutes` | `stock_chart_thirty_minutes` | supported | pending |  |
+| `chart` | `chart.one_hour` | `stock_chart_one_hour` | supported | pending |  |
+| `chart` | `chart.four_hours` | `stock_chart_four_hours` | supported | pending |  |
+| `economics` | `economics.treasury_rates` | `treasury_rates` | supported | pending |  |
+| `economics` | `economics.indicators` | `economic_indicators` | supported | pending |  |
+| `economics` | `economics.calendar` | `economic_calendar` | deferred | pending | `previous`/`estimate`/`actual` are documented non-null `f64`; live nulls tracked in #40 |
+| `economics` | `economics.market_risk_premium` | `market_risk_premium` | supported | pending |  |
+| `calendar` | `calendar.dividends` | `dividends` | supported | pending |  |
+| `calendar` | `calendar.dividends_calendar` | `dividends_calendar` | supported | pending |  |
+| `calendar` | `calendar.earnings` | `earnings` | supported | pending |  |
+| `calendar` | `calendar.earnings_calendar` | `earnings_calendar` | supported | pending |  |
+| `calendar` | `calendar.ipos_calendar` | `ipos_calendar` | supported | pending |  |
+| `calendar` | `calendar.ipos_disclosure` | `ipos_disclosure` | supported | pending |  |
+| `calendar` | `calendar.ipos_prospectus` | `ipos_prospectus` | supported | pending |  |
+| `calendar` | `calendar.stock_splits` | `stock_splits` | supported | pending |  |
+| `calendar` | `calendar.stock_splits_calendar` | `stock_splits_calendar` | supported | pending |  |
+| `transcripts` | `transcripts.latest_earnings_transcripts` | `latest_earnings_transcripts` | supported | pending |  |
+| `transcripts` | `transcripts.earnings_transcript` | `earnings_transcript` | supported | pending |  |
+| `transcripts` | `transcripts.earnings_transcript_dates` | `earnings_transcript_dates` | supported | pending |  |
+| `news` | `news.fmp_articles` | `fmp_articles` | supported | pending |  |
+| `news` | `news.latest_general_news` | `latest_general_news` | supported | pending |  |
+| `news` | `news.latest_press_releases` | `latest_press_releases` | supported | pending |  |
+| `news` | `news.latest_stock_news` | `latest_stock_news` | supported | pending |  |
+| `news` | `news.latest_crypto_news` | `latest_crypto_news` | supported | pending |  |
+| `news` | `news.latest_forex_news` | `latest_forex_news` | supported | pending |  |
+| `news` | `news.search_press_releases` | `search_press_releases` | supported | pending |  |
+| `news` | `news.search_stock_news` | `search_stock_news` | supported | pending |  |
+| `news` | `news.search_crypto_news` | `search_crypto_news` | supported | pending |  |
+| `news` | `news.search_forex_news` | `search_forex_news` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.latest_filings` | `latest_institutional_ownership_filings` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.extract` | `institutional_ownership_extract` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.form_13f_filing_dates` | `form_13f_filing_dates` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.holder_analytics` | `institutional_holder_analytics` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.holder_performance_summary` | `holder_performance_summary` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.holder_industry_breakdown` | `holder_industry_breakdown` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.positions_summary` | `institutional_positions_summary` | supported | pending |  |
+| `institutional_ownership` | `institutional_ownership.industry_summary` | `institutional_industry_summary` | supported | pending |  |
+| `analyst` | `analyst.financial_estimates` | `financial_estimates` | supported | pending |  |
+| `analyst` | `analyst.ratings_snapshot` | `ratings_snapshot` | supported | pending |  |
+| `analyst` | `analyst.historical_ratings` | `historical_ratings` | supported | pending |  |
+| `analyst` | `analyst.price_target_summary` | `price_target_summary` | supported | pending |  |
+| `analyst` | `analyst.price_target_consensus` | `price_target_consensus` | supported | pending |  |
+| `analyst` | `analyst.stock_grades` | `stock_grades` | supported | pending |  |
+| `analyst` | `analyst.historical_stock_grades` | `historical_stock_grades` | supported | pending |  |
+| `analyst` | `analyst.stock_grades_summary` | `stock_grades_summary` | supported | pending |  |
+| `market` | `market.sector_performance_snapshot` | `sector_performance_snapshot` | supported | pending |  |
+| `market` | `market.industry_performance_snapshot` | `industry_performance_snapshot` | supported | pending |  |
+| `market` | `market.sector_pe_snapshot` | `sector_pe_snapshot` | supported | pending |  |
+| `market` | `market.industry_pe_snapshot` | `industry_pe_snapshot` | supported | pending |  |
+| `market` | `market.historical_sector_performance` | `historical_sector_performance` | supported | pending |  |
+| `market` | `market.historical_industry_performance` | `historical_industry_performance` | supported | pending |  |
+| `market` | `market.historical_sector_pe` | `historical_sector_pe` | supported | pending |  |
+| `market` | `market.historical_industry_pe` | `historical_industry_pe` | supported | pending |  |
+| `market` | `market.biggest_gainers` | `biggest_gainers` | supported | pending |  |
+| `market` | `market.biggest_losers` | `biggest_losers` | supported | pending |  |
+| `market` | `market.most_actives` | `most_actives` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.simple_moving_average` | `simple_moving_average` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.exponential_moving_average` | `exponential_moving_average` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.weighted_moving_average` | `weighted_moving_average` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.double_exponential_moving_average` | `double_exponential_moving_average` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.triple_exponential_moving_average` | `triple_exponential_moving_average` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.relative_strength_index` | `relative_strength_index` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.standard_deviation` | `standard_deviation` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.williams` | `williams` | supported | pending |  |
+| `technical_indicators` | `technical_indicators.average_directional_index` | `average_directional_index` | supported | pending |  |
+| `funds` | `funds.etf_holdings` | `etf_holdings` | supported | pending |  |
+| `funds` | `funds.etf_info` | `etf_info` | supported | pending |  |
+| `funds` | `funds.etf_country_weightings` | `etf_country_weightings` | supported | pending |  |
+| `funds` | `funds.etf_asset_exposure` | `etf_asset_exposure` | supported | pending |  |
+| `funds` | `funds.etf_sector_weightings` | `etf_sector_weightings` | supported | pending |  |
+| `funds` | `funds.latest_fund_disclosure_holders` | `latest_fund_disclosure_holders` | supported | pending |  |
+| `funds` | `funds.fund_disclosures` | `fund_disclosures` | supported | pending |  |
+| `funds` | `funds.search_fund_disclosure_holders` | `search_fund_disclosure_holders` | supported | pending |  |
+| `funds` | `funds.fund_disclosure_dates` | `fund_disclosure_dates` | supported | pending |  |
+| `sec_filings` | `sec_filings.latest_8k` | `latest_8k_sec_filings` | supported | pending |  |
+| `sec_filings` | `sec_filings.latest` | `latest_sec_filings` | supported | pending |  |
+| `sec_filings` | `sec_filings.by_form_type` | `sec_filings_by_form_type` | supported | pending |  |
+| `sec_filings` | `sec_filings.by_symbol` | `sec_filings_by_symbol` | supported | pending |  |
+| `sec_filings` | `sec_filings.by_cik` | `sec_filings_by_cik` | supported | pending |  |
+| `sec_filings` | `sec_filings.search_companies_by_name` | `search_sec_companies_by_name` | supported | pending |  |
+| `sec_filings` | `sec_filings.search_companies_by_symbol` | `search_sec_companies_by_symbol` | supported | pending |  |
+| `sec_filings` | `sec_filings.search_companies_by_cik` | `search_sec_companies_by_cik` | supported | pending |  |
+| `sec_filings` | `sec_filings.company_profile` | `sec_company_profile` | supported | pending |  |
+| `sec_filings` | `sec_filings.industry_classifications` | `industry_classifications` | supported | pending |  |
+| `sec_filings` | `sec_filings.all_industry_classifications` | `all_industry_classifications` | supported | pending |  |
+| `sec_filings` | `sec_filings.search_industry_classifications` | `search_industry_classifications` | raw | pending | documented as `[{}]`; Rust `Vec<DynamicObject>`, Python `list[dict]` |
+| `insider_trading` | `insider_trading.latest_trades` | `latest_insider_trades` | supported | pending |  |
+| `insider_trading` | `insider_trading.search_trades` | `search_insider_trades` | supported | pending |  |
+| `insider_trading` | `insider_trading.search_reporting_names` | `search_insider_reporting_names` | supported | pending |  |
+| `insider_trading` | `insider_trading.transaction_types` | `insider_transaction_types` | supported | pending |  |
+| `insider_trading` | `insider_trading.trade_statistics` | `insider_trade_statistics` | supported | pending |  |
+| `insider_trading` | `insider_trading.beneficial_ownership_acquisitions` | `beneficial_ownership_acquisitions` | supported | pending |  |
+| `indexes` | `indexes.list` | `index_list` | supported | pending |  |
+| `indexes` | `indexes.quote` | `index_quote` | supported | pending |  |
+| `indexes` | `indexes.quote_short` | `index_quote_short` | supported | pending |  |
+| `indexes` | `indexes.chart_light` | `index_chart_light` | supported | pending |  |
+| `indexes` | `indexes.chart_full` | `index_chart_full` | supported | pending |  |
+| `indexes` | `indexes.chart_one_minute` | `index_chart_one_minute` | supported | pending |  |
+| `indexes` | `indexes.chart_five_minutes` | `index_chart_five_minutes` | supported | pending |  |
+| `indexes` | `indexes.chart_one_hour` | `index_chart_one_hour` | supported | pending |  |
+| `indexes` | `indexes.sp500_constituents` | `sp500_constituents` | supported | pending |  |
+| `indexes` | `indexes.nasdaq_constituents` | `nasdaq_constituents` | supported | pending |  |
+| `indexes` | `indexes.dow_jones_constituents` | `dow_jones_constituents` | supported | pending |  |
+| `indexes` | `indexes.historical_sp500_constituents` | `historical_sp500_constituents` | supported | pending |  |
+| `indexes` | `indexes.historical_nasdaq_constituents` | `historical_nasdaq_constituents` | supported | pending |  |
+| `indexes` | `indexes.historical_dow_jones_constituents` | `historical_dow_jones_constituents` | supported | pending |  |
+| `market_hours` | `market_hours.exchange_market_hours` | `exchange_market_hours` | supported | pending |  |
+| `market_hours` | `market_hours.holidays_by_exchange` | `holidays_by_exchange` | supported | pending |  |
+| `market_hours` | `market_hours.all_exchange_market_hours` | `all_exchange_market_hours` | supported | pending |  |
+| `commodities` | `commodities.list` | `commodities_list` | supported | pending |  |
+| `commodities` | `commodities.quote` | `commodity_quote` | supported | pending |  |
+| `commodities` | `commodities.quote_short` | `commodity_quote_short` | supported | pending |  |
+| `commodities` | `commodities.chart_light` | `commodity_chart_light` | supported | pending |  |
+| `commodities` | `commodities.chart_full` | `commodity_chart_full` | supported | pending |  |
+| `commodities` | `commodities.chart_one_minute` | `commodity_chart_one_minute` | supported | pending |  |
+| `commodities` | `commodities.chart_five_minutes` | `commodity_chart_five_minutes` | supported | pending |  |
+| `commodities` | `commodities.chart_one_hour` | `commodity_chart_one_hour` | supported | pending |  |
+| `dcf` | `dcf.discounted_cash_flow` | `discounted_cash_flow` | supported | pending |  |
+| `dcf` | `dcf.levered_discounted_cash_flow` | `levered_discounted_cash_flow` | supported | pending |  |
+| `dcf` | `dcf.custom_discounted_cash_flow` | `custom_discounted_cash_flow` | supported | pending |  |
+| `dcf` | `dcf.custom_levered_discounted_cash_flow` | `custom_levered_discounted_cash_flow` | supported | pending |  |
+| `forex` | `forex.list` | `forex_list` | supported | pending |  |
+| `forex` | `forex.quote` | `forex_quote` | supported | pending |  |
+| `forex` | `forex.quote_short` | `forex_quote_short` | supported | pending |  |
+| `forex` | `forex.chart_light` | `forex_chart_light` | supported | pending |  |
+| `forex` | `forex.chart_full` | `forex_chart_full` | supported | pending |  |
+| `forex` | `forex.chart_one_minute` | `forex_chart_one_minute` | supported | pending |  |
+| `forex` | `forex.chart_five_minutes` | `forex_chart_five_minutes` | supported | pending |  |
+| `forex` | `forex.chart_one_hour` | `forex_chart_one_hour` | supported | pending |  |
+| `crypto` | `crypto.list` | `cryptocurrency_list` | supported | pending |  |
+| `crypto` | `crypto.quote` | `cryptocurrency_quote` | supported | pending |  |
+| `crypto` | `crypto.quote_short` | `cryptocurrency_quote_short` | supported | pending |  |
+| `crypto` | `crypto.chart_light` | `cryptocurrency_chart_light` | supported | pending |  |
+| `crypto` | `crypto.chart_full` | `cryptocurrency_chart_full` | supported | pending |  |
+| `crypto` | `crypto.chart_one_minute` | `cryptocurrency_chart_one_minute` | supported | pending |  |
+| `crypto` | `crypto.chart_five_minutes` | `cryptocurrency_chart_five_minutes` | supported | pending |  |
+| `crypto` | `crypto.chart_one_hour` | `cryptocurrency_chart_one_hour` | supported | pending |  |
+| `congressional` | `congressional.latest_senate_disclosures` | `latest_senate_disclosures` | supported | pending |  |
+| `congressional` | `congressional.latest_house_disclosures` | `latest_house_disclosures` | supported | pending |  |
+| `congressional` | `congressional.senate_trades` | `senate_trades` | supported | pending |  |
+| `congressional` | `congressional.senate_trades_by_name` | `senate_trades_by_name` | supported | pending |  |
+| `congressional` | `congressional.senate_trades_by_member_id` | `senate_trades_by_member_id` | supported | pending |  |
+| `congressional` | `congressional.house_trades` | `house_trades` | supported | pending |  |
+| `congressional` | `congressional.house_trades_by_name` | `house_trades_by_name` | supported | pending |  |
+| `congressional` | `congressional.house_trades_by_member_id` | `house_trades_by_member_id` | supported | pending |  |
+| `congressional` | `congressional.profiles` | `congressional_profiles` | supported | pending |  |
+| `congressional` | `congressional.positions` | `congressional_positions` | supported | pending |  |
+| `congressional` | `congressional.net_worth` | `congressional_net_worth` | supported | pending |  |
+| `congressional` | `congressional.net_worth_aggregated` | `congressional_net_worth_aggregated` | supported | pending |  |
+| `esg` | `esg.disclosures` | `esg_disclosures` | supported | pending |  |
+| `esg` | `esg.ratings` | `esg_ratings` | supported | pending |  |
+| `esg` | `esg.benchmark` | `esg_benchmark` | supported | pending |  |
+| `commitment_of_traders` | `commitment_of_traders.report` | `cot_report` | supported | pending |  |
+| `commitment_of_traders` | `commitment_of_traders.analysis` | `cot_analysis` | supported | pending |  |
+| `commitment_of_traders` | `commitment_of_traders.report_list` | `cot_report_list` | supported | pending |  |
+| `fundraising` | `fundraising.latest_crowdfunding_offerings` | `latest_crowdfunding_offerings` | supported | pending |  |
+| `fundraising` | `fundraising.crowdfunding_offerings_by_cik` | `crowdfunding_offerings_by_cik` | supported | pending |  |
+| `fundraising` | `fundraising.search_crowdfunding_offerings` | `search_crowdfunding_offerings` | supported | pending |  |
+| `fundraising` | `fundraising.search_regulation_d_offerings` | `search_regulation_d_offerings` | supported | pending |  |
+| `fundraising` | `fundraising.latest_regulation_d_offerings` | `latest_regulation_d_offerings` | supported | pending |  |
+| `fundraising` | `fundraising.regulation_d_offerings_by_cik` | `regulation_d_offerings_by_cik` | supported | pending |  |
+| `bulk` | `bulk.company_profiles` | `bulk_company_profiles` | supported | pending |  |
+| `bulk` | `bulk.stock_ratings` | `bulk_stock_ratings` | supported | pending |  |
+| `bulk` | `bulk.dcf_valuations` | `bulk_dcf_valuations` | supported | pending |  |
+| `bulk` | `bulk.financial_scores` | `bulk_financial_scores` | supported | pending |  |
+| `bulk` | `bulk.price_target_summaries` | `bulk_price_target_summaries` | supported | pending |  |
+| `bulk` | `bulk.etf_holdings` | `bulk_etf_holdings` | deferred | pending | documented key `lastUpdated"` is mirrored verbatim; upstream fix tracked in #40 |
+| `bulk` | `bulk.upgrades_downgrades_consensus` | `bulk_upgrades_downgrades_consensus` | supported | pending |  |
+| `bulk` | `bulk.key_metrics_ttm` | `bulk_key_metrics_ttm` | supported | pending |  |
+| `bulk` | `bulk.financial_ratios_ttm` | `bulk_financial_ratios_ttm` | supported | pending |  |
+| `bulk` | `bulk.stock_peers` | `bulk_stock_peers` | supported | pending |  |
+| `bulk` | `bulk.earnings_surprises` | `bulk_earnings_surprises` | supported | pending |  |
+| `bulk` | `bulk.income_statements` | `bulk_income_statements` | supported | pending |  |
+| `bulk` | `bulk.income_statement_growth` | `bulk_income_statement_growth` | supported | pending |  |
+| `bulk` | `bulk.balance_sheet_statements` | `bulk_balance_sheet_statements` | supported | pending |  |
+| `bulk` | `bulk.balance_sheet_statement_growth` | `bulk_balance_sheet_statement_growth` | supported | pending |  |
+| `bulk` | `bulk.cash_flow_statements` | `bulk_cash_flow_statements` | supported | pending |  |
+| `bulk` | `bulk.cash_flow_statement_growth` | `bulk_cash_flow_statement_growth` | supported | pending |  |
+| `bulk` | `bulk.eod` | `bulk_eod` | supported | pending |  |
+| `tipranks` | `tipranks.ratings_search` | `tipranks_ratings_search` | gated | pending | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`); Enterprise plan for history older than 3 years |
+| `tipranks` | `tipranks.point_in_time_ratings_by_symbol` | `tipranks_point_in_time_ratings_by_symbol` | gated | pending | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
+| `tipranks` | `tipranks.point_in_time_ratings_by_analyst` | `tipranks_point_in_time_ratings_by_analyst` | gated | pending | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
+| `tipranks` | `tipranks.symbol_summary` | `tipranks_symbol_summary` | gated | pending | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
+| `tipranks` | `tipranks.analyst_summary` | `tipranks_analyst_summary` | gated | pending | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
+| `tipranks` | `tipranks.firm_summary` | `tipranks_firm_summary` | gated | pending | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
+| `tipranks` | `tipranks.analysts` | `tipranks_analysts` | gated | pending | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
