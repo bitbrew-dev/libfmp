@@ -178,6 +178,8 @@ def test_key_executives_keeps_big_integers_exact(client: Any, fixture_server: Fi
     assert type(probe.year_born) is int and probe.year_born == 2**70
     assert type(probe.title_since) is int and probe.title_since == 2**64 - 1
     assert probe.pay == {"amount": 2**70, "components": [-(2**70), pytest.approx(1.5)]}
+    assert type(probe.pay["amount"]) is int
+    assert type(probe.pay["components"][0]) is int
     assert type(probe.pay["components"][1]) is float
 
 
