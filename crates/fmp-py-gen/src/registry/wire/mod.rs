@@ -20,17 +20,29 @@
 
 mod collect;
 mod params;
+mod resolve;
 
 use std::collections::BTreeMap;
 use std::fmt;
-use std::path::PathBuf;
+use std::fs;
+use std::path::{Path, PathBuf};
 
-use super::scan::{Origin, Unexpanded};
+use super::Endpoint;
+use super::scan::{Origin, ScanError, Unexpanded, collect_rust_files};
 
 /// The HTTP method of an endpoint, mirroring `libfmp::transport::HttpMethod`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HttpMethod {
     Get,
+}
+
+impl HttpMethod {
+    fn parse(variant: &str) -> Result<Self, String> {
+        match variant {
+            "Get" => Ok(Self::Get),
+            other => Err(format!("unsupported `HttpMethod::{other}`")),
+        }
+    }
 }
 
 impl fmt::Display for HttpMethod {
@@ -114,4 +126,55 @@ pub struct WireSurface {
     pub endpoints: BTreeMap<String, WireEndpoint>,
     pub unresolved: Vec<Unresolved>,
     pub unexpanded: Vec<Unexpanded>,
+}
+
+impl WireSurface {
+    /// Builds the surface from already parsed files, with `endpoints_root`
+    /// giving each file its module path.
+    pub fn from_files(endpoints_root: &Path, files: &[(PathBuf, syn::File)]) -> WireSurface {
+        let collected = collect::Collected::from_files(endpoints_root, files);
+        let mut surface = WireSurface {
+            unexpanded: collected.unexpanded.clone(),
+            ..WireSurface::default()
+        };
+        for method in collected.client_methods.keys() {
+            match resolve::resolve(&collected, method) {
+                Ok(endpoint) => {
+                    surface.endpoints.insert(method.clone(), endpoint);
+                }
+                Err(reason) => surface.unresolved.push(Unresolved {
+                    method: method.clone(),
+                    reason,
+                }),
+            }
+        }
+        surface
+    }
+
+    /// The wire endpoint behind a registry entry, joined by its `libfmp`
+    /// method name.
+    pub fn for_endpoint(&self, endpoint: &Endpoint) -> Option<&WireEndpoint> {
+        self.endpoints.get(&endpoint.libfmp_method)
+    }
+}
+
+/// Parses every `.rs` file under `endpoints_root` and resolves every
+/// `Client` method's wire contract.
+pub fn wire_surface(endpoints_root: &Path) -> Result<WireSurface, ScanError> {
+    let mut paths = Vec::new();
+    collect_rust_files(endpoints_root, &mut paths)?;
+    paths.sort();
+    let mut files = Vec::with_capacity(paths.len());
+    for path in paths {
+        let content = fs::read_to_string(&path).map_err(|source| ScanError::Io {
+            path: path.clone(),
+            source,
+        })?;
+        let parsed = syn::parse_file(&content).map_err(|source| ScanError::Syntax {
+            path: path.clone(),
+            source,
+        })?;
+        files.push((path, parsed));
+    }
+    Ok(WireSurface::from_files(endpoints_root, &files))
 }

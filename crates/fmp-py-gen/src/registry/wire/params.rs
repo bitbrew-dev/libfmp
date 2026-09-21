@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 //! The ordered wire parameters a query type emits, read from its
 //! `encode` body: `encoder.required("key", value)` and
 //! `encoder.optional("key", value)` calls, where the value is a field of
