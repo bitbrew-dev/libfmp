@@ -6,7 +6,7 @@ use fmp_py_gen::registry::wire::wire_surface;
 use fmp_py_gen::registry::{ArgKind, Registry};
 use fmp_py_gen::responses::{FieldAttrs, FieldDef, StructDef, discover};
 
-use super::{Selection, generate, parse_args};
+use super::{Selection, generate, generated_domains, parse_args};
 use crate::types::{Codec, TypeTable, arg_kind_go};
 
 fn manifest() -> PathBuf {
@@ -24,52 +24,68 @@ fn normalized(source: &str) -> String {
         .join("\n")
 }
 
-fn generate_domains(names: &[&str]) -> Result<Vec<(String, String)>, String> {
+fn sdk_go() -> PathBuf {
+    manifest().join("../../sdk/go")
+}
+
+/// Renders `names` as the whole generated set, unformatted.
+fn generate_domains(names: &BTreeSet<String>) -> Result<Vec<(String, String)>, String> {
     let registry = Registry::load(&manifest().join("registry")).expect("registry loads");
     let wire = wire_surface(&manifest().join("../libfmp/src/endpoints")).expect("endpoints parse");
     let discovery = discover(&manifest().join("../libfmp/src/responses")).expect("responses parse");
-    let generated: BTreeSet<String> = names.iter().map(|name| name.to_string()).collect();
-    generate(&registry, &wire, &discovery, &generated, &generated)
+    generate(&registry, &wire, &discovery, names, names)
 }
 
+fn domain_set(names: &[&str]) -> BTreeSet<String> {
+    names.iter().map(|name| name.to_string()).collect()
+}
+
+/// Mirrors the shell gate: every domain whose committed `<domain>.go`
+/// carries the header regenerates to the committed text, at any stage of
+/// the fan-out. The quote domain is always among them.
 #[test]
-fn quote_domain_regenerates_the_committed_files() {
-    let files = generate_domains(&["quote"]).expect("quote generates");
-    let names: Vec<&str> = files.iter().map(|(name, _)| name.as_str()).collect();
-    assert_eq!(
-        names,
-        ["quote_models.go", "quote.go", "queries.go", "namespaces.go"]
-    );
+fn committed_domains_regenerate_to_the_committed_files() {
+    let registry = Registry::load(&manifest().join("registry")).expect("registry loads");
+    let committed_set = generated_domains(&registry, &sdk_go());
+    assert!(committed_set.contains("quote"), "{committed_set:?}");
+    let files = generate_domains(&committed_set).expect("committed domains generate");
+    assert_eq!(files.len(), committed_set.len() * 2 + 2);
     for (name, source) in &files {
-        let committed = fs::read_to_string(manifest().join("../../sdk/go").join(name))
+        let committed = fs::read_to_string(sdk_go().join(name))
             .unwrap_or_else(|error| panic!("{name} is committed under sdk/go: {error}"));
         assert_eq!(
             normalized(source),
             normalized(&committed),
-            "{name} differs from the committed file; run gen_go --domain quote"
+            "{name} differs from the committed file; run gen_go and commit the result"
         );
     }
-    let (_, quote) = &files[1];
+    let file = |wanted: &str| {
+        files
+            .iter()
+            .find(|(name, _)| name == wanted)
+            .map(|(_, source)| source.as_str())
+            .unwrap_or_else(|| panic!("{wanted} is rendered"))
+    };
+    let quote = file("quote.go");
     assert_eq!(quote.matches("func (n *QuoteNamespace) ").count(), 16);
     assert!(quote.contains("shortOnlyParams"));
-    let (_, queries) = &files[2];
+    assert!(!quote.contains("type QuoteQuery struct"));
     assert!(
-        queries.contains("type QuoteQuery struct"),
+        file("queries.go").contains("type QuoteQuery struct"),
         "shared queries live in queries.go"
     );
-    assert!(!quote.contains("type QuoteQuery struct"));
-    let (_, models) = &files[0];
+    let models = file("quote_models.go");
     assert!(models.contains("OneDay float64 `json:\"1D\"`"));
     assert!(models.contains("MarketCap *uint64 `json:\"marketCap\"`"));
+    assert!(file("namespaces.go").contains("Quote QuoteNamespace"));
 }
 
 #[test]
 fn cross_domain_models_require_their_owner_to_be_generated() {
-    let error = generate_domains(&["forex"]).expect_err("forex references quote models");
-    assert!(
-        error.contains("generate the `quote` domain first"),
-        "{error}"
-    );
+    let error =
+        generate_domains(&domain_set(&["forex"])).expect_err("forex references other models");
+    assert!(error.contains("domain first"), "{error}");
+    assert!(error.contains("_models.go"), "{error}");
 }
 
 fn field(name: &str, ty: &str, attrs: FieldAttrs) -> FieldDef {
