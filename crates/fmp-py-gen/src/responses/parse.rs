@@ -1,13 +1,14 @@
 //! Source discovery and `syn` parsing: walking response files, deriving module
-//! paths, and peeling wrapper types.
+//! paths, peeling wrapper types, and reading serde attributes.
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use syn::{GenericArgument, Item, PathArguments, Type};
+use syn::meta::ParseNestedMeta;
+use syn::{Attribute, Expr, GenericArgument, Item, LitStr, PathArguments, Token, Type};
 
 use super::DiscoverError;
-use super::model::{FieldDef, StructDef, Wrap};
+use super::model::{FieldAttrs, FieldDef, StructDef, Wrap};
 
 /// Peels `Option`/`Vec` wrappers and returns the base type identifier.
 pub fn peel(ty: &Type) -> (Vec<Wrap>, Option<String>) {
@@ -86,15 +87,18 @@ pub fn technical_indicator_structs(
             fields.push(FieldDef {
                 name: field_name.to_string(),
                 ty: parse_type(field_ty)?,
+                attrs: FieldAttrs::default(),
             });
         }
         fields.push(FieldDef {
             name: metric,
             ty: parse_type(&metric_type)?,
+            attrs: FieldAttrs::default(),
         });
         defs.push(StructDef {
             name,
             module_path: module_path.to_vec(),
+            rename_all: Some("camelCase".to_string()),
             fields,
         });
     }
@@ -106,6 +110,84 @@ fn parse_type(text: &str) -> Result<Type, DiscoverError> {
         text: text.to_string(),
         source,
     })
+}
+
+/// Reads the container-level `rename_all` rule from a struct's attributes.
+pub fn struct_rename_all(attrs: &[Attribute]) -> syn::Result<Option<String>> {
+    let mut rule = None;
+    for attr in serde_attrs(attrs) {
+        attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("rename_all") {
+                rule = string_value(&meta)?;
+            } else {
+                skip_payload(&meta)?;
+            }
+            Ok(())
+        })?;
+    }
+    Ok(rule)
+}
+
+/// Reads the serde facts a field carries in its `#[serde(...)]` attributes.
+pub fn field_attrs(attrs: &[Attribute]) -> syn::Result<FieldAttrs> {
+    let mut out = FieldAttrs::default();
+    for attr in serde_attrs(attrs) {
+        attr.parse_nested_meta(|meta| {
+            if meta.path.is_ident("rename") {
+                out.rename = string_value(&meta)?;
+            } else if meta.path.is_ident("default") {
+                out.default = true;
+                skip_payload(&meta)?;
+            } else if meta.path.is_ident("with") {
+                out.with = string_value(&meta)?;
+            } else if meta.path.is_ident("deserialize_with") {
+                out.deserialize_with = string_value(&meta)?;
+            } else if meta.path.is_ident("flatten") {
+                out.flatten = true;
+            } else if meta.path.is_ident("skip") || meta.path.is_ident("skip_deserializing") {
+                out.skip = true;
+            } else {
+                skip_payload(&meta)?;
+            }
+            Ok(())
+        })?;
+    }
+    Ok(out)
+}
+
+fn serde_attrs(attrs: &[Attribute]) -> impl Iterator<Item = &Attribute> {
+    attrs.iter().filter(|attr| attr.path().is_ident("serde"))
+}
+
+/// Reads `key = "value"`, or the `deserialize` half of
+/// `key(serialize = "...", deserialize = "...")`.
+fn string_value(meta: &ParseNestedMeta) -> syn::Result<Option<String>> {
+    if meta.input.peek(Token![=]) {
+        let lit: LitStr = meta.value()?.parse()?;
+        return Ok(Some(lit.value()));
+    }
+    let mut found = None;
+    meta.parse_nested_meta(|inner| {
+        let lit: LitStr = inner.value()?.parse()?;
+        if inner.path.is_ident("deserialize") {
+            found = Some(lit.value());
+        }
+        Ok(())
+    })?;
+    Ok(found)
+}
+
+/// Consumes the payload of an attribute key this reader does not use, so the
+/// nested-meta parser can continue to the next key.
+fn skip_payload(meta: &ParseNestedMeta) -> syn::Result<()> {
+    if meta.input.peek(Token![=]) {
+        meta.value()?.parse::<Expr>()?;
+    } else if meta.input.peek(syn::token::Paren) {
+        let content;
+        syn::parenthesized!(content in meta.input);
+        content.parse::<proc_macro2::TokenStream>()?;
+    }
+    Ok(())
 }
 
 /// Derives a module path from a response file's location.
