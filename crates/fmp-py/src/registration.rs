@@ -528,5 +528,6 @@ fn register_transcripts(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::transcripts::EarningsTranscript>()?;
     module.add_class::<crate::models::transcripts::EarningsTranscriptDate>()?;
     module.add_class::<crate::models::transcripts::LatestEarningsTranscript>()?;
+    module.add_class::<crate::namespaces::transcripts::TranscriptsNamespace>()?;
     add_submodule(parent, "fmp._native.transcripts", &module)
 }

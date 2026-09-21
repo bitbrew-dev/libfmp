@@ -8,6 +8,7 @@ __all__ = [
     "EarningsTranscript",
     "EarningsTranscriptDate",
     "LatestEarningsTranscript",
+    "TranscriptsNamespace",
 ]
 
 
@@ -66,3 +67,39 @@ class LatestEarningsTranscript:
         date: datetime.date,
     ) -> LatestEarningsTranscript: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class TranscriptsNamespace:
+    r"""
+    Transcripts endpoints for a single client, exposed as `client.transcripts`.
+    """
+
+    def latest_earnings_transcripts(
+        self,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        page: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[LatestEarningsTranscript]:
+        r"""
+        Retrieves the latest worldwide earnings-transcript metadata.
+        """
+
+    def earnings_transcript(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        quarter: builtins.int,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[EarningsTranscript]:
+        r"""
+        Retrieves complete worldwide earnings-call transcripts.
+        """
+
+    def earnings_transcript_dates(
+        self, symbol: builtins.str
+    ) -> builtins.list[EarningsTranscriptDate]:
+        r"""
+        Retrieves available worldwide transcript dates for one ticker.
+        """

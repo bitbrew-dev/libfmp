@@ -32,6 +32,7 @@ use crate::namespaces::sec_filings::SecFilingsNamespace;
 use crate::namespaces::statements::StatementsNamespace;
 use crate::namespaces::technical_indicators::TechnicalIndicatorsNamespace;
 use crate::namespaces::tipranks::TipranksNamespace;
+use crate::namespaces::transcripts::TranscriptsNamespace;
 
 #[gen_stub_pymethods]
 #[pymethods]
@@ -202,5 +203,11 @@ impl FmpClient {
     #[getter]
     fn tipranks(&self) -> TipranksNamespace {
         TipranksNamespace::new(self.builder.clone())
+    }
+
+    /// The `transcripts` endpoints, reached as `client.transcripts`.
+    #[getter]
+    fn transcripts(&self) -> TranscriptsNamespace {
+        TranscriptsNamespace::new(self.builder.clone())
     }
 }
