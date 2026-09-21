@@ -18,7 +18,7 @@ use syn::{Fields, Item};
 
 pub use model::{FieldAttrs, FieldDef, StructDef, Wrap, apply_rename_rule};
 pub use parse::{
-    base_ident, collect_rust_files, field_attrs, is_public, module_path_for, peel,
+    base_ident, collect_rust_files, doc_paragraph, field_attrs, is_public, module_path_for, peel,
     struct_rename_all, technical_indicator_structs,
 };
 
@@ -116,6 +116,7 @@ pub fn discover(responses_root: &Path) -> Result<Discovery, DiscoverError> {
                         discovery.structs.push(StructDef {
                             name,
                             module_path: module_path.clone(),
+                            doc: doc_paragraph(&item.attrs),
                             rename_all,
                             fields,
                         });
@@ -207,6 +208,16 @@ mod tests {
             .find(|def| def.name == "StandardDeviationBar")
             .expect("macro-generated indicator row is discovered");
         assert_eq!(bar.rename_all.as_deref(), Some("camelCase"));
+        assert_eq!(bar.doc, None);
+        let quote = discovery
+            .structs
+            .iter()
+            .find(|def| def.name == "Quote")
+            .expect("quote struct is discovered");
+        assert_eq!(
+            quote.doc.as_deref(),
+            Some("A detailed real-time stock quote.")
+        );
         let metric = bar.fields.last().expect("metric field");
         assert_eq!(
             metric.wire_name(bar.rename_all.as_deref()),

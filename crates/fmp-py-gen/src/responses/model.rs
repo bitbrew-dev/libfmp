@@ -9,6 +9,9 @@ use syn::Type;
 pub struct StructDef {
     pub name: String,
     pub module_path: Vec<String>,
+    /// The first paragraph of the struct's `///` doc comment, lines joined
+    /// with one space, if any.
+    pub doc: Option<String>,
     /// The container-level `#[serde(rename_all = "...")]` rule, if any.
     pub rename_all: Option<String>,
     pub fields: Vec<FieldDef>,
