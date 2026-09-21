@@ -1,0 +1,43 @@
+# Contract ambiguities register
+
+Every wire contract in `libfmp` is derived from the captured provider
+documentation (`artifacts/documentations/outer.md`, gitignored). Where that
+source is silent, contradictory, or shows only a null, the SDK keeps an
+explicit raw type, a closed query, or a strict decode rather than a guessed
+schema. This register lists those deferred decisions so they are revisited only
+against a captured live response. Line numbers are as of the commit that added
+each row; `git log -S` on the quoted key finds the current location.
+
+## How to resolve a row
+
+1. Capture the real response (see `crates/libfmp/tests/fixtures/README.md`).
+2. Add the captured row as a fixture variant and a decode test.
+3. Change the type, amend the owning ADR, regenerate the Python models and
+   stubs (`gen_models`, `stub_gen`), update `typecheck_contract.py`.
+4. Delete the row here.
+
+## Open rows
+
+| Area | Ambiguity | Current contract | Where |
+| --- | --- | --- | --- |
+| Economics calendar | `previous`, `estimate`, `actual` are numeric in the only documented row; upcoming releases will carry null `actual` (and possibly null `previous`, `change`, `changePercentage`). | Required `f64`; a null is a decode error. Recipe in issue #40 (2026-09-21 comment): promote `required_option` from `responses/calendar.rs:10` into `codecs.rs`, mirror the ADR 0011 earnings `eps_actual` pattern. | `crates/libfmp/src/responses/economics.rs:46-48`; `tests/economics_responses.rs:139-144`; ADR 0010 |
+| Bulk ETF holder | Documented sample key is `lastUpdated"` with a trailing quote (outer.md 15134). A clean live `lastUpdated` would fail every row. | Exact `#[serde(rename = "lastUpdated\"")]`, no alias; value kept verbatim as `last_updated_raw`. | `crates/libfmp/src/responses/bulk/snapshots.rs:81`; ADR 0028 lines 58-60 |
+| SEC industry classification search | Only documented row is `{}`. | `Vec<DynamicObject>` (raw `dict` rows in Python). | `crates/libfmp/src/endpoints/sec_filings.rs:579-585`; ADR 0019 lines 27, 46 |
+| Whole-asset and exchange quotes | `short=false` response shapes are undocumented. | `ShortOnlyQuery` always emits `short=true`; `new(false)` is a `compile_fail` doctest. | `crates/libfmp/src/endpoints/quote.rs:174-183`; `forex.rs:40-43`; `commodities.rs:44`; `crypto.rs:38`; `indexes.rs:150`; ADR 0005 line 34 |
+| IPO calendar `daa` | Provider key `daa` (outer.md 7768) is an unexplained ISO timestamp. | Retained literally as `daa: IsoTimestamp`; no expansion of the name. | `crates/libfmp/src/responses/calendar.rs:55`; ADR 0011 line 47 |
+| IPO calendar nullable values | `shares`, `priceRange`, `marketCap` are documented only as null. | Required-present `Option<DynamicJson>`. | `crates/libfmp/src/responses/calendar.rs:59-64`; ADR 0011 lines 45-47 |
+| Exchange holidays | `adjOpenTime`, `adjCloseTime` are documented only as null. | Required-present `Option<DynamicJson>`. | `crates/libfmp/src/responses/market_hours.rs:42-45`; ADR 0022 lines 37-41 |
+| Company executives | `pay`, `yearBorn`, `titleSince` have no documented non-null shape. | `Option<DynamicJson>`. | `crates/libfmp/src/responses/company.rs:160-164` |
+| Congressional net worth | `income` has no documented non-null shape. | Required-present `Option<DynamicJson>`. | `crates/libfmp/src/responses/congressional.rs:127-128` |
+| Crowdfunding search | `date` documented only as null (Regulation D search proves a datetime). | Required-present `Option<DynamicJson>`. | `crates/libfmp/src/responses/fundraising.rs:31-32`; ADR 0027 lines 29-33 |
+| SEC company profile | `securityType` documented only as null. | Nullable `Option<DynamicJson>`. | `crates/libfmp/src/responses/sec_filings.rs:80-81`; ADR 0019 line 45 |
+| Symbol-change directory | `invalid` parameter is a lowercase string with undocumented semantics. | `TrueFalseFlag` passed through uninterpreted. | `crates/libfmp/src/endpoints/directory.rs:104-118` |
+| Economic indicators | Example range spans a year while the note caps ranges at 90 days. | Both dates preserved; 90-day bound exposed as metadata, not enforced. | ADR 0010 lines 28-33 |
+| Market risk premium | Prose mentions dates; no parameters are documented. | Queryless descriptor; date parameters deferred. | ADR 0010 lines 35-38 |
+| As-reported, segmentation, financial reports | Issuer taxonomy keys and value kinds are open-ended. | `DynamicObject` payload; duplicate JSON members collapse to the last value. | `crates/libfmp/src/responses/statements/{as_reported,segmentation,reports}.rs`; ADR 0008 lines 26-35 |
+| Float decode fidelity | Two documented fixtures decode 1 ULP away from Python's `json` (`altmanZScore`, `growthCashAtEndOfPeriod`); serde_json's default float parser is not correctly rounded. | Python tests compare floats with `pytest.approx`. Candidate fix: `float_roundtrip` feature plus a decode test against the fixture literal. | Issue #40 comment (PY2-10, #176); `crates/fmp-py/tests/test_chart_a.py:8-9` |
+
+## Resolved rows
+
+None yet. Move a row here with the resolving commit when a captured response
+settles it, so the history of each decision stays in one place.
