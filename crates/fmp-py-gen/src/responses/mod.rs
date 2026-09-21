@@ -14,7 +14,9 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use syn::{Fields, Item};
+use std::collections::BTreeSet;
+
+use syn::{Fields, Item, Type};
 
 pub use model::{FieldAttrs, FieldDef, StructDef, Wrap, apply_rename_rule};
 pub use parse::{
@@ -87,6 +89,7 @@ pub fn discover(responses_root: &Path) -> Result<Discovery, DiscoverError> {
                 .structs
                 .extend(technical_indicator_structs(&parsed, &module_path)?);
         }
+        let custom_deserialize = custom_deserialize_targets(&parsed);
         for item in &parsed.items {
             match item {
                 Item::Mod(item) => {
@@ -113,12 +116,14 @@ pub fn discover(responses_root: &Path) -> Result<Discovery, DiscoverError> {
                                 attrs: field_attrs(&field.attrs).map_err(attribute_error)?,
                             });
                         }
+                        let custom_deserialize = custom_deserialize.contains(&name);
                         discovery.structs.push(StructDef {
                             name,
                             module_path: module_path.clone(),
                             doc: doc_paragraph(&item.attrs),
                             rename_all,
                             fields,
+                            custom_deserialize,
                         });
                     }
                 }
@@ -151,6 +156,28 @@ pub fn discover(responses_root: &Path) -> Result<Discovery, DiscoverError> {
     }
 
     Ok(discovery)
+}
+
+/// The self types of every `impl<'de> Deserialize<'de> for X` in one file:
+/// the structs whose wire shape a hand-written decoder defines.
+fn custom_deserialize_targets(file: &syn::File) -> BTreeSet<String> {
+    file.items
+        .iter()
+        .filter_map(|item| match item {
+            Item::Impl(item) => {
+                let (_, trait_path, _) = item.trait_.as_ref()?;
+                let is_deserialize = trait_path
+                    .segments
+                    .last()
+                    .is_some_and(|segment| segment.ident == "Deserialize");
+                match (is_deserialize, item.self_ty.as_ref()) {
+                    (true, Type::Path(path)) => Some(path.path.segments.last()?.ident.to_string()),
+                    _ => None,
+                }
+            }
+            _ => None,
+        })
+        .collect()
 }
 
 fn parse_file(path: &Path) -> Result<syn::File, DiscoverError> {
@@ -197,6 +224,18 @@ mod tests {
         );
         assert!(discovery.aliases.contains_key("DynamicJson"));
         assert!(!discovery.module_public.is_empty());
+    }
+
+    #[test]
+    fn discover_flags_structs_with_a_hand_written_deserialize() {
+        let discovery = discover(&responses_root()).expect("responses discover");
+        let flagged: Vec<&str> = discovery
+            .structs
+            .iter()
+            .filter(|def| def.custom_deserialize)
+            .map(|def| def.name.as_str())
+            .collect();
+        assert_eq!(flagged, ["FinancialReportJson"]);
     }
 
     #[test]

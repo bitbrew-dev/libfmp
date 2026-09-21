@@ -32,6 +32,12 @@ pub(crate) enum Codec {
     /// `deserialize_with = "required_option"` on `Option<Number>`: the key
     /// must be present, null is allowed, a present value must be a number.
     RequiredNumber,
+    /// A `DynamicObject` that holds every member the named fields do not
+    /// claim, as serde `flatten` on a map does: `#[serde(flatten)]`, or the
+    /// single `DynamicObject` field of a struct with a hand-written
+    /// `Deserialize`. The member has no wire name; json/v2 `embed` collects
+    /// and re-emits the remaining members.
+    Embedded,
 }
 
 /// One Go struct member derived from a Rust field.
@@ -59,6 +65,7 @@ impl GoField {
     pub(crate) fn required_key(&self) -> bool {
         match self.codec {
             Codec::Plain | Codec::Number => !self.optional,
+            Codec::Embedded => false,
             Codec::RequiredOption
             | Codec::RequiredNumber
             | Codec::EmptyDate
@@ -88,13 +95,28 @@ impl<'a> TypeTable<'a> {
     pub(crate) fn go_field(&self, def: &StructDef, field: &FieldDef) -> Result<GoField, String> {
         let label = format!("{}.{}", def.name, field.name);
         let fail = |message: String| format!("{label}: {message}");
-        if field.attrs.skip || field.attrs.flatten {
-            return Err(fail(
-                "serde skip and flatten are not supported by gen_go".to_string(),
-            ));
+        if field.attrs.skip {
+            return Err(fail("serde skip is not supported by gen_go".to_string()));
         }
         let (wraps, ident) = peel(&field.ty);
         let ident = ident.ok_or_else(|| fail("unsupported type shape".to_string()))?;
+        let embedded = field.attrs.flatten || def.custom_deserialize;
+        if embedded && ident == "DynamicObject" && wraps.is_empty() {
+            return Ok(GoField {
+                name: exported(&field.name),
+                wire: String::new(),
+                public_ty: "jsontext.Value".to_string(),
+                shadow_ty: "jsontext.Value".to_string(),
+                optional: false,
+                codec: Codec::Embedded,
+                omit_none: false,
+            });
+        }
+        if field.attrs.flatten {
+            return Err(fail(
+                "serde flatten is supported by gen_go only on a bare DynamicObject".to_string(),
+            ));
+        }
         if wraps
             .windows(2)
             .any(|pair| pair == [Wrap::Option, Wrap::Option])
