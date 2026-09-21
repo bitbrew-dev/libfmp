@@ -1,8 +1,8 @@
 //! Worldwide company stock screener endpoint.
 //!
-//! The reserved Python surface for a future binding is `fmp.screener`, with
-//! `FmpClient.company_screener`, `CompanyScreenerQuery`, and
-//! `CompanyScreenerEntry`. This crate does not implement that Python binding.
+//! The provider documents the screener as available for companies worldwide,
+//! so the descriptor carries [`GeographicAvailability::Worldwide`]. The Python
+//! binding exposes the same route under `client.screener`.
 
 use crate::{
     Client, Result,

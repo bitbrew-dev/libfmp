@@ -1,7 +1,6 @@
 //! Response models returned by company screener endpoints.
 //!
-//! Future Python bindings should expose this model from `fmp.screener` as
-//! `CompanyScreenerEntry`. This crate does not implement that Python binding.
+//! The Python binding exposes this model under `fmp.screener`.
 
 use serde::{Deserialize, Serialize};
 

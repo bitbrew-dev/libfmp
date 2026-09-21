@@ -1,11 +1,6 @@
 //! Response models returned by symbol, transcript, and taxonomy directories.
 //!
-//! Future Python bindings should expose the meaningful public models from
-//! `fmp.directory` as `CompanySymbol`, `FinancialStatementSymbol`, `CikEntry`,
-//! `SymbolChange`, `EtfSymbol`, `ActivelyTradingSymbol`, and
-//! `EarningsTranscriptAvailability`, `AvailableExchange`, `AvailableSector`,
-//! `AvailableIndustry`, and `AvailableCountry`. This crate does not implement
-//! those Python bindings.
+//! The Python binding exposes these models under `fmp.directory`.
 
 use serde::{Deserialize, Serialize};
 

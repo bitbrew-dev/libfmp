@@ -1,7 +1,6 @@
 //! Response models returned by search endpoints.
 //!
-//! Future Python bindings should expose these models from `fmp.search`, using
-//! the same model names as the Rust API where they make sense in Python.
+//! The Python binding exposes these models under `fmp.search`.
 
 use serde::{Deserialize, Serialize};
 

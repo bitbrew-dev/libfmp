@@ -1,12 +1,11 @@
 //! Symbol, transcript, and provider-taxonomy directory endpoints.
 //!
-//! The reserved Python surface for a future binding is `fmp.directory`, with
-//! `FmpClient.company_symbols`, `financial_statement_symbols`, `cik_list`,
-//! `symbol_changes`, `etf_symbols`, `actively_trading`, and
-//! `earnings_transcript_list`, `available_exchanges`, `available_sectors`,
-//! `available_industries`, and `available_countries` methods and the
-//! corresponding public response models. This crate does not implement those
-//! Python bindings.
+//! The provider documents the CIK, symbol-change, and earnings-transcript
+//! directories as available for US-based companies only, the symbol and
+//! exchange directories as worldwide, and the sector, industry, and country
+//! taxonomies without any geography, so each descriptor carries the matching
+//! [`GeographicAvailability`]. The Python binding exposes the same eleven
+//! routes under `client.directory`.
 
 use crate::{
     Client, Result,
