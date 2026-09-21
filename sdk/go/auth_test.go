@@ -1,6 +1,7 @@
 package fmp
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -137,8 +138,8 @@ func TestRegisterAuthRedactionProtectsNamesAndValues(t *testing.T) {
 
 func assertConfigurationKind(t *testing.T, err error, kind ConfigurationKind) {
 	t.Helper()
-	typed, ok := err.(*Error)
-	if !ok {
+	var typed *Error
+	if !errors.As(err, &typed) {
 		t.Fatalf("error %v (%T) is not *Error", err, err)
 	}
 	if typed.Category != CategoryConfiguration || typed.ConfigurationKind != kind {
