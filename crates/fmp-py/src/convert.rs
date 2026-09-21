@@ -51,7 +51,10 @@ pub fn dynamic_json_to_py<'py>(
 
 /// Converts a JSON number into a Python `int` when its literal is an integer
 /// (exact at any magnitude) and into a `float` otherwise.
-fn number_to_py<'py>(py: Python<'py>, number: &serde_json::Number) -> PyResult<Bound<'py, PyAny>> {
+pub(crate) fn number_to_py<'py>(
+    py: Python<'py>,
+    number: &serde_json::Number,
+) -> PyResult<Bound<'py, PyAny>> {
     if let Some(value) = number.as_u64() {
         return value.into_bound_py_any(py);
     }
