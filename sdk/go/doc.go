@@ -91,4 +91,7 @@
 //     null, matching serde. Unknown members are ignored. Members whose Rust
 //     codec treats "" as absent (empty_date, empty_or_null_date) decode to a
 //     nil *Date; re-encoding writes null, not "", since the SDK is read-only.
+//     A member serde skips when None (skip_serializing_if = "Option::is_none")
+//     carries the omitzero tag option, so a nil member is omitted on
+//     re-encoding exactly as the Rust model omits it.
 package fmp
