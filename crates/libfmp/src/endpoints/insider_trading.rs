@@ -1,4 +1,9 @@
 //! Insider-trading endpoint query contracts.
+//!
+//! The provider documents every insider-trading route as available for
+//! US-based companies only, so each descriptor carries
+//! [`GeographicAvailability::UsOnly`]. The Python binding exposes the same six
+//! methods under `client.insider_trading`.
 
 use crate::{
     Client, Result,

@@ -1,6 +1,8 @@
 //! Response rows returned by insider-trading endpoints.
 //!
-//! Future Python bindings reserve these models under `fmp.insider_trading`.
+//! The provider documents every insider-trading route as available for
+//! US-based companies only. The Python binding exposes these models under
+//! `fmp.insider_trading`.
 
 use serde::{Deserialize, Serialize};
 
