@@ -436,7 +436,7 @@ args = [
     { name = "symbol", kind = "ticker" },
     { name = "symbol", kind = "ticker" },
     { name = "bare" },
-    { name = "inputs", nested = { type = "DcfAssumptions", setters = [{ arg = "symbol", kind = "finite_decimal" }] } },
+    { name = "inputs", required = false, nested = { type = "DcfAssumptions", setters = [{ arg = "symbol", kind = "finite_decimal" }] } },
 ]
 setters = [{ arg = "missing" }, { arg = "symbol" }]
 
@@ -473,6 +473,12 @@ path = "other.sub"
         "quote.toml",
         "quote.full",
         "setter arg `symbol` must be `required = false`",
+    );
+    assert_names(
+        &errors,
+        "quote.toml",
+        "quote.full",
+        "nested builder `inputs` is always passed to the constructor; drop `required = false`",
     );
     assert_names(
         &errors,

@@ -60,6 +60,8 @@ struct ArgEntry {
     name: String,
     /// The conversion kind of a plain parameter; absent for a nested builder.
     kind: Option<String>,
+    /// Whether a plain parameter is positional; a nested builder is always
+    /// passed, so `required = false` on it is rejected.
     #[serde(default = "default_true")]
     required: bool,
     /// A builder type passed whole to the constructor.
@@ -280,6 +282,12 @@ fn lower_endpoint(
                 });
             }
             (None, Some(builder)) => {
+                if !arg.required {
+                    fail(format!(
+                        "nested builder `{}` is always passed to the constructor; drop `required = false`",
+                        arg.name
+                    ));
+                }
                 if !is_type_name(&builder.type_name) {
                     fail(format!(
                         "nested builder `{}`: `{}` is not a Rust type name",
