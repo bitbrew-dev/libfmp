@@ -6,7 +6,10 @@ with one argument shape, and asserts the exact request target plus a few
 typed fields. The expected targets are the ones the Rust
 ``quote_single_endpoints.rs``, ``quote_batch_endpoints.rs``, and
 ``quote_universe_endpoints.rs`` tests pin. No quote model carries a date
-field: ``timestamp`` is an integer of Unix milliseconds.
+field. Every ``timestamp`` is a plain ``int`` in Python, but the unit differs
+by model exactly as the Rust newtypes record it: ``Quote.timestamp`` is Unix
+seconds (``UnixSeconds``), while ``AftermarketTrade.timestamp`` and
+``AftermarketQuote.timestamp`` are Unix milliseconds (``UnixMilliseconds``).
 """
 
 from types import SimpleNamespace
