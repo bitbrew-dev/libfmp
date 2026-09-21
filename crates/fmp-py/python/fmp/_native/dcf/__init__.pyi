@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "CustomDcfValuation",
     "CustomLeveredDcfValuation",
+    "DcfNamespace",
     "DcfValuation",
 ]
 
@@ -268,6 +269,83 @@ class CustomLeveredDcfValuation:
         operating_cash_flow_percentage: builtins.float,
     ) -> CustomLeveredDcfValuation: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class DcfNamespace:
+    r"""
+    Dcf endpoints for a single client, exposed as `client.dcf`.
+    """
+
+    def discounted_cash_flow(self, symbol: builtins.str) -> builtins.list[DcfValuation]:
+        r"""
+        Retrieves the standard discounted-cash-flow valuation for one company.
+        """
+
+    def levered_discounted_cash_flow(
+        self, symbol: builtins.str
+    ) -> builtins.list[DcfValuation]:
+        r"""
+        Retrieves the levered discounted-cash-flow valuation for one company.
+        """
+
+    def custom_discounted_cash_flow(
+        self,
+        symbol: builtins.str,
+        *,
+        revenue_growth_pct: typing.Optional[builtins.float] = None,
+        ebitda_pct: typing.Optional[builtins.float] = None,
+        depreciation_and_amortization_pct: typing.Optional[builtins.float] = None,
+        cash_and_short_term_investments_pct: typing.Optional[builtins.float] = None,
+        receivables_pct: typing.Optional[builtins.float] = None,
+        inventories_pct: typing.Optional[builtins.float] = None,
+        payable_pct: typing.Optional[builtins.float] = None,
+        ebit_pct: typing.Optional[builtins.float] = None,
+        capital_expenditure_pct: typing.Optional[builtins.float] = None,
+        operating_cash_flow_pct: typing.Optional[builtins.float] = None,
+        selling_general_and_administrative_expenses_pct: typing.Optional[
+            builtins.float
+        ] = None,
+        tax_rate: typing.Optional[builtins.float] = None,
+        long_term_growth_rate: typing.Optional[builtins.float] = None,
+        cost_of_debt: typing.Optional[builtins.float] = None,
+        cost_of_equity: typing.Optional[builtins.float] = None,
+        market_risk_premium: typing.Optional[builtins.float] = None,
+        beta: typing.Optional[builtins.float] = None,
+        risk_free_rate: typing.Optional[builtins.float] = None,
+    ) -> builtins.list[CustomDcfValuation]:
+        r"""
+        Retrieves a custom unlevered discounted-cash-flow valuation.
+        """
+
+    def custom_levered_discounted_cash_flow(
+        self,
+        symbol: builtins.str,
+        *,
+        revenue_growth_pct: typing.Optional[builtins.float] = None,
+        ebitda_pct: typing.Optional[builtins.float] = None,
+        depreciation_and_amortization_pct: typing.Optional[builtins.float] = None,
+        cash_and_short_term_investments_pct: typing.Optional[builtins.float] = None,
+        receivables_pct: typing.Optional[builtins.float] = None,
+        inventories_pct: typing.Optional[builtins.float] = None,
+        payable_pct: typing.Optional[builtins.float] = None,
+        ebit_pct: typing.Optional[builtins.float] = None,
+        capital_expenditure_pct: typing.Optional[builtins.float] = None,
+        operating_cash_flow_pct: typing.Optional[builtins.float] = None,
+        selling_general_and_administrative_expenses_pct: typing.Optional[
+            builtins.float
+        ] = None,
+        tax_rate: typing.Optional[builtins.float] = None,
+        long_term_growth_rate: typing.Optional[builtins.float] = None,
+        cost_of_debt: typing.Optional[builtins.float] = None,
+        cost_of_equity: typing.Optional[builtins.float] = None,
+        market_risk_premium: typing.Optional[builtins.float] = None,
+        beta: typing.Optional[builtins.float] = None,
+        risk_free_rate: typing.Optional[builtins.float] = None,
+    ) -> builtins.list[CustomLeveredDcfValuation]:
+        r"""
+        Retrieves a custom levered discounted-cash-flow valuation.
+        """
 
 
 @typing.final

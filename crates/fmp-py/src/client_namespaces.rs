@@ -13,6 +13,7 @@ use crate::namespaces::commodities::CommoditiesNamespace;
 use crate::namespaces::company::CompanyNamespace;
 use crate::namespaces::congressional::CongressionalNamespace;
 use crate::namespaces::crypto::CryptoNamespace;
+use crate::namespaces::dcf::DcfNamespace;
 use crate::namespaces::directory::DirectoryNamespace;
 use crate::namespaces::economics::EconomicsNamespace;
 use crate::namespaces::esg::EsgNamespace;
@@ -89,6 +90,12 @@ impl FmpClient {
     #[getter]
     fn crypto(&self) -> CryptoNamespace {
         CryptoNamespace::new(self.builder.clone())
+    }
+
+    /// The `dcf` endpoints, reached as `client.dcf`.
+    #[getter]
+    fn dcf(&self) -> DcfNamespace {
+        DcfNamespace::new(self.builder.clone())
     }
 
     /// The `directory` endpoints, reached as `client.directory`.
