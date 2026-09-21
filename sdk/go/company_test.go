@@ -78,8 +78,8 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("EmployeeCount = %+v, %v", employees, err)
 	}
 
-	from := mustDate(t, "2026-04-16")
-	to := mustDate(t, "2026-07-16")
+	from := mustParseDate(t, "2026-04-16")
+	to := mustParseDate(t, "2026-07-16")
 	history, err := client.Company.HistoricalMarketCapitalization(ctx,
 		NewHistoricalMarketCapitalizationQuery("AAPL").WithFrom(from))
 	if err != nil || len(history) != 1 || history[0].MarketCap != 4_879_177_245_542 {

@@ -16,7 +16,7 @@ import (
 const analystPublishers = `["StreetInsider","TheFly","Benzinga","Pulse 2.0","TipRanks Contributor","MarketWatch",` +
 	`"Investing","Barrons","Investor's Business Daily"]`
 
-func mustDate(t *testing.T, year int, month time.Month, day int) Date {
+func mustNewDate(t *testing.T, year int, month time.Month, day int) Date {
 	t.Helper()
 	date, err := NewDate(year, month, day)
 	if err != nil {
@@ -42,7 +42,7 @@ func TestDocumentedFinancialEstimateDecodesAll22Fields(t *testing.T) {
 	t.Parallel()
 	rows := assertFixtureParity[FinancialEstimate](t, "financial_estimates.json")
 	want := FinancialEstimate{
-		Symbol: "AAPL", Date: mustDate(t, 2030, time.September, 27),
+		Symbol: "AAPL", Date: mustNewDate(t, 2030, time.September, 27),
 		RevenueLow: 648_228_509_004, RevenueHigh: 735_022_980_353, RevenueAvg: 679_000_000_000,
 		EbitdaLow: 233_968_328_102, EbitdaHigh: 265_295_486_763, EbitdaAvg: 245_074_834_838,
 		EbitLow: 217_109_092_822, EbitHigh: 246_178_886_382, EbitAvg: 227_415_289_483,
@@ -67,7 +67,7 @@ func TestDocumentedRatingFixturesKeepSnapshotAndHistoricalRowsDistinct(t *testin
 		t.Fatalf("ratings_snapshot = %+v", snapshots)
 	}
 	historical := assertFixtureParity[HistoricalRating](t, "historical_ratings.json")
-	if len(historical) != 1 || historical[0].Date != mustDate(t, 2026, time.July, 30) ||
+	if len(historical) != 1 || historical[0].Date != mustNewDate(t, 2026, time.July, 30) ||
 		historical[0].PriceToBookScore != 1 {
 		t.Fatalf("historical_ratings = %+v", historical)
 	}
@@ -91,7 +91,7 @@ func TestDocumentedPriceTargetFixturesPreserveRawPublishersAndNumericPrices(t *t
 func TestDocumentedGradeFixturesPreserveBothBucketKeyFamilies(t *testing.T) {
 	t.Parallel()
 	grades := assertFixtureParity[StockGrade](t, "stock_grades.json")
-	want := StockGrade{Symbol: "AAPL", Date: mustDate(t, 2026, time.July, 23), GradingCompany: "Morgan Stanley",
+	want := StockGrade{Symbol: "AAPL", Date: mustNewDate(t, 2026, time.July, 23), GradingCompany: "Morgan Stanley",
 		PreviousGrade: "Overweight", NewGrade: "Overweight", Action: "maintain"}
 	if len(grades) != 1 || grades[0] != want {
 		t.Fatalf("stock_grades = %+v, want %+v", grades, want)

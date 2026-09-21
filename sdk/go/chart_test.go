@@ -58,8 +58,8 @@ func TestChartMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 	server, rec := newServer(t, chartRouter(t))
 	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
 	ctx := context.Background()
-	eodFrom, eodTo := mustDate(t, "2026-04-30"), mustDate(t, "2026-07-30")
-	from, to := mustDate(t, "2024-01-01"), mustDate(t, "2024-03-01")
+	eodFrom, eodTo := mustParseDate(t, "2026-04-30"), mustParseDate(t, "2026-07-30")
+	from, to := mustParseDate(t, "2024-01-01"), mustParseDate(t, "2024-03-01")
 	share := "BRK.B / Class A"
 
 	light, err := client.Chart.Light(ctx, NewStockChartEodQuery(share).WithFrom(eodFrom).WithTo(eodTo))
@@ -120,7 +120,7 @@ func TestChartMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 
 func TestChartQueriesExposeTheirArgumentsAsGiven(t *testing.T) {
 	t.Parallel()
-	from := mustDate(t, "2026-04-30")
+	from := mustParseDate(t, "2026-04-30")
 	eod := NewStockChartEodQuery(" AAPL ")
 	if eod.Symbol() != " AAPL " || eod.From() != nil || eod.To() != nil {
 		t.Fatalf("EOD query normalized or defaulted an argument: %+v", eod)

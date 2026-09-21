@@ -27,24 +27,6 @@ var (
 		"indexes_chart_one_minute.json", "indexes_chart_five_minutes.json", "indexes_chart_one_hour.json"}
 )
 
-func mustDate(t *testing.T, text string) Date {
-	t.Helper()
-	date, err := ParseDate(text)
-	if err != nil {
-		t.Fatalf("ParseDate(%q): %v", text, err)
-	}
-	return date
-}
-
-func mustDateTime(t *testing.T, text string) DateTime {
-	t.Helper()
-	value, err := ParseDateTime(text)
-	if err != nil {
-		t.Fatalf("ParseDateTime(%q): %v", text, err)
-	}
-	return value
-}
-
 func TestChartFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
 	for _, name := range chartLightFixtures {
@@ -64,7 +46,7 @@ func TestChartFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 // Exact values copied from crates/libfmp/tests/chart_responses.rs.
 func TestDocumentedStockChartFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	date := mustDate(t, "2026-07-30")
+	date := mustParseDate(t, "2026-07-30")
 
 	light := assertFixtureParity[StockChartLightBar](t, "stock_chart_light.json")
 	if want := (StockChartLightBar{Symbol: "AAPL", Date: date, Price: 332.39, Volume: 29_207_295}); len(light) != 1 ||
@@ -97,7 +79,7 @@ func TestDocumentedStockChartFixturesDecodeExactValues(t *testing.T) {
 	}
 
 	intraday := assertFixtureParity[StockChartIntradayBar](t, "stock_chart_intraday.json")
-	want := StockChartIntradayBar{Date: mustDateTime(t, "2026-07-30 13:16:00"), Open: 332.4, Low: 332.27499,
+	want := StockChartIntradayBar{Date: mustParseDateTime(t, "2026-07-30 13:16:00"), Open: 332.4, Low: 332.27499,
 		High: 332.48, Close: 332.47, Volume: 67_660}
 	if len(intraday) != 1 || intraday[0] != want {
 		t.Fatalf("stock_chart_intraday = %+v, want %+v", intraday, want)
@@ -115,17 +97,17 @@ func TestDocumentedIntradayRoutesDecodeTheirExactRows(t *testing.T) {
 		fixture string
 		want    StockChartIntradayBar
 	}{
-		{"stock_chart_one_minute.json", StockChartIntradayBar{Date: mustDateTime(t, "2026-07-30 13:16:00"),
+		{"stock_chart_one_minute.json", StockChartIntradayBar{Date: mustParseDateTime(t, "2026-07-30 13:16:00"),
 			Open: 332.4, Low: 332.27499, High: 332.48, Close: 332.47, Volume: 67_660}},
-		{"stock_chart_five_minutes.json", StockChartIntradayBar{Date: mustDateTime(t, "2026-07-30 13:15:00"),
+		{"stock_chart_five_minutes.json", StockChartIntradayBar{Date: mustParseDateTime(t, "2026-07-30 13:15:00"),
 			Open: 332.655, Low: 332.31989, High: 332.755, Close: 332.31989, Volume: 123_020}},
-		{"stock_chart_fifteen_minutes.json", StockChartIntradayBar{Date: mustDateTime(t, "2026-07-30 13:15:00"),
+		{"stock_chart_fifteen_minutes.json", StockChartIntradayBar{Date: mustParseDateTime(t, "2026-07-30 13:15:00"),
 			Open: 332.655, Low: 332.31989, High: 332.755, Close: 332.31989, Volume: 123_020}},
-		{"stock_chart_thirty_minutes.json", StockChartIntradayBar{Date: mustDateTime(t, "2026-07-30 13:00:00"),
+		{"stock_chart_thirty_minutes.json", StockChartIntradayBar{Date: mustParseDateTime(t, "2026-07-30 13:00:00"),
 			Open: 331.71, Low: 331.71, High: 332.82999, Close: 332.31989, Volume: 980_442}},
-		{"stock_chart_one_hour.json", StockChartIntradayBar{Date: mustDateTime(t, "2026-07-30 12:30:00"),
+		{"stock_chart_one_hour.json", StockChartIntradayBar{Date: mustParseDateTime(t, "2026-07-30 12:30:00"),
 			Open: 332.14, Low: 331.43, High: 332.82999, Close: 332.31989, Volume: 3_285_503}},
-		{"stock_chart_four_hours.json", StockChartIntradayBar{Date: mustDateTime(t, "2026-07-30 09:30:00"),
+		{"stock_chart_four_hours.json", StockChartIntradayBar{Date: mustParseDateTime(t, "2026-07-30 09:30:00"),
 			Open: 333.13, Low: 329.70499, High: 334.26, Close: 332.31989, Volume: 28_439_347}},
 	}
 	for _, tc := range cases {
