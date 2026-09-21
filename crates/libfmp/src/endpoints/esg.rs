@@ -1,8 +1,8 @@
 //! Environmental, social, and governance endpoint contracts.
 //!
-//! A future Python binding reserves the matching `FmpClient` method names
-//! `esg_disclosures`, `esg_ratings`, and `esg_benchmark`, with response models
-//! under `fmp.esg`. This crate does not implement those Python bindings.
+//! The provider documents every ESG route as available for US-based companies
+//! only, so each descriptor carries [`GeographicAvailability::UsOnly`]. The
+//! Python binding exposes the same three methods under `client.esg`.
 
 use crate::{
     Client, Result,
@@ -101,7 +101,7 @@ pub fn esg_benchmark(
 }
 
 impl Client {
-    /// Retrieves ESG disclosure filings for one company.
+    /// Retrieves the US-only ESG disclosure filings for one company.
     pub async fn esg_disclosures(
         &self,
         query: impl Into<EsgSymbolQuery>,
@@ -109,12 +109,12 @@ impl Client {
         self.execute(&esg_disclosures(query.into())).await
     }
 
-    /// Retrieves ESG ratings for one company.
+    /// Retrieves the US-only ESG ratings for one company.
     pub async fn esg_ratings(&self, query: impl Into<EsgSymbolQuery>) -> Result<Vec<EsgRating>> {
         self.execute(&esg_ratings(query.into())).await
     }
 
-    /// Retrieves sector ESG benchmarks, optionally for one provider year string.
+    /// Retrieves the US-only sector ESG benchmarks, optionally for one provider year string.
     pub async fn esg_benchmark(&self, query: EsgBenchmarkQuery) -> Result<Vec<EsgBenchmark>> {
         self.execute(&esg_benchmark(query)).await
     }

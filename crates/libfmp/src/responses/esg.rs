@@ -1,6 +1,6 @@
 //! Response rows returned by environmental, social, and governance endpoints.
 //!
-//! Future Python bindings reserve these models under `fmp.esg`.
+//! The Python binding exposes these models under `fmp.esg`.
 
 use serde::{Deserialize, Serialize};
 
