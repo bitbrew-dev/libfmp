@@ -117,3 +117,66 @@ fn pascal_case(name: &str) -> String {
     }
     out
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn field(name: &str, ty: &str, attrs: FieldAttrs) -> FieldDef {
+        FieldDef {
+            name: name.to_string(),
+            ty: syn::parse_str(ty).expect("valid type"),
+            attrs,
+        }
+    }
+
+    #[test]
+    fn rename_rules_match_serde() {
+        assert_eq!(apply_rename_rule("camelCase", "market_cap"), "marketCap");
+        assert_eq!(apply_rename_rule("camelCase", "symbol"), "symbol");
+        assert_eq!(apply_rename_rule("PascalCase", "market_cap"), "MarketCap");
+        assert_eq!(
+            apply_rename_rule("SCREAMING_SNAKE_CASE", "market_cap"),
+            "MARKET_CAP"
+        );
+        assert_eq!(apply_rename_rule("kebab-case", "market_cap"), "market-cap");
+        assert_eq!(
+            apply_rename_rule("SCREAMING-KEBAB-CASE", "market_cap"),
+            "MARKET-CAP"
+        );
+        assert_eq!(apply_rename_rule("lowercase", "Market_cap"), "market_cap");
+        assert_eq!(apply_rename_rule("UPPERCASE", "market_cap"), "MARKET_CAP");
+        assert_eq!(apply_rename_rule("snake_case", "market_cap"), "market_cap");
+        assert_eq!(apply_rename_rule("bogus", "market_cap"), "market_cap");
+    }
+
+    #[test]
+    fn wire_name_prefers_rename_then_rule_then_rust_name() {
+        let renamed = field(
+            "one_day",
+            "f64",
+            FieldAttrs {
+                rename: Some("1D".to_string()),
+                ..FieldAttrs::default()
+            },
+        );
+        assert_eq!(renamed.wire_name(Some("camelCase")), "1D");
+        let plain = field("market_cap", "f64", FieldAttrs::default());
+        assert_eq!(plain.wire_name(Some("camelCase")), "marketCap");
+        assert_eq!(plain.wire_name(None), "market_cap");
+        let raw = field("r#type", "String", FieldAttrs::default());
+        assert_eq!(raw.wire_name(Some("camelCase")), "type");
+    }
+
+    #[test]
+    fn required_needs_non_option_without_default() {
+        assert!(field("price", "Price", FieldAttrs::default()).required());
+        assert!(!field("price", "Option<Price>", FieldAttrs::default()).required());
+        assert!(field("bars", "Vec<Option<Price>>", FieldAttrs::default()).required());
+        let defaulted = FieldAttrs {
+            default: true,
+            ..FieldAttrs::default()
+        };
+        assert!(!field("price", "Price", defaulted).required());
+    }
+}
