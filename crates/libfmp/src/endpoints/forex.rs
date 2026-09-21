@@ -99,6 +99,10 @@ impl Client {
     }
 
     /// Retrieves compact end-of-day forex history.
+    ///
+    /// The documented 5,000-row maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_response_rows`](super::metadata::EndpointBounds::accepts_response_rows)
+    /// for optional preflight validation.
     pub async fn forex_chart_light(
         &self,
         query: impl Into<AssetChartQuery>,
@@ -107,6 +111,10 @@ impl Client {
     }
 
     /// Retrieves detailed end-of-day forex history.
+    ///
+    /// The documented 5,000-row maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_response_rows`](super::metadata::EndpointBounds::accepts_response_rows)
+    /// for optional preflight validation.
     pub async fn forex_chart_full(
         &self,
         query: impl Into<AssetChartQuery>,
