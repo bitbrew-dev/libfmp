@@ -18,6 +18,12 @@ from fmp.chart import (
     StockChartIntradayBar,
     StockChartLightBar,
 )
+from fmp.commitment_of_traders import (
+    CommitmentOfTradersNamespace,
+    CotAnalysis,
+    CotReport,
+    CotReportListing,
+)
 from fmp.commodities import CommoditiesNamespace, CommodityListing
 from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
 from fmp.congressional import (
@@ -525,6 +531,24 @@ def check_market_hours_contract(client: FmpClient) -> None:
     everywhere: list[ExchangeMarketHours] = client.market_hours.all_exchange_market_hours()
     timezone: str = everywhere[0].timezone
     _ = (opening_hour, is_open, holiday_date, is_closed, adj_open_time, timezone)
+
+
+def check_commitment_of_traders_contract(client: FmpClient) -> None:
+    """Type-check the flat COT namespace, its keyword-only symbol and date filters, and the query-less list."""
+    commitment_of_traders: CommitmentOfTradersNamespace = client.commitment_of_traders
+    reports: list[CotReport] = commitment_of_traders.report(
+        symbol="VX", from_=datetime.date(2024, 1, 1), to="2024-03-01"
+    )
+    reported_on: datetime.datetime = reports[0].date
+    spread_change: int = reports[0].change_in_noncomm_spread_all
+    contract_units: str = reports[0].contract_units
+    analyses: list[CotAnalysis] = client.commitment_of_traders.analysis(symbol="PA")
+    net_position: int = analyses[0].net_position
+    net_change: float = analyses[0].change_in_net_position
+    reversal: bool = analyses[0].reversal_trend
+    listings: list[CotReportListing] = client.commitment_of_traders.report_list()
+    listed_symbol: str = listings[0].symbol
+    _ = (reported_on, spread_change, contract_units, net_position, net_change, reversal, listed_symbol)
 
 
 def check_public_contract(client: FmpClient) -> None:
