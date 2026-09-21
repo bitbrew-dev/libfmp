@@ -153,6 +153,34 @@ def test_key_executives_surfaces_dynamic_json_values(client: Any, fixture_server
     assert probe.year_born == "01980"
 
 
+def test_key_executives_keeps_big_integers_exact(client: Any, fixture_server: FixtureServer) -> None:
+    """Passthrough fields surface integer literals above ``2**64`` as exact ``int``s, like dynamic rows do."""
+    fixture_server.route(
+        "/key-executives",
+        [
+            {
+                "title": "Synthetic Executive",
+                "name": "Big Int Probe",
+                "pay": {"amount": 2**70, "components": [-(2**70), 1.5]},
+                "currencyPay": "XTS",
+                "gender": "unspecified",
+                "yearBorn": 2**70,
+                "titleSince": 18446744073709551615,
+                "active": False,
+            }
+        ],
+    )
+    rows = client.company.key_executives("AAPL")
+
+    assert fixture_server.requests[0].target == "/key-executives?symbol=AAPL"
+    assert len(rows) == 1
+    probe = rows[0]
+    assert type(probe.year_born) is int and probe.year_born == 2**70
+    assert type(probe.title_since) is int and probe.title_since == 2**64 - 1
+    assert probe.pay == {"amount": 2**70, "components": [-(2**70), pytest.approx(1.5)]}
+    assert type(probe.pay["components"][1]) is float
+
+
 def test_executive_compensation_maps_to_the_governance_path(client: Any, fixture_server: FixtureServer) -> None:
     """``executive_compensation`` reaches ``/governance-executive-compensation`` with the symbol."""
     fixture_server.route("/governance-executive-compensation", load_fixture("company_executive_compensation.json"))
