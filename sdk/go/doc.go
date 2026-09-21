@@ -1,0 +1,58 @@
+// Package fmp is a pure Go client for the Financial Modeling Prep (FMP) HTTP
+// API. It mirrors the Rust crate libfmp one-for-one: the same client options,
+// the same authentication modes, the same error categories, and the same
+// transport rules.
+//
+// The module path ends in "go", so import it with an alias:
+//
+//	import fmp "github.com/bitbrew-dev/libfmp/sdk/go"
+//
+// # Building a client
+//
+// NewClient validates every option before any request is made and returns a
+// *Error of category CategoryConfiguration when the configuration is unsafe
+// or inconsistent. Direct access to the default FMP origin requires explicit
+// authentication:
+//
+//	auth, ok := fmp.FmpHeaderFromEnv()
+//	if !ok {
+//		return errors.New("FMP_API_KEY is not set")
+//	}
+//	client, err := fmp.NewClient(fmp.WithAuthentication(auth))
+//
+// Header authentication modes (FmpHeader, Bearer, CustomHeader) never place a
+// credential in the URL. Query modes (FmpQuery, CustomQuery) append the secret
+// as the last query pair of every request.
+//
+// # Transport rules
+//
+// The client is standard-library only and builds with CGO_ENABLED=0. It never
+// retries: every call issues exactly one request per redirect hop, whatever
+// the status. Redirects are followed only to the same origin and at most ten
+// times; RedirectNone returns the redirect as a status error instead. One
+// context deadline (WithTimeout, default 30 seconds) spans the whole call,
+// including redirects and the body read. Response bodies are capped by
+// WithMaxResponseBodyBytes (default 64 MiB).
+//
+// WithHTTPClient injects a caller-owned *http.Client for proxies and tests.
+// The SDK shallow-copies it to install its redirect policy, so the caller's
+// value is never mutated. WithConnectTimeout applies only to the transport
+// the SDK builds itself; a caller-supplied client keeps its own dialer.
+//
+// # Credential policy
+//
+// No credential can reach a diagnostic. Authentication, Client, and Redactor
+// implement fmt.Formatter so that %v, %+v, and %#v print a description
+// without secret values. Every transport failure is rebuilt without the
+// request URL before it escapes (Go's *url.Error embeds the URL, which holds
+// the API key in query mode), and its cause text is passed through the
+// Redactor. Provider bodies retained in an *Error are redacted and capped at
+// MaxSafeBodyBytes.
+//
+// # Environment
+//
+// FmpHeaderFromEnv reads FMP_API_KEY. The live opt-in tests of the Rust crate
+// use FMP_LIVE_TESTS=1, FMP_API_KEY, FMP_PROXY_BASE_URL, FMP_PROXY_TOKEN,
+// FMP_PROXY_PATH_PREFIX, and FMP_TENANT; the Go module uses the same names
+// once its live tests exist. NewClient itself never reads the environment.
+package fmp
