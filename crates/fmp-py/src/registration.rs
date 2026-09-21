@@ -231,6 +231,7 @@ fn register_esg(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::esg::EsgBenchmark>()?;
     module.add_class::<crate::models::esg::EsgDisclosure>()?;
     module.add_class::<crate::models::esg::EsgRating>()?;
+    module.add_class::<crate::namespaces::esg::EsgNamespace>()?;
     add_submodule(parent, "fmp._native.esg", &module)
 }
 

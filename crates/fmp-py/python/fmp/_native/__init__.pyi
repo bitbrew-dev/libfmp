@@ -214,6 +214,12 @@ class FmpClient:
         """
 
     @property
+    def esg(self) -> esg.EsgNamespace:
+        r"""
+        The `esg` endpoints, reached as `client.esg`.
+        """
+
+    @property
     def forex(self) -> forex.ForexNamespace:
         r"""
         The `forex` endpoints, reached as `client.forex`.

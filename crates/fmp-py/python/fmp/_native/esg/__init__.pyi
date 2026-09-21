@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "EsgBenchmark",
     "EsgDisclosure",
+    "EsgNamespace",
     "EsgRating",
 ]
 
@@ -76,6 +77,30 @@ class EsgDisclosure:
         url: builtins.str,
     ) -> EsgDisclosure: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class EsgNamespace:
+    r"""
+    Esg endpoints for a single client, exposed as `client.esg`.
+    """
+
+    def disclosures(self, symbol: builtins.str) -> builtins.list[EsgDisclosure]:
+        r"""
+        Retrieves ESG disclosure filings for one company.
+        """
+
+    def ratings(self, symbol: builtins.str) -> builtins.list[EsgRating]:
+        r"""
+        Retrieves ESG ratings for one company.
+        """
+
+    def benchmark(
+        self, *, year: typing.Optional[builtins.str] = None
+    ) -> builtins.list[EsgBenchmark]:
+        r"""
+        Retrieves sector ESG benchmarks, optionally for one provider year string.
+        """
 
 
 @typing.final

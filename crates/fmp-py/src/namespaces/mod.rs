@@ -11,6 +11,7 @@ pub(crate) mod congressional;
 pub(crate) mod crypto;
 pub(crate) mod directory;
 pub(crate) mod economics;
+pub(crate) mod esg;
 pub(crate) mod forex;
 pub(crate) mod fundraising;
 pub(crate) mod funds;

@@ -15,6 +15,7 @@ use crate::namespaces::congressional::CongressionalNamespace;
 use crate::namespaces::crypto::CryptoNamespace;
 use crate::namespaces::directory::DirectoryNamespace;
 use crate::namespaces::economics::EconomicsNamespace;
+use crate::namespaces::esg::EsgNamespace;
 use crate::namespaces::forex::ForexNamespace;
 use crate::namespaces::fundraising::FundraisingNamespace;
 use crate::namespaces::funds::FundsNamespace;
@@ -99,6 +100,12 @@ impl FmpClient {
     #[getter]
     fn economics(&self) -> EconomicsNamespace {
         EconomicsNamespace::new(self.builder.clone())
+    }
+
+    /// The `esg` endpoints, reached as `client.esg`.
+    #[getter]
+    fn esg(&self) -> EsgNamespace {
+        EsgNamespace::new(self.builder.clone())
     }
 
     /// The `forex` endpoints, reached as `client.forex`.
