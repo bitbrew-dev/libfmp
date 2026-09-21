@@ -19,6 +19,8 @@ type Namespaces struct {
 	CommitmentOfTraders CommitmentOfTradersNamespace
 	// Company holds the company endpoints.
 	Company CompanyNamespace
+	// Directory holds the directory endpoints.
+	Directory DirectoryNamespace
 	// Quote holds the quote endpoints.
 	Quote QuoteNamespace
 }
@@ -30,5 +32,6 @@ func (c *Client) bindNamespaces() {
 	c.Chart = newChartNamespace(c)
 	c.CommitmentOfTraders = newCommitmentOfTradersNamespace(c)
 	c.Company = newCompanyNamespace(c)
+	c.Directory = newDirectoryNamespace(c)
 	c.Quote = newQuoteNamespace(c)
 }
