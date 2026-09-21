@@ -100,7 +100,7 @@ func TestForexMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	}
 }
 
-func TestAssetChartQueryExposesItsArgumentsAsGiven(t *testing.T) {
+func TestForexAssetChartQueryExposesItsArgumentsAsGiven(t *testing.T) {
 	t.Parallel()
 	from := mustParseDate(t, "2026-01-27")
 	q := NewAssetChartQuery(" EURUSD ")
