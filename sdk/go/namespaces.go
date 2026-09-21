@@ -39,6 +39,8 @@ type Namespaces struct {
 	Market MarketNamespace
 	// MarketHours holds the market_hours endpoints.
 	MarketHours MarketHoursNamespace
+	// News holds the news endpoints.
+	News NewsNamespace
 	// Quote holds the quote endpoints.
 	Quote QuoteNamespace
 }
@@ -60,5 +62,6 @@ func (c *Client) bindNamespaces() {
 	c.InstitutionalOwnership = newInstitutionalOwnershipNamespace(c)
 	c.Market = newMarketNamespace(c)
 	c.MarketHours = newMarketHoursNamespace(c)
+	c.News = newNewsNamespace(c)
 	c.Quote = newQuoteNamespace(c)
 }
