@@ -9,6 +9,8 @@ package fmp
 // domain. Client embeds it, so client.Quote.Full is the call shape; the fields
 // are valid only on a Client built by NewClient.
 type Namespaces struct {
+	// Calendar holds the calendar endpoints.
+	Calendar CalendarNamespace
 	// Company holds the company endpoints.
 	Company CompanyNamespace
 	// Quote holds the quote endpoints.
@@ -17,6 +19,7 @@ type Namespaces struct {
 
 // bindNamespaces points every namespace at its client.
 func (c *Client) bindNamespaces() {
+	c.Calendar = newCalendarNamespace(c)
 	c.Company = newCompanyNamespace(c)
 	c.Quote = newQuoteNamespace(c)
 }
