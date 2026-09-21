@@ -58,6 +58,10 @@ pub(crate) struct GoField {
     /// carries `omitzero` so a nil member is omitted when re-encoded, as
     /// serde omits `None`.
     pub(crate) omit_none: bool,
+    /// The wire name cannot be spelled in a `json` struct tag, so the member
+    /// travels through the shadow's embedded fallback on decode and the
+    /// model's own `MarshalJSONTo` on encode. See [`tag_spellable`].
+    pub(crate) raw_key: bool,
 }
 
 impl GoField {
@@ -110,6 +114,7 @@ impl<'a> TypeTable<'a> {
                 optional: false,
                 codec: Codec::Embedded,
                 omit_none: false,
+                raw_key: false,
             });
         }
         if field.attrs.flatten {
@@ -154,6 +159,7 @@ impl<'a> TypeTable<'a> {
         let base = self.base(&ident, 0).map_err(fail)?;
         let name = exported(&field.name);
         let wire = field.wire_name(def.rename_all.as_deref());
+        let raw_key = !tag_spellable(&wire);
         let public_ty = wrap(&wraps, &base.go);
 
         let (codec, shadow_ty) = match (codec_attr, base.kind, wraps.as_slice()) {
@@ -208,6 +214,12 @@ impl<'a> TypeTable<'a> {
             (None, _, _) if optional => (Codec::Plain, public_ty.clone()),
             (None, _, _) => (Codec::Plain, format!("*{public_ty}")),
         };
+        if raw_key && codec != Codec::Plain {
+            return Err(fail(format!(
+                "wire name `{wire}` cannot be spelled in a json struct tag and only a plain \
+                 field is bridged through the embedded fallback; codec {codec:?} has no Go shape"
+            )));
+        }
         Ok(GoField {
             name,
             wire,
@@ -216,6 +228,7 @@ impl<'a> TypeTable<'a> {
             optional,
             codec,
             omit_none,
+            raw_key,
         })
     }
 
@@ -337,6 +350,18 @@ fn scalar(ident: &str) -> Option<&'static str> {
         "FiniteDecimal" => "float64",
         _ => return None,
     })
+}
+
+/// Whether `encoding/json/v2` accepts `wire` as a struct tag name. Its tag
+/// parser (`fields.go`, Go 1.27) reserves the comma, the backslash, and the
+/// three quote characters, and rejects the single-quoted spelling at the
+/// name position, so such a name has no tag form at all and the member is
+/// bridged through an embedded fallback instead.
+pub(crate) fn tag_spellable(wire: &str) -> bool {
+    !wire.is_empty()
+        && !wire
+            .chars()
+            .any(|c| matches!(c, ',' | '\\' | '\'' | '"' | '`'))
 }
 
 fn wrap(wraps: &[Wrap], base: &str) -> String {

@@ -9,6 +9,10 @@ use fmp_py_gen::responses::StructDef;
 use crate::emit::{GENERATED_HEADER, doc_comment, local_ident, lower_first, lower_lead};
 use crate::types::{Codec, GoField, TypeTable};
 
+/// The shadow and emit member that collects the members json/v2 cannot spell
+/// in a struct tag (`json:",embed"` on a `map[string]jsontext.Value`).
+const RAW_MEMBERS: &str = "RawMembers";
+
 /// One Go model ready to render.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct ModelPlan {
@@ -35,6 +39,7 @@ pub(crate) fn plan_models(
             if def.custom_deserialize {
                 check_custom_deserialize_shape(&def.name, &fields)?;
             }
+            check_raw_key_fallback(&def.name, &fields)?;
             let doc = match &def.doc {
                 Some(doc) => format!("{} is {}", def.name, lower_lead(doc)),
                 None => format!("{} is a response model of the {domain} domain.", def.name),
@@ -72,6 +77,31 @@ fn check_custom_deserialize_shape(name: &str, fields: &[GoField]) -> Result<(), 
     ))
 }
 
+/// A raw-keyed member (a wire name json/v2 cannot spell in a struct tag)
+/// rides on an embedded fallback, and json/v2 allows one fallback per
+/// struct: a model whose remaining members already flow through an
+/// `Embedded` member cannot also carry raw keys, and the fallback's own name
+/// must stay free.
+fn check_raw_key_fallback(name: &str, fields: &[GoField]) -> Result<(), String> {
+    if !fields.iter().any(|f| f.raw_key) {
+        return Ok(());
+    }
+    if let Some(rest) = fields.iter().find(|f| f.codec == Codec::Embedded) {
+        return Err(format!(
+            "{name}: raw-keyed members need the embedded fallback, but {} already embeds the \
+             remaining members; json/v2 allows one embedded fallback per struct",
+            rest.name
+        ));
+    }
+    if fields.iter().any(|f| f.name == RAW_MEMBERS) {
+        return Err(format!(
+            "{name}: a field named {RAW_MEMBERS} collides with the embedded fallback that carries \
+             its raw-keyed members"
+        ));
+    }
+    Ok(())
+}
+
 /// Renders the whole models file (before `gofmt`).
 pub(crate) fn render_models(domain: &str, models: &[ModelPlan]) -> String {
     let mut out = String::new();
@@ -92,33 +122,45 @@ pub(crate) fn render_models(domain: &str, models: &[ModelPlan]) -> String {
 
 fn render_model(model: &ModelPlan, out: &mut String) {
     let shadow = format!("{}Shadow", lower_first(&model.name));
+    let has_raw = model.fields.iter().any(|f| f.raw_key);
     out.push_str(&doc_comment(&model.doc));
     let _ = writeln!(out, "type {} struct {{", model.name);
     for field in &model.fields {
         let options = if field.omit_none { ",omitzero" } else { "" };
-        let _ = writeln!(
-            out,
-            "\t{} {} `json:\"{}\"`",
-            field.name,
-            field.public_ty,
+        let tag = if field.raw_key {
+            "-".to_string()
+        } else {
             member_tag(field, options)
-        );
+        };
+        let _ = writeln!(out, "\t{} {} `json:\"{tag}\"`", field.name, field.public_ty);
     }
     out.push_str("}\n\n");
 
-    out.push_str(&doc_comment(&format!(
+    let mut shadow_doc = format!(
         "{shadow} mirrors {} with a pointer or raw value for every required member so a \
          missing or null member is observable after decoding.",
         model.name
-    )));
+    );
+    if has_raw {
+        shadow_doc.push_str(
+            " The embedded fallback collects the members json/v2 cannot spell in a struct tag.",
+        );
+    }
+    out.push_str(&doc_comment(&shadow_doc));
     let _ = writeln!(out, "type {shadow} struct {{");
-    for field in &model.fields {
+    for field in model.fields.iter().filter(|f| !f.raw_key) {
         let _ = writeln!(
             out,
             "\t{} {} `json:\"{}\"`",
             field.name,
             field.shadow_ty,
             member_tag(field, "")
+        );
+    }
+    if has_raw {
+        let _ = writeln!(
+            out,
+            "\t{RAW_MEMBERS} map[string]jsontext.Value `json:\",embed\"`"
         );
     }
     out.push_str("}\n\n");
@@ -147,6 +189,16 @@ fn render_model(model: &ModelPlan, out: &mut String) {
     out.push_str(
         "\tif err := json.UnmarshalDecode(dec, &shadow); err != nil {\n\t\treturn err\n\t}\n",
     );
+    for (field, rust_name) in model.fields.iter().zip(&model.rust_names) {
+        if field.raw_key {
+            let _ = writeln!(
+                out,
+                "\t{} := rawMember(shadow.{RAW_MEMBERS}, {:?})",
+                wire_local(rust_name),
+                field.wire
+            );
+        }
+    }
     render_required_switch(model, out);
     for (field, rust_name) in model.fields.iter().zip(&model.rust_names) {
         render_codec_block(&model.name, field, &local_name(rust_name), out);
@@ -154,6 +206,7 @@ fn render_model(model: &ModelPlan, out: &mut String) {
     let _ = writeln!(out, "\t*m = {}{{", model.name);
     for (field, rust_name) in model.fields.iter().zip(&model.rust_names) {
         let value = match field.codec {
+            _ if field.raw_key => local_name(rust_name),
             Codec::Plain | Codec::DynamicObject | Codec::Number if !field.optional => {
                 format!("*shadow.{}", field.name)
             }
@@ -172,17 +225,88 @@ fn render_model(model: &ModelPlan, out: &mut String) {
         let _ = writeln!(out, "\t\t{}: {value},", field.name);
     }
     out.push_str("\t}\n\treturn nil\n}\n");
+    if has_raw {
+        render_marshal(model, out);
+    }
+}
+
+/// The `MarshalJSONTo` of a model with raw-keyed members: the tagged members
+/// marshal through a method-less copy of the struct, and the raw-keyed ones
+/// through an embedded fallback next to it, each under its exact wire name.
+fn render_marshal(model: &ModelPlan, out: &mut String) {
+    let plain = format!("{}Plain", lower_first(&model.name));
+    let emit = format!("{}Emit", lower_first(&model.name));
+    let raw: Vec<(&GoField, &String)> = model
+        .fields
+        .iter()
+        .zip(&model.rust_names)
+        .filter(|(f, _)| f.raw_key)
+        .collect();
+    out.push_str(&doc_comment(&format!(
+        "{plain} is {} without its JSON methods, so its tagged members marshal through the \
+         ordinary struct rules.",
+        model.name
+    )));
+    let _ = writeln!(out, "type {plain} {}\n", model.name);
+    out.push_str(&doc_comment(&format!(
+        "{emit} carries the members json/v2 cannot spell in a struct tag through an embedded \
+         fallback, next to the promoted tagged members of {plain}."
+    )));
+    let _ = writeln!(
+        out,
+        "type {emit} struct {{\n\t{plain}\n\t{RAW_MEMBERS} map[string]jsontext.Value \
+         `json:\",embed\"`\n}}\n"
+    );
+    out.push_str(
+        "// MarshalJSONTo encodes the object with every member under its exact wire\n\
+         // name, including the names json/v2 cannot spell in a struct tag. The value\n\
+         // receiver keeps non-addressable values, such as slice elements, on this path.\n",
+    );
+    let _ = writeln!(
+        out,
+        "func (m {}) MarshalJSONTo(enc *jsontext.Encoder) error {{\n\
+         \trawMembers := make(map[string]jsontext.Value, {})",
+        model.name,
+        raw.len()
+    );
+    for (field, rust_name) in raw {
+        let local = wire_local(rust_name);
+        let indent = if field.omit_none { "\t\t" } else { "\t" };
+        if field.omit_none {
+            let _ = writeln!(out, "\tif m.{} != nil {{", field.name);
+        }
+        let _ = writeln!(
+            out,
+            "{indent}{local}, err := json.Marshal(m.{})\n{indent}if err != nil {{\n\
+             {indent}\treturn err\n{indent}}}\n{indent}rawMembers[{:?}] = {local}",
+            field.name, field.wire
+        );
+        if field.omit_none {
+            out.push_str("\t}\n");
+        }
+    }
+    let _ = writeln!(
+        out,
+        "\treturn json.MarshalEncode(enc, {emit}{{\n\t\t{plain}: {plain}(m),\n\
+         \t\t{RAW_MEMBERS}: rawMembers,\n\t}})\n}}"
+    );
 }
 
 /// The `switch` that reports the first missing required member, in field order.
 fn render_required_switch(model: &ModelPlan, out: &mut String) {
-    let required: Vec<&GoField> = model.fields.iter().filter(|f| f.required_key()).collect();
+    let required: Vec<(&GoField, &String)> = model
+        .fields
+        .iter()
+        .zip(&model.rust_names)
+        .filter(|(f, _)| f.required_key())
+        .collect();
     if required.is_empty() {
         return;
     }
     out.push_str("\tswitch {\n");
-    for field in required {
+    for (field, rust_name) in required {
         let test = match field.codec {
+            _ if field.raw_key => format!("{} == nil", wire_local(rust_name)),
             Codec::RequiredOption
             | Codec::RequiredNumber
             | Codec::EmptyDate
@@ -204,6 +328,10 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
 
 /// The per-member decode a raw shadow value needs after the presence check.
 fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut String) {
+    if field.raw_key {
+        render_raw_member(field, local, out);
+        return;
+    }
     match field.codec {
         Codec::Plain | Codec::DynamicJson => {}
         Codec::Embedded => {
@@ -273,6 +401,35 @@ fn member_tag(field: &GoField, options: &str) -> String {
     } else {
         format!("{}{options}", field.wire)
     }
+}
+
+/// The decode of a raw-keyed plain member from the value `rawMember` found:
+/// missing and null were already reported for a required member and mean nil
+/// for an optional one.
+fn render_raw_member(field: &GoField, local: &str, out: &mut String) {
+    let wire = format!("{local}Wire");
+    if field.optional {
+        let inner = field.public_ty.trim_start_matches('*');
+        let _ = writeln!(
+            out,
+            "\tvar {local} {}\n\tif {wire} != nil {{\n\t\tvar value {inner}\n\
+             \t\tif err := json.Unmarshal({wire}, &value); err != nil {{\n\
+             \t\t\treturn err\n\t\t}}\n\t\t{local} = &value\n\t}}",
+            field.public_ty
+        );
+    } else {
+        let _ = writeln!(
+            out,
+            "\tvar {local} {}\n\tif err := json.Unmarshal({wire}, &{local}); err != nil {{\n\
+             \t\treturn err\n\t}}",
+            field.public_ty
+        );
+    }
+}
+
+/// The local that holds the raw wire value of a raw-keyed member.
+fn wire_local(rust_name: &str) -> String {
+    format!("{}Wire", local_name(rust_name))
 }
 
 /// A local variable name for a raw-decoded member that cannot collide with

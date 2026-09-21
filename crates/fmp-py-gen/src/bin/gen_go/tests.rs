@@ -195,6 +195,13 @@ fn skip_serializing_if(predicate: &str) -> FieldAttrs {
     }
 }
 
+fn rename(wire: &str) -> FieldAttrs {
+    FieldAttrs {
+        rename: Some(wire.to_string()),
+        ..FieldAttrs::default()
+    }
+}
+
 #[test]
 fn unmapped_types_fail_naming_the_struct_and_field() {
     let aliases = BTreeMap::new();
@@ -676,6 +683,107 @@ fn embedded_dynamic_object_holds_the_remaining_members() {
     mixed.custom_deserialize = true;
     let error = plan_models("test", &[&mixed], &table).expect_err("a raw codec beside the rest");
     assert!(error.contains("some other codec"), "{error}");
+}
+
+#[test]
+fn unspellable_wire_names_bridge_through_the_embedded_fallback() {
+    let aliases = BTreeMap::new();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let def = row(vec![
+        field("symbol", "String", FieldAttrs::default()),
+        field("stock_price", "NumericString", rename("Stock Price")),
+        field("last_updated_raw", "String", rename("lastUpdated\"")),
+        field(
+            "note",
+            "Option<String>",
+            FieldAttrs {
+                rename: Some("a,b".to_string()),
+                ..skip_serializing_if("Option::is_none")
+            },
+        ),
+    ]);
+    let fields: Vec<_> = def
+        .fields
+        .iter()
+        .map(|f| table.go_field(&def, f).expect("maps"))
+        .collect();
+    assert_eq!(
+        fields.iter().map(|f| f.raw_key).collect::<Vec<_>>(),
+        [false, false, true, true]
+    );
+    assert!(fields[2].required_key() && !fields[3].required_key());
+
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    for expected in [
+        "StockPrice string `json:\"Stock Price\"`",
+        "LastUpdatedRaw string `json:\"-\"`",
+        "Note *string `json:\"-\"`",
+        "RawMembers map[string]jsontext.Value `json:\",embed\"`",
+        "lastUpdatedRawWire := rawMember(shadow.RawMembers, \"lastUpdated\\\"\")",
+        "noteWire := rawMember(shadow.RawMembers, \"a,b\")",
+        "case lastUpdatedRawWire == nil:\n\t\treturn missingMemberError(\"Row\", \"lastUpdated\\\"\")",
+        "if err := json.Unmarshal(lastUpdatedRawWire, &lastUpdatedRaw); err != nil",
+        "if noteWire != nil {\n\t\tvar value string",
+        "type rowPlain Row",
+        "func (m Row) MarshalJSONTo(enc *jsontext.Encoder) error",
+        "rawMembers[\"lastUpdated\\\"\"] = lastUpdatedRawWire",
+        "if m.Note != nil {\n\t\tnoteWire, err := json.Marshal(m.Note)",
+        "rowPlain: rowPlain(m),",
+    ] {
+        assert!(
+            rendered.contains(expected),
+            "missing {expected:?} in\n{rendered}"
+        );
+    }
+    assert!(!rendered.contains("case noteWire == nil"), "{rendered}");
+    assert_eq!(rendered.matches("`json:\"-\"`").count(), 2, "{rendered}");
+
+    let plain = row(vec![field(
+        "stock_price",
+        "NumericString",
+        rename("Stock Price"),
+    )]);
+    let plain_models = plan_models("test", &[&plain], &table).expect("plans");
+    let plain_rendered = render_models("test", &plain_models);
+    assert!(!plain_rendered.contains("RawMembers") && !plain_rendered.contains("MarshalJSONTo"));
+
+    let coded = row(vec![field(
+        "when",
+        "Option<Date>",
+        FieldAttrs {
+            rename: Some("when\"".to_string()),
+            ..with("empty_date")
+        },
+    )]);
+    let error = table
+        .go_field(&coded, &coded.fields[0])
+        .expect_err("codec attributes are not bridged");
+    assert!(
+        error.contains("Row.when")
+            && error.contains("cannot be spelled")
+            && error.contains("EmptyDate"),
+        "{error}"
+    );
+
+    let collision = row(vec![
+        field("raw_members", "String", FieldAttrs::default()),
+        field("odd", "String", rename("odd\"")),
+    ]);
+    let error = plan_models("test", &[&collision], &table).expect_err("collides");
+    assert!(error.contains("RawMembers"), "{error}");
+
+    let mut two_fallbacks = row(vec![
+        field("odd", "String", rename("odd\"")),
+        field("rest", "DynamicObject", FieldAttrs::default()),
+    ]);
+    two_fallbacks.custom_deserialize = true;
+    let error = plan_models("test", &[&two_fallbacks], &table).expect_err("two embedded fallbacks");
+    assert!(
+        error.contains("Row") && error.contains("Rest") && error.contains("one embedded fallback"),
+        "{error}"
+    );
 }
 
 #[test]
