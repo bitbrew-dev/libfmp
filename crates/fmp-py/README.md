@@ -33,8 +33,7 @@ part of this release.
 
 - CPython 3.10 or newer (`abi3-py310`: one wheel per platform covers every
   supported interpreter).
-- Rust is only needed to build from source; the published wheels are
-  self-contained.
+- Rust is only needed to build from source; a built wheel is self-contained.
 
 ## Namespaces
 
