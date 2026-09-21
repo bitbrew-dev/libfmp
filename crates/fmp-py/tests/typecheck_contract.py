@@ -63,6 +63,7 @@ from fmp.institutional_ownership import (
     InstitutionalOwnershipNamespace,
 )
 from fmp.market import IndustryPe, MarketMover, MarketNamespace, SectorPerformance
+from fmp.market_hours import ExchangeHoliday, ExchangeMarketHours, MarketHoursNamespace
 from fmp.news import FmpArticle, NewsArticle, NewsNamespace
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
 from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
@@ -507,6 +508,23 @@ def check_economics_contract(client: FmpClient) -> None:
     premiums: list[MarketRiskPremium] = client.economics.market_risk_premium()
     premium: float = premiums[0].country_risk_premium
     _ = (observed_on, year_30, name, value, event_time, impact, premium)
+
+
+def check_market_hours_contract(client: FmpClient) -> None:
+    """Type-check the flat market-hours namespace, its required exchange, the keyword-only filters, and the rows."""
+    market_hours: MarketHoursNamespace = client.market_hours
+    hours: list[ExchangeMarketHours] = market_hours.exchange_market_hours("NASDAQ", timestamp="001769527402")
+    opening_hour: str = hours[0].opening_hour
+    is_open: bool = hours[0].is_market_open
+    holidays: list[ExchangeHoliday] = client.market_hours.holidays_by_exchange(
+        "NASDAQ", from_=datetime.date(2025, 4, 27), to="2026-04-27"
+    )
+    holiday_date: datetime.date = holidays[0].date
+    is_closed: bool = holidays[0].is_closed
+    adj_open_time: Any = holidays[0].adj_open_time
+    everywhere: list[ExchangeMarketHours] = client.market_hours.all_exchange_market_hours()
+    timezone: str = everywhere[0].timezone
+    _ = (opening_hour, is_open, holiday_date, is_closed, adj_open_time, timezone)
 
 
 def check_public_contract(client: FmpClient) -> None:
