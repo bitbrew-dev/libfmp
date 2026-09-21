@@ -1,16 +1,16 @@
 //! Source discovery and `syn` parsing: walking response files, deriving module
-//! paths, peeling wrapper types, and sanitizing field names for Python.
+//! paths, and peeling wrapper types.
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
 use syn::{GenericArgument, Item, PathArguments, Type};
 
-use crate::BoxError;
-use crate::model::{FieldDef, StructDef, Wrap};
+use super::DiscoverError;
+use super::model::{FieldDef, StructDef, Wrap};
 
 /// Peels `Option`/`Vec` wrappers and returns the base type identifier.
-pub(crate) fn peel(ty: &Type) -> (Vec<Wrap>, Option<String>) {
+pub fn peel(ty: &Type) -> (Vec<Wrap>, Option<String>) {
     let mut wraps = Vec::new();
     let mut current = ty;
     loop {
@@ -38,22 +38,23 @@ pub(crate) fn peel(ty: &Type) -> (Vec<Wrap>, Option<String>) {
 }
 
 /// Returns the last path-segment identifier of a type, ignoring generics.
-pub(crate) fn base_ident(ty: &Type) -> Option<String> {
+pub fn base_ident(ty: &Type) -> Option<String> {
     match ty {
         Type::Path(path) => path.path.segments.last().map(|s| s.ident.to_string()),
         _ => None,
     }
 }
 
-pub(crate) fn is_public(vis: &syn::Visibility) -> bool {
+/// Reports whether an item is `pub`.
+pub fn is_public(vis: &syn::Visibility) -> bool {
     matches!(vis, syn::Visibility::Public(_))
 }
 
 /// Reconstructs the technical-indicator structs hidden behind a declarative macro.
-pub(crate) fn technical_indicator_structs(
+pub fn technical_indicator_structs(
     file: &syn::File,
     module_path: &[String],
-) -> Result<Vec<StructDef>, BoxError> {
+) -> Result<Vec<StructDef>, DiscoverError> {
     let mut defs = Vec::new();
     for item in &file.items {
         let Item::Macro(item) = item else { continue };
@@ -68,7 +69,7 @@ pub(crate) fn technical_indicator_structs(
             .map(|part| part.trim().to_string())
             .collect();
         if parts.len() != 3 {
-            return Err(format!("unexpected technical_indicator_row args: {tokens}").into());
+            return Err(DiscoverError::MacroArgs(tokens));
         }
         let name = parts[0].clone();
         let metric = parts[1].clone();
@@ -84,12 +85,12 @@ pub(crate) fn technical_indicator_structs(
         ] {
             fields.push(FieldDef {
                 name: field_name.to_string(),
-                ty: syn::parse_str::<Type>(field_ty)?,
+                ty: parse_type(field_ty)?,
             });
         }
         fields.push(FieldDef {
             name: metric,
-            ty: syn::parse_str::<Type>(&metric_type)?,
+            ty: parse_type(&metric_type)?,
         });
         defs.push(StructDef {
             name,
@@ -100,44 +101,15 @@ pub(crate) fn technical_indicator_structs(
     Ok(defs)
 }
 
-/// Maps a libfmp field name to a valid, non-reserved Python identifier.
-///
-/// The libfmp name may be a Rust raw identifier (`r#yield`); the `r#` prefix is
-/// stripped first, then a trailing underscore is appended when the base collides
-/// with a Python keyword or is not a valid Python identifier. The original name
-/// is retained separately for libfmp field access.
-pub(crate) fn python_safe_ident(name: &str) -> String {
-    let base = name.strip_prefix("r#").unwrap_or(name);
-    if is_python_keyword(base) || !is_valid_python_ident(base) {
-        format!("{base}_")
-    } else {
-        base.to_string()
-    }
-}
-
-/// Reports whether a name is a Python hard or soft keyword.
-fn is_python_keyword(name: &str) -> bool {
-    const KEYWORDS: &[&str] = &[
-        "False", "None", "True", "and", "as", "assert", "async", "await", "break", "class",
-        "continue", "def", "del", "elif", "else", "except", "finally", "for", "from", "global",
-        "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return",
-        "try", "while", "with", "yield", "match", "case", "type",
-    ];
-    KEYWORDS.contains(&name)
-}
-
-/// Reports whether a name is a syntactically valid Python identifier.
-fn is_valid_python_ident(name: &str) -> bool {
-    let mut chars = name.chars();
-    match chars.next() {
-        Some(first) if first == '_' || first.is_ascii_alphabetic() => {}
-        _ => return false,
-    }
-    chars.all(|c| c == '_' || c.is_ascii_alphanumeric())
+fn parse_type(text: &str) -> Result<Type, DiscoverError> {
+    syn::parse_str::<Type>(text).map_err(|source| DiscoverError::MacroType {
+        text: text.to_string(),
+        source,
+    })
 }
 
 /// Derives a module path from a response file's location.
-pub(crate) fn module_path_for(file: &Path, root: &Path) -> Vec<String> {
+pub fn module_path_for(file: &Path, root: &Path) -> Vec<String> {
     let rel = file.strip_prefix(root).unwrap_or(file);
     let mut comps: Vec<String> = rel
         .components()
@@ -153,10 +125,18 @@ pub(crate) fn module_path_for(file: &Path, root: &Path) -> Vec<String> {
 }
 
 /// Recursively collects every `.rs` file under a directory.
-pub(crate) fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) -> Result<(), BoxError> {
-    for entry in fs::read_dir(dir)? {
-        let entry = entry?;
-        let path = entry.path();
+pub fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) -> Result<(), DiscoverError> {
+    let entries = fs::read_dir(dir).map_err(|source| DiscoverError::Io {
+        path: dir.to_path_buf(),
+        source,
+    })?;
+    for entry in entries {
+        let path = entry
+            .map_err(|source| DiscoverError::Io {
+                path: dir.to_path_buf(),
+                source,
+            })?
+            .path();
         if path.is_dir() {
             collect_rust_files(&path, out)?;
         } else if path.extension().and_then(|ext| ext.to_str()) == Some("rs") {
