@@ -77,14 +77,14 @@ pub struct SecCompanyProfile {
     pub open_figi_composite: String,
     pub price_currency: CurrencyCode,
     pub market_sector: Sector,
-    #[serde(deserialize_with = "deserialize_nullable")]
+    #[serde(deserialize_with = "required_option")]
     pub security_type: Option<DynamicJson>,
     pub is_etf: bool,
     pub is_adr: bool,
     pub is_fund: bool,
 }
 
-fn deserialize_nullable<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
 where
     D: serde::Deserializer<'de>,
     T: Deserialize<'de>,

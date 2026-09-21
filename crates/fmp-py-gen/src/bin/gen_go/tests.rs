@@ -193,6 +193,16 @@ fn unmapped_types_fail_naming_the_struct_and_field() {
             "default",
         ),
         (
+            "defaulted_codec",
+            "Option<f64>",
+            FieldAttrs {
+                default: true,
+                deserialize_with: Some("required_option".to_string()),
+                ..FieldAttrs::default()
+            },
+            "default",
+        ),
+        (
             "never_none",
             "f64",
             skip_serializing_if("Option::is_none"),
@@ -211,6 +221,45 @@ fn unmapped_types_fail_naming_the_struct_and_field() {
         assert!(error.starts_with(&format!("Row.{name}: ")), "{error}");
         assert!(error.contains(expected), "{name}: {error}");
     }
+}
+
+/// `#[serde(default)]` on a plain `Option<_>` field changes nothing: serde
+/// already reads a missing key as `None`, and `None` still serializes as
+/// null, so the member keeps the pointer shadow without `omitzero`.
+#[test]
+fn serde_default_on_a_plain_option_keeps_the_pointer_shadow() {
+    let aliases = BTreeMap::new();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let def = row(vec![field(
+        "has_financials",
+        "Option<bool>",
+        FieldAttrs {
+            default: true,
+            ..FieldAttrs::default()
+        },
+    )]);
+    let mapped = table.go_field(&def, &def.fields[0]).expect("maps");
+    assert_eq!(
+        (
+            mapped.name.as_str(),
+            mapped.wire.as_str(),
+            mapped.public_ty.as_str(),
+            mapped.shadow_ty.as_str(),
+            mapped.codec,
+            mapped.required_key(),
+            mapped.omit_none,
+        ),
+        (
+            "HasFinancials",
+            "hasFinancials",
+            "*bool",
+            "*bool",
+            Codec::Plain,
+            false,
+            false
+        )
+    );
 }
 
 #[test]

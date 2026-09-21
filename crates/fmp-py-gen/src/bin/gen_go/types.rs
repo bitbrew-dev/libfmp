@@ -88,9 +88,9 @@ impl<'a> TypeTable<'a> {
     pub(crate) fn go_field(&self, def: &StructDef, field: &FieldDef) -> Result<GoField, String> {
         let label = format!("{}.{}", def.name, field.name);
         let fail = |message: String| format!("{label}: {message}");
-        if field.attrs.skip || field.attrs.flatten || field.attrs.default {
+        if field.attrs.skip || field.attrs.flatten {
             return Err(fail(
-                "serde skip, flatten, and default are not supported by gen_go".to_string(),
+                "serde skip and flatten are not supported by gen_go".to_string(),
             ));
         }
         let (wraps, ident) = peel(&field.ty);
@@ -102,6 +102,18 @@ impl<'a> TypeTable<'a> {
             return Err(fail("nested Option<Option<_>> has no Go shape".to_string()));
         }
         let optional = wraps.first() == Some(&Wrap::Option);
+        let codec_attr = field
+            .attrs
+            .with
+            .as_deref()
+            .or(field.attrs.deserialize_with.as_deref());
+        if field.attrs.default && (!optional || codec_attr.is_some()) {
+            return Err(fail(
+                "serde default is only supported on a plain Option<_> field, where a missing \
+                 key is None with or without the attribute; any other default has no Go shape"
+                    .to_string(),
+            ));
+        }
         let omit_none = match field.attrs.skip_serializing_if.as_deref() {
             None => false,
             Some("Option::is_none") if optional => true,
@@ -122,11 +134,6 @@ impl<'a> TypeTable<'a> {
         let wire = field.wire_name(def.rename_all.as_deref());
         let public_ty = wrap(&wraps, &base.go);
 
-        let codec_attr = field
-            .attrs
-            .with
-            .as_deref()
-            .or(field.attrs.deserialize_with.as_deref());
         let (codec, shadow_ty) = match (codec_attr, base.kind, wraps.as_slice()) {
             (
                 Some("required_option"),
