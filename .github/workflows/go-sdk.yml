@@ -1,0 +1,52 @@
+name: Go SDK
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sdk/go/**'
+      - 'scripts/check_go_sdk.sh'
+      - '.github/workflows/go-sdk.yml'
+      - 'crates/libfmp/tests/fixtures/**'
+  push:
+    branches: [main]
+    paths:
+      - 'sdk/go/**'
+      - 'scripts/check_go_sdk.sh'
+      - '.github/workflows/go-sdk.yml'
+      - 'crates/libfmp/tests/fixtures/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: go sdk (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v5
+
+      - name: set up the go version pinned in sdk/go/go.mod
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: sdk/go/go.mod
+          cache: false
+
+      - name: install golangci-lint v2
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.13.2
+          install-only: true
+
+      - name: run the go sdk checks
+        run: bash scripts/check_go_sdk.sh

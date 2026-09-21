@@ -1,0 +1,21 @@
+version: "2"
+
+# Small explicit set (ADR 0030, "Verification gates"). Generated files carry the
+# `// Code generated ... DO NOT EDIT.` header and are excluded automatically.
+linters:
+  default: none
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - misspell
+    - errorlint
+  settings:
+    misspell:
+      locale: US
+
+formatters:
+  enable:
+    - gofmt

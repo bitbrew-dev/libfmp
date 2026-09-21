@@ -24,7 +24,7 @@ jobs:
       packages: read
     secrets: inherit
     with:
-      prek_skip: fmt,check,clippy,test
+      prek_skip: fmt,check,clippy,test,go-sdk-tests
 
   check-change-files:
     name: check-changed-files
