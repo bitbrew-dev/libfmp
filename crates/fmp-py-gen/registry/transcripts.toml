@@ -1,0 +1,36 @@
+# Endpoint registry for the `transcripts` domain, reached from Python as
+# `client.transcripts`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "latest_earnings_transcripts"
+method = "latest_earnings_transcripts"
+query = "LatestEarningsTranscriptsQuery"
+response = "transcripts::LatestEarningsTranscript"
+doc = "Retrieves the latest worldwide earnings-transcript metadata."
+args = [
+    { name = "limit", kind = "limit", required = false },
+    { name = "page", kind = "page", required = false },
+]
+setters = [{ arg = "limit" }, { arg = "page" }]
+
+[[endpoint]]
+name = "earnings_transcript"
+method = "earnings_transcript"
+query = "EarningsTranscriptQuery"
+response = "transcripts::EarningsTranscript"
+doc = "Retrieves complete worldwide earnings-call transcripts."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "quarter", kind = "quarter" },
+    { name = "limit", kind = "limit", required = false },
+]
+setters = [{ arg = "limit" }]
+
+[[endpoint]]
+name = "earnings_transcript_dates"
+method = "earnings_transcript_dates"
+query = "EarningsTranscriptDatesQuery"
+response = "transcripts::EarningsTranscriptDate"
+doc = "Retrieves available worldwide transcript dates for one ticker."
+args = [{ name = "symbol", kind = "ticker" }]
