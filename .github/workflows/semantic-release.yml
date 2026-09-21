@@ -116,3 +116,68 @@ jobs:
         # then uncomment the override below (and remove it for the real publish):
         # with:
         #   repository-url: https://test.pypi.org/legacy/
+
+  publish-go-tag:
+    name: tag the Go module (sdk/go/vX.Y.Z)
+    needs: [semantic-release, publish-crate, publish-pypi]
+    if: ${{ needs.semantic-release.outputs.new_release == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # push the sdk/go/vX.Y.Z tag with the workflow token
+    env:
+      VER: ${{ needs.semantic-release.outputs.new_release_tag }}
+    steps:
+      - name: checkout the released tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.semantic-release.outputs.new_release_tag }}
+      - name: assert the checkout carries the Go module at the release version
+        shell: bash
+        run: |
+          test -f sdk/go/go.mod || { echo "sdk/go/go.mod is missing at ${VER}"; exit 1; }
+          grep -qF 'module github.com/bitbrew-dev/libfmp/sdk/go' sdk/go/go.mod || { echo "sdk/go/go.mod does not declare the expected module path"; exit 1; }
+          grep -qxF "const Version = \"${VER}\"" sdk/go/version.go || {
+            echo "sdk/go/version.go does not carry Version = \"${VER}\" at the release commit; the Go tag cannot be created (the release commit must include the set-version.sh output)"
+            grep -n 'const Version' sdk/go/version.go
+            exit 1
+          }
+      - name: create and push sdk/go/v${{ needs.semantic-release.outputs.new_release_tag }}
+        shell: bash
+        run: |
+          GO_TAG="sdk/go/v${VER}"
+          commit="$(git rev-parse HEAD)"
+          # Idempotent: an existing tag at this commit is a no-op (a rerun of
+          # the workflow); one at another commit is never moved, because the
+          # module proxy serves a fetched version forever.
+          if git ls-remote --exit-code --tags origin "refs/tags/${GO_TAG}" >/dev/null; then
+            git fetch --no-tags origin "refs/tags/${GO_TAG}:refs/tags/${GO_TAG}"
+            existing="$(git rev-parse "refs/tags/${GO_TAG}^{commit}")"
+            if [[ "${existing}" == "${commit}" ]]; then
+              echo "${GO_TAG} already points at ${commit}; nothing to do"
+              exit 0
+            fi
+            echo "${GO_TAG} already exists at ${existing}, not ${commit}; refusing to move it"
+            exit 1
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${GO_TAG}" -m "Go module github.com/bitbrew-dev/libfmp/sdk/go v${VER} (release ${VER})" "${commit}"
+          git push origin "refs/tags/${GO_TAG}"
+          echo "pushed ${GO_TAG} at ${commit}"
+      - name: set up the go version pinned in sdk/go/go.mod
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: sdk/go/go.mod
+          cache: false
+      - name: resolve the version through the public module proxy
+        shell: bash
+        # This fetch makes proxy.golang.org cache sdk/go/v${VER}; from here on
+        # the version is immutable. The tag is already pushed, so a proxy
+        # timeout here is safe to rerun: the previous step is idempotent.
+        env:
+          GOPROXY: https://proxy.golang.org
+          GONOSUMDB: "*"
+          GOFLAGS: -mod=mod
+        run: |
+          cd "${RUNNER_TEMP}"
+          go list -m "github.com/bitbrew-dev/libfmp/sdk/go@v${VER}"
