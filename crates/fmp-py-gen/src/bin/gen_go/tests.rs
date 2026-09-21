@@ -496,6 +496,11 @@ fn unsupported_arg_kinds_name_the_helper_to_add() {
         error.contains("`open_economic_indicator`") && error.contains("openEconomicIndicatorParam"),
         "{error}"
     );
+    let quarter = arg_kind_go(ArgKind::Quarter).expect("wire enum");
+    assert_eq!(
+        (quarter.go_type, quarter.helper),
+        ("Quarter", "quarterParam")
+    );
     let error = arg_kind_go(ArgKind::DateRange).expect_err("date_range is deferred");
     assert!(
         error.contains("`date_range`") && error.contains("dateRangeParam"),
