@@ -1,0 +1,82 @@
+# Endpoint registry for the `dcf` domain, reached from Python as
+# `client.dcf`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+#
+# The two custom routes take `CustomDcfQuery::new(symbol, assumptions)`; the
+# `DcfAssumptions` builder is declared `nested` so its eighteen setters become
+# keyword-only parameters, listed here in the order the query encodes them.
+
+[[endpoint]]
+name = "discounted_cash_flow"
+method = "discounted_cash_flow"
+query = "DcfQuery"
+response = "dcf::DcfValuation"
+doc = "Retrieves the standard discounted-cash-flow valuation for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "levered_discounted_cash_flow"
+method = "levered_discounted_cash_flow"
+query = "DcfQuery"
+response = "dcf::DcfValuation"
+doc = "Retrieves the levered discounted-cash-flow valuation for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "custom_discounted_cash_flow"
+method = "custom_discounted_cash_flow"
+query = "CustomDcfQuery"
+response = "dcf::CustomDcfValuation"
+doc = "Retrieves a custom unlevered discounted-cash-flow valuation."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "assumptions", nested = { type = "DcfAssumptions", setters = [
+        { arg = "revenue_growth_pct", kind = "finite_decimal" },
+        { arg = "ebitda_pct", kind = "finite_decimal" },
+        { arg = "depreciation_and_amortization_pct", kind = "finite_decimal" },
+        { arg = "cash_and_short_term_investments_pct", kind = "finite_decimal" },
+        { arg = "receivables_pct", kind = "finite_decimal" },
+        { arg = "inventories_pct", kind = "finite_decimal" },
+        { arg = "payable_pct", kind = "finite_decimal" },
+        { arg = "ebit_pct", kind = "finite_decimal" },
+        { arg = "capital_expenditure_pct", kind = "finite_decimal" },
+        { arg = "operating_cash_flow_pct", kind = "finite_decimal" },
+        { arg = "selling_general_and_administrative_expenses_pct", kind = "finite_decimal" },
+        { arg = "tax_rate", kind = "finite_decimal" },
+        { arg = "long_term_growth_rate", kind = "finite_decimal" },
+        { arg = "cost_of_debt", kind = "finite_decimal" },
+        { arg = "cost_of_equity", kind = "finite_decimal" },
+        { arg = "market_risk_premium", kind = "finite_decimal" },
+        { arg = "beta", kind = "finite_decimal" },
+        { arg = "risk_free_rate", kind = "finite_decimal" },
+    ] } },
+]
+
+[[endpoint]]
+name = "custom_levered_discounted_cash_flow"
+method = "custom_levered_discounted_cash_flow"
+query = "CustomDcfQuery"
+response = "dcf::CustomLeveredDcfValuation"
+doc = "Retrieves a custom levered discounted-cash-flow valuation."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "assumptions", nested = { type = "DcfAssumptions", setters = [
+        { arg = "revenue_growth_pct", kind = "finite_decimal" },
+        { arg = "ebitda_pct", kind = "finite_decimal" },
+        { arg = "depreciation_and_amortization_pct", kind = "finite_decimal" },
+        { arg = "cash_and_short_term_investments_pct", kind = "finite_decimal" },
+        { arg = "receivables_pct", kind = "finite_decimal" },
+        { arg = "inventories_pct", kind = "finite_decimal" },
+        { arg = "payable_pct", kind = "finite_decimal" },
+        { arg = "ebit_pct", kind = "finite_decimal" },
+        { arg = "capital_expenditure_pct", kind = "finite_decimal" },
+        { arg = "operating_cash_flow_pct", kind = "finite_decimal" },
+        { arg = "selling_general_and_administrative_expenses_pct", kind = "finite_decimal" },
+        { arg = "tax_rate", kind = "finite_decimal" },
+        { arg = "long_term_growth_rate", kind = "finite_decimal" },
+        { arg = "cost_of_debt", kind = "finite_decimal" },
+        { arg = "cost_of_equity", kind = "finite_decimal" },
+        { arg = "market_risk_premium", kind = "finite_decimal" },
+        { arg = "beta", kind = "finite_decimal" },
+        { arg = "risk_free_rate", kind = "finite_decimal" },
+    ] } },
+]
