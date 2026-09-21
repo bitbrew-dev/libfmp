@@ -1,6 +1,6 @@
 # Release validation
 
-The Rust crate and Python distribution share their version through `workspace.package.version`. The Python wheel must report distribution name `fmp-py-sdk`; its import package is `fmp` and its private extension is `fmp._native`.
+The Rust crate, the Python distribution, and the Go module share their version through `workspace.package.version`; `scripts/set-version.sh` writes it to `Cargo.toml`, `Cargo.lock`, and `sdk/go/version.go` on every release. The Python wheel must report distribution name `fmp-py-sdk`; its import package is `fmp` and its private extension is `fmp._native`.
 
 ## License
 
@@ -58,3 +58,16 @@ An exact package response means the name is registered. A not-found response ind
 - Unresolved upstream response gaps: point at the `deferred` and `raw` rows of the same table and at the open hardening issue (#40) so users know which documented ambiguities are mirrored verbatim rather than corrected.
 
 Regenerate the coverage table before tagging when the registry changed (`python3 scripts/gen-endpoint-coverage.py --oracle artifacts/documentations/outer.md`) so the linked rows match the release.
+
+## Go module checklist
+
+The `publish-go-tag` job of `semantic-release.yml` runs after the crates.io and PyPI jobs of the same user-dispatched run. It checks out the release tag (`X.Y.Z`, no `v`), asserts that `sdk/go/go.mod` exists and that `sdk/go/version.go` carries `Version = "X.Y.Z"` at that commit, then creates the annotated tag `sdk/go/vX.Y.Z` there and pushes it. Go requires the `sdk/go/` prefix for a module in a subdirectory ([Mapping versions to commits](https://go.dev/ref/mod#vcs-version)); the module version itself is `vX.Y.Z`. The job never creates a second GitHub release and never moves an existing tag: a rerun that finds `sdk/go/vX.Y.Z` at the release commit is a no-op, and one that finds it elsewhere fails. Its last step resolves the version through `proxy.golang.org`, which caches it; from then on the version is immutable, so a failed version can only be superseded by a new release. A proxy timeout in that step is safe to rerun.
+
+The first `sdk/go/v*` tag is a user decision: it is created by the first release the user dispatches after the plumbing merged, and nothing else pushes one.
+
+After the run finishes:
+
+- Verify the tag sits on the release commit: `git ls-remote --tags origin 'refs/tags/sdk/go/vX.Y.Z*'` lists the tag and its peeled commit; the peeled commit must equal `git rev-list -n 1 X.Y.Z`.
+- Verify the proxy serves it: `GOPROXY=https://proxy.golang.org go list -m -versions github.com/bitbrew-dev/libfmp/sdk/go` must list `vX.Y.Z`, and `go list -m github.com/bitbrew-dev/libfmp/sdk/go@vX.Y.Z` must print the same version. Run both from a directory without a `go.mod`.
+- Verify `go test ./...` from `sdk/go` at the tag passes `TestVersionMatchesWorkspace`, which compares `Version` with `Cargo.toml`.
+- Remember that the served version is immutable: a wrong tag is fixed by the next release, never by retagging.
