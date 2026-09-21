@@ -12,7 +12,7 @@ use crate::bindings::{
     Binding, build_bindings, render_client_namespaces, render_facade_domains,
     render_namespaces_mod, render_registration,
 };
-use crate::emit::{EmitError, EntryModules, QueryModules, Rendered, render};
+use crate::emit::{EmitError, EntryModules, QueryModules, Rendered, humanize, render};
 use crate::models::scan_models;
 use crate::plan::{Node, build_tree, struct_name_for};
 use crate::query_modules;
@@ -82,6 +82,51 @@ fn quote_registry_renders_the_drop_in_namespace() {
     }
     assert!(!quote.contains("#[getter]"));
     assert!(!quote.contains("BinaryPayload"));
+}
+
+#[test]
+fn multi_word_namespaces_render_humanised_docstrings() {
+    let files = render_all(&manifest().join("registry"));
+    let insider = source(&files, "insider_trading.rs");
+    assert!(insider.contains(
+        "/// Insider trading endpoints for a single client, exposed as `client.insider_trading`."
+    ));
+    let income = source(&files, "statements/income.rs");
+    assert!(income.contains(
+        "/// Statements income endpoints for a single client, exposed as `client.statements.income`."
+    ));
+    for file in files.values() {
+        let heading = file
+            .source
+            .lines()
+            .find_map(|line| line.split_once(" endpoints for a single client"))
+            .map(|(prose, _)| prose)
+            .expect("every namespace carries the struct docstring");
+        assert!(
+            !heading.contains('_'),
+            "underscore leaked into a docstring: {heading}"
+        );
+    }
+}
+
+#[test]
+fn humanize_spaces_underscores_and_capitalises_once() {
+    let path = |segments: &[&str]| segments.iter().map(|s| (*s).to_owned()).collect::<Vec<_>>();
+    assert_eq!(humanize(&path(&["quote"])), "Quote");
+    assert_eq!(humanize(&path(&["insider_trading"])), "Insider trading");
+    assert_eq!(
+        humanize(&path(&["commitment_of_traders"])),
+        "Commitment of traders"
+    );
+    assert_eq!(
+        humanize(&path(&["statements", "income"])),
+        "Statements income"
+    );
+    assert_eq!(
+        humanize(&path(&["market_hours", "all"])),
+        "Market hours all"
+    );
+    assert_eq!(humanize(&[]), "");
 }
 
 #[test]
