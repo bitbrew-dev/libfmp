@@ -17,6 +17,7 @@ pub(crate) mod indexes;
 pub(crate) mod insider_trading;
 pub(crate) mod institutional_ownership;
 pub(crate) mod market;
+pub(crate) mod market_hours;
 pub(crate) mod news;
 pub(crate) mod quote;
 pub(crate) mod screener;

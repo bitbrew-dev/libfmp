@@ -7,6 +7,7 @@ import typing
 __all__ = [
     "ExchangeHoliday",
     "ExchangeMarketHours",
+    "MarketHoursNamespace",
 ]
 
 
@@ -60,3 +61,35 @@ class ExchangeMarketHours:
         is_market_open: builtins.bool,
     ) -> ExchangeMarketHours: ...
     def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class MarketHoursNamespace:
+    r"""
+    Market_hours endpoints for a single client, exposed as `client.market_hours`.
+    """
+
+    def exchange_market_hours(
+        self, exchange: builtins.str, *, timestamp: typing.Optional[builtins.str] = None
+    ) -> builtins.list[ExchangeMarketHours]:
+        r"""
+        Retrieves trading hours for one exchange.
+        """
+
+    def holidays_by_exchange(
+        self,
+        exchange: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[ExchangeHoliday]:
+        r"""
+        Retrieves holidays for one exchange.
+        """
+
+    def all_exchange_market_hours(
+        self, *, timestamp: typing.Optional[builtins.str] = None
+    ) -> builtins.list[ExchangeMarketHours]:
+        r"""
+        Retrieves trading hours for all exchanges.
+        """
