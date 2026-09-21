@@ -1,0 +1,27 @@
+# Endpoint registry for the `esg` domain, reached from Python as
+# `client.esg`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
+
+[[endpoint]]
+name = "disclosures"
+method = "esg_disclosures"
+query = "EsgSymbolQuery"
+response = "esg::EsgDisclosure"
+doc = "Retrieves ESG disclosure filings for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "ratings"
+method = "esg_ratings"
+query = "EsgSymbolQuery"
+response = "esg::EsgRating"
+doc = "Retrieves ESG ratings for one company."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[endpoint]]
+name = "benchmark"
+method = "esg_benchmark"
+query = "EsgBenchmarkQuery"
+response = "esg::EsgBenchmark"
+doc = "Retrieves sector ESG benchmarks, optionally for one provider year string."
+args = [{ name = "year", kind = "benchmark_year", required = false }]
+setters = [{ arg = "year" }]
