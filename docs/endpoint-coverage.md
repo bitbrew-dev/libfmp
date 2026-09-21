@@ -104,17 +104,17 @@ served by the single method that owns the path:
 | `company` | `company.executive_compensation` | `executive_compensation` | supported |  |
 | `company` | `company.executive_compensation_benchmark` | `executive_compensation_benchmark` | supported |  |
 | `screener` | `screener.companies` | `company_screener` | supported |  |
-| `quote` | `quote.full` | `quote` | supported | Nasdaq rows are 15-minute delayed unless the user declaration is on file |
-| `quote` | `quote.short` | `quote_short` | supported |  |
+| `quote` | `quote.full` | `quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.short` | `quote_short` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.mutual_funds` | `mutual_fund_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
-| `quote` | `quote.aftermarket_trade` | `aftermarket_trade` | supported |  |
-| `quote` | `quote.aftermarket_quote` | `aftermarket_quote` | supported |  |
+| `quote` | `quote.aftermarket_trade` | `aftermarket_trade` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.aftermarket_quote` | `aftermarket_quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.stock_price_change` | `stock_price_change` | supported |  |
-| `quote` | `quote.batch_quote` | `batch_quote` | supported |  |
-| `quote` | `quote.batch_quote_short` | `batch_quote_short` | supported |  |
-| `quote` | `quote.batch_aftermarket_trade` | `batch_aftermarket_trade` | supported |  |
-| `quote` | `quote.batch_aftermarket_quote` | `batch_aftermarket_quote` | supported |  |
-| `quote` | `quote.exchange` | `exchange_quotes` | supported |  |
+| `quote` | `quote.batch_quote` | `batch_quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch_quote_short` | `batch_quote_short` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch_aftermarket_trade` | `batch_aftermarket_trade` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch_aftermarket_quote` | `batch_aftermarket_quote` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.exchange` | `exchange_quotes` | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.etfs` | `etf_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
 | `quote` | `quote.commodities` | `commodity_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
 | `quote` | `quote.cryptocurrencies` | `cryptocurrency_quotes` | gated | fixed `short=true`; the undocumented `short=false` universe is not exposed |
