@@ -132,6 +132,10 @@ pub fn stock_chart_dividend_adjusted(
 
 impl Client {
     /// Retrieves compact worldwide end-of-day stock chart rows.
+    ///
+    /// The documented 5,000-row maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_response_rows`](super::metadata::EndpointBounds::accepts_response_rows)
+    /// for optional preflight validation.
     pub async fn stock_chart_light(
         &self,
         query: impl Into<StockChartEodQuery>,
@@ -140,6 +144,10 @@ impl Client {
     }
 
     /// Retrieves detailed worldwide end-of-day stock chart rows.
+    ///
+    /// The documented 5,000-row maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_response_rows`](super::metadata::EndpointBounds::accepts_response_rows)
+    /// for optional preflight validation.
     pub async fn stock_chart_full(
         &self,
         query: impl Into<StockChartEodQuery>,
@@ -148,6 +156,10 @@ impl Client {
     }
 
     /// Retrieves split-unadjusted worldwide end-of-day stock chart rows.
+    ///
+    /// The documented 5,000-row maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_response_rows`](super::metadata::EndpointBounds::accepts_response_rows)
+    /// for optional preflight validation.
     pub async fn stock_chart_non_split_adjusted(
         &self,
         query: impl Into<StockChartEodQuery>,
@@ -157,6 +169,10 @@ impl Client {
     }
 
     /// Retrieves dividend-adjusted worldwide end-of-day stock chart rows.
+    ///
+    /// The documented 5,000-row maximum is advisory metadata. Use
+    /// [`EndpointBounds::accepts_response_rows`](super::metadata::EndpointBounds::accepts_response_rows)
+    /// for optional preflight validation.
     pub async fn stock_chart_dividend_adjusted(
         &self,
         query: impl Into<StockChartEodQuery>,
