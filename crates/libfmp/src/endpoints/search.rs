@@ -1,9 +1,9 @@
 //! Symbol, name, identifier, and exchange-variant search endpoints.
 //!
-//! The reserved Python surface for a future binding is `fmp.search`, with
-//! `FmpClient.search_symbol`, `search_name`, `search_cik`, `search_cusip`,
-//! `search_isin`, and `search_exchange_variants` methods and matching response
-//! model names. This crate does not implement those Python bindings.
+//! The provider documents CIK search as available for US-based companies only
+//! and the other five routes as worldwide, so each descriptor carries the
+//! matching [`GeographicAvailability`]. The Python binding exposes the same
+//! six routes under `client.search`.
 
 use crate::{
     Client, Result,
