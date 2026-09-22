@@ -10,8 +10,8 @@ import (
 
 // Opt-in live tests against the real provider and a production proxy route,
 // mirroring crates/libfmp/tests/live_opt_in.rs. Every TestLive* test skips
-// unless FMP_LIVE_TESTS is exactly 1 and its variables are set, so the default
-// gate never opens a socket. Run them explicitly from sdk/go:
+// unless FMP_LIVE_TESTS is 1 (after trimming) and its variables are set, so the
+// default gate never opens a socket. Run them explicitly from sdk/go:
 //
 //	FMP_LIVE_TESTS=1 FMP_API_KEY=... go test -run 'TestLive' -count=1 ./...
 //
@@ -19,8 +19,9 @@ import (
 // is sent as "X-Proxy-Token: Bearer <token>", FMP_PROXY_PATH_PREFIX overrides
 // the router/stable prefix, and FMP_TENANT adds the X-Tenant header when set.
 // Values are read from the environment, handed to the client, and never
-// formatted: on failure the helpers prove the error text does not contain
-// them before the test fails with that redacted text.
+// formatted by the tests: on failure the helpers prove the error text does
+// not contain the credential (the API key or the proxy token, as in the Rust
+// file) before the test fails with that text.
 const (
 	liveSwitchEnv          = "FMP_LIVE_TESTS"
 	liveAPIKeyEnv          = EnvAPIKey
@@ -66,8 +67,8 @@ func liveEnv(t *testing.T, names ...string) []string {
 }
 
 // liveAssertNoLeak fails with a fixed message when text contains any of the
-// configured secrets. Empty secrets are ignored because every string contains
-// the empty string.
+// credentials. Empty secrets are ignored because every string contains the
+// empty string.
 func liveAssertNoLeak(t *testing.T, text string, secrets ...string) {
 	t.Helper()
 	for _, secret := range secrets {
@@ -90,7 +91,7 @@ func liveErrorText(err error) string {
 
 // liveQuoteShort requests the compact AAPL quote and returns the rows. The
 // client's formatted shape and, on failure, the error text are both proven
-// free of secrets before anything is reported.
+// free of the credential before anything is reported.
 func liveQuoteShort(t *testing.T, client *Client, secrets ...string) []QuoteShort {
 	t.Helper()
 	liveAssertNoLeak(t, fmt.Sprintf("%v %+v %#v", client, client, client), secrets...)
@@ -149,11 +150,11 @@ func TestLiveProductionProxyRouteReturnsQuoteShortRows(t *testing.T) {
 	}
 	client, err := NewClient(opts...)
 	if err != nil {
-		liveAssertNoLeak(t, liveErrorText(err), baseURL, token, tenant)
+		liveAssertNoLeak(t, liveErrorText(err), token)
 		t.Fatalf("NewClient: %v", err)
 	}
 
-	rows := liveQuoteShort(t, client, baseURL, token, tenant)
+	rows := liveQuoteShort(t, client, token)
 
 	liveAssertAppleRows(t, rows)
 }

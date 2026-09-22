@@ -172,8 +172,8 @@ prek run go-sdk-tests --all-files
 ### Live tests
 
 The opt-in live tests mirror `crates/libfmp/tests/live_opt_in.rs` and skip
-unless `FMP_LIVE_TESTS` is exactly `1`, so the gate above never opens a
-socket. Run them by hand from `sdk/go`:
+unless `FMP_LIVE_TESTS` is `1` (after trimming), so the gate above never
+opens a socket. Run them by hand from `sdk/go`:
 
 ```sh
 FMP_LIVE_TESTS=1 FMP_API_KEY=... go test -run 'TestLive' -count=1 ./...
