@@ -20,7 +20,12 @@ func metadataSample() EndpointMetadata {
 			Delay:           &MarketDataDelay{Minutes: 15, Scope: DelayScopeNasdaq},
 			UserDeclaration: UserDeclarationRequiredForRealtime,
 		},
-		Bounds: EndpointBounds{Limit: inclusiveMaximum(5000), ResponseRows: inclusiveMaximum(1000)},
+		Bounds: EndpointBounds{
+			Limit:         inclusiveMaximum(5000),
+			ResponseRows:  inclusiveMaximum(1000),
+			Page:          inclusiveMaximum(100),
+			DateRangeDays: inclusiveMaximum(90),
+		},
 	}
 }
 
@@ -69,7 +74,7 @@ func TestEndpointMetadataLabelsAreShortAndStable(t *testing.T) {
 		{RealtimeAccess{UserDeclaration: UserDeclarationRequiredForRealtime}, "declaration required-for-realtime"},
 		{EndpointBounds{Page: inclusiveMaximum(100), DateRangeDays: inclusiveMaximum(90)}, "page<=100, date_range_days<=90"},
 		{metadataSample(), "geography worldwide; access add-on TipRanks; plan Enterprise when history older than 3 years; " +
-			"realtime delay 15 minutes (nasdaq), declaration required-for-realtime; bounds limit<=5000, response_rows<=1000"},
+			"realtime delay 15 minutes (nasdaq), declaration required-for-realtime; bounds limit<=5000, response_rows<=1000, page<=100, date_range_days<=90"},
 	}
 	for _, tc := range cases {
 		if got := tc.value.String(); got != tc.want {
@@ -89,13 +94,16 @@ func TestEndpointMetadataCloneSharesNoPointer(t *testing.T) {
 		copied.Realtime == original.Realtime ||
 		copied.Realtime.Delay == original.Realtime.Delay ||
 		copied.Bounds.Limit == original.Bounds.Limit ||
-		copied.Bounds.ResponseRows == original.Bounds.ResponseRows {
+		copied.Bounds.ResponseRows == original.Bounds.ResponseRows ||
+		copied.Bounds.Page == original.Bounds.Page ||
+		copied.Bounds.DateRangeDays == original.Bounds.DateRangeDays {
 		t.Fatal("clone() shares a pointer with the original")
 	}
 	copied.ConditionalPlan.Plan = "Other"
 	copied.Realtime.Delay.Minutes = 1
 	*copied.Bounds.Limit = 1
-	if original.ConditionalPlan.Plan != "Enterprise" || original.Realtime.Delay.Minutes != 15 || *original.Bounds.Limit != 5000 {
+	*copied.Bounds.DateRangeDays = 1
+	if original.ConditionalPlan.Plan != "Enterprise" || original.Realtime.Delay.Minutes != 15 || *original.Bounds.Limit != 5000 || *original.Bounds.DateRangeDays != 90 {
 		t.Fatalf("mutating the clone changed the original: %s", original)
 	}
 	var zero EndpointMetadata
