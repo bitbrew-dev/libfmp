@@ -148,7 +148,8 @@ jobs:
           commit="$(git rev-parse HEAD)"
           # Idempotent: an existing tag at this commit is a no-op (a rerun of
           # the workflow); one at another commit is never moved, because the
-          # module proxy serves a fetched version forever.
+          # module proxy serves a fetched version forever once the repository
+          # is public.
           if git ls-remote --exit-code --tags origin "refs/tags/${GO_TAG}" >/dev/null; then
             git fetch --no-tags origin "refs/tags/${GO_TAG}:refs/tags/${GO_TAG}"
             existing="$(git rev-parse "refs/tags/${GO_TAG}^{commit}")"
@@ -169,11 +170,49 @@ jobs:
         with:
           go-version-file: sdk/go/go.mod
           cache: false
-      - name: resolve the version through the public module proxy
+      - name: detect repository visibility
+        id: visibility
         shell: bash
-        # This fetch makes proxy.golang.org cache sdk/go/v${VER}; from here on
-        # the version is immutable. The tag is already pushed, so a proxy
-        # timeout here is safe to rerun: the previous step is idempotent.
+        # workflow_dispatch does not guarantee github.event.repository.private,
+        # so ask the API. The value gates the proxy warm-up below.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          private="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .private)"
+          case "${private}" in
+            true|false) ;;
+            *) echo "unexpected visibility value '${private}' for ${GITHUB_REPOSITORY}"; exit 1 ;;
+          esac
+          echo "private=${private}" >> "$GITHUB_OUTPUT"
+          echo "${GITHUB_REPOSITORY} private=${private}"
+      - name: verify the tag resolves as a Go module (direct)
+        shell: bash
+        # Always runs: a direct VCS fetch with the workflow token proves the
+        # nested-module tag is well formed whether or not the repository is
+        # public. The token goes into a scratch git config, never into logs.
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GIT_CONFIG_GLOBAL: ${{ runner.temp }}/gitconfig-go-direct
+          GOPROXY: direct
+          GOPRIVATE: github.com/bitbrew-dev/*
+          GONOSUMDB: github.com/bitbrew-dev/*
+          GOFLAGS: -mod=mod
+        run: |
+          git config --global url."https://x-access-token:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+          cd "${RUNNER_TEMP}"
+          resolved="$(go list -m -f '{{.Version}}' "github.com/bitbrew-dev/libfmp/sdk/go@v${VER}")"
+          if [[ "${resolved}" != "v${VER}" ]]; then
+            echo "direct resolution returned '${resolved}', expected 'v${VER}'"
+            exit 1
+          fi
+          echo "github.com/bitbrew-dev/libfmp/sdk/go@${resolved} resolves directly"
+      - name: resolve the version through the public module proxy
+        if: steps.visibility.outputs.private == 'false'
+        shell: bash
+        # Public repository only: this fetch makes proxy.golang.org cache
+        # sdk/go/v${VER}; from here on the version is immutable. The tag is
+        # already pushed and verified directly, so a proxy timeout here is
+        # safe to rerun: the tag step is idempotent.
         env:
           GOPROXY: https://proxy.golang.org
           GONOSUMDB: "*"
@@ -181,3 +220,8 @@ jobs:
         run: |
           cd "${RUNNER_TEMP}"
           go list -m "github.com/bitbrew-dev/libfmp/sdk/go@v${VER}"
+      - name: note the skipped proxy warm-up
+        if: steps.visibility.outputs.private == 'true'
+        shell: bash
+        run: |
+          echo "::notice::repository is private; skipped proxy.golang.org warm-up, consumers need GOPRIVATE=github.com/bitbrew-dev/*"
