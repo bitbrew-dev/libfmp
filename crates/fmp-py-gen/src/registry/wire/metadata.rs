@@ -11,6 +11,16 @@
 //! never a silent default, so a refactor on the `libfmp` side cannot drop
 //! metadata unnoticed.
 
+use std::fmt;
+use std::str::FromStr;
+
+use syn::{Expr, ExprCall, ExprMethodCall, Lit};
+
+use super::collect::{Collected, ConstDef, ModulePath, string_literal, text};
+
+/// Deepest chain of const-to-const derivation the evaluator follows.
+const MAX_DEPTH: usize = 8;
+
 /// Geographic coverage, mirroring `libfmp::endpoints::metadata::GeographicAvailability`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum GeographicAvailability {
@@ -86,4 +96,390 @@ pub struct WireMetadata {
     pub conditional_plan: Option<ConditionalPlanRequirement>,
     pub realtime: Option<RealtimeAccess>,
     pub bounds: EndpointBounds,
+}
+
+/// Whether `expr` has the shape of an `EndpointMetadata` value: a builder
+/// chain rooted in `EndpointMetadata::new()` or in a bare const name. The
+/// shape says nothing about whether [`evaluate`] will succeed.
+pub(super) fn looks_like_metadata(expr: &Expr) -> bool {
+    match chain(expr).0 {
+        Expr::Path(path) => path.path.segments.len() == 1,
+        Expr::Call(call) => is_constructor(call, "EndpointMetadata", "new"),
+        _ => false,
+    }
+}
+
+/// Folds `expr`, written in `module`, into its metadata.
+pub(super) fn evaluate(
+    collected: &Collected,
+    module: &ModulePath,
+    expr: &Expr,
+) -> Result<WireMetadata, String> {
+    Evaluator { collected }.metadata(module, expr, 0)
+}
+
+struct Evaluator<'a> {
+    collected: &'a Collected,
+}
+
+impl Evaluator<'_> {
+    fn metadata(
+        &self,
+        module: &ModulePath,
+        expr: &Expr,
+        depth: usize,
+    ) -> Result<WireMetadata, String> {
+        if depth > MAX_DEPTH {
+            return Err(format!("metadata const chain deeper than {MAX_DEPTH}"));
+        }
+        let (root, calls) = chain(expr);
+        let mut metadata = match root {
+            Expr::Call(call) if is_constructor(call, "EndpointMetadata", "new") => {
+                no_args(call)?;
+                WireMetadata::default()
+            }
+            Expr::Path(_) => {
+                let (home, def) = self.constant(module, root, "EndpointMetadata")?;
+                self.metadata(home, &def.expr, depth + 1)?
+            }
+            other => {
+                return Err(format!(
+                    "not an `EndpointMetadata::new()` chain or a metadata const: {}",
+                    text(other)
+                ));
+            }
+        };
+        for call in calls {
+            let arg = single_arg(call)?;
+            match call.method.to_string().as_str() {
+                "with_geography" => {
+                    metadata.geography =
+                        variant(arg, "GeographicAvailability", |name| match name {
+                            "Worldwide" => Some(GeographicAvailability::Worldwide),
+                            "UsOnly" => Some(GeographicAvailability::UsOnly),
+                            "Unspecified" => Some(GeographicAvailability::Unspecified),
+                            _ => None,
+                        })?;
+                }
+                "with_access" => metadata.access = access(arg)?,
+                "with_conditional_plan" => {
+                    metadata.conditional_plan = Some(conditional_plan(arg)?);
+                }
+                "with_realtime" => metadata.realtime = Some(self.realtime(module, arg, depth)?),
+                "with_bounds" => metadata.bounds = bounds(arg)?,
+                other => {
+                    return Err(format!(
+                        "unsupported `EndpointMetadata` builder `{other}`: {}",
+                        text(call)
+                    ));
+                }
+            }
+        }
+        Ok(metadata)
+    }
+
+    /// `RealtimeAccess::new(Option<MarketDataDelay>, Option<UserDeclarationRequirement>)`
+    /// or a const holding one.
+    fn realtime(
+        &self,
+        module: &ModulePath,
+        expr: &Expr,
+        depth: usize,
+    ) -> Result<RealtimeAccess, String> {
+        if depth > MAX_DEPTH {
+            return Err(format!("realtime const chain deeper than {MAX_DEPTH}"));
+        }
+        match expr {
+            Expr::Path(_) => {
+                let (home, def) = self.constant(module, expr, "RealtimeAccess")?;
+                self.realtime(home, &def.expr, depth + 1)
+            }
+            Expr::Call(call) if is_constructor(call, "RealtimeAccess", "new") => {
+                let [delay, declaration] = call.args.iter().collect::<Vec<_>>()[..] else {
+                    return Err(format!(
+                        "`RealtimeAccess::new` takes two arguments: {}",
+                        text(call)
+                    ));
+                };
+                Ok(RealtimeAccess {
+                    delay: option(delay, market_data_delay)?,
+                    user_declaration: option(declaration, |expr| {
+                        variant(expr, "UserDeclarationRequirement", |name| match name {
+                            "RequiredForRealtime" => {
+                                Some(UserDeclarationRequirement::RequiredForRealtime)
+                            }
+                            _ => None,
+                        })
+                    })?,
+                })
+            }
+            other => Err(format!(
+                "realtime is not `RealtimeAccess::new(..)` or a const: {}",
+                text(other)
+            )),
+        }
+    }
+
+    /// The const a bare path names, in `module` or through its `use`
+    /// imports, checked against the type it was declared with.
+    fn constant<'c>(
+        &'c self,
+        module: &ModulePath,
+        expr: &Expr,
+        expected: &str,
+    ) -> Result<(&'c ModulePath, &'c ConstDef), String> {
+        let Expr::Path(path) = expr else {
+            return Err(format!("not a const path: {}", text(expr)));
+        };
+        let name = path
+            .path
+            .get_ident()
+            .map(ToString::to_string)
+            .ok_or_else(|| format!("not a bare const name: {}", text(expr)))?;
+        let (home, def) = self.collected.constant(module, &name).ok_or_else(|| {
+            format!(
+                "`{name}` is not a const in module `{}` or its `use` imports",
+                module.join("::")
+            )
+        })?;
+        if def.ty != expected {
+            return Err(format!(
+                "const `{name}` is declared as `{}`, not `{expected}`",
+                def.ty
+            ));
+        }
+        Ok((home, def))
+    }
+}
+
+/// `AccessRequirement::Standard`, `::Unspecified`, or `::NamedAddOn("..")`.
+fn access(expr: &Expr) -> Result<AccessRequirement, String> {
+    match expr {
+        Expr::Path(_) => variant(expr, "AccessRequirement", |name| match name {
+            "Standard" => Some(AccessRequirement::Standard),
+            "Unspecified" => Some(AccessRequirement::Unspecified),
+            _ => None,
+        }),
+        Expr::Call(call) if is_constructor(call, "AccessRequirement", "NamedAddOn") => {
+            let arg = one_of(call, "`AccessRequirement::NamedAddOn`")?;
+            string_literal(arg)
+                .map(AccessRequirement::NamedAddOn)
+                .ok_or_else(|| format!("add-on name is not a string literal: {}", text(arg)))
+        }
+        other => Err(format!(
+            "access is not an `AccessRequirement` variant: {}",
+            text(other)
+        )),
+    }
+}
+
+/// `ConditionalPlanRequirement::new("plan", PlanCondition::HistoryOlderThanYears(n))`.
+fn conditional_plan(expr: &Expr) -> Result<ConditionalPlanRequirement, String> {
+    let Expr::Call(call) = expr else {
+        return Err(format!(
+            "conditional plan is not `ConditionalPlanRequirement::new(..)`: {}",
+            text(expr)
+        ));
+    };
+    if !is_constructor(call, "ConditionalPlanRequirement", "new") {
+        return Err(format!(
+            "conditional plan is not `ConditionalPlanRequirement::new(..)`: {}",
+            text(expr)
+        ));
+    }
+    let [plan, condition] = call.args.iter().collect::<Vec<_>>()[..] else {
+        return Err(format!(
+            "`ConditionalPlanRequirement::new` takes two arguments: {}",
+            text(call)
+        ));
+    };
+    let plan = string_literal(plan)
+        .ok_or_else(|| format!("plan name is not a string literal: {}", text(plan)))?;
+    let years = match condition {
+        Expr::Call(call) if is_constructor(call, "PlanCondition", "HistoryOlderThanYears") => {
+            one_of(call, "`PlanCondition::HistoryOlderThanYears`")?
+        }
+        other => {
+            return Err(format!(
+                "unsupported `PlanCondition` variant: {}",
+                text(other)
+            ));
+        }
+    };
+    Ok(ConditionalPlanRequirement {
+        plan,
+        condition: PlanCondition::HistoryOlderThanYears(integer(years, "years")?),
+    })
+}
+
+/// `MarketDataDelay::new(minutes, DelayScope::Nasdaq)`.
+fn market_data_delay(expr: &Expr) -> Result<MarketDataDelay, String> {
+    let Expr::Call(call) = expr else {
+        return Err(format!(
+            "delay is not `MarketDataDelay::new(..)`: {}",
+            text(expr)
+        ));
+    };
+    if !is_constructor(call, "MarketDataDelay", "new") {
+        return Err(format!(
+            "delay is not `MarketDataDelay::new(..)`: {}",
+            text(expr)
+        ));
+    }
+    let [minutes, scope] = call.args.iter().collect::<Vec<_>>()[..] else {
+        return Err(format!(
+            "`MarketDataDelay::new` takes two arguments: {}",
+            text(call)
+        ));
+    };
+    Ok(MarketDataDelay {
+        minutes: integer(minutes, "delay minutes")?,
+        scope: variant(scope, "DelayScope", |name| match name {
+            "Nasdaq" => Some(DelayScope::Nasdaq),
+            _ => None,
+        })?,
+    })
+}
+
+/// `EndpointBounds::new()` followed by `with_limit`, `with_response_rows`,
+/// `with_page`, and `with_date_range_days` with integer literals.
+fn bounds(expr: &Expr) -> Result<EndpointBounds, String> {
+    let (root, calls) = chain(expr);
+    let mut bounds = match root {
+        Expr::Call(call) if is_constructor(call, "EndpointBounds", "new") => {
+            no_args(call)?;
+            EndpointBounds::default()
+        }
+        other => {
+            return Err(format!(
+                "bounds are not an `EndpointBounds::new()` chain: {}",
+                text(other)
+            ));
+        }
+    };
+    for call in calls {
+        let method = call.method.to_string();
+        let value = integer(single_arg(call)?, &method)?;
+        match method.as_str() {
+            "with_limit" => bounds.limit = Some(value),
+            "with_response_rows" => bounds.response_rows = Some(value),
+            "with_page" => bounds.page = Some(value),
+            "with_date_range_days" => bounds.date_range_days = Some(value),
+            other => {
+                return Err(format!(
+                    "unsupported `EndpointBounds` builder `{other}`: {}",
+                    text(call)
+                ));
+            }
+        }
+    }
+    Ok(bounds)
+}
+
+/// `None`, or `Some(inner)` folded with `parse`.
+fn option<T>(expr: &Expr, parse: impl Fn(&Expr) -> Result<T, String>) -> Result<Option<T>, String> {
+    match expr {
+        Expr::Path(path) if path.path.is_ident("None") => Ok(None),
+        Expr::Call(call) if call_segments(call).as_deref() == Some(&["Some".to_owned()][..]) => {
+            one_of(call, "`Some`").and_then(&parse).map(Some)
+        }
+        other => Err(format!("not `Some(..)` or `None`: {}", text(other))),
+    }
+}
+
+/// `Type::Variant` folded with `parse`, which rejects unknown variants.
+fn variant<T>(expr: &Expr, ty: &str, parse: impl Fn(&str) -> Option<T>) -> Result<T, String> {
+    let Expr::Path(path) = expr else {
+        return Err(format!("not a `{ty}` variant: {}", text(expr)));
+    };
+    let segments: Vec<String> = path
+        .path
+        .segments
+        .iter()
+        .map(|s| s.ident.to_string())
+        .collect();
+    match segments.as_slice() {
+        [head, name] if head == ty => {
+            parse(name).ok_or_else(|| format!("unsupported `{ty}::{name}`"))
+        }
+        _ => Err(format!("not a `{ty}` variant: {}", text(expr))),
+    }
+}
+
+/// An integer literal such as `5_000`, parsed into `N`.
+fn integer<N>(expr: &Expr, what: &str) -> Result<N, String>
+where
+    N: FromStr,
+    N::Err: fmt::Display,
+{
+    match expr {
+        Expr::Lit(literal) => match &literal.lit {
+            Lit::Int(value) => value
+                .base10_parse::<N>()
+                .map_err(|error| format!("{what} `{}` is out of range: {error}", value.token())),
+            other => Err(format!("{what} is not an integer literal: {}", text(other))),
+        },
+        other => Err(format!("{what} is not an integer literal: {}", text(other))),
+    }
+}
+
+/// The root of a builder chain and its method calls in application order.
+fn chain(expr: &Expr) -> (&Expr, Vec<&ExprMethodCall>) {
+    let mut calls = Vec::new();
+    let mut current = expr;
+    loop {
+        match current {
+            Expr::MethodCall(call) => {
+                calls.push(call);
+                current = &call.receiver;
+            }
+            Expr::Paren(inner) => current = &inner.expr,
+            _ => break,
+        }
+    }
+    calls.reverse();
+    (current, calls)
+}
+
+fn call_segments(call: &ExprCall) -> Option<Vec<String>> {
+    let Expr::Path(func) = &*call.func else {
+        return None;
+    };
+    Some(
+        func.path
+            .segments
+            .iter()
+            .map(|s| s.ident.to_string())
+            .collect(),
+    )
+}
+
+fn is_constructor(call: &ExprCall, ty: &str, name: &str) -> bool {
+    call_segments(call).is_some_and(|segments| segments == [ty, name])
+}
+
+fn no_args(call: &ExprCall) -> Result<(), String> {
+    if call.args.is_empty() {
+        Ok(())
+    } else {
+        Err(format!("constructor takes no arguments: {}", text(call)))
+    }
+}
+
+fn one_of<'e>(call: &'e ExprCall, what: &str) -> Result<&'e Expr, String> {
+    match call.args.iter().collect::<Vec<_>>()[..] {
+        [arg] => Ok(arg),
+        _ => Err(format!("{what} takes one argument: {}", text(call))),
+    }
+}
+
+fn single_arg(call: &ExprMethodCall) -> Result<&Expr, String> {
+    match call.args.iter().collect::<Vec<_>>()[..] {
+        [arg] => Ok(arg),
+        _ => Err(format!(
+            "`{}` takes one argument: {}",
+            call.method,
+            text(call)
+        )),
+    }
 }

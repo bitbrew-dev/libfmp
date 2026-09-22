@@ -342,6 +342,8 @@ mod tests {
                     encoder.optional("to", self.to.as_ref());
                 }
             }
+            const WORLDWIDE: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
             pub fn chart(query: ChartQuery) -> EndpointSpec<ChartQuery, Vec<Bar>> {
                 EndpointSpec::get("chart-id", "historical-chart/1min", query)
                     .with_metadata(WORLDWIDE)
@@ -388,6 +390,8 @@ mod tests {
                 };
             }
             symbol_query!("docs", QuoteQuery);
+            const US_ONLY: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
             macro_rules! endpoint {
                 ($function:ident, $path:literal, $query:ty) => {
                     #[doc = concat!("Describes `GET ", $path, "`.")]
@@ -492,6 +496,8 @@ mod tests {
             impl QueryParameters for AssetChartQuery {
                 fn encode(&self, encoder: &mut QueryEncoder<'_>) { encoder.required("symbol", &self.symbol); }
             }
+            const EOD_METADATA: EndpointMetadata =
+                EndpointMetadata::new().with_bounds(EndpointBounds::new().with_response_rows(5_000));
             fn endpoint<R>(path: &'static str, query: AssetChartQuery, metadata: EndpointMetadata) -> EndpointSpec<AssetChartQuery, Vec<R>>
             where R: DeserializeOwned,
             {
