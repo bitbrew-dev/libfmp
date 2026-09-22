@@ -147,7 +147,7 @@ an in-process TLS server with placeholder credentials:
 prefix, a tenant header, and a proxy token, and
 [`example_client_test.go`](example_client_test.go) and
 [`example_error_test.go`](example_error_test.go) hold the `Example*` functions
-shown on pkg.go.dev (`go test -run Example ./...`).
+shown on pkg.go.dev (`cd sdk/go && go test -run Example ./...`).
 
 ## Checks
 

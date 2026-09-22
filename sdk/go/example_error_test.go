@@ -16,6 +16,10 @@ import (
 // with a 401 whose body echoes the credential it received; the SDK redacts
 // the retained body, so the error text never contains the key.
 func ExampleError() {
+	// key is a placeholder credential, never a real one. It is declared here
+	// so the example stays self-contained on pkg.go.dev.
+	const key = "example-key"
+
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
@@ -26,7 +30,7 @@ func ExampleError() {
 	client, err := fmp.NewClient(
 		fmp.WithBaseURL(server.URL),
 		fmp.WithHTTPClient(server.Client()),
-		fmp.WithAuthentication(fmp.FmpHeader(exampleKey)),
+		fmp.WithAuthentication(fmp.FmpHeader(key)),
 	)
 	if err != nil {
 		fmt.Println("configuration rejected:", err)
@@ -39,7 +43,7 @@ func ExampleError() {
 		fmt.Println("not an *fmp.Error:", err)
 		return
 	}
-	if strings.Contains(fmpErr.Error(), exampleKey) {
+	if strings.Contains(fmpErr.Error(), key) {
 		fmt.Println("the error text leaked the credential")
 		return
 	}
