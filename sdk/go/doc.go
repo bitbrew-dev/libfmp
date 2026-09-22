@@ -57,10 +57,14 @@
 //
 // # Environment
 //
-// FmpHeaderFromEnv reads FMP_API_KEY. The live opt-in tests of the Rust crate
-// use FMP_LIVE_TESTS=1, FMP_API_KEY, FMP_PROXY_BASE_URL, FMP_PROXY_TOKEN,
-// FMP_PROXY_PATH_PREFIX, and FMP_TENANT; the Go module uses the same names
-// once its live tests exist. NewClient itself never reads the environment.
+// FmpHeaderFromEnv reads FMP_API_KEY. NewClient itself never reads the
+// environment. The opt-in live tests (live_test.go) use the same names as
+// the Rust crate's live_opt_in.rs: FMP_LIVE_TESTS=1 and FMP_API_KEY for the
+// direct test; FMP_PROXY_BASE_URL, FMP_PROXY_TOKEN, and optionally
+// FMP_PROXY_PATH_PREFIX (default router/stable) and FMP_TENANT for the proxy
+// test. They skip without the switch; run them from sdk/go with:
+//
+//	FMP_LIVE_TESTS=1 FMP_API_KEY=... go test -run 'TestLive' -count=1 ./...
 //
 // # Endpoint surface
 //

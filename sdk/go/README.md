@@ -109,7 +109,7 @@ The environment names match the Rust crate's live opt-in tests:
 | Variable | Read by |
 | --- | --- |
 | `FMP_API_KEY` | `FmpHeaderFromEnv` and `FmpAPIKeyFromEnv` |
-| `FMP_LIVE_TESTS` | live tests, which run only when it is `1` |
+| `FMP_LIVE_TESTS` | live tests (`live_test.go`), which run only when it is `1` |
 | `FMP_PROXY_BASE_URL`, `FMP_PROXY_TOKEN`, `FMP_PROXY_PATH_PREFIX`, `FMP_TENANT` | live tests against a proxy |
 
 ## Errors
@@ -168,6 +168,21 @@ for changes under `sdk/go/`. Run the hook by hand with:
 ```sh
 prek run go-sdk-tests --all-files
 ```
+
+### Live tests
+
+The opt-in live tests mirror `crates/libfmp/tests/live_opt_in.rs` and skip
+unless `FMP_LIVE_TESTS` is exactly `1`, so the gate above never opens a
+socket. Run them by hand from `sdk/go`:
+
+```sh
+FMP_LIVE_TESTS=1 FMP_API_KEY=... go test -run 'TestLive' -count=1 ./...
+```
+
+The proxy test needs `FMP_PROXY_BASE_URL` and `FMP_PROXY_TOKEN` (sent as
+`X-Proxy-Token: Bearer <token>`); `FMP_PROXY_PATH_PREFIX` overrides the
+`router/stable` prefix and `FMP_TENANT` adds an `X-Tenant` header. A test
+skips naming the missing variable and never prints a value.
 
 Endpoint coverage across the SDKs is tracked in
 [docs/endpoint-coverage.md](../../docs/endpoint-coverage.md).
