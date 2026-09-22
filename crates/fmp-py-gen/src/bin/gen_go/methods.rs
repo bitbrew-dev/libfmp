@@ -5,7 +5,9 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use fmp_py_gen::registry::wire::{Contract, Presence, Source, WireEndpoint, WireSurface};
+use fmp_py_gen::registry::wire::{
+    Contract, Presence, Source, WireEndpoint, WireMetadata, WireSurface,
+};
 use fmp_py_gen::registry::{Domain, Endpoint, Registry};
 
 use crate::emit::{exported, local_ident, lower_first, lower_lead};
@@ -82,6 +84,9 @@ pub(crate) struct MethodPlan {
     pub(crate) constant: Option<String>,
     pub(crate) wire_summary: String,
     pub(crate) response: ResponseKind,
+    /// The advisory metadata the descriptor attaches, rendered into
+    /// `metadata_table.go`; `None` when it attaches none.
+    pub(crate) metadata: Option<WireMetadata>,
 }
 
 /// One nested `[[namespace]]` reached through a field of its parent.
@@ -315,6 +320,7 @@ impl Context<'_> {
             constant,
             wire_summary,
             response,
+            metadata: wire.metadata.clone(),
         })
     }
 }

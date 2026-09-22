@@ -5,7 +5,9 @@
 //! `sdk/go/<domain>_models.go` (models with shadow-struct decode) and
 //! `sdk/go/<domain>.go` (namespace, queries, methods), plus the shared
 //! `queries.go` (query types used by more than one domain) and
-//! `namespaces.go` (the `Namespaces` struct Client embeds). Every file is
+//! `namespaces.go` (the `Namespaces` struct Client embeds), and
+//! `metadata_table.go` (the advisory `EndpointMetadata` of every method
+//! whose descriptor attaches one, behind `EndpointMetadataFor`). Every file is
 //! passed through `gofmt` before it is written, so a second run is a no-op.
 //!
 //! ```console
@@ -18,6 +20,7 @@
 //! struct and field (or the arg and the helper to add); nothing is emitted.
 
 mod emit;
+mod metadata;
 mod methods;
 mod models;
 mod render;
@@ -35,6 +38,7 @@ use fmp_py_gen::registry::{Registry, RegistryError, format_errors};
 use fmp_py_gen::responses::{Discovery, StructDef, discover};
 
 use crate::emit::{GENERATED_HEADER, gofmt};
+use crate::metadata::render_metadata_table;
 use crate::methods::{Context, DomainPlan, QueryPlan};
 use crate::models::{plan_models, render_models};
 use crate::render::{render_domain, render_namespaces, render_shared_queries};
@@ -182,7 +186,7 @@ fn generated_domains(registry: &Registry, sdk_go: &Path) -> BTreeSet<String> {
 
 /// Renders every file of the run as `(file name, unformatted source)`: the
 /// domain files of `requested` (all of `generated` when nothing is named)
-/// and the two shared files derived from the whole `generated` set.
+/// and the three shared files derived from the whole `generated` set.
 fn generate(
     registry: &Registry,
     wire: &WireSurface,
@@ -242,6 +246,10 @@ fn generate(
     files.push((
         "namespaces.go".to_string(),
         render_namespaces(&domain_plans),
+    ));
+    files.push((
+        "metadata_table.go".to_string(),
+        render_metadata_table(&domain_plans)?,
     ));
     Ok(files)
 }
