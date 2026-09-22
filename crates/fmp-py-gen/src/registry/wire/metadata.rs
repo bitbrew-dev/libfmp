@@ -483,3 +483,243 @@ fn single_arg(call: &ExprMethodCall) -> Result<&Expr, String> {
         )),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::path::{Path, PathBuf};
+
+    use super::*;
+
+    /// Folds the const `name` of a snippet placed at `endpoints/m.rs`.
+    fn folded(source: &str, name: &str) -> Result<WireMetadata, String> {
+        let root = Path::new("/virtual/endpoints");
+        let files: Vec<(PathBuf, syn::File)> = vec![(
+            root.join("m.rs"),
+            syn::parse_file(source).expect("snippet parses"),
+        )];
+        let collected = Collected::from_files(root, &files);
+        let (home, def) = collected
+            .constant(&vec!["m".to_owned()], name)
+            .expect("const is collected");
+        evaluate(&collected, home, &def.expr)
+    }
+
+    fn geography(source: &str) -> Result<GeographicAvailability, String> {
+        folded(source, "M").map(|metadata| metadata.geography)
+    }
+
+    #[test]
+    fn new_alone_is_the_default() {
+        assert_eq!(
+            folded("const M: EndpointMetadata = EndpointMetadata::new();", "M"),
+            Ok(WireMetadata::default())
+        );
+    }
+
+    #[test]
+    fn with_geography_reads_every_variant() {
+        for (variant, expected) in [
+            ("Worldwide", GeographicAvailability::Worldwide),
+            ("UsOnly", GeographicAvailability::UsOnly),
+            ("Unspecified", GeographicAvailability::Unspecified),
+        ] {
+            let source = format!(
+                "const M: EndpointMetadata = EndpointMetadata::new()
+                    .with_geography(GeographicAvailability::{variant});"
+            );
+            assert_eq!(geography(&source), Ok(expected), "{variant}");
+        }
+        let unknown = geography(
+            "const M: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::Mars);",
+        );
+        assert_eq!(
+            unknown,
+            Err("unsupported `GeographicAvailability::Mars`".to_owned())
+        );
+    }
+
+    #[test]
+    fn with_access_reads_variants_and_named_add_on() {
+        let named = folded(
+            r#"const M: EndpointMetadata =
+                EndpointMetadata::new().with_access(AccessRequirement::NamedAddOn("TipRanks"));"#,
+            "M",
+        );
+        assert_eq!(
+            named.map(|m| m.access),
+            Ok(AccessRequirement::NamedAddOn("TipRanks".to_owned()))
+        );
+        let standard = folded(
+            "const M: EndpointMetadata =
+                EndpointMetadata::new().with_access(AccessRequirement::Standard);",
+            "M",
+        );
+        assert_eq!(standard.map(|m| m.access), Ok(AccessRequirement::Standard));
+        let dynamic = folded(
+            "const M: EndpointMetadata =
+                EndpointMetadata::new().with_access(AccessRequirement::NamedAddOn(NAME));",
+            "M",
+        );
+        assert_eq!(
+            dynamic,
+            Err("add-on name is not a string literal: NAME".to_owned())
+        );
+    }
+
+    #[test]
+    fn with_conditional_plan_reads_plan_and_condition() {
+        let plan = folded(
+            r#"const M: EndpointMetadata = EndpointMetadata::new()
+                .with_conditional_plan(ConditionalPlanRequirement::new(
+                    "Enterprise",
+                    PlanCondition::HistoryOlderThanYears(3),
+                ));"#,
+            "M",
+        );
+        assert_eq!(
+            plan.map(|m| m.conditional_plan),
+            Ok(Some(ConditionalPlanRequirement {
+                plan: "Enterprise".to_owned(),
+                condition: PlanCondition::HistoryOlderThanYears(3),
+            }))
+        );
+        let other = folded(
+            r#"const M: EndpointMetadata = EndpointMetadata::new()
+                .with_conditional_plan(ConditionalPlanRequirement::new("E", PlanCondition::Always));"#,
+            "M",
+        );
+        assert_eq!(
+            other,
+            Err("unsupported `PlanCondition` variant: PlanCondition :: Always".to_owned())
+        );
+    }
+
+    #[test]
+    fn with_realtime_reads_inline_and_const_forms() {
+        let source = "
+            const DELAYED: RealtimeAccess = RealtimeAccess::new(
+                Some(MarketDataDelay::new(15, DelayScope::Nasdaq)),
+                Some(UserDeclarationRequirement::RequiredForRealtime),
+            );
+            const M: EndpointMetadata = EndpointMetadata::new().with_realtime(DELAYED);
+            const N: EndpointMetadata =
+                EndpointMetadata::new().with_realtime(RealtimeAccess::new(None, None));
+        ";
+        assert_eq!(
+            folded(source, "M").map(|m| m.realtime),
+            Ok(Some(RealtimeAccess {
+                delay: Some(MarketDataDelay {
+                    minutes: 15,
+                    scope: DelayScope::Nasdaq,
+                }),
+                user_declaration: Some(UserDeclarationRequirement::RequiredForRealtime),
+            }))
+        );
+        assert_eq!(
+            folded(source, "N").map(|m| m.realtime),
+            Ok(Some(RealtimeAccess::default()))
+        );
+        let bare = folded(
+            "const M: EndpointMetadata = EndpointMetadata::new().with_realtime(RealtimeAccess::new(Some(15), None));",
+            "M",
+        );
+        assert_eq!(
+            bare,
+            Err("delay is not `MarketDataDelay::new(..)`: 15".to_owned())
+        );
+    }
+
+    #[test]
+    fn with_bounds_reads_every_maximum() {
+        let bounds = folded(
+            "const M: EndpointMetadata = EndpointMetadata::new().with_bounds(
+                EndpointBounds::new()
+                    .with_limit(5_000)
+                    .with_response_rows(250)
+                    .with_page(100)
+                    .with_date_range_days(90),
+            );",
+            "M",
+        );
+        assert_eq!(
+            bounds.map(|m| m.bounds),
+            Ok(EndpointBounds {
+                limit: Some(5_000),
+                response_rows: Some(250),
+                page: Some(100),
+                date_range_days: Some(90),
+            })
+        );
+        let computed = folded(
+            "const M: EndpointMetadata = EndpointMetadata::new()
+                .with_bounds(EndpointBounds::new().with_page(u32::MAX));",
+            "M",
+        );
+        assert_eq!(
+            computed,
+            Err("with_page is not an integer literal: u32 :: MAX".to_owned())
+        );
+        let unrooted = folded(
+            "const M: EndpointMetadata = EndpointMetadata::new().with_bounds(BOUNDS);",
+            "M",
+        );
+        assert_eq!(
+            unrooted,
+            Err("bounds are not an `EndpointBounds::new()` chain: BOUNDS".to_owned())
+        );
+    }
+
+    #[test]
+    fn consts_derive_from_consts_until_the_depth_limit() {
+        let source = "
+            const US_ONLY: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
+            const M: EndpointMetadata =
+                US_ONLY.with_bounds(EndpointBounds::new().with_response_rows(100));
+            const LOOP: EndpointMetadata = LOOP.with_geography(GeographicAvailability::UsOnly);
+        ";
+        assert_eq!(
+            folded(source, "M"),
+            Ok(WireMetadata {
+                geography: GeographicAvailability::UsOnly,
+                bounds: EndpointBounds {
+                    response_rows: Some(100),
+                    ..EndpointBounds::default()
+                },
+                ..WireMetadata::default()
+            })
+        );
+        assert_eq!(
+            folded(source, "LOOP"),
+            Err(format!("metadata const chain deeper than {MAX_DEPTH}"))
+        );
+    }
+
+    #[test]
+    fn unsupported_builders_and_roots_are_errors() {
+        let builder = folded(
+            "const M: EndpointMetadata = EndpointMetadata::new().with_latency(1);",
+            "M",
+        );
+        assert_eq!(
+            builder,
+            Err("unsupported `EndpointMetadata` builder `with_latency`: \
+                 EndpointMetadata :: new () . with_latency (1)"
+                .to_owned())
+        );
+        let root = folded("const M: EndpointMetadata = metadata();", "M");
+        assert_eq!(
+            root,
+            Err(
+                "not an `EndpointMetadata::new()` chain or a metadata const: metadata ()"
+                    .to_owned()
+            )
+        );
+        let missing = folded("const M: EndpointMetadata = OTHER;", "M");
+        assert_eq!(
+            missing,
+            Err("`OTHER` is not a const in module `m` or its `use` imports".to_owned())
+        );
+    }
+}
