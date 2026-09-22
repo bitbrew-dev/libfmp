@@ -197,8 +197,19 @@ mod tests {
     use super::*;
     use crate::registry::Registry;
 
+    /// Registry methods whose descriptor attaches `.with_metadata(..)`, the
+    /// number `registry_check` prints as `metadata ok`.
+    const DESCRIPTORS_WITH_METADATA: usize = 251;
+
     fn manifest() -> PathBuf {
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+    }
+
+    fn worldwide() -> WireMetadata {
+        WireMetadata {
+            geography: GeographicAvailability::Worldwide,
+            ..WireMetadata::default()
+        }
     }
 
     fn shipped() -> WireSurface {
@@ -249,6 +260,7 @@ mod tests {
         );
         assert!(surface.unexpanded.is_empty(), "{:?}", surface.unexpanded);
         let mut methods = 0;
+        let mut with_metadata = 0;
         for domain in &registry.domains {
             for namespace in &domain.namespaces {
                 for endpoint in &namespace.endpoints {
@@ -256,6 +268,7 @@ mod tests {
                     let wire = surface.for_endpoint(endpoint).unwrap_or_else(|| {
                         panic!("{} has no wire endpoint", endpoint.libfmp_method)
                     });
+                    with_metadata += usize::from(wire.metadata.is_some());
                     assert!(!wire.relative_path.is_empty(), "{}", wire.method);
                     assert!(!wire.id.is_empty(), "{}", wire.method);
                     assert_eq!(wire.http_method, HttpMethod::Get, "{}", wire.method);
@@ -273,6 +286,7 @@ mod tests {
         }
         assert_eq!(methods, 271);
         assert_eq!(surface.endpoints.len(), 271);
+        assert_eq!(with_metadata, DESCRIPTORS_WITH_METADATA);
     }
 
     #[test]
@@ -325,6 +339,48 @@ mod tests {
                 .iter()
                 .any(|p| p.source == field("assumptions.beta"))
         );
+        let quote = &surface.endpoints["quote"];
+        assert_eq!(
+            quote.metadata,
+            Some(WireMetadata {
+                geography: GeographicAvailability::Worldwide,
+                realtime: Some(RealtimeAccess {
+                    delay: Some(MarketDataDelay {
+                        minutes: 15,
+                        scope: DelayScope::Nasdaq,
+                    }),
+                    user_declaration: Some(UserDeclarationRequirement::RequiredForRealtime),
+                }),
+                ..WireMetadata::default()
+            })
+        );
+        let tipranks = &surface.endpoints["tipranks_ratings_search"];
+        assert_eq!(
+            tipranks.metadata,
+            Some(WireMetadata {
+                access: AccessRequirement::NamedAddOn("TipRanks".to_owned()),
+                conditional_plan: Some(ConditionalPlanRequirement {
+                    plan: "Enterprise".to_owned(),
+                    condition: PlanCondition::HistoryOlderThanYears(3),
+                }),
+                bounds: EndpointBounds {
+                    limit: Some(5_000),
+                    response_rows: Some(5_000),
+                    ..EndpointBounds::default()
+                },
+                ..WireMetadata::default()
+            })
+        );
+        let growth = &surface.endpoints["income_statement_growth"];
+        assert_eq!(
+            growth.metadata.as_ref().map(|m| m.bounds.response_rows),
+            Some(Some(1_000))
+        );
+        assert_eq!(
+            forex.metadata.as_ref().map(|m| m.bounds.response_rows),
+            Some(Some(5_000))
+        );
+        assert_eq!(dow.metadata, None);
     }
 
     const CLIENT_PRELUDE: &str = r#"
@@ -365,6 +421,7 @@ mod tests {
         assert_eq!(chart.http_method, HttpMethod::Get);
         assert_eq!(chart.query_type.as_deref(), Some("ChartQuery"));
         assert_eq!(chart.contract, Contract::Rows);
+        assert_eq!(chart.metadata, Some(worldwide()));
         assert_eq!(
             chart.params,
             [
@@ -412,6 +469,10 @@ mod tests {
         let quote = &surface.endpoints["quote"];
         assert_eq!(quote.origin, Origin::Macro("endpoint".to_owned()));
         assert_eq!(quote.relative_path, "quote");
+        assert_eq!(
+            quote.metadata.as_ref().map(|m| m.geography),
+            Some(GeographicAvailability::UsOnly)
+        );
         assert_eq!(
             quote.params,
             [param("symbol", Presence::Required, field("symbol"))]
@@ -506,14 +567,23 @@ mod tests {
             pub(crate) fn chart_light(query: AssetChartQuery) -> EndpointSpec<AssetChartQuery, Vec<Bar>> {
                 endpoint("historical-price-eod/light", query, EOD_METADATA)
             }
+            pub(crate) fn chart_1min(query: AssetChartQuery) -> EndpointSpec<AssetChartQuery, Vec<Bar>> {
+                endpoint("historical-chart/1min", query, EndpointMetadata::new())
+            }
         "#;
         let forex = r#"
             pub fn forex_chart_light(query: AssetChartQuery) -> EndpointSpec<AssetChartQuery, Vec<Bar>> {
                 super::asset_chart::chart_light(query)
             }
+            pub fn forex_chart_1min(query: AssetChartQuery) -> EndpointSpec<AssetChartQuery, Vec<Bar>> {
+                super::asset_chart::chart_1min(query)
+            }
             impl Client {
                 pub async fn forex_chart_light(&self, query: impl Into<AssetChartQuery>) -> Result<Vec<Bar>> {
                     self.execute(&forex_chart_light(query.into())).await
+                }
+                pub async fn forex_chart_1min(&self, query: impl Into<AssetChartQuery>) -> Result<Vec<Bar>> {
+                    self.execute(&forex_chart_1min(query.into())).await
                 }
             }
         "#;
@@ -554,10 +624,161 @@ mod tests {
             forex.params,
             [param("symbol", Presence::Required, field("symbol"))]
         );
+        assert_eq!(
+            forex.metadata,
+            Some(WireMetadata {
+                bounds: EndpointBounds {
+                    response_rows: Some(5_000),
+                    ..EndpointBounds::default()
+                },
+                ..WireMetadata::default()
+            })
+        );
+        let intraday = &surface.endpoints["forex_chart_1min"];
+        assert_eq!(intraday.metadata, Some(WireMetadata::default()));
         let nasdaq = &surface.endpoints["nasdaq_constituents"];
         assert_eq!(nasdaq.relative_path, "nasdaq-constituent");
         assert_eq!(nasdaq.query_type, None);
         assert!(nasdaq.params.is_empty());
+        assert_eq!(nasdaq.metadata, None);
+    }
+
+    #[test]
+    fn resolves_metadata_consts_derived_and_imported_across_modules() {
+        let statements = r#"
+            pub(crate) const WORLDWIDE: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+            pub(crate) const STATEMENT: EndpointMetadata =
+                WORLDWIDE.with_bounds(EndpointBounds::new().with_response_rows(1_000));
+            pub fn income(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("income", "income", query).with_metadata(STATEMENT)
+            }
+            impl Client {
+                pub async fn income(&self) -> Result<Vec<Row>> { self.execute(&income(())).await }
+            }
+        "#;
+        let ratios = r#"
+            use super::{RatiosQuery, STATEMENT};
+            pub fn ratios(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("ratios", "ratios", query).with_metadata(STATEMENT)
+            }
+            impl Client {
+                pub async fn ratios(&self) -> Result<Vec<Row>> { self.execute(&ratios(())).await }
+            }
+        "#;
+        let growth = r#"
+            use crate::{endpoints::{EndpointSpec, statements::WORLDWIDE as GLOBAL}};
+            pub fn growth(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("growth", "growth", query).with_metadata(GLOBAL)
+            }
+            impl Client {
+                pub async fn growth(&self) -> Result<Vec<Row>> { self.execute(&growth(())).await }
+            }
+        "#;
+        let surface = surface(&[
+            ("statements.rs", statements),
+            ("statements/ratios.rs", ratios),
+            ("statements/growth/combined.rs", growth),
+            ("mod.rs", CLIENT_PRELUDE),
+        ]);
+        assert!(surface.unresolved.is_empty(), "{:?}", surface.unresolved);
+        let statement = WireMetadata {
+            bounds: EndpointBounds {
+                response_rows: Some(1_000),
+                ..EndpointBounds::default()
+            },
+            ..worldwide()
+        };
+        assert_eq!(
+            surface.endpoints["income"].metadata,
+            Some(statement.clone())
+        );
+        assert_eq!(surface.endpoints["ratios"].metadata, Some(statement));
+        assert_eq!(surface.endpoints["growth"].metadata, Some(worldwide()));
+    }
+
+    #[test]
+    fn outermost_with_metadata_wins() {
+        let source = r#"
+            const A: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::UsOnly);
+            const B: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+            pub fn twice(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("twice", "twice", query).with_metadata(A).with_metadata(B)
+            }
+            impl Client {
+                pub async fn twice(&self) -> Result<Vec<Row>> { self.execute(&twice(())).await }
+            }
+        "#;
+        let surface = surface(&[("twice.rs", source), ("mod.rs", CLIENT_PRELUDE)]);
+        assert!(surface.unresolved.is_empty(), "{:?}", surface.unresolved);
+        assert_eq!(surface.endpoints["twice"].metadata, Some(worldwide()));
+    }
+
+    #[test]
+    fn unreadable_metadata_is_reported_by_descriptor_and_file() {
+        let source = r#"
+            const BROKEN: EndpointMetadata =
+                EndpointMetadata::new().with_bounds(EndpointBounds::new().with_limit(u32::MAX));
+            const TEXT: &str = "not metadata";
+            pub fn missing(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("missing", "missing", query).with_metadata(MISSING)
+            }
+            pub fn computed(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("computed", "computed", query).with_metadata(compute())
+            }
+            pub fn unknown(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("unknown", "unknown", query)
+                    .with_metadata(EndpointMetadata::new().with_geography(GeographicAvailability::Mars))
+            }
+            pub fn broken(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("broken", "broken", query).with_metadata(BROKEN)
+            }
+            pub fn typed(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("typed", "typed", query).with_metadata(TEXT)
+            }
+            impl Client {
+                pub async fn missing(&self) -> Result<Vec<Row>> { self.execute(&missing(())).await }
+                pub async fn computed(&self) -> Result<Vec<Row>> { self.execute(&computed(())).await }
+                pub async fn unknown(&self) -> Result<Vec<Row>> { self.execute(&unknown(())).await }
+                pub async fn broken(&self) -> Result<Vec<Row>> { self.execute(&broken(())).await }
+                pub async fn typed(&self) -> Result<Vec<Row>> { self.execute(&typed(())).await }
+            }
+        "#;
+        let surface = surface(&[("meta.rs", source), ("mod.rs", CLIENT_PRELUDE)]);
+        assert!(
+            surface.endpoints.is_empty(),
+            "{:?}",
+            surface.endpoints.keys()
+        );
+        let reasons: BTreeMap<&str, &str> = surface
+            .unresolved
+            .iter()
+            .map(|entry| (entry.method.as_str(), entry.reason.as_str()))
+            .collect();
+        assert_eq!(reasons.len(), 5);
+        for (method, reason) in &reasons {
+            assert!(
+                reason.starts_with(&format!(
+                    "metadata of `meta::{method}` in /virtual/endpoints/meta.rs: "
+                )),
+                "{method}: {reason}"
+            );
+        }
+        assert!(reasons["missing"].contains("`MISSING` is not a const in module `meta`"));
+        assert!(
+            reasons["computed"]
+                .contains("not a supported `EndpointMetadata` expression: compute ()")
+        );
+        assert!(reasons["unknown"].contains("unsupported `GeographicAvailability::Mars`"));
+        assert!(reasons["broken"].contains("with_limit is not an integer literal: u32 :: MAX"));
+        assert!(
+            reasons["typed"]
+                .contains("const `TEXT` is declared as `& str`, not `EndpointMetadata`"),
+            "{}",
+            reasons["typed"]
+        );
     }
 
     #[test]
