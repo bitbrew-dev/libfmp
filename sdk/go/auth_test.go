@@ -191,6 +191,21 @@ func TestCustomHeaderWithPrefixEmptyPrefixIsCustomHeader(t *testing.T) {
 	}
 }
 
+// TestCustomHeaderFormattingReportsPrefixPresence mirrors the Rust Debug
+// output, which prints has_prefix so a "Bearer" prefix missing its trailing
+// space is visible in logs while the prefix text itself is not.
+func TestCustomHeaderFormattingReportsPrefixPresence(t *testing.T) {
+	t.Parallel()
+	const prefix = "Bearer "
+	prefixed := fmt.Sprint(CustomHeaderWithPrefix("X-Proxy-Token", prefix, "example-key"))
+	if !strings.Contains(prefixed, "has_prefix: true") || strings.Contains(prefixed, prefix) {
+		t.Fatalf("prefixed value printed as %s", prefixed)
+	}
+	if plain := fmt.Sprint(CustomHeader("X-Proxy-Token", "example-key")); !strings.Contains(plain, "has_prefix: false") {
+		t.Fatalf("plain value printed as %s", plain)
+	}
+}
+
 func TestCustomHeaderWithPrefixRejectsInvalidPrefixAtClientBuild(t *testing.T) {
 	t.Parallel()
 	_, err := NewClient(WithBaseURL("https://proxy.example/router"),

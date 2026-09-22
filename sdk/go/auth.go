@@ -70,9 +70,10 @@ func Bearer(token string) Authentication {
 	return Authentication{mode: authBearer, name: bearerHeader, secret: token}
 }
 
-// CustomHeader sends a secret in a caller-selected header.
+// CustomHeader sends a secret in a caller-selected header. It is
+// CustomHeaderWithPrefix with an empty prefix.
 func CustomHeader(name, secret string) Authentication {
-	return Authentication{mode: authCustomHeader, name: name, secret: secret}
+	return CustomHeaderWithPrefix(name, "", secret)
 }
 
 // CustomHeaderWithPrefix sends a secret in a caller-selected header with
@@ -80,8 +81,10 @@ func CustomHeader(name, secret string) Authentication {
 // prefix followed by secret; no separator is inserted, so a "Bearer " prefix
 // must carry its own trailing space. It mirrors the Rust
 // Authentication::custom_header(name, Some(prefix), secret) form, and an empty
-// prefix is the same value as CustomHeader(name, secret). The prefix is
-// validated like a header value when the client is built.
+// prefix is the same value as CustomHeader(name, secret) (Rust's Some("")
+// differs from None in Debug and equality, not on the wire). The prefix is
+// validated like a header value when the client is built. Formatting the
+// value reports whether a prefix is present, never its text.
 func CustomHeaderWithPrefix(name, prefix, secret string) Authentication {
 	return Authentication{mode: authCustomHeader, name: name, prefix: prefix, secret: secret}
 }
@@ -103,7 +106,8 @@ func (a Authentication) String() string {
 	case authBearer:
 		return "Bearer([REDACTED])"
 	case authCustomHeader:
-		return fmt.Sprintf("CustomHeader{name: %q, secret: [REDACTED]}", a.name)
+		return fmt.Sprintf("CustomHeader{name: %q, has_prefix: %t, secret: [REDACTED]}",
+			a.name, a.prefix != "")
 	case authCustomQuery:
 		return fmt.Sprintf("CustomQuery{name: %q, secret: [REDACTED]}", a.name)
 	default:
