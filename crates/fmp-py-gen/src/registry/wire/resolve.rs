@@ -15,7 +15,9 @@ use std::collections::BTreeMap;
 
 use syn::{Expr, Stmt};
 
-use super::collect::{Collected, FnDef, ModulePath, query_type, string_literal, text};
+use super::collect::{
+    Collected, FnDef, ModulePath, query_type, relative_item, string_list, string_literal, text,
+};
 use super::params::params;
 use super::{Contract, HttpMethod, WireEndpoint};
 
@@ -62,7 +64,7 @@ pub(super) fn resolve(collected: &Collected, method: &str) -> Result<WireEndpoin
     let query = query_type(&descriptor.output)?;
     let args: Vec<Value> = args
         .iter()
-        .map(|arg| evaluator.eval(arg, &BTreeMap::new()))
+        .map(|arg| evaluator.eval(arg, &BTreeMap::new(), &client.module))
         .collect();
     let spec = evaluator.eval_fn(descriptor, args, 0)?;
     let params = match &query {
@@ -80,6 +82,7 @@ pub(super) fn resolve(collected: &Collected, method: &str) -> Result<WireEndpoin
         query_type: query,
         contract: spec.contract,
         params,
+        metadata: None,
     })
 }
 
@@ -113,30 +116,10 @@ fn descriptor_call(body: &syn::Block) -> Result<(syn::Path, Vec<Expr>), String> 
     Ok((func.path.clone(), call.args.iter().cloned().collect()))
 }
 
-/// Resolves a call path to the `(module, name)` key of a free function:
-/// a bare name is in the caller's module, `super::m::f` and
-/// `crate::endpoints::m::f` name a sibling module.
+/// Resolves a call path to the `(module, name)` key of a free function.
 fn resolve_path(caller: &ModulePath, path: &syn::Path) -> Result<(ModulePath, String), String> {
     let segments: Vec<String> = path.segments.iter().map(|s| s.ident.to_string()).collect();
-    let (name, qualifiers) = segments
-        .split_last()
-        .ok_or_else(|| "empty call path".to_owned())?;
-    if qualifiers.is_empty() {
-        return Ok((caller.clone(), name.clone()));
-    }
-    let mut module = caller.clone();
-    for (index, segment) in qualifiers.iter().enumerate() {
-        match segment.as_str() {
-            "self" => {}
-            "super" => {
-                module.pop();
-            }
-            "crate" => module.clear(),
-            "endpoints" if index > 0 && qualifiers[index - 1] == "crate" => {}
-            other => module.push(other.to_owned()),
-        }
-    }
-    Ok((module, name.clone()))
+    relative_item(caller, &segments)
 }
 
 impl Evaluator<'_> {
@@ -164,7 +147,7 @@ impl Evaluator<'_> {
             let (syn::Pat::Ident(name), Some(init)) = (&local.pat, &local.init) else {
                 return Err(format!("unsupported `let` binding: {}", text(stmt)));
             };
-            let value = self.eval(&init.expr, &env);
+            let value = self.eval(&init.expr, &env, &def.module);
             env.insert(name.ident.to_string(), value);
         }
         let Stmt::Expr(tail, None) = tail else {
@@ -192,7 +175,11 @@ impl Evaluator<'_> {
                 let Expr::Path(func) = &*call.func else {
                     return Err(format!("unsupported descriptor call: {}", text(expr)));
                 };
-                let args: Vec<Value> = call.args.iter().map(|arg| self.eval(arg, env)).collect();
+                let args: Vec<Value> = call
+                    .args
+                    .iter()
+                    .map(|arg| self.eval(arg, env, &def.module))
+                    .collect();
                 let segments: Vec<String> = func
                     .path
                     .segments
@@ -201,7 +188,7 @@ impl Evaluator<'_> {
                     .collect();
                 match segments.as_slice() {
                     [head, constructor] if head == "EndpointSpec" => {
-                        self.constructor(constructor, &args, &call.args)
+                        self.constructor(constructor, &args, &call.args, &def.module)
                     }
                     _ => {
                         let key = resolve_path(&def.module, &func.path)?;
@@ -224,6 +211,7 @@ impl Evaluator<'_> {
         name: &str,
         args: &[Value],
         exprs: &syn::punctuated::Punctuated<Expr, syn::Token![,]>,
+        module: &ModulePath,
     ) -> Result<Spec, String> {
         let string = |index: usize, what: &str| match args.get(index) {
             Some(Value::Str(value)) => Ok(value.clone()),
@@ -271,14 +259,18 @@ impl Evaluator<'_> {
                 http_method: http_method(0)?,
                 id: string(1, "id")?,
                 relative_path: string(2, "path")?,
-                contract: self.response_contract(exprs.iter().nth(4))?,
+                contract: self.response_contract(exprs.iter().nth(4), module)?,
             }),
             other => Err(format!("unsupported constructor `EndpointSpec::{other}`")),
         }
     }
 
     /// Reads `ResponseContract::json()` or `ResponseContract::binary(list)`.
-    fn response_contract(&self, expr: Option<&Expr>) -> Result<Contract, String> {
+    fn response_contract(
+        &self,
+        expr: Option<&Expr>,
+        module: &ModulePath,
+    ) -> Result<Contract, String> {
         let unsupported = |expr: Option<&Expr>| {
             format!(
                 "response contract is not `ResponseContract::json()` or `::binary(..)`: {}",
@@ -302,7 +294,7 @@ impl Evaluator<'_> {
                 Ok(Contract::Rows)
             }
             ([head, kind], Some(list)) if head == "ResponseContract" && kind == "binary" => {
-                match self.eval(list, &BTreeMap::new()) {
+                match self.eval(list, &BTreeMap::new(), module) {
                     Value::Strs(values) => Ok(Contract::Binary(values)),
                     other => Err(format!(
                         "binary content types are not a `&[&str]` literal or constant: {other:?}"
@@ -313,14 +305,16 @@ impl Evaluator<'_> {
         }
     }
 
-    fn eval(&self, expr: &Expr, env: &BTreeMap<String, Value>) -> Value {
+    /// Evaluates a value expression written in `module`, which scopes the
+    /// const lookups.
+    fn eval(&self, expr: &Expr, env: &BTreeMap<String, Value>, module: &ModulePath) -> Value {
         match expr {
             Expr::Lit(_) => {
                 string_literal(expr).map_or_else(|| Value::Opaque(text(expr)), Value::Str)
             }
-            Expr::Reference(reference) => self.eval(&reference.expr, env),
-            Expr::Paren(inner) => self.eval(&inner.expr, env),
-            Expr::Group(inner) => self.eval(&inner.expr, env),
+            Expr::Reference(reference) => self.eval(&reference.expr, env, module),
+            Expr::Paren(inner) => self.eval(&inner.expr, env, module),
+            Expr::Group(inner) => self.eval(&inner.expr, env, module),
             Expr::Array(array) => array
                 .elems
                 .iter()
@@ -339,11 +333,8 @@ impl Evaluator<'_> {
                         .get(name)
                         .cloned()
                         .or_else(|| {
-                            self.collected
-                                .string_lists
-                                .get(name)
-                                .cloned()
-                                .map(Value::Strs)
+                            let (_, def) = self.collected.constant(module, name)?;
+                            string_list(&def.expr).map(Value::Strs)
                         })
                         .unwrap_or_else(|| Value::Opaque(text(expr))),
                     [ty, variant] => Value::Variant(ty.clone(), variant.clone()),
@@ -351,7 +342,7 @@ impl Evaluator<'_> {
                 }
             }
             Expr::MethodCall(call) if call.args.is_empty() => {
-                match self.eval(&call.receiver, env) {
+                match self.eval(&call.receiver, env, module) {
                     Value::Variant(ty, variant) => self
                         .collected
                         .literal_methods
