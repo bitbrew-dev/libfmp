@@ -43,15 +43,17 @@ func main() {
 
 func run() error {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		switch {
 		case r.URL.Path != "/router/"+pathPrefix+"/quote-short":
 			http.NotFound(w, r)
 		case r.Header.Get("X-Proxy-Token") != proxyToken:
-			http.Error(w, `{"error":"proxy token rejected"}`, http.StatusUnauthorized)
+			w.WriteHeader(http.StatusUnauthorized)
+			_, _ = fmt.Fprint(w, `{"error":"proxy token rejected"}`)
 		case r.Header.Get("X-Tenant") != tenant:
-			http.Error(w, `{"error":"unknown tenant"}`, http.StatusForbidden)
+			w.WriteHeader(http.StatusForbidden)
+			_, _ = fmt.Fprint(w, `{"error":"unknown tenant"}`)
 		default:
-			w.Header().Set("Content-Type", "application/json")
 			_, _ = fmt.Fprint(w, quoteShortFixture)
 		}
 	}))

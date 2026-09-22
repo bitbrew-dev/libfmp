@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"path/filepath"
 
 	fmp "github.com/bitbrew-dev/libfmp/sdk/go"
 )
@@ -15,25 +14,30 @@ import (
 // real key, and no example prints it.
 const exampleKey = "example-key"
 
-// quoteShortFixture is the shared Rust fixture the examples serve, resolved
-// from the package directory that "go test" uses as the working directory.
-var quoteShortFixture = filepath.Join("..", "..", "crates", "libfmp", "tests", "fixtures", "quote_short.json")
+// quoteShortFixture is a copy of crates/libfmp/tests/fixtures/quote_short.json,
+// the documented provider response the Rust and Go parity tests both decode.
+// It is inlined so the examples stay self-contained on pkg.go.dev and when the
+// module is tested outside this repository.
+const quoteShortFixture = `[
+  {
+    "change": -6.33498,
+    "price": 331.85501,
+    "symbol": "AAPL",
+    "volume": 28718014
+  }
+]`
 
 // serveQuoteShort starts an in-process TLS server that answers GET
-// <prefix>/quote-short with the shared quote_short.json fixture, after check
-// has accepted the request. Any other path, or a rejected request, is a 404.
+// <prefix>/quote-short with the quote_short.json fixture, after check has
+// accepted the request. Any other path, or a rejected request, is a 404.
 func serveQuoteShort(prefix string, check func(*http.Request) bool) *httptest.Server {
-	body, err := os.ReadFile(quoteShortFixture)
-	if err != nil {
-		panic(err)
-	}
 	return httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != prefix+"/quote-short" || (check != nil && !check(r)) {
+		if r.URL.Path != prefix+"/quote-short" || !check(r) {
 			http.NotFound(w, r)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write(body)
+		_, _ = fmt.Fprint(w, quoteShortFixture)
 	}))
 }
 
