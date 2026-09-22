@@ -138,6 +138,29 @@ provider body, redacted and capped. The client never retries, wraps every
 transport failure before it escapes, and formats `Authentication`, `Client`,
 and `Error` without any secret value, so an error is safe to log.
 
+## Endpoint metadata
+
+Every endpoint method whose Rust descriptor attaches advisory metadata has an
+entry in the generated `metadata_table.go`, keyed by the Go call path without
+the client (`Quote.Full`, `Statements.Growth.IncomeStatement`):
+
+```go
+metadata, ok := fmp.EndpointMetadataFor("Tipranks.RatingsSearch")
+if ok {
+	log.Printf("access %s, plan %s, bounds %s", metadata.Access, metadata.ConditionalPlan, metadata.Bounds)
+	if metadata.Bounds.Limit != nil && limit > *metadata.Bounds.Limit {
+		limit = *metadata.Bounds.Limit
+	}
+}
+```
+
+`EndpointMetadata` mirrors the Rust type one-for-one (`Geography`, `Access`,
+`ConditionalPlan`, `Realtime`, `Bounds`), every zero value means unspecified,
+and each type has a short `String()` that is safe to log. The lookup reports
+`false` with the zero value for a method without metadata and for an unknown
+key. The metadata is advisory: the client never validates a request against
+it, exactly as the Rust crate does not.
+
 ## Examples
 
 Two runnable programs and the package's godoc examples all run offline against
