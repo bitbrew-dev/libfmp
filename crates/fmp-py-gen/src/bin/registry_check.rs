@@ -75,9 +75,9 @@ fn check_wire(registry: &Registry, wire: &WireSurface) -> ExitCode {
         for namespace in &domain.namespaces {
             for endpoint in &namespace.endpoints {
                 let method = &endpoint.libfmp_method;
-                if let Some(wire) = wire.for_endpoint(endpoint) {
+                if let Some(resolved_wire) = wire.for_endpoint(endpoint) {
                     resolved += 1;
-                    if wire.metadata.is_some() {
+                    if resolved_wire.metadata.is_some() {
                         with_metadata += 1;
                     }
                     continue;

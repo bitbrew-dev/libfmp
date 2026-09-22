@@ -263,6 +263,11 @@ fn flatten_use(tree: &UseTree, prefix: &mut Vec<String>, out: &mut Vec<(String, 
     }
 }
 
+/// The identifiers of a path: `a::b::C` as `["a", "b", "C"]`.
+pub(super) fn path_segments(path: &syn::Path) -> Vec<String> {
+    path.segments.iter().map(|s| s.ident.to_string()).collect()
+}
+
 /// Reads `&["a", "b"]` (or `["a", "b"]`) into its string values.
 pub(super) fn string_list(expr: &Expr) -> Option<Vec<String>> {
     match expr {

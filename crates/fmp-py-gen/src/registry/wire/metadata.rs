@@ -14,9 +14,11 @@
 use std::fmt;
 use std::str::FromStr;
 
-use syn::{Expr, ExprCall, ExprMethodCall, Lit};
+use quote::ToTokens;
+use syn::punctuated::Punctuated;
+use syn::{Expr, ExprCall, ExprMethodCall, Lit, Token};
 
-use super::collect::{Collected, ConstDef, ModulePath, string_literal, text};
+use super::collect::{Collected, ConstDef, ModulePath, path_segments, string_literal, text};
 
 /// Deepest chain of const-to-const derivation the evaluator follows.
 const MAX_DEPTH: usize = 8;
@@ -98,12 +100,16 @@ pub struct WireMetadata {
     pub bounds: EndpointBounds,
 }
 
-/// Whether `expr` has the shape of an `EndpointMetadata` value: a builder
-/// chain rooted in `EndpointMetadata::new()` or in a bare const name. The
-/// shape says nothing about whether [`evaluate`] will succeed.
-pub(super) fn looks_like_metadata(expr: &Expr) -> bool {
+/// Whether `expr`, written in `module`, is an `EndpointMetadata` value: a
+/// builder chain rooted in `EndpointMetadata::new()` or in a const declared
+/// with that type. Says nothing about whether [`evaluate`] will succeed.
+pub(super) fn is_metadata(collected: &Collected, module: &ModulePath, expr: &Expr) -> bool {
     match chain(expr).0 {
-        Expr::Path(path) => path.path.segments.len() == 1,
+        Expr::Path(path) => path.path.get_ident().is_some_and(|name| {
+            collected
+                .constant(module, &name.to_string())
+                .is_some_and(|(_, def)| def.ty == "EndpointMetadata")
+        }),
         Expr::Call(call) => is_constructor(call, "EndpointMetadata", "new"),
         _ => false,
     }
@@ -135,7 +141,7 @@ impl Evaluator<'_> {
         let (root, calls) = chain(expr);
         let mut metadata = match root {
             Expr::Call(call) if is_constructor(call, "EndpointMetadata", "new") => {
-                no_args(call)?;
+                args_of::<0>(call, "`EndpointMetadata::new`")?;
                 WireMetadata::default()
             }
             Expr::Path(_) => {
@@ -150,7 +156,7 @@ impl Evaluator<'_> {
             }
         };
         for call in calls {
-            let arg = single_arg(call)?;
+            let [arg] = args_of(call, &format!("`{}`", call.method))?;
             match call.method.to_string().as_str() {
                 "with_geography" => {
                     metadata.geography =
@@ -195,12 +201,7 @@ impl Evaluator<'_> {
                 self.realtime(home, &def.expr, depth + 1)
             }
             Expr::Call(call) if is_constructor(call, "RealtimeAccess", "new") => {
-                let [delay, declaration] = call.args.iter().collect::<Vec<_>>()[..] else {
-                    return Err(format!(
-                        "`RealtimeAccess::new` takes two arguments: {}",
-                        text(call)
-                    ));
-                };
+                let [delay, declaration] = args_of(call, "`RealtimeAccess::new`")?;
                 Ok(RealtimeAccess {
                     delay: option(delay, market_data_delay)?,
                     user_declaration: option(declaration, |expr| {
@@ -262,7 +263,7 @@ fn access(expr: &Expr) -> Result<AccessRequirement, String> {
             _ => None,
         }),
         Expr::Call(call) if is_constructor(call, "AccessRequirement", "NamedAddOn") => {
-            let arg = one_of(call, "`AccessRequirement::NamedAddOn`")?;
+            let [arg] = args_of(call, "`AccessRequirement::NamedAddOn`")?;
             string_literal(arg)
                 .map(AccessRequirement::NamedAddOn)
                 .ok_or_else(|| format!("add-on name is not a string literal: {}", text(arg)))
@@ -276,29 +277,19 @@ fn access(expr: &Expr) -> Result<AccessRequirement, String> {
 
 /// `ConditionalPlanRequirement::new("plan", PlanCondition::HistoryOlderThanYears(n))`.
 fn conditional_plan(expr: &Expr) -> Result<ConditionalPlanRequirement, String> {
-    let Expr::Call(call) = expr else {
-        return Err(format!(
-            "conditional plan is not `ConditionalPlanRequirement::new(..)`: {}",
-            text(expr)
-        ));
-    };
-    if !is_constructor(call, "ConditionalPlanRequirement", "new") {
-        return Err(format!(
-            "conditional plan is not `ConditionalPlanRequirement::new(..)`: {}",
-            text(expr)
-        ));
-    }
-    let [plan, condition] = call.args.iter().collect::<Vec<_>>()[..] else {
-        return Err(format!(
-            "`ConditionalPlanRequirement::new` takes two arguments: {}",
-            text(call)
-        ));
-    };
+    let call = constructor_call(
+        expr,
+        "ConditionalPlanRequirement",
+        "new",
+        "conditional plan",
+    )?;
+    let [plan, condition] = args_of(call, "`ConditionalPlanRequirement::new`")?;
     let plan = string_literal(plan)
         .ok_or_else(|| format!("plan name is not a string literal: {}", text(plan)))?;
     let years = match condition {
         Expr::Call(call) if is_constructor(call, "PlanCondition", "HistoryOlderThanYears") => {
-            one_of(call, "`PlanCondition::HistoryOlderThanYears`")?
+            let [years] = args_of(call, "`PlanCondition::HistoryOlderThanYears`")?;
+            years
         }
         other => {
             return Err(format!(
@@ -315,24 +306,8 @@ fn conditional_plan(expr: &Expr) -> Result<ConditionalPlanRequirement, String> {
 
 /// `MarketDataDelay::new(minutes, DelayScope::Nasdaq)`.
 fn market_data_delay(expr: &Expr) -> Result<MarketDataDelay, String> {
-    let Expr::Call(call) = expr else {
-        return Err(format!(
-            "delay is not `MarketDataDelay::new(..)`: {}",
-            text(expr)
-        ));
-    };
-    if !is_constructor(call, "MarketDataDelay", "new") {
-        return Err(format!(
-            "delay is not `MarketDataDelay::new(..)`: {}",
-            text(expr)
-        ));
-    }
-    let [minutes, scope] = call.args.iter().collect::<Vec<_>>()[..] else {
-        return Err(format!(
-            "`MarketDataDelay::new` takes two arguments: {}",
-            text(call)
-        ));
-    };
+    let call = constructor_call(expr, "MarketDataDelay", "new", "delay")?;
+    let [minutes, scope] = args_of(call, "`MarketDataDelay::new`")?;
     Ok(MarketDataDelay {
         minutes: integer(minutes, "delay minutes")?,
         scope: variant(scope, "DelayScope", |name| match name {
@@ -348,7 +323,7 @@ fn bounds(expr: &Expr) -> Result<EndpointBounds, String> {
     let (root, calls) = chain(expr);
     let mut bounds = match root {
         Expr::Call(call) if is_constructor(call, "EndpointBounds", "new") => {
-            no_args(call)?;
+            args_of::<0>(call, "`EndpointBounds::new`")?;
             EndpointBounds::default()
         }
         other => {
@@ -360,19 +335,20 @@ fn bounds(expr: &Expr) -> Result<EndpointBounds, String> {
     };
     for call in calls {
         let method = call.method.to_string();
-        let value = integer(single_arg(call)?, &method)?;
-        match method.as_str() {
-            "with_limit" => bounds.limit = Some(value),
-            "with_response_rows" => bounds.response_rows = Some(value),
-            "with_page" => bounds.page = Some(value),
-            "with_date_range_days" => bounds.date_range_days = Some(value),
+        let slot = match method.as_str() {
+            "with_limit" => &mut bounds.limit,
+            "with_response_rows" => &mut bounds.response_rows,
+            "with_page" => &mut bounds.page,
+            "with_date_range_days" => &mut bounds.date_range_days,
             other => {
                 return Err(format!(
                     "unsupported `EndpointBounds` builder `{other}`: {}",
                     text(call)
                 ));
             }
-        }
+        };
+        let [value] = args_of(call, &format!("`{method}`"))?;
+        *slot = Some(integer(value, &method)?);
     }
     Ok(bounds)
 }
@@ -382,7 +358,8 @@ fn option<T>(expr: &Expr, parse: impl Fn(&Expr) -> Result<T, String>) -> Result<
     match expr {
         Expr::Path(path) if path.path.is_ident("None") => Ok(None),
         Expr::Call(call) if call_segments(call).as_deref() == Some(&["Some".to_owned()][..]) => {
-            one_of(call, "`Some`").and_then(&parse).map(Some)
+            let [inner] = args_of(call, "`Some`")?;
+            parse(inner).map(Some)
         }
         other => Err(format!("not `Some(..)` or `None`: {}", text(other))),
     }
@@ -393,13 +370,7 @@ fn variant<T>(expr: &Expr, ty: &str, parse: impl Fn(&str) -> Option<T>) -> Resul
     let Expr::Path(path) = expr else {
         return Err(format!("not a `{ty}` variant: {}", text(expr)));
     };
-    let segments: Vec<String> = path
-        .path
-        .segments
-        .iter()
-        .map(|s| s.ident.to_string())
-        .collect();
-    match segments.as_slice() {
+    match path_segments(&path.path).as_slice() {
         [head, name] if head == ty => {
             parse(name).ok_or_else(|| format!("unsupported `{ty}::{name}`"))
         }
@@ -446,43 +417,59 @@ fn call_segments(call: &ExprCall) -> Option<Vec<String>> {
     let Expr::Path(func) = &*call.func else {
         return None;
     };
-    Some(
-        func.path
-            .segments
-            .iter()
-            .map(|s| s.ident.to_string())
-            .collect(),
-    )
+    Some(path_segments(&func.path))
 }
 
 fn is_constructor(call: &ExprCall, ty: &str, name: &str) -> bool {
     call_segments(call).is_some_and(|segments| segments == [ty, name])
 }
 
-fn no_args(call: &ExprCall) -> Result<(), String> {
-    if call.args.is_empty() {
-        Ok(())
-    } else {
-        Err(format!("constructor takes no arguments: {}", text(call)))
+/// `expr` as the call `Ty::name(..)`, or an error naming `what` it was
+/// meant to be.
+fn constructor_call<'e>(
+    expr: &'e Expr,
+    ty: &str,
+    name: &str,
+    what: &str,
+) -> Result<&'e ExprCall, String> {
+    match expr {
+        Expr::Call(call) if is_constructor(call, ty, name) => Ok(call),
+        other => Err(format!("{what} is not `{ty}::{name}(..)`: {}", text(other))),
     }
 }
 
-fn one_of<'e>(call: &'e ExprCall, what: &str) -> Result<&'e Expr, String> {
-    match call.args.iter().collect::<Vec<_>>()[..] {
-        [arg] => Ok(arg),
-        _ => Err(format!("{what} takes one argument: {}", text(call))),
+/// A call whose argument count the evaluator checks: a free call
+/// (`Ty::new(a, b)`) or a builder method (`.with_x(a)`).
+pub(super) trait CallArgs: ToTokens {
+    fn args(&self) -> &Punctuated<Expr, Token![,]>;
+}
+
+impl CallArgs for ExprCall {
+    fn args(&self) -> &Punctuated<Expr, Token![,]> {
+        &self.args
     }
 }
 
-fn single_arg(call: &ExprMethodCall) -> Result<&Expr, String> {
-    match call.args.iter().collect::<Vec<_>>()[..] {
-        [arg] => Ok(arg),
-        _ => Err(format!(
-            "`{}` takes one argument: {}",
-            call.method,
-            text(call)
-        )),
+impl CallArgs for ExprMethodCall {
+    fn args(&self) -> &Punctuated<Expr, Token![,]> {
+        &self.args
     }
+}
+
+/// Exactly `N` arguments of `call`, or an error naming `what` was called.
+pub(super) fn args_of<'e, const N: usize>(
+    call: &'e impl CallArgs,
+    what: &str,
+) -> Result<[&'e Expr; N], String> {
+    <[&Expr; N]>::try_from(call.args().iter().collect::<Vec<_>>()).map_err(|_| {
+        let count = match N {
+            0 => "no arguments".to_owned(),
+            1 => "one argument".to_owned(),
+            2 => "two arguments".to_owned(),
+            n => format!("{n} arguments"),
+        };
+        format!("{what} takes {count}: {}", text(call))
+    })
 }
 
 #[cfg(test)]
