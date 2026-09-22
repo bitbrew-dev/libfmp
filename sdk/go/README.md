@@ -76,18 +76,29 @@ immediately before the secret, byte for byte: no separator is inserted, so a
 `"Bearer "` prefix carries its own trailing space. It mirrors the Rust
 `Authentication::custom_header(name, Some(prefix), secret)` form; an empty
 prefix is the same value as `CustomHeader`. Only the secret is redacted from
-diagnostics, never the prefix. A custom router or proxy that expects
-`X-Proxy-Token: Bearer <token>` is configured like this:
+diagnostics, never the prefix, and formatting the value reports `has_prefix`
+without the prefix text. A custom router or proxy that expects
+`X-Proxy-Token: Bearer <token>` is configured like this (the same shape as
+the Rust crate's live proxy test: the path prefix defaults to `router/stable`
+and `X-Tenant` is sent only when `FMP_TENANT` is set, since an empty default
+header value is accepted and sent as an empty field):
 
 ```go
-client, err := fmp.NewClient(
+pathPrefix := os.Getenv("FMP_PROXY_PATH_PREFIX")
+if pathPrefix == "" {
+	pathPrefix = "router/stable"
+}
+opts := []fmp.Option{
 	fmp.WithBaseURL(os.Getenv("FMP_PROXY_BASE_URL")),
-	fmp.WithPathPrefix("router/stable"),
+	fmp.WithPathPrefix(pathPrefix),
 	fmp.WithAuthentication(fmp.CustomHeaderWithPrefix(
 		"X-Proxy-Token", "Bearer ", os.Getenv("FMP_PROXY_TOKEN"),
 	)),
-	fmp.WithDefaultHeader("X-Tenant", os.Getenv("FMP_TENANT")),
-)
+}
+if tenant := os.Getenv("FMP_TENANT"); tenant != "" {
+	opts = append(opts, fmp.WithDefaultHeader("X-Tenant", tenant))
+}
+client, err := fmp.NewClient(opts...)
 if err != nil {
 	return err
 }
