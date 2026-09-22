@@ -138,6 +138,17 @@ provider body, redacted and capped. The client never retries, wraps every
 transport failure before it escapes, and formats `Authentication`, `Client`,
 and `Error` without any secret value, so an error is safe to log.
 
+## Examples
+
+Two runnable programs and the package's godoc examples all run offline against
+an in-process TLS server with placeholder credentials:
+[`examples/quote`](examples/quote/main.go) fetches one detailed quote,
+[`examples/proxy`](examples/proxy/main.go) routes through a proxy with a path
+prefix, a tenant header, and a proxy token, and
+[`example_client_test.go`](example_client_test.go) and
+[`example_error_test.go`](example_error_test.go) hold the `Example*` functions
+shown on pkg.go.dev (`go test -run Example ./...`).
+
 ## Checks
 
 Run the full gate from the repository root:
