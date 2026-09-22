@@ -1,118 +1,63 @@
 # libfmp
 
-`libfmp` is a Rust-first client for the [Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API, with synchronous Python bindings distributed as `fmp-py-sdk` and imported as `fmp`.
+[![Crates.io](https://img.shields.io/crates/v/libfmp)](https://crates.io/crates/libfmp)
+[![PyPI](https://img.shields.io/pypi/v/fmp-py-sdk)](https://pypi.org/project/fmp-py-sdk/)
+[![docs.rs](https://img.shields.io/docsrs/libfmp)](https://docs.rs/libfmp)
+[![License: MIT](https://img.shields.io/crates/l/libfmp)](LICENSE)
 
-The Rust client implements all 276 endpoint entries in the repository's
-captured API documentation oracle through 271 `Client` methods. This is
-coverage of that pinned oracle, not a claim that every endpoint currently or
-historically offered by the provider is covered. The Python client exposes all
-271 methods, grouped into 30 domain namespaces.
+A Rust-first client for the
+[Financial Modeling Prep (FMP)](https://financialmodelingprep.com/) data API,
+with synchronous Python bindings distributed as `fmp-py-sdk` and imported as
+`fmp`, and a pure Go module generated from the same contract. All three cover
+the 271 `Client` methods across 30 namespaces of the pinned documentation
+oracle. See [status and support](wiki/status.md) for the support policy and
+the coverage caveat.
 
-[docs/endpoint-coverage.md](docs/endpoint-coverage.md) lists every endpoint with its
-supported, raw, gated, or deferred state.
+## Install
 
-## Rust
+### Rust
 
-```rust
-use std::env;
-
-use libfmp::{Client, config::Authentication, types::Ticker};
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = Client::builder()
-        .authentication(Authentication::fmp_header(env::var("FMP_API_KEY")?))
-        .build()?;
-    let rows = client.quote_short(Ticker::new("AAPL")?).await?;
-    println!("{rows:#?}");
-    Ok(())
-}
+```sh
+cargo add libfmp
 ```
 
-The Rust builder never reads the environment on its own. When the key lives in
-`FMP_API_KEY`, `Authentication::fmp_header_from_env()` returns the same header
-authentication as `Option<Authentication>` (`None` when the variable is unset,
-empty, or whitespace-only), so the `env::var` line above is the explicit form.
+[Rust guide and examples](wiki/rust.md) · [API reference](https://docs.rs/libfmp)
 
-The Rust client is async. Endpoint descriptors, typed queries, response models,
-and `Client` methods cover every documented oracle entry. `quote_short`, for
-example, preserves FMP's bare-array response as `Vec<QuoteShort>`, including
-empty and multi-row responses.
+### Python
 
-## Python
+Requires CPython 3.10 or newer.
 
-Install the distribution and import the public package:
-
-```console
+```sh
 python -m pip install fmp-py-sdk
 ```
 
-```python
-from fmp import FmpClient
+[Python guide and examples](wiki/python.md) · [Package README](crates/fmp-py/README.md)
 
-client = FmpClient()
-rows = client.quote.short("AAPL")
-print(rows[0].symbol, rows[0].price)
+### Go
+
+Requires Go 1.27.1; the module is pure Go with no cgo and no native library.
+
+```sh
+go get github.com/bitbrew-dev/libfmp/sdk/go@vX.Y.Z
 ```
 
-`FmpClient()` reads the `FMP_API_KEY` environment variable when `token` is
-omitted; pass `token=...` to override it, or `auth_mode="none"` to ignore it.
-With neither a token nor the variable, the default host raises
-`FmpConfigError` naming `FMP_API_KEY`.
+Releases are user-triggered, and the first `sdk/go/v*` tag ships with the
+first release after the release plumbing landed.
+[Go guide and examples](wiki/go.md) · [API reference](https://pkg.go.dev/github.com/bitbrew-dev/libfmp/sdk/go)
 
-Every `libfmp` endpoint is reachable as `client.<domain>.<method>(...)`:
-required arguments are positional, optional ones keyword-only, names are
-snake_case, and rows come back as typed models (`list[QuoteShort]` above).
-Nested domains group their sub-namespaces, and the few open-ended endpoints
-return `list[dict]` rows instead of models:
+## Documentation
 
-```python
-income = client.statements.income.statement("AAPL", period="annual", limit=5)
-valuation = client.dcf.custom_discounted_cash_flow("AAPL", beta=1.2, tax_rate=0.21)
-rows = client.sec_filings.search_industry_classifications(symbol="AAPL")
-```
+| Topic | Start here |
+|-------|------------|
+| Language guides and examples | [Rust](wiki/rust.md) · [Python](wiki/python.md) · [Go](wiki/go.md) |
+| Endpoint coverage and status | [Status and support](wiki/status.md) · [Endpoint coverage](docs/endpoint-coverage.md) · [Issues](https://github.com/bitbrew-dev/libfmp/issues) |
+| Build, test, and repository layout | [Development](wiki/development.md) |
+| Architecture and decisions | [Design](wiki/design.md) · [ADRs](docs/adr/) |
+| Contract ambiguities | [Register](docs/contract-ambiguities.md) |
+| Releasing | [Release validation](docs/releasing.md) |
 
-The client is synchronous: each call releases the Python GIL while the async
-Rust transport waits. Local argument validation raises `FmpValidationError`
-before any request; provider and transport failures map to the hierarchy under
-`fmp.errors`. See [crates/fmp-py/README.md](crates/fmp-py/README.md) for the
-domain list, binary and secret-URL handling, and the generator commands.
+The tracked `wiki/` pages hold the detailed guides.
 
-## Custom routers and proxies
+## License
 
-Endpoint code is independent of transport configuration. Both clients support a custom base URL and path prefix, no authentication, FMP header or query authentication, bearer authentication, custom secret headers or query parameters, and arbitrary default headers.
-
-```python
-import os
-
-from fmp import FmpClient
-
-client = FmpClient(
-    base_url=os.environ["FMP_PROXY_BASE_URL"],
-    path_prefix="router/stable",
-    auth_mode="custom_header",
-    auth_name="X-Proxy-Token",
-    auth_prefix="Bearer ",
-    token=os.environ["FMP_PROXY_TOKEN"],
-    headers={"X-Tenant": os.environ["FMP_TENANT"]},
-)
-rows = client.quote.short("AAPL")
-```
-
-`auth_mode="none"` supports credential-free local or trusted routers. Redirect following is either disabled or restricted to the same origin so credentials are not forwarded across origins.
-
-## Support policy
-
-- Rust: 1.96 or newer; the repository pins Rust 1.96.0 for development and release validation.
-- Python: CPython 3.10 or newer, using the stable ABI from Python 3.10 (`abi3-py310`).
-- Package version: the Cargo workspace version is the single source used by both the `libfmp` crate and the `fmp-py-sdk` wheel.
-
-The repository ships inline Rust documentation plus domain-aligned native
-Python modules, public `.py` packages, `.pyi` stubs generated by
-`pyo3-stub-gen`, and a `py.typed` marker. The Python namespaces, models, and
-stubs are all generated from the registry under `crates/fmp-py-gen/registry/`
-and the `libfmp` sources.
-
-## Release status
-
-This project is available under the [MIT License](LICENSE). See [docs/releasing.md](docs/releasing.md) for the remaining release checks.
+This project is available under the [MIT License](LICENSE).
