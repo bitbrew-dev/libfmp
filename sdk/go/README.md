@@ -26,6 +26,20 @@ prefix that Go requires for a nested module, while the module version stays
 go get github.com/bitbrew-dev/libfmp/sdk/go@vX.Y.Z
 ```
 
+While this repository is private, the public module proxy cannot serve the
+module, so tell Go to fetch it directly: set `GOPRIVATE=github.com/bitbrew-dev/*`
+(which also disables the checksum database for that path) and give git
+credentials for github.com: a token over https as below, or ssh with
+`git config --global url."git@github.com:".insteadOf "https://github.com/"`.
+With that environment `go get` clones the repository directly, and
+`go list -m -versions` needs the same environment:
+
+```sh
+export GOPRIVATE='github.com/bitbrew-dev/*'
+git config --global url."https://x-access-token:TOKEN@github.com/".insteadOf "https://github.com/"
+go get github.com/bitbrew-dev/libfmp/sdk/go@vX.Y.Z
+```
+
 Because the version is shared, a `feat(sdk/go)` commit minor-bumps the
 workspace and republishes `libfmp` and `fmp-py` with no Rust change; ADR 0030
 accepts that consequence. Releases are user-triggered, and the first
