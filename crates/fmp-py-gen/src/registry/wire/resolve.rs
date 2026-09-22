@@ -17,7 +17,8 @@ use std::collections::BTreeMap;
 use syn::{Expr, ExprMethodCall, Stmt};
 
 use super::collect::{
-    Collected, FnDef, ModulePath, query_type, relative_item, string_list, string_literal, text,
+    Collected, FnDef, ModulePath, path_segments, query_type, relative_item, string_list,
+    string_literal, text,
 };
 use super::metadata::{self, WireMetadata};
 use super::params::params;
@@ -125,8 +126,7 @@ fn descriptor_call(body: &syn::Block) -> Result<(syn::Path, Vec<Expr>), String> 
 
 /// Resolves a call path to the `(module, name)` key of a free function.
 fn resolve_path(caller: &ModulePath, path: &syn::Path) -> Result<(ModulePath, String), String> {
-    let segments: Vec<String> = path.segments.iter().map(|s| s.ident.to_string()).collect();
-    relative_item(caller, &segments)
+    relative_item(caller, &path_segments(path))
 }
 
 impl Evaluator<'_> {
@@ -195,13 +195,7 @@ impl Evaluator<'_> {
                     .iter()
                     .map(|arg| self.eval(arg, env, &def.module))
                     .collect();
-                let segments: Vec<String> = func
-                    .path
-                    .segments
-                    .iter()
-                    .map(|s| s.ident.to_string())
-                    .collect();
-                match segments.as_slice() {
+                match path_segments(&func.path).as_slice() {
                     [head, constructor] if head == "EndpointSpec" => {
                         self.constructor(constructor, &args, &call.args, &def.module)
                     }
@@ -221,8 +215,9 @@ impl Evaluator<'_> {
         }
     }
 
-    /// The folded argument of one `.with_metadata(..)` call in `def`, with
-    /// any failure located by descriptor and file.
+    /// The folded argument of one `.with_metadata(..)` call in `def`: a
+    /// parameter bound by the caller, or an expression folded in place.
+    /// Any failure is located by descriptor and file.
     fn metadata_arg(
         &self,
         call: &ExprMethodCall,
@@ -237,20 +232,23 @@ impl Evaluator<'_> {
                 def.file.display()
             )
         };
-        let [arg] = call.args.iter().collect::<Vec<_>>()[..] else {
-            return Err(located(format!(
-                "`with_metadata` takes one argument: {}",
-                text(call)
-            )));
+        let [arg] = metadata::args_of(call, "`with_metadata`").map_err(located)?;
+        let bound = match arg {
+            Expr::Path(path) => path
+                .path
+                .get_ident()
+                .and_then(|name| env.get(&name.to_string())),
+            _ => None,
         };
-        match self.eval(arg, env, &def.module) {
-            Value::Metadata(metadata) => Ok(metadata),
-            Value::Opaque(reason) => Err(located(format!(
+        match bound {
+            Some(Value::Metadata(metadata)) => Ok(metadata.clone()),
+            Some(Value::Opaque(reason)) => Err(located(format!(
                 "argument is not a supported `EndpointMetadata` expression: {reason}"
             ))),
-            other => Err(located(format!(
+            Some(other) => Err(located(format!(
                 "argument is not `EndpointMetadata`: {other:?}"
             ))),
+            None => metadata::evaluate(self.collected, &def.module, arg).map_err(located),
         }
     }
 
@@ -373,26 +371,18 @@ impl Evaluator<'_> {
                 .map(string_literal)
                 .collect::<Option<Vec<_>>>()
                 .map_or_else(|| Value::Opaque(text(expr)), Value::Strs),
-            Expr::Path(path) => {
-                let segments: Vec<String> = path
-                    .path
-                    .segments
-                    .iter()
-                    .map(|s| s.ident.to_string())
-                    .collect();
-                match segments.as_slice() {
-                    [name] => env
-                        .get(name)
-                        .cloned()
-                        .or_else(|| {
-                            let (_, def) = self.collected.constant(module, name)?;
-                            string_list(&def.expr).map(Value::Strs)
-                        })
-                        .unwrap_or_else(|| self.opaque(expr, module)),
-                    [ty, variant] => Value::Variant(ty.clone(), variant.clone()),
-                    _ => Value::Opaque(text(expr)),
-                }
-            }
+            Expr::Path(path) => match path_segments(&path.path).as_slice() {
+                [name] => env
+                    .get(name)
+                    .cloned()
+                    .or_else(|| {
+                        let (_, def) = self.collected.constant(module, name)?;
+                        string_list(&def.expr).map(Value::Strs)
+                    })
+                    .unwrap_or_else(|| self.opaque(expr, module)),
+                [ty, variant] => Value::Variant(ty.clone(), variant.clone()),
+                _ => Value::Opaque(text(expr)),
+            },
             Expr::MethodCall(call) if call.args.is_empty() => {
                 match self.eval(&call.receiver, env, module) {
                     Value::Variant(ty, variant) => self
@@ -410,9 +400,11 @@ impl Evaluator<'_> {
     }
 
     /// The value of an expression no other rule matched: folded metadata
-    /// when it is shaped like an `EndpointMetadata` value, else opaque.
+    /// when it is an `EndpointMetadata` value (so a metadata const can be
+    /// passed on to a helper's `.with_metadata(..)`), else opaque source
+    /// text.
     fn opaque(&self, expr: &Expr, module: &ModulePath) -> Value {
-        if !metadata::looks_like_metadata(expr) {
+        if !metadata::is_metadata(self.collected, module, expr) {
             return Value::Opaque(text(expr));
         }
         match metadata::evaluate(self.collected, module, expr) {

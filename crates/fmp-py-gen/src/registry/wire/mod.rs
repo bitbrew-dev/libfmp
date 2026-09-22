@@ -717,6 +717,28 @@ mod tests {
     }
 
     #[test]
+    fn non_metadata_consts_keep_their_plain_reason() {
+        let source = r#"
+            const ID: &str = "by-const";
+            pub fn by_const(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get(ID, "by-const", query)
+            }
+            impl Client {
+                pub async fn by_const(&self) -> Result<Vec<Row>> { self.execute(&by_const(())).await }
+            }
+        "#;
+        let surface = surface(&[("plain.rs", source), ("mod.rs", CLIENT_PRELUDE)]);
+        let [entry] = surface.unresolved.as_slice() else {
+            panic!("{:?}", surface.unresolved);
+        };
+        assert_eq!(entry.method, "by_const");
+        assert_eq!(
+            entry.reason, "id of `EndpointSpec::get` is not a literal: ID",
+            "a `&str` const must not pick up a metadata-flavored reason"
+        );
+    }
+
+    #[test]
     fn glob_imported_metadata_const_is_reported_not_guessed() {
         let shared = r#"
             pub(crate) const WORLDWIDE: EndpointMetadata =
@@ -808,7 +830,9 @@ mod tests {
         assert!(reasons["missing"].contains("`MISSING` is not a const in module `meta`"));
         assert!(
             reasons["computed"]
-                .contains("not a supported `EndpointMetadata` expression: compute ()")
+                .contains("not an `EndpointMetadata::new()` chain or a metadata const: compute ()"),
+            "{}",
+            reasons["computed"]
         );
         assert!(reasons["unknown"].contains("unsupported `GeographicAvailability::Mars`"));
         assert!(reasons["broken"].contains("with_limit is not an integer literal: u32 :: MAX"));
