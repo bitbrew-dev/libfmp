@@ -86,7 +86,7 @@ pub(crate) fn render_namespaces(domains: &[&DomainPlan]) -> String {
     out
 }
 
-fn file_prelude(description: &str) -> String {
+pub(crate) fn file_prelude(description: &str) -> String {
     let mut out = String::from(GENERATED_HEADER);
     out.push_str("\n\npackage fmp\n\n");
     out.push_str(&doc_comment(description));

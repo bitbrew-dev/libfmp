@@ -10,6 +10,10 @@ use super::{Selection, generate, generated_domains, parse_args};
 use crate::models::{plan_models, render_models};
 use crate::types::{Codec, TypeTable, arg_kind_go};
 
+/// Registry methods whose descriptor attaches `.with_metadata(..)`, the
+/// number `registry_check` prints as `metadata ok`.
+const DESCRIPTORS_WITH_METADATA: usize = 251;
+
 fn manifest() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
@@ -50,7 +54,7 @@ fn committed_domains_regenerate_to_the_committed_files() {
     let committed_set = generated_domains(&registry, &sdk_go());
     assert!(committed_set.contains("quote"), "{committed_set:?}");
     let files = generate_domains(&committed_set).expect("committed domains generate");
-    assert_eq!(files.len(), committed_set.len() * 2 + 2);
+    assert_eq!(files.len(), committed_set.len() * 2 + 3);
     for (name, source) in &files {
         let committed = fs::read_to_string(sdk_go().join(name))
             .unwrap_or_else(|error| panic!("{name} is committed under sdk/go: {error}"));
@@ -79,6 +83,37 @@ fn committed_domains_regenerate_to_the_committed_files() {
     assert!(models.contains("OneDay float64 `json:\"1D\"`"));
     assert!(models.contains("MarketCap *uint64 `json:\"marketCap\"`"));
     assert!(file("namespaces.go").contains("Quote QuoteNamespace"));
+    let table = file("metadata_table.go");
+    assert!(
+        table.contains(
+            "\t\"Quote.Full\": {Geography: GeographyWorldwide, Realtime: &RealtimeAccess{Delay: \
+             &MarketDataDelay{Minutes: 15, Scope: DelayScopeNasdaq}, UserDeclaration: \
+             UserDeclarationRequiredForRealtime}},\n"
+        ),
+        "{table}"
+    );
+    assert!(
+        table.contains("\t\"Analyst.PriceTargetConsensus\": {Geography: GeographyUsOnly},\n"),
+        "{table}"
+    );
+    if committed_set.len() == registry.domains.len() {
+        assert_eq!(
+            table
+                .lines()
+                .filter(|line| line.starts_with("\t\""))
+                .count(),
+            DESCRIPTORS_WITH_METADATA,
+            "one table entry per method whose descriptor attaches metadata"
+        );
+        assert!(
+            table.contains("func EndpointMetadataFor(method string) (EndpointMetadata, bool)"),
+            "{table}"
+        );
+        assert!(
+            !table.contains("\"Directory.AvailableCountries\""),
+            "a method without metadata has no entry: {table}"
+        );
+    }
 }
 
 /// The statements domain is the first with nested `[[namespace]]` entries,
