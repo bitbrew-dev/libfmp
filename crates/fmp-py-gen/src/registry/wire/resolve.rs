@@ -4,20 +4,22 @@
 //! The evaluator is deliberately small: a descriptor body is `let`
 //! bindings followed by one tail expression, the tail is an
 //! `EndpointSpec::{get, get_binary, new, with_response}` call (possibly
-//! wrapped in `.with_metadata(..)`-style builder calls) or a call to
-//! another free function that is evaluated the same way with its
-//! parameters bound to the caller's arguments. Values are string literals,
-//! `&[&str]` constants, enum variants, and the `&'static str` an enum's
-//! `const fn` match table returns for a variant. Anything else stops the
-//! resolution with a reason naming the expression, never a guess.
+//! wrapped in builder calls, of which `.with_metadata(..)` is read and the
+//! rest are transparent) or a call to another free function that is
+//! evaluated the same way with its parameters bound to the caller's
+//! arguments. Values are string literals, `&[&str]` constants, enum
+//! variants, the `&'static str` an enum's `const fn` match table returns
+//! for a variant, and folded [`WireMetadata`] values. Anything else stops
+//! the resolution with a reason naming the expression, never a guess.
 
 use std::collections::BTreeMap;
 
-use syn::{Expr, Stmt};
+use syn::{Expr, ExprMethodCall, Stmt};
 
 use super::collect::{
     Collected, FnDef, ModulePath, query_type, relative_item, string_list, string_literal, text,
 };
+use super::metadata::{self, WireMetadata};
 use super::params::params;
 use super::{Contract, HttpMethod, WireEndpoint};
 
@@ -31,16 +33,21 @@ enum Value {
     Strs(Vec<String>),
     /// `Type::Variant`, kept for the match tables and `HttpMethod::Get`.
     Variant(String, String),
-    /// Anything the evaluator does not model, carried as source text.
+    /// A folded `EndpointMetadata` const or builder chain.
+    Metadata(WireMetadata),
+    /// Anything the evaluator does not model, carried as source text, or
+    /// as the reason when it looked like metadata but could not be folded.
     Opaque(String),
 }
 
-/// The literal facts of one `EndpointSpec` constructor call.
+/// The literal facts of one `EndpointSpec` constructor call and the
+/// metadata attached by `.with_metadata(..)` on the way out.
 struct Spec {
     id: String,
     relative_path: String,
     http_method: HttpMethod,
     contract: Contract,
+    metadata: Option<WireMetadata>,
 }
 
 struct Evaluator<'a> {
@@ -82,7 +89,7 @@ pub(super) fn resolve(collected: &Collected, method: &str) -> Result<WireEndpoin
         query_type: query,
         contract: spec.contract,
         params,
-        metadata: None,
+        metadata: spec.metadata,
     })
 }
 
@@ -160,7 +167,9 @@ impl Evaluator<'_> {
     }
 
     /// Evaluates the tail expression of a descriptor: builder method calls
-    /// are peeled until the constructor or helper call underneath.
+    /// are peeled until the constructor or helper call underneath, and a
+    /// `.with_metadata(..)` on the way back out attaches its folded
+    /// argument (the outermost call wins, as in Rust).
     fn eval_spec(
         &self,
         expr: &Expr,
@@ -169,7 +178,13 @@ impl Evaluator<'_> {
         depth: usize,
     ) -> Result<Spec, String> {
         match expr {
-            Expr::MethodCall(builder) => self.eval_spec(&builder.receiver, env, def, depth),
+            Expr::MethodCall(builder) => {
+                let mut spec = self.eval_spec(&builder.receiver, env, def, depth)?;
+                if builder.method == "with_metadata" {
+                    spec.metadata = Some(self.metadata_arg(builder, env, def)?);
+                }
+                Ok(spec)
+            }
             Expr::Paren(inner) => self.eval_spec(&inner.expr, env, def, depth),
             Expr::Call(call) => {
                 let Expr::Path(func) = &*call.func else {
@@ -203,6 +218,39 @@ impl Evaluator<'_> {
                 "unsupported descriptor expression: {}",
                 text(other)
             )),
+        }
+    }
+
+    /// The folded argument of one `.with_metadata(..)` call in `def`, with
+    /// any failure located by descriptor and file.
+    fn metadata_arg(
+        &self,
+        call: &ExprMethodCall,
+        env: &BTreeMap<String, Value>,
+        def: &FnDef,
+    ) -> Result<WireMetadata, String> {
+        let located = |reason: String| {
+            format!(
+                "metadata of `{}::{}` in {}: {reason}",
+                def.module.join("::"),
+                def.name,
+                def.file.display()
+            )
+        };
+        let [arg] = call.args.iter().collect::<Vec<_>>()[..] else {
+            return Err(located(format!(
+                "`with_metadata` takes one argument: {}",
+                text(call)
+            )));
+        };
+        match self.eval(arg, env, &def.module) {
+            Value::Metadata(metadata) => Ok(metadata),
+            Value::Opaque(reason) => Err(located(format!(
+                "argument is not a supported `EndpointMetadata` expression: {reason}"
+            ))),
+            other => Err(located(format!(
+                "argument is not `EndpointMetadata`: {other:?}"
+            ))),
         }
     }
 
@@ -242,24 +290,28 @@ impl Evaluator<'_> {
                 relative_path: string(1, "path")?,
                 http_method: HttpMethod::Get,
                 contract: Contract::Rows,
+                metadata: None,
             }),
             "get_binary" => Ok(Spec {
                 id: string(0, "id")?,
                 relative_path: string(1, "path")?,
                 http_method: HttpMethod::Get,
                 contract: Contract::Binary(strings(3, "content types")?),
+                metadata: None,
             }),
             "new" => Ok(Spec {
                 http_method: http_method(0)?,
                 id: string(1, "id")?,
                 relative_path: string(2, "path")?,
                 contract: Contract::Rows,
+                metadata: None,
             }),
             "with_response" => Ok(Spec {
                 http_method: http_method(0)?,
                 id: string(1, "id")?,
                 relative_path: string(2, "path")?,
                 contract: self.response_contract(exprs.iter().nth(4), module)?,
+                metadata: None,
             }),
             other => Err(format!("unsupported constructor `EndpointSpec::{other}`")),
         }
@@ -306,7 +358,7 @@ impl Evaluator<'_> {
     }
 
     /// Evaluates a value expression written in `module`, which scopes the
-    /// const lookups.
+    /// const lookups behind metadata paths.
     fn eval(&self, expr: &Expr, env: &BTreeMap<String, Value>, module: &ModulePath) -> Value {
         match expr {
             Expr::Lit(_) => {
@@ -336,7 +388,7 @@ impl Evaluator<'_> {
                             let (_, def) = self.collected.constant(module, name)?;
                             string_list(&def.expr).map(Value::Strs)
                         })
-                        .unwrap_or_else(|| Value::Opaque(text(expr))),
+                        .unwrap_or_else(|| self.opaque(expr, module)),
                     [ty, variant] => Value::Variant(ty.clone(), variant.clone()),
                     _ => Value::Opaque(text(expr)),
                 }
@@ -353,7 +405,19 @@ impl Evaluator<'_> {
                     _ => Value::Opaque(text(expr)),
                 }
             }
-            _ => Value::Opaque(text(expr)),
+            _ => self.opaque(expr, module),
+        }
+    }
+
+    /// The value of an expression no other rule matched: folded metadata
+    /// when it is shaped like an `EndpointMetadata` value, else opaque.
+    fn opaque(&self, expr: &Expr, module: &ModulePath) -> Value {
+        if !metadata::looks_like_metadata(expr) {
+            return Value::Opaque(text(expr));
+        }
+        match metadata::evaluate(self.collected, module, expr) {
+            Ok(metadata) => Value::Metadata(metadata),
+            Err(reason) => Value::Opaque(reason),
         }
     }
 }

@@ -29,6 +29,7 @@ pub(super) type ModulePath = Vec<String>;
 /// One free function under `endpoints/`.
 #[derive(Debug, Clone)]
 pub(super) struct FnDef {
+    pub name: String,
     pub file: PathBuf,
     pub module: ModulePath,
     pub origin: Origin,
@@ -44,9 +45,11 @@ pub(super) struct ClientMethodDef {
     pub body: syn::Block,
 }
 
-/// One `const NAME: Type = expr;` item.
+/// One `const NAME: Type = expr;` item, with `ty` reduced to its base ident
+/// (or kept as source text for non-path types such as `&str`).
 #[derive(Debug, Clone)]
 pub(super) struct ConstDef {
+    pub ty: String,
     pub expr: Expr,
 }
 
@@ -90,6 +93,7 @@ impl Collected {
                 self.functions.insert(
                     (module.clone(), item.sig.ident.to_string()),
                     FnDef {
+                        name: item.sig.ident.to_string(),
                         file: file.to_path_buf(),
                         module: module.clone(),
                         origin: origin.clone(),
@@ -120,6 +124,7 @@ impl Collected {
                 self.constants.insert(
                     (module.clone(), item.ident.to_string()),
                     ConstDef {
+                        ty: base_ident(&item.ty).unwrap_or_else(|| text(&item.ty)),
                         expr: (*item.expr).clone(),
                     },
                 );

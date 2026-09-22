@@ -9,7 +9,9 @@
 //! A second pass joins every entry to its wire contract (endpoint path and
 //! query parameters read from the Rust descriptor functions) and prints
 //! `wire ok: N resolved, M unresolved`; any unresolved entry is listed by
-//! method with the reason and also fails the run.
+//! method with the reason and also fails the run. A final line,
+//! `metadata ok: N descriptors carry advisory metadata`, counts the
+//! resolved entries whose descriptor attaches `.with_metadata(..)`.
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -67,13 +69,17 @@ fn main() -> ExitCode {
 /// Joins every registry entry to its wire endpoint and prints the summary.
 fn check_wire(registry: &Registry, wire: &WireSurface) -> ExitCode {
     let mut resolved = 0;
+    let mut with_metadata = 0;
     let mut unresolved = Vec::new();
     for domain in &registry.domains {
         for namespace in &domain.namespaces {
             for endpoint in &namespace.endpoints {
                 let method = &endpoint.libfmp_method;
-                if wire.for_endpoint(endpoint).is_some() {
+                if let Some(wire) = wire.for_endpoint(endpoint) {
                     resolved += 1;
+                    if wire.metadata.is_some() {
+                        with_metadata += 1;
+                    }
                     continue;
                 }
                 let reason = wire
@@ -101,6 +107,7 @@ fn check_wire(registry: &Registry, wire: &WireSurface) -> ExitCode {
     }
     if unresolved.is_empty() {
         println!("wire ok: {resolved} resolved, 0 unresolved");
+        println!("metadata ok: {with_metadata} descriptors carry advisory metadata");
         ExitCode::SUCCESS
     } else {
         eprintln!(
