@@ -20,9 +20,13 @@
 //	}
 //	client, err := fmp.NewClient(fmp.WithAuthentication(auth))
 //
-// Header authentication modes (FmpHeader, Bearer, CustomHeader) never place a
-// credential in the URL. Query modes (FmpQuery, CustomQuery) append the secret
-// as the last query pair of every request.
+// Header authentication modes (FmpHeader, Bearer, CustomHeader,
+// CustomHeaderWithPrefix) never place a credential in the URL. Query modes
+// (FmpQuery, CustomQuery) append the secret as the last query pair of every
+// request. CustomHeaderWithPrefix sends the header value as prefix followed
+// by secret with no separator inserted, mirroring the Rust
+// Authentication::custom_header(name, Some(prefix), secret) form; an empty
+// prefix is the same value as CustomHeader.
 //
 // # Transport rules
 //
