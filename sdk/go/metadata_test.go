@@ -1,0 +1,104 @@
+package fmp
+
+import (
+	"fmt"
+	"testing"
+)
+
+// metadataSample is a fully populated value whose members are all pointers
+// or discriminated structs, so the copy and label tests cover every branch.
+func metadataSample() EndpointMetadata {
+	return EndpointMetadata{
+		Geography: GeographyWorldwide,
+		Access:    AccessRequirement{Kind: AccessNamedAddOn, AddOn: "TipRanks"},
+		ConditionalPlan: &ConditionalPlanRequirement{
+			Plan:      "Enterprise",
+			Condition: PlanCondition{Kind: PlanConditionHistoryOlderThanYears, Years: 3},
+		},
+		Realtime: &RealtimeAccess{
+			Delay:           &MarketDataDelay{Minutes: 15, Scope: DelayScopeNasdaq},
+			UserDeclaration: UserDeclarationRequiredForRealtime,
+		},
+		Bounds: EndpointBounds{Limit: inclusiveMaximum(5000), ResponseRows: inclusiveMaximum(1000)},
+	}
+}
+
+func TestEndpointMetadataZeroValueIsUnspecified(t *testing.T) {
+	t.Parallel()
+	var zero EndpointMetadata
+	if zero.Geography != GeographyUnspecified {
+		t.Errorf("Geography = %v, want %v", zero.Geography, GeographyUnspecified)
+	}
+	if zero.Access != (AccessRequirement{}) || zero.Access.Kind != AccessUnspecified {
+		t.Errorf("Access = %+v, want unspecified", zero.Access)
+	}
+	if zero.ConditionalPlan != nil || zero.Realtime != nil {
+		t.Errorf("ConditionalPlan = %v, Realtime = %v, want both nil", zero.ConditionalPlan, zero.Realtime)
+	}
+	if zero.Bounds != (EndpointBounds{}) {
+		t.Errorf("Bounds = %+v, want no maxima", zero.Bounds)
+	}
+	want := "geography unspecified; access unspecified; bounds unbounded"
+	if got := zero.String(); got != want {
+		t.Errorf("String() = %q, want %q", got, want)
+	}
+}
+
+func TestEndpointMetadataLabelsAreShortAndStable(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		value fmt.Stringer
+		want  string
+	}{
+		{GeographyWorldwide, "worldwide"},
+		{GeographyUsOnly, "us-only"},
+		{GeographicAvailability(9), "GeographicAvailability(9)"},
+		{AccessRequirement{Kind: AccessStandard}, "standard"},
+		{AccessRequirement{Kind: AccessNamedAddOn, AddOn: "TipRanks"}, "add-on TipRanks"},
+		{AccessKind(9), "AccessKind(9)"},
+		{PlanCondition{}, "unspecified"},
+		{PlanCondition{Kind: PlanConditionKind(9)}, "PlanCondition(9)"},
+		{ConditionalPlanRequirement{Plan: "Enterprise", Condition: PlanCondition{Kind: PlanConditionHistoryOlderThanYears, Years: 3}}, "Enterprise when history older than 3 years"},
+		{UserDeclarationRequiredForRealtime, "required-for-realtime"},
+		{UserDeclarationRequirement(9), "UserDeclarationRequirement(9)"},
+		{DelayScopeNasdaq, "nasdaq"},
+		{DelayScope(9), "DelayScope(9)"},
+		{MarketDataDelay{Minutes: 15, Scope: DelayScopeNasdaq}, "15 minutes (nasdaq)"},
+		{RealtimeAccess{}, "no caveats"},
+		{RealtimeAccess{UserDeclaration: UserDeclarationRequiredForRealtime}, "declaration required-for-realtime"},
+		{EndpointBounds{Page: inclusiveMaximum(100), DateRangeDays: inclusiveMaximum(90)}, "page<=100, date_range_days<=90"},
+		{metadataSample(), "geography worldwide; access add-on TipRanks; plan Enterprise when history older than 3 years; " +
+			"realtime delay 15 minutes (nasdaq), declaration required-for-realtime; bounds limit<=5000, response_rows<=1000"},
+	}
+	for _, tc := range cases {
+		if got := tc.value.String(); got != tc.want {
+			t.Errorf("%T.String() = %q, want %q", tc.value, got, tc.want)
+		}
+	}
+}
+
+func TestEndpointMetadataCloneSharesNoPointer(t *testing.T) {
+	t.Parallel()
+	original := metadataSample()
+	copied := original.clone()
+	if copied.String() != original.String() {
+		t.Fatalf("clone() = %s, want %s", copied, original)
+	}
+	if copied.ConditionalPlan == original.ConditionalPlan ||
+		copied.Realtime == original.Realtime ||
+		copied.Realtime.Delay == original.Realtime.Delay ||
+		copied.Bounds.Limit == original.Bounds.Limit ||
+		copied.Bounds.ResponseRows == original.Bounds.ResponseRows {
+		t.Fatal("clone() shares a pointer with the original")
+	}
+	copied.ConditionalPlan.Plan = "Other"
+	copied.Realtime.Delay.Minutes = 1
+	*copied.Bounds.Limit = 1
+	if original.ConditionalPlan.Plan != "Enterprise" || original.Realtime.Delay.Minutes != 15 || *original.Bounds.Limit != 5000 {
+		t.Fatalf("mutating the clone changed the original: %s", original)
+	}
+	var zero EndpointMetadata
+	if got := zero.clone(); got != (EndpointMetadata{}) {
+		t.Fatalf("clone() of the zero value = %+v, want the zero value", got)
+	}
+}
