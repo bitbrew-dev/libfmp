@@ -2,6 +2,7 @@ package fmp
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -100,5 +101,93 @@ func TestEndpointMetadataCloneSharesNoPointer(t *testing.T) {
 	var zero EndpointMetadata
 	if got := zero.clone(); got != (EndpointMetadata{}) {
 		t.Fatalf("clone() of the zero value = %+v, want the zero value", got)
+	}
+}
+
+// endpointMetadataMethods is the number of generated methods whose Rust
+// descriptor attaches metadata: the count registry_check prints as
+// "metadata ok". The remaining methods (271 in total) report false.
+const endpointMetadataMethods = 251
+
+// metadataNasdaqRealtime is the realtime caveat the quote consts share
+// (NASDAQ_DELAYED_REALTIME in crates/libfmp/src/endpoints/quote.rs).
+func metadataNasdaqRealtime() *RealtimeAccess {
+	return &RealtimeAccess{
+		Delay:           &MarketDataDelay{Minutes: 15, Scope: DelayScopeNasdaq},
+		UserDeclaration: UserDeclarationRequiredForRealtime,
+	}
+}
+
+func TestEndpointMetadataForPinsValuesFromTheRustConsts(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		method string
+		want   EndpointMetadata
+	}{
+		{"Quote.Full", EndpointMetadata{Geography: GeographyWorldwide, Realtime: metadataNasdaqRealtime()}},
+		{"Quote.AftermarketTrade", EndpointMetadata{Geography: GeographyUsOnly, Realtime: metadataNasdaqRealtime()}},
+		{"Tipranks.RatingsSearch", EndpointMetadata{
+			Access: AccessRequirement{Kind: AccessNamedAddOn, AddOn: "TipRanks"},
+			ConditionalPlan: &ConditionalPlanRequirement{
+				Plan:      "Enterprise",
+				Condition: PlanCondition{Kind: PlanConditionHistoryOlderThanYears, Years: 3},
+			},
+			Bounds: EndpointBounds{Limit: inclusiveMaximum(5000), ResponseRows: inclusiveMaximum(5000)},
+		}},
+		{"Statements.Growth.IncomeStatement", EndpointMetadata{
+			Geography: GeographyWorldwide,
+			Bounds:    EndpointBounds{ResponseRows: inclusiveMaximum(1000)},
+		}},
+	}
+	for _, tc := range cases {
+		t.Run(tc.method, func(t *testing.T) {
+			t.Parallel()
+			got, ok := EndpointMetadataFor(tc.method)
+			if !ok {
+				t.Fatalf("EndpointMetadataFor(%q) reported no metadata", tc.method)
+			}
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("EndpointMetadataFor(%q) = %s, want %s", tc.method, got, tc.want)
+			}
+		})
+	}
+}
+
+func TestEndpointMetadataForReportsFalseWithTheZeroValue(t *testing.T) {
+	t.Parallel()
+	for _, method := range []string{
+		"Directory.AvailableCountries",
+		"Indexes.DowJonesConstituents",
+		"quote",
+		"Client.Quote.Full",
+		"",
+	} {
+		got, ok := EndpointMetadataFor(method)
+		if ok || got != (EndpointMetadata{}) {
+			t.Errorf("EndpointMetadataFor(%q) = %s, %v; want the zero value and false", method, got, ok)
+		}
+	}
+}
+
+func TestEndpointMetadataForReturnsACopy(t *testing.T) {
+	t.Parallel()
+	first, _ := EndpointMetadataFor("Tipranks.RatingsSearch")
+	first.ConditionalPlan.Plan = "Other"
+	*first.Bounds.Limit = 1
+	second, _ := EndpointMetadataFor("Tipranks.RatingsSearch")
+	if second.ConditionalPlan.Plan != "Enterprise" || *second.Bounds.Limit != 5000 {
+		t.Fatalf("a mutated lookup changed the table: %s", second)
+	}
+}
+
+func TestEndpointMetadataTableCoversEveryDescriptorWithMetadata(t *testing.T) {
+	t.Parallel()
+	if got := len(endpointMetadataTable); got != endpointMetadataMethods {
+		t.Fatalf("table holds %d methods, want %d (registry_check: metadata ok)", got, endpointMetadataMethods)
+	}
+	for method := range endpointMetadataTable {
+		if _, ok := EndpointMetadataFor(method); !ok {
+			t.Errorf("EndpointMetadataFor(%q) reported false for a table entry", method)
+		}
 	}
 }
