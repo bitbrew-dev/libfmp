@@ -717,6 +717,45 @@ mod tests {
     }
 
     #[test]
+    fn glob_imported_metadata_const_is_reported_not_guessed() {
+        let shared = r#"
+            pub(crate) const WORLDWIDE: EndpointMetadata =
+                EndpointMetadata::new().with_geography(GeographicAvailability::Worldwide);
+        "#;
+        let globbed = r#"
+            use super::shared::*;
+            pub fn globbed(query: ()) -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get("globbed", "globbed", query).with_metadata(WORLDWIDE)
+            }
+            impl Client {
+                pub async fn globbed(&self) -> Result<Vec<Row>> { self.execute(&globbed(())).await }
+            }
+        "#;
+        let surface = surface(&[
+            ("shared.rs", shared),
+            ("globbed.rs", globbed),
+            ("mod.rs", CLIENT_PRELUDE),
+        ]);
+        assert!(
+            surface.endpoints.is_empty(),
+            "{:?}",
+            surface.endpoints.keys()
+        );
+        let [entry] = surface.unresolved.as_slice() else {
+            panic!("{:?}", surface.unresolved);
+        };
+        assert_eq!(entry.method, "globbed");
+        assert!(
+            entry.reason.contains(
+                "`WORLDWIDE` is not a const in module `globbed` or its `use` imports \
+                 (glob imports and re-exports are not followed)"
+            ),
+            "{}",
+            entry.reason
+        );
+    }
+
+    #[test]
     fn unreadable_metadata_is_reported_by_descriptor_and_file() {
         let source = r#"
             const BROKEN: EndpointMetadata =

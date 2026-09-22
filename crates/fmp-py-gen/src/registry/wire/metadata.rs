@@ -238,7 +238,8 @@ impl Evaluator<'_> {
             .ok_or_else(|| format!("not a bare const name: {}", text(expr)))?;
         let (home, def) = self.collected.constant(module, &name).ok_or_else(|| {
             format!(
-                "`{name}` is not a const in module `{}` or its `use` imports",
+                "`{name}` is not a const in module `{}` or its `use` imports \
+                 (glob imports and re-exports are not followed)",
                 module.join("::")
             )
         })?;
@@ -719,7 +720,9 @@ mod tests {
         let missing = folded("const M: EndpointMetadata = OTHER;", "M");
         assert_eq!(
             missing,
-            Err("`OTHER` is not a const in module `m` or its `use` imports".to_owned())
+            Err("`OTHER` is not a const in module `m` or its `use` imports \
+                 (glob imports and re-exports are not followed)"
+                .to_owned())
         );
     }
 }

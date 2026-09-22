@@ -59,7 +59,9 @@ pub(super) struct Collected {
     /// Every `const` item keyed by `(module, name)`.
     pub constants: BTreeMap<(ModulePath, String), ConstDef>,
     /// Per module, the local name each `use` brings in and the
-    /// `(module, name)` it refers to; glob imports are not followed.
+    /// `(module, name)` it refers to. Glob imports (`use m::*`) and
+    /// re-export chains (`use` of a `pub use`) are not followed: a const
+    /// reached only that way is reported as not found, never guessed.
     pub imports: BTreeMap<ModulePath, BTreeMap<String, (ModulePath, String)>>,
     pub functions: BTreeMap<(ModulePath, String), FnDef>,
     pub client_methods: BTreeMap<String, ClientMethodDef>,
