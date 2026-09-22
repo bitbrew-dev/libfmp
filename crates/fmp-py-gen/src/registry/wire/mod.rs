@@ -1,6 +1,7 @@
 //! The wire contract behind every `libfmp::Client` method: endpoint id,
-//! relative path, HTTP method, response contract, and the ordered query
-//! parameters, read with `syn` from `crates/libfmp/src/endpoints/**`.
+//! relative path, HTTP method, response contract, the ordered query
+//! parameters, and the advisory metadata attached with `.with_metadata(..)`,
+//! read with `syn` from `crates/libfmp/src/endpoints/**`.
 //!
 //! The registry names methods, query types, and responses but carries no
 //! request path and no parameter encoding; those live only in the Rust
@@ -19,6 +20,7 @@
 //! report it.
 
 mod collect;
+mod metadata;
 mod params;
 mod resolve;
 
@@ -26,6 +28,12 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
+
+pub use metadata::{
+    AccessRequirement, ConditionalPlanRequirement, DelayScope, EndpointBounds,
+    GeographicAvailability, MarketDataDelay, PlanCondition, RealtimeAccess,
+    UserDeclarationRequirement, WireMetadata,
+};
 
 use super::Endpoint;
 use super::scan::{Origin, ScanError, Unexpanded, collect_rust_files};
@@ -110,6 +118,11 @@ pub struct WireEndpoint {
     pub query_type: Option<String>,
     pub contract: Contract,
     pub params: Vec<WireParam>,
+    /// The advisory metadata the descriptor attaches with
+    /// `.with_metadata(..)`, folded to plain data. `None` only when no call
+    /// in the descriptor's helper chain attaches any; an unreadable
+    /// argument leaves the method unresolved instead.
+    pub metadata: Option<WireMetadata>,
 }
 
 /// A client method the resolver could not map to literal wire facts.

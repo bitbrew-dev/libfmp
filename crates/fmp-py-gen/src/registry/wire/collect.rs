@@ -4,7 +4,9 @@
 //! struct field types (for `self.field.encode(encoder)` delegation, where
 //! the target's `encode` may be an inherent method, as `DcfAssumptions`), the
 //! `const fn (self) -> &'static str` match tables enums use to pick a path,
-//! and `&[&str]` constants (the binary content-type lists).
+//! every `const` with its declared type (the `&[&str]` binary content-type
+//! lists and the `EndpointMetadata` builder chains), and the `use` imports
+//! that bring a sibling module's const into scope.
 //!
 //! Macro-generated items are captured through the same
 //! [`visit_items`](super::super::scan::visit_items) walk the validator uses,
@@ -15,7 +17,7 @@ use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use quote::ToTokens;
-use syn::{Expr, Fields, ImplItem, Item, Lit, Pat, ReturnType, Stmt, Type};
+use syn::{Expr, Fields, ImplItem, Item, Lit, Pat, ReturnType, Stmt, Type, UseTree};
 
 use super::super::scan::{
     Origin, Unexpanded, base_ident, is_public, module_path, typed_params, visit_items,
@@ -42,9 +44,20 @@ pub(super) struct ClientMethodDef {
     pub body: syn::Block,
 }
 
+/// One `const NAME: Type = expr;` item.
+#[derive(Debug, Clone)]
+pub(super) struct ConstDef {
+    pub expr: Expr,
+}
+
 /// Everything the resolver reads, keyed for lookup.
 #[derive(Debug, Default)]
 pub(super) struct Collected {
+    /// Every `const` item keyed by `(module, name)`.
+    pub constants: BTreeMap<(ModulePath, String), ConstDef>,
+    /// Per module, the local name each `use` brings in and the
+    /// `(module, name)` it refers to; glob imports are not followed.
+    pub imports: BTreeMap<ModulePath, BTreeMap<String, (ModulePath, String)>>,
     pub functions: BTreeMap<(ModulePath, String), FnDef>,
     pub client_methods: BTreeMap<String, ClientMethodDef>,
     /// `QueryParameters::encode` bodies keyed by the implementing type.
@@ -54,8 +67,6 @@ pub(super) struct Collected {
     /// `(type, method)` to `{variant: literal}` for
     /// `fn method(self) -> &'static str { match self { Self::V => "..", } }`.
     pub literal_methods: BTreeMap<(String, String), BTreeMap<String, String>>,
-    /// `const NAME: &[&str] = &["..", ..];` values keyed by name.
-    pub string_lists: BTreeMap<String, Vec<String>>,
     pub unexpanded: Vec<Unexpanded>,
 }
 
@@ -106,13 +117,43 @@ impl Collected {
                 self.struct_fields.insert(item.ident.to_string(), fields);
             }
             Item::Const(item) => {
-                if let Some(list) = string_list(&item.expr) {
-                    self.string_lists.insert(item.ident.to_string(), list);
+                self.constants.insert(
+                    (module.clone(), item.ident.to_string()),
+                    ConstDef {
+                        expr: (*item.expr).clone(),
+                    },
+                );
+            }
+            Item::Use(item) => {
+                let mut imported = Vec::new();
+                flatten_use(&item.tree, &mut Vec::new(), &mut imported);
+                let imports = self.imports.entry(module.clone()).or_default();
+                for (local, segments) in imported {
+                    if let Ok(target) = relative_item(module, &segments) {
+                        imports.insert(local, target);
+                    }
                 }
             }
             Item::Impl(item) => self.absorb_impl(module, item),
             _ => {}
         }
+    }
+
+    /// The const `name` refers to from `module`: declared there, or brought
+    /// in by one of its `use` imports. Returns the module it lives in.
+    pub(super) fn constant(
+        &self,
+        module: &ModulePath,
+        name: &str,
+    ) -> Option<(&ModulePath, &ConstDef)> {
+        let local = (module.clone(), name.to_owned());
+        let key = match self.constants.contains_key(&local) {
+            true => local,
+            false => self.imports.get(module)?.get(name)?.clone(),
+        };
+        self.constants
+            .get_key_value(&key)
+            .map(|(key, def)| (&key.0, def))
     }
 
     fn absorb_impl(&mut self, module: &ModulePath, item: &syn::ItemImpl) {
@@ -159,8 +200,64 @@ impl Collected {
     }
 }
 
+/// Resolves item path segments to the `(module, name)` of an item: a bare
+/// name is in the caller's module, `super::m::x` and `crate::endpoints::m::x`
+/// name a sibling module.
+pub(super) fn relative_item(
+    caller: &ModulePath,
+    segments: &[String],
+) -> Result<(ModulePath, String), String> {
+    let (name, qualifiers) = segments
+        .split_last()
+        .ok_or_else(|| "empty item path".to_owned())?;
+    if qualifiers.is_empty() {
+        return Ok((caller.clone(), name.clone()));
+    }
+    let mut module = caller.clone();
+    for (index, segment) in qualifiers.iter().enumerate() {
+        match segment.as_str() {
+            "self" => {}
+            "super" => {
+                module.pop();
+            }
+            "crate" => module.clear(),
+            "endpoints" if index > 0 && qualifiers[index - 1] == "crate" => {}
+            other => module.push(other.to_owned()),
+        }
+    }
+    Ok((module, name.clone()))
+}
+
+/// Flattens a `use` tree into `(local name, full path segments)` pairs,
+/// following groups and renames and skipping globs.
+fn flatten_use(tree: &UseTree, prefix: &mut Vec<String>, out: &mut Vec<(String, Vec<String>)>) {
+    match tree {
+        UseTree::Path(path) => {
+            prefix.push(path.ident.to_string());
+            flatten_use(&path.tree, prefix, out);
+            prefix.pop();
+        }
+        UseTree::Name(name) => {
+            let mut segments = prefix.clone();
+            segments.push(name.ident.to_string());
+            out.push((name.ident.to_string(), segments));
+        }
+        UseTree::Rename(rename) => {
+            let mut segments = prefix.clone();
+            segments.push(rename.ident.to_string());
+            out.push((rename.rename.to_string(), segments));
+        }
+        UseTree::Group(group) => {
+            for item in &group.items {
+                flatten_use(item, prefix, out);
+            }
+        }
+        UseTree::Glob(_) => {}
+    }
+}
+
 /// Reads `&["a", "b"]` (or `["a", "b"]`) into its string values.
-fn string_list(expr: &Expr) -> Option<Vec<String>> {
+pub(super) fn string_list(expr: &Expr) -> Option<Vec<String>> {
     match expr {
         Expr::Reference(reference) => string_list(&reference.expr),
         Expr::Array(array) => array.elems.iter().map(string_literal).collect(),
