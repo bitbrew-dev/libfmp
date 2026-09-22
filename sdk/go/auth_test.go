@@ -3,6 +3,7 @@ package fmp
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 	"testing"
@@ -51,6 +52,7 @@ func TestAuthenticationFormattingNeverPrintsSecrets(t *testing.T) {
 	auths := []Authentication{
 		FmpHeader(secret), FmpQuery(secret), Bearer(secret),
 		CustomHeader("X-Proxy-Token", secret), CustomQuery("router_token", secret),
+		CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", secret),
 	}
 	for _, auth := range auths {
 		for _, verb := range []string{"%v", "%+v", "%#v", "%s", "%d", "%q"} {
@@ -82,6 +84,14 @@ func TestAuthMaterialMirrorsTheRustModes(t *testing.T) {
 	if err != nil || custom.headerName != "x-proxy-token" || custom.headerValue != "tok" {
 		t.Fatalf("CustomHeader material = %+v, err %v", custom, err)
 	}
+	spaced, err := buildAuthMaterial(CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", "tok"))
+	if err != nil || spaced.headerName != "x-proxy-token" || spaced.headerValue != "Bearer tok" {
+		t.Fatalf("CustomHeaderWithPrefix material = %+v, err %v", spaced, err)
+	}
+	joined, err := buildAuthMaterial(CustomHeaderWithPrefix("X-Proxy-Token", "Bearer", "tok"))
+	if err != nil || joined.headerValue != "Bearertok" {
+		t.Fatalf("CustomHeaderWithPrefix inserted a separator: %+v, err %v", joined, err)
+	}
 	query, err := buildAuthMaterial(CustomQuery("router_token", "tok"))
 	if err != nil || query.queryName != "router_token" || query.querySecret != "tok" || query.headerName != "" {
 		t.Fatalf("CustomQuery material = %+v, err %v", query, err)
@@ -105,6 +115,16 @@ func TestAuthMaterialRejectsUnsafeInput(t *testing.T) {
 		{"custom header bad name", CustomHeader("x proxy", "tok"), ConfigurationKindInvalidHeaderName},
 		{"custom header transport owned", CustomHeader("Host", "tok"), ConfigurationKindProtectedFieldCollision},
 		{"custom header bad value", CustomHeader("X-Proxy-Token", "tok\n"), ConfigurationKindInvalidHeaderValue},
+		{"custom header prefix crlf", CustomHeaderWithPrefix("X-Proxy-Token", "Bearer\r\n", "tok"),
+			ConfigurationKindInvalidHeaderValue},
+		{"custom header prefix control", CustomHeaderWithPrefix("X-Proxy-Token", "Bearer\x00", "tok"),
+			ConfigurationKindInvalidHeaderValue},
+		{"custom header prefix non ascii", CustomHeaderWithPrefix("X-Proxy-Token", "Träger ", "tok"),
+			ConfigurationKindInvalidHeaderValue},
+		{"custom header prefix bad name", CustomHeaderWithPrefix("x proxy", "Bearer ", "tok"),
+			ConfigurationKindInvalidHeaderName},
+		{"custom header prefix empty secret", CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", ""),
+			ConfigurationKindEmptyCredential},
 		{"custom query bad name", CustomQuery("router\ttoken", "tok"), ConfigurationKindInvalidQueryName},
 		{"custom query empty name", CustomQuery("", "tok"), ConfigurationKindInvalidQueryName},
 	}
@@ -145,5 +165,143 @@ func assertConfigurationKind(t *testing.T, err error, kind ConfigurationKind) {
 	if typed.Category != CategoryConfiguration || typed.ConfigurationKind != kind {
 		t.Fatalf("error = category %v kind %d, want configuration kind %d: %v",
 			typed.Category, int(typed.ConfigurationKind), int(kind), err)
+	}
+}
+
+func TestCustomHeaderWithPrefixEmptyPrefixIsCustomHeader(t *testing.T) {
+	t.Parallel()
+	plain := CustomHeader("X-Proxy-Token", "example-key")
+	unprefixed := CustomHeaderWithPrefix("X-Proxy-Token", "", "example-key")
+	if unprefixed != plain {
+		t.Fatalf("empty prefix produced a different value: %v vs %v", unprefixed, plain)
+	}
+	plainMaterial, err := buildAuthMaterial(plain)
+	if err != nil {
+		t.Fatal(err)
+	}
+	unprefixedMaterial, err := buildAuthMaterial(unprefixed)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if unprefixedMaterial != plainMaterial {
+		t.Fatal("empty prefix produced different transport material")
+	}
+	if fmt.Sprint(unprefixed) != fmt.Sprint(plain) {
+		t.Fatalf("empty prefix prints differently: %v vs %v", unprefixed, plain)
+	}
+}
+
+func TestCustomHeaderWithPrefixRejectsInvalidPrefixAtClientBuild(t *testing.T) {
+	t.Parallel()
+	_, err := NewClient(WithBaseURL("https://proxy.example/router"),
+		WithAuthentication(CustomHeaderWithPrefix("X-Proxy-Token", "Bearer\r\n", "example-key")))
+	assertConfigurationKind(t, err, ConfigurationKindInvalidHeaderValue)
+	if strings.Contains(err.Error(), "example-key") {
+		t.Fatalf("configuration error leaked the credential: %v", err)
+	}
+	_, err = NewClient(WithBaseURL("https://proxy.example/router"),
+		WithAuthentication(CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", "example-key")))
+	if err != nil {
+		t.Fatalf("valid prefix was rejected: %v", err)
+	}
+}
+
+func TestCustomHeaderWithPrefixSendsPrefixThenSecretByteForByte(t *testing.T) {
+	t.Parallel()
+	const secret = "example-key"
+	cases := []struct {
+		name   string
+		prefix string
+		want   string
+	}{
+		{name: "trailing space", prefix: "Bearer ", want: "Bearer " + secret},
+		{name: "no separator", prefix: "Bearer", want: "Bearer" + secret},
+		{name: "tab", prefix: "Token\t", want: "Token\t" + secret},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			server, rec := newServer(t, jsonHandler(`[]`))
+			client := newClient(t, server,
+				WithAuthentication(CustomHeaderWithPrefix("X-Proxy-Token", tc.prefix, secret)))
+			if _, err := probe(t, client, queryParam{"symbol", "AAPL"}); err != nil {
+				t.Fatal(err)
+			}
+			reqs := rec.all()
+			if len(reqs) != 1 {
+				t.Fatalf("%d requests, want 1", len(reqs))
+			}
+			if got := reqs[0].Header.Get("X-Proxy-Token"); got != tc.want {
+				t.Fatalf("header value = %q, want %q", got, tc.want)
+			}
+			if strings.Contains(reqs[0].URL.String(), secret) {
+				t.Fatal("header credential appeared in the URL")
+			}
+		})
+	}
+}
+
+func TestCustomHeaderWithPrefixSecretIsRedactedFromStatusErrors(t *testing.T) {
+	t.Parallel()
+	const secret = "example-key"
+	server, _ := newServer(t, func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusBadGateway)
+		_, _ = fmt.Fprintf(w, "proxy rejected %s", r.Header.Get("X-Proxy-Token"))
+	})
+	client := newClient(t, server,
+		WithAuthentication(CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", secret)))
+
+	_, err := probe(t, client)
+	typed := assertError(t, err, CategoryStatus, http.StatusBadGateway)
+	if typed.Body == nil || typed.Body.Text != "proxy rejected Bearer "+Redacted {
+		t.Fatalf("status body was not redacted: %v", typed.Body)
+	}
+	assertNoSecret(t, secret, err.Error(), typed.Body.Text, fmt.Sprintf("%+v", typed))
+}
+
+// echoingTransport fails every request with an error that quotes the secret
+// header, the way a misbehaving proxy or debugging transport might. The
+// http.Client wraps that error in a *url.Error before the SDK sees it.
+type echoingTransport struct{}
+
+func (echoingTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	return nil, fmt.Errorf("proxy refused header value %q", req.Header.Get("X-Proxy-Token"))
+}
+
+func TestCustomHeaderWithPrefixSecretIsRedactedFromTransportErrors(t *testing.T) {
+	t.Parallel()
+	const secret = "example-key"
+	client, err := NewClient(WithBaseURL("https://proxy.example/router"),
+		WithHTTPClient(&http.Client{Transport: echoingTransport{}}),
+		WithAuthentication(CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", secret)))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = probe(t, client)
+	typed := assertError(t, err, CategoryTransport, 0)
+	cause := typed.Unwrap()
+	if cause == nil {
+		t.Fatal("transport error kept no cause")
+	}
+	if !strings.Contains(cause.Error(), "Bearer "+Redacted) {
+		t.Fatalf("cause did not keep the redacted header value: %v", cause)
+	}
+	if strings.Contains(cause.Error(), "contract-probe") {
+		t.Fatalf("cause kept the *url.Error request URL: %v", cause)
+	}
+	var urlErr interface{ Timeout() bool }
+	if errors.As(err, &urlErr) {
+		t.Fatalf("a raw transport error escaped: %T", cause)
+	}
+	assertNoSecret(t, secret, err.Error(), cause.Error(), fmt.Sprintf("%+v", typed))
+}
+
+func assertNoSecret(t *testing.T, secret string, texts ...string) {
+	t.Helper()
+	for _, text := range texts {
+		if strings.Contains(text, secret) {
+			t.Fatalf("diagnostic leaked the credential: %s", text)
+		}
 	}
 }

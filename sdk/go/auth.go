@@ -33,6 +33,7 @@ const (
 type Authentication struct {
 	mode   authMode
 	name   string
+	prefix string
 	secret string
 }
 
@@ -72,6 +73,17 @@ func Bearer(token string) Authentication {
 // CustomHeader sends a secret in a caller-selected header.
 func CustomHeader(name, secret string) Authentication {
 	return Authentication{mode: authCustomHeader, name: name, secret: secret}
+}
+
+// CustomHeaderWithPrefix sends a secret in a caller-selected header with
+// non-secret text placed immediately before it. The header value is exactly
+// prefix followed by secret; no separator is inserted, so a "Bearer " prefix
+// must carry its own trailing space. It mirrors the Rust
+// Authentication::custom_header(name, Some(prefix), secret) form, and an empty
+// prefix is the same value as CustomHeader(name, secret). The prefix is
+// validated like a header value when the client is built.
+func CustomHeaderWithPrefix(name, prefix, secret string) Authentication {
+	return Authentication{mode: authCustomHeader, name: name, prefix: prefix, secret: secret}
 }
 
 // CustomQuery sends a secret in a caller-selected query parameter.
@@ -126,7 +138,7 @@ func buildAuthMaterial(a Authentication) (authMaterial, error) {
 	case authBearer:
 		return secretHeader(bearerHeader, bearerPrefix, a.secret)
 	case authCustomHeader:
-		return secretHeader(a.name, "", a.secret)
+		return secretHeader(a.name, a.prefix, a.secret)
 	case authCustomQuery:
 		if err := validateQueryName(a.name); err != nil {
 			return authMaterial{}, err

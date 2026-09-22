@@ -65,11 +65,33 @@ if err != nil {
 }
 ```
 
-Header modes (`FmpHeader`, `Bearer`, `CustomHeader`) never place a credential
-in the URL. Query modes (`FmpQuery`, `CustomQuery`) append the secret as the
-last query pair of every request. `WithBaseURL` and `WithPathPrefix` route the
-client through a proxy; `WithHTTPClient` injects a caller-owned
-`*http.Client` for tests and custom transports.
+Header modes (`FmpHeader`, `Bearer`, `CustomHeader`, `CustomHeaderWithPrefix`)
+never place a credential in the URL. Query modes (`FmpQuery`, `CustomQuery`)
+append the secret as the last query pair of every request. `WithBaseURL` and
+`WithPathPrefix` route the client through a proxy; `WithHTTPClient` injects a
+caller-owned `*http.Client` for tests and custom transports.
+
+`CustomHeaderWithPrefix(name, prefix, secret)` places non-secret text
+immediately before the secret, byte for byte: no separator is inserted, so a
+`"Bearer "` prefix carries its own trailing space. It mirrors the Rust
+`Authentication::custom_header(name, Some(prefix), secret)` form; an empty
+prefix is the same value as `CustomHeader`. Only the secret is redacted from
+diagnostics, never the prefix. A custom router or proxy that expects
+`X-Proxy-Token: Bearer <token>` is configured like this:
+
+```go
+client, err := fmp.NewClient(
+	fmp.WithBaseURL(os.Getenv("FMP_PROXY_BASE_URL")),
+	fmp.WithPathPrefix("router/stable"),
+	fmp.WithAuthentication(fmp.CustomHeaderWithPrefix(
+		"X-Proxy-Token", "Bearer ", os.Getenv("FMP_PROXY_TOKEN"),
+	)),
+	fmp.WithDefaultHeader("X-Tenant", os.Getenv("FMP_TENANT")),
+)
+if err != nil {
+	return err
+}
+```
 
 The environment names match the Rust crate's live opt-in tests:
 

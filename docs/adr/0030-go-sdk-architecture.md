@@ -78,7 +78,7 @@ one-for-one. Every option name is the Rust builder method in Go casing:
 | --- | --- | --- |
 | `base_url` | `WithBaseURL` | same URL validation and unsafe-URL refusal |
 | `path_prefix` | `WithPathPrefix` | |
-| `authentication` | `WithAuthentication(Authentication)` | constructors `FmpHeader`, `FmpQuery`, `Bearer`, `CustomHeader`, `CustomQuery`, `FmpHeaderFromEnv` (`FMP_API_KEY`) |
+| `authentication` | `WithAuthentication(Authentication)` | constructors `FmpHeader`, `FmpQuery`, `Bearer`, `CustomHeader`, `CustomHeaderWithPrefix`, `CustomQuery`, `FmpHeaderFromEnv` (`FMP_API_KEY`). Rust `custom_header(name, None, secret)` is `CustomHeader(name, secret)`; `custom_header(name, Some(prefix), secret)` is `CustomHeaderWithPrefix(name, prefix, secret)`, and both send `<prefix><secret>` byte for byte with no separator inserted |
 | `default_header` | `WithDefaultHeader` | same protected-field collision rule |
 | `user_agent` | `WithUserAgent` | |
 | `timeout` | `WithTimeout` | one logical deadline across redirects and body read |
