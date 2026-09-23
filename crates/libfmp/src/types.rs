@@ -664,11 +664,13 @@ pub type Change = f64;
 pub type Percentage = f64;
 /// A market value represented by the provider as a JSON number.
 pub type MarketValue = f64;
-/// A non-negative volume represented by the provider as a JSON number.
+/// A traded volume represented by the provider as a JSON number.
 ///
-/// The provider sends a JSON integer or, intermittently, a fractional number
-/// (`20201922.82733` was observed on `quote-short`), so the type is `f64`.
-/// Response fields re-encode an integral value as a JSON integer through
+/// The provider documents volume as a non-negative integer, but it sends a
+/// JSON integer or, intermittently, a fractional number (`20201922.82733` was
+/// observed on `quote-short`), so the type is `f64` and the SDK accepts any
+/// JSON number without enforcing a sign or integrality. Response fields
+/// re-encode an integral value as a JSON integer through
 /// [`crate::codecs::volume`]; the screener volume filters stay `u64`.
 pub type Volume = f64;
 /// A non-negative count represented by the provider as a JSON integer.

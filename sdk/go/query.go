@@ -89,7 +89,8 @@ func uint32Param(name string, value uint32) (queryParam, error) {
 	return queryParam{Name: name, Value: strconv.FormatUint(uint64(value), 10)}, nil
 }
 
-// uint64Param encodes the u64 aliases (MarketCapitalization, Volume) in decimal.
+// uint64Param encodes the u64 query aliases (MarketCapitalization and the
+// screener volume filters; response Volume is float64) in decimal.
 func uint64Param(name string, value uint64) (queryParam, error) {
 	return queryParam{Name: name, Value: strconv.FormatUint(value, 10)}, nil
 }

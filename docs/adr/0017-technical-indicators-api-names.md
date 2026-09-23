@@ -39,7 +39,9 @@ reversed interval, impose a span, or invent an undocumented cap.
 
 Response timestamps reuse the strict timezone-less `ApiDateTime`. OHLC values
 and the SMA, EMA, WMA, DEMA, TEMA, and standard-deviation metrics use `Price`.
-Volume uses the full `Volume` (`u64`) domain. RSI, Williams, and ADX remain raw
+Volume uses the full `Volume` (`u64`) domain. Issue #337 later made `Volume`
+an `f64` across every response type because the provider intermittently sends
+a fractional volume (see ADR 0030). RSI, Williams, and ADX remain raw
 `f64` values, preserving negative Williams readings and accepting integer or
 fractional JSON numbers. The standard-deviation row preserves the exact
 `standardDeviation` provider key.
