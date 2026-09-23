@@ -5,9 +5,9 @@ use libfmp::{
         DateOrDateTime, DynamicJson, DynamicObject, FiscalYear, IsoTimestamp,
         NumberOrNumericString, OpaqueDateText, PercentageValue, TitleCaseBoolFlag, TrueFalseFlag,
         UsDate, WireBool, YesNoFlag, YnFlag, empty_date, empty_or_null_date,
-        empty_or_null_date_or_datetime,
+        empty_or_null_date_or_datetime, volume,
     },
-    types::Date,
+    types::{Date, Volume},
 };
 use serde::{Deserialize, Serialize};
 
@@ -203,4 +203,48 @@ fn dynamic_object_preserves_semantics_without_treating_member_order_as_data() {
 
     assert!(serde_json::from_str::<DynamicObject>("[]").is_err());
     assert!(serde_json::from_str::<DynamicObject>("null").is_err());
+}
+
+#[test]
+fn volume_accepts_any_json_number_and_re_encodes_integral_values_as_integers() {
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    struct Row {
+        #[serde(serialize_with = "volume::serialize")]
+        volume: Volume,
+    }
+    let encoded = |value: f64| serde_json::to_string(&Row { volume: value }).unwrap();
+
+    let documented: Row = serde_json::from_str(r#"{"volume":28718014}"#).unwrap();
+    let observed: Row = serde_json::from_str(r#"{"volume":20201922.82733}"#).unwrap();
+    assert_eq!(documented.volume, 28_718_014.0);
+    assert_eq!(observed.volume, 20_201_922.827_33);
+    assert_eq!(
+        serde_json::to_string(&documented).unwrap(),
+        r#"{"volume":28718014}"#
+    );
+    assert_eq!(
+        serde_json::to_string(&observed).unwrap(),
+        r#"{"volume":20201922.82733}"#
+    );
+
+    assert_eq!(encoded(0.0), r#"{"volume":0}"#);
+    assert_eq!(encoded(4_294_967_296.0), r#"{"volume":4294967296}"#);
+    assert_eq!(encoded(-1.0), r#"{"volume":-1}"#);
+    assert_eq!(encoded(1.5), r#"{"volume":1.5}"#);
+    assert_eq!(
+        serde_json::to_value(Row {
+            volume: 32_030_003_200.0
+        })
+        .unwrap()["volume"]
+            .as_u64(),
+        Some(32_030_003_200)
+    );
+    let beyond_u64 = serde_json::to_value(Row {
+        volume: u64::MAX as f64,
+    })
+    .unwrap();
+    assert!(beyond_u64["volume"].is_f64());
+    assert_eq!(beyond_u64["volume"].as_f64(), Some(u64::MAX as f64));
+    assert!(serde_json::from_str::<Row>(r#"{"volume":"1"}"#).is_err());
+    assert!(serde_json::from_str::<Row>(r#"{"volume":null}"#).is_err());
 }
