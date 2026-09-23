@@ -179,8 +179,6 @@ pub fn field_attrs(attrs: &[Attribute]) -> syn::Result<FieldAttrs> {
                 out.with = string_value(&meta)?;
             } else if meta.path.is_ident("deserialize_with") {
                 out.deserialize_with = string_value(&meta)?;
-            } else if meta.path.is_ident("serialize_with") {
-                out.serialize_with = string_value(&meta)?;
             } else if meta.path.is_ident("flatten") {
                 out.flatten = true;
             } else if meta.path.is_ident("skip") || meta.path.is_ident("skip_deserializing") {
@@ -283,7 +281,7 @@ mod tests {
     }
 
     #[test]
-    fn captures_rename_default_with_deserialize_with_and_serialize_with() {
+    fn captures_rename_default_with_and_deserialize_with() {
         let item = parse_struct(
             r#"
             #[derive(Deserialize)]
@@ -305,8 +303,6 @@ mod tests {
                 pub flag: Option<Flag>,
                 #[doc = "no serde"]
                 pub plain: String,
-                #[serde(serialize_with = "crate::codecs::volume::serialize")]
-                pub volume: Volume,
             }
             "#,
         );
@@ -333,19 +329,6 @@ mod tests {
         assert_eq!(flag.rename.as_deref(), Some("flagUSD"));
         assert_eq!(flag.skip_serializing_if.as_deref(), Some("Option::is_none"));
         assert_eq!(attrs_of(&item, 7), FieldAttrs::default());
-        let volume = attrs_of(&item, 8);
-        assert_eq!(
-            volume.serialize_with.as_deref(),
-            Some("crate::codecs::volume::serialize")
-        );
-        assert_eq!(
-            FieldAttrs {
-                serialize_with: None,
-                ..volume
-            },
-            FieldAttrs::default(),
-            "serialize_with must not set any attribute a generator acts on"
-        );
     }
 
     #[test]
