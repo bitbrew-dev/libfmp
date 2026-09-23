@@ -127,6 +127,24 @@ async fn zero_and_false_are_emitted_while_absent_filters_are_omitted() {
 }
 
 #[tokio::test]
+async fn volume_filters_stay_whole_numbers_even_though_response_volumes_are_floats() {
+    let executor = Arc::new(FixtureExecutor::new([json_fixture(EMPTY)]));
+    let client = proxy_client(executor.clone());
+    let query = CompanyScreenerQuery::new()
+        .with_volume_more_than(u64::MAX)
+        .with_volume_lower_than(9_007_199_254_740_993);
+
+    client.company_screener(query.clone()).await.unwrap();
+
+    assert_eq!(query.volume_more_than(), Some(u64::MAX));
+    assert_eq!(query.volume_lower_than(), Some(9_007_199_254_740_993));
+    assert_eq!(
+        executor.requests()[0].expose_url().as_str(),
+        "https://proxy.example/router/stable/company-screener?volumeMoreThan=18446744073709551615&volumeLowerThan=9007199254740993"
+    );
+}
+
+#[tokio::test]
 async fn client_preserves_empty_multiple_unknown_and_large_number_arrays() {
     let executor = Arc::new(FixtureExecutor::new([
         json_fixture(EMPTY),
