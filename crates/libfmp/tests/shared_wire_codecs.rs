@@ -228,9 +228,28 @@ fn volume_accepts_any_json_number_and_re_encodes_integral_values_as_integers() {
     );
 
     assert_eq!(encoded(0.0), r#"{"volume":0}"#);
+    assert_eq!(encoded(-0.0), r#"{"volume":0}"#);
     assert_eq!(encoded(4_294_967_296.0), r#"{"volume":4294967296}"#);
     assert_eq!(encoded(-1.0), r#"{"volume":-1}"#);
     assert_eq!(encoded(1.5), r#"{"volume":1.5}"#);
+    assert_eq!(
+        encoded(9_007_199_254_740_992.0),
+        r#"{"volume":9007199254740992}"#,
+        "2^53 is integral and still emits an integer"
+    );
+    assert_eq!(
+        encoded(18_446_744_073_709_549_568.0),
+        r#"{"volume":18446744073709549568}"#,
+        "the largest f64 below 2^64 casts to u64 exactly"
+    );
+    assert_eq!(
+        encoded(i64::MIN as f64),
+        r#"{"volume":-9223372036854775808}"#,
+        "-2^63 is the last negative integral value that fits an i64"
+    );
+    assert_eq!(encoded(f64::NAN), r#"{"volume":null}"#);
+    assert_eq!(encoded(f64::INFINITY), r#"{"volume":null}"#);
+    assert_eq!(encoded(f64::NEG_INFINITY), r#"{"volume":null}"#);
     assert_eq!(
         serde_json::to_value(Row {
             volume: 32_030_003_200.0

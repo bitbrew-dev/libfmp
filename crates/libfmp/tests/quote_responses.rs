@@ -177,7 +177,8 @@ fn new_quote_response_arrays_preserve_empty_multiple_unknown_and_large_values() 
     assert_eq!(quotes[0].ask_size, 9_007_199_254_740_993);
     assert_eq!(quotes[0].volume, (u64::MAX - 1) as f64);
     assert_eq!(quotes[0].timestamp, UnixMilliseconds(i64::MAX));
-    assert_eq!(quotes[1].volume, 9_007_199_254_740_993.0);
+    // The fixture carries 9007199254740993 (2^53 + 1), which rounds to 2^53 as an f64.
+    assert_eq!(quotes[1].volume, 9_007_199_254_740_992.0);
 
     let changes: Vec<StockPriceChange> =
         serde_json::from_str(include_str!("fixtures/stock_price_change_synthetic.json")).unwrap();

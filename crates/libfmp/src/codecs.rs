@@ -722,7 +722,7 @@ pub mod volume {
             if *value >= 0.0 && *value < u64::MAX as f64 {
                 return serializer.serialize_u64(*value as u64);
             }
-            if *value < 0.0 && *value > i64::MIN as f64 {
+            if *value < 0.0 && *value >= i64::MIN as f64 {
                 return serializer.serialize_i64(*value as i64);
             }
         }
