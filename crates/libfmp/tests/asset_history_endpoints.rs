@@ -177,7 +177,7 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        126_573
+        126_573.0
     );
     assert_eq!(
         client.commodity_chart_full(commodity_eod).await.unwrap()[0].change,
@@ -189,7 +189,7 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        59
+        59.0
     );
     assert_eq!(
         client
@@ -197,7 +197,7 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        103
+        103.0
     );
     assert_eq!(
         client
@@ -205,7 +205,7 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        690
+        690.0
     );
     assert_eq!(
         client.forex_chart_light(forex_eod.clone()).await.unwrap()[0].price,
@@ -221,7 +221,7 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        76
+        76.0
     );
     assert_eq!(
         client
@@ -229,11 +229,11 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        91
+        91.0
     );
     assert_eq!(
         client.forex_chart_one_hour(forex_intraday).await.unwrap()[0].volume,
-        1_420
+        1_420.0
     );
     assert_eq!(
         client
@@ -241,11 +241,11 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        32_030_003_200
+        32_030_003_200.0
     );
     assert_eq!(
         client.cryptocurrency_chart_full(crypto_eod).await.unwrap()[0].volume,
-        32_030_003_200
+        32_030_003_200.0
     );
     assert_eq!(
         client
@@ -253,7 +253,7 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        0
+        0.0
     );
     assert_eq!(
         client
@@ -261,13 +261,13 @@ async fn proxy_routes_all_fifteen_methods_and_decodes_exact_outer_rows() {
             .await
             .unwrap()[0]
             .volume,
-        0
+        0.0
     );
     let hourly = client
         .cryptocurrency_chart_one_hour(crypto_intraday)
         .await
         .unwrap();
-    assert_eq!(hourly[0].volume, 0);
+    assert_eq!(hourly[0].volume, 0.0);
     assert_eq!(hourly[0].date.to_string(), "2026-07-30 13:00:00");
 
     let requests = executor.requests();

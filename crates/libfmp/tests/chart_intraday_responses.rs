@@ -27,7 +27,7 @@ fn every_intraday_route_decodes_its_exact_documented_row() {
             332.27499,
             332.48,
             332.47,
-            67_660,
+            67_660.0,
         ),
         (
             "2026-07-30 13:15:00",
@@ -35,7 +35,7 @@ fn every_intraday_route_decodes_its_exact_documented_row() {
             332.31989,
             332.755,
             332.31989,
-            123_020,
+            123_020.0,
         ),
         (
             "2026-07-30 13:15:00",
@@ -43,7 +43,7 @@ fn every_intraday_route_decodes_its_exact_documented_row() {
             332.31989,
             332.755,
             332.31989,
-            123_020,
+            123_020.0,
         ),
         (
             "2026-07-30 13:00:00",
@@ -51,7 +51,7 @@ fn every_intraday_route_decodes_its_exact_documented_row() {
             331.71,
             332.82999,
             332.31989,
-            980_442,
+            980_442.0,
         ),
         (
             "2026-07-30 12:30:00",
@@ -59,7 +59,7 @@ fn every_intraday_route_decodes_its_exact_documented_row() {
             331.43,
             332.82999,
             332.31989,
-            3_285_503,
+            3_285_503.0,
         ),
         (
             "2026-07-30 09:30:00",
@@ -67,7 +67,7 @@ fn every_intraday_route_decodes_its_exact_documented_row() {
             329.70499,
             334.26,
             332.31989,
-            28_439_347,
+            28_439_347.0,
         ),
     ];
 

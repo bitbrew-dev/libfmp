@@ -91,7 +91,7 @@ async fn custom_proxy_preserves_exact_queries_headers_and_fixture_identity() {
     );
     assert_eq!(info.len(), 1);
     assert_eq!(info[0].assets_under_management, 777_349_860_000);
-    assert_eq!(info[0].avg_volume, 52_093_933);
+    assert_eq!(info[0].avg_volume, 52_093_933.0);
     assert_eq!(info[0].sectors_list.len(), 3);
     assert_eq!(info[0].sectors_list[1].industry.as_str(), "Cash & Others");
     assert_eq!(info[0].sectors_list[1].exposure, 0.30489782336177595);

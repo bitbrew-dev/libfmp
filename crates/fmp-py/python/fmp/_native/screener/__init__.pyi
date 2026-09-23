@@ -28,7 +28,7 @@ class CompanyScreenerEntry:
     @property
     def last_annual_dividend(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     @property
     def exchange(self) -> builtins.str: ...
     @property
@@ -51,7 +51,7 @@ class CompanyScreenerEntry:
         beta: builtins.float,
         price: builtins.float,
         last_annual_dividend: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
         exchange: builtins.str,
         exchange_short_name: builtins.str,
         country: builtins.str,

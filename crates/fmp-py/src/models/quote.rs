@@ -20,7 +20,7 @@ pub(crate) struct Quote {
     #[pyo3(get)]
     pub change: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub day_low: f64,
     #[pyo3(get)]
@@ -58,7 +58,7 @@ impl Quote {
         price: f64,
         change_percentage: f64,
         change: f64,
-        volume: u64,
+        volume: f64,
         day_low: f64,
         day_high: f64,
         year_high: f64,
@@ -152,7 +152,7 @@ pub(crate) struct QuoteShort {
     #[pyo3(get)]
     pub change: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
 }
 
 #[gen_stub_pymethods]
@@ -162,7 +162,7 @@ impl QuoteShort {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (symbol, price, change, volume))]
-    fn new(symbol: String, price: f64, change: f64, volume: u64) -> Self {
+    fn new(symbol: String, price: f64, change: f64, volume: f64) -> Self {
         Self {
             symbol,
             price,
@@ -262,7 +262,7 @@ pub(crate) struct AftermarketQuote {
     #[pyo3(get)]
     pub ask_price: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub timestamp: i64,
 }
@@ -280,7 +280,7 @@ impl AftermarketQuote {
         bid_price: f64,
         ask_size: u64,
         ask_price: f64,
-        volume: u64,
+        volume: f64,
         timestamp: i64,
     ) -> Self {
         Self {

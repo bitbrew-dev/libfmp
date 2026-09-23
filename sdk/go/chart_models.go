@@ -15,7 +15,7 @@ type StockChartLightBar struct {
 	Symbol string  `json:"symbol"`
 	Date   Date    `json:"date"`
 	Price  float64 `json:"price"`
-	Volume uint64  `json:"volume"`
+	Volume float64 `json:"volume"`
 }
 
 // stockChartLightBarShadow mirrors StockChartLightBar with a pointer or raw
@@ -25,7 +25,7 @@ type stockChartLightBarShadow struct {
 	Symbol *string  `json:"symbol"`
 	Date   *Date    `json:"date"`
 	Price  *float64 `json:"price"`
-	Volume *uint64  `json:"volume"`
+	Volume *float64 `json:"volume"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -63,7 +63,7 @@ type StockChartFullBar struct {
 	High          float64 `json:"high"`
 	Low           float64 `json:"low"`
 	Close         float64 `json:"close"`
-	Volume        uint64  `json:"volume"`
+	Volume        float64 `json:"volume"`
 	Change        float64 `json:"change"`
 	ChangePercent float64 `json:"changePercent"`
 	Vwap          float64 `json:"vwap"`
@@ -79,7 +79,7 @@ type stockChartFullBarShadow struct {
 	High          *float64 `json:"high"`
 	Low           *float64 `json:"low"`
 	Close         *float64 `json:"close"`
-	Volume        *uint64  `json:"volume"`
+	Volume        *float64 `json:"volume"`
 	Change        *float64 `json:"change"`
 	ChangePercent *float64 `json:"changePercent"`
 	Vwap          *float64 `json:"vwap"`
@@ -139,7 +139,7 @@ type StockChartAdjustedBar struct {
 	AdjHigh  float64 `json:"adjHigh"`
 	AdjLow   float64 `json:"adjLow"`
 	AdjClose float64 `json:"adjClose"`
-	Volume   uint64  `json:"volume"`
+	Volume   float64 `json:"volume"`
 }
 
 // stockChartAdjustedBarShadow mirrors StockChartAdjustedBar with a pointer or
@@ -152,7 +152,7 @@ type stockChartAdjustedBarShadow struct {
 	AdjHigh  *float64 `json:"adjHigh"`
 	AdjLow   *float64 `json:"adjLow"`
 	AdjClose *float64 `json:"adjClose"`
-	Volume   *uint64  `json:"volume"`
+	Volume   *float64 `json:"volume"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -198,7 +198,7 @@ type StockChartIntradayBar struct {
 	Low    float64  `json:"low"`
 	High   float64  `json:"high"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 }
 
 // stockChartIntradayBarShadow mirrors StockChartIntradayBar with a pointer or
@@ -210,7 +210,7 @@ type stockChartIntradayBarShadow struct {
 	Low    *float64  `json:"low"`
 	High   *float64  `json:"high"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode

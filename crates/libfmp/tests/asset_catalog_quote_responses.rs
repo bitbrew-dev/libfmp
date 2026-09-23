@@ -231,7 +231,7 @@ where
 #[test]
 fn crypto_quotes_preserve_large_volume_market_cap_and_nullable_market_cap() {
     let crypto: Vec<CryptocurrencyQuote> = serde_json::from_slice(CRYPTOCURRENCY_QUOTE).unwrap();
-    assert_eq!(crypto[0].volume, 32_030_003_200);
+    assert_eq!(crypto[0].volume, 32_030_003_200.0);
     assert_eq!(crypto[0].market_cap, Some(1_293_361_815_015));
 
     let commodity: Vec<CommodityQuote> = serde_json::from_slice(COMMODITY_QUOTE).unwrap();
@@ -241,7 +241,7 @@ fn crypto_quotes_preserve_large_volume_market_cap_and_nullable_market_cap() {
 
     let compact: Vec<CryptocurrencyQuoteShort> =
         serde_json::from_slice(CRYPTOCURRENCY_QUOTE_SHORT).unwrap();
-    assert_eq!(compact[0].volume, 32_030_003_200);
+    assert_eq!(compact[0].volume, 32_030_003_200.0);
 }
 
 #[test]

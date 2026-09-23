@@ -82,7 +82,7 @@ func TestCommoditiesMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 		name   string
 		call   func(context.Context, AssetChartQuery) ([]StockChartIntradayBar, error)
 		query  AssetChartQuery
-		volume uint64
+		volume float64
 	}{
 		{"OneMinute", client.Commodities.ChartOneMinute, NewAssetChartQuery("GCUSD").WithFrom(from).WithTo(to), 59},
 		{"OneMinute bare", client.Commodities.ChartOneMinute, NewAssetChartQuery("GCUSD"), 59},
@@ -92,7 +92,7 @@ func TestCommoditiesMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 	for _, tc := range intraday {
 		rows, err := tc.call(ctx, tc.query)
 		if err != nil || len(rows) != 1 || rows[0].Volume != tc.volume {
-			t.Fatalf("%s = %+v, %v, want volume %d", tc.name, rows, err, tc.volume)
+			t.Fatalf("%s = %+v, %v, want volume %.0f", tc.name, rows, err, tc.volume)
 		}
 	}
 

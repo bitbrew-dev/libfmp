@@ -76,7 +76,7 @@ arg_kinds! {
     CalendarQuarter => ("calendar_quarter", "CalendarQuarter", "i64", "int"),
     PeriodLength => ("period_length", "PeriodLength", "i64", "int"),
     MarketCapitalization => ("market_capitalization", "MarketCapitalization", "i64", "int"),
-    Volume => ("volume", "Volume", "i64", "int"),
+    Volume => ("volume", "u64", "i64", "int"),
     FiniteDecimal => ("finite_decimal", "FiniteDecimal", "f64", "float"),
     TrueFalseFlag => ("true_false_flag", "TrueFalseFlag", "bool", "bool"),
     Boolean => ("boolean", "bool", "bool", "bool"),

@@ -22,7 +22,7 @@ fn endpoint_source_fixtures_decode_every_exact_required_field() {
             symbol: Ticker::new("AAPL").unwrap(),
             date: Date::from_str("2026-07-30").unwrap(),
             price: 332.39,
-            volume: 29_207_295,
+            volume: 29_207_295.0,
         }]
     );
     assert_eq!(serde_json::to_value(light).unwrap(), light_value);
@@ -37,7 +37,7 @@ fn endpoint_source_fixtures_decode_every_exact_required_field() {
             high: 334.48,
             low: 329.59,
             close: 332.39,
-            volume: 29_207_295,
+            volume: 29_207_295.0,
             change: -0.74,
             change_percent: -0.2221355,
             vwap: 332.15,

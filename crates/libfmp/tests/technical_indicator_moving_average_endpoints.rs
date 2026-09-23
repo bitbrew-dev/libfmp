@@ -106,7 +106,7 @@ async fn custom_proxy_keeps_query_order_headers_fixtures_and_independent_dates()
         .weighted_moving_average(query("AAPL", ChartTimeframe::FourHours).with_to(to))
         .await
         .unwrap();
-    assert_eq!((sma[0].sma, sma[0].volume), (331.621, 29_207_295));
+    assert_eq!((sma[0].sma, sma[0].volume), (331.621, 29_207_295.0));
     assert_eq!(ema[0].ema, 331.1209325826155);
     assert_eq!(wma[0].wma, 333.21345454545457);
 

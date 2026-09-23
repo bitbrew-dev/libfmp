@@ -61,7 +61,7 @@ fn exact_info_fixture_decodes_nineteen_fields_and_nested_sectors() {
     assert_eq!(row.etf_company, "SPDR");
     assert_eq!(row.expense_ratio, 0.09);
     assert_eq!(row.assets_under_management, 777_349_860_000);
-    assert_eq!(row.avg_volume, 52_093_933);
+    assert_eq!(row.avg_volume, 52_093_933.0);
     assert_eq!(row.inception_date, Date::from_str("1993-01-22").unwrap());
     assert_eq!(row.nav, 729.27);
     assert_eq!(row.nav_currency, CurrencyCode::new("USD").unwrap());
@@ -257,13 +257,18 @@ fn integer_widths_signed_change_and_decimal_market_values_are_preserved() {
             INFO
         };
         let mut value: serde_json::Value = serde_json::from_slice(fixture).unwrap();
-        value[0][field] = serde_json::json!(u64::MAX);
+        let width = if field == "avgVolume" {
+            u64::from(u32::MAX) + 1
+        } else {
+            u64::MAX
+        };
+        value[0][field] = serde_json::json!(width);
         if field == "sharesNumber" {
             let rows: Vec<EtfFundHolding> = serde_json::from_value(value).unwrap();
             assert_eq!(rows[0].shares_number, u64::MAX);
         } else {
             let rows: Vec<EtfFundInfo> = serde_json::from_value(value).unwrap();
-            assert_eq!(serde_json::to_value(rows).unwrap()[0][field], u64::MAX);
+            assert_eq!(serde_json::to_value(rows).unwrap()[0][field], width);
         }
     }
 

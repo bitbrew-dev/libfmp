@@ -83,7 +83,7 @@ func run() error {
 
 	quote := quotes[0]
 	fmt.Printf("client: %v\n", client)
-	fmt.Printf("%s via tenant %s: price %.5f, change %.5f, volume %d\n",
+	fmt.Printf("%s via tenant %s: price %.5f, change %.5f, volume %.0f\n",
 		quote.Symbol, tenant, quote.Price, quote.Change, quote.Volume)
 	return nil
 }

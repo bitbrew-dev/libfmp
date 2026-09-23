@@ -26,7 +26,7 @@ pub(crate) struct CompanyScreenerEntry {
     #[pyo3(get)]
     pub last_annual_dividend: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub exchange: String,
     #[pyo3(get)]
@@ -57,7 +57,7 @@ impl CompanyScreenerEntry {
         beta: f64,
         price: f64,
         last_annual_dividend: f64,
-        volume: u64,
+        volume: f64,
         exchange: String,
         exchange_short_name: String,
         country: String,

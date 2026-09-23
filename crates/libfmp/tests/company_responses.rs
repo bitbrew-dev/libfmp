@@ -15,8 +15,8 @@ fn documented_company_profile_decodes_every_exact_field_and_wire_type() {
     assert_eq!(row.range, "201.5-344.57");
     assert_eq!(row.change, -6.33498);
     assert_eq!(row.change_percentage, -1.8732);
-    assert_eq!(row.volume, 28_718_014);
-    assert_eq!(row.average_volume, 55_309_000);
+    assert_eq!(row.volume, 28_718_014.0);
+    assert_eq!(row.average_volume, 55_309_000.0);
     assert_eq!(row.company_name, "Apple Inc.");
     assert_eq!(row.currency.as_str(), "USD");
     assert_eq!(row.cik.as_str(), "0000320193");
@@ -117,8 +117,8 @@ fn company_arrays_preserve_empty_multiple_unknown_and_large_values() {
     assert_eq!(profiles.len(), 2);
     assert_eq!(profiles[0].market_cap, 9_007_199_254_740_993);
     assert!(profiles[0].market_cap > 2_u64.pow(53));
-    assert_eq!(profiles[0].volume, u64::MAX);
-    assert_eq!(profiles[0].average_volume, 4_294_967_296);
+    assert_eq!(profiles[0].volume, u64::MAX as f64);
+    assert_eq!(profiles[0].average_volume, 4_294_967_296.0);
     assert_eq!(profiles[0].full_time_employees.as_str(), "42");
     let large_wire = serde_json::to_value(&profiles[0]).unwrap();
     assert_eq!(large_wire["fullTimeEmployees"], "42");

@@ -157,7 +157,7 @@ class StockChartAdjustedBar:
     @property
     def adj_close(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     def __new__(
         cls,
         symbol: builtins.str,
@@ -166,7 +166,7 @@ class StockChartAdjustedBar:
         adj_high: builtins.float,
         adj_low: builtins.float,
         adj_close: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
     ) -> StockChartAdjustedBar: ...
     def __getnewargs__(self) -> tuple: ...
 
@@ -186,7 +186,7 @@ class StockChartFullBar:
     @property
     def close(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     @property
     def change(self) -> builtins.float: ...
     @property
@@ -201,7 +201,7 @@ class StockChartFullBar:
         high: builtins.float,
         low: builtins.float,
         close: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
         change: builtins.float,
         change_percent: builtins.float,
         vwap: builtins.float,
@@ -222,7 +222,7 @@ class StockChartIntradayBar:
     @property
     def close(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     def __new__(
         cls,
         date: datetime.datetime,
@@ -230,7 +230,7 @@ class StockChartIntradayBar:
         low: builtins.float,
         high: builtins.float,
         close: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
     ) -> StockChartIntradayBar: ...
     def __getnewargs__(self) -> tuple: ...
 
@@ -244,12 +244,12 @@ class StockChartLightBar:
     @property
     def price(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     def __new__(
         cls,
         symbol: builtins.str,
         date: datetime.date,
         price: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
     ) -> StockChartLightBar: ...
     def __getnewargs__(self) -> tuple: ...

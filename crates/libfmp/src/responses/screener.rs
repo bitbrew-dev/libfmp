@@ -21,6 +21,7 @@ pub struct CompanyScreenerEntry {
     pub beta: MarketValue,
     pub price: Price,
     pub last_annual_dividend: MarketValue,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
     /// The provider's full exchange name.
     pub exchange: String,

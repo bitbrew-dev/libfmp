@@ -157,11 +157,11 @@ async fn proxy_routing_preserves_every_path_query_state_auth_and_default_header(
         .unwrap();
 
     assert_eq!(one_minute[0].date.to_string(), "2026-07-30 13:16:00");
-    assert_eq!(five_minutes[0].volume, 123_020);
+    assert_eq!(five_minutes[0].volume, 123_020.0);
     assert_eq!(fifteen_minutes[0].open, 332.655);
-    assert_eq!(thirty_minutes[0].volume, 980_442);
-    assert_eq!(one_hour[0].volume, 3_285_503);
-    assert_eq!(four_hours[0].volume, 28_439_347);
+    assert_eq!(thirty_minutes[0].volume, 980_442.0);
+    assert_eq!(one_hour[0].volume, 3_285_503.0);
+    assert_eq!(four_hours[0].volume, 28_439_347.0);
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 6);

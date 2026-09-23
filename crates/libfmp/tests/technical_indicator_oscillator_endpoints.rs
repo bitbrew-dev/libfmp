@@ -129,7 +129,7 @@ async fn custom_proxy_preserves_order_headers_fixtures_and_independent_dates() {
             williams[0].volume,
             adx[0].volume
         ],
-        [29_207_295; 4]
+        [29_207_295.0; 4]
     );
 
     let requests = executor.requests();

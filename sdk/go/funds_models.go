@@ -130,7 +130,7 @@ type EtfFundInfo struct {
 	EtfCompany            string              `json:"etfCompany"`
 	ExpenseRatio          float64             `json:"expenseRatio"`
 	AssetsUnderManagement uint64              `json:"assetsUnderManagement"`
-	AvgVolume             uint64              `json:"avgVolume"`
+	AvgVolume             float64             `json:"avgVolume"`
 	InceptionDate         Date                `json:"inceptionDate"`
 	Nav                   float64             `json:"nav"`
 	NavCurrency           string              `json:"navCurrency"`
@@ -154,7 +154,7 @@ type etfFundInfoShadow struct {
 	EtfCompany            *string              `json:"etfCompany"`
 	ExpenseRatio          *float64             `json:"expenseRatio"`
 	AssetsUnderManagement *uint64              `json:"assetsUnderManagement"`
-	AvgVolume             *uint64              `json:"avgVolume"`
+	AvgVolume             *float64             `json:"avgVolume"`
 	InceptionDate         *Date                `json:"inceptionDate"`
 	Nav                   *float64             `json:"nav"`
 	NavCurrency           *string              `json:"navCurrency"`

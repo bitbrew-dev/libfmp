@@ -16,6 +16,7 @@ pub struct Quote {
     pub price: Price,
     pub change_percentage: Percentage,
     pub change: Change,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
     pub day_low: Price,
     pub day_high: Price,
@@ -37,6 +38,7 @@ pub struct QuoteShort {
     pub symbol: Ticker,
     pub price: Price,
     pub change: Change,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
 }
 
@@ -59,6 +61,7 @@ pub struct AftermarketQuote {
     pub bid_price: Price,
     pub ask_size: Count,
     pub ask_price: Price,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
     pub timestamp: UnixMilliseconds,
 }

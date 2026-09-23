@@ -85,7 +85,7 @@ func TestDocumentedCommodityChartFixturesDecodeExactValues(t *testing.T) {
 	intraday := []struct {
 		fixture string
 		date    string
-		volume  uint64
+		volume  float64
 	}{
 		{"commodity_chart_one_minute.json", "2026-07-30 13:06:00", 59},
 		{"commodity_chart_five_minutes.json", "2026-07-30 13:05:00", 103},
@@ -95,7 +95,7 @@ func TestDocumentedCommodityChartFixturesDecodeExactValues(t *testing.T) {
 		rows := assertFixtureParity[StockChartIntradayBar](t, tc.fixture)
 		if len(rows) != 1 || rows[0].Date.String() != tc.date || rows[0].Volume != tc.volume ||
 			rows[0].Close != 4166.8 {
-			t.Fatalf("%s = %+v, want date %s volume %d", tc.fixture, rows, tc.date, tc.volume)
+			t.Fatalf("%s = %+v, want date %s volume %.0f", tc.fixture, rows, tc.date, tc.volume)
 		}
 	}
 }

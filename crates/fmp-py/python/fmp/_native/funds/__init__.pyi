@@ -114,7 +114,7 @@ class EtfFundInfo:
     @property
     def assets_under_management(self) -> builtins.int: ...
     @property
-    def avg_volume(self) -> builtins.int: ...
+    def avg_volume(self) -> builtins.float: ...
     @property
     def inception_date(self) -> datetime.date: ...
     @property
@@ -142,7 +142,7 @@ class EtfFundInfo:
         etf_company: builtins.str,
         expense_ratio: builtins.float,
         assets_under_management: builtins.int,
-        avg_volume: builtins.int,
+        avg_volume: builtins.float,
         inception_date: datetime.date,
         nav: builtins.float,
         nav_currency: builtins.str,

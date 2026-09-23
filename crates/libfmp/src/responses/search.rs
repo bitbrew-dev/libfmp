@@ -70,6 +70,7 @@ pub struct ExchangeVariant {
     pub symbol: Ticker,
     pub price: Price,
     pub beta: MarketValue,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub vol_avg: Volume,
     #[serde(rename = "mktCap")]
     pub market_cap: MarketCapitalization,

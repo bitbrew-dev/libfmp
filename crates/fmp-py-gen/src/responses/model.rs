@@ -40,6 +40,11 @@ pub struct FieldAttrs {
     pub with: Option<String>,
     /// `deserialize_with = "path"`: decoding uses a custom function.
     pub deserialize_with: Option<String>,
+    /// `serialize_with = "path"`: encoding uses a custom function. Neither
+    /// generator reads it: the wire shape a Go or Python model decodes is
+    /// unchanged (the volume codec only re-encodes integral floats as
+    /// integers).
+    pub serialize_with: Option<String>,
     /// `flatten`: the field's keys live on the parent object.
     pub flatten: bool,
     /// `skip` or `skip_deserializing`: the field is never read from JSON.

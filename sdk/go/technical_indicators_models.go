@@ -18,7 +18,7 @@ type SimpleMovingAverageBar struct {
 	High   float64  `json:"high"`
 	Low    float64  `json:"low"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 	Sma    float64  `json:"sma"`
 }
 
@@ -31,7 +31,7 @@ type simpleMovingAverageBarShadow struct {
 	High   *float64  `json:"high"`
 	Low    *float64  `json:"low"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 	Sma    *float64  `json:"sma"`
 }
 
@@ -79,7 +79,7 @@ type ExponentialMovingAverageBar struct {
 	High   float64  `json:"high"`
 	Low    float64  `json:"low"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 	Ema    float64  `json:"ema"`
 }
 
@@ -92,7 +92,7 @@ type exponentialMovingAverageBarShadow struct {
 	High   *float64  `json:"high"`
 	Low    *float64  `json:"low"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 	Ema    *float64  `json:"ema"`
 }
 
@@ -140,7 +140,7 @@ type WeightedMovingAverageBar struct {
 	High   float64  `json:"high"`
 	Low    float64  `json:"low"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 	Wma    float64  `json:"wma"`
 }
 
@@ -153,7 +153,7 @@ type weightedMovingAverageBarShadow struct {
 	High   *float64  `json:"high"`
 	Low    *float64  `json:"low"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 	Wma    *float64  `json:"wma"`
 }
 
@@ -201,7 +201,7 @@ type DoubleExponentialMovingAverageBar struct {
 	High   float64  `json:"high"`
 	Low    float64  `json:"low"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 	Dema   float64  `json:"dema"`
 }
 
@@ -214,7 +214,7 @@ type doubleExponentialMovingAverageBarShadow struct {
 	High   *float64  `json:"high"`
 	Low    *float64  `json:"low"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 	Dema   *float64  `json:"dema"`
 }
 
@@ -262,7 +262,7 @@ type TripleExponentialMovingAverageBar struct {
 	High   float64  `json:"high"`
 	Low    float64  `json:"low"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 	Tema   float64  `json:"tema"`
 }
 
@@ -275,7 +275,7 @@ type tripleExponentialMovingAverageBarShadow struct {
 	High   *float64  `json:"high"`
 	Low    *float64  `json:"low"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 	Tema   *float64  `json:"tema"`
 }
 
@@ -323,7 +323,7 @@ type RelativeStrengthIndexBar struct {
 	High   float64  `json:"high"`
 	Low    float64  `json:"low"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 	Rsi    float64  `json:"rsi"`
 }
 
@@ -336,7 +336,7 @@ type relativeStrengthIndexBarShadow struct {
 	High   *float64  `json:"high"`
 	Low    *float64  `json:"low"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 	Rsi    *float64  `json:"rsi"`
 }
 
@@ -383,7 +383,7 @@ type StandardDeviationBar struct {
 	High              float64  `json:"high"`
 	Low               float64  `json:"low"`
 	Close             float64  `json:"close"`
-	Volume            uint64   `json:"volume"`
+	Volume            float64  `json:"volume"`
 	StandardDeviation float64  `json:"standardDeviation"`
 }
 
@@ -396,7 +396,7 @@ type standardDeviationBarShadow struct {
 	High              *float64  `json:"high"`
 	Low               *float64  `json:"low"`
 	Close             *float64  `json:"close"`
-	Volume            *uint64   `json:"volume"`
+	Volume            *float64  `json:"volume"`
 	StandardDeviation *float64  `json:"standardDeviation"`
 }
 
@@ -443,7 +443,7 @@ type WilliamsBar struct {
 	High     float64  `json:"high"`
 	Low      float64  `json:"low"`
 	Close    float64  `json:"close"`
-	Volume   uint64   `json:"volume"`
+	Volume   float64  `json:"volume"`
 	Williams float64  `json:"williams"`
 }
 
@@ -455,7 +455,7 @@ type williamsBarShadow struct {
 	High     *float64  `json:"high"`
 	Low      *float64  `json:"low"`
 	Close    *float64  `json:"close"`
-	Volume   *uint64   `json:"volume"`
+	Volume   *float64  `json:"volume"`
 	Williams *float64  `json:"williams"`
 }
 
@@ -503,7 +503,7 @@ type AverageDirectionalIndexBar struct {
 	High   float64  `json:"high"`
 	Low    float64  `json:"low"`
 	Close  float64  `json:"close"`
-	Volume uint64   `json:"volume"`
+	Volume float64  `json:"volume"`
 	Adx    float64  `json:"adx"`
 }
 
@@ -516,7 +516,7 @@ type averageDirectionalIndexBarShadow struct {
 	High   *float64  `json:"high"`
 	Low    *float64  `json:"low"`
 	Close  *float64  `json:"close"`
-	Volume *uint64   `json:"volume"`
+	Volume *float64  `json:"volume"`
 	Adx    *float64  `json:"adx"`
 }
 

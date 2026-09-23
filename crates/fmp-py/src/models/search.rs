@@ -320,7 +320,7 @@ pub(crate) struct ExchangeVariant {
     #[pyo3(get)]
     pub beta: f64,
     #[pyo3(get)]
-    pub vol_avg: u64,
+    pub vol_avg: f64,
     #[pyo3(get)]
     pub market_cap: u64,
     #[pyo3(get)]
@@ -398,7 +398,7 @@ impl ExchangeVariant {
         symbol: String,
         price: f64,
         beta: f64,
-        vol_avg: u64,
+        vol_avg: f64,
         market_cap: u64,
         last_div: f64,
         range: String,

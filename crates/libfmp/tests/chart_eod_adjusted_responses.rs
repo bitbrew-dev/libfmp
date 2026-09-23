@@ -25,7 +25,7 @@ fn both_endpoint_source_fixtures_decode_the_exact_shared_seven_field_row() {
                 adj_high: 334.48,
                 adj_low: 329.59,
                 adj_close: 332.39,
-                volume: 29_207_295,
+                volume: 29_207_295.0,
             }]
         );
         assert_eq!(serde_json::to_value(rows).unwrap(), source);

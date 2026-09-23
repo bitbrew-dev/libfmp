@@ -17,7 +17,7 @@ type Quote struct {
 	Price            float64     `json:"price"`
 	ChangePercentage float64     `json:"changePercentage"`
 	Change           float64     `json:"change"`
-	Volume           uint64      `json:"volume"`
+	Volume           float64     `json:"volume"`
 	DayLow           float64     `json:"dayLow"`
 	DayHigh          float64     `json:"dayHigh"`
 	YearHigh         float64     `json:"yearHigh"`
@@ -39,7 +39,7 @@ type quoteShadow struct {
 	Price            *float64     `json:"price"`
 	ChangePercentage *float64     `json:"changePercentage"`
 	Change           *float64     `json:"change"`
-	Volume           *uint64      `json:"volume"`
+	Volume           *float64     `json:"volume"`
 	DayLow           *float64     `json:"dayLow"`
 	DayHigh          *float64     `json:"dayHigh"`
 	YearHigh         *float64     `json:"yearHigh"`
@@ -123,7 +123,7 @@ type QuoteShort struct {
 	Symbol string  `json:"symbol"`
 	Price  float64 `json:"price"`
 	Change float64 `json:"change"`
-	Volume uint64  `json:"volume"`
+	Volume float64 `json:"volume"`
 }
 
 // quoteShortShadow mirrors QuoteShort with a pointer or raw value for every
@@ -132,7 +132,7 @@ type quoteShortShadow struct {
 	Symbol *string  `json:"symbol"`
 	Price  *float64 `json:"price"`
 	Change *float64 `json:"change"`
-	Volume *uint64  `json:"volume"`
+	Volume *float64 `json:"volume"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -215,7 +215,7 @@ type AftermarketQuote struct {
 	BidPrice  float64          `json:"bidPrice"`
 	AskSize   uint64           `json:"askSize"`
 	AskPrice  float64          `json:"askPrice"`
-	Volume    uint64           `json:"volume"`
+	Volume    float64          `json:"volume"`
 	Timestamp UnixMilliseconds `json:"timestamp"`
 }
 
@@ -228,7 +228,7 @@ type aftermarketQuoteShadow struct {
 	BidPrice  *float64          `json:"bidPrice"`
 	AskSize   *uint64           `json:"askSize"`
 	AskPrice  *float64          `json:"askPrice"`
-	Volume    *uint64           `json:"volume"`
+	Volume    *float64          `json:"volume"`
 	Timestamp *UnixMilliseconds `json:"timestamp"`
 }
 

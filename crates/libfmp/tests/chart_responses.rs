@@ -22,7 +22,7 @@ fn exact_source_rows_decode_all_required_fields() {
             symbol: Ticker::new("AAPL").unwrap(),
             date: Date::from_str("2026-07-30").unwrap(),
             price: 332.39,
-            volume: 29_207_295,
+            volume: 29_207_295.0,
         }]
     );
 
@@ -36,7 +36,7 @@ fn exact_source_rows_decode_all_required_fields() {
             high: 334.48,
             low: 329.59,
             close: 332.39,
-            volume: 29_207_295,
+            volume: 29_207_295.0,
             change: -0.74,
             change_percent: -0.2221355,
             vwap: 332.15,
@@ -53,7 +53,7 @@ fn exact_source_rows_decode_all_required_fields() {
             adj_high: 334.48,
             adj_low: 329.59,
             adj_close: 332.39,
-            volume: 29_207_295,
+            volume: 29_207_295.0,
         }]
     );
 
@@ -66,7 +66,7 @@ fn exact_source_rows_decode_all_required_fields() {
             low: 332.27499,
             high: 332.48,
             close: 332.47,
-            volume: 67_660,
+            volume: 67_660.0,
         }]
     );
 }

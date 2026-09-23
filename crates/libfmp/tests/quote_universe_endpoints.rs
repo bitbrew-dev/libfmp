@@ -145,7 +145,7 @@ async fn proxy_client_uses_every_exact_path_and_decodes_documented_short_rows() 
 
     assert_eq!(exchange[0].symbol.as_str(), "AAACX");
     assert_eq!(mutual_funds[0].price, 44.0);
-    assert_eq!(etfs[0].volume, 1);
+    assert_eq!(etfs[0].volume, 1.0);
     assert_eq!(commodities[0].change, 0.02);
     assert_eq!(cryptocurrencies[0].symbol.as_str(), "00USD");
     assert_eq!(forex[0].price, 0.38716);
