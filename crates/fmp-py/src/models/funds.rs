@@ -160,7 +160,7 @@ pub(crate) struct EtfFundInfo {
     #[pyo3(get)]
     pub assets_under_management: u64,
     #[pyo3(get)]
-    pub avg_volume: u64,
+    pub avg_volume: f64,
     #[pyo3(get)]
     pub inception_date: ::chrono::NaiveDate,
     #[pyo3(get)]
@@ -196,7 +196,7 @@ impl EtfFundInfo {
         etf_company: String,
         expense_ratio: f64,
         assets_under_management: u64,
-        avg_volume: u64,
+        avg_volume: f64,
         inception_date: ::chrono::NaiveDate,
         nav: f64,
         nav_currency: String,

@@ -16,7 +16,7 @@ pub(crate) struct StockChartLightBar {
     #[pyo3(get)]
     pub price: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
 }
 
 #[gen_stub_pymethods]
@@ -26,7 +26,7 @@ impl StockChartLightBar {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (symbol, date, price, volume))]
-    fn new(symbol: String, date: ::chrono::NaiveDate, price: f64, volume: u64) -> Self {
+    fn new(symbol: String, date: ::chrono::NaiveDate, price: f64, volume: f64) -> Self {
         Self {
             symbol,
             date,
@@ -75,7 +75,7 @@ pub(crate) struct StockChartFullBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub change: f64,
     #[pyo3(get)]
@@ -98,7 +98,7 @@ impl StockChartFullBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         change: f64,
         change_percent: f64,
         vwap: f64,
@@ -169,7 +169,7 @@ pub(crate) struct StockChartAdjustedBar {
     #[pyo3(get)]
     pub adj_close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
 }
 
 #[gen_stub_pymethods]
@@ -186,7 +186,7 @@ impl StockChartAdjustedBar {
         adj_high: f64,
         adj_low: f64,
         adj_close: f64,
-        volume: u64,
+        volume: f64,
     ) -> Self {
         Self {
             symbol,
@@ -243,7 +243,7 @@ pub(crate) struct StockChartIntradayBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
 }
 
 #[gen_stub_pymethods]
@@ -259,7 +259,7 @@ impl StockChartIntradayBar {
         low: f64,
         high: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
     ) -> Self {
         Self {
             date,

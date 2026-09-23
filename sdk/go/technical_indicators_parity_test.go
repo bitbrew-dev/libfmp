@@ -17,7 +17,7 @@ type technicalIndicatorBar struct {
 	High   float64
 	Low    float64
 	Close  float64
-	Volume uint64
+	Volume float64
 	Metric float64
 }
 

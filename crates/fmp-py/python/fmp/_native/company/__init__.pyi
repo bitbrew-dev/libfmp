@@ -243,9 +243,9 @@ class CompanyProfile:
     @property
     def change_percentage(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     @property
-    def average_volume(self) -> builtins.int: ...
+    def average_volume(self) -> builtins.float: ...
     @property
     def company_name(self) -> builtins.str: ...
     @property
@@ -308,8 +308,8 @@ class CompanyProfile:
         range: builtins.str,
         change: builtins.float,
         change_percentage: builtins.float,
-        volume: builtins.int,
-        average_volume: builtins.int,
+        volume: builtins.float,
+        average_volume: builtins.float,
         company_name: builtins.str,
         currency: builtins.str,
         cik: builtins.str,

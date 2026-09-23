@@ -11,6 +11,7 @@ pub struct StockChartLightBar {
     pub symbol: Ticker,
     pub date: Date,
     pub price: Price,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
 }
 
@@ -24,6 +25,7 @@ pub struct StockChartFullBar {
     pub high: Price,
     pub low: Price,
     pub close: Price,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
     pub change: Change,
     pub change_percent: Percentage,
@@ -44,6 +46,7 @@ pub struct StockChartAdjustedBar {
     pub adj_low: Price,
     #[serde(rename = "adjClose")]
     pub adj_close: Price,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
 }
 
@@ -60,5 +63,6 @@ pub struct StockChartIntradayBar {
     pub low: Price,
     pub high: Price,
     pub close: Price,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
 }

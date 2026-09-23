@@ -9,7 +9,7 @@ use libfmp::{
     query::{PeriodLength, Quarter, Year},
     types::{
         CalendarQuarter, CalendarYear, FiniteDecimal, InvalidCalendarQuarter, Limit,
-        MarketCapitalization, Page, Volume,
+        MarketCapitalization, Page,
     },
 };
 use pyo3::prelude::*;
@@ -85,8 +85,10 @@ pub fn market_capitalization(name: &str, value: i64) -> PyResult<MarketCapitaliz
     unsigned_u64(name, value)
 }
 
-/// Converts a non-negative Python `int` into a [`Volume`].
-pub fn volume(name: &str, value: i64) -> PyResult<Volume> {
+/// Converts a non-negative Python `int` into a screener volume filter.
+///
+/// The query side stays an integer even though response volumes are floats.
+pub fn volume(name: &str, value: i64) -> PyResult<u64> {
     unsigned_u64(name, value)
 }
 

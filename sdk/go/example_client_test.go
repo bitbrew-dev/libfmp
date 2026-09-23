@@ -49,7 +49,7 @@ func printQuoteShort(quotes []fmp.QuoteShort) {
 		return
 	}
 	q := quotes[0]
-	fmt.Printf("%s price %.5f change %.5f volume %d\n", q.Symbol, q.Price, q.Change, q.Volume)
+	fmt.Printf("%s price %.5f change %.5f volume %.0f\n", q.Symbol, q.Price, q.Change, q.Volume)
 }
 
 // ExampleNewClient builds a client against an in-process server. Drop

@@ -15,7 +15,7 @@ fn documented_company_screener_entry_decodes_every_exact_field() {
     assert_eq!(row.beta, 1.097);
     assert_eq!(row.price, 332.64001);
     assert_eq!(row.last_annual_dividend, 1.05);
-    assert_eq!(row.volume, 29_909_012);
+    assert_eq!(row.volume, 29_909_012.0);
     assert_eq!(row.exchange, "NASDAQ Global Select");
     assert_eq!(row.exchange_short_name.as_str(), "NASDAQ");
     assert_eq!(row.country.as_str(), "US");
@@ -47,10 +47,10 @@ fn screener_arrays_preserve_empty_multiple_unknown_and_large_integer_values() {
     assert_eq!(multiple.len(), 2);
     assert_eq!(multiple[0].market_cap, 9_007_199_254_740_993);
     assert!(multiple[0].market_cap > 2_u64.pow(53));
-    assert_eq!(multiple[0].volume, u64::MAX);
+    assert_eq!(multiple[0].volume, u64::MAX as f64);
     assert_eq!(multiple[0].sector.as_str(), "Future Sector");
     assert_eq!(multiple[1].market_cap, 4_294_967_296);
-    assert_eq!(multiple[1].volume, 4_294_967_296);
+    assert_eq!(multiple[1].volume, 4_294_967_296.0);
     assert!(multiple[1].is_fund);
     assert_eq!(unknown.len(), 1);
     assert_eq!(unknown[0].symbol.as_str(), "AAPL");

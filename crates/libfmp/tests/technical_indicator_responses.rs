@@ -40,7 +40,7 @@ fn assert_exact<T: DeserializeOwned + Serialize>(fixture: &[u8]) {
 fn source_values_preserve_second_precision_large_volume_and_negative_williams() {
     let sma: Vec<SimpleMovingAverageBar> = serde_json::from_slice(SMA).unwrap();
     assert_eq!(sma[0].date.to_string(), "2026-07-30 00:00:00");
-    assert_eq!(sma[0].volume, 29_207_295);
+    assert_eq!(sma[0].volume, 29_207_295.0);
     assert_eq!(sma[0].sma, 331.621);
 
     let williams: Vec<WilliamsBar> = serde_json::from_slice(WILLIAMS).unwrap();
@@ -123,7 +123,7 @@ fn volume_preserves_values_above_u32_and_float_metrics_accept_integers_and_fract
     source[0]["volume"] = serde_json::json!(u64::MAX);
     source[0]["sma"] = serde_json::json!(7);
     let integer: Vec<SimpleMovingAverageBar> = serde_json::from_value(source).unwrap();
-    assert_eq!(integer[0].volume, u64::MAX);
+    assert_eq!(integer[0].volume, u64::MAX as f64);
     assert_eq!(integer[0].sma, 7.0);
 
     let mut rsi: serde_json::Value = serde_json::from_slice(RSI).unwrap();

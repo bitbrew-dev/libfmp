@@ -20,7 +20,7 @@ pub(crate) struct SimpleMovingAverageBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub sma: f64,
 }
@@ -38,7 +38,7 @@ impl SimpleMovingAverageBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         sma: f64,
     ) -> Self {
         Self {
@@ -98,7 +98,7 @@ pub(crate) struct ExponentialMovingAverageBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub ema: f64,
 }
@@ -116,7 +116,7 @@ impl ExponentialMovingAverageBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         ema: f64,
     ) -> Self {
         Self {
@@ -176,7 +176,7 @@ pub(crate) struct WeightedMovingAverageBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub wma: f64,
 }
@@ -194,7 +194,7 @@ impl WeightedMovingAverageBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         wma: f64,
     ) -> Self {
         Self {
@@ -254,7 +254,7 @@ pub(crate) struct DoubleExponentialMovingAverageBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub dema: f64,
 }
@@ -272,7 +272,7 @@ impl DoubleExponentialMovingAverageBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         dema: f64,
     ) -> Self {
         Self {
@@ -334,7 +334,7 @@ pub(crate) struct TripleExponentialMovingAverageBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub tema: f64,
 }
@@ -352,7 +352,7 @@ impl TripleExponentialMovingAverageBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         tema: f64,
     ) -> Self {
         Self {
@@ -414,7 +414,7 @@ pub(crate) struct RelativeStrengthIndexBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub rsi: f64,
 }
@@ -432,7 +432,7 @@ impl RelativeStrengthIndexBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         rsi: f64,
     ) -> Self {
         Self {
@@ -492,7 +492,7 @@ pub(crate) struct StandardDeviationBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub standard_deviation: f64,
 }
@@ -510,7 +510,7 @@ impl StandardDeviationBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         standard_deviation: f64,
     ) -> Self {
         Self {
@@ -568,7 +568,7 @@ pub(crate) struct WilliamsBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub williams: f64,
 }
@@ -586,7 +586,7 @@ impl WilliamsBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         williams: f64,
     ) -> Self {
         Self {
@@ -644,7 +644,7 @@ pub(crate) struct AverageDirectionalIndexBar {
     #[pyo3(get)]
     pub close: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
     pub adx: f64,
 }
@@ -662,7 +662,7 @@ impl AverageDirectionalIndexBar {
         high: f64,
         low: f64,
         close: f64,
-        volume: u64,
+        volume: f64,
         adx: f64,
     ) -> Self {
         Self {

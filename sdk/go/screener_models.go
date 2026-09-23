@@ -21,7 +21,7 @@ type CompanyScreenerEntry struct {
 	Beta               float64 `json:"beta"`
 	Price              float64 `json:"price"`
 	LastAnnualDividend float64 `json:"lastAnnualDividend"`
-	Volume             uint64  `json:"volume"`
+	Volume             float64 `json:"volume"`
 	Exchange           string  `json:"exchange"`
 	ExchangeShortName  string  `json:"exchangeShortName"`
 	Country            string  `json:"country"`
@@ -42,7 +42,7 @@ type companyScreenerEntryShadow struct {
 	Beta               *float64 `json:"beta"`
 	Price              *float64 `json:"price"`
 	LastAnnualDividend *float64 `json:"lastAnnualDividend"`
-	Volume             *uint64  `json:"volume"`
+	Volume             *float64 `json:"volume"`
 	Exchange           *string  `json:"exchange"`
 	ExchangeShortName  *string  `json:"exchangeShortName"`
 	Country            *string  `json:"country"`

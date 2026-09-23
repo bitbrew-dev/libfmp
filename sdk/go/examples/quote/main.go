@@ -78,7 +78,7 @@ func run() error {
 
 	quote := quotes[0]
 	fmt.Printf("%s (%s) on %s\n", quote.Symbol, quote.Name, quote.Exchange)
-	fmt.Printf("  price %.5f, change %.5f (%.4f%%), volume %d\n",
+	fmt.Printf("  price %.5f, change %.5f (%.4f%%), volume %.0f\n",
 		quote.Price, quote.Change, quote.ChangePercentage, quote.Volume)
 	if quote.MarketCap != nil {
 		fmt.Printf("  market cap %d\n", *quote.MarketCap)

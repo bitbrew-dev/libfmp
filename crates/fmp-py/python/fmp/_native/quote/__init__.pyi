@@ -26,7 +26,7 @@ class AftermarketQuote:
     @property
     def ask_price(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     @property
     def timestamp(self) -> builtins.int: ...
     def __new__(
@@ -36,7 +36,7 @@ class AftermarketQuote:
         bid_price: builtins.float,
         ask_size: builtins.int,
         ask_price: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
         timestamp: builtins.int,
     ) -> AftermarketQuote: ...
     def __getnewargs__(self) -> tuple: ...
@@ -75,7 +75,7 @@ class Quote:
     @property
     def change(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     @property
     def day_low(self) -> builtins.float: ...
     @property
@@ -105,7 +105,7 @@ class Quote:
         price: builtins.float,
         change_percentage: builtins.float,
         change: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
         day_low: builtins.float,
         day_high: builtins.float,
         year_high: builtins.float,
@@ -231,13 +231,13 @@ class QuoteShort:
     @property
     def change(self) -> builtins.float: ...
     @property
-    def volume(self) -> builtins.int: ...
+    def volume(self) -> builtins.float: ...
     def __new__(
         cls,
         symbol: builtins.str,
         price: builtins.float,
         change: builtins.float,
-        volume: builtins.int,
+        volume: builtins.float,
     ) -> QuoteShort: ...
     def __getnewargs__(self) -> tuple: ...
 

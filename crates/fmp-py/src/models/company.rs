@@ -26,9 +26,9 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub change_percentage: f64,
     #[pyo3(get)]
-    pub volume: u64,
+    pub volume: f64,
     #[pyo3(get)]
-    pub average_volume: u64,
+    pub average_volume: f64,
     #[pyo3(get)]
     pub company_name: String,
     #[pyo3(get)]
@@ -99,8 +99,8 @@ impl CompanyProfile {
         range: String,
         change: f64,
         change_percentage: f64,
-        volume: u64,
-        average_volume: u64,
+        volume: f64,
+        average_volume: f64,
         company_name: String,
         currency: String,
         cik: String,

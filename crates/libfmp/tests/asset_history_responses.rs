@@ -68,9 +68,9 @@ fn asset_history_preserves_timezone_less_times_large_crypto_volume_and_zero_volu
 
     assert_eq!(commodity[0].date.to_string(), "2026-07-30 13:06:00");
     assert_eq!(forex[0].date.to_string(), "2026-07-30 13:17:00");
-    assert_eq!(crypto_light[0].volume, 32_030_003_200);
-    assert_eq!(crypto_full[0].volume, 32_030_003_200);
-    assert_eq!(crypto_intraday[0].volume, 0);
+    assert_eq!(crypto_light[0].volume, 32_030_003_200.0);
+    assert_eq!(crypto_full[0].volume, 32_030_003_200.0);
+    assert_eq!(crypto_intraday[0].volume, 0.0);
 }
 
 fn assert_exact<T>(fixture: &[u8])

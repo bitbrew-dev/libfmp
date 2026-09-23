@@ -70,7 +70,7 @@ class ExchangeVariant:
     @property
     def beta(self) -> builtins.float: ...
     @property
-    def vol_avg(self) -> builtins.int: ...
+    def vol_avg(self) -> builtins.float: ...
     @property
     def market_cap(self) -> builtins.int: ...
     @property
@@ -140,7 +140,7 @@ class ExchangeVariant:
         symbol: builtins.str,
         price: builtins.float,
         beta: builtins.float,
-        vol_avg: builtins.int,
+        vol_avg: builtins.float,
         market_cap: builtins.int,
         last_div: builtins.float,
         range: builtins.str,

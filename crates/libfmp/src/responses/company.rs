@@ -27,7 +27,9 @@ pub struct CompanyProfile {
     pub range: String,
     pub change: Change,
     pub change_percentage: Percentage,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub volume: Volume,
+    #[serde(serialize_with = "crate::codecs::volume::serialize")]
     pub average_volume: Volume,
     pub company_name: String,
     pub currency: CurrencyCode,

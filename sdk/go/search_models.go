@@ -261,7 +261,7 @@ type ExchangeVariant struct {
 	Symbol            string  `json:"symbol"`
 	Price             float64 `json:"price"`
 	Beta              float64 `json:"beta"`
-	VolAvg            uint64  `json:"volAvg"`
+	VolAvg            float64 `json:"volAvg"`
 	MarketCap         uint64  `json:"mktCap"`
 	LastDiv           float64 `json:"lastDiv"`
 	Range             string  `json:"range"`
@@ -303,7 +303,7 @@ type exchangeVariantShadow struct {
 	Symbol            *string  `json:"symbol"`
 	Price             *float64 `json:"price"`
 	Beta              *float64 `json:"beta"`
-	VolAvg            *uint64  `json:"volAvg"`
+	VolAvg            *float64 `json:"volAvg"`
 	MarketCap         *uint64  `json:"mktCap"`
 	LastDiv           *float64 `json:"lastDiv"`
 	Range             *string  `json:"range"`

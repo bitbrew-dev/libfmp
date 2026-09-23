@@ -13,7 +13,7 @@ use crate::{
     responses::screener::CompanyScreenerEntry,
     types::{
         CountryCode, ExchangeCode, FiniteDecimal, Industry, Limit, MarketCapitalization, Page,
-        Sector, Volume,
+        Sector,
     },
 };
 
@@ -30,8 +30,8 @@ pub struct CompanyScreenerQuery {
     price_lower_than: Option<FiniteDecimal>,
     dividend_more_than: Option<FiniteDecimal>,
     dividend_lower_than: Option<FiniteDecimal>,
-    volume_more_than: Option<Volume>,
-    volume_lower_than: Option<Volume>,
+    volume_more_than: Option<u64>,
+    volume_lower_than: Option<u64>,
     exchange: Option<ExchangeCode>,
     country: Option<CountryCode>,
     is_etf: Option<bool>,
@@ -173,15 +173,15 @@ impl CompanyScreenerQuery {
         with_volume_more_than,
         volume_more_than,
         volume_more_than,
-        Volume,
-        "Sets or returns the optional lower volume filter."
+        u64,
+        "Sets or returns the optional lower volume filter (a whole number of shares)."
     );
     value_filter!(
         with_volume_lower_than,
         volume_lower_than,
         volume_lower_than,
-        Volume,
-        "Sets or returns the optional upper volume filter."
+        u64,
+        "Sets or returns the optional upper volume filter (a whole number of shares)."
     );
     string_filter!(
         with_exchange,

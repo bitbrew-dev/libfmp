@@ -21,8 +21,8 @@ type CompanyProfile struct {
 	Range             string  `json:"range"`
 	Change            float64 `json:"change"`
 	ChangePercentage  float64 `json:"changePercentage"`
-	Volume            uint64  `json:"volume"`
-	AverageVolume     uint64  `json:"averageVolume"`
+	Volume            float64 `json:"volume"`
+	AverageVolume     float64 `json:"averageVolume"`
 	CompanyName       string  `json:"companyName"`
 	Currency          string  `json:"currency"`
 	Cik               string  `json:"cik"`
@@ -63,8 +63,8 @@ type companyProfileShadow struct {
 	Range             *string  `json:"range"`
 	Change            *float64 `json:"change"`
 	ChangePercentage  *float64 `json:"changePercentage"`
-	Volume            *uint64  `json:"volume"`
-	AverageVolume     *uint64  `json:"averageVolume"`
+	Volume            *float64 `json:"volume"`
+	AverageVolume     *float64 `json:"averageVolume"`
 	CompanyName       *string  `json:"companyName"`
 	Currency          *string  `json:"currency"`
 	Cik               *string  `json:"cik"`

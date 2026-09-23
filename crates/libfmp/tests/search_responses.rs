@@ -78,7 +78,7 @@ fn documented_exchange_variant_decodes_every_field_and_inverted_exchange_names()
     assert_eq!(row.symbol.as_str(), "AAPL");
     assert_eq!(row.price, 331.85501);
     assert_eq!(row.beta, 1.097);
-    assert_eq!(row.vol_avg, 55_309_000);
+    assert_eq!(row.vol_avg, 55_309_000.0);
     assert_eq!(row.market_cap, 4_874_072_686_740);
     assert!(row.market_cap > u64::from(u32::MAX));
     assert_eq!(row.last_div, 1.05);

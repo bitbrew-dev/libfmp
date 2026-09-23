@@ -277,7 +277,7 @@ def check_chart_contract(client: FmpClient) -> None:
         "AAPL", from_="2024-01-01", to=datetime.date(2024, 3, 1), nonadjusted=False, extended=True
     )
     bar_time: datetime.datetime = intraday[0].date
-    volume: int = intraday[0].volume
+    volume: float = intraday[0].volume
     _ = (traded_on, price, adj_close, bar_time, volume)
 
 
@@ -357,7 +357,7 @@ def check_technical_indicators_contract(client: FmpClient) -> None:
         "AAPL", 10, "1day", from_=datetime.date(2026, 3, 1), to="2026-06-01"
     )
     bar_time: datetime.datetime = sma[0].date
-    volume: int = sma[0].volume
+    volume: float = sma[0].volume
     average: float = sma[0].sma
     rsi: list[RelativeStrengthIndexBar] = client.technical_indicators.relative_strength_index("AAPL", 14, "1hour")
     strength: float = rsi[0].rsi
@@ -625,7 +625,7 @@ def check_public_contract(client: FmpClient) -> None:
     ten_years: float = changes[0].ten_years
     symbol: str = short_rows[0].symbol
     price: float = full_rows[0].price
-    volume: int = fund_rows[0].volume
+    volume: float = fund_rows[0].volume
     market_cap: int | None = full_rows[0].market_cap
     exports: list[str] = fmp.__all__
     version: str = fmp.__version__

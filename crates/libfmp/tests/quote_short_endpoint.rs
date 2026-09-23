@@ -16,6 +16,8 @@ const QUOTE_SHORT: &[u8] = include_bytes!("fixtures/quote_short.json");
 const QUOTE_SHORT_EMPTY: &[u8] = include_bytes!("fixtures/quote_short_empty.json");
 const QUOTE_SHORT_MULTIPLE: &[u8] = include_bytes!("fixtures/quote_short_multiple.json");
 const QUOTE_SHORT_UNKNOWN: &[u8] = include_bytes!("fixtures/quote_short_unknown.json");
+const QUOTE_SHORT_FRACTIONAL_VOLUME: &[u8] =
+    include_bytes!("fixtures/quote_short_fractional_volume.json");
 
 #[test]
 fn descriptor_uses_the_documented_method_path_query_and_response_shape() {
@@ -40,7 +42,7 @@ async fn client_decodes_every_documented_field_without_selecting_a_first_row() {
     assert_eq!(rows[0].symbol.as_str(), "AAPL");
     assert_eq!(rows[0].price, 331.85501);
     assert_eq!(rows[0].change, -6.33498);
-    assert_eq!(rows[0].volume, 28_718_014);
+    assert_eq!(rows[0].volume, 28_718_014.0);
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 1);
@@ -68,10 +70,30 @@ async fn client_preserves_empty_multiple_and_forward_compatible_arrays() {
     assert!(empty.is_empty());
     assert_eq!(multiple.len(), 2);
     assert_eq!(multiple[0].symbol.as_str(), "000001.SZ");
-    assert_eq!(multiple[0].volume, 4_294_967_296);
+    assert_eq!(multiple[0].volume, 4_294_967_296.0);
     assert_eq!(multiple[1].symbol.as_str(), "^VIX");
     assert_eq!(future_shape.len(), 1);
     assert_eq!(future_shape[0].symbol.as_str(), "AAPL");
+}
+
+#[tokio::test]
+async fn client_decodes_the_fractional_volume_observed_live_and_re_encodes_it_unchanged() {
+    let executor = Arc::new(FixtureExecutor::new([json_fixture(
+        QUOTE_SHORT_FRACTIONAL_VOLUME,
+    )]));
+    let client = proxy_client(executor, Authentication::None);
+
+    let rows = client
+        .quote_short(&Ticker::new("AAPL").unwrap())
+        .await
+        .unwrap();
+
+    assert_eq!(rows.len(), 1);
+    assert_eq!(rows[0].price, 342.395);
+    assert_eq!(rows[0].change, 3.415);
+    assert_eq!(rows[0].volume, 20_201_922.827_33);
+    let wire: serde_json::Value = serde_json::from_slice(QUOTE_SHORT_FRACTIONAL_VOLUME).unwrap();
+    assert_eq!(serde_json::to_value(&rows).unwrap(), wire);
 }
 
 #[tokio::test]

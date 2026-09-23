@@ -702,3 +702,30 @@ pub mod empty_date {
         }
     }
 }
+
+/// Serializer for a [`Volume`](crate::types::Volume) response field.
+///
+/// The provider sends volume as a JSON integer and, intermittently, as a
+/// fractional number, so the field is an `f64` that deserializes from any
+/// JSON number. Re-encoding writes a finite integral value back as a JSON
+/// integer (so a documented row round-trips byte-for-byte) and anything else
+/// as a JSON float. Apply it with `serialize_with`; deserialization is serde's
+/// default `f64` path.
+pub mod volume {
+    use super::*;
+
+    pub fn serialize<S>(value: &f64, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if value.is_finite() && value.fract() == 0.0 {
+            if *value >= 0.0 && *value < u64::MAX as f64 {
+                return serializer.serialize_u64(*value as u64);
+            }
+            if *value < 0.0 && *value > i64::MIN as f64 {
+                return serializer.serialize_i64(*value as i64);
+            }
+        }
+        serializer.serialize_f64(*value)
+    }
+}

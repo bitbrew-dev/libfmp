@@ -275,3 +275,19 @@ def test_status_error_redacts_configured_query_secret(fixture_server: FixtureSer
     assert error.body == "denied?apikey=[REDACTED]"
     assert error.body_truncated is False
     assert "query-secret" not in f"{error!s} {error!r} {error.body}"
+
+
+def test_quote_short_decodes_the_fractional_volume_observed_live(
+    client: Any, fixture_server: FixtureServer
+) -> None:
+    """Issue #337: a fractional ``volume`` on ``quote-short`` decodes as a ``float``."""
+    fixture_server.route(QUOTE_SHORT_PATH, load_fixture("quote_short_fractional_volume.json"))
+    rows = client.quote.short("AAPL")
+
+    assert fixture_server.requests[0].target == "/quote-short?symbol=AAPL"
+    assert len(rows) == 1
+    assert isinstance(rows[0], QuoteShort)
+    assert isinstance(rows[0].volume, float)
+    assert rows[0].volume == pytest.approx(20_201_922.82733)
+    assert rows[0].price == pytest.approx(342.395)
+    assert rows[0].change == pytest.approx(3.415)

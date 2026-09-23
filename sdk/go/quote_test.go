@@ -205,3 +205,17 @@ func TestQuoteMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 		t.Fatalf("cause = %v, want it to name the missing member change", cause)
 	}
 }
+
+// TestQuoteShortDecodesTheFractionalVolumeObservedLive pins issue #337: the
+// provider intermittently sends a fractional volume on quote-short, which the
+// uint64 contract rejected as a decode error in every language.
+func TestQuoteShortDecodesTheFractionalVolumeObservedLive(t *testing.T) {
+	t.Parallel()
+	server, _ := newServer(t, jsonHandler(`[{"symbol":"AAPL","price":342.395,"change":3.415,"volume":20201922.82733}]`))
+	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+
+	short, err := client.Quote.Short(context.Background(), NewQuoteShortQuery("AAPL"))
+	if err != nil || len(short) != 1 || short[0].Volume != 20_201_922.82733 || short[0].Price != 342.395 {
+		t.Fatalf("Short = %+v, %v, want the fractional volume decoded", short, err)
+	}
+}

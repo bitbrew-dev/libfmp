@@ -14,7 +14,7 @@ fn documented_full_quote_decodes_exact_wire_values() {
     assert_eq!(quote.price, 331.85501);
     assert_eq!(quote.change_percentage, -1.8732);
     assert_eq!(quote.change, -6.33498);
-    assert_eq!(quote.volume, 28_718_014);
+    assert_eq!(quote.volume, 28_718_014.0);
     assert_eq!(quote.day_low, 329.59);
     assert_eq!(quote.day_high, 334.48);
     assert_eq!(quote.year_high, 344.57);
@@ -56,7 +56,7 @@ fn documented_short_quote_preserves_negative_change() {
     assert_eq!(quotes[0].symbol.as_str(), "AAPL");
     assert_eq!(quotes[0].price, 331.85501);
     assert_eq!(quotes[0].change, -6.33498);
-    assert_eq!(quotes[0].volume, 28_718_014);
+    assert_eq!(quotes[0].volume, 28_718_014.0);
 }
 
 #[test]
@@ -69,7 +69,7 @@ fn bare_quote_arrays_retain_empty_and_multiple_shapes() {
     assert!(empty.is_empty());
     assert_eq!(multiple.len(), 2);
     assert_eq!(multiple[0].symbol.as_str(), "000001.SZ");
-    assert_eq!(multiple[0].volume, 4_294_967_296);
+    assert_eq!(multiple[0].volume, 4_294_967_296.0);
     assert_eq!(multiple[1].symbol.as_str(), "^VIX");
 }
 
@@ -103,7 +103,7 @@ fn documented_aftermarket_quote_decodes_exact_wire_values_in_milliseconds() {
     assert_eq!(quote.bid_price, 331.85);
     assert_eq!(quote.ask_size, 40);
     assert_eq!(quote.ask_price, 331.88);
-    assert_eq!(quote.volume, 28_718_455);
+    assert_eq!(quote.volume, 28_718_455.0);
     assert_eq!(quote.timestamp, UnixMilliseconds(1_785_430_813_000));
 
     let wire = serde_json::to_value(quote).unwrap();
@@ -175,9 +175,9 @@ fn new_quote_response_arrays_preserve_empty_multiple_unknown_and_large_values() 
     assert_eq!(quotes.len(), 2);
     assert_eq!(quotes[0].bid_size, u64::MAX);
     assert_eq!(quotes[0].ask_size, 9_007_199_254_740_993);
-    assert_eq!(quotes[0].volume, u64::MAX - 1);
+    assert_eq!(quotes[0].volume, (u64::MAX - 1) as f64);
     assert_eq!(quotes[0].timestamp, UnixMilliseconds(i64::MAX));
-    assert_eq!(quotes[1].volume, 9_007_199_254_740_993);
+    assert_eq!(quotes[1].volume, 9_007_199_254_740_993.0);
 
     let changes: Vec<StockPriceChange> =
         serde_json::from_str(include_str!("fixtures/stock_price_change_synthetic.json")).unwrap();

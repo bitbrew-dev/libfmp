@@ -97,11 +97,11 @@ async fn custom_proxy_preserves_order_headers_fixtures_and_independent_dates() {
         .unwrap();
     assert_eq!(
         (dema[0].dema, dema[0].volume),
-        (337.7659642917977, 29_207_295)
+        (337.7659642917977, 29_207_295.0)
     );
     assert_eq!(
         (tema[0].tema, tema[0].volume),
-        (337.09671042323214, 29_207_295)
+        (337.09671042323214, 29_207_295.0)
     );
 
     let requests = executor.requests();

@@ -113,6 +113,11 @@ func TestShortQuoteFixturesPreserveDocumentedValues(t *testing.T) {
 	if len(unknown) != 1 || unknown[0] != short[0] {
 		t.Fatalf("quote_short_unknown = %+v, want %+v", unknown, short)
 	}
+	fractional := assertFixtureParity[QuoteShort](t, "quote_short_fractional_volume.json")
+	if want := (QuoteShort{Symbol: "AAPL", Price: 342.395, Change: 3.415, Volume: 20_201_922.82733}); len(fractional) != 1 ||
+		fractional[0] != want {
+		t.Fatalf("quote_short_fractional_volume = %+v, want %+v", fractional, want)
+	}
 }
 
 func TestRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
