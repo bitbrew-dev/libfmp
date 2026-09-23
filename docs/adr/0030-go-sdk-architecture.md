@@ -122,7 +122,8 @@ that no wire information is invented or lost:
 | --- | --- | --- |
 | `String` newtypes (`Ticker`, `ExchangeCode`, ...) | `string` | validated on the query side only |
 | `Price`, `Change`, `Percentage`, `MarketValue` (`f64`) | `float64` | |
-| `Volume`, `Count`, `MarketCapitalization` (`u64`) | `uint64` | |
+| `Volume` (`f64`) | `float64` | the provider intermittently sends a fractional volume (#337); Rust re-encodes an integral value as a JSON integer through `codecs::volume`, json/v2 already formats an integral `float64` without a fraction; the screener volume filters stay `uint64` |
+| `Count`, `MarketCapitalization` (`u64`) | `uint64` | |
 | `StatementAmount` (`i64`) | `int64` | |
 | `Option<T>` | `*T` | `nil` for absent and for JSON `null` |
 | `NumericString`, `PercentString` | `string` | exact wire text, never scaled |

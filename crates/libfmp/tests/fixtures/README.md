@@ -23,6 +23,12 @@ network connection.
   are constructed by hand for edge cases the documentation does not show
   (mixed numeric forms, dynamic JSON recursion). Their file name marks them as
   not provider-observed.
+- **Observed-shape reproductions.** `quote_short_fractional_volume.json`
+  reproduces the one live `quote-short` row that motivated issue #337 (seen
+  2026-09-23: a fractional `volume`, `20201922.82733`); the four values are
+  the ones reported in the issue, not a recorded response body. It is the
+  decode proof for `Volume = f64` in `quote_short_endpoint.rs`,
+  `fmp-py/tests/test_client.py`, and `sdk/go/quote_parity_test.go`.
 - **No captured live responses yet.** Nothing here was recorded from a live
   call. When one is captured, add it under a `*_captured.json` name, note the
   capture date and plan tier in the owning test, and resolve the matching row

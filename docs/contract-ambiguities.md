@@ -41,5 +41,9 @@ each row; `git log -S` on the quoted key finds the current location.
 
 ## Resolved rows
 
-None yet. Move a row here with the resolving commit when a captured response
-settles it, so the history of each decision stays in one place.
+Move a row here with the resolving commit when a captured response settles
+it, so the history of each decision stays in one place.
+
+| Area | Ambiguity | Resolution | Where |
+| --- | --- | --- | --- |
+| Volume fields | Every documented `volume` sample is a JSON integer, so the shared `Volume` alias was `u64`; a live `quote-short` row carried `"volume": 20201922.82733` (observed 2026-09-23, issue #337) and every decoder rejected it. | Decision A: `Volume` is `f64` in Rust, `float64` in Go, `float` in Python, on all 21 response fields at once. Rust re-encodes an integral value as a JSON integer through `codecs::volume` so documented fixtures round-trip byte-for-byte; the screener `volumeMoreThan`/`volumeLowerThan` filters stay `u64`. Values above `2^53` now round to the nearest `f64`. | `crates/libfmp/src/types.rs` (`Volume`); `crates/libfmp/src/codecs.rs` (`volume`); `crates/libfmp/tests/fixtures/quote_short_fractional_volume.json`; ADR 0030 codec table |
