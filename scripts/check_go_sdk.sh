@@ -7,7 +7,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 root=$(pwd)
 
-# 1. Toolchain pins. The Go version must match go.mod exactly; golangci-lint
+# 1. Toolchain pins. The Go version must match the go.mod toolchain line exactly; golangci-lint
 #    must be a v2 release because .golangci.yml uses the v2 schema.
 go_version=$(go env GOVERSION)
 if [[ "$go_version" != go1.27.1 ]]; then
