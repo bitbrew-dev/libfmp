@@ -180,6 +180,10 @@ INVALID_CONFIGURATIONS = [
     pytest.param({"base_url": "https://proxy.example", "timeout": float("nan")}, id="nan-timeout"),
     pytest.param({"base_url": "https://proxy.example", "connect_timeout": 1e300}, id="huge-connect-timeout"),
     pytest.param({"base_url": "https://proxy.example", "headers": {"bad name": "value"}}, id="bad-header-name"),
+    pytest.param({"base_url": "https://proxy.example", "headers": {"X-Tenant": 1}}, id="non-str-header-value"),
+    pytest.param({"base_url": "https://proxy.example", "headers": {1: "value"}}, id="non-str-header-name"),
+    pytest.param({"base_url": "https://proxy.example", "max_response_body_bytes": -1}, id="negative-body-limit"),
+    pytest.param({"base_url": "https://proxy.example", "max_response_body_bytes": 2**70}, id="huge-body-limit"),
     pytest.param({"token": "secret", "base_url": "http://proxy.example"}, id="insecure-authenticated-http"),
 ]
 

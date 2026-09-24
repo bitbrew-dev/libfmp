@@ -9,7 +9,10 @@ use libfmp::{
     config::{Authentication, RedirectPolicy, fmp_api_key_from_env},
     error::ConfigurationErrorKind,
 };
-use pyo3::{prelude::*, types::PyDict};
+use pyo3::{
+    prelude::*,
+    types::{PyDict, PyInt},
+};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::errors::to_py_error;
@@ -129,6 +132,20 @@ fn authentication(
     }
 }
 
+fn header_text(value: &Bound<'_, PyAny>) -> PyResult<String> {
+    value
+        .extract()
+        .map_err(|_| invalid_configuration("headers must map str names to str values"))
+}
+
+fn body_limit(value: &Bound<'_, PyInt>) -> PyResult<usize> {
+    value.extract().map_err(|_| {
+        invalid_configuration(
+            "max_response_body_bytes must be a non-negative integer that fits in usize",
+        )
+    })
+}
+
 fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
     let message = match field {
         "timeout" => "timeout must be a finite number greater than zero",
@@ -176,7 +193,8 @@ impl FmpClient {
         headers: Option<&Bound<'_, PyDict>>,
         timeout: Option<f64>,
         connect_timeout: Option<f64>,
-        max_response_body_bytes: Option<usize>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[builtins.int]", imports = ("builtins", "typing")))]
+        max_response_body_bytes: Option<Bound<'_, PyInt>>,
         danger_allow_insecure_authentication: bool,
         follow_redirects: Option<bool>,
     ) -> PyResult<Self> {
@@ -191,8 +209,7 @@ impl FmpClient {
         }
         if let Some(headers) = headers {
             for (name, value) in headers.iter() {
-                builder =
-                    builder.default_header(name.extract::<String>()?, value.extract::<String>()?);
+                builder = builder.default_header(header_text(&name)?, header_text(&value)?);
             }
         }
         if let Some(timeout) = timeout {
@@ -203,7 +220,7 @@ impl FmpClient {
                 builder.connect_timeout(positive_duration(connect_timeout, "connect_timeout")?);
         }
         if let Some(max_response_body_bytes) = max_response_body_bytes {
-            builder = builder.max_response_body_bytes(max_response_body_bytes);
+            builder = builder.max_response_body_bytes(body_limit(&max_response_body_bytes)?);
         }
         builder =
             builder.danger_allow_insecure_authentication(danger_allow_insecure_authentication);
