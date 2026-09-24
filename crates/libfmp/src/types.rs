@@ -672,7 +672,7 @@ pub type MarketValue = f64;
 /// observed on `quote-short`), so the type is `f64` and the SDK accepts any
 /// JSON number without enforcing a sign or integrality. Response fields
 /// re-encode an integral value as a JSON integer through
-/// the crate's `volume` serde codec; the screener volume filters stay `u64`.
+/// the crate's `integral_f64` serde codec; the screener volume filters stay `u64`.
 pub type Volume = f64;
 /// A non-negative count represented by the provider as a JSON integer.
 pub type Count = u64;

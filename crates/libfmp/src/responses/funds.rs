@@ -48,7 +48,7 @@ pub struct EtfFundInfo {
     pub etf_company: String,
     pub expense_ratio: Percentage,
     pub assets_under_management: u64,
-    #[serde(serialize_with = "crate::codecs::volume::serialize")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub avg_volume: Volume,
     pub inception_date: Date,
     pub nav: f64,

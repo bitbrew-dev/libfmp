@@ -708,22 +708,20 @@ pub mod empty_date {
     }
 }
 
-/// Serializer for a [`Volume`](crate::types::Volume) response field.
+/// Serializers for response fields typed with an integral-`f64` alias.
 ///
-/// The provider sends volume as a JSON integer and, intermittently, as a
-/// fractional number, so the field is an `f64` that deserializes from any
-/// JSON number. Re-encoding writes a finite integral value back as a JSON
-/// integer (so a documented row round-trips byte-for-byte) and anything else
-/// as a JSON float. Apply it with `serialize_with`; deserialization is serde's
-/// default `f64` path.
-///
-/// Serde wiring for the response models, hidden from the documented API and
-/// exempt from semver guarantees, like the other `with` helper modules here.
-#[doc(hidden)]
-pub mod volume {
+/// The provider documents fields such as [`Volume`](crate::types::Volume)
+/// and [`MarketCapitalization`](crate::types::MarketCapitalization) as JSON
+/// integers but intermittently sends a fractional or exponent-form number,
+/// so they are `f64` fields that deserialize from any JSON number.
+/// Re-encoding writes a finite integral value back as a JSON integer (so a
+/// documented row round-trips byte-for-byte), any other finite value as a
+/// JSON float, and NaN or an infinity as `null`. Apply [`serialize`] with
+/// `serialize_with`; deserialization is serde's default `f64` path.
+pub(crate) mod integral_f64 {
     use super::*;
 
-    pub fn serialize<S>(value: &f64, serializer: S) -> Result<S::Ok, S::Error>
+    pub(crate) fn serialize<S>(value: &f64, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -736,5 +734,75 @@ pub mod volume {
             }
         }
         serializer.serialize_f64(*value)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use serde::{Deserialize, Serialize};
+
+    use crate::types::Volume;
+
+    #[test]
+    fn integral_f64_accepts_any_json_number_and_re_encodes_integral_values_as_integers() {
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Row {
+            #[serde(serialize_with = "super::integral_f64::serialize")]
+            volume: Volume,
+        }
+        let encoded = |value: f64| serde_json::to_string(&Row { volume: value }).unwrap();
+
+        let documented: Row = serde_json::from_str(r#"{"volume":28718014}"#).unwrap();
+        let observed: Row = serde_json::from_str(r#"{"volume":20201922.82733}"#).unwrap();
+        assert_eq!(documented.volume, 28_718_014.0);
+        assert_eq!(observed.volume, 20_201_922.827_33);
+        assert_eq!(
+            serde_json::to_string(&documented).unwrap(),
+            r#"{"volume":28718014}"#
+        );
+        assert_eq!(
+            serde_json::to_string(&observed).unwrap(),
+            r#"{"volume":20201922.82733}"#
+        );
+
+        assert_eq!(encoded(0.0), r#"{"volume":0}"#);
+        assert_eq!(encoded(-0.0), r#"{"volume":0}"#);
+        assert_eq!(encoded(4_294_967_296.0), r#"{"volume":4294967296}"#);
+        assert_eq!(encoded(-1.0), r#"{"volume":-1}"#);
+        assert_eq!(encoded(1.5), r#"{"volume":1.5}"#);
+        assert_eq!(
+            encoded(9_007_199_254_740_992.0),
+            r#"{"volume":9007199254740992}"#,
+            "2^53 is integral and still emits an integer"
+        );
+        assert_eq!(
+            encoded(18_446_744_073_709_549_568.0),
+            r#"{"volume":18446744073709549568}"#,
+            "the largest f64 below 2^64 casts to u64 exactly"
+        );
+        assert_eq!(
+            encoded(i64::MIN as f64),
+            r#"{"volume":-9223372036854775808}"#,
+            "-2^63 is the last negative integral value that fits an i64"
+        );
+        assert_eq!(encoded(f64::NAN), r#"{"volume":null}"#);
+        assert_eq!(encoded(f64::INFINITY), r#"{"volume":null}"#);
+        assert_eq!(encoded(f64::NEG_INFINITY), r#"{"volume":null}"#);
+        assert_eq!(
+            serde_json::to_value(Row {
+                volume: 32_030_003_200.0
+            })
+            .unwrap()["volume"]
+                .as_u64(),
+            Some(32_030_003_200)
+        );
+        let beyond_u64 = serde_json::to_value(Row {
+            volume: u64::MAX as f64,
+        })
+        .unwrap();
+        assert!(beyond_u64["volume"].is_f64());
+        assert_eq!(beyond_u64["volume"].as_f64(), Some(u64::MAX as f64));
+        assert!(serde_json::from_str::<Row>(r#"{"volume":"1"}"#).is_err());
+        assert!(serde_json::from_str::<Row>(r#"{"volume":null}"#).is_err());
     }
 }
