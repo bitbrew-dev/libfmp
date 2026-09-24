@@ -42,8 +42,7 @@ Requires Go 1.27.1; the module is pure Go with no cgo and no native library.
 go get github.com/bitbrew-dev/libfmp/sdk/go@vX.Y.Z
 ```
 
-Releases are user-triggered, and the first `sdk/go/v*` tag ships with the
-first release after the release plumbing landed.
+Every release tags the module as `sdk/go/vX.Y.Z`.
 [Go guide and examples](wiki/go.md) · [API reference](https://pkg.go.dev/github.com/bitbrew-dev/libfmp/sdk/go)
 
 ## Documentation
