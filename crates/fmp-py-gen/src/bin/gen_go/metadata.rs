@@ -5,8 +5,10 @@
 //!
 //! The table is keyed per method, not per endpoint id: several methods share
 //! one id through helper reuse (`quote` serves five namespaces) and carry
-//! different metadata, so the id is not a key. The Go types the literals name
-//! live in the hand-written `sdk/go/metadata.go`.
+//! different metadata, so the id is not a key. A second map lists the call
+//! paths serving each id, behind the hand-written `EndpointMetadataByID`
+//! that resolves `Error.Endpoint`. The Go types the literals name live in
+//! the hand-written `sdk/go/metadata.go`.
 
 use std::collections::BTreeMap;
 use std::fmt::Write;
@@ -25,15 +27,20 @@ use crate::render::file_prelude;
 /// silent overwrite.
 pub(crate) fn render_metadata_table(domains: &[&DomainPlan]) -> Result<String, String> {
     let mut entries: BTreeMap<String, String> = BTreeMap::new();
+    let mut by_id: BTreeMap<&str, Vec<String>> = BTreeMap::new();
     for domain in domains {
         for namespace in &domain.namespaces {
             for method in &namespace.methods {
-                let Some(metadata) = &method.metadata else {
-                    continue;
-                };
                 let mut key: Vec<String> = namespace.path.iter().map(|s| exported(s)).collect();
                 key.push(method.name.clone());
                 let key = key.join(".");
+                by_id
+                    .entry(method.endpoint_id.as_str())
+                    .or_default()
+                    .push(key.clone());
+                let Some(metadata) = &method.metadata else {
+                    continue;
+                };
                 if entries.insert(key.clone(), literal(metadata)).is_some() {
                     return Err(format!(
                         "{}: metadata key `{key}` is rendered twice",
@@ -70,6 +77,19 @@ pub(crate) fn render_metadata_table(domains: &[&DomainPlan]) -> Result<String, S
     out.push_str("var endpointMetadataTable = map[string]EndpointMetadata{\n");
     for (key, value) in &entries {
         let _ = writeln!(out, "\t{key:?}: {value},");
+    }
+    out.push_str("}\n\n");
+    out.push_str(&doc_comment(&format!(
+        "endpointMethodsByID lists, for each of the {} endpoint ids, the call paths of \
+         the generated methods that send it, sorted. Several methods share one id \
+         through helper reuse.",
+        by_id.len()
+    )));
+    out.push_str("var endpointMethodsByID = map[string][]string{\n");
+    for (id, methods) in &mut by_id {
+        methods.sort();
+        let quoted: Vec<String> = methods.iter().map(|method| format!("{method:?}")).collect();
+        let _ = writeln!(out, "\t{id:?}: {{{}}},", quoted.join(", "));
     }
     out.push_str("}\n");
     Ok(out)

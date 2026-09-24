@@ -3,6 +3,7 @@ package fmp
 import (
 	"fmt"
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -197,5 +198,99 @@ func TestEndpointMetadataTableCoversEveryDescriptorWithMetadata(t *testing.T) {
 		if _, ok := EndpointMetadataFor(method); !ok {
 			t.Errorf("EndpointMetadataFor(%q) reported false for a table entry", method)
 		}
+	}
+}
+
+// endpointIDsWithConflictingMetadata are the ids whose methods carry more
+// than one distinct metadata value: the per-asset chart and quote helpers
+// the quote, chart, commodities, crypto, forex, and indexes domains share.
+var endpointIDsWithConflictingMetadata = []string{
+	"historical-chart/1hour",
+	"historical-chart/1min",
+	"historical-chart/5min",
+	"historical-price-eod/full",
+	"historical-price-eod/light",
+	"quote",
+	"quote-short",
+}
+
+func TestEndpointMetadataByIDReturnsEveryMethodSendingTheID(t *testing.T) {
+	t.Parallel()
+	got := EndpointMetadataByID("analyst-estimates")
+	want := []EndpointMethodMetadata{{
+		Method: "Analyst.FinancialEstimates",
+		Metadata: EndpointMetadata{
+			Geography: GeographyWorldwide,
+			Bounds:    EndpointBounds{ResponseRows: inclusiveMaximum(1000)},
+		},
+	}}
+	if !reflect.DeepEqual(got, want) {
+		t.Fatalf("EndpointMetadataByID(analyst-estimates) = %+v, want %+v", got, want)
+	}
+	quote := EndpointMetadataByID("quote")
+	methods := make([]string, 0, len(quote))
+	for _, entry := range quote {
+		methods = append(methods, entry.Method)
+		if want, _ := EndpointMetadataFor(entry.Method); !reflect.DeepEqual(entry.Metadata, want) {
+			t.Errorf("entry %s = %s, want %s", entry.Method, entry.Metadata, want)
+		}
+	}
+	if !slices.IsSorted(methods) || !slices.Contains(methods, "Quote.Full") || len(methods) != 4 {
+		t.Fatalf("EndpointMetadataByID(quote) methods = %v, want 4 sorted entries including Quote.Full", methods)
+	}
+}
+
+func TestEndpointMetadataByIDKeepsConflictingIDsUnmerged(t *testing.T) {
+	t.Parallel()
+	var conflicting []string
+	for id := range endpointMethodsByID {
+		distinct := map[string]struct{}{}
+		for _, entry := range EndpointMetadataByID(id) {
+			distinct[entry.Metadata.String()] = struct{}{}
+		}
+		if len(distinct) > 1 {
+			conflicting = append(conflicting, id)
+		}
+	}
+	slices.Sort(conflicting)
+	if !slices.Equal(conflicting, endpointIDsWithConflictingMetadata) {
+		t.Fatalf("ids with conflicting metadata = %v, want %v", conflicting, endpointIDsWithConflictingMetadata)
+	}
+}
+
+func TestEndpointMetadataByIDReportsNilWithoutMetadata(t *testing.T) {
+	t.Parallel()
+	for _, id := range []string{"available-countries", "Quote.Full", "unknown-id", ""} {
+		if got := EndpointMetadataByID(id); got != nil {
+			t.Errorf("EndpointMetadataByID(%q) = %+v, want nil", id, got)
+		}
+	}
+}
+
+func TestEndpointMethodsByIDCoversEveryTableEntry(t *testing.T) {
+	t.Parallel()
+	listed := map[string]int{}
+	for id, methods := range endpointMethodsByID {
+		if !slices.IsSorted(methods) {
+			t.Errorf("methods of %q are not sorted: %v", id, methods)
+		}
+		for _, method := range methods {
+			listed[method]++
+		}
+	}
+	for method := range endpointMetadataTable {
+		if listed[method] != 1 {
+			t.Errorf("%s is listed under %d ids, want exactly 1", method, listed[method])
+		}
+	}
+}
+
+func TestEndpointMetadataByIDReturnsACopy(t *testing.T) {
+	t.Parallel()
+	first := EndpointMetadataByID("analyst-estimates")
+	*first[0].Metadata.Bounds.ResponseRows = 1
+	second := EndpointMetadataByID("analyst-estimates")
+	if *second[0].Metadata.Bounds.ResponseRows != 1000 {
+		t.Fatalf("a mutated lookup changed the table: %s", second[0].Metadata)
 	}
 }

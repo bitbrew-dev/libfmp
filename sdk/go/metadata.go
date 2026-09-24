@@ -241,7 +241,7 @@ func (b EndpointBounds) String() string {
 // EndpointMetadata::new() produces on the Rust side: every member
 // unspecified, no conditional plan, no realtime caveats, no bounds. The client
 // never validates a request against it; callers read it to pick endpoints and
-// size requests. Look one up with EndpointMetadataFor.
+// size requests. Look one up with EndpointMetadataFor or EndpointMetadataByID.
 type EndpointMetadata struct {
 	Geography       GeographicAvailability
 	Access          AccessRequirement
@@ -302,4 +302,32 @@ func cloneMaximum(maximum *uint32) *uint32 {
 		return nil
 	}
 	return inclusiveMaximum(*maximum)
+}
+
+// EndpointMethodMetadata is the metadata of one method that sends a given
+// endpoint id. Method is the EndpointMetadataFor key of that method.
+type EndpointMethodMetadata struct {
+	Method   string
+	Metadata EndpointMetadata
+}
+
+// EndpointMetadataByID returns the metadata of every generated method that
+// sends the endpoint id carried by Error.Endpoint ("quote-short"), one entry
+// per method whose descriptor attaches metadata, sorted by Method. Several
+// methods can share one id through helper reuse and carry different
+// metadata (the id "quote" serves five namespaces with different
+// geography), so the result is never merged: callers that know which method
+// they called pick its entry by Method, and callers that do not must treat
+// a result with more than one distinct Metadata as ambiguous. A method that
+// sends the id but attaches no metadata has no entry. It returns nil for an
+// unknown id and for an id none of whose methods attaches metadata. Every
+// value is a copy.
+func EndpointMetadataByID(id string) []EndpointMethodMetadata {
+	var out []EndpointMethodMetadata
+	for _, method := range endpointMethodsByID[id] {
+		if metadata, ok := EndpointMetadataFor(method); ok {
+			out = append(out, EndpointMethodMetadata{Method: method, Metadata: metadata})
+		}
+	}
+	return out
 }

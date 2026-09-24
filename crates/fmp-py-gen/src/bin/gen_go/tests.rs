@@ -97,8 +97,11 @@ fn committed_domains_regenerate_to_the_committed_files() {
         "{table}"
     );
     if committed_set.len() == registry.domains.len() {
+        let (metadata_entries, by_id) = table
+            .split_once("var endpointMethodsByID")
+            .expect("the id map follows the metadata table");
         assert_eq!(
-            table
+            metadata_entries
                 .lines()
                 .filter(|line| line.starts_with("\t\""))
                 .count(),
@@ -110,8 +113,19 @@ fn committed_domains_regenerate_to_the_committed_files() {
             "{table}"
         );
         assert!(
-            !table.contains("\"Directory.AvailableCountries\""),
-            "a method without metadata has no entry: {table}"
+            !metadata_entries.contains("\"Directory.AvailableCountries\""),
+            "a method without metadata has no entry: {metadata_entries}"
+        );
+        assert!(
+            by_id.contains(
+                "\t\"quote\": {\"Commodities.Quote\", \"Crypto.Quote\", \"Forex.Quote\", \
+                 \"Indexes.Quote\", \"Quote.Full\"},\n"
+            ),
+            "one sorted entry per endpoint id: {by_id}"
+        );
+        assert!(
+            by_id.contains("\"Directory.AvailableCountries\""),
+            "the id map lists methods without metadata too: {by_id}"
         );
     }
 }

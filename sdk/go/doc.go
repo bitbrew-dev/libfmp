@@ -142,4 +142,11 @@
 // endpoint id through helper reuse while carrying different metadata (the id
 // "quote" serves five namespaces), so the id cannot be the key, and a table
 // keyed by call path adds one generated file instead of 271 methods.
+//
+// EndpointMetadataByID resolves the endpoint id an *Error carries in its
+// Endpoint field. It returns one EndpointMethodMetadata per method that
+// sends the id and attaches metadata, never a merged value: seven ids (the
+// quote, quote-short, and five chart helpers the asset domains share) carry
+// different metadata per method, and the caller picks the entry whose Method
+// it called.
 package fmp
