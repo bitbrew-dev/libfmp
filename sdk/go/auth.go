@@ -89,7 +89,10 @@ func CustomHeaderWithPrefix(name, prefix, secret string) Authentication {
 	return Authentication{mode: authCustomHeader, name: name, prefix: prefix, secret: secret}
 }
 
-// CustomQuery sends a secret in a caller-selected query parameter.
+// CustomQuery sends a secret in a caller-selected query parameter. The name
+// must be non-empty and use only ASCII letters, digits, and "-._~", the
+// characters the Redactor can protect; NewClient rejects any other name with
+// ConfigurationKindInvalidQueryName.
 func CustomQuery(name, secret string) Authentication {
 	return Authentication{mode: authCustomQuery, name: name, secret: secret}
 }
@@ -185,10 +188,13 @@ func validateCredential(secret string) error {
 	return nil
 }
 
+// validateQueryName applies the Redactor's secret query name rule (ASCII
+// letters, digits, and "-._~") when the client is built, so a name the
+// Redactor could not protect is rejected before it is ever sent.
 func validateQueryName(name string) error {
-	if name == "" || hasControlCharacter(name) {
+	if validateSecretName(name, isQueryNameByte) != nil {
 		return configurationError(ConfigurationKindInvalidQueryName,
-			"secret query name must not be empty or contain controls")
+			"secret query name must be non-empty ASCII letters, digits, or -._~")
 	}
 	return nil
 }
