@@ -432,7 +432,23 @@ func validHeaderName(name string) bool {
 	return true
 }
 
+// validHeaderValue mirrors the Rust http::HeaderValue check and the RFC 9110
+// field-value grammar: horizontal tab, visible ASCII, and obs-text bytes
+// 0x80 through 0xFF are accepted; the other control bytes and DEL (0x7f)
+// are rejected.
 func validHeaderValue(value string) bool {
+	for i := 0; i < len(value); i++ {
+		if b := value[i]; b != '\t' && (b < 0x20 || b == 0x7f) {
+			return false
+		}
+	}
+	return true
+}
+
+// visibleHeaderText mirrors the Rust HeaderValue::to_str check applied to
+// response headers: horizontal tab and visible ASCII only, so an obs-text
+// response header is treated as unreadable.
+func visibleHeaderText(value string) bool {
 	for i := 0; i < len(value); i++ {
 		if b := value[i]; b != '\t' && (b < 0x20 || b >= 0x7f) {
 			return false

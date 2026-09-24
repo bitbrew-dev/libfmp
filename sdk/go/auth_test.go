@@ -123,7 +123,7 @@ func TestAuthMaterialRejectsUnsafeInput(t *testing.T) {
 			ConfigurationKindInvalidHeaderValue},
 		{"custom header prefix control", CustomHeaderWithPrefix("X-Proxy-Token", "Bearer\x00", "tok"),
 			ConfigurationKindInvalidHeaderValue},
-		{"custom header prefix non ascii", CustomHeaderWithPrefix("X-Proxy-Token", "Träger ", "tok"),
+		{"custom header prefix del", CustomHeaderWithPrefix("X-Proxy-Token", "Bearer\x7f", "tok"),
 			ConfigurationKindInvalidHeaderValue},
 		{"custom header prefix bad name", CustomHeaderWithPrefix("x proxy", "Bearer ", "tok"),
 			ConfigurationKindInvalidHeaderName},
