@@ -37,7 +37,7 @@ python -m venv .venv-release-check
 
 ## Check names immediately before publishing
 
-As of 2026-08-26, both registry APIs returned HTTP 404 for their exact package lookup, and `cargo search libfmp --limit 10` returned no matches, so the names were unregistered at that time. Since the first releases on 2026-08-27 (0.1.0 on crates.io, 0.1.1 on PyPI) this project owns both names, and every release publishes the same workspace version to crates.io and PyPI (0.7.0 on 2026-09-21).
+As of 2026-08-26, both registry APIs returned HTTP 404 for their exact package lookup, and `cargo search libfmp --limit 10` returned no matches, so the names were unregistered at that time. Since the first releases on 2026-08-27 (0.1.0 on crates.io, 0.1.1 on PyPI) this project owns both names, and every release publishes the same workspace version to crates.io and PyPI; `Cargo.toml` holds the current one.
 
 Repeat these checks immediately before publishing to confirm the registries still report this project's latest version:
 

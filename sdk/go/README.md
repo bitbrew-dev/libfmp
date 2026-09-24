@@ -42,21 +42,11 @@ go get github.com/bitbrew-dev/libfmp/sdk/go@vX.Y.Z
 
 Because the version is shared, a `feat(sdk/go)` commit minor-bumps the
 workspace and republishes `libfmp` and `fmp-py` with no Rust change; ADR 0030
-accepts that consequence. Releases are user-triggered, and the first
-`sdk/go/v*` tag ships with the first release after the release plumbing
-landed. Check which versions have been published with:
+accepts that consequence. Every release tags `sdk/go/vX.Y.Z`. Check which
+versions have been published with:
 
 ```sh
 go list -m -versions github.com/bitbrew-dev/libfmp/sdk/go
-```
-
-While that list is empty, use a source checkout of this repository and point
-your module at it with a `replace` directive:
-
-```
-require github.com/bitbrew-dev/libfmp/sdk/go v0.0.0
-
-replace github.com/bitbrew-dev/libfmp/sdk/go => ../libfmp/sdk/go
 ```
 
 ## Building a client

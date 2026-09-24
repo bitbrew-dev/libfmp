@@ -14,10 +14,9 @@ import fmp "github.com/bitbrew-dev/libfmp/sdk/go"
 ```
 
 Start with [installation](../README.md#install). The module shares the
-libfmp workspace version and every release tags `sdk/go/vX.Y.Z`; until the
-first tag exists, the
+libfmp workspace version and every release tags `sdk/go/vX.Y.Z`; the
 [Installation](../sdk/go/README.md#installation) section of the Go README
-shows how to point a module at a source checkout with a `replace` directive.
+lists the published versions and the private-repository setup.
 
 ## Building a client
 
