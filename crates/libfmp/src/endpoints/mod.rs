@@ -224,6 +224,10 @@ impl<'a> QueryEncoder<'a> {
 }
 
 /// A typed query that emits unencoded values in deterministic wire order.
+///
+/// Implement it for a custom query passed through [`EndpointSpec::new`].
+/// Future releases add methods to this trait only with default
+/// implementations, so existing implementations keep compiling.
 pub trait QueryParameters {
     /// Encodes required and present optional values using exact provider keys.
     fn encode(&self, encoder: &mut QueryEncoder<'_>);

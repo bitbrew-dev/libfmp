@@ -19,6 +19,18 @@ pub mod types;
 pub use client::{Client, ClientBuilder};
 pub use error::{Error, Result};
 
+pub use bytes;
+pub use chrono;
+pub use http;
+pub use serde_json;
+pub use url;
+
+const _: () = {
+    const fn assert_send_sync_static<T: Send + Sync + 'static>() {}
+    assert_send_sync_static::<Error>();
+    assert_send_sync_static::<Client>();
+};
+
 /// The version of the `libfmp` crate.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
