@@ -81,6 +81,14 @@ valuation = client.dcf.custom_discounted_cash_flow(
   RFC 3339 timestamps (for example `TipRanksRatingSearchResult.date`) stay
   `str` with the exact wire text. Shared Rust response types map to one shared
   Python class rather than a copy per endpoint.
+- Numeric strings (for example `CompanyProfile.full_time_employees`) stay
+  `str` with the exact wire text; wrap them with `decimal.Decimal(...)` for
+  arithmetic.
+- Unix timestamps are `int` in the unit the provider sends: `Quote.timestamp`
+  is seconds, while `AftermarketTrade.timestamp` and
+  `AftermarketQuote.timestamp` are milliseconds.
+- Naive `datetime.datetime` values carry no timezone because the provider
+  does not document one; the binding does not attach or assume UTC.
 - Dynamic rows: endpoints whose documented shape is open-ended return
   `list[dict[str, Any]]` with the raw provider keys, for example
   `client.sec_filings.search_industry_classifications(symbol="AAPL")`. A
