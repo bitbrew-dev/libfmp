@@ -167,7 +167,7 @@ impl fmt::Debug for TransportResponse {
 /// can contain query credentials. Construct it with [`ExecutorError::new`];
 /// the unit-struct literal is reserved so a reason can be added later.
 ///
-/// ```compile_fail
+/// ```compile_fail,E0603
 /// let _ = libfmp::transport::ExecutorError;
 /// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
