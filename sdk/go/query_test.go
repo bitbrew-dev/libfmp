@@ -248,6 +248,10 @@ func TestEconomicIndicatorKindIsOpenLikeTheRustEnum(t *testing.T) {
 		got, err := economicIndicatorParam("name", indicator)
 		assertParam(t, got, err, "name", documentedEconomicIndicatorWire[index])
 	}
+	documented[0] = "mutated"
+	if again := DocumentedEconomicIndicators(); again[0] != EconomicIndicatorGdp {
+		t.Fatalf("mutating the returned slice changed the table: %q", again[0])
+	}
 	got, err := economicIndicatorParam("name", "futureProviderIndicator")
 	assertParam(t, got, err, "name", "futureProviderIndicator")
 	got, err = economicIndicatorParam("name", "open, with comma")

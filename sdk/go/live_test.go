@@ -141,8 +141,7 @@ func TestLiveProductionProxyRouteReturnsQuoteShortRows(t *testing.T) {
 	opts := []Option{
 		WithBaseURL(baseURL),
 		WithPathPrefix(pathPrefix),
-		// TODO(#324): switch to CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", token).
-		WithAuthentication(CustomHeader("X-Proxy-Token", "Bearer "+token)),
+		WithAuthentication(CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", token)),
 	}
 	tenant, hasTenant := liveValue(liveTenantEnv)
 	if hasTenant {

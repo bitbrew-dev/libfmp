@@ -120,6 +120,12 @@
 //     parity tests prove the JSON kind only), and a FiscalPeriod member
 //     decodes as a plain string rather than the closed FiscalPeriod type the
 //     queries use, in the same way IsoTimestamp members stay exact strings.
+//   - Dynamic rows: an endpoint whose Rust method returns
+//     Vec<DynamicObject> (registry response = "dynamic") returns
+//     []jsontext.Value, one raw JSON object per row, checked to be an
+//     object and otherwise kept verbatim. SecFilings.SearchIndustryClassifications
+//     is the only one today; it stays dynamic in Go for as long as the Rust
+//     contract does, since a typed row is a Rust model change first.
 //   - Type aliases: a Rust alias of a model (FundDisclosureDate for
 //     Form13fFilingDate) has no Go type of its own; the method returns the
 //     aliased model's Go type, so one Rust model is one Go type.
