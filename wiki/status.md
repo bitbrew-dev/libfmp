@@ -33,6 +33,12 @@ libfmp is pre-1.0. Breaking changes still ship as minor versions until the
 maintainer cuts 1.0; each one carries a `BREAKING CHANGE:` note in the
 release notes. From 1.0 on, the rules below apply as written.
 
+How a breaking change maps to a major:
+
+- A `BREAKING CHANGE:` footer alone releases a minor, before and after 1.0.
+- Only the maintainer cuts a major, with a dedicated release commit; a
+  change the table below classes as major waits for that release.
+
 ### What is public API
 
 | SDK | Public | Not public |

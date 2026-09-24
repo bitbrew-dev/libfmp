@@ -293,4 +293,3 @@ Go checks, mirroring the sibling's `go-bindings-tests` hook.
   constructors named in the client-surface table above (`FmpHeader`,
   `FmpQuery`, `FmpHeaderFromEnv`) become `FMPHeader`, `FMPQuery`, and
   `FMPHeaderFromEnv` when #344 lands; this ADR keeps the names as shipped.
-- The module path stays `github.com/bitbrew-dev/libfmp/sdk/go` (ADR 0031).
