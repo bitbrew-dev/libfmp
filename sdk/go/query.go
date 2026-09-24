@@ -159,6 +159,15 @@ const (
 // ErrUnknownWireValue is returned when an enumerated argument is not one of
 // its documented wire values. The Rust crate makes this unrepresentable with
 // a closed enum; the Go SDK checks it when the request is built.
+//
+// Wire enum policy: a query type is closed (RetrievalFrequency, Quarter,
+// ChartTimeframe, FiscalPeriod, StatementPeriod, SegmentationStructure) when
+// its libfmp counterpart is a closed Rust enum, and then any value outside its
+// constants fails with ErrUnknownWireValue before a request is sent. A type
+// is open (EconomicIndicator) only when the libfmp type accepts provider
+// values it does not list; its constants are the documented spellings and
+// any other valid string is forwarded. Widening a closed type follows the
+// Rust enum gaining a variant, never the provider documentation alone.
 var ErrUnknownWireValue = errors.New("value is not a documented wire value")
 
 // wireEnumParam encodes an enumerated argument after checking that the value
@@ -333,10 +342,10 @@ const (
 )
 
 // DocumentedEconomicIndicators lists the 24 documented indicator names, as
-// the libfmp EconomicIndicator::DOCUMENTED table does. Callers must not
-// modify the returned slice.
+// the libfmp EconomicIndicator::DOCUMENTED table does. Each call returns a
+// fresh copy, so modifying it never changes a later result.
 func DocumentedEconomicIndicators() []EconomicIndicator {
-	return documentedEconomicIndicators[:]
+	return slices.Clone(documentedEconomicIndicators[:])
 }
 
 var documentedEconomicIndicators = [...]EconomicIndicator{
