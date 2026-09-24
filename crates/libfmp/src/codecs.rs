@@ -716,6 +716,10 @@ pub mod empty_date {
 /// integer (so a documented row round-trips byte-for-byte) and anything else
 /// as a JSON float. Apply it with `serialize_with`; deserialization is serde's
 /// default `f64` path.
+///
+/// Serde wiring for the response models, hidden from the documented API and
+/// exempt from semver guarantees, like the other `with` helper modules here.
+#[doc(hidden)]
 pub mod volume {
     use super::*;
 
