@@ -50,8 +50,8 @@ func FmpAPIKeyFromEnv() (string, bool) {
 }
 
 // FmpHeaderFromEnv builds FmpHeader authentication from FMP_API_KEY using the
-// normalization of FmpAPIKeyFromEnv. NewClient never reads the environment on
-// its own, so callers opt in explicitly.
+// normalization of FmpAPIKeyFromEnv. NewClient never reads a credential from
+// the environment on its own, so callers opt in explicitly.
 func FmpHeaderFromEnv() (Authentication, bool) {
 	key, ok := FmpAPIKeyFromEnv()
 	if !ok {
