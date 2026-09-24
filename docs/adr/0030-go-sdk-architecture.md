@@ -1,6 +1,6 @@
 # ADR 0030: Go SDK architecture
 
-- Status: Proposed
+- Status: Accepted (2026-09-24; naming amended by ADR 0032)
 - Date: 2026-09-21
 - Decision owners: libfmp maintainers
 - Scope: `sdk/go`, the generator crate, release plumbing for the Go module
@@ -284,3 +284,13 @@ Go checks, mirroring the sibling's `go-bindings-tests` hook.
   realtime caveats, bounds) is generated into `metadata_table.go` from the
   `WireMetadata` the wire scanner folds out of the Rust descriptors, behind
   `EndpointMetadataFor`. The Python binding still has no such surface.
+
+## Amendment (2026-09-24)
+
+- Status moved from Proposed to Accepted: phases 0 to 4 shipped and
+  `sdk/go/vX.Y.Z` tags are published with each release.
+- Go identifier casing and method names follow ADR 0032. The auth
+  constructors named in the client-surface table above (`FmpHeader`,
+  `FmpQuery`, `FmpHeaderFromEnv`) become `FMPHeader`, `FMPQuery`, and
+  `FMPHeaderFromEnv` when #344 lands; this ADR keeps the names as shipped.
+- The module path stays `github.com/bitbrew-dev/libfmp/sdk/go` (ADR 0031).

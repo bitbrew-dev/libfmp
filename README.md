@@ -10,7 +10,8 @@ A Rust-first client for the
 with synchronous Python bindings distributed as `fmp-py-sdk` and imported as
 `fmp`, and a pure Go module generated from the same contract. All three cover
 the 271 `Client` methods across 30 namespaces of the pinned documentation
-oracle. See [status and support](wiki/status.md) for the support policy and
+oracle. See [status and support](wiki/status.md) for the support policy,
+the [stability and semver policy](wiki/status.md#stability-and-semver), and
 the coverage caveat.
 
 ## Install

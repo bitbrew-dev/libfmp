@@ -27,6 +27,41 @@ the wheel with no Rust change.
 registry name checks, the release-notes checklist, and the Go module
 checklist.
 
+## Stability and semver
+
+libfmp is pre-1.0. Breaking changes still ship as minor versions until the
+maintainer cuts 1.0; each one carries a `BREAKING CHANGE:` note in the
+release notes. From 1.0 on, the rules below apply as written.
+
+### What is public API
+
+| SDK | Public | Not public |
+|-----|--------|------------|
+| Rust | items reachable from the `libfmp` crate root: `Client`, `ClientBuilder`, endpoint functions, query and response types, `Error` and its categories | `#[doc(hidden)]` items, private modules, `Debug` output |
+| Python | names exported from `fmp` and its domain packages, as typed in the shipped `.pyi` stubs | `fmp._native`, `repr` output |
+| Go | exported identifiers of `github.com/bitbrew-dev/libfmp/sdk/go` | unexported identifiers, `String()` output |
+
+In every SDK, error message text is not stable: match on the category
+(`Validation`, `Configuration`, `Transport`, `Status`, `Decode`) and the
+structured fields, not on the message.
+
+### Change classes
+
+| Change | Release |
+|--------|---------|
+| New endpoint, new method, new option | minor |
+| New field on a response struct (Rust response structs are `#[non_exhaustive]`) | minor |
+| Widening a response field type (`i64` to `f64`) or `T` to `Option<T>` to match observed provider data | minor, with a changelog notice naming the field |
+| Raising the Rust MSRV, the Python floor, or the Go version | minor |
+| Bug fix that keeps the public signature | patch |
+| Removing or renaming a public item, or narrowing a type | major |
+| Changing the meaning of a field or the error category of a condition | major |
+
+A field widening is a minor because the provider, not the SDK, changed the
+contract: the old type already rejected real responses. The decisions behind
+these rules are in
+[ADR 0031](../docs/adr/0031-pre-1.0-contract-decisions.md).
+
 ## Endpoint coverage
 
 | Count | Value |
