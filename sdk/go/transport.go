@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"slices"
 	"strings"
 	"time"
 )
@@ -139,13 +140,18 @@ func (c *Client) roundTrip(ctx context.Context, endpointID string, target *url.U
 }
 
 // redactCause rebuilds a transport or decoder failure without the request
-// URL (*url.Error embeds it, and it carries the API key in query mode) and
-// passes the remaining text through the client's Redactor.
+// URL (*url.Error embeds it, and it carries the API key in query mode),
+// passes the remaining text through the client's Redactor, and then removes
+// the network topology a dial or proxy failure prints: the base URL and
+// proxy hosts registered at build time and the addresses the failure itself
+// names. The topology pass applies to causes only, never to provider bodies.
 func (c *Client) redactCause(err error) error {
 	var urlErr *url.Error
 	if errors.As(err, &urlErr) && urlErr.Err != nil {
 		err = urlErr.Err
 	}
+	text := redactSecretValues(c.redactor.Redact(err.Error()),
+		append(slices.Clone(c.topology), causeAddresses(err)...))
 	var sentinel error
 	switch {
 	case errors.Is(err, context.DeadlineExceeded):
@@ -153,7 +159,75 @@ func (c *Client) redactCause(err error) error {
 	case errors.Is(err, context.Canceled):
 		sentinel = context.Canceled
 	}
-	return &redactedCause{text: c.redactor.Redact(err.Error()), sentinel: sentinel}
+	return &redactedCause{text: text, sentinel: sentinel}
+}
+
+// networkTopology lists the host spellings a network failure can print for
+// baseURL and for the proxy the transport resolves for it: host, host:port
+// with the scheme's default port filled in, and, for a proxy, its full URL
+// and any password it carries.
+func networkTopology(baseURL *url.URL, proxy func(*http.Request) (*url.URL, error)) []string {
+	topology := hostSpellings(baseURL)
+	if proxy == nil {
+		return topology
+	}
+	proxyURL, err := proxy(&http.Request{Method: http.MethodGet, URL: baseURL, Header: http.Header{}})
+	if err != nil || proxyURL == nil {
+		return topology
+	}
+	topology = append(topology, proxyURL.String())
+	if password, ok := proxyURL.User.Password(); ok {
+		topology = append(topology, password)
+	}
+	return append(topology, hostSpellings(proxyURL)...)
+}
+
+func hostSpellings(u *url.URL) []string {
+	hostname := u.Hostname()
+	if hostname == "" {
+		return nil
+	}
+	port := u.Port()
+	if port == "" {
+		port = "443"
+		if u.Scheme == "http" {
+			port = "80"
+		}
+	}
+	return []string{u.Host, net.JoinHostPort(hostname, port), hostname}
+}
+
+// transportProxy returns the proxy function of the transport the client
+// sends through, or nil when it is not an *http.Transport.
+func transportProxy(client *http.Client) func(*http.Request) (*url.URL, error) {
+	roundTripper := client.Transport
+	if roundTripper == nil {
+		roundTripper = http.DefaultTransport
+	}
+	if transport, ok := roundTripper.(*http.Transport); ok {
+		return transport.Proxy
+	}
+	return nil
+}
+
+// causeAddresses collects the addresses a network failure names: the local
+// and remote endpoints of a *net.OpError and the name and server of a
+// *net.DNSError, anywhere in the chain.
+func causeAddresses(err error) []string {
+	var addresses []string
+	var opErr *net.OpError
+	if errors.As(err, &opErr) {
+		for _, addr := range []net.Addr{opErr.Addr, opErr.Source} {
+			if addr != nil {
+				addresses = append(addresses, addr.String())
+			}
+		}
+	}
+	var dnsErr *net.DNSError
+	if errors.As(err, &dnsErr) {
+		addresses = append(addresses, dnsErr.Name, dnsErr.Server)
+	}
+	return slices.DeleteFunc(addresses, func(address string) bool { return address == "" })
 }
 
 func (c *Client) statusError(endpointID string, resp *bufferedResponse) *Error {
