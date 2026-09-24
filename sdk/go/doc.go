@@ -52,7 +52,10 @@
 // without secret values. Every transport failure is rebuilt without the
 // request URL before it escapes (Go's *url.Error embeds the URL, which holds
 // the API key in query mode), and its cause text is passed through the
-// Redactor. Provider bodies retained in an *Error are redacted and capped at
+// Redactor. The cause text also loses the network topology a dial or proxy
+// failure prints (the base URL host, the resolved proxy host, and the
+// addresses a *net.OpError or *net.DNSError names); provider bodies keep
+// such text. Provider bodies retained in an *Error are redacted and capped at
 // MaxSafeBodyBytes.
 //
 // # Environment

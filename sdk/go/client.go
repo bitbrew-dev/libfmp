@@ -160,6 +160,7 @@ type Client struct {
 	auth                 authMaterial
 	defaultHeaders       http.Header
 	redactor             *Redactor
+	topology             []string
 	httpClient           *http.Client
 	timeout              time.Duration
 	maxResponseBodyBytes int64
@@ -246,6 +247,7 @@ func NewClient(opts ...Option) (*Client, error) {
 		auth:                 auth,
 		defaultHeaders:       defaultHeaders,
 		redactor:             redactor,
+		topology:             networkTopology(baseURL, transportProxy(httpClient)),
 		httpClient:           httpClient,
 		timeout:              cfg.timeout,
 		maxResponseBodyBytes: cfg.maxResponseBodyBytes,

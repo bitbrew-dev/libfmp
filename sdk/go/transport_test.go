@@ -4,8 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -67,6 +70,86 @@ func TestTransportErrorsNeverEmbedTheRequestURL(t *testing.T) {
 	var urlErr interface{ Timeout() bool }
 	if errors.As(err, &urlErr) {
 		t.Fatalf("a raw transport error escaped: %T", cause)
+	}
+}
+
+func TestTransportCausesOmitNetworkTopology(t *testing.T) {
+	t.Parallel()
+	closed := func() *url.URL {
+		server := httptest.NewServer(jsonHandler(`[]`))
+		parsed, err := url.Parse(server.URL)
+		if err != nil {
+			t.Fatal(err)
+		}
+		server.Close()
+		return parsed
+	}
+	direct := closed()
+	proxy := closed()
+	proxy.User = url.UserPassword("proxy-user", "proxy-password")
+	cases := []struct {
+		name   string
+		opts   []Option
+		hidden []string
+	}{
+		{"direct", []Option{WithBaseURL(direct.String())}, []string{direct.Host}},
+		{"proxy", []Option{
+			WithBaseURL("http://upstream.invalid:8080"),
+			WithHTTPClient(&http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxy)}}),
+		}, []string{proxy.Host, "proxy-password", "upstream.invalid"}},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			client, err := NewClient(append(tc.opts, WithTimeout(2*time.Second))...)
+			if err != nil {
+				t.Fatal(err)
+			}
+			_, err = probe(t, client)
+			typed := assertError(t, err, CategoryTransport, 0)
+			cause := typed.Unwrap()
+			if cause == nil || !strings.Contains(cause.Error(), Redacted) {
+				t.Fatalf("transport cause = %v, want a redacted cause", cause)
+			}
+			for _, text := range []string{cause.Error(), fmt.Sprintf("%+v", typed)} {
+				for _, host := range tc.hidden {
+					if strings.Contains(text, host) {
+						t.Fatalf("transport error leaked %q: %s", host, text)
+					}
+				}
+			}
+		})
+	}
+}
+
+func TestCauseAddressesNameEveryNetworkEndpoint(t *testing.T) {
+	t.Parallel()
+	opErr := &net.OpError{Op: "dial", Net: "tcp",
+		Source: &net.TCPAddr{IP: net.IPv4(10, 0, 0, 2), Port: 50000},
+		Addr:   &net.TCPAddr{IP: net.IPv4(203, 0, 113, 7), Port: 443},
+		Err:    errors.New("connect: connection refused")}
+	dnsErr := &net.DNSError{Err: "no such host", Name: "gateway.internal", Server: "10.0.0.53:53"}
+	got := causeAddresses(fmt.Errorf("wrapped: %w", errors.Join(opErr, dnsErr)))
+	want := []string{"203.0.113.7:443", "10.0.0.2:50000", "gateway.internal", "10.0.0.53:53"}
+	if !slices.Equal(got, want) {
+		t.Fatalf("causeAddresses = %v, want %v", got, want)
+	}
+	if got := causeAddresses(errors.New("plain")); len(got) != 0 {
+		t.Fatalf("causeAddresses of a plain error = %v, want none", got)
+	}
+}
+
+func TestTopologyNeverRedactsProviderBodies(t *testing.T) {
+	t.Parallel()
+	server, _ := newServer(t, func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusBadGateway)
+		_, _ = w.Write([]byte("upstream 127.0.0.1 unavailable"))
+	})
+	client := newClient(t, server)
+	_, err := probe(t, client)
+	typed := assertError(t, err, CategoryStatus, http.StatusBadGateway)
+	if typed.Body == nil || typed.Body.Text != "upstream 127.0.0.1 unavailable" {
+		t.Fatalf("provider body = %+v, want it unredacted", typed.Body)
 	}
 }
 
