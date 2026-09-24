@@ -21,14 +21,20 @@ use tokio::runtime::{Builder as RuntimeBuilder, Handle, Runtime};
 
 use pyo3::PyResult;
 
-use crate::errors::to_py_error;
+use crate::errors::{FmpError, to_py_error};
 
 fn configuration_error(message: &'static str) -> pyo3::PyErr {
     to_py_error(libfmp::Error::configuration(message))
 }
 
+/// An internal runtime failure is not a configuration problem the caller can
+/// fix, so it raises the base `FmpError` with no category.
+fn internal_error(message: &'static str) -> pyo3::PyErr {
+    FmpError::new_err(message)
+}
+
 fn poisoned() -> pyo3::PyErr {
-    configuration_error("the fmp runtime lock was poisoned by a panicking thread")
+    internal_error("the fmp runtime lock was poisoned by a panicking thread")
 }
 
 /// A client built for one `ClientBuilder`, retained while that builder lives.
@@ -53,7 +59,7 @@ impl Inner {
         let runtime = RuntimeBuilder::new_multi_thread()
             .enable_all()
             .build()
-            .map_err(|_| configuration_error("the fmp runtime could not be constructed"))?;
+            .map_err(|_| internal_error("the fmp runtime could not be constructed"))?;
         Ok(Arc::new(Self {
             owner_pid: process::id(),
             runtime,
