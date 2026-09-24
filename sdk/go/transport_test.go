@@ -304,3 +304,33 @@ func TestWithHTTPClientNeverMutatesTheCallerValue(t *testing.T) {
 		t.Fatal("caller's CheckRedirect was replaced")
 	}
 }
+
+func TestNetworkTopologyToleratesMissingOrFailingProxy(t *testing.T) {
+	t.Parallel()
+	base, err := url.Parse("https://api.example.test/stable")
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []string{"api.example.test", "api.example.test:443", "api.example.test"}
+	failing := func(*http.Request) (*url.URL, error) { return nil, errors.New("proxy lookup failed") }
+	none := func(*http.Request) (*url.URL, error) { return nil, nil }
+	for name, proxy := range map[string]func(*http.Request) (*url.URL, error){"nil": nil, "failing": failing, "none": none} {
+		if got := networkTopology(base, proxy); !slices.Equal(got, want) {
+			t.Errorf("%s proxy: networkTopology = %v, want %v", name, got, want)
+		}
+	}
+	var seen *http.Request
+	proxied := func(req *http.Request) (*url.URL, error) {
+		seen = req
+		return url.Parse("http://user:s3cret@gateway.example.test:3128")
+	}
+	got := networkTopology(base, proxied)
+	if seen == nil || seen.Host != "api.example.test" || seen.Context() == nil {
+		t.Fatalf("proxy saw request %+v, want a GET for the base URL", seen)
+	}
+	for _, spelling := range []string{"s3cret", "gateway.example.test:3128", "gateway.example.test"} {
+		if !slices.Contains(got, spelling) {
+			t.Errorf("networkTopology = %v, want it to contain %q", got, spelling)
+		}
+	}
+}

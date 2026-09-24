@@ -165,13 +165,19 @@ func (c *Client) redactCause(err error) error {
 // networkTopology lists the host spellings a network failure can print for
 // baseURL and for the proxy the transport resolves for it: host, host:port
 // with the scheme's default port filled in, and, for a proxy, its full URL
-// and any password it carries.
+// and any password it carries. It calls proxy once with a GET for baseURL,
+// as the first request would; a nil proxy, an error, or a nil URL leaves the
+// base URL spellings only.
 func networkTopology(baseURL *url.URL, proxy func(*http.Request) (*url.URL, error)) []string {
 	topology := hostSpellings(baseURL)
 	if proxy == nil {
 		return topology
 	}
-	proxyURL, err := proxy(&http.Request{Method: http.MethodGet, URL: baseURL, Header: http.Header{}})
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, baseURL.String(), nil)
+	if err != nil {
+		return topology
+	}
+	proxyURL, err := proxy(req)
 	if err != nil || proxyURL == nil {
 		return topology
 	}
