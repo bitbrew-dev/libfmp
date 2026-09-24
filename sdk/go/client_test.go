@@ -147,10 +147,12 @@ func TestNewClientRejectsInvalidConfiguration(t *testing.T) {
 func TestInsecureAuthenticationOverrideAndLoopback(t *testing.T) {
 	t.Parallel()
 	_, err := NewClient(WithBaseURL("http://example.test"), WithAuthentication(FmpHeader("k")),
-		WithDangerAllowInsecureAuthentication(true))
+		WithDangerAllowInsecureAuthentication())
 	if err != nil {
 		t.Fatalf("override refused: %v", err)
 	}
+	_, err = NewClient(WithBaseURL("http://example.test"), WithAuthentication(FmpHeader("k")))
+	assertConfigurationKind(t, err, ConfigurationKindInsecureAuthentication)
 	for _, base := range []string{"http://127.0.0.1:8080", "http://[::1]:8080"} {
 		if _, err := NewClient(WithBaseURL(base), WithAuthentication(FmpHeader("k"))); err != nil {
 			t.Fatalf("loopback %s refused: %v", base, err)

@@ -128,10 +128,11 @@ func WithMaxResponseBodyBytes(maxBytes int64) Option {
 }
 
 // WithDangerAllowInsecureAuthentication allows credentials over plaintext
-// HTTP to a non-loopback host. Literal IPv4 and IPv6 loopback URLs used by
-// local test servers never need it.
-func WithDangerAllowInsecureAuthentication(allow bool) Option {
-	return func(c *clientConfig) { c.dangerAllowInsecureAuth = allow }
+// HTTP to a non-loopback host. Leaving it out keeps the refusal, so there is
+// no way to pass it in its disabled form. Literal IPv4 and IPv6 loopback URLs
+// used by local test servers never need it.
+func WithDangerAllowInsecureAuthentication() Option {
+	return func(c *clientConfig) { c.dangerAllowInsecureAuth = true }
 }
 
 // WithRedirectPolicy selects RedirectNone or RedirectSameOrigin.
