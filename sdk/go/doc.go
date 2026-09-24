@@ -60,9 +60,12 @@
 //
 // # Environment
 //
-// FmpHeaderFromEnv reads FMP_API_KEY. NewClient itself never reads the
-// environment. The opt-in live tests (live_test.go) use the same names as
-// the Rust crate's live_opt_in.rs: FMP_LIVE_TESTS=1 switches both tests on,
+// FmpHeaderFromEnv reads FMP_API_KEY. NewClient never reads a credential
+// from the environment; it consults the proxy variables (HTTP_PROXY,
+// HTTPS_PROXY, NO_PROXY) once through the transport's proxy function, as the
+// first request would, to register the proxy host for cause redaction. The
+// opt-in live tests (live_test.go) use the same names as the Rust crate's
+// live_opt_in.rs: FMP_LIVE_TESTS=1 switches both tests on,
 // the direct test needs FMP_API_KEY, and the proxy test needs
 // FMP_PROXY_BASE_URL, FMP_PROXY_TOKEN, and optionally FMP_PROXY_PATH_PREFIX
 // (default router/stable) and FMP_TENANT. They skip without the switch; run
