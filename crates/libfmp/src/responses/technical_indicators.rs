@@ -15,7 +15,7 @@ macro_rules! technical_indicator_row {
             pub high: Price,
             pub low: Price,
             pub close: Price,
-            #[serde(serialize_with = "crate::codecs::volume::serialize")]
+            #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
             pub volume: Volume,
             pub $metric: $metric_type,
         }
