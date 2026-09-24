@@ -8,7 +8,7 @@
 |-----------|-----|-------|
 | Rust | 1.96.0 | [`rust-toolchain.toml`](../rust-toolchain.toml); plain `cargo` picks it up |
 | Python | CPython 3.10 or newer | `abi3-py310` wheels; Rust is only needed to build from source |
-| Go | 1.27.1 | [`sdk/go/go.mod`](../sdk/go/go.mod); the checks pin it exactly |
+| Go | 1.27 minimum, toolchain 1.27.1 | [`sdk/go/go.mod`](../sdk/go/go.mod) `go` and `toolchain` lines; the checks pin the toolchain exactly |
 | golangci-lint | v2.13.2 | the `go-sdk.yml` workflow; `scripts/check_go_sdk.sh` requires a v2 release |
 
 ## Build and test
@@ -34,7 +34,7 @@ The Go SDK gate on its own, from the repository root:
 bash scripts/check_go_sdk.sh
 ```
 
-It pins Go 1.27.1 and golangci-lint v2, then runs `gofmt`, `go vet`,
+It pins the Go 1.27.1 toolchain and golangci-lint v2, then runs `gofmt`, `go vet`,
 `golangci-lint run`, `go test -race -count=1`, and every example under
 `sdk/go/examples/`, all with `CGO_ENABLED=0`.
 
