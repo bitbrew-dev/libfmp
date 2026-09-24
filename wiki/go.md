@@ -5,7 +5,7 @@
 The Go module is a pure Go client for the same API. It mirrors the Rust crate
 one-for-one: the same client options, authentication modes, error categories,
 and transport rules, with all 271 methods across 30 namespaces generated from
-the Rust contract. It requires Go 1.27.1 and builds with `CGO_ENABLED=0`:
+the Rust contract. It requires Go 1.27 or later (CI builds with toolchain 1.27.1) and builds with `CGO_ENABLED=0`:
 there is no cgo and no native library. The module path ends in `go`, so
 import it with an alias:
 
@@ -51,7 +51,10 @@ and `Error` without any secret value, so an error is safe to log. See
 `EndpointMetadataFor("Quote.Full")` returns the advisory metadata a Rust
 descriptor attaches to an endpoint (geography, access, conditional plan,
 realtime, bounds), keyed by the Go call path without the client. The client
-never validates a request against it, exactly as the Rust crate does not. See
+never validates a request against it, exactly as the Rust crate does not.
+`EndpointMetadataByID(err.Endpoint)` resolves the endpoint id an `*Error`
+carries to one entry per method that sends it, since a shared id such as
+`quote` can carry different metadata per namespace. See
 [Endpoint metadata](../sdk/go/README.md#endpoint-metadata).
 
 ## Examples and tests

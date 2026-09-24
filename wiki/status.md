@@ -8,7 +8,7 @@
 |----------|-----------|------------------------------------|
 | Rust | 1.96 or newer | 1.96.0 (`rust-toolchain.toml`) |
 | Python | CPython 3.10 or newer, stable ABI from 3.10 (`abi3-py310`) | one wheel per platform |
-| Go | 1.27.1, pure Go, `CGO_ENABLED=0` | golangci-lint v2.13.2 for the lint gate |
+| Go | 1.27 or newer, pure Go, `CGO_ENABLED=0` | toolchain 1.27.1; golangci-lint v2.13.2 for the lint gate |
 
 ## Versions and releases
 
