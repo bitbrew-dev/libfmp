@@ -45,6 +45,31 @@ The client is synchronous: each call releases the Python GIL while the async
 Rust transport waits, so other threads keep running. A Python async facade is
 not part of the current release.
 
+## Responses
+
+Rows keep the provider's wire meaning. The SDK does not guess units, scale
+values, or invent a timezone.
+
+| Wire value | Python type | What to do with it |
+|------------|-------------|--------------------|
+| numeric string, for example `CompanyProfile.full_time_employees` | `str`, the exact wire text | wrap with `Decimal(...)` for arithmetic |
+| `Quote.timestamp` | `int`, Unix **seconds** | `datetime.fromtimestamp(ts, tz=timezone.utc)` |
+| `AftermarketTrade.timestamp`, `AftermarketQuote.timestamp` | `int`, Unix **milliseconds** | divide by 1000 first |
+| `YYYY-MM-DD HH:MM:SS` | naive `datetime.datetime` | the provider does not document the timezone; do not assume UTC |
+| `YYYY-MM-DD` | `datetime.date` | |
+| RFC 3339 timestamp, for example `TipRanksRatingSearchResult.date` | `str`, the exact wire text | `datetime.fromisoformat(...)` on Python 3.11 or newer |
+
+```python
+from datetime import datetime, timezone
+from decimal import Decimal
+
+profile = client.company.profile("AAPL")[0]
+employees = Decimal(profile.full_time_employees)
+
+quote = client.quote.full("AAPL")[0]
+at = datetime.fromtimestamp(quote.timestamp, tz=timezone.utc)
+```
+
 ## Errors
 
 Local argument validation raises `FmpValidationError` before any request;

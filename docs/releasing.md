@@ -63,7 +63,7 @@ Regenerate the coverage table before tagging when the registry changed (`python3
 
 The `publish-go-tag` job of `semantic-release.yml` runs after the crates.io and PyPI jobs of the same user-dispatched run. It checks out the release tag (`X.Y.Z`, no `v`), asserts that `sdk/go/go.mod` exists and that `sdk/go/version.go` carries `Version = "X.Y.Z"` at that commit, then creates the annotated tag `sdk/go/vX.Y.Z` there and pushes it. Go requires the `sdk/go/` prefix for a module in a subdirectory ([Mapping versions to commits](https://go.dev/ref/mod#vcs-version)); the module version itself is `vX.Y.Z`. The job never creates a second GitHub release and never moves an existing tag: a rerun that finds `sdk/go/vX.Y.Z` at the release commit is a no-op, and one that finds it elsewhere fails. Its last steps always verify the pushed tag directly (`GOPROXY=direct` with the workflow token, asserting that `go list -m` returns `vX.Y.Z`), then warm `proxy.golang.org` only when the repository is public; the proxy caches the version and from then on it is immutable, so a failed version can only be superseded by a new release. While the repository is private the job prints a notice instead of warming the proxy. A proxy timeout in that step is safe to rerun.
 
-The first `sdk/go/v*` tag is a user decision: it is created by the first release the user dispatches after the plumbing merged, and nothing else pushes one.
+`sdk/go/v*` tags are a user decision: only a release the user dispatches creates one, and nothing else pushes one.
 
 After the run finishes:
 
