@@ -7,6 +7,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
 /// Why a string-backed identifier or code was rejected.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum StringValueError {
     /// The value was empty or contained only whitespace.
     Empty,

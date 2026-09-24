@@ -164,8 +164,14 @@ impl fmt::Debug for TransportResponse {
 /// A deliberately opaque executor failure.
 ///
 /// Provider URLs and lower-level error strings are not retained because they
-/// can contain query credentials.
+/// can contain query credentials. Construct it with [`ExecutorError::new`];
+/// the unit-struct literal is reserved so a reason can be added later.
+///
+/// ```compile_fail
+/// let _ = libfmp::transport::ExecutorError;
+/// ```
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub struct ExecutorError;
 
 impl ExecutorError {
@@ -180,6 +186,14 @@ impl Default for ExecutorError {
         Self::new()
     }
 }
+
+impl fmt::Display for ExecutorError {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("HTTP request execution failed")
+    }
+}
+
+impl std::error::Error for ExecutorError {}
 
 /// Future returned by a dependency-injected HTTP executor.
 pub type ExecutorFuture<'a> = Pin<

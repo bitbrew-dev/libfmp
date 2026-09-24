@@ -642,6 +642,7 @@ pub struct OpaqueDateText(pub String);
 
 macro_rules! optional_temporal_module {
     ($module:ident, $type:ty) => {
+        #[doc(hidden)]
         pub mod $module {
             use super::*;
 
@@ -674,9 +675,13 @@ optional_temporal_module!(empty_or_null_date_or_datetime, DateOrDateTime);
 
 /// Codec for a required wire key whose absent date is represented by `""`.
 ///
+/// Serde wiring for the response models, hidden from the documented API and
+/// exempt from semver guarantees, like the other `with` helper modules here.
+///
 /// Unlike [`empty_or_null_date`], JSON null is rejected and `None` serializes
 /// back to the provider's exact empty-string sentinel. Do not add
 /// `#[serde(default)]` at call sites when the response key is required.
+#[doc(hidden)]
 pub mod empty_date {
     use super::*;
 

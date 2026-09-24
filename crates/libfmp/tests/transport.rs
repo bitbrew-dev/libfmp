@@ -44,9 +44,11 @@ fn endpoint() -> EndpointSpec<[(&'static str, &'static str); 1], Answer> {
 }
 
 #[test]
-fn executor_error_preserves_public_unit_struct_construction() {
-    let downstream_constructed = ExecutorError;
-    assert_eq!(downstream_constructed, ExecutorError::new());
+fn executor_error_is_an_opaque_std_error() {
+    let error: Box<dyn std::error::Error + Send + Sync> = Box::new(ExecutorError::new());
+    assert_eq!(error.to_string(), "HTTP request execution failed");
+    assert!(error.source().is_none());
+    assert_eq!(ExecutorError::default(), ExecutorError::new());
 }
 
 async fn serve(responses: Vec<String>) -> (String, JoinHandle<Vec<String>>) {
