@@ -201,6 +201,9 @@ pub type ExecutorFuture<'a> = Pin<
 >;
 
 /// Object-safe async boundary used by the shared client transport.
+///
+/// Future releases add methods to this trait only with default
+/// implementations, so existing executors keep compiling.
 pub trait HttpExecutor: fmt::Debug + Send + Sync {
     /// Executes one already-prepared request without following redirects.
     fn execute(&self, request: PreparedRequest) -> ExecutorFuture<'_>;
