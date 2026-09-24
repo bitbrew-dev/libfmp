@@ -35,9 +35,10 @@ release notes. From 1.0 on, the rules below apply as written.
 
 How a breaking change maps to a major:
 
-- A `BREAKING CHANGE:` footer alone releases a minor, before and after 1.0.
-- Only the maintainer cuts a major, with a dedicated release commit; a
-  change the table below classes as major waits for that release.
+- Today the release configuration maps a `BREAKING CHANGE:` footer to a
+  minor release.
+- Only the maintainer-owned `incompat` commit type releases a major; a change
+  the table below classes as major waits for that release.
 
 ### What is public API
 

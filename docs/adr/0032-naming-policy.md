@@ -77,8 +77,7 @@ one initialism table in `gen_go`:
 ## Alternatives considered
 
 - **Go's generated casing without an initialism table (`Fmp`, `Ttm`).**
-  Rejected by the maintainer (#344). Rationale (not stated by the
-  maintainer): it reads unlike the standard library (`http.Client`,
+  Rejected (#344). *Rationale*, written by the implementer: it reads unlike the standard library (`http.Client`,
   `url.URL`) and the Go code review guidance on initialisms.
 - **Rename in each SDK separately.** Rejected: three spellings per endpoint
   is the drift the registry exists to prevent.
