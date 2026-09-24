@@ -144,6 +144,30 @@ func TestNewClientRejectsInvalidConfiguration(t *testing.T) {
 	}
 }
 
+func TestHeaderValuesAcceptObsText(t *testing.T) {
+	t.Parallel()
+	for _, value := range []string{"Träger", "\x80\xff", "tab\tseparated", "~visible!"} {
+		if !validHeaderValue(value) {
+			t.Errorf("validHeaderValue(%q) = false, want true", value)
+		}
+	}
+	for _, value := range []string{"v\x7f", "v\x00", "v\r\n", "v\x1f"} {
+		if validHeaderValue(value) {
+			t.Errorf("validHeaderValue(%q) = true, want false", value)
+		}
+	}
+	server, rec := newServer(t, jsonHandler(`[]`))
+	client := newClient(t, server, WithDefaultHeader("X-Region", "Zürich"),
+		WithAuthentication(CustomHeaderWithPrefix("X-Proxy-Token", "Träger ", "tok")))
+	if _, err := probe(t, client); err != nil {
+		t.Fatal(err)
+	}
+	req := rec.all()[0]
+	if req.Header.Get("X-Region") != "Zürich" || req.Header.Get("X-Proxy-Token") != "Träger tok" {
+		t.Fatalf("obs-text headers were not sent verbatim: %v", req.Header)
+	}
+}
+
 func TestInsecureAuthenticationOverrideAndLoopback(t *testing.T) {
 	t.Parallel()
 	_, err := NewClient(WithBaseURL("http://example.test"), WithAuthentication(FmpHeader("k")),

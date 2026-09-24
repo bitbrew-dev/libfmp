@@ -59,7 +59,7 @@ func (c *Client) getBinary(ctx context.Context, endpointID, relativePath string,
 	case contentType == "":
 		return BinaryPayload{}, decodeError(endpointID, resp.status, c.safeBody(resp.body),
 			"successful response omitted its content type", nil)
-	case !validHeaderValue(contentType):
+	case !visibleHeaderText(contentType):
 		return BinaryPayload{}, decodeError(endpointID, resp.status, c.safeBody(resp.body),
 			"successful response used an invalid content type", nil)
 	case !matchesMediaType(contentType, expectedContentTypes):
@@ -67,7 +67,7 @@ func (c *Client) getBinary(ctx context.Context, endpointID, relativePath string,
 			"successful response used an unexpected content type", nil)
 	}
 	disposition := resp.header.Get("Content-Disposition")
-	if !validHeaderValue(disposition) {
+	if !visibleHeaderText(disposition) {
 		disposition = ""
 	}
 	return BinaryPayload{Data: resp.body, ContentType: contentType, ContentDisposition: disposition}, nil
