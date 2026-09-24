@@ -1,4 +1,10 @@
 //! Rust-first access to Financial Modeling Prep data.
+//!
+//! # Cargo features
+//!
+//! - `rustls` (default): HTTPS through `reqwest` with rustls. Disabling
+//!   default features leaves the built-in executor without TLS, for plain-HTTP
+//!   targets such as a local proxy, or for a caller-supplied [`transport::HttpExecutor`].
 
 pub mod client;
 pub mod codecs;

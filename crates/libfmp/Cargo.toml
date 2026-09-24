@@ -12,6 +12,14 @@ keywords = ["finance", "market-data", "fmp", "api", "sdk"]
 categories = ["api-bindings", "finance"]
 include = ["/src/**", "/Cargo.toml", "/LICENSE", "/README.md"]
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = ["rustls"]
+rustls = ["reqwest/rustls"]
+
 [lib]
 path = "src/lib.rs"
 
