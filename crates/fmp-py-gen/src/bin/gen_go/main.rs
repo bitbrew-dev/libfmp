@@ -7,7 +7,8 @@
 //! `queries.go` (query types used by more than one domain) and
 //! `namespaces.go` (the `Namespaces` struct Client embeds), and
 //! `metadata_table.go` (the advisory `EndpointMetadata` of every method
-//! whose descriptor attaches one, behind `EndpointMetadataFor`). Every file is
+//! whose descriptor attaches one, behind `EndpointMetadataFor`, and the call
+//! paths serving each endpoint id, behind `EndpointMetadataByID`). Every file is
 //! passed through `gofmt` before it is written, so a second run is a no-op.
 //!
 //! ```console
