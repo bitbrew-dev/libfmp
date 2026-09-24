@@ -14,6 +14,7 @@ pub const MAX_SAFE_BODY_BYTES: usize = 4096;
 
 /// Why a custom secret header or query name was rejected.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum SecretNameError {
     /// Names must contain at least one character.
     Empty,
@@ -445,6 +446,13 @@ impl fmt::Debug for SafeBody {
 }
 
 /// The stable error value returned by the Rust client.
+///
+/// Equality compares every retained field, so tests and callers can match a
+/// whole error value. [`std::error::Error::source`] deliberately returns
+/// `None`: lower-level transport and decode errors are dropped at
+/// construction instead of chained, because their text can carry request URLs
+/// with query credentials. Use [`Error::category`] and the other accessors for
+/// programmatic handling.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Error {
     category: ErrorCategory,
