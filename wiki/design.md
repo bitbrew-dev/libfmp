@@ -42,4 +42,6 @@ hold in every language:
 
 - [ADR index](../docs/adr/): one record per domain's API names and contracts, starting with the [v0.1 public architecture](../docs/adr/0001-v0.1-public-architecture.md).
 - [ADR 0030](../docs/adr/0030-go-sdk-architecture.md): the Go SDK architecture, including why it is generated rather than bound through cgo.
+- [ADR 0031](../docs/adr/0031-pre-1.0-contract-decisions.md): pre-1.0 contract decisions (error equality without a source chain, `#[non_exhaustive]` responses, `f64` quantities, exact numeric strings, Python model equality, the `fmp` import name).
+- [ADR 0032](../docs/adr/0032-naming-policy.md): the naming policy for methods, row types, and Go initialisms across all three SDKs.
 - [Contract ambiguities register](../docs/contract-ambiguities.md): where the captured documentation is silent or contradictory, the SDK keeps an explicit raw type, a closed query, or a strict decode rather than a guessed schema. The register lists those deferred decisions.
