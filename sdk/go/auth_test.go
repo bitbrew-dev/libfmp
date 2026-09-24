@@ -96,6 +96,10 @@ func TestAuthMaterialMirrorsTheRustModes(t *testing.T) {
 	if err != nil || query.queryName != "router_token" || query.querySecret != "tok" || query.headerName != "" {
 		t.Fatalf("CustomQuery material = %+v, err %v", query, err)
 	}
+	unreserved, err := buildAuthMaterial(CustomQuery("Router.api-key_1~", "tok"))
+	if err != nil || unreserved.queryName != "Router.api-key_1~" {
+		t.Fatalf("CustomQuery rejected an unreserved name: %+v, err %v", unreserved, err)
+	}
 	none, err := buildAuthMaterial(Authentication{})
 	if err != nil || none != (authMaterial{}) {
 		t.Fatalf("None material = %+v, err %v", none, err)
@@ -127,6 +131,10 @@ func TestAuthMaterialRejectsUnsafeInput(t *testing.T) {
 			ConfigurationKindEmptyCredential},
 		{"custom query bad name", CustomQuery("router\ttoken", "tok"), ConfigurationKindInvalidQueryName},
 		{"custom query empty name", CustomQuery("", "tok"), ConfigurationKindInvalidQueryName},
+		{"custom query space in name", CustomQuery("router token", "tok"), ConfigurationKindInvalidQueryName},
+		{"custom query percent in name", CustomQuery("router%74oken", "tok"), ConfigurationKindInvalidQueryName},
+		{"custom query plus in name", CustomQuery("router+token", "tok"), ConfigurationKindInvalidQueryName},
+		{"custom query non ascii name", CustomQuery("routér_token", "tok"), ConfigurationKindInvalidQueryName},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
