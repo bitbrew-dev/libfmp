@@ -92,15 +92,15 @@ func (m *FinancialStatementSymbol) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 	return nil
 }
 
-// CikEntry is one US SEC entity in the CIK directory.
-type CikEntry struct {
+// CikListing is one US SEC entity in the CIK directory.
+type CikListing struct {
 	Cik         string `json:"cik"`
 	CompanyName string `json:"companyName"`
 }
 
-// cikEntryShadow mirrors CikEntry with a pointer or raw value for every
+// cikListingShadow mirrors CikListing with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
-type cikEntryShadow struct {
+type cikListingShadow struct {
 	Cik         *string `json:"cik"`
 	CompanyName *string `json:"companyName"`
 }
@@ -108,18 +108,18 @@ type cikEntryShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CikEntry) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow cikEntryShadow
+func (m *CikListing) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow cikListingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Cik == nil:
-		return missingMemberError("CikEntry", "cik")
+		return missingMemberError("CikListing", "cik")
 	case shadow.CompanyName == nil:
-		return missingMemberError("CikEntry", "companyName")
+		return missingMemberError("CikListing", "companyName")
 	}
-	*m = CikEntry{
+	*m = CikListing{
 		Cik:         *shadow.Cik,
 		CompanyName: *shadow.CompanyName,
 	}

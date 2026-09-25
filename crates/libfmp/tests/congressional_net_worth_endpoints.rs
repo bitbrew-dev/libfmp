@@ -14,9 +14,7 @@ use libfmp::{
         metadata::{AccessRequirement, EndpointBounds, GeographicAvailability},
     },
     error::ErrorCategory,
-    responses::congressional::{
-        CongressionalMemberNetWorthAggregate, CongressionalMemberNetWorthEntry,
-    },
+    responses::congressional::{CongressionalMemberNetWorth, CongressionalMemberNetWorthAggregate},
     transport::HttpMethod,
     types::{CongressionalMemberId, Limit, Page},
 };
@@ -38,7 +36,7 @@ fn descriptors_use_exact_get_paths_typed_rows_and_only_documented_metadata() {
 }
 
 fn assert_net_worth_facts(
-    endpoint: &EndpointSpec<CongressionalNetWorthQuery, Vec<CongressionalMemberNetWorthEntry>>,
+    endpoint: &EndpointSpec<CongressionalNetWorthQuery, Vec<CongressionalMemberNetWorth>>,
 ) {
     assert_common(endpoint, "senate-net-worth");
     assert_eq!(
@@ -221,7 +219,7 @@ fn itemized_required_fields_and_nullable_shapes_are_strict() {
         let mut missing = row.clone();
         missing.as_object_mut().unwrap().remove(field);
         assert!(
-            serde_json::from_value::<CongressionalMemberNetWorthEntry>(missing).is_err(),
+            serde_json::from_value::<CongressionalMemberNetWorth>(missing).is_err(),
             "itemized field {field} must be present"
         );
     }
@@ -237,7 +235,7 @@ fn itemized_required_fields_and_nullable_shapes_are_strict() {
         let mut nullable = row.clone();
         nullable[field] = serde_json::Value::Null;
         assert!(
-            serde_json::from_value::<CongressionalMemberNetWorthEntry>(nullable).is_ok(),
+            serde_json::from_value::<CongressionalMemberNetWorth>(nullable).is_ok(),
             "nullable field {field} must accept null"
         );
     }
@@ -258,7 +256,7 @@ fn itemized_required_fields_and_nullable_shapes_are_strict() {
         let mut invalid = row.clone();
         invalid[field] = serde_json::Value::Null;
         assert!(
-            serde_json::from_value::<CongressionalMemberNetWorthEntry>(invalid).is_err(),
+            serde_json::from_value::<CongressionalMemberNetWorth>(invalid).is_err(),
             "itemized field {field} must not accept null"
         );
     }

@@ -30,7 +30,7 @@ func TestCongressionalFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) 
 	}
 	assertFixtureParity[CongressionalMemberProfile](t, "congress_senate_profile.json")
 	assertFixtureParity[CongressionalMemberPosition](t, "congress_senate_positions.json")
-	assertFixtureParity[CongressionalMemberNetWorthEntry](t, "congress_senate_net_worth.json")
+	assertFixtureParity[CongressionalMemberNetWorth](t, "congress_senate_net_worth.json")
 	assertFixtureParity[CongressionalMemberNetWorthAggregate](t, "congress_senate_net_worth_aggregated.json")
 }
 
@@ -114,7 +114,7 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 		t.Fatalf("re-encoded position = %s, %v", encoded, err)
 	}
 
-	entries := assertFixtureParity[CongressionalMemberNetWorthEntry](t, "congress_senate_net_worth.json")
+	entries := assertFixtureParity[CongressionalMemberNetWorth](t, "congress_senate_net_worth.json")
 	if len(entries) != 1 {
 		t.Fatalf("rows = %d, want 1", len(entries))
 	}
@@ -171,7 +171,7 @@ func TestCongressionalRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		{"position without endDate", `[` + position + `}]`, "CongressionalMemberPosition", "endDate"},
 		{"position with null senateID", `[` + strings.Replace(position, `"Z000018"`, `null`, 1) + `,"endDate":null}]`,
 			"CongressionalMemberPosition", "senateID"},
-		{"entry without debtDetails", `[` + entry + `}]`, "CongressionalMemberNetWorthEntry", "debtDetails"},
+		{"entry without debtDetails", `[` + entry + `}]`, "CongressionalMemberNetWorth", "debtDetails"},
 		{"entry with empty debtDetails", `[` + entry + `,"debtDetails":{}}]`, "CongressionalDebtDetails", "dateIncurred"},
 		{"entry with half a range",
 			`[` + strings.Replace(entry, `"valueRange":null`, `"valueRange":{"min":1}`, 1) + `,"debtDetails":null}]`,
@@ -190,7 +190,7 @@ func TestCongressionalRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 				var rows []CongressionalMemberPosition
 				err = json.Unmarshal([]byte(tc.wire), &rows)
 			default:
-				var rows []CongressionalMemberNetWorthEntry
+				var rows []CongressionalMemberNetWorth
 				err = json.Unmarshal([]byte(tc.wire), &rows)
 			}
 			assertCompanyDecodeError(t, err, tc.model, tc.member)
@@ -202,7 +202,7 @@ func TestCongressionalRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		len(positions) != 1 || positions[0].EndDate == nil || *positions[0].EndDate != mustParseDate(t, "2027-01-03") {
 		t.Fatalf("position with a dated endDate = %+v, %v", positions, err)
 	}
-	var entries []CongressionalMemberNetWorthEntry
+	var entries []CongressionalMemberNetWorth
 	if err := json.Unmarshal([]byte(`[`+entry+`,"debtDetails":null}]`), &entries); err != nil || len(entries) != 1 ||
 		entries[0].DebtDetails != nil || entries[0].Value != -1 || entries[0].IncomeRange == nil ||
 		entries[0].IncomeRange.Min != -10 {

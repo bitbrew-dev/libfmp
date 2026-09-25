@@ -6,8 +6,8 @@ import typing
 
 __all__ = [
     "CongressionalDebtDetails",
+    "CongressionalMemberNetWorth",
     "CongressionalMemberNetWorthAggregate",
-    "CongressionalMemberNetWorthEntry",
     "CongressionalMemberPosition",
     "CongressionalMemberProfile",
     "CongressionalNamespace",
@@ -25,57 +25,7 @@ class CongressionalDebtDetails:
 
 
 @typing.final
-class CongressionalMemberNetWorthAggregate:
-    @property
-    def member_id(self) -> builtins.str: ...
-    @property
-    def year(self) -> builtins.int: ...
-    @property
-    def total(self) -> builtins.int: ...
-    @property
-    def real_estate_liabilities(self) -> builtins.int: ...
-    @property
-    def cash_and_cash_equivalents(self) -> builtins.int: ...
-    @property
-    def business_and_self_employment(self) -> builtins.int: ...
-    @property
-    def real_estate(self) -> builtins.int: ...
-    @property
-    def ownership_interest(self) -> builtins.int: ...
-    @property
-    def stock(self) -> builtins.int: ...
-    @property
-    def options(self) -> builtins.int: ...
-    @property
-    def revolving_and_credit_lines(self) -> builtins.int: ...
-    @property
-    def asset_backed_securities(self) -> builtins.int: ...
-    @property
-    def business_liabilities(self) -> builtins.int: ...
-    @property
-    def mutual_funds_and_etfs(self) -> builtins.int: ...
-    def __new__(
-        cls,
-        member_id: builtins.str,
-        year: builtins.int,
-        total: builtins.int,
-        real_estate_liabilities: builtins.int,
-        cash_and_cash_equivalents: builtins.int,
-        business_and_self_employment: builtins.int,
-        real_estate: builtins.int,
-        ownership_interest: builtins.int,
-        stock: builtins.int,
-        options: builtins.int,
-        revolving_and_credit_lines: builtins.int,
-        asset_backed_securities: builtins.int,
-        business_liabilities: builtins.int,
-        mutual_funds_and_etfs: builtins.int,
-    ) -> CongressionalMemberNetWorthAggregate: ...
-    def __getnewargs__(self) -> tuple: ...
-
-
-@typing.final
-class CongressionalMemberNetWorthEntry:
+class CongressionalMemberNetWorth:
     @property
     def member_id(self) -> builtins.str: ...
     @property
@@ -129,7 +79,57 @@ class CongressionalMemberNetWorthEntry:
         income_range: typing.Optional[CongressionalNetWorthRange],
         income: typing.Optional[builtins.str],
         link: builtins.str,
-    ) -> CongressionalMemberNetWorthEntry: ...
+    ) -> CongressionalMemberNetWorth: ...
+    def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class CongressionalMemberNetWorthAggregate:
+    @property
+    def member_id(self) -> builtins.str: ...
+    @property
+    def year(self) -> builtins.int: ...
+    @property
+    def total(self) -> builtins.int: ...
+    @property
+    def real_estate_liabilities(self) -> builtins.int: ...
+    @property
+    def cash_and_cash_equivalents(self) -> builtins.int: ...
+    @property
+    def business_and_self_employment(self) -> builtins.int: ...
+    @property
+    def real_estate(self) -> builtins.int: ...
+    @property
+    def ownership_interest(self) -> builtins.int: ...
+    @property
+    def stock(self) -> builtins.int: ...
+    @property
+    def options(self) -> builtins.int: ...
+    @property
+    def revolving_and_credit_lines(self) -> builtins.int: ...
+    @property
+    def asset_backed_securities(self) -> builtins.int: ...
+    @property
+    def business_liabilities(self) -> builtins.int: ...
+    @property
+    def mutual_funds_and_etfs(self) -> builtins.int: ...
+    def __new__(
+        cls,
+        member_id: builtins.str,
+        year: builtins.int,
+        total: builtins.int,
+        real_estate_liabilities: builtins.int,
+        cash_and_cash_equivalents: builtins.int,
+        business_and_self_employment: builtins.int,
+        real_estate: builtins.int,
+        ownership_interest: builtins.int,
+        stock: builtins.int,
+        options: builtins.int,
+        revolving_and_credit_lines: builtins.int,
+        asset_backed_securities: builtins.int,
+        business_liabilities: builtins.int,
+        mutual_funds_and_etfs: builtins.int,
+    ) -> CongressionalMemberNetWorthAggregate: ...
     def __getnewargs__(self) -> tuple: ...
 
 
@@ -320,7 +320,7 @@ class CongressionalNamespace:
         *,
         page: typing.Optional[builtins.int] = None,
         limit: typing.Optional[builtins.int] = None,
-    ) -> builtins.list[CongressionalMemberNetWorthEntry]:
+    ) -> builtins.list[CongressionalMemberNetWorth]:
         r"""
         Retrieves itemized congressional net-worth disclosures.
         """

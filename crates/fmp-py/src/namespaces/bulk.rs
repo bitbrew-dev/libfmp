@@ -14,7 +14,7 @@ use crate::models::bulk::cash_flow::{BulkCashFlowStatement, BulkCashFlowStatemen
 use crate::models::bulk::eod::BulkEodBar;
 use crate::models::bulk::income::{BulkIncomeStatement, BulkIncomeStatementGrowth};
 use crate::models::bulk::metrics::{
-    BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeers,
+    BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeer,
 };
 use crate::models::bulk::snapshots::{
     BulkDcfValuation, BulkEtfHolding, BulkFinancialScore, BulkPriceTargetSummary, BulkStockRating,
@@ -170,7 +170,7 @@ impl BulkNamespace {
     }
 
     /// Retrieves worldwide stock peers in one provider bulk response.
-    fn stock_peers(&self, py: Python<'_>) -> PyResult<Vec<BulkStockPeers>> {
+    fn stock_peers(&self, py: Python<'_>) -> PyResult<Vec<BulkStockPeer>> {
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(
@@ -178,7 +178,7 @@ impl BulkNamespace {
                 |client| async move { client.bulk_stock_peers().await },
             )
         })?;
-        rows.map(|items| items.into_iter().map(BulkStockPeers::from).collect())
+        rows.map(|items| items.into_iter().map(BulkStockPeer::from).collect())
             .map_err(to_py_error)
     }
 

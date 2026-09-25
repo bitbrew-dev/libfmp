@@ -2,7 +2,7 @@ use serde::{Serialize, de::DeserializeOwned};
 use serde_json::{Map, Value, json};
 
 use libfmp::responses::bulk::{
-    BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeers,
+    BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeer,
 };
 
 const KEY_METRICS: &[u8] = include_bytes!("fixtures/bulk_key_metrics_ttm.json");
@@ -14,7 +14,7 @@ const SURPRISES: &[u8] = include_bytes!("fixtures/bulk_earnings_surprises.json")
 fn exact_outer_md_fixtures_round_trip_with_exact_unique_key_sets() {
     assert_exact::<BulkKeyMetricsTtm>(KEY_METRICS, 43);
     assert_exact::<BulkFinancialRatiosTtm>(RATIOS, 60);
-    assert_exact::<BulkStockPeers>(PEERS, 2);
+    assert_exact::<BulkStockPeer>(PEERS, 2);
     assert_exact::<BulkEarningsSurprise>(SURPRISES, 5);
 }
 
@@ -22,7 +22,7 @@ fn exact_outer_md_fixtures_round_trip_with_exact_unique_key_sets() {
 fn every_documented_field_is_required_non_null_and_unknown_fields_are_tolerated() {
     assert_required::<BulkKeyMetricsTtm>(KEY_METRICS);
     assert_required::<BulkFinancialRatiosTtm>(RATIOS);
-    assert_required::<BulkStockPeers>(PEERS);
+    assert_required::<BulkStockPeer>(PEERS);
     assert_required::<BulkEarningsSurprise>(SURPRISES);
 }
 
@@ -92,12 +92,12 @@ fn all_ttm_keys_and_provider_hazards_keep_exact_wire_spelling() {
 
 #[test]
 fn peers_remain_one_scalar_string_and_earnings_dates_are_typed() {
-    let peers = rows::<BulkStockPeers>(PEERS).remove(0);
+    let peers = rows::<BulkStockPeer>(PEERS).remove(0);
     assert_eq!(peers.symbol.as_str(), "000001.SZ");
     assert_eq!(peers.peers, "600036.SS");
     let mut peer_row = source_row(PEERS);
     peer_row.insert("peers".into(), json!(["600036.SS"]));
-    assert!(serde_json::from_value::<BulkStockPeers>(Value::Object(peer_row)).is_err());
+    assert!(serde_json::from_value::<BulkStockPeer>(Value::Object(peer_row)).is_err());
 
     let surprise = rows::<BulkEarningsSurprise>(SURPRISES).remove(0);
     assert_eq!(surprise.symbol.as_str(), "AMKYF");
@@ -112,7 +112,7 @@ fn peers_remain_one_scalar_string_and_earnings_dates_are_typed() {
 fn all_four_contracts_require_bare_array_roots_and_accept_empty_arrays() {
     assert_array_contract::<BulkKeyMetricsTtm>();
     assert_array_contract::<BulkFinancialRatiosTtm>();
-    assert_array_contract::<BulkStockPeers>();
+    assert_array_contract::<BulkStockPeer>();
     assert_array_contract::<BulkEarningsSurprise>();
 }
 

@@ -14,18 +14,18 @@ import (
 // carries one extra provider member on purpose.
 func TestScreenerFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[CompanyScreenerEntry](t, "company_screener.json")
-	assertFixtureParity[CompanyScreenerEntry](t, "company_screener_empty.json")
-	assertFixtureParity[CompanyScreenerEntry](t, "company_screener_multiple.json")
-	assertFixtureParity[CompanyScreenerEntry](t, "company_screener_unknown.json", "futureProviderField")
+	assertFixtureParity[CompanyScreenerResult](t, "company_screener.json")
+	assertFixtureParity[CompanyScreenerResult](t, "company_screener_empty.json")
+	assertFixtureParity[CompanyScreenerResult](t, "company_screener_multiple.json")
+	assertFixtureParity[CompanyScreenerResult](t, "company_screener_unknown.json", "futureProviderField")
 }
 
 // Exact values copied from crates/libfmp/tests/screener_responses.rs
 // (documented_company_screener_entry_decodes_every_exact_field).
-func TestDocumentedCompanyScreenerEntryDecodesExactValues(t *testing.T) {
+func TestDocumentedCompanyScreenerResultDecodesExactValues(t *testing.T) {
 	t.Parallel()
-	rows := assertFixtureParity[CompanyScreenerEntry](t, "company_screener.json")
-	want := CompanyScreenerEntry{
+	rows := assertFixtureParity[CompanyScreenerResult](t, "company_screener.json")
+	want := CompanyScreenerResult{
 		Symbol:             "AAPL",
 		CompanyName:        "Apple Inc.",
 		MarketCap:          4_885_602_246_714,
@@ -55,11 +55,11 @@ func TestDocumentedCompanyScreenerEntryDecodesExactValues(t *testing.T) {
 	for _, member := range []string{`"companyName":"Apple Inc."`, `"marketCap":4885602246714`, `"lastAnnualDividend":1.05`,
 		`"exchangeShortName":"NASDAQ"`, `"isEtf":false`, `"isFund":false`, `"isActivelyTrading":true`} {
 		if !strings.Contains(string(encoded), member) {
-			t.Fatalf("CompanyScreenerEntry re-encoded = %s, want it to contain %s", encoded, member)
+			t.Fatalf("CompanyScreenerResult re-encoded = %s, want it to contain %s", encoded, member)
 		}
 	}
 	if strings.Contains(string(encoded), "company_name") {
-		t.Fatalf("CompanyScreenerEntry re-encoded with a snake_case member: %s", encoded)
+		t.Fatalf("CompanyScreenerResult re-encoded with a snake_case member: %s", encoded)
 	}
 }
 
@@ -69,16 +69,16 @@ func TestDocumentedCompanyScreenerEntryDecodesExactValues(t *testing.T) {
 // rounds to 2^64.
 func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T) {
 	t.Parallel()
-	empty := assertFixtureParity[CompanyScreenerEntry](t, "company_screener_empty.json")
+	empty := assertFixtureParity[CompanyScreenerResult](t, "company_screener_empty.json")
 	if len(empty) != 0 {
 		t.Fatalf("company_screener_empty = %+v, want no rows", empty)
 	}
 
-	multiple := assertFixtureParity[CompanyScreenerEntry](t, "company_screener_multiple.json")
+	multiple := assertFixtureParity[CompanyScreenerResult](t, "company_screener_multiple.json")
 	if len(multiple) != 2 {
 		t.Fatalf("company_screener_multiple = %+v, want two rows", multiple)
 	}
-	first := CompanyScreenerEntry{
+	first := CompanyScreenerResult{
 		Symbol: "BIG", CompanyName: "Beyond Float Precision Corp.", MarketCap: 9_007_199_254_740_992,
 		Sector: "Future Sector", Industry: "Future Industry", Beta: 0, Price: 0, LastAnnualDividend: 0,
 		Volume: math.MaxUint64, Exchange: "Future Exchange", ExchangeShortName: "NEXT", Country: "ZZ",
@@ -87,7 +87,7 @@ func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T
 	if multiple[0] != first || multiple[0].MarketCap < 1<<53 {
 		t.Fatalf("company_screener_multiple[0] = %+v, want %+v", multiple[0], first)
 	}
-	second := CompanyScreenerEntry{
+	second := CompanyScreenerResult{
 		Symbol: "FUND", CompanyName: "Example Fund", MarketCap: 4_294_967_296,
 		Sector: "Financial Services", Industry: "Asset Management", Beta: 1.25, Price: 42.5, LastAnnualDividend: 2.5,
 		Volume: 4_294_967_296, Exchange: "New York Stock Exchange", ExchangeShortName: "NYSE", Country: "US",
@@ -97,13 +97,13 @@ func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T
 		t.Fatalf("company_screener_multiple[1] = %+v, want %+v", multiple[1], second)
 	}
 
-	unknown := assertFixtureParity[CompanyScreenerEntry](t, "company_screener_unknown.json", "futureProviderField")
+	unknown := assertFixtureParity[CompanyScreenerResult](t, "company_screener_unknown.json", "futureProviderField")
 	if len(unknown) != 1 || unknown[0].Symbol != "AAPL" {
 		t.Fatalf("company_screener_unknown = %+v, want the AAPL row", unknown)
 	}
 
 	// The contract is a bare array: an object envelope is rejected.
-	var enveloped []CompanyScreenerEntry
+	var enveloped []CompanyScreenerResult
 	if err := json.Unmarshal([]byte(`{"companies":[]}`), &enveloped); err == nil {
 		t.Fatal("an object envelope decoded into a bare-array contract")
 	}
@@ -127,14 +127,14 @@ func TestScreenerRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			var rows []CompanyScreenerEntry
+			var rows []CompanyScreenerResult
 			err := json.Unmarshal([]byte(tc.wire), &rows)
 			var typed *Error
 			if !errors.As(err, &typed) || typed.Category != CategoryDecode {
 				t.Fatalf("error = %v (%T), want a CategoryDecode *Error", err, err)
 			}
-			if !strings.Contains(typed.Message, `"`+tc.member+`"`) || !strings.Contains(typed.Message, "CompanyScreenerEntry") {
-				t.Fatalf("message = %q, want it to name member %q of CompanyScreenerEntry", typed.Message, tc.member)
+			if !strings.Contains(typed.Message, `"`+tc.member+`"`) || !strings.Contains(typed.Message, "CompanyScreenerResult") {
+				t.Fatalf("message = %q, want it to name member %q of CompanyScreenerResult", typed.Message, tc.member)
 			}
 		})
 	}

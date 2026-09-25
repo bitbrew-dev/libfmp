@@ -141,7 +141,7 @@ setters = [
 name = "net_worth"
 method = "congressional_net_worth"
 query = "CongressionalNetWorthQuery"
-response = "congressional::CongressionalMemberNetWorthEntry"
+response = "congressional::CongressionalMemberNetWorth"
 doc = "Retrieves itemized congressional net-worth disclosures."
 args = [
     { name = "member_id", kind = "congressional_member_id" },

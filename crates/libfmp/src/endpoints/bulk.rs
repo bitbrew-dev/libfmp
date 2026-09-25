@@ -25,7 +25,7 @@ use crate::{
             BulkBalanceSheetStatement, BulkBalanceSheetStatementGrowth, BulkCashFlowStatement,
             BulkCashFlowStatementGrowth, BulkDcfValuation, BulkEarningsSurprise, BulkEodBar,
             BulkEtfHolding, BulkFinancialRatiosTtm, BulkFinancialScore, BulkIncomeStatement,
-            BulkIncomeStatementGrowth, BulkKeyMetricsTtm, BulkPriceTargetSummary, BulkStockPeers,
+            BulkIncomeStatementGrowth, BulkKeyMetricsTtm, BulkPriceTargetSummary, BulkStockPeer,
             BulkStockRating, BulkUpgradesDowngradesConsensus,
         },
         company::CompanyProfile,
@@ -220,7 +220,7 @@ pub fn bulk_financial_ratios_ttm() -> EndpointSpec<(), Vec<BulkFinancialRatiosTt
 }
 
 /// Describes `GET peers-bulk` without binding a transport.
-pub fn bulk_stock_peers() -> EndpointSpec<(), Vec<BulkStockPeers>> {
+pub fn bulk_stock_peers() -> EndpointSpec<(), Vec<BulkStockPeer>> {
     EndpointSpec::get("peers-bulk", "peers-bulk", ()).with_metadata(WORLDWIDE)
 }
 
@@ -360,7 +360,7 @@ impl Client {
     }
 
     /// Retrieves worldwide stock peers in one provider bulk response.
-    pub async fn bulk_stock_peers(&self) -> Result<Vec<BulkStockPeers>> {
+    pub async fn bulk_stock_peers(&self) -> Result<Vec<BulkStockPeer>> {
         self.execute(&bulk_stock_peers()).await
     }
 

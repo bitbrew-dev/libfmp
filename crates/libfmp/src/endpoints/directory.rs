@@ -16,7 +16,7 @@ use crate::{
     },
     responses::directory::{
         ActivelyTradingSymbol, AvailableCountry, AvailableExchange, AvailableIndustry,
-        AvailableSector, CikEntry, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
+        AvailableSector, CikListing, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
         FinancialStatementSymbol, SymbolChange,
     },
     types::{Limit, Page},
@@ -167,7 +167,7 @@ pub fn financial_statement_symbols() -> EndpointSpec<(), Vec<FinancialStatementS
 }
 
 /// Describes `GET cik-list` without binding it to a transport.
-pub fn cik_list(query: CikListQuery) -> EndpointSpec<CikListQuery, Vec<CikEntry>> {
+pub fn cik_list(query: CikListQuery) -> EndpointSpec<CikListQuery, Vec<CikListing>> {
     EndpointSpec::get("cik-list", "cik-list", query).with_metadata(CIK_LIST)
 }
 
@@ -228,7 +228,7 @@ impl Client {
     }
 
     /// Lists US SEC entities with optional provider pagination.
-    pub async fn cik_list(&self, query: CikListQuery) -> Result<Vec<CikEntry>> {
+    pub async fn cik_list(&self, query: CikListQuery) -> Result<Vec<CikListing>> {
         self.execute(&cik_list(query)).await
     }
 

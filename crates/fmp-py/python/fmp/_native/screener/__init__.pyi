@@ -4,13 +4,13 @@ import builtins
 import typing
 
 __all__ = [
-    "CompanyScreenerEntry",
+    "CompanyScreenerResult",
     "ScreenerNamespace",
 ]
 
 
 @typing.final
-class CompanyScreenerEntry:
+class CompanyScreenerResult:
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -58,7 +58,7 @@ class CompanyScreenerEntry:
         is_etf: builtins.bool,
         is_fund: builtins.bool,
         is_actively_trading: builtins.bool,
-    ) -> CompanyScreenerEntry: ...
+    ) -> CompanyScreenerResult: ...
     def __getnewargs__(self) -> tuple: ...
 
 
@@ -91,7 +91,7 @@ class ScreenerNamespace:
         page: typing.Optional[builtins.int] = None,
         limit: typing.Optional[builtins.int] = None,
         include_all_share_classes: typing.Optional[builtins.bool] = None,
-    ) -> builtins.list[CompanyScreenerEntry]:
+    ) -> builtins.list[CompanyScreenerResult]:
         r"""
         Screens worldwide companies using the supplied optional filters.
         """

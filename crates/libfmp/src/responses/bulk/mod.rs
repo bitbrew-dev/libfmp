@@ -19,9 +19,7 @@ pub use balance::{BulkBalanceSheetStatement, BulkBalanceSheetStatementGrowth};
 pub use cash_flow::{BulkCashFlowStatement, BulkCashFlowStatementGrowth};
 pub use eod::BulkEodBar;
 pub use income::{BulkIncomeStatement, BulkIncomeStatementGrowth};
-pub use metrics::{
-    BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeers,
-};
+pub use metrics::{BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeer};
 pub use snapshots::{
     BulkDcfValuation, BulkEtfHolding, BulkFinancialScore, BulkPriceTargetSummary, BulkStockRating,
     BulkUpgradesDowngradesConsensus,

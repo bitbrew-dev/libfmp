@@ -108,7 +108,7 @@ pub struct CongressionalDebtDetails {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
-pub struct CongressionalMemberNetWorthEntry {
+pub struct CongressionalMemberNetWorth {
     #[serde(rename = "senateID")]
     pub member_id: CongressionalMemberId,
     pub form_type: FormType,

@@ -226,7 +226,7 @@ pub struct BulkFinancialRatiosTtm {
 /// One worldwide stock-peer bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
-pub struct BulkStockPeers {
+pub struct BulkStockPeer {
     pub symbol: Ticker,
     pub peers: String,
 }

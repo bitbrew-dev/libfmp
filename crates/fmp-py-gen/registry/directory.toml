@@ -17,7 +17,7 @@ doc = "Lists worldwide companies with financial statements available."
 name = "cik_list"
 method = "cik_list"
 query = "CikListQuery"
-response = "directory::CikEntry"
+response = "directory::CikListing"
 doc = "Lists US SEC entities with optional provider pagination."
 args = [
     { name = "page", kind = "page", required = false },

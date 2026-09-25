@@ -8,7 +8,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.screener", frozen, from_py_object)]
 #[derive(Clone)]
-pub(crate) struct CompanyScreenerEntry {
+pub(crate) struct CompanyScreenerResult {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
@@ -43,7 +43,7 @@ pub(crate) struct CompanyScreenerEntry {
 
 #[gen_stub_pymethods]
 #[pymethods]
-impl CompanyScreenerEntry {
+impl CompanyScreenerResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
@@ -107,8 +107,8 @@ impl CompanyScreenerEntry {
     }
 }
 
-impl From<libfmp::responses::screener::CompanyScreenerEntry> for CompanyScreenerEntry {
-    fn from(value: libfmp::responses::screener::CompanyScreenerEntry) -> Self {
+impl From<libfmp::responses::screener::CompanyScreenerResult> for CompanyScreenerResult {
+    fn from(value: libfmp::responses::screener::CompanyScreenerResult) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
             company_name: value.company_name,

@@ -2188,16 +2188,16 @@ func (m *BulkFinancialRatiosTtm) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	return nil
 }
 
-// BulkStockPeers is one worldwide stock-peer bulk row.
-type BulkStockPeers struct {
+// BulkStockPeer is one worldwide stock-peer bulk row.
+type BulkStockPeer struct {
 	Symbol string `json:"symbol"`
 	Peers  string `json:"peers"`
 }
 
-// bulkStockPeersShadow mirrors BulkStockPeers with a pointer or raw value for
+// bulkStockPeerShadow mirrors BulkStockPeer with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
-type bulkStockPeersShadow struct {
+type bulkStockPeerShadow struct {
 	Symbol *string `json:"symbol"`
 	Peers  *string `json:"peers"`
 }
@@ -2205,18 +2205,18 @@ type bulkStockPeersShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *BulkStockPeers) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow bulkStockPeersShadow
+func (m *BulkStockPeer) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow bulkStockPeerShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("BulkStockPeers", "symbol")
+		return missingMemberError("BulkStockPeer", "symbol")
 	case shadow.Peers == nil:
-		return missingMemberError("BulkStockPeers", "peers")
+		return missingMemberError("BulkStockPeer", "peers")
 	}
-	*m = BulkStockPeers{
+	*m = BulkStockPeer{
 		Symbol: *shadow.Symbol,
 		Peers:  *shadow.Peers,
 	}

@@ -5,7 +5,7 @@
 name = "companies"
 method = "company_screener"
 query = "CompanyScreenerQuery"
-response = "screener::CompanyScreenerEntry"
+response = "screener::CompanyScreenerResult"
 doc = "Screens worldwide companies using the supplied optional filters."
 args = [
     { name = "market_cap_more_than", kind = "market_capitalization", required = false },

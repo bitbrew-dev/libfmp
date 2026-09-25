@@ -10,7 +10,7 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointMetadata, GeographicAvailability},
     },
-    responses::screener::CompanyScreenerEntry,
+    responses::screener::CompanyScreenerResult,
     types::{CountryCode, ExchangeCode, FiniteDecimal, Industry, Limit, Page, Sector},
 };
 
@@ -269,7 +269,7 @@ const WORLDWIDE: EndpointMetadata =
 /// Describes `GET company-screener` without binding it to a transport.
 pub fn company_screener(
     query: CompanyScreenerQuery,
-) -> EndpointSpec<CompanyScreenerQuery, Vec<CompanyScreenerEntry>> {
+) -> EndpointSpec<CompanyScreenerQuery, Vec<CompanyScreenerResult>> {
     EndpointSpec::get("company-screener", "company-screener", query).with_metadata(WORLDWIDE)
 }
 
@@ -278,7 +278,7 @@ impl Client {
     pub async fn company_screener(
         &self,
         query: CompanyScreenerQuery,
-    ) -> Result<Vec<CompanyScreenerEntry>> {
+    ) -> Result<Vec<CompanyScreenerResult>> {
         self.execute(&company_screener(query)).await
     }
 }

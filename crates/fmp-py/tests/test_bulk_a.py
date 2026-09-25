@@ -16,7 +16,7 @@ from typing import Any
 import pytest
 from conftest import FixtureServer, load_fixture
 from fmp.bulk import BulkNamespace
-from fmp.bulk.metrics import BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeers
+from fmp.bulk.metrics import BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeer
 from fmp.bulk.snapshots import (
     BulkDcfValuation,
     BulkEtfHolding,
@@ -194,7 +194,7 @@ def test_stock_peers_takes_no_arguments(client: Any, fixture_server: FixtureServ
     assert fixture_server.requests[0].target == "/peers-bulk"
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, BulkStockPeers)
+    assert isinstance(row, BulkStockPeer)
     assert row.symbol == "000001.SZ"
     assert row.peers == "600036.SS"
 

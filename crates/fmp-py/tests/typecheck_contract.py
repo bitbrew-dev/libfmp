@@ -27,8 +27,8 @@ from fmp.commitment_of_traders import (
 from fmp.commodities import CommoditiesNamespace, CommodityListing
 from fmp.company import CompanyMarketCapitalization, CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark
 from fmp.congressional import (
+    CongressionalMemberNetWorth,
     CongressionalMemberNetWorthAggregate,
-    CongressionalMemberNetWorthEntry,
     CongressionalMemberProfile,
     CongressionalNamespace,
     CongressionalNetWorthRange,
@@ -36,7 +36,13 @@ from fmp.congressional import (
 )
 from fmp.crypto import CryptocurrencyListing, CryptoNamespace
 from fmp.dcf import CustomDcfValuation, CustomLeveredDcfValuation, DcfNamespace, DcfValuation
-from fmp.directory import AvailableExchange, CikEntry, DirectoryNamespace, EarningsTranscriptAvailability, SymbolChange
+from fmp.directory import (
+    AvailableExchange,
+    CikListing,
+    DirectoryNamespace,
+    EarningsTranscriptAvailability,
+    SymbolChange,
+)
 from fmp.economics import (
     EconomicCalendarEvent,
     EconomicIndicatorObservation,
@@ -74,7 +80,7 @@ from fmp.market import IndustryPe, MarketMover, MarketNamespace, SectorPerforman
 from fmp.market_hours import ExchangeHoliday, ExchangeMarketHours, MarketHoursNamespace
 from fmp.news import FmpArticle, NewsArticle, NewsNamespace
 from fmp.quote import AftermarketTrade, Quote, QuoteShort, StockPriceChange
-from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
+from fmp.screener import CompanyScreenerResult, ScreenerNamespace
 from fmp.search import CikSearchResult, ExchangeVariant, SearchNamespace, SymbolSearchResult
 from fmp.sec_filings import SecCompanyProfile, SecCompanySearchResult, SecFiling, SecFilingsNamespace
 from fmp.statements import StatementsNamespace
@@ -171,7 +177,7 @@ def check_directory_contract(client: FmpClient) -> None:
     changed_on: datetime.date = changes[0].date
     exchanges: list[AvailableExchange] = client.directory.available_exchanges(extended=True)
     suffix: str = exchanges[0].symbol_suffix
-    entries: list[CikEntry] = client.directory.cik_list(page=0, limit=1000)
+    entries: list[CikListing] = client.directory.cik_list(page=0, limit=1000)
     cik: str = entries[0].cik
     transcripts: list[EarningsTranscriptAvailability] = client.directory.earnings_transcript_list()
     count: str = transcripts[0].no_of_transcripts
@@ -189,7 +195,7 @@ def check_congressional_contract(client: FmpClient) -> None:
     )
     born: datetime.date = profiles[0].birth_date
     years_active: float = profiles[0].years_active
-    entries: list[CongressionalMemberNetWorthEntry] = client.congressional.net_worth("P000197", limit=100)
+    entries: list[CongressionalMemberNetWorth] = client.congressional.net_worth("P000197", limit=100)
     value_range: CongressionalNetWorthRange | None = entries[0].value_range
     totals: list[CongressionalMemberNetWorthAggregate] = client.congressional.net_worth_aggregated(
         "P000197", totals_col="stock"
@@ -301,8 +307,8 @@ def check_market_contract(client: FmpClient) -> None:
 def check_screener_contract(client: FmpClient) -> None:
     """Type-check the keyword-only filter surface and the screener row type."""
     screener: ScreenerNamespace = client.screener
-    everything: list[CompanyScreenerEntry] = screener.companies()
-    filtered: list[CompanyScreenerEntry] = client.screener.companies(
+    everything: list[CompanyScreenerResult] = screener.companies()
+    filtered: list[CompanyScreenerResult] = client.screener.companies(
         market_cap_more_than=1_000_000_000,
         sector="Technology",
         beta_lower_than=1.5,
