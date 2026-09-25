@@ -2,7 +2,7 @@
 # `client.market_hours`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
 
 [[endpoint]]
-name = "exchange_market_hours"
+name = "exchange"
 method = "exchange_market_hours"
 query = "ExchangeMarketHoursQuery"
 response = "market_hours::ExchangeMarketHours"
@@ -14,7 +14,7 @@ args = [
 setters = [{ arg = "timestamp" }]
 
 [[endpoint]]
-name = "holidays_by_exchange"
+name = "holidays"
 method = "holidays_by_exchange"
 query = "HolidaysByExchangeQuery"
 response = "market_hours::ExchangeHoliday"
@@ -27,7 +27,7 @@ args = [
 setters = [{ arg = "from" }, { arg = "to" }]
 
 [[endpoint]]
-name = "all_exchange_market_hours"
+name = "all_exchanges"
 method = "all_exchange_market_hours"
 query = "AllExchangeMarketHoursQuery"
 response = "market_hours::ExchangeMarketHours"

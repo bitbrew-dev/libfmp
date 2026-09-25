@@ -75,7 +75,7 @@ class TranscriptsNamespace:
     Transcripts endpoints for a single client, exposed as `client.transcripts`.
     """
 
-    def latest_earnings_transcripts(
+    def latest(
         self,
         *,
         limit: typing.Optional[builtins.int] = None,
@@ -85,7 +85,7 @@ class TranscriptsNamespace:
         Retrieves the latest worldwide earnings-transcript metadata.
         """
 
-    def earnings_transcript(
+    def by_quarter(
         self,
         symbol: builtins.str,
         year: builtins.int,
@@ -97,9 +97,7 @@ class TranscriptsNamespace:
         Retrieves complete worldwide earnings-call transcripts.
         """
 
-    def earnings_transcript_dates(
-        self, symbol: builtins.str
-    ) -> builtins.list[EarningsTranscriptDate]:
+    def dates(self, symbol: builtins.str) -> builtins.list[EarningsTranscriptDate]:
         r"""
         Retrieves available worldwide transcript dates for one ticker.
         """

@@ -44,22 +44,22 @@ func TestTranscriptsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	ctx := context.Background()
 	ns := client.Transcripts
 
-	bare, err := ns.LatestEarningsTranscripts(ctx, NewLatestEarningsTranscriptsQuery())
+	bare, err := ns.Latest(ctx, NewLatestEarningsTranscriptsQuery())
 	if err != nil || len(bare) != 1 || bare[0].Symbol != "VLO" || bare[0].FiscalYear != 2026 {
-		t.Fatalf("LatestEarningsTranscripts (no query) = %+v, %v", bare, err)
+		t.Fatalf("Latest (no query) = %+v, %v", bare, err)
 	}
-	paged, err := ns.LatestEarningsTranscripts(ctx, NewLatestEarningsTranscriptsQuery().WithLimit(100).WithPage(0))
+	paged, err := ns.Latest(ctx, NewLatestEarningsTranscriptsQuery().WithLimit(100).WithPage(0))
 	if err != nil || len(paged) != 1 || paged[0].Period != "Q2" {
-		t.Fatalf("LatestEarningsTranscripts (limit and page) = %+v, %v", paged, err)
+		t.Fatalf("Latest (limit and page) = %+v, %v", paged, err)
 	}
-	transcripts, err := ns.EarningsTranscript(ctx, NewEarningsTranscriptQuery("AAPL", 2020, QuarterQ3).WithLimit(1))
+	transcripts, err := ns.ByQuarter(ctx, NewEarningsTranscriptQuery("AAPL", 2020, QuarterQ3).WithLimit(1))
 	if err != nil || len(transcripts) != 1 || transcripts[0].Year != 2020 ||
 		!strings.HasSuffix(transcripts[0].Content, "Aft...") {
-		t.Fatalf("EarningsTranscript = %+v, %v", transcripts, err)
+		t.Fatalf("ByQuarter = %+v, %v", transcripts, err)
 	}
-	dates, err := ns.EarningsTranscriptDates(ctx, NewEarningsTranscriptDatesQuery("AAPL"))
+	dates, err := ns.Dates(ctx, NewEarningsTranscriptDatesQuery("AAPL"))
 	if err != nil || len(dates) != 1 || dates[0].Quarter != 2 || dates[0].FiscalYear != 2026 {
-		t.Fatalf("EarningsTranscriptDates = %+v, %v", dates, err)
+		t.Fatalf("Dates = %+v, %v", dates, err)
 	}
 
 	requests := rec.all()
@@ -84,7 +84,7 @@ func TestTranscriptsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	ns := client.Transcripts
 
 	for _, quarter := range []Quarter{"5", "Q3", "", "3 "} {
-		_, err := ns.EarningsTranscript(ctx, NewEarningsTranscriptQuery("AAPL", 2020, quarter))
+		_, err := ns.ByQuarter(ctx, NewEarningsTranscriptQuery("AAPL", 2020, quarter))
 		typed := assertQuoteError(t, err, CategoryValidation, 0, "")
 		if !errors.Is(err, ErrUnknownWireValue) ||
 			typed.Message != "quarter: "+ErrUnknownWireValue.Error()+", expected one of 1, 2, 3, 4" {
@@ -102,14 +102,14 @@ func TestTranscriptsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		{"comma", "AAPL,MSFT", ErrCommaInTicker},
 	}
 	for _, tc := range cases {
-		_, err := ns.EarningsTranscriptDates(ctx, NewEarningsTranscriptDatesQuery(tc.symbol))
+		_, err := ns.Dates(ctx, NewEarningsTranscriptDatesQuery(tc.symbol))
 		typed := assertQuoteError(t, err, CategoryValidation, 0, "")
 		if !errors.Is(err, tc.reason) || typed.Message != "symbol: "+tc.reason.Error() {
 			t.Fatalf("%s: error = %v, want symbol: %v", tc.name, err, tc.reason)
 		}
-		_, err = ns.EarningsTranscript(ctx, NewEarningsTranscriptQuery(tc.symbol, 2020, QuarterQ3))
+		_, err = ns.ByQuarter(ctx, NewEarningsTranscriptQuery(tc.symbol, 2020, QuarterQ3))
 		if transcript := assertQuoteError(t, err, CategoryValidation, 0, ""); transcript.Message != typed.Message {
-			t.Fatalf("%s: EarningsTranscript message %q differs from EarningsTranscriptDates message %q",
+			t.Fatalf("%s: ByQuarter message %q differs from Dates message %q",
 				tc.name, transcript.Message, typed.Message)
 		}
 	}
@@ -141,7 +141,7 @@ func TestTranscriptsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"AAPL","period":"Q3","year":2020,"date":"2020-07-30"}]`))
 	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
 
-	_, err := client.Transcripts.EarningsTranscript(context.Background(), NewEarningsTranscriptQuery("AAPL", 2020, QuarterQ3))
+	_, err := client.Transcripts.ByQuarter(context.Background(), NewEarningsTranscriptQuery("AAPL", 2020, QuarterQ3))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "earning-call-transcript")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"content"`) {
 		t.Fatalf("cause = %v, want it to name the missing member content", cause)

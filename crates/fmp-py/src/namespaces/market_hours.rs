@@ -32,13 +32,13 @@ impl MarketHoursNamespace {
 impl MarketHoursNamespace {
     /// Retrieves trading hours for one exchange.
     #[pyo3(signature = (exchange, *, timestamp=None))]
-    fn exchange_market_hours(
+    fn exchange(
         &self,
         py: Python<'_>,
         exchange: &str,
         timestamp: Option<&str>,
     ) -> PyResult<Vec<ExchangeMarketHours>> {
-        let query = exchange_market_hours_query(exchange, timestamp)?;
+        let query = exchange_query(exchange, timestamp)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -51,14 +51,14 @@ impl MarketHoursNamespace {
 
     /// Retrieves holidays for one exchange.
     #[pyo3(signature = (exchange, *, from_=None, to=None))]
-    fn holidays_by_exchange(
+    fn holidays(
         &self,
         py: Python<'_>,
         exchange: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
     ) -> PyResult<Vec<ExchangeHoliday>> {
-        let query = holidays_by_exchange_query(exchange, from_, to)?;
+        let query = holidays_query(exchange, from_, to)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -71,12 +71,12 @@ impl MarketHoursNamespace {
 
     /// Retrieves trading hours for all exchanges.
     #[pyo3(signature = (*, timestamp=None))]
-    fn all_exchange_market_hours(
+    fn all_exchanges(
         &self,
         py: Python<'_>,
         timestamp: Option<&str>,
     ) -> PyResult<Vec<ExchangeMarketHours>> {
-        let query = all_exchange_market_hours_query(timestamp)?;
+        let query = all_exchanges_query(timestamp)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -88,11 +88,8 @@ impl MarketHoursNamespace {
     }
 }
 
-/// Builds the `ExchangeMarketHoursQuery` for `MarketHoursNamespace::exchange_market_hours` from validated Python arguments.
-fn exchange_market_hours_query(
-    exchange: &str,
-    timestamp: Option<&str>,
-) -> PyResult<ExchangeMarketHoursQuery> {
+/// Builds the `ExchangeMarketHoursQuery` for `MarketHoursNamespace::exchange` from validated Python arguments.
+fn exchange_query(exchange: &str, timestamp: Option<&str>) -> PyResult<ExchangeMarketHoursQuery> {
     let exchange = args::exchange_code("exchange", exchange)?;
     let timestamp = args::optional("timestamp", timestamp, args::market_hours_timestamp)?;
     let mut query = ExchangeMarketHoursQuery::new(exchange);
@@ -102,8 +99,8 @@ fn exchange_market_hours_query(
     Ok(query)
 }
 
-/// Builds the `HolidaysByExchangeQuery` for `MarketHoursNamespace::holidays_by_exchange` from validated Python arguments.
-fn holidays_by_exchange_query(
+/// Builds the `HolidaysByExchangeQuery` for `MarketHoursNamespace::holidays` from validated Python arguments.
+fn holidays_query(
     exchange: &str,
     from_: Option<args::DateArg>,
     to: Option<args::DateArg>,
@@ -121,10 +118,8 @@ fn holidays_by_exchange_query(
     Ok(query)
 }
 
-/// Builds the `AllExchangeMarketHoursQuery` for `MarketHoursNamespace::all_exchange_market_hours` from validated Python arguments.
-fn all_exchange_market_hours_query(
-    timestamp: Option<&str>,
-) -> PyResult<AllExchangeMarketHoursQuery> {
+/// Builds the `AllExchangeMarketHoursQuery` for `MarketHoursNamespace::all_exchanges` from validated Python arguments.
+fn all_exchanges_query(timestamp: Option<&str>) -> PyResult<AllExchangeMarketHoursQuery> {
     let timestamp = args::optional("timestamp", timestamp, args::market_hours_timestamp)?;
     let mut query = AllExchangeMarketHoursQuery::new();
     if let Some(timestamp) = timestamp {

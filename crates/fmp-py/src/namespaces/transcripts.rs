@@ -34,13 +34,13 @@ impl TranscriptsNamespace {
 impl TranscriptsNamespace {
     /// Retrieves the latest worldwide earnings-transcript metadata.
     #[pyo3(signature = (*, limit=None, page=None))]
-    fn latest_earnings_transcripts(
+    fn latest(
         &self,
         py: Python<'_>,
         limit: Option<i64>,
         page: Option<i64>,
     ) -> PyResult<Vec<LatestEarningsTranscript>> {
-        let query = latest_earnings_transcripts_query(limit, page)?;
+        let query = latest_query(limit, page)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -58,7 +58,7 @@ impl TranscriptsNamespace {
 
     /// Retrieves complete worldwide earnings-call transcripts.
     #[pyo3(signature = (symbol, year, quarter, *, limit=None))]
-    fn earnings_transcript(
+    fn by_quarter(
         &self,
         py: Python<'_>,
         symbol: &str,
@@ -66,7 +66,7 @@ impl TranscriptsNamespace {
         quarter: i64,
         limit: Option<i64>,
     ) -> PyResult<Vec<EarningsTranscript>> {
-        let query = earnings_transcript_query(symbol, year, quarter, limit)?;
+        let query = by_quarter_query(symbol, year, quarter, limit)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -79,12 +79,8 @@ impl TranscriptsNamespace {
 
     /// Retrieves available worldwide transcript dates for one ticker.
     #[pyo3(signature = (symbol))]
-    fn earnings_transcript_dates(
-        &self,
-        py: Python<'_>,
-        symbol: &str,
-    ) -> PyResult<Vec<EarningsTranscriptDate>> {
-        let query = earnings_transcript_dates_query(symbol)?;
+    fn dates(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<EarningsTranscriptDate>> {
+        let query = dates_query(symbol)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -101,11 +97,8 @@ impl TranscriptsNamespace {
     }
 }
 
-/// Builds the `LatestEarningsTranscriptsQuery` for `TranscriptsNamespace::latest_earnings_transcripts` from validated Python arguments.
-fn latest_earnings_transcripts_query(
-    limit: Option<i64>,
-    page: Option<i64>,
-) -> PyResult<LatestEarningsTranscriptsQuery> {
+/// Builds the `LatestEarningsTranscriptsQuery` for `TranscriptsNamespace::latest` from validated Python arguments.
+fn latest_query(limit: Option<i64>, page: Option<i64>) -> PyResult<LatestEarningsTranscriptsQuery> {
     let limit = args::optional("limit", limit, args::limit)?;
     let page = args::optional("page", page, args::page)?;
     let mut query = LatestEarningsTranscriptsQuery::new();
@@ -118,8 +111,8 @@ fn latest_earnings_transcripts_query(
     Ok(query)
 }
 
-/// Builds the `EarningsTranscriptQuery` for `TranscriptsNamespace::earnings_transcript` from validated Python arguments.
-fn earnings_transcript_query(
+/// Builds the `EarningsTranscriptQuery` for `TranscriptsNamespace::by_quarter` from validated Python arguments.
+fn by_quarter_query(
     symbol: &str,
     year: i64,
     quarter: i64,
@@ -136,8 +129,8 @@ fn earnings_transcript_query(
     Ok(query)
 }
 
-/// Builds the `EarningsTranscriptDatesQuery` for `TranscriptsNamespace::earnings_transcript_dates` from validated Python arguments.
-fn earnings_transcript_dates_query(symbol: &str) -> PyResult<EarningsTranscriptDatesQuery> {
+/// Builds the `EarningsTranscriptDatesQuery` for `TranscriptsNamespace::dates` from validated Python arguments.
+fn dates_query(symbol: &str) -> PyResult<EarningsTranscriptDatesQuery> {
     let symbol = args::ticker("symbol", symbol)?;
     Ok(EarningsTranscriptDatesQuery::new(symbol))
 }

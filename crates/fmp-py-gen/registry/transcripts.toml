@@ -2,7 +2,7 @@
 # `client.transcripts`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
 
 [[endpoint]]
-name = "latest_earnings_transcripts"
+name = "latest"
 method = "latest_earnings_transcripts"
 query = "LatestEarningsTranscriptsQuery"
 response = "transcripts::LatestEarningsTranscript"
@@ -14,7 +14,7 @@ args = [
 setters = [{ arg = "limit" }, { arg = "page" }]
 
 [[endpoint]]
-name = "earnings_transcript"
+name = "by_quarter"
 method = "earnings_transcript"
 query = "EarningsTranscriptQuery"
 response = "transcripts::EarningsTranscript"
@@ -28,7 +28,7 @@ args = [
 setters = [{ arg = "limit" }]
 
 [[endpoint]]
-name = "earnings_transcript_dates"
+name = "dates"
 method = "earnings_transcript_dates"
 query = "EarningsTranscriptDatesQuery"
 response = "transcripts::EarningsTranscriptDate"

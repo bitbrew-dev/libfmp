@@ -31,10 +31,10 @@ def test_market_hours_namespace_is_the_generated_type(client: Any) -> None:
     assert isinstance(client.market_hours, MarketHoursNamespace)
 
 
-def test_exchange_market_hours_with_only_the_exchange(client: Any, fixture_server: FixtureServer) -> None:
-    """``exchange_market_hours`` sends only ``exchange`` and decodes the raw hour strings."""
+def test_exchange_with_only_the_exchange(client: Any, fixture_server: FixtureServer) -> None:
+    """``exchange`` sends only ``exchange`` and decodes the raw hour strings."""
     fixture_server.route("/exchange-market-hours", load_fixture("exchange_market_hours.json"))
-    rows = client.market_hours.exchange_market_hours("NASDAQ")
+    rows = client.market_hours.exchange("NASDAQ")
 
     assert fixture_server.requests[0].target == "/exchange-market-hours?exchange=NASDAQ"
     assert len(rows) == 1
@@ -48,10 +48,10 @@ def test_exchange_market_hours_with_only_the_exchange(client: Any, fixture_serve
     assert row.is_market_open is True
 
 
-def test_exchange_market_hours_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
-    """``exchange_market_hours`` form-encodes the exchange and keeps the timestamp's leading zeros."""
+def test_exchange_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
+    """``exchange`` form-encodes the exchange and keeps the timestamp's leading zeros."""
     fixture_server.route("/exchange-market-hours", load_fixture("exchange_market_hours.json"))
-    rows = client.market_hours.exchange_market_hours(SPACED_EXCHANGE, timestamp=TIMESTAMP)
+    rows = client.market_hours.exchange(SPACED_EXCHANGE, timestamp=TIMESTAMP)
 
     assert (
         fixture_server.requests[0].target
@@ -63,9 +63,9 @@ def test_exchange_market_hours_with_every_option(client: Any, fixture_server: Fi
 
 
 def test_holidays_by_exchange_with_only_the_exchange(client: Any, fixture_server: FixtureServer) -> None:
-    """``holidays_by_exchange`` sends only ``exchange`` and decodes the date plus the null adjusted times."""
+    """``holidays`` sends only ``exchange`` and decodes the date plus the null adjusted times."""
     fixture_server.route("/holidays-by-exchange", load_fixture("holidays_by_exchange.json"))
-    rows = client.market_hours.holidays_by_exchange("NASDAQ")
+    rows = client.market_hours.holidays("NASDAQ")
 
     assert fixture_server.requests[0].target == "/holidays-by-exchange?exchange=NASDAQ"
     assert len(rows) == 1
@@ -80,9 +80,9 @@ def test_holidays_by_exchange_with_only_the_exchange(client: Any, fixture_server
 
 
 def test_holidays_by_exchange_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
-    """``holidays_by_exchange`` encodes ``exchange``, ``from``, ``to`` in that order and accepts dates."""
+    """``holidays`` encodes ``exchange``, ``from``, ``to`` in that order and accepts dates."""
     fixture_server.route("/holidays-by-exchange", load_fixture("holidays_by_exchange.json"))
-    rows = client.market_hours.holidays_by_exchange(SPACED_EXCHANGE, from_=FROM, to=TO)
+    rows = client.market_hours.holidays(SPACED_EXCHANGE, from_=FROM, to=TO)
 
     assert fixture_server.requests[0].target == f"/holidays-by-exchange?exchange={SPACED_EXCHANGE_ENCODED}&{DATE_QUERY}"
     assert len(rows) == 1
@@ -101,16 +101,16 @@ def test_holidays_by_exchange_dates_are_independent(
 ) -> None:
     """Each holiday date bound is sent alone after ``exchange`` when the other one is left out."""
     fixture_server.route("/holidays-by-exchange", load_fixture("holidays_by_exchange.json"))
-    rows = client.market_hours.holidays_by_exchange("NASDAQ", **keywords)
+    rows = client.market_hours.holidays("NASDAQ", **keywords)
 
     assert fixture_server.requests[0].target == target
     assert len(rows) == 1
 
 
-def test_all_exchange_market_hours_with_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
-    """``all_exchange_market_hours`` maps to ``/all-exchange-market-hours`` with no query string."""
+def test_all_exchanges_with_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
+    """``all_exchanges`` maps to ``/all-exchange-market-hours`` with no query string."""
     fixture_server.route("/all-exchange-market-hours", load_fixture("all_exchange_market_hours.json"))
-    rows = client.market_hours.all_exchange_market_hours()
+    rows = client.market_hours.all_exchanges()
 
     assert fixture_server.requests[0].target == "/all-exchange-market-hours"
     assert len(rows) == 1
@@ -123,10 +123,10 @@ def test_all_exchange_market_hours_with_no_arguments(client: Any, fixture_server
     assert row.is_market_open is False
 
 
-def test_all_exchange_market_hours_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
-    """``all_exchange_market_hours`` sends the opaque timestamp unchanged."""
+def test_all_exchanges_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
+    """``all_exchanges`` sends the opaque timestamp unchanged."""
     fixture_server.route("/all-exchange-market-hours", load_fixture("all_exchange_market_hours.json"))
-    rows = client.market_hours.all_exchange_market_hours(timestamp=TIMESTAMP)
+    rows = client.market_hours.all_exchanges(timestamp=TIMESTAMP)
 
     assert fixture_server.requests[0].target == f"/all-exchange-market-hours?timestamp={TIMESTAMP}"
     assert len(rows) == 1
@@ -136,10 +136,10 @@ def test_from_keyword_is_renamed_but_the_wire_key_is_not(client: Any, fixture_se
     """The Python keyword is ``from_``; ``from`` is rejected and the wire key stays ``from``."""
     fixture_server.route("/holidays-by-exchange", load_fixture("holidays_by_exchange.json"))
     with pytest.raises(TypeError, match="unexpected keyword argument 'from'"):
-        client.market_hours.holidays_by_exchange("NASDAQ", **{"from": "2025-04-27"})
+        client.market_hours.holidays("NASDAQ", **{"from": "2025-04-27"})
     assert fixture_server.requests == []
 
-    client.market_hours.holidays_by_exchange("NASDAQ", from_="2025-04-27")
+    client.market_hours.holidays("NASDAQ", from_="2025-04-27")
     assert fixture_server.requests[0].query == {"exchange": ["NASDAQ"], "from": ["2025-04-27"]}
     assert "from_" not in fixture_server.requests[0].raw_query
 
@@ -147,15 +147,15 @@ def test_from_keyword_is_renamed_but_the_wire_key_is_not(client: Any, fixture_se
 def test_optionals_are_keyword_only(client: Any, fixture_server: FixtureServer) -> None:
     """A positional timestamp or date is a ``TypeError``, never a silent ``timestamp`` or ``from``."""
     with pytest.raises(TypeError):
-        client.market_hours.exchange_market_hours("NASDAQ", TIMESTAMP)
+        client.market_hours.exchange("NASDAQ", TIMESTAMP)
     with pytest.raises(TypeError):
-        client.market_hours.holidays_by_exchange("NASDAQ", "2025-04-27")
+        client.market_hours.holidays("NASDAQ", "2025-04-27")
     with pytest.raises(TypeError):
-        client.market_hours.all_exchange_market_hours(TIMESTAMP)
+        client.market_hours.all_exchanges(TIMESTAMP)
     assert fixture_server.requests == []
 
 
-@pytest.mark.parametrize("method", ["exchange_market_hours", "holidays_by_exchange"])
+@pytest.mark.parametrize("method", ["exchange", "holidays"])
 def test_exchange_is_required(client: Any, fixture_server: FixtureServer, method: str) -> None:
     """The two per-exchange methods without an exchange are a ``TypeError`` before any request."""
     with pytest.raises(TypeError):
@@ -163,7 +163,7 @@ def test_exchange_is_required(client: Any, fixture_server: FixtureServer, method
     assert fixture_server.requests == []
 
 
-@pytest.mark.parametrize("method", ["exchange_market_hours", "holidays_by_exchange"])
+@pytest.mark.parametrize("method", ["exchange", "holidays"])
 @pytest.mark.parametrize(
     ("value", "message"),
     [
@@ -186,7 +186,7 @@ def test_invalid_exchange_names_the_argument(
 
 @pytest.mark.parametrize(
     ("method", "positional"),
-    [("exchange_market_hours", ("NASDAQ",)), ("all_exchange_market_hours", ())],
+    [("exchange", ("NASDAQ",)), ("all_exchanges", ())],
 )
 @pytest.mark.parametrize(
     ("value", "message"),
@@ -223,7 +223,7 @@ def test_non_iso_holiday_date_names_the_argument(
 ) -> None:
     """A date string that is not ``YYYY-MM-DD`` fails locally once the exchange has been accepted."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.market_hours.holidays_by_exchange("NASDAQ", **{keyword: value})
+        client.market_hours.holidays("NASDAQ", **{keyword: value})
     error = raised.value
     assert str(error) == f"{keyword}: value must be a valid YYYY-MM-DD date"
     assert error.category == "validation"
@@ -234,7 +234,7 @@ def test_status_error_names_the_endpoint(client: Any, fixture_server: FixtureSer
     """A non-success status carries the libfmp endpoint id, status, and body."""
     fixture_server.route("/exchange-market-hours", {"error": "denied"}, status=403)
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.market_hours.exchange_market_hours("NASDAQ")
+        client.market_hours.exchange("NASDAQ")
     error = raised.value
     assert error.endpoint == "exchange-market-hours"
     assert error.status == 403
@@ -247,7 +247,7 @@ def test_status_error_names_the_all_exchange_endpoint(
     """A failing all-exchange route reports the ``all-exchange-market-hours`` endpoint id and the raw body."""
     fixture_server.route("/all-exchange-market-hours", b"not-json", status=500, content_type="text/plain")
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.market_hours.all_exchange_market_hours(timestamp=TIMESTAMP)
+        client.market_hours.all_exchanges(timestamp=TIMESTAMP)
     assert raised.value.endpoint == "all-exchange-market-hours"
     assert raised.value.status == 500
     assert raised.value.body == "not-json"
@@ -259,7 +259,7 @@ def test_decode_error_names_the_holidays_endpoint(
     """A non-array body on the holidays route surfaces as a decode error with the endpoint id."""
     fixture_server.route("/holidays-by-exchange", {})
     with pytest.raises(errors.FmpDecodeError) as raised:
-        client.market_hours.holidays_by_exchange("NASDAQ")
+        client.market_hours.holidays("NASDAQ")
     assert raised.value.endpoint == "holidays-by-exchange"
 
 
@@ -269,5 +269,5 @@ def test_decode_error_names_the_exchange_endpoint(
     """A well-formed but wrongly shaped row on the exchange route is a decode error."""
     fixture_server.route("/exchange-market-hours", [{"exchange": "NASDAQ"}])
     with pytest.raises(errors.FmpDecodeError) as raised:
-        client.market_hours.exchange_market_hours("NASDAQ")
+        client.market_hours.exchange("NASDAQ")
     assert raised.value.endpoint == "exchange-market-hours"

@@ -172,9 +172,9 @@ served by the single method that owns the path:
 | `calendar` | `calendar.ipos_prospectus` | `ipos_prospectus` | supported | supported |  |
 | `calendar` | `calendar.stock_splits` | `stock_splits` | supported | supported |  |
 | `calendar` | `calendar.stock_splits_calendar` | `stock_splits_calendar` | supported | supported |  |
-| `transcripts` | `transcripts.latest_earnings_transcripts` | `latest_earnings_transcripts` | supported | supported |  |
-| `transcripts` | `transcripts.earnings_transcript` | `earnings_transcript` | supported | supported |  |
-| `transcripts` | `transcripts.earnings_transcript_dates` | `earnings_transcript_dates` | supported | supported |  |
+| `transcripts` | `transcripts.latest` | `latest_earnings_transcripts` | supported | supported |  |
+| `transcripts` | `transcripts.by_quarter` | `earnings_transcript` | supported | supported |  |
+| `transcripts` | `transcripts.dates` | `earnings_transcript_dates` | supported | supported |  |
 | `news` | `news.fmp_articles` | `fmp_articles` | supported | supported |  |
 | `news` | `news.latest_general_news` | `latest_general_news` | supported | supported |  |
 | `news` | `news.latest_press_releases` | `latest_press_releases` | supported | supported |  |
@@ -262,9 +262,9 @@ served by the single method that owns the path:
 | `indexes` | `indexes.historical_sp500_constituents` | `historical_sp500_constituents` | supported | supported |  |
 | `indexes` | `indexes.historical_nasdaq_constituents` | `historical_nasdaq_constituents` | supported | supported |  |
 | `indexes` | `indexes.historical_dow_jones_constituents` | `historical_dow_jones_constituents` | supported | supported |  |
-| `market_hours` | `market_hours.exchange_market_hours` | `exchange_market_hours` | supported | supported |  |
-| `market_hours` | `market_hours.holidays_by_exchange` | `holidays_by_exchange` | supported | supported |  |
-| `market_hours` | `market_hours.all_exchange_market_hours` | `all_exchange_market_hours` | supported | supported |  |
+| `market_hours` | `market_hours.exchange` | `exchange_market_hours` | supported | supported |  |
+| `market_hours` | `market_hours.holidays` | `holidays_by_exchange` | supported | supported |  |
+| `market_hours` | `market_hours.all_exchanges` | `all_exchange_market_hours` | supported | supported |  |
 | `commodities` | `commodities.list` | `commodities_list` | supported | supported |  |
 | `commodities` | `commodities.quote` | `commodity_quote` | supported | supported |  |
 | `commodities` | `commodities.quote_short` | `commodity_quote_short` | supported | supported |  |

@@ -69,14 +69,14 @@ class MarketHoursNamespace:
     Market hours endpoints for a single client, exposed as `client.market_hours`.
     """
 
-    def exchange_market_hours(
+    def exchange(
         self, exchange: builtins.str, *, timestamp: typing.Optional[builtins.str] = None
     ) -> builtins.list[ExchangeMarketHours]:
         r"""
         Retrieves trading hours for one exchange.
         """
 
-    def holidays_by_exchange(
+    def holidays(
         self,
         exchange: builtins.str,
         *,
@@ -87,7 +87,7 @@ class MarketHoursNamespace:
         Retrieves holidays for one exchange.
         """
 
-    def all_exchange_market_hours(
+    def all_exchanges(
         self, *, timestamp: typing.Optional[builtins.str] = None
     ) -> builtins.list[ExchangeMarketHours]:
         r"""
