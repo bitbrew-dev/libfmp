@@ -90,8 +90,8 @@
 //     (client.Quote). A domain with nested namespaces nests the structs the
 //     same way (client.Statements.Income).
 //   - Method casing: the registry entry name in UpperCamelCase with mechanical
-//     casing and no initialism table: etfs is Etfs, batch_quote_short is
-//     BatchQuoteShort. Predictable generation wins over Go initialism style.
+//     casing and no initialism table: etfs is Etfs, batch_aftermarket_trade
+//     is BatchAftermarketTrade. Predictable generation wins over Go initialism style.
 //   - Queries: every endpoint with arguments takes a value type named after
 //     the Rust query (QuoteQuery) built by New<Query>(required args...), with
 //     one With<Setter>(value) builder method per Rust with_* setter. String

@@ -112,8 +112,8 @@ served by the single method that owns the path:
 | `quote` | `quote.aftermarket_trade` | `aftermarket_trade` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.aftermarket_quote` | `aftermarket_quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.stock_price_change` | `stock_price_change` | supported | supported |  |
-| `quote` | `quote.batch_quote` | `batch_quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
-| `quote` | `quote.batch_quote_short` | `batch_quote_short` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch` | `batch_quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
+| `quote` | `quote.batch_short` | `batch_quote_short` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.batch_aftermarket_trade` | `batch_aftermarket_trade` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.batch_aftermarket_quote` | `batch_aftermarket_quote` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |
 | `quote` | `quote.exchange` | `exchange_quotes` | supported | supported | Nasdaq data is 15-minute delayed unless the real-time user declaration is on file |

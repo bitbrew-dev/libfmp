@@ -116,8 +116,8 @@ impl QuoteNamespace {
 
     /// Retrieves detailed worldwide stock quotes for multiple tickers.
     #[pyo3(signature = (symbols))]
-    fn batch_quote(&self, py: Python<'_>, symbols: args::SymbolsArg) -> PyResult<Vec<Quote>> {
-        let query = batch_quote_query(symbols)?;
+    fn batch(&self, py: Python<'_>, symbols: args::SymbolsArg) -> PyResult<Vec<Quote>> {
+        let query = batch_query(symbols)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(
@@ -131,12 +131,8 @@ impl QuoteNamespace {
 
     /// Retrieves compact worldwide stock quotes for multiple tickers.
     #[pyo3(signature = (symbols))]
-    fn batch_quote_short(
-        &self,
-        py: Python<'_>,
-        symbols: args::SymbolsArg,
-    ) -> PyResult<Vec<QuoteShort>> {
-        let query = batch_quote_short_query(symbols)?;
+    fn batch_short(&self, py: Python<'_>, symbols: args::SymbolsArg) -> PyResult<Vec<QuoteShort>> {
+        let query = batch_short_query(symbols)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -282,14 +278,14 @@ fn stock_price_change_query(symbol: &str) -> PyResult<StockPriceChangeQuery> {
     Ok(StockPriceChangeQuery::new(symbol))
 }
 
-/// Builds the `BatchQuoteQuery` for `QuoteNamespace::batch_quote` from validated Python arguments.
-fn batch_quote_query(symbols: args::SymbolsArg) -> PyResult<BatchQuoteQuery> {
+/// Builds the `BatchQuoteQuery` for `QuoteNamespace::batch` from validated Python arguments.
+fn batch_query(symbols: args::SymbolsArg) -> PyResult<BatchQuoteQuery> {
     let symbols = args::ticker_list("symbols", symbols)?;
     Ok(BatchQuoteQuery::new(symbols))
 }
 
-/// Builds the `BatchQuoteShortQuery` for `QuoteNamespace::batch_quote_short` from validated Python arguments.
-fn batch_quote_short_query(symbols: args::SymbolsArg) -> PyResult<BatchQuoteShortQuery> {
+/// Builds the `BatchQuoteShortQuery` for `QuoteNamespace::batch_short` from validated Python arguments.
+fn batch_short_query(symbols: args::SymbolsArg) -> PyResult<BatchQuoteShortQuery> {
     let symbols = args::ticker_list("symbols", symbols)?;
     Ok(BatchQuoteShortQuery::new(symbols))
 }

@@ -80,9 +80,9 @@ def test_stock_price_change_encodes_a_spaced_symbol(client: Any, fixture_server:
 
 
 def test_batch_quote_joins_a_symbol_list_with_a_comma(client: Any, fixture_server: FixtureServer) -> None:
-    """``batch_quote`` sends ``symbols=`` as a comma-joined, form-encoded list."""
+    """``batch`` sends ``symbols=`` as a comma-joined, form-encoded list."""
     fixture_server.route("/batch-quote", load_fixture("quote.json"))
-    rows = client.quote.batch_quote(["AAPL", "MSFT"])
+    rows = client.quote.batch(["AAPL", "MSFT"])
 
     assert fixture_server.requests[0].target == "/batch-quote?symbols=AAPL%2CMSFT"
     assert len(rows) == 1
@@ -98,7 +98,7 @@ def test_batch_quote_joins_a_symbol_list_with_a_comma(client: Any, fixture_serve
 def test_batch_quote_short_accepts_a_bare_string(client: Any, fixture_server: FixtureServer) -> None:
     """A bare ``str`` is one ticker, never split on commas."""
     fixture_server.route("/batch-quote-short", load_fixture("quote_short_multiple.json"))
-    rows = client.quote.batch_quote_short("AAPL")
+    rows = client.quote.batch_short("AAPL")
 
     assert fixture_server.requests[0].target == "/batch-quote-short?symbols=AAPL"
     assert len(rows) == 2
@@ -207,7 +207,7 @@ def test_invalid_symbol_lists_name_the_argument(
 ) -> None:
     """``ticker_list`` validation fails locally and names ``symbols`` (with the index)."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.quote.batch_quote(symbols)
+        client.quote.batch(symbols)
     error = raised.value
     assert str(error) == message
     assert error.category == "validation"
@@ -230,7 +230,7 @@ def test_batch_status_error_names_the_batch_endpoint(
     """A non-success status on a batch call carries the batch endpoint id."""
     fixture_server.route("/batch-quote-short", {"error": "denied"}, status=403)
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.quote.batch_quote_short(["AAPL", "MSFT"])
+        client.quote.batch_short(["AAPL", "MSFT"])
     error = raised.value
     assert error.endpoint == "batch-quote-short"
     assert error.status == 403

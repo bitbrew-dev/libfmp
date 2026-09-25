@@ -201,7 +201,7 @@ class RealTreeTest(unittest.TestCase):
         expected = {e.go_key for e in cov.load_expected() if e.domain == "quote"}
         self.assertEqual(actual, expected)
         self.assertIn(("QuoteNamespace", "Etfs"), actual)
-        self.assertIn(("QuoteNamespace", "BatchQuoteShort"), actual)
+        self.assertIn(("QuoteNamespace", "BatchShort"), actual)
 
 
 if __name__ == "__main__":

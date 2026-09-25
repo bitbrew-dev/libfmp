@@ -74,9 +74,9 @@ func TestQuoteMethodsUseExactPathsQueriesAndHeaderAuthentication(t *testing.T) {
 		t.Fatalf("Etfs = %+v, %v", etfs, err)
 	}
 
-	batch, err := client.Quote.BatchQuoteShort(ctx, NewBatchQuoteShortQuery([]string{"AAPL", "^VIX"}))
+	batch, err := client.Quote.BatchShort(ctx, NewBatchQuoteShortQuery([]string{"AAPL", "^VIX"}))
 	if err != nil || len(batch) != 2 || batch[1].Symbol != "^VIX" {
-		t.Fatalf("BatchQuoteShort = %+v, %v", batch, err)
+		t.Fatalf("BatchShort = %+v, %v", batch, err)
 	}
 	exchange, err := client.Quote.Exchange(ctx, NewExchangeQuotesQuery("NASDAQ"))
 	if err != nil || len(exchange) == 0 {
@@ -178,7 +178,7 @@ func TestQuoteQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		t.Fatalf("Symbol() normalized the ticker: %q", q.Symbol())
 	}
 
-	_, err := client.Quote.BatchQuoteShort(context.Background(), NewBatchQuoteShortQuery(nil))
+	_, err := client.Quote.BatchShort(context.Background(), NewBatchQuoteShortQuery(nil))
 	if typed := assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrEmptyTickerList) ||
 		typed.Message != "symbols: "+ErrEmptyTickerList.Error() {
 		t.Fatalf("empty ticker list: %v", err)
