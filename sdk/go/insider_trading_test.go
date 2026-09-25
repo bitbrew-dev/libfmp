@@ -46,7 +46,7 @@ func insiderTradingRouter(t *testing.T) http.HandlerFunc {
 func TestInsiderTradingMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, insiderTradingRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	latest, err := client.InsiderTrading.LatestTrades(ctx, NewLatestInsiderTradesQuery())
@@ -110,7 +110,7 @@ func TestInsiderTradingMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 func TestInsiderTradingQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, insiderTradingRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name   string
@@ -174,7 +174,7 @@ func TestInsiderTradingQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestInsiderTradingMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"AAPL","cik":"0000320193","year":2026,"quarter":2}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.InsiderTrading.TradeStatistics(context.Background(), NewInsiderTradeStatisticsQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "insider-trading/statistics")

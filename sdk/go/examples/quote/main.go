@@ -1,7 +1,7 @@
 // Command quote fetches one detailed quote through the Go SDK against an
 // in-process TLS server, so it runs offline and prints no credential. Replace
 // the server with the real origin by building the client from
-// fmp.FmpHeaderFromEnv and dropping WithBaseURL and WithHTTPClient.
+// fmp.FMPHeaderFromEnv and dropping WithBaseURL and WithHTTPClient.
 package main
 
 import (
@@ -59,7 +59,7 @@ func run() error {
 	client, err := fmp.NewClient(
 		fmp.WithBaseURL(server.URL),
 		fmp.WithHTTPClient(server.Client()),
-		fmp.WithAuthentication(fmp.FmpHeader("example-key")),
+		fmp.WithAuthentication(fmp.FMPHeader("example-key")),
 		fmp.WithTimeout(10*time.Second),
 	)
 	if err != nil {

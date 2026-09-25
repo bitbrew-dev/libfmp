@@ -38,7 +38,7 @@ func cotRouter(t *testing.T) http.HandlerFunc {
 func TestCommitmentOfTradersMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, cotRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	full := NewCotQuery().WithSymbol("VX / Index").WithFrom(mustParseDate(t, "2024-01-01")).
 		WithTo(mustParseDate(t, "2024-03-01"))
@@ -89,7 +89,7 @@ func TestCommitmentOfTradersMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestCommitmentOfTradersQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, cotRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name   string
@@ -133,7 +133,7 @@ func TestCommitmentOfTradersMethodsReportNumberKindAsDecodeError(t *testing.T) {
 		t.Fatal("cot_report.json no longer spells pctOfOpenInterestAll as the integer 100")
 	}
 	server, _ := newServer(t, jsonHandler(corrupted))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.CommitmentOfTraders.Report(context.Background(), NewCotQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "commitment-of-traders-report")

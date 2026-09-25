@@ -43,7 +43,7 @@ func fundraisingRouter(t *testing.T) http.HandlerFunc {
 func TestFundraisingMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, fundraisingRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	fund := client.Fundraising
 
@@ -117,7 +117,7 @@ func TestFundraisingMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestFundraisingQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, fundraisingRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	fund := client.Fundraising
 	cases := []struct {
@@ -181,7 +181,7 @@ func TestFundraisingMethodsReportNumberKindAsDecodeError(t *testing.T) {
 		t.Fatal("crowdfunding_offerings_latest.json no longer spells offeringPrice as the decimal 0.1")
 	}
 	server, _ := newServer(t, jsonHandler(corrupted))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Fundraising.LatestCrowdfundingOfferings(context.Background(), NewLatestCrowdfundingOfferingsQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "crowdfunding-offerings-latest")

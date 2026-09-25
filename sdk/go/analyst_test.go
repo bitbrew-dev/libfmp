@@ -46,7 +46,7 @@ func analystRouter(t *testing.T) http.HandlerFunc {
 func TestAnalystMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, analystRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	estimates, err := client.Analyst.FinancialEstimates(ctx,
@@ -100,7 +100,7 @@ func TestAnalystMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestAnalystQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, analystRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	_, err := client.Analyst.FinancialEstimates(ctx, NewFinancialEstimatesQuery("AAPL", "yearly"))
@@ -134,7 +134,7 @@ func TestAnalystQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestAnalystMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"AAPL","targetHigh":400,"targetLow":250}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Analyst.PriceTargetConsensus(context.Background(), NewPriceTargetConsensusQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "price-target-consensus")

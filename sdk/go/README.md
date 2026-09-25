@@ -53,10 +53,10 @@ go list -m -versions github.com/bitbrew-dev/libfmp/sdk/go
 
 `NewClient` validates every option before any request is made. Direct access
 to the FMP origin requires explicit authentication; the client never reads the
-environment on its own, so opt in with `FmpHeaderFromEnv`:
+environment on its own, so opt in with `FMPHeaderFromEnv`:
 
 ```go
-auth, ok := fmp.FmpHeaderFromEnv()
+auth, ok := fmp.FMPHeaderFromEnv()
 if !ok {
 	return errors.New("FMP_API_KEY is not set")
 }
@@ -69,8 +69,8 @@ if err != nil {
 }
 ```
 
-Header modes (`FmpHeader`, `Bearer`, `CustomHeader`, `CustomHeaderWithPrefix`)
-never place a credential in the URL. Query modes (`FmpQuery`, `CustomQuery`)
+Header modes (`FMPHeader`, `Bearer`, `CustomHeader`, `CustomHeaderWithPrefix`)
+never place a credential in the URL. Query modes (`FMPQuery`, `CustomQuery`)
 append the secret as the last query pair of every request. `WithBaseURL` and
 `WithPathPrefix` route the client through a proxy; `WithHTTPClient` injects a
 caller-owned `*http.Client` for tests and custom transports.
@@ -112,7 +112,7 @@ The environment names match the Rust crate's live opt-in tests:
 
 | Variable | Read by |
 | --- | --- |
-| `FMP_API_KEY` | `FmpHeaderFromEnv` and `FmpAPIKeyFromEnv` |
+| `FMP_API_KEY` | `FMPHeaderFromEnv` and `APIKeyFromEnv` |
 | `FMP_LIVE_TESTS` | live tests (`live_test.go`), which run only when it is `1` |
 | `FMP_PROXY_BASE_URL`, `FMP_PROXY_TOKEN`, `FMP_PROXY_PATH_PREFIX`, `FMP_TENANT` | live tests against a proxy |
 

@@ -50,7 +50,7 @@ func TestTransportErrorsNeverEmbedTheRequestURL(t *testing.T) {
 	server := httptest.NewServer(jsonHandler(`[]`))
 	baseURL := server.URL
 	server.Close()
-	client, err := NewClient(WithBaseURL(baseURL), WithAuthentication(FmpQuery(secret)),
+	client, err := NewClient(WithBaseURL(baseURL), WithAuthentication(FMPQuery(secret)),
 		WithTimeout(2*time.Second))
 	if err != nil {
 		t.Fatal(err)
@@ -156,7 +156,7 @@ func TestTopologyNeverRedactsProviderBodies(t *testing.T) {
 func TestSameOriginRedirectIsFollowedWithCredentials(t *testing.T) {
 	t.Parallel()
 	const secret = "redirect-key"
-	for _, auth := range []Authentication{Bearer(secret), FmpQuery(secret)} {
+	for _, auth := range []Authentication{Bearer(secret), FMPQuery(secret)} {
 		server, rec := newServer(t, func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/router/stable/contract-probe" {
 				http.Redirect(w, r, "/router/stable/moved?from=probe#frag", http.StatusFound)
@@ -182,7 +182,7 @@ func TestSameOriginRedirectIsFollowedWithCredentials(t *testing.T) {
 			}
 		}
 		if got := reqs[1].URL.RawQuery; !strings.HasPrefix(got, "from=probe") ||
-			(auth.mode == authFmpQuery && !strings.HasSuffix(got, fmpQueryName+"="+secret)) {
+			(auth.mode == authFMPQuery && !strings.HasSuffix(got, fmpQueryName+"="+secret)) {
 			t.Fatalf("%v: second hop query = %q", auth, got)
 		}
 	}

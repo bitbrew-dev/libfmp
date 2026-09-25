@@ -56,7 +56,7 @@ func chartRouter(t *testing.T) http.HandlerFunc {
 func TestChartMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, chartRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	eodFrom, eodTo := mustParseDate(t, "2026-04-30"), mustParseDate(t, "2026-07-30")
 	from, to := mustParseDate(t, "2024-01-01"), mustParseDate(t, "2024-03-01")
@@ -143,7 +143,7 @@ func TestChartQueriesExposeTheirArgumentsAsGiven(t *testing.T) {
 func TestChartQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, chartRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	for _, tc := range []struct {
 		name   string
@@ -184,7 +184,7 @@ func TestChartQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestChartMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`[{"date":"2026-07-30 13:16:00","open":1,"low":1,"high":1,"volume":1}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Chart.OneHour(context.Background(), NewStockChartIntradayQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "historical-chart/1hour")

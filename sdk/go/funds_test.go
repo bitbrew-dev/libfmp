@@ -47,7 +47,7 @@ func fundsRouter(t *testing.T) http.HandlerFunc {
 func TestFundsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, fundsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	ns := client.Funds
 
@@ -120,7 +120,7 @@ func TestFundsOptionalCikIsOmittedWhenUnset(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte("[]"))
 	})
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	disclosures, err := client.Funds.Disclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4))
@@ -139,7 +139,7 @@ func TestFundsOptionalCikIsOmittedWhenUnset(t *testing.T) {
 func TestFundsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, fundsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	ns := client.Funds
 
@@ -190,7 +190,7 @@ func TestFundsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestFundsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"country":"United States"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Funds.EtfCountryWeightings(context.Background(), NewEtfCountryWeightingsQuery("SPY"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "etf/country-weightings")

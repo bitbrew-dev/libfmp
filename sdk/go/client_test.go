@@ -99,7 +99,7 @@ func TestNewClientRequiresCredentialsForTheDefaultOrigin(t *testing.T) {
 	t.Parallel()
 	_, err := NewClient()
 	assertConfigurationKind(t, err, ConfigurationKindMissingCredential)
-	if _, err := NewClient(WithAuthentication(FmpHeader("k"))); err != nil {
+	if _, err := NewClient(WithAuthentication(FMPHeader("k"))); err != nil {
 		t.Fatalf("authenticated default client: %v", err)
 	}
 	if _, err := NewClient(WithBaseURL("https://proxy.example/router")); err != nil {
@@ -114,7 +114,7 @@ func TestNewClientRejectsInvalidConfiguration(t *testing.T) {
 		opts []Option
 		kind ConfigurationKind
 	}{
-		{"authentication twice", []Option{WithAuthentication(FmpHeader("k")), WithAuthentication(Authentication{})},
+		{"authentication twice", []Option{WithAuthentication(FMPHeader("k")), WithAuthentication(Authentication{})},
 			ConfigurationKindConflictingAuthentication},
 		{"relative base", []Option{WithBaseURL("/relative")}, ConfigurationKindInvalidBaseURL},
 		{"ftp base", []Option{WithBaseURL("ftp://example.test")}, ConfigurationKindInvalidBaseURL},
@@ -124,7 +124,7 @@ func TestNewClientRejectsInvalidConfiguration(t *testing.T) {
 		{"fragment", []Option{WithBaseURL("https://example.test/#f")}, ConfigurationKindUnsafeBaseURL},
 		{"dot prefix", []Option{WithBaseURL("https://example.test"), WithPathPrefix("../x")}, ConfigurationKindInvalidPath},
 		{"query prefix", []Option{WithBaseURL("https://example.test"), WithPathPrefix("a?b")}, ConfigurationKindInvalidPath},
-		{"insecure header auth", []Option{WithBaseURL("http://example.test"), WithAuthentication(FmpHeader("k"))},
+		{"insecure header auth", []Option{WithBaseURL("http://example.test"), WithAuthentication(FMPHeader("k"))},
 			ConfigurationKindInsecureAuthentication},
 		{"insecure localhost name", []Option{WithBaseURL("http://localhost:8080"), WithAuthentication(Bearer("k"))},
 			ConfigurationKindInsecureAuthentication},
@@ -170,15 +170,15 @@ func TestHeaderValuesAcceptObsText(t *testing.T) {
 
 func TestInsecureAuthenticationOverrideAndLoopback(t *testing.T) {
 	t.Parallel()
-	_, err := NewClient(WithBaseURL("http://example.test"), WithAuthentication(FmpHeader("k")),
+	_, err := NewClient(WithBaseURL("http://example.test"), WithAuthentication(FMPHeader("k")),
 		WithDangerAllowInsecureAuthentication())
 	if err != nil {
 		t.Fatalf("override refused: %v", err)
 	}
-	_, err = NewClient(WithBaseURL("http://example.test"), WithAuthentication(FmpHeader("k")))
+	_, err = NewClient(WithBaseURL("http://example.test"), WithAuthentication(FMPHeader("k")))
 	assertConfigurationKind(t, err, ConfigurationKindInsecureAuthentication)
 	for _, base := range []string{"http://127.0.0.1:8080", "http://[::1]:8080"} {
-		if _, err := NewClient(WithBaseURL(base), WithAuthentication(FmpHeader("k"))); err != nil {
+		if _, err := NewClient(WithBaseURL(base), WithAuthentication(FMPHeader("k"))); err != nil {
 			t.Fatalf("loopback %s refused: %v", base, err)
 		}
 	}
@@ -199,7 +199,7 @@ func TestDefaultHeadersCannotReplaceProtectedFields(t *testing.T) {
 func TestRequestCarriesDefaultsHeaderAuthAndOrderedQuery(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"^VIX"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("header-key")),
+	client := newClient(t, server, WithAuthentication(FMPHeader("header-key")),
 		WithDefaultHeader("X-Mode", "default"), WithDefaultHeader("x-mode", "final"),
 		WithUserAgent("custom-agent/1"))
 
@@ -230,7 +230,7 @@ func TestRequestCarriesDefaultsHeaderAuthAndOrderedQuery(t *testing.T) {
 func TestQueryAuthenticationIsAppendedLastAndProtected(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[]`))
-	client := newClient(t, server, WithAuthentication(FmpQuery("query-key")))
+	client := newClient(t, server, WithAuthentication(FMPQuery("query-key")))
 
 	if _, err := probe(t, client, queryParam{"symbol", "AAPL"}); err != nil {
 		t.Fatal(err)

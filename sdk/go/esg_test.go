@@ -38,7 +38,7 @@ func esgRouter(t *testing.T) http.HandlerFunc {
 func TestEsgMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, esgRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	symbol := NewEsgSymbolQuery("BRK.B / Class A")
 
@@ -88,7 +88,7 @@ func TestEsgMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestEsgQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, esgRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name   string
@@ -151,7 +151,7 @@ func TestEsgMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 		t.Fatal("esg_disclosures.json no longer spells the ESGScore member as 56.79")
 	}
 	server, _ := newServer(t, jsonHandler(corrupted))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Esg.Disclosures(context.Background(), NewEsgSymbolQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "esg-disclosures")

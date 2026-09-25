@@ -63,7 +63,7 @@ func ExampleNewClient() {
 	client, err := fmp.NewClient(
 		fmp.WithBaseURL(server.URL),
 		fmp.WithHTTPClient(server.Client()),
-		fmp.WithAuthentication(fmp.FmpHeader(exampleKey)),
+		fmp.WithAuthentication(fmp.FMPHeader(exampleKey)),
 	)
 	if err != nil {
 		fmt.Println("configuration rejected:", err)
@@ -80,10 +80,10 @@ func ExampleNewClient() {
 	// AAPL price 331.85501 change -6.33498 volume 28718014
 }
 
-// ExampleFmpHeaderFromEnv reads FMP_API_KEY and sends it in the apikey
+// ExampleFMPHeaderFromEnv reads FMP_API_KEY and sends it in the apikey
 // header. NewClient never reads the environment on its own, so the opt-in is
 // explicit. Formatting the Authentication never reveals the key.
-func ExampleFmpHeaderFromEnv() {
+func ExampleFMPHeaderFromEnv() {
 	previous, had := os.LookupEnv(fmp.EnvAPIKey)
 	if err := os.Setenv(fmp.EnvAPIKey, exampleKey); err != nil {
 		fmt.Println("setenv failed:", err)
@@ -97,7 +97,7 @@ func ExampleFmpHeaderFromEnv() {
 		}
 	}()
 
-	auth, ok := fmp.FmpHeaderFromEnv()
+	auth, ok := fmp.FMPHeaderFromEnv()
 	if !ok {
 		fmt.Println(fmp.EnvAPIKey, "is not set")
 		return
@@ -125,7 +125,7 @@ func ExampleFmpHeaderFromEnv() {
 	}
 	printQuoteShort(quotes)
 	// Output:
-	// authentication: FmpHeader([REDACTED])
+	// authentication: FMPHeader([REDACTED])
 	// AAPL price 331.85501 change -6.33498 volume 28718014
 }
 

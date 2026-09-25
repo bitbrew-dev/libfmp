@@ -48,7 +48,7 @@ func directoryRouter(t *testing.T) http.HandlerFunc {
 func TestDirectoryMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, directoryRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	companies, err := client.Directory.CompanySymbols(ctx)
@@ -156,7 +156,7 @@ func TestDirectoryQuerySettersReturnCopiesAndKeepGettersNil(t *testing.T) {
 func TestDirectoryMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"exchange":"AMEX","name":"New York Stock Exchange Arca","countryName":"United States of America"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Directory.AvailableExchanges(context.Background(), NewAvailableExchangesQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "available-exchanges")

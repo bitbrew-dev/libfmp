@@ -51,7 +51,7 @@ func congressionalRouter(t *testing.T) http.HandlerFunc {
 func TestCongressionalTradeMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, congressionalRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	senateLatest, err := client.Congressional.LatestSenateDisclosures(ctx,
@@ -96,7 +96,7 @@ func TestCongressionalTradeMethodsUseExactPathsAndWireParameterOrder(t *testing.
 func TestCongressionalMemberAndNetWorthMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, congressionalRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	profiles, err := client.Congressional.Profiles(ctx, NewCongressionalProfilesQuery())
@@ -161,7 +161,7 @@ func assertCongressionalRequests(t *testing.T, rec *recorder, count int) {
 func TestCongressionalQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, congressionalRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name     string
@@ -222,7 +222,7 @@ func TestCongressionalQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestCongressionalMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(string(readFixture(t, "congress_senate_profile.json"))))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Congressional.Positions(context.Background(), NewCongressionalPositionsQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "senate-positions")
@@ -231,7 +231,7 @@ func TestCongressionalMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	}
 
 	server, _ = newServer(t, jsonHandler(`{}`))
-	client = newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client = newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	_, err = client.Congressional.NetWorthAggregated(context.Background(), NewCongressionalNetWorthAggregatedQuery("P000197"))
 	if typed = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "senate-net-worth-aggregated"); typed.Body == nil {
 		t.Fatalf("non-array response kept no safe body: %+v", typed)

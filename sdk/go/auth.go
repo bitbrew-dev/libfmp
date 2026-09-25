@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// EnvAPIKey is the process environment variable read by FmpHeaderFromEnv.
+// EnvAPIKey is the process environment variable read by FMPHeaderFromEnv.
 const EnvAPIKey = "FMP_API_KEY"
 
 const (
@@ -20,8 +20,8 @@ type authMode uint8
 
 const (
 	authNone authMode = iota
-	authFmpHeader
-	authFmpQuery
+	authFMPHeader
+	authFMPQuery
 	authBearer
 	authCustomHeader
 	authCustomQuery
@@ -37,32 +37,32 @@ type Authentication struct {
 	secret string
 }
 
-// FmpHeader sends the FMP API key in the exact "apikey" header.
-func FmpHeader(apiKey string) Authentication {
-	return Authentication{mode: authFmpHeader, name: fmpHeaderName, secret: apiKey}
+// FMPHeader sends the FMP API key in the exact "apikey" header.
+func FMPHeader(apiKey string) Authentication {
+	return Authentication{mode: authFMPHeader, name: fmpHeaderName, secret: apiKey}
 }
 
-// FmpAPIKeyFromEnv reads FMP_API_KEY, trims surrounding whitespace, and
+// APIKeyFromEnv reads FMP_API_KEY, trims surrounding whitespace, and
 // reports false when the variable is unset, empty, or whitespace-only.
-func FmpAPIKeyFromEnv() (string, bool) {
+func APIKeyFromEnv() (string, bool) {
 	value := strings.TrimSpace(os.Getenv(EnvAPIKey))
 	return value, value != ""
 }
 
-// FmpHeaderFromEnv builds FmpHeader authentication from FMP_API_KEY using the
-// normalization of FmpAPIKeyFromEnv. NewClient never reads a credential from
+// FMPHeaderFromEnv builds FMPHeader authentication from FMP_API_KEY using the
+// normalization of APIKeyFromEnv. NewClient never reads a credential from
 // the environment on its own, so callers opt in explicitly.
-func FmpHeaderFromEnv() (Authentication, bool) {
-	key, ok := FmpAPIKeyFromEnv()
+func FMPHeaderFromEnv() (Authentication, bool) {
+	key, ok := APIKeyFromEnv()
 	if !ok {
 		return Authentication{}, false
 	}
-	return FmpHeader(key), true
+	return FMPHeader(key), true
 }
 
-// FmpQuery sends the FMP API key in the "apikey" query parameter.
-func FmpQuery(apiKey string) Authentication {
-	return Authentication{mode: authFmpQuery, name: fmpQueryName, secret: apiKey}
+// FMPQuery sends the FMP API key in the "apikey" query parameter.
+func FMPQuery(apiKey string) Authentication {
+	return Authentication{mode: authFMPQuery, name: fmpQueryName, secret: apiKey}
 }
 
 // Bearer sends an RFC 6750 "Authorization: Bearer ..." header.
@@ -102,10 +102,10 @@ func (a Authentication) String() string {
 	switch a.mode {
 	case authNone:
 		return "None"
-	case authFmpHeader:
-		return "FmpHeader([REDACTED])"
-	case authFmpQuery:
-		return "FmpQuery([REDACTED])"
+	case authFMPHeader:
+		return "FMPHeader([REDACTED])"
+	case authFMPQuery:
+		return "FMPQuery([REDACTED])"
 	case authBearer:
 		return "Bearer([REDACTED])"
 	case authCustomHeader:
@@ -135,9 +135,9 @@ func buildAuthMaterial(a Authentication) (authMaterial, error) {
 	switch a.mode {
 	case authNone:
 		return authMaterial{}, nil
-	case authFmpHeader:
+	case authFMPHeader:
 		return secretHeader(fmpHeaderName, "", a.secret)
-	case authFmpQuery:
+	case authFMPQuery:
 		if err := validateCredential(a.secret); err != nil {
 			return authMaterial{}, err
 		}
@@ -202,9 +202,9 @@ func validateQueryName(name string) error {
 func registerAuthRedaction(redactor *Redactor, a Authentication) error {
 	switch a.mode {
 	case authNone:
-	case authFmpHeader, authBearer:
+	case authFMPHeader, authBearer:
 		redactor.AddSecret(a.secret)
-	case authFmpQuery:
+	case authFMPQuery:
 		redactor.AddSecret(a.secret)
 		if err := redactor.AddSecretQueryName(fmpQueryName); err != nil {
 			return configurationError(ConfigurationKindInvalidQueryName,

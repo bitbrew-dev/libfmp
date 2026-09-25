@@ -30,7 +30,7 @@ func ExampleError() {
 	client, err := fmp.NewClient(
 		fmp.WithBaseURL(server.URL),
 		fmp.WithHTTPClient(server.Client()),
-		fmp.WithAuthentication(fmp.FmpHeader(key)),
+		fmp.WithAuthentication(fmp.FMPHeader(key)),
 	)
 	if err != nil {
 		fmt.Println("configuration rejected:", err)

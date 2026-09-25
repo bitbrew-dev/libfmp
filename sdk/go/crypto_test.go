@@ -46,7 +46,7 @@ func cryptoRouter(t *testing.T) http.HandlerFunc {
 func TestCryptoMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, cryptoRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	eodFrom, eodTo := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-27")
 	from, to := mustParseDate(t, "2024-01-01"), mustParseDate(t, "2024-03-01")
@@ -126,7 +126,7 @@ func TestCryptoAssetChartQueryExposesItsArgumentsAsGiven(t *testing.T) {
 func TestCryptoQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, cryptoRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	for _, tc := range []struct {
 		name   string
@@ -175,7 +175,7 @@ func TestCryptoMethodsReportDecodeErrorsWithEndpointIdentity(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`[{"symbol":"MIOTAUSD","name":"IOTA USD","exchange":"CCC",`+
 		`"icoDate":"2017-11-09","circulatingSupply":4232705124}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	_, err := client.Crypto.List(ctx)
@@ -188,7 +188,7 @@ func TestCryptoMethodsReportDecodeErrorsWithEndpointIdentity(t *testing.T) {
 	}
 
 	object, _ := newServer(t, jsonHandler(`{}`))
-	client = newClient(t, object, WithAuthentication(FmpHeader("route-secret")))
+	client = newClient(t, object, WithAuthentication(FMPHeader("route-secret")))
 	_, err = client.Crypto.ChartOneMinute(ctx, NewAssetChartQuery("BTCUSD"))
 	_ = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "historical-chart/1min")
 	_, err = client.Crypto.Quote(ctx, NewQuoteQuery("BTCUSD"))
