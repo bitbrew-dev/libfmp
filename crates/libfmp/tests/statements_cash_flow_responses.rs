@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -16,7 +20,8 @@ fn historical_fixture_decodes_all_47_documented_fields_exactly() {
     assert_eq!(value[0].as_object().unwrap().len(), 47);
 
     let rows: Vec<CashFlowStatement> = serde_json::from_value(value).unwrap();
-    assert_eq!(rows, [historical_expected()]);
+    assert_eq!(rows.len(), 1);
+    assert_historical(&rows[0]);
     assert_eq!(
         rows[0].net_cash_provided_by_operating_activities,
         111_482_000_000.0
@@ -35,7 +40,8 @@ fn ttm_fixture_reuses_the_same_47_field_bare_array_contract() {
     assert_eq!(value[0].as_object().unwrap().len(), 47);
 
     let rows: Vec<CashFlowStatement> = serde_json::from_value(value).unwrap();
-    assert_eq!(rows, [ttm_expected()]);
+    assert_eq!(rows.len(), 1);
+    assert_ttm(&rows[0]);
     assert_eq!(
         rows[0].net_cash_provided_by_investing_activities,
         -8_568_000_000.0
@@ -98,106 +104,112 @@ fn statement_amounts_preserve_large_integral_values_for_both_endpoints() {
     }
 }
 
-fn historical_expected() -> CashFlowStatement {
-    CashFlowStatement {
-        date: Date::from_str("2025-09-27").unwrap(),
-        symbol: Ticker::new("AAPL").unwrap(),
-        reported_currency: CurrencyCode::new("USD").unwrap(),
-        cik: Cik::new("0000320193").unwrap(),
-        filing_date: Date::from_str("2025-10-31").unwrap(),
-        accepted_date: ApiDateTime::from_str("2025-10-31 06:01:26").unwrap(),
-        fiscal_year: FiscalYearString::new("2025").unwrap(),
-        period: FiscalPeriod::FullYear,
-        net_income: 112_010_000_000.0,
-        depreciation_and_amortization: 11_698_000_000.0,
-        deferred_income_tax: 0.0,
-        stock_based_compensation: 12_863_000_000.0,
-        change_in_working_capital: -25_000_000_000.0,
-        accounts_receivables: -7_029_000_000.0,
-        inventory: 1_400_000_000.0,
-        accounts_payables: 902_000_000.0,
-        other_working_capital: -20_273_000_000.0,
-        other_non_cash_items: -89_000_000.0,
-        net_cash_provided_by_operating_activities: 111_482_000_000.0,
-        investments_in_property_plant_and_equipment: -12_715_000_000.0,
-        acquisitions_net: 0.0,
-        purchases_of_investments: -24_407_000_000.0,
-        sales_maturities_of_investments: 53_797_000_000.0,
-        other_investing_activities: -1_480_000_000.0,
-        net_cash_provided_by_investing_activities: 15_195_000_000.0,
-        net_debt_issuance: -8_483_000_000.0,
-        long_term_net_debt_issuance: -6_451_000_000.0,
-        short_term_net_debt_issuance: -2_032_000_000.0,
-        net_stock_issuance: -90_711_000_000.0,
-        net_common_stock_issuance: -90_711_000_000.0,
-        common_stock_issuance: 0.0,
-        common_stock_repurchased: -90_711_000_000.0,
-        net_preferred_stock_issuance: 0.0,
-        net_dividends_paid: -15_421_000_000.0,
-        common_dividends_paid: -15_421_000_000.0,
-        preferred_dividends_paid: 0.0,
-        other_financing_activities: -6_071_000_000.0,
-        net_cash_provided_by_financing_activities: -120_686_000_000.0,
-        effect_of_forex_changes_on_cash: 0.0,
-        net_change_in_cash: 5_991_000_000.0,
-        cash_at_end_of_period: 35_934_000_000.0,
-        cash_at_beginning_of_period: 29_943_000_000.0,
-        operating_cash_flow: 111_482_000_000.0,
-        capital_expenditure: -12_715_000_000.0,
-        free_cash_flow: 98_767_000_000.0,
-        income_taxes_paid: 43_369_000_000.0,
-        interest_paid: 0.0,
-    }
+fn assert_historical(row: &CashFlowStatement) {
+    assert_row!(
+        row,
+        CashFlowStatement {
+            date: Date::from_str("2025-09-27").unwrap(),
+            symbol: Ticker::new("AAPL").unwrap(),
+            reported_currency: CurrencyCode::new("USD").unwrap(),
+            cik: Cik::new("0000320193").unwrap(),
+            filing_date: Date::from_str("2025-10-31").unwrap(),
+            accepted_date: ApiDateTime::from_str("2025-10-31 06:01:26").unwrap(),
+            fiscal_year: FiscalYearString::new("2025").unwrap(),
+            period: FiscalPeriod::FullYear,
+            net_income: 112_010_000_000.0,
+            depreciation_and_amortization: 11_698_000_000.0,
+            deferred_income_tax: 0.0,
+            stock_based_compensation: 12_863_000_000.0,
+            change_in_working_capital: -25_000_000_000.0,
+            accounts_receivables: -7_029_000_000.0,
+            inventory: 1_400_000_000.0,
+            accounts_payables: 902_000_000.0,
+            other_working_capital: -20_273_000_000.0,
+            other_non_cash_items: -89_000_000.0,
+            net_cash_provided_by_operating_activities: 111_482_000_000.0,
+            investments_in_property_plant_and_equipment: -12_715_000_000.0,
+            acquisitions_net: 0.0,
+            purchases_of_investments: -24_407_000_000.0,
+            sales_maturities_of_investments: 53_797_000_000.0,
+            other_investing_activities: -1_480_000_000.0,
+            net_cash_provided_by_investing_activities: 15_195_000_000.0,
+            net_debt_issuance: -8_483_000_000.0,
+            long_term_net_debt_issuance: -6_451_000_000.0,
+            short_term_net_debt_issuance: -2_032_000_000.0,
+            net_stock_issuance: -90_711_000_000.0,
+            net_common_stock_issuance: -90_711_000_000.0,
+            common_stock_issuance: 0.0,
+            common_stock_repurchased: -90_711_000_000.0,
+            net_preferred_stock_issuance: 0.0,
+            net_dividends_paid: -15_421_000_000.0,
+            common_dividends_paid: -15_421_000_000.0,
+            preferred_dividends_paid: 0.0,
+            other_financing_activities: -6_071_000_000.0,
+            net_cash_provided_by_financing_activities: -120_686_000_000.0,
+            effect_of_forex_changes_on_cash: 0.0,
+            net_change_in_cash: 5_991_000_000.0,
+            cash_at_end_of_period: 35_934_000_000.0,
+            cash_at_beginning_of_period: 29_943_000_000.0,
+            operating_cash_flow: 111_482_000_000.0,
+            capital_expenditure: -12_715_000_000.0,
+            free_cash_flow: 98_767_000_000.0,
+            income_taxes_paid: 43_369_000_000.0,
+            interest_paid: 0.0,
+        }
+    );
 }
 
-fn ttm_expected() -> CashFlowStatement {
-    CashFlowStatement {
-        date: Date::from_str("2026-03-28").unwrap(),
-        symbol: Ticker::new("AAPL").unwrap(),
-        reported_currency: CurrencyCode::new("USD").unwrap(),
-        cik: Cik::new("0000320193").unwrap(),
-        filing_date: Date::from_str("2026-05-01").unwrap(),
-        accepted_date: ApiDateTime::from_str("2026-05-01 10:01:00").unwrap(),
-        fiscal_year: FiscalYearString::new("2026").unwrap(),
-        period: FiscalPeriod::Q2,
-        net_income: 122_575_000_000.0,
-        depreciation_and_amortization: 12_610_000_000.0,
-        deferred_income_tax: 0.0,
-        stock_based_compensation: 13_473_000_000.0,
-        change_in_working_capital: -8_847_000_000.0,
-        accounts_receivables: -4_163_000_000.0,
-        inventory: -542_000_000.0,
-        accounts_payables: 3_209_000_000.0,
-        other_working_capital: -7_351_000_000.0,
-        other_non_cash_items: 411_000_000.0,
-        net_cash_provided_by_operating_activities: 140_222_000_000.0,
-        investments_in_property_plant_and_equipment: -11_048_000_000.0,
-        acquisitions_net: 0.0,
-        purchases_of_investments: -44_397_000_000.0,
-        sales_maturities_of_investments: 49_306_000_000.0,
-        other_investing_activities: -2_429_000_000.0,
-        net_cash_provided_by_investing_activities: -8_568_000_000.0,
-        net_debt_issuance: -14_331_000_000.0,
-        long_term_net_debt_issuance: -10_356_000_000.0,
-        short_term_net_debt_issuance: -3_975_000_000.0,
-        net_stock_issuance: -78_196_000_000.0,
-        net_common_stock_issuance: -78_196_000_000.0,
-        common_stock_issuance: 0.0,
-        common_stock_repurchased: -78_196_000_000.0,
-        net_preferred_stock_issuance: 0.0,
-        net_dividends_paid: -15_550_000_000.0,
-        common_dividends_paid: -15_550_000_000.0,
-        preferred_dividends_paid: 0.0,
-        other_financing_activities: -6_167_000_000.0,
-        net_cash_provided_by_financing_activities: -114_244_000_000.0,
-        effect_of_forex_changes_on_cash: 0.0,
-        net_change_in_cash: 17_410_000_000.0,
-        cash_at_end_of_period: 45_572_000_000.0,
-        cash_at_beginning_of_period: 28_162_000_000.0,
-        operating_cash_flow: 140_222_000_000.0,
-        capital_expenditure: -11_048_000_000.0,
-        free_cash_flow: 129_174_000_000.0,
-        income_taxes_paid: -11_286_000_000.0,
-        interest_paid: 0.0,
-    }
+fn assert_ttm(row: &CashFlowStatement) {
+    assert_row!(
+        row,
+        CashFlowStatement {
+            date: Date::from_str("2026-03-28").unwrap(),
+            symbol: Ticker::new("AAPL").unwrap(),
+            reported_currency: CurrencyCode::new("USD").unwrap(),
+            cik: Cik::new("0000320193").unwrap(),
+            filing_date: Date::from_str("2026-05-01").unwrap(),
+            accepted_date: ApiDateTime::from_str("2026-05-01 10:01:00").unwrap(),
+            fiscal_year: FiscalYearString::new("2026").unwrap(),
+            period: FiscalPeriod::Q2,
+            net_income: 122_575_000_000.0,
+            depreciation_and_amortization: 12_610_000_000.0,
+            deferred_income_tax: 0.0,
+            stock_based_compensation: 13_473_000_000.0,
+            change_in_working_capital: -8_847_000_000.0,
+            accounts_receivables: -4_163_000_000.0,
+            inventory: -542_000_000.0,
+            accounts_payables: 3_209_000_000.0,
+            other_working_capital: -7_351_000_000.0,
+            other_non_cash_items: 411_000_000.0,
+            net_cash_provided_by_operating_activities: 140_222_000_000.0,
+            investments_in_property_plant_and_equipment: -11_048_000_000.0,
+            acquisitions_net: 0.0,
+            purchases_of_investments: -44_397_000_000.0,
+            sales_maturities_of_investments: 49_306_000_000.0,
+            other_investing_activities: -2_429_000_000.0,
+            net_cash_provided_by_investing_activities: -8_568_000_000.0,
+            net_debt_issuance: -14_331_000_000.0,
+            long_term_net_debt_issuance: -10_356_000_000.0,
+            short_term_net_debt_issuance: -3_975_000_000.0,
+            net_stock_issuance: -78_196_000_000.0,
+            net_common_stock_issuance: -78_196_000_000.0,
+            common_stock_issuance: 0.0,
+            common_stock_repurchased: -78_196_000_000.0,
+            net_preferred_stock_issuance: 0.0,
+            net_dividends_paid: -15_550_000_000.0,
+            common_dividends_paid: -15_550_000_000.0,
+            preferred_dividends_paid: 0.0,
+            other_financing_activities: -6_167_000_000.0,
+            net_cash_provided_by_financing_activities: -114_244_000_000.0,
+            effect_of_forex_changes_on_cash: 0.0,
+            net_change_in_cash: 17_410_000_000.0,
+            cash_at_end_of_period: 45_572_000_000.0,
+            cash_at_beginning_of_period: 28_162_000_000.0,
+            operating_cash_flow: 140_222_000_000.0,
+            capital_expenditure: -11_048_000_000.0,
+            free_cash_flow: 129_174_000_000.0,
+            income_taxes_paid: -11_286_000_000.0,
+            interest_paid: 0.0,
+        }
+    );
 }
