@@ -22,9 +22,13 @@ SPACED_SYMBOL_ENCODED = "BRK.B+%2F+Class+A"
 CUSTOM_PATH = "/custom-discounted-cash-flow"
 CUSTOM_LEVERED_PATH = "/custom-levered-discounted-cash-flow"
 CUSTOM_METHODS = [
-    pytest.param("custom_discounted_cash_flow", CUSTOM_PATH, id="custom"),
-    pytest.param("custom_levered_discounted_cash_flow", CUSTOM_LEVERED_PATH, id="custom-levered"),
+    pytest.param("custom", CUSTOM_PATH, id="custom"),
+    pytest.param("custom_levered", CUSTOM_LEVERED_PATH, id="custom-levered"),
 ]
+CUSTOM_FIXTURES = {
+    "custom": "custom_discounted_cash_flow.json",
+    "custom_levered": "custom_levered_discounted_cash_flow.json",
+}
 
 DOCUMENTED_ASSUMPTIONS: dict[str, float] = {
     "revenue_growth_pct": 0.1094119804597946,
@@ -82,9 +86,9 @@ def test_dcf_namespace_is_the_generated_type(client: Any) -> None:
 
 
 def test_discounted_cash_flow_decodes_the_documented_fixture(client: Any, fixture_server: FixtureServer) -> None:
-    """``discounted_cash_flow`` maps to ``/discounted-cash-flow`` with a form-encoded symbol and decodes the row."""
+    """``standard`` maps to ``/discounted-cash-flow`` with a form-encoded symbol and decodes the row."""
     fixture_server.route("/discounted-cash-flow", load_fixture("discounted_cash_flow.json"))
-    rows = client.dcf.discounted_cash_flow(SPACED_SYMBOL)
+    rows = client.dcf.standard(SPACED_SYMBOL)
 
     assert fixture_server.requests[0].target == f"/discounted-cash-flow?symbol={SPACED_SYMBOL_ENCODED}"
     assert len(rows) == 1
@@ -99,9 +103,9 @@ def test_discounted_cash_flow_decodes_the_documented_fixture(client: Any, fixtur
 def test_levered_discounted_cash_flow_decodes_the_documented_fixture(
     client: Any, fixture_server: FixtureServer
 ) -> None:
-    """``levered_discounted_cash_flow`` shares the row model and sends only ``symbol``."""
+    """``levered`` shares the row model and sends only ``symbol``."""
     fixture_server.route("/levered-discounted-cash-flow", load_fixture("levered_discounted_cash_flow.json"))
-    rows = client.dcf.levered_discounted_cash_flow("AAPL")
+    rows = client.dcf.levered("AAPL")
 
     assert fixture_server.requests[0].target == "/levered-discounted-cash-flow?symbol=AAPL"
     assert len(rows) == 1
@@ -111,7 +115,7 @@ def test_levered_discounted_cash_flow_decodes_the_documented_fixture(
     assert row.dcf == pytest.approx(140.6429495133426)
 
 
-@pytest.mark.parametrize("method", ["discounted_cash_flow", "levered_discounted_cash_flow"])
+@pytest.mark.parametrize("method", ["standard", "levered"])
 def test_plain_methods_take_exactly_one_symbol(client: Any, fixture_server: FixtureServer, method: str) -> None:
     """The plain methods require ``symbol`` and accept no assumption keywords."""
     with pytest.raises(TypeError):
@@ -124,7 +128,7 @@ def test_plain_methods_take_exactly_one_symbol(client: Any, fixture_server: Fixt
 def test_custom_discounted_cash_flow_without_assumptions(client: Any, fixture_server: FixtureServer) -> None:
     """With no assumptions the custom route carries only ``symbol`` and decodes the unlevered row."""
     fixture_server.route(CUSTOM_PATH, load_fixture("custom_discounted_cash_flow.json"))
-    rows = client.dcf.custom_discounted_cash_flow("AAPL")
+    rows = client.dcf.custom("AAPL")
 
     assert fixture_server.requests[0].target == f"{CUSTOM_PATH}?symbol=AAPL"
     assert len(rows) == 1
@@ -141,7 +145,7 @@ def test_custom_discounted_cash_flow_without_assumptions(client: Any, fixture_se
 def test_custom_levered_discounted_cash_flow_without_assumptions(client: Any, fixture_server: FixtureServer) -> None:
     """With no assumptions the levered custom route carries only ``symbol`` and decodes the levered row."""
     fixture_server.route(CUSTOM_LEVERED_PATH, load_fixture("custom_levered_discounted_cash_flow.json"))
-    rows = client.dcf.custom_levered_discounted_cash_flow("AAPL")
+    rows = client.dcf.custom_levered("AAPL")
 
     assert fixture_server.requests[0].target == f"{CUSTOM_LEVERED_PATH}?symbol=AAPL"
     assert len(rows) == 1
@@ -159,7 +163,7 @@ def test_custom_methods_encode_every_assumption_in_documented_order(
     client: Any, fixture_server: FixtureServer, method: str, path: str
 ) -> None:
     """All eighteen assumptions follow ``symbol`` in the Rust encoding order, at their exact magnitudes."""
-    fixture_server.route(path, load_fixture(f"{method}.json"))
+    fixture_server.route(path, load_fixture(CUSTOM_FIXTURES[method]))
     rows = getattr(client.dcf, method)(SPACED_SYMBOL, **DOCUMENTED_ASSUMPTIONS)
 
     assert fixture_server.requests[0].target == f"{path}?{DOCUMENTED_QUERY}"
@@ -173,7 +177,7 @@ def test_each_assumption_is_sent_alone_under_its_wire_key(
     client: Any, fixture_server: FixtureServer, method: str, path: str, keyword: str, wire_key: str
 ) -> None:
     """One assumption at a time reaches the wire under its camelCase key, after ``symbol``."""
-    fixture_server.route(path, load_fixture(f"{method}.json"))
+    fixture_server.route(path, load_fixture(CUSTOM_FIXTURES[method]))
     rows = getattr(client.dcf, method)("AAPL", **{keyword: 1.25})
 
     assert fixture_server.requests[0].target == f"{path}?symbol=AAPL&{wire_key}=1.25"
@@ -186,7 +190,7 @@ def test_assumptions_keep_encoding_order_regardless_of_keyword_order(
 ) -> None:
     """Keyword order does not matter: ``beta`` precedes ``riskFreeRate`` on the wire and the rest stay omitted."""
     fixture_server.route(CUSTOM_PATH, load_fixture("custom_discounted_cash_flow.json"))
-    client.dcf.custom_discounted_cash_flow("AAPL", risk_free_rate=3.64, beta=1.244)
+    client.dcf.custom("AAPL", risk_free_rate=3.64, beta=1.244)
 
     assert fixture_server.requests[0].target == f"{CUSTOM_PATH}?symbol=AAPL&beta=1.244&riskFreeRate=3.64"
 
@@ -194,7 +198,7 @@ def test_assumptions_keep_encoding_order_regardless_of_keyword_order(
 def test_zero_negative_and_integral_assumptions_are_encoded_exactly(client: Any, fixture_server: FixtureServer) -> None:
     """``0.0`` is sent as ``0``, negatives keep their sign, and a Python ``int`` is accepted for a float."""
     fixture_server.route(CUSTOM_LEVERED_PATH, load_fixture("custom_levered_discounted_cash_flow.json"))
-    client.dcf.custom_levered_discounted_cash_flow(
+    client.dcf.custom_levered(
         "AAPL", revenue_growth_pct=0.0, tax_rate=-1.25, long_term_growth_rate=4
     )
 
@@ -248,17 +252,17 @@ def test_non_finite_assumption_names_the_keyword(
 def test_non_numeric_assumption_is_a_type_error(client: Any, fixture_server: FixtureServer) -> None:
     """A string where a float is expected fails at extraction, before validation or any request."""
     with pytest.raises(TypeError):
-        client.dcf.custom_discounted_cash_flow("AAPL", beta="1.244")
+        client.dcf.custom("AAPL", beta="1.244")
     assert fixture_server.requests == []
 
 
 @pytest.mark.parametrize(
     "method",
     [
-        "discounted_cash_flow",
-        "levered_discounted_cash_flow",
-        "custom_discounted_cash_flow",
-        "custom_levered_discounted_cash_flow",
+        "standard",
+        "levered",
+        "custom",
+        "custom_levered",
     ],
 )
 @pytest.mark.parametrize(
@@ -284,7 +288,7 @@ def test_status_error_names_the_plain_endpoint(
     """A non-success status carries the libfmp endpoint id, status, and body."""
     fixture_server.route("/discounted-cash-flow", {"error": "denied"}, status=403)
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.dcf.discounted_cash_flow("AAPL")
+        client.dcf.standard("AAPL")
     error = raised.value
     assert error.endpoint == "discounted-cash-flow"
     assert error.status == 403
@@ -297,7 +301,7 @@ def test_status_error_names_the_custom_endpoint(
     """A failing custom route reports the ``custom-discounted-cash-flow`` id and the raw body."""
     fixture_server.route(CUSTOM_PATH, b"not-json", status=500, content_type="text/plain")
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.dcf.custom_discounted_cash_flow("AAPL", beta=1.244)
+        client.dcf.custom("AAPL", beta=1.244)
     assert raised.value.endpoint == "custom-discounted-cash-flow"
     assert raised.value.status == 500
     assert raised.value.body == "not-json"
@@ -309,7 +313,7 @@ def test_decode_error_names_the_levered_endpoint(
     """A non-array body on the levered route surfaces as a decode error with the endpoint id."""
     fixture_server.route("/levered-discounted-cash-flow", {})
     with pytest.raises(errors.FmpDecodeError) as raised:
-        client.dcf.levered_discounted_cash_flow("AAPL")
+        client.dcf.levered("AAPL")
     assert raised.value.endpoint == "levered-discounted-cash-flow"
 
 
@@ -319,14 +323,14 @@ def test_decode_error_names_the_custom_levered_endpoint(
     """A well-formed but incomplete levered row is a decode error naming the custom levered endpoint."""
     fixture_server.route(CUSTOM_LEVERED_PATH, [{"symbol": "AAPL", "year": "2030"}])
     with pytest.raises(errors.FmpDecodeError) as raised:
-        client.dcf.custom_levered_discounted_cash_flow("AAPL")
+        client.dcf.custom_levered("AAPL")
     assert raised.value.endpoint == "custom-levered-discounted-cash-flow"
 
 
 def test_custom_dcf_decodes_fractional_diluted_shares(client: Any, fixture_server: FixtureServer) -> None:
     """Issue #340: a fractional diluted share count decodes as ``float``."""
     fixture_server.route(CUSTOM_PATH, load_fixture("custom_discounted_cash_flow_fractional_synthetic.json"))
-    rows = client.dcf.custom_discounted_cash_flow("AAPL")
+    rows = client.dcf.custom("AAPL")
 
     assert len(rows) == 1
     assert isinstance(rows[0].diluted_shares_outstanding, float)

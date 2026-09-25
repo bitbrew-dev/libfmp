@@ -37,7 +37,7 @@ return `list[dict]` rows instead of models:
 
 ```python
 income = client.statements.income.statement("AAPL", period="annual", limit=5)
-valuation = client.dcf.custom_discounted_cash_flow("AAPL", beta=1.2, tax_rate=0.21)
+valuation = client.dcf.custom("AAPL", beta=1.2, tax_rate=0.21)
 rows = client.sec_filings.search_industry_classifications(symbol="AAPL")
 ```
 

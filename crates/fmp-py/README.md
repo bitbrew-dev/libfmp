@@ -51,7 +51,7 @@ client = FmpClient()
 
 quotes = client.quote.short("AAPL")
 income = client.statements.income.statement("AAPL", period="annual", limit=5)
-valuation = client.dcf.custom_discounted_cash_flow(
+valuation = client.dcf.custom(
     "AAPL", beta=1.2, tax_rate=0.21, long_term_growth_rate=4.0
 )
 ```

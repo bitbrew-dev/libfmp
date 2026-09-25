@@ -77,30 +77,30 @@ func TestDcfMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
 	ctx := context.Background()
 
-	standard, err := client.Dcf.DiscountedCashFlow(ctx, NewDcfQuery("BRK.B / Class A"))
+	standard, err := client.Dcf.Standard(ctx, NewDcfQuery("BRK.B / Class A"))
 	if err != nil || len(standard) != 1 || standard[0].Dcf != 147.10881272667325 {
-		t.Fatalf("DiscountedCashFlow = %+v, %v", standard, err)
+		t.Fatalf("Standard = %+v, %v", standard, err)
 	}
-	levered, err := client.Dcf.LeveredDiscountedCashFlow(ctx, NewDcfQuery("BRK.B / Class A"))
+	levered, err := client.Dcf.Levered(ctx, NewDcfQuery("BRK.B / Class A"))
 	if err != nil || len(levered) != 1 || levered[0].Dcf != 140.6429495133426 {
-		t.Fatalf("LeveredDiscountedCashFlow = %+v, %v", levered, err)
+		t.Fatalf("Levered = %+v, %v", levered, err)
 	}
-	omitted, err := client.Dcf.CustomDiscountedCashFlow(ctx, NewCustomDcfQuery("AAPL"))
+	omitted, err := client.Dcf.Custom(ctx, NewCustomDcfQuery("AAPL"))
 	if err != nil || len(omitted) != 1 || omitted[0].EquityValuePerShare != 147.18 {
-		t.Fatalf("CustomDiscountedCashFlow (no assumptions) = %+v, %v", omitted, err)
+		t.Fatalf("Custom (no assumptions) = %+v, %v", omitted, err)
 	}
-	custom, err := client.Dcf.CustomDiscountedCashFlow(ctx, dcfDocumentedQuery("BRK.B / Class A"))
+	custom, err := client.Dcf.Custom(ctx, dcfDocumentedQuery("BRK.B / Class A"))
 	if err != nil || len(custom) != 1 || custom[0].EquityValuePerShare != 147.18 {
-		t.Fatalf("CustomDiscountedCashFlow (documented) = %+v, %v", custom, err)
+		t.Fatalf("Custom (documented) = %+v, %v", custom, err)
 	}
-	partial, err := client.Dcf.CustomLeveredDiscountedCashFlow(ctx, NewCustomDcfQuery("AAPL").
+	partial, err := client.Dcf.CustomLevered(ctx, NewCustomDcfQuery("AAPL").
 		WithRevenueGrowthPct(0).WithTaxRate(-1.25).WithLongTermGrowthRate(4))
 	if err != nil || len(partial) != 1 || partial[0].EquityValuePerShare != 140.71 {
-		t.Fatalf("CustomLeveredDiscountedCashFlow (partial) = %+v, %v", partial, err)
+		t.Fatalf("CustomLevered (partial) = %+v, %v", partial, err)
 	}
-	full, err := client.Dcf.CustomLeveredDiscountedCashFlow(ctx, dcfDocumentedQuery("BRK.B / Class A"))
+	full, err := client.Dcf.CustomLevered(ctx, dcfDocumentedQuery("BRK.B / Class A"))
 	if err != nil || len(full) != 1 || full[0].EquityValuePerShare != 140.71 {
-		t.Fatalf("CustomLeveredDiscountedCashFlow (documented) = %+v, %v", full, err)
+		t.Fatalf("CustomLevered (documented) = %+v, %v", full, err)
 	}
 
 	requests := rec.all()
@@ -123,18 +123,18 @@ func TestDcfQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
 	ctx := context.Background()
 
-	_, err := client.Dcf.DiscountedCashFlow(ctx, NewDcfQuery("AAPL,MSFT"))
+	_, err := client.Dcf.Standard(ctx, NewDcfQuery("AAPL,MSFT"))
 	typed := assertQuoteError(t, err, CategoryValidation, 0, "")
 	if !errors.Is(err, ErrCommaInTicker) || typed.Message != "symbol: "+ErrCommaInTicker.Error() {
 		t.Fatalf("comma ticker: error = %v", err)
 	}
-	_, err = client.Dcf.CustomLeveredDiscountedCashFlow(ctx, NewCustomDcfQuery(" ").WithBeta(1.2))
+	_, err = client.Dcf.CustomLevered(ctx, NewCustomDcfQuery(" ").WithBeta(1.2))
 	if typed = assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrEmptyValue) ||
 		typed.Message != "symbol: "+ErrEmptyValue.Error() {
 		t.Fatalf("blank ticker: error = %v", err)
 	}
 	for name, value := range map[string]float64{"nan": math.NaN(), "inf": math.Inf(1), "neg-inf": math.Inf(-1)} {
-		_, err = client.Dcf.CustomDiscountedCashFlow(ctx, NewCustomDcfQuery("AAPL").WithBeta(value))
+		_, err = client.Dcf.Custom(ctx, NewCustomDcfQuery("AAPL").WithBeta(value))
 		if typed = assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrNonFiniteDecimal) ||
 			typed.Message != "beta: "+ErrNonFiniteDecimal.Error() {
 			t.Fatalf("%s beta: error = %v", name, err)
@@ -164,19 +164,19 @@ func TestDcfMethodsReportMalformedRootsAsDecodeErrorsPerEndpoint(t *testing.T) {
 		call     func() error
 	}{
 		{"discounted-cash-flow", func() error {
-			_, err := client.Dcf.DiscountedCashFlow(ctx, NewDcfQuery("AAPL"))
+			_, err := client.Dcf.Standard(ctx, NewDcfQuery("AAPL"))
 			return err
 		}},
 		{"levered-discounted-cash-flow", func() error {
-			_, err := client.Dcf.LeveredDiscountedCashFlow(ctx, NewDcfQuery("AAPL"))
+			_, err := client.Dcf.Levered(ctx, NewDcfQuery("AAPL"))
 			return err
 		}},
 		{"custom-discounted-cash-flow", func() error {
-			_, err := client.Dcf.CustomDiscountedCashFlow(ctx, NewCustomDcfQuery("AAPL"))
+			_, err := client.Dcf.Custom(ctx, NewCustomDcfQuery("AAPL"))
 			return err
 		}},
 		{"custom-levered-discounted-cash-flow", func() error {
-			_, err := client.Dcf.CustomLeveredDiscountedCashFlow(ctx, NewCustomDcfQuery("AAPL"))
+			_, err := client.Dcf.CustomLevered(ctx, NewCustomDcfQuery("AAPL"))
 			return err
 		}},
 	}

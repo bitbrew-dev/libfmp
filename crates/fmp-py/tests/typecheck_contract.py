@@ -596,14 +596,14 @@ def check_transcripts_contract(client: FmpClient) -> None:
 def check_dcf_contract(client: FmpClient) -> None:
     """Type-check the flat dcf namespace, the symbol-only methods, and the keyword-only flattened assumptions."""
     dcf: DcfNamespace = client.dcf
-    standard: list[DcfValuation] = dcf.discounted_cash_flow("AAPL")
-    levered: list[DcfValuation] = client.dcf.levered_discounted_cash_flow("AAPL")
+    standard: list[DcfValuation] = dcf.standard("AAPL")
+    levered: list[DcfValuation] = client.dcf.levered("AAPL")
     valued_on: datetime.date = standard[0].date
     value: float = levered[0].dcf
-    custom: list[CustomDcfValuation] = client.dcf.custom_discounted_cash_flow(
+    custom: list[CustomDcfValuation] = client.dcf.custom(
         "AAPL", revenue_growth_pct=0.109, tax_rate=0.149, long_term_growth_rate=4, beta=1.244
     )
-    custom_levered: list[CustomLeveredDcfValuation] = client.dcf.custom_levered_discounted_cash_flow(
+    custom_levered: list[CustomLeveredDcfValuation] = client.dcf.custom_levered(
         "AAPL", cost_of_debt=3.64, cost_of_equity=9.51168, risk_free_rate=3.64
     )
     year: str = custom[0].year
