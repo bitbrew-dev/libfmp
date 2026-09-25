@@ -199,6 +199,59 @@ impl BulkKeyMetricsTtm {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['market_cap'], typing.Literal['enterprise_value_ttm'], typing.Literal['ev_to_sales_ttm'], typing.Literal['ev_to_operating_cash_flow_ttm'], typing.Literal['ev_to_free_cash_flow_ttm'], typing.Literal['ev_to_ebitda_ttm'], typing.Literal['net_debt_to_ebitda_ttm'], typing.Literal['current_ratio_ttm'], typing.Literal['income_quality_ttm'], typing.Literal['graham_number_ttm'], typing.Literal['graham_net_net_ttm'], typing.Literal['tax_burden_ttm'], typing.Literal['interest_burden_ttm'], typing.Literal['working_capital_ttm'], typing.Literal['invested_capital_ttm'], typing.Literal['return_on_assets_ttm'], typing.Literal['operating_return_on_assets_ttm'], typing.Literal['return_on_tangible_assets_ttm'], typing.Literal['return_on_equity_ttm'], typing.Literal['return_on_invested_capital_ttm'], typing.Literal['return_on_capital_employed_ttm'], typing.Literal['earnings_yield_ttm'], typing.Literal['free_cash_flow_yield_ttm'], typing.Literal['capex_to_operating_cash_flow_ttm'], typing.Literal['capex_to_depreciation_ttm'], typing.Literal['capex_to_revenue_ttm'], typing.Literal['sales_general_and_administrative_to_revenue_ttm'], typing.Literal['research_and_development_to_revenue_ttm'], typing.Literal['stock_based_compensation_to_revenue_ttm'], typing.Literal['intangibles_to_total_assets_ttm'], typing.Literal['average_receivables_ttm'], typing.Literal['average_payables_ttm'], typing.Literal['average_inventory_ttm'], typing.Literal['days_of_sales_outstanding_ttm'], typing.Literal['days_of_payables_outstanding_ttm'], typing.Literal['days_of_inventory_outstanding_ttm'], typing.Literal['operating_cycle_ttm'], typing.Literal['cash_conversion_cycle_ttm'], typing.Literal['free_cash_flow_to_equity_ttm'], typing.Literal['free_cash_flow_to_firm_ttm'], typing.Literal['tangible_asset_value_ttm'], typing.Literal['net_current_asset_value_ttm']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "market_cap",
+                "enterprise_value_ttm",
+                "ev_to_sales_ttm",
+                "ev_to_operating_cash_flow_ttm",
+                "ev_to_free_cash_flow_ttm",
+                "ev_to_ebitda_ttm",
+                "net_debt_to_ebitda_ttm",
+                "current_ratio_ttm",
+                "income_quality_ttm",
+                "graham_number_ttm",
+                "graham_net_net_ttm",
+                "tax_burden_ttm",
+                "interest_burden_ttm",
+                "working_capital_ttm",
+                "invested_capital_ttm",
+                "return_on_assets_ttm",
+                "operating_return_on_assets_ttm",
+                "return_on_tangible_assets_ttm",
+                "return_on_equity_ttm",
+                "return_on_invested_capital_ttm",
+                "return_on_capital_employed_ttm",
+                "earnings_yield_ttm",
+                "free_cash_flow_yield_ttm",
+                "capex_to_operating_cash_flow_ttm",
+                "capex_to_depreciation_ttm",
+                "capex_to_revenue_ttm",
+                "sales_general_and_administrative_to_revenue_ttm",
+                "research_and_development_to_revenue_ttm",
+                "stock_based_compensation_to_revenue_ttm",
+                "intangibles_to_total_assets_ttm",
+                "average_receivables_ttm",
+                "average_payables_ttm",
+                "average_inventory_ttm",
+                "days_of_sales_outstanding_ttm",
+                "days_of_payables_outstanding_ttm",
+                "days_of_inventory_outstanding_ttm",
+                "operating_cycle_ttm",
+                "cash_conversion_cycle_ttm",
+                "free_cash_flow_to_equity_ttm",
+                "free_cash_flow_to_firm_ttm",
+                "tangible_asset_value_ttm",
+                "net_current_asset_value_ttm",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -415,6 +468,432 @@ impl BulkKeyMetricsTtm {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BulkKeyMetricsTtm",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("market_cap", self.market_cap.clone().into_bound_py_any(py)?),
+                (
+                    "enterprise_value_ttm",
+                    self.enterprise_value_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ev_to_sales_ttm",
+                    self.ev_to_sales_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ev_to_operating_cash_flow_ttm",
+                    self.ev_to_operating_cash_flow_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ev_to_free_cash_flow_ttm",
+                    self.ev_to_free_cash_flow_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ev_to_ebitda_ttm",
+                    self.ev_to_ebitda_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "net_debt_to_ebitda_ttm",
+                    self.net_debt_to_ebitda_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "current_ratio_ttm",
+                    self.current_ratio_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "income_quality_ttm",
+                    self.income_quality_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "graham_number_ttm",
+                    self.graham_number_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "graham_net_net_ttm",
+                    self.graham_net_net_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "tax_burden_ttm",
+                    self.tax_burden_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "interest_burden_ttm",
+                    self.interest_burden_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "working_capital_ttm",
+                    self.working_capital_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "invested_capital_ttm",
+                    self.invested_capital_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_assets_ttm",
+                    self.return_on_assets_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_return_on_assets_ttm",
+                    self.operating_return_on_assets_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_tangible_assets_ttm",
+                    self.return_on_tangible_assets_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_equity_ttm",
+                    self.return_on_equity_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_invested_capital_ttm",
+                    self.return_on_invested_capital_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_capital_employed_ttm",
+                    self.return_on_capital_employed_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "earnings_yield_ttm",
+                    self.earnings_yield_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_yield_ttm",
+                    self.free_cash_flow_yield_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "capex_to_operating_cash_flow_ttm",
+                    self.capex_to_operating_cash_flow_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "capex_to_depreciation_ttm",
+                    self.capex_to_depreciation_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "capex_to_revenue_ttm",
+                    self.capex_to_revenue_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "sales_general_and_administrative_to_revenue_ttm",
+                    self.sales_general_and_administrative_to_revenue_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "research_and_development_to_revenue_ttm",
+                    self.research_and_development_to_revenue_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "stock_based_compensation_to_revenue_ttm",
+                    self.stock_based_compensation_to_revenue_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "intangibles_to_total_assets_ttm",
+                    self.intangibles_to_total_assets_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "average_receivables_ttm",
+                    self.average_receivables_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "average_payables_ttm",
+                    self.average_payables_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "average_inventory_ttm",
+                    self.average_inventory_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "days_of_sales_outstanding_ttm",
+                    self.days_of_sales_outstanding_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "days_of_payables_outstanding_ttm",
+                    self.days_of_payables_outstanding_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "days_of_inventory_outstanding_ttm",
+                    self.days_of_inventory_outstanding_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cycle_ttm",
+                    self.operating_cycle_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_conversion_cycle_ttm",
+                    self.cash_conversion_cycle_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_to_equity_ttm",
+                    self.free_cash_flow_to_equity_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_to_firm_ttm",
+                    self.free_cash_flow_to_firm_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tangible_asset_value_ttm",
+                    self.tangible_asset_value_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_current_asset_value_ttm",
+                    self.net_current_asset_value_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "market_cap",
+            crate::models::convert::DictValue::dict_value(&self.market_cap, py)?,
+        )?;
+        dict.set_item(
+            "enterprise_value_ttm",
+            crate::models::convert::DictValue::dict_value(&self.enterprise_value_ttm, py)?,
+        )?;
+        dict.set_item(
+            "ev_to_sales_ttm",
+            crate::models::convert::DictValue::dict_value(&self.ev_to_sales_ttm, py)?,
+        )?;
+        dict.set_item(
+            "ev_to_operating_cash_flow_ttm",
+            crate::models::convert::DictValue::dict_value(&self.ev_to_operating_cash_flow_ttm, py)?,
+        )?;
+        dict.set_item(
+            "ev_to_free_cash_flow_ttm",
+            crate::models::convert::DictValue::dict_value(&self.ev_to_free_cash_flow_ttm, py)?,
+        )?;
+        dict.set_item(
+            "ev_to_ebitda_ttm",
+            crate::models::convert::DictValue::dict_value(&self.ev_to_ebitda_ttm, py)?,
+        )?;
+        dict.set_item(
+            "net_debt_to_ebitda_ttm",
+            crate::models::convert::DictValue::dict_value(&self.net_debt_to_ebitda_ttm, py)?,
+        )?;
+        dict.set_item(
+            "current_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.current_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "income_quality_ttm",
+            crate::models::convert::DictValue::dict_value(&self.income_quality_ttm, py)?,
+        )?;
+        dict.set_item(
+            "graham_number_ttm",
+            crate::models::convert::DictValue::dict_value(&self.graham_number_ttm, py)?,
+        )?;
+        dict.set_item(
+            "graham_net_net_ttm",
+            crate::models::convert::DictValue::dict_value(&self.graham_net_net_ttm, py)?,
+        )?;
+        dict.set_item(
+            "tax_burden_ttm",
+            crate::models::convert::DictValue::dict_value(&self.tax_burden_ttm, py)?,
+        )?;
+        dict.set_item(
+            "interest_burden_ttm",
+            crate::models::convert::DictValue::dict_value(&self.interest_burden_ttm, py)?,
+        )?;
+        dict.set_item(
+            "working_capital_ttm",
+            crate::models::convert::DictValue::dict_value(&self.working_capital_ttm, py)?,
+        )?;
+        dict.set_item(
+            "invested_capital_ttm",
+            crate::models::convert::DictValue::dict_value(&self.invested_capital_ttm, py)?,
+        )?;
+        dict.set_item(
+            "return_on_assets_ttm",
+            crate::models::convert::DictValue::dict_value(&self.return_on_assets_ttm, py)?,
+        )?;
+        dict.set_item(
+            "operating_return_on_assets_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.operating_return_on_assets_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "return_on_tangible_assets_ttm",
+            crate::models::convert::DictValue::dict_value(&self.return_on_tangible_assets_ttm, py)?,
+        )?;
+        dict.set_item(
+            "return_on_equity_ttm",
+            crate::models::convert::DictValue::dict_value(&self.return_on_equity_ttm, py)?,
+        )?;
+        dict.set_item(
+            "return_on_invested_capital_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.return_on_invested_capital_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "return_on_capital_employed_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.return_on_capital_employed_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "earnings_yield_ttm",
+            crate::models::convert::DictValue::dict_value(&self.earnings_yield_ttm, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_yield_ttm",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow_yield_ttm, py)?,
+        )?;
+        dict.set_item(
+            "capex_to_operating_cash_flow_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.capex_to_operating_cash_flow_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "capex_to_depreciation_ttm",
+            crate::models::convert::DictValue::dict_value(&self.capex_to_depreciation_ttm, py)?,
+        )?;
+        dict.set_item(
+            "capex_to_revenue_ttm",
+            crate::models::convert::DictValue::dict_value(&self.capex_to_revenue_ttm, py)?,
+        )?;
+        dict.set_item(
+            "sales_general_and_administrative_to_revenue_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.sales_general_and_administrative_to_revenue_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "research_and_development_to_revenue_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.research_and_development_to_revenue_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "stock_based_compensation_to_revenue_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.stock_based_compensation_to_revenue_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "intangibles_to_total_assets_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.intangibles_to_total_assets_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "average_receivables_ttm",
+            crate::models::convert::DictValue::dict_value(&self.average_receivables_ttm, py)?,
+        )?;
+        dict.set_item(
+            "average_payables_ttm",
+            crate::models::convert::DictValue::dict_value(&self.average_payables_ttm, py)?,
+        )?;
+        dict.set_item(
+            "average_inventory_ttm",
+            crate::models::convert::DictValue::dict_value(&self.average_inventory_ttm, py)?,
+        )?;
+        dict.set_item(
+            "days_of_sales_outstanding_ttm",
+            crate::models::convert::DictValue::dict_value(&self.days_of_sales_outstanding_ttm, py)?,
+        )?;
+        dict.set_item(
+            "days_of_payables_outstanding_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.days_of_payables_outstanding_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "days_of_inventory_outstanding_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.days_of_inventory_outstanding_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "operating_cycle_ttm",
+            crate::models::convert::DictValue::dict_value(&self.operating_cycle_ttm, py)?,
+        )?;
+        dict.set_item(
+            "cash_conversion_cycle_ttm",
+            crate::models::convert::DictValue::dict_value(&self.cash_conversion_cycle_ttm, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_to_equity_ttm",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow_to_equity_ttm, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_to_firm_ttm",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow_to_firm_ttm, py)?,
+        )?;
+        dict.set_item(
+            "tangible_asset_value_ttm",
+            crate::models::convert::DictValue::dict_value(&self.tangible_asset_value_ttm, py)?,
+        )?;
+        dict.set_item(
+            "net_current_asset_value_ttm",
+            crate::models::convert::DictValue::dict_value(&self.net_current_asset_value_ttm, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkKeyMetricsTtm> for BulkKeyMetricsTtm {
@@ -470,6 +949,12 @@ impl From<libfmp::responses::bulk::BulkKeyMetricsTtm> for BulkKeyMetricsTtm {
             tangible_asset_value_ttm: value.tangible_asset_value_ttm.into_inner(),
             net_current_asset_value_ttm: value.net_current_asset_value_ttm.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for BulkKeyMetricsTtm {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -734,6 +1219,76 @@ impl BulkFinancialRatiosTtm {
 
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
+
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['gross_profit_margin_ttm'], typing.Literal['ebit_margin_ttm'], typing.Literal['ebitda_margin_ttm'], typing.Literal['operating_profit_margin_ttm'], typing.Literal['pretax_profit_margin_ttm'], typing.Literal['continuous_operations_profit_margin_ttm'], typing.Literal['net_profit_margin_ttm'], typing.Literal['bottom_line_profit_margin_ttm'], typing.Literal['receivables_turnover_ttm'], typing.Literal['payables_turnover_ttm'], typing.Literal['inventory_turnover_ttm'], typing.Literal['fixed_asset_turnover_ttm'], typing.Literal['asset_turnover_ttm'], typing.Literal['current_ratio_ttm'], typing.Literal['quick_ratio_ttm'], typing.Literal['solvency_ratio_ttm'], typing.Literal['cash_ratio_ttm'], typing.Literal['price_to_earnings_ratio_ttm'], typing.Literal['price_to_earnings_growth_ratio_ttm'], typing.Literal['forward_price_to_earnings_growth_ratio_ttm'], typing.Literal['price_to_book_ratio_ttm'], typing.Literal['price_to_sales_ratio_ttm'], typing.Literal['price_to_free_cash_flow_ratio_ttm'], typing.Literal['price_to_operating_cash_flow_ratio_ttm'], typing.Literal['debt_to_assets_ratio_ttm'], typing.Literal['debt_to_equity_ratio_ttm'], typing.Literal['debt_to_capital_ratio_ttm'], typing.Literal['long_term_debt_to_capital_ratio_ttm'], typing.Literal['financial_leverage_ratio_ttm'], typing.Literal['working_capital_turnover_ratio_ttm'], typing.Literal['operating_cash_flow_ratio_ttm'], typing.Literal['operating_cash_flow_sales_ratio_ttm'], typing.Literal['free_cash_flow_operating_cash_flow_ratio_ttm'], typing.Literal['debt_service_coverage_ratio_ttm'], typing.Literal['interest_coverage_ratio_ttm'], typing.Literal['short_term_operating_cash_flow_coverage_ratio_ttm'], typing.Literal['operating_cash_flow_coverage_ratio_ttm'], typing.Literal['capital_expenditure_coverage_ratio_ttm'], typing.Literal['dividend_paid_and_capex_coverage_ratio_ttm'], typing.Literal['dividend_payout_ratio_ttm'], typing.Literal['dividend_yield_ttm'], typing.Literal['enterprise_value_ttm'], typing.Literal['revenue_per_share_ttm'], typing.Literal['net_income_per_share_ttm'], typing.Literal['interest_debt_per_share_ttm'], typing.Literal['cash_per_share_ttm'], typing.Literal['book_value_per_share_ttm'], typing.Literal['tangible_book_value_per_share_ttm'], typing.Literal['shareholders_equity_per_share_ttm'], typing.Literal['operating_cash_flow_per_share_ttm'], typing.Literal['capex_per_share_ttm'], typing.Literal['free_cash_flow_per_share_ttm'], typing.Literal['net_income_per_ebt_ttm'], typing.Literal['ebt_per_ebit_ttm'], typing.Literal['price_to_fair_value_ttm'], typing.Literal['debt_to_market_cap_ttm'], typing.Literal['effective_tax_rate_ttm'], typing.Literal['enterprise_value_multiple_ttm'], typing.Literal['dividend_per_share_ttm']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "gross_profit_margin_ttm",
+                "ebit_margin_ttm",
+                "ebitda_margin_ttm",
+                "operating_profit_margin_ttm",
+                "pretax_profit_margin_ttm",
+                "continuous_operations_profit_margin_ttm",
+                "net_profit_margin_ttm",
+                "bottom_line_profit_margin_ttm",
+                "receivables_turnover_ttm",
+                "payables_turnover_ttm",
+                "inventory_turnover_ttm",
+                "fixed_asset_turnover_ttm",
+                "asset_turnover_ttm",
+                "current_ratio_ttm",
+                "quick_ratio_ttm",
+                "solvency_ratio_ttm",
+                "cash_ratio_ttm",
+                "price_to_earnings_ratio_ttm",
+                "price_to_earnings_growth_ratio_ttm",
+                "forward_price_to_earnings_growth_ratio_ttm",
+                "price_to_book_ratio_ttm",
+                "price_to_sales_ratio_ttm",
+                "price_to_free_cash_flow_ratio_ttm",
+                "price_to_operating_cash_flow_ratio_ttm",
+                "debt_to_assets_ratio_ttm",
+                "debt_to_equity_ratio_ttm",
+                "debt_to_capital_ratio_ttm",
+                "long_term_debt_to_capital_ratio_ttm",
+                "financial_leverage_ratio_ttm",
+                "working_capital_turnover_ratio_ttm",
+                "operating_cash_flow_ratio_ttm",
+                "operating_cash_flow_sales_ratio_ttm",
+                "free_cash_flow_operating_cash_flow_ratio_ttm",
+                "debt_service_coverage_ratio_ttm",
+                "interest_coverage_ratio_ttm",
+                "short_term_operating_cash_flow_coverage_ratio_ttm",
+                "operating_cash_flow_coverage_ratio_ttm",
+                "capital_expenditure_coverage_ratio_ttm",
+                "dividend_paid_and_capex_coverage_ratio_ttm",
+                "dividend_payout_ratio_ttm",
+                "dividend_yield_ttm",
+                "enterprise_value_ttm",
+                "revenue_per_share_ttm",
+                "net_income_per_share_ttm",
+                "interest_debt_per_share_ttm",
+                "cash_per_share_ttm",
+                "book_value_per_share_ttm",
+                "tangible_book_value_per_share_ttm",
+                "shareholders_equity_per_share_ttm",
+                "operating_cash_flow_per_share_ttm",
+                "capex_per_share_ttm",
+                "free_cash_flow_per_share_ttm",
+                "net_income_per_ebt_ttm",
+                "ebt_per_ebit_ttm",
+                "price_to_fair_value_ttm",
+                "debt_to_market_cap_ttm",
+                "effective_tax_rate_ttm",
+                "enterprise_value_multiple_ttm",
+                "dividend_per_share_ttm",
+            ],
+        )
+    }
 
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
@@ -1052,6 +1607,622 @@ impl BulkFinancialRatiosTtm {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BulkFinancialRatiosTtm",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "gross_profit_margin_ttm",
+                    self.gross_profit_margin_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ebit_margin_ttm",
+                    self.ebit_margin_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ebitda_margin_ttm",
+                    self.ebitda_margin_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_profit_margin_ttm",
+                    self.operating_profit_margin_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "pretax_profit_margin_ttm",
+                    self.pretax_profit_margin_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "continuous_operations_profit_margin_ttm",
+                    self.continuous_operations_profit_margin_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_profit_margin_ttm",
+                    self.net_profit_margin_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "bottom_line_profit_margin_ttm",
+                    self.bottom_line_profit_margin_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "receivables_turnover_ttm",
+                    self.receivables_turnover_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "payables_turnover_ttm",
+                    self.payables_turnover_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "inventory_turnover_ttm",
+                    self.inventory_turnover_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "fixed_asset_turnover_ttm",
+                    self.fixed_asset_turnover_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "asset_turnover_ttm",
+                    self.asset_turnover_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "current_ratio_ttm",
+                    self.current_ratio_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "quick_ratio_ttm",
+                    self.quick_ratio_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "solvency_ratio_ttm",
+                    self.solvency_ratio_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_ratio_ttm",
+                    self.cash_ratio_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_earnings_ratio_ttm",
+                    self.price_to_earnings_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_earnings_growth_ratio_ttm",
+                    self.price_to_earnings_growth_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "forward_price_to_earnings_growth_ratio_ttm",
+                    self.forward_price_to_earnings_growth_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_book_ratio_ttm",
+                    self.price_to_book_ratio_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_sales_ratio_ttm",
+                    self.price_to_sales_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_free_cash_flow_ratio_ttm",
+                    self.price_to_free_cash_flow_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_operating_cash_flow_ratio_ttm",
+                    self.price_to_operating_cash_flow_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_to_assets_ratio_ttm",
+                    self.debt_to_assets_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_to_equity_ratio_ttm",
+                    self.debt_to_equity_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_to_capital_ratio_ttm",
+                    self.debt_to_capital_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "long_term_debt_to_capital_ratio_ttm",
+                    self.long_term_debt_to_capital_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "financial_leverage_ratio_ttm",
+                    self.financial_leverage_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "working_capital_turnover_ratio_ttm",
+                    self.working_capital_turnover_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cash_flow_ratio_ttm",
+                    self.operating_cash_flow_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cash_flow_sales_ratio_ttm",
+                    self.operating_cash_flow_sales_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_operating_cash_flow_ratio_ttm",
+                    self.free_cash_flow_operating_cash_flow_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_service_coverage_ratio_ttm",
+                    self.debt_service_coverage_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "interest_coverage_ratio_ttm",
+                    self.interest_coverage_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "short_term_operating_cash_flow_coverage_ratio_ttm",
+                    self.short_term_operating_cash_flow_coverage_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cash_flow_coverage_ratio_ttm",
+                    self.operating_cash_flow_coverage_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "capital_expenditure_coverage_ratio_ttm",
+                    self.capital_expenditure_coverage_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "dividend_paid_and_capex_coverage_ratio_ttm",
+                    self.dividend_paid_and_capex_coverage_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "dividend_payout_ratio_ttm",
+                    self.dividend_payout_ratio_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "dividend_yield_ttm",
+                    self.dividend_yield_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "enterprise_value_ttm",
+                    self.enterprise_value_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_per_share_ttm",
+                    self.revenue_per_share_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "net_income_per_share_ttm",
+                    self.net_income_per_share_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "interest_debt_per_share_ttm",
+                    self.interest_debt_per_share_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_per_share_ttm",
+                    self.cash_per_share_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "book_value_per_share_ttm",
+                    self.book_value_per_share_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tangible_book_value_per_share_ttm",
+                    self.tangible_book_value_per_share_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "shareholders_equity_per_share_ttm",
+                    self.shareholders_equity_per_share_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cash_flow_per_share_ttm",
+                    self.operating_cash_flow_per_share_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "capex_per_share_ttm",
+                    self.capex_per_share_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_per_share_ttm",
+                    self.free_cash_flow_per_share_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_income_per_ebt_ttm",
+                    self.net_income_per_ebt_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ebt_per_ebit_ttm",
+                    self.ebt_per_ebit_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_fair_value_ttm",
+                    self.price_to_fair_value_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_to_market_cap_ttm",
+                    self.debt_to_market_cap_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "effective_tax_rate_ttm",
+                    self.effective_tax_rate_ttm.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "enterprise_value_multiple_ttm",
+                    self.enterprise_value_multiple_ttm
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "dividend_per_share_ttm",
+                    self.dividend_per_share_ttm.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "gross_profit_margin_ttm",
+            crate::models::convert::DictValue::dict_value(&self.gross_profit_margin_ttm, py)?,
+        )?;
+        dict.set_item(
+            "ebit_margin_ttm",
+            crate::models::convert::DictValue::dict_value(&self.ebit_margin_ttm, py)?,
+        )?;
+        dict.set_item(
+            "ebitda_margin_ttm",
+            crate::models::convert::DictValue::dict_value(&self.ebitda_margin_ttm, py)?,
+        )?;
+        dict.set_item(
+            "operating_profit_margin_ttm",
+            crate::models::convert::DictValue::dict_value(&self.operating_profit_margin_ttm, py)?,
+        )?;
+        dict.set_item(
+            "pretax_profit_margin_ttm",
+            crate::models::convert::DictValue::dict_value(&self.pretax_profit_margin_ttm, py)?,
+        )?;
+        dict.set_item(
+            "continuous_operations_profit_margin_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.continuous_operations_profit_margin_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "net_profit_margin_ttm",
+            crate::models::convert::DictValue::dict_value(&self.net_profit_margin_ttm, py)?,
+        )?;
+        dict.set_item(
+            "bottom_line_profit_margin_ttm",
+            crate::models::convert::DictValue::dict_value(&self.bottom_line_profit_margin_ttm, py)?,
+        )?;
+        dict.set_item(
+            "receivables_turnover_ttm",
+            crate::models::convert::DictValue::dict_value(&self.receivables_turnover_ttm, py)?,
+        )?;
+        dict.set_item(
+            "payables_turnover_ttm",
+            crate::models::convert::DictValue::dict_value(&self.payables_turnover_ttm, py)?,
+        )?;
+        dict.set_item(
+            "inventory_turnover_ttm",
+            crate::models::convert::DictValue::dict_value(&self.inventory_turnover_ttm, py)?,
+        )?;
+        dict.set_item(
+            "fixed_asset_turnover_ttm",
+            crate::models::convert::DictValue::dict_value(&self.fixed_asset_turnover_ttm, py)?,
+        )?;
+        dict.set_item(
+            "asset_turnover_ttm",
+            crate::models::convert::DictValue::dict_value(&self.asset_turnover_ttm, py)?,
+        )?;
+        dict.set_item(
+            "current_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.current_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "quick_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.quick_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "solvency_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.solvency_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "cash_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.cash_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "price_to_earnings_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.price_to_earnings_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "price_to_earnings_growth_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.price_to_earnings_growth_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "forward_price_to_earnings_growth_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.forward_price_to_earnings_growth_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "price_to_book_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.price_to_book_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "price_to_sales_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.price_to_sales_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "price_to_free_cash_flow_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.price_to_free_cash_flow_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "price_to_operating_cash_flow_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.price_to_operating_cash_flow_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "debt_to_assets_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.debt_to_assets_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "debt_to_equity_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.debt_to_equity_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "debt_to_capital_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.debt_to_capital_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "long_term_debt_to_capital_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.long_term_debt_to_capital_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "financial_leverage_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.financial_leverage_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "working_capital_turnover_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.working_capital_turnover_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.operating_cash_flow_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow_sales_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.operating_cash_flow_sales_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_operating_cash_flow_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.free_cash_flow_operating_cash_flow_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "debt_service_coverage_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.debt_service_coverage_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "interest_coverage_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.interest_coverage_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "short_term_operating_cash_flow_coverage_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.short_term_operating_cash_flow_coverage_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow_coverage_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.operating_cash_flow_coverage_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "capital_expenditure_coverage_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.capital_expenditure_coverage_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "dividend_paid_and_capex_coverage_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.dividend_paid_and_capex_coverage_ratio_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "dividend_payout_ratio_ttm",
+            crate::models::convert::DictValue::dict_value(&self.dividend_payout_ratio_ttm, py)?,
+        )?;
+        dict.set_item(
+            "dividend_yield_ttm",
+            crate::models::convert::DictValue::dict_value(&self.dividend_yield_ttm, py)?,
+        )?;
+        dict.set_item(
+            "enterprise_value_ttm",
+            crate::models::convert::DictValue::dict_value(&self.enterprise_value_ttm, py)?,
+        )?;
+        dict.set_item(
+            "revenue_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.revenue_per_share_ttm, py)?,
+        )?;
+        dict.set_item(
+            "net_income_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.net_income_per_share_ttm, py)?,
+        )?;
+        dict.set_item(
+            "interest_debt_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.interest_debt_per_share_ttm, py)?,
+        )?;
+        dict.set_item(
+            "cash_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.cash_per_share_ttm, py)?,
+        )?;
+        dict.set_item(
+            "book_value_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.book_value_per_share_ttm, py)?,
+        )?;
+        dict.set_item(
+            "tangible_book_value_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.tangible_book_value_per_share_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "shareholders_equity_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.shareholders_equity_per_share_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(
+                &self.operating_cash_flow_per_share_ttm,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "capex_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.capex_per_share_ttm, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow_per_share_ttm, py)?,
+        )?;
+        dict.set_item(
+            "net_income_per_ebt_ttm",
+            crate::models::convert::DictValue::dict_value(&self.net_income_per_ebt_ttm, py)?,
+        )?;
+        dict.set_item(
+            "ebt_per_ebit_ttm",
+            crate::models::convert::DictValue::dict_value(&self.ebt_per_ebit_ttm, py)?,
+        )?;
+        dict.set_item(
+            "price_to_fair_value_ttm",
+            crate::models::convert::DictValue::dict_value(&self.price_to_fair_value_ttm, py)?,
+        )?;
+        dict.set_item(
+            "debt_to_market_cap_ttm",
+            crate::models::convert::DictValue::dict_value(&self.debt_to_market_cap_ttm, py)?,
+        )?;
+        dict.set_item(
+            "effective_tax_rate_ttm",
+            crate::models::convert::DictValue::dict_value(&self.effective_tax_rate_ttm, py)?,
+        )?;
+        dict.set_item(
+            "enterprise_value_multiple_ttm",
+            crate::models::convert::DictValue::dict_value(&self.enterprise_value_multiple_ttm, py)?,
+        )?;
+        dict.set_item(
+            "dividend_per_share_ttm",
+            crate::models::convert::DictValue::dict_value(&self.dividend_per_share_ttm, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkFinancialRatiosTtm> for BulkFinancialRatiosTtm {
@@ -1145,6 +2316,12 @@ impl From<libfmp::responses::bulk::BulkFinancialRatiosTtm> for BulkFinancialRati
     }
 }
 
+impl crate::models::convert::DictValue for BulkFinancialRatiosTtm {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
+    }
+}
+
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.bulk.metrics", frozen, eq, from_py_object)]
 #[derive(Clone, PartialEq)]
@@ -1169,6 +2346,12 @@ impl BulkStockPeer {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['peers']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "peers"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1179,6 +2362,32 @@ impl BulkStockPeer {
         kwargs.set_item("peers", self.peers.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BulkStockPeer",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("peers", self.peers.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "peers",
+            crate::models::convert::DictValue::dict_value(&self.peers, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkStockPeer> for BulkStockPeer {
@@ -1187,6 +2396,12 @@ impl From<libfmp::responses::bulk::BulkStockPeer> for BulkStockPeer {
             symbol: value.symbol.into_inner(),
             peers: value.peers,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for BulkStockPeer {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -1232,6 +2447,21 @@ impl BulkEarningsSurprise {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['eps_actual'], typing.Literal['eps_estimated'], typing.Literal['last_updated']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "eps_actual",
+                "eps_estimated",
+                "last_updated",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1251,6 +2481,53 @@ impl BulkEarningsSurprise {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BulkEarningsSurprise",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("eps_actual", self.eps_actual.clone().into_bound_py_any(py)?),
+                (
+                    "eps_estimated",
+                    self.eps_estimated.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_updated",
+                    self.last_updated.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "eps_actual",
+            crate::models::convert::DictValue::dict_value(&self.eps_actual, py)?,
+        )?;
+        dict.set_item(
+            "eps_estimated",
+            crate::models::convert::DictValue::dict_value(&self.eps_estimated, py)?,
+        )?;
+        dict.set_item(
+            "last_updated",
+            crate::models::convert::DictValue::dict_value(&self.last_updated, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkEarningsSurprise> for BulkEarningsSurprise {
@@ -1262,5 +2539,11 @@ impl From<libfmp::responses::bulk::BulkEarningsSurprise> for BulkEarningsSurpris
             eps_estimated: value.eps_estimated.into_inner(),
             last_updated: value.last_updated.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for BulkEarningsSurprise {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

@@ -23,6 +23,7 @@ __all__ = [
 @typing.final
 class ActivelyTradingSymbol:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["symbol"], typing.Literal["name"]]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -33,22 +34,43 @@ class ActivelyTradingSymbol:
         cls, *, symbol: builtins.str, name: builtins.str
     ) -> ActivelyTradingSymbol: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class AvailableCountry:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["country"]]
 
     @property
     def country(self) -> builtins.str: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(cls, *, country: builtins.str) -> AvailableCountry: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class AvailableExchange:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["exchange"],
+        typing.Literal["name"],
+        typing.Literal["country_name"],
+        typing.Literal["country_code"],
+        typing.Literal["symbol_suffix"],
+        typing.Literal["delay"],
+    ]
 
     @property
     def exchange(self) -> builtins.str: ...
@@ -74,33 +96,54 @@ class AvailableExchange:
         delay: builtins.str,
     ) -> AvailableExchange: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class AvailableIndustry:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["industry"]]
 
     @property
     def industry(self) -> builtins.str: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(cls, *, industry: builtins.str) -> AvailableIndustry: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class AvailableSector:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["sector"]]
 
     @property
     def sector(self) -> builtins.str: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(cls, *, sector: builtins.str) -> AvailableSector: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CikListing:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["cik"], typing.Literal["company_name"]]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -111,11 +154,18 @@ class CikListing:
         cls, *, cik: builtins.str, company_name: builtins.str
     ) -> CikListing: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CompanySymbol:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["symbol"], typing.Literal["company_name"]]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -126,6 +176,12 @@ class CompanySymbol:
         cls, *, symbol: builtins.str, company_name: builtins.str
     ) -> CompanySymbol: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -205,6 +261,11 @@ class DirectoryNamespace:
 @typing.final
 class EarningsTranscriptAvailability:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["no_of_transcripts"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -221,11 +282,18 @@ class EarningsTranscriptAvailability:
         no_of_transcripts: builtins.str,
     ) -> EarningsTranscriptAvailability: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EtfSymbol:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["symbol"], typing.Literal["name"]]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -234,11 +302,23 @@ class EtfSymbol:
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(cls, *, symbol: builtins.str, name: builtins.str) -> EtfSymbol: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class FinancialStatementSymbol:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["trading_currency"],
+        typing.Literal["reporting_currency"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -258,11 +338,23 @@ class FinancialStatementSymbol:
         reporting_currency: builtins.str,
     ) -> FinancialStatementSymbol: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class SymbolChange:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["company_name"],
+        typing.Literal["old_symbol"],
+        typing.Literal["new_symbol"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -282,3 +374,9 @@ class SymbolChange:
         new_symbol: builtins.str,
     ) -> SymbolChange: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

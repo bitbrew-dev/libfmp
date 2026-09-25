@@ -60,6 +60,15 @@ impl SimpleMovingAverageBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['sma']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "sma"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -74,6 +83,57 @@ impl SimpleMovingAverageBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("sma", self.sma.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "SimpleMovingAverageBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("sma", self.sma.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "sma",
+            crate::models::convert::DictValue::dict_value(&self.sma, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -90,6 +150,12 @@ impl From<libfmp::responses::technical_indicators::SimpleMovingAverageBar>
             volume: value.volume,
             sma: value.sma,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for SimpleMovingAverageBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -148,6 +214,15 @@ impl ExponentialMovingAverageBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['ema']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "ema"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -162,6 +237,57 @@ impl ExponentialMovingAverageBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("ema", self.ema.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "ExponentialMovingAverageBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("ema", self.ema.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "ema",
+            crate::models::convert::DictValue::dict_value(&self.ema, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -178,6 +304,12 @@ impl From<libfmp::responses::technical_indicators::ExponentialMovingAverageBar>
             volume: value.volume,
             ema: value.ema,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for ExponentialMovingAverageBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -236,6 +368,15 @@ impl WeightedMovingAverageBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['wma']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "wma"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -250,6 +391,57 @@ impl WeightedMovingAverageBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("wma", self.wma.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "WeightedMovingAverageBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("wma", self.wma.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "wma",
+            crate::models::convert::DictValue::dict_value(&self.wma, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -266,6 +458,12 @@ impl From<libfmp::responses::technical_indicators::WeightedMovingAverageBar>
             volume: value.volume,
             wma: value.wma,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for WeightedMovingAverageBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -324,6 +522,15 @@ impl DoubleExponentialMovingAverageBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['dema']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "dema"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -338,6 +545,57 @@ impl DoubleExponentialMovingAverageBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("dema", self.dema.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "DoubleExponentialMovingAverageBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("dema", self.dema.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "dema",
+            crate::models::convert::DictValue::dict_value(&self.dema, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -356,6 +614,12 @@ impl From<libfmp::responses::technical_indicators::DoubleExponentialMovingAverag
             volume: value.volume,
             dema: value.dema,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for DoubleExponentialMovingAverageBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -414,6 +678,15 @@ impl TripleExponentialMovingAverageBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['tema']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "tema"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -428,6 +701,57 @@ impl TripleExponentialMovingAverageBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("tema", self.tema.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "TripleExponentialMovingAverageBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("tema", self.tema.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "tema",
+            crate::models::convert::DictValue::dict_value(&self.tema, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -446,6 +770,12 @@ impl From<libfmp::responses::technical_indicators::TripleExponentialMovingAverag
             volume: value.volume,
             tema: value.tema,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for TripleExponentialMovingAverageBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -504,6 +834,15 @@ impl RelativeStrengthIndexBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['rsi']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "rsi"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -518,6 +857,57 @@ impl RelativeStrengthIndexBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("rsi", self.rsi.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "RelativeStrengthIndexBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("rsi", self.rsi.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "rsi",
+            crate::models::convert::DictValue::dict_value(&self.rsi, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -534,6 +924,12 @@ impl From<libfmp::responses::technical_indicators::RelativeStrengthIndexBar>
             volume: value.volume,
             rsi: value.rsi,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for RelativeStrengthIndexBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -592,6 +988,23 @@ impl StandardDeviationBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['standard_deviation']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "standard_deviation",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -610,6 +1023,60 @@ impl StandardDeviationBar {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StandardDeviationBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                (
+                    "standard_deviation",
+                    self.standard_deviation.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "standard_deviation",
+            crate::models::convert::DictValue::dict_value(&self.standard_deviation, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::technical_indicators::StandardDeviationBar> for StandardDeviationBar {
@@ -623,6 +1090,12 @@ impl From<libfmp::responses::technical_indicators::StandardDeviationBar> for Sta
             volume: value.volume,
             standard_deviation: value.standard_deviation,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StandardDeviationBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -681,6 +1154,15 @@ impl WilliamsBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['williams']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "williams"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -696,6 +1178,57 @@ impl WilliamsBar {
         kwargs.set_item("williams", self.williams.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "WilliamsBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("williams", self.williams.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "williams",
+            crate::models::convert::DictValue::dict_value(&self.williams, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::technical_indicators::WilliamsBar> for WilliamsBar {
@@ -709,6 +1242,12 @@ impl From<libfmp::responses::technical_indicators::WilliamsBar> for WilliamsBar 
             volume: value.volume,
             williams: value.williams,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for WilliamsBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -767,6 +1306,15 @@ impl AverageDirectionalIndexBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['adx']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["date", "open", "high", "low", "close", "volume", "adx"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -781,6 +1329,57 @@ impl AverageDirectionalIndexBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("adx", self.adx.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "AverageDirectionalIndexBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("adx", self.adx.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "adx",
+            crate::models::convert::DictValue::dict_value(&self.adx, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -797,5 +1396,11 @@ impl From<libfmp::responses::technical_indicators::AverageDirectionalIndexBar>
             volume: value.volume,
             adx: value.adx,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for AverageDirectionalIndexBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

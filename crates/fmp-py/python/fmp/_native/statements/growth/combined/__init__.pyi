@@ -12,6 +12,52 @@ __all__ = [
 @typing.final
 class FinancialStatementGrowth:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["reported_currency"],
+        typing.Literal["revenue_growth"],
+        typing.Literal["gross_profit_growth"],
+        typing.Literal["ebit_growth"],
+        typing.Literal["operating_income_growth"],
+        typing.Literal["net_income_growth"],
+        typing.Literal["eps_growth"],
+        typing.Literal["eps_diluted_growth"],
+        typing.Literal["weighted_average_shares_growth"],
+        typing.Literal["weighted_average_shares_diluted_growth"],
+        typing.Literal["dividends_per_share_growth"],
+        typing.Literal["operating_cash_flow_growth"],
+        typing.Literal["receivables_growth"],
+        typing.Literal["inventory_growth"],
+        typing.Literal["asset_growth"],
+        typing.Literal["book_value_per_share_growth"],
+        typing.Literal["debt_growth"],
+        typing.Literal["rd_expense_growth"],
+        typing.Literal["sga_expenses_growth"],
+        typing.Literal["free_cash_flow_growth"],
+        typing.Literal["ten_y_revenue_growth_per_share"],
+        typing.Literal["five_y_revenue_growth_per_share"],
+        typing.Literal["three_y_revenue_growth_per_share"],
+        typing.Literal["ten_y_operating_cf_growth_per_share"],
+        typing.Literal["five_y_operating_cf_growth_per_share"],
+        typing.Literal["three_y_operating_cf_growth_per_share"],
+        typing.Literal["ten_y_net_income_growth_per_share"],
+        typing.Literal["five_y_net_income_growth_per_share"],
+        typing.Literal["three_y_net_income_growth_per_share"],
+        typing.Literal["ten_y_shareholders_equity_growth_per_share"],
+        typing.Literal["five_y_shareholders_equity_growth_per_share"],
+        typing.Literal["three_y_shareholders_equity_growth_per_share"],
+        typing.Literal["ten_y_dividend_per_share_growth_per_share"],
+        typing.Literal["five_y_dividend_per_share_growth_per_share"],
+        typing.Literal["three_y_dividend_per_share_growth_per_share"],
+        typing.Literal["ebitda_growth"],
+        typing.Literal["growth_capital_expenditure"],
+        typing.Literal["ten_y_bottom_line_net_income_growth_per_share"],
+        typing.Literal["five_y_bottom_line_net_income_growth_per_share"],
+        typing.Literal["three_y_bottom_line_net_income_growth_per_share"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -151,3 +197,9 @@ class FinancialStatementGrowth:
         three_y_bottom_line_net_income_growth_per_share: builtins.float,
     ) -> FinancialStatementGrowth: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

@@ -115,6 +115,38 @@ impl FinancialEstimate {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['revenue_low'], typing.Literal['revenue_high'], typing.Literal['revenue_avg'], typing.Literal['ebitda_low'], typing.Literal['ebitda_high'], typing.Literal['ebitda_avg'], typing.Literal['ebit_low'], typing.Literal['ebit_high'], typing.Literal['ebit_avg'], typing.Literal['net_income_low'], typing.Literal['net_income_high'], typing.Literal['net_income_avg'], typing.Literal['sga_expense_low'], typing.Literal['sga_expense_high'], typing.Literal['sga_expense_avg'], typing.Literal['eps_avg'], typing.Literal['eps_high'], typing.Literal['eps_low'], typing.Literal['num_analysts_revenue'], typing.Literal['num_analysts_eps']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "revenue_low",
+                "revenue_high",
+                "revenue_avg",
+                "ebitda_low",
+                "ebitda_high",
+                "ebitda_avg",
+                "ebit_low",
+                "ebit_high",
+                "ebit_avg",
+                "net_income_low",
+                "net_income_high",
+                "net_income_avg",
+                "sga_expense_low",
+                "sga_expense_high",
+                "sga_expense_avg",
+                "eps_avg",
+                "eps_high",
+                "eps_low",
+                "num_analysts_revenue",
+                "num_analysts_eps",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -181,6 +213,168 @@ impl FinancialEstimate {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "FinancialEstimate",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "revenue_low",
+                    self.revenue_low.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_high",
+                    self.revenue_high.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_avg",
+                    self.revenue_avg.clone().into_bound_py_any(py)?,
+                ),
+                ("ebitda_low", self.ebitda_low.clone().into_bound_py_any(py)?),
+                (
+                    "ebitda_high",
+                    self.ebitda_high.clone().into_bound_py_any(py)?,
+                ),
+                ("ebitda_avg", self.ebitda_avg.clone().into_bound_py_any(py)?),
+                ("ebit_low", self.ebit_low.clone().into_bound_py_any(py)?),
+                ("ebit_high", self.ebit_high.clone().into_bound_py_any(py)?),
+                ("ebit_avg", self.ebit_avg.clone().into_bound_py_any(py)?),
+                (
+                    "net_income_low",
+                    self.net_income_low.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "net_income_high",
+                    self.net_income_high.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "net_income_avg",
+                    self.net_income_avg.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "sga_expense_low",
+                    self.sga_expense_low.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "sga_expense_high",
+                    self.sga_expense_high.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "sga_expense_avg",
+                    self.sga_expense_avg.clone().into_bound_py_any(py)?,
+                ),
+                ("eps_avg", self.eps_avg.clone().into_bound_py_any(py)?),
+                ("eps_high", self.eps_high.clone().into_bound_py_any(py)?),
+                ("eps_low", self.eps_low.clone().into_bound_py_any(py)?),
+                (
+                    "num_analysts_revenue",
+                    self.num_analysts_revenue.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "num_analysts_eps",
+                    self.num_analysts_eps.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "revenue_low",
+            crate::models::convert::DictValue::dict_value(&self.revenue_low, py)?,
+        )?;
+        dict.set_item(
+            "revenue_high",
+            crate::models::convert::DictValue::dict_value(&self.revenue_high, py)?,
+        )?;
+        dict.set_item(
+            "revenue_avg",
+            crate::models::convert::DictValue::dict_value(&self.revenue_avg, py)?,
+        )?;
+        dict.set_item(
+            "ebitda_low",
+            crate::models::convert::DictValue::dict_value(&self.ebitda_low, py)?,
+        )?;
+        dict.set_item(
+            "ebitda_high",
+            crate::models::convert::DictValue::dict_value(&self.ebitda_high, py)?,
+        )?;
+        dict.set_item(
+            "ebitda_avg",
+            crate::models::convert::DictValue::dict_value(&self.ebitda_avg, py)?,
+        )?;
+        dict.set_item(
+            "ebit_low",
+            crate::models::convert::DictValue::dict_value(&self.ebit_low, py)?,
+        )?;
+        dict.set_item(
+            "ebit_high",
+            crate::models::convert::DictValue::dict_value(&self.ebit_high, py)?,
+        )?;
+        dict.set_item(
+            "ebit_avg",
+            crate::models::convert::DictValue::dict_value(&self.ebit_avg, py)?,
+        )?;
+        dict.set_item(
+            "net_income_low",
+            crate::models::convert::DictValue::dict_value(&self.net_income_low, py)?,
+        )?;
+        dict.set_item(
+            "net_income_high",
+            crate::models::convert::DictValue::dict_value(&self.net_income_high, py)?,
+        )?;
+        dict.set_item(
+            "net_income_avg",
+            crate::models::convert::DictValue::dict_value(&self.net_income_avg, py)?,
+        )?;
+        dict.set_item(
+            "sga_expense_low",
+            crate::models::convert::DictValue::dict_value(&self.sga_expense_low, py)?,
+        )?;
+        dict.set_item(
+            "sga_expense_high",
+            crate::models::convert::DictValue::dict_value(&self.sga_expense_high, py)?,
+        )?;
+        dict.set_item(
+            "sga_expense_avg",
+            crate::models::convert::DictValue::dict_value(&self.sga_expense_avg, py)?,
+        )?;
+        dict.set_item(
+            "eps_avg",
+            crate::models::convert::DictValue::dict_value(&self.eps_avg, py)?,
+        )?;
+        dict.set_item(
+            "eps_high",
+            crate::models::convert::DictValue::dict_value(&self.eps_high, py)?,
+        )?;
+        dict.set_item(
+            "eps_low",
+            crate::models::convert::DictValue::dict_value(&self.eps_low, py)?,
+        )?;
+        dict.set_item(
+            "num_analysts_revenue",
+            crate::models::convert::DictValue::dict_value(&self.num_analysts_revenue, py)?,
+        )?;
+        dict.set_item(
+            "num_analysts_eps",
+            crate::models::convert::DictValue::dict_value(&self.num_analysts_eps, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::FinancialEstimate> for FinancialEstimate {
@@ -209,6 +403,12 @@ impl From<libfmp::responses::analyst::FinancialEstimate> for FinancialEstimate {
             num_analysts_revenue: value.num_analysts_revenue,
             num_analysts_eps: value.num_analysts_eps,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for FinancialEstimate {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -270,6 +470,25 @@ impl RatingSnapshot {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['rating'], typing.Literal['overall_score'], typing.Literal['discounted_cash_flow_score'], typing.Literal['return_on_equity_score'], typing.Literal['return_on_assets_score'], typing.Literal['debt_to_equity_score'], typing.Literal['price_to_earnings_score'], typing.Literal['price_to_book_score']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "rating",
+                "overall_score",
+                "discounted_cash_flow_score",
+                "return_on_equity_score",
+                "return_on_assets_score",
+                "debt_to_equity_score",
+                "price_to_earnings_score",
+                "price_to_book_score",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -310,6 +529,90 @@ impl RatingSnapshot {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "RatingSnapshot",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("rating", self.rating.clone().into_bound_py_any(py)?),
+                (
+                    "overall_score",
+                    self.overall_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "discounted_cash_flow_score",
+                    self.discounted_cash_flow_score
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_equity_score",
+                    self.return_on_equity_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_assets_score",
+                    self.return_on_assets_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_to_equity_score",
+                    self.debt_to_equity_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_earnings_score",
+                    self.price_to_earnings_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_book_score",
+                    self.price_to_book_score.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "rating",
+            crate::models::convert::DictValue::dict_value(&self.rating, py)?,
+        )?;
+        dict.set_item(
+            "overall_score",
+            crate::models::convert::DictValue::dict_value(&self.overall_score, py)?,
+        )?;
+        dict.set_item(
+            "discounted_cash_flow_score",
+            crate::models::convert::DictValue::dict_value(&self.discounted_cash_flow_score, py)?,
+        )?;
+        dict.set_item(
+            "return_on_equity_score",
+            crate::models::convert::DictValue::dict_value(&self.return_on_equity_score, py)?,
+        )?;
+        dict.set_item(
+            "return_on_assets_score",
+            crate::models::convert::DictValue::dict_value(&self.return_on_assets_score, py)?,
+        )?;
+        dict.set_item(
+            "debt_to_equity_score",
+            crate::models::convert::DictValue::dict_value(&self.debt_to_equity_score, py)?,
+        )?;
+        dict.set_item(
+            "price_to_earnings_score",
+            crate::models::convert::DictValue::dict_value(&self.price_to_earnings_score, py)?,
+        )?;
+        dict.set_item(
+            "price_to_book_score",
+            crate::models::convert::DictValue::dict_value(&self.price_to_book_score, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::RatingSnapshot> for RatingSnapshot {
@@ -325,6 +628,12 @@ impl From<libfmp::responses::analyst::RatingSnapshot> for RatingSnapshot {
             price_to_earnings_score: value.price_to_earnings_score,
             price_to_book_score: value.price_to_book_score,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for RatingSnapshot {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -390,6 +699,26 @@ impl HistoricalRating {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['rating'], typing.Literal['overall_score'], typing.Literal['discounted_cash_flow_score'], typing.Literal['return_on_equity_score'], typing.Literal['return_on_assets_score'], typing.Literal['debt_to_equity_score'], typing.Literal['price_to_earnings_score'], typing.Literal['price_to_book_score']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "rating",
+                "overall_score",
+                "discounted_cash_flow_score",
+                "return_on_equity_score",
+                "return_on_assets_score",
+                "debt_to_equity_score",
+                "price_to_earnings_score",
+                "price_to_book_score",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -431,6 +760,95 @@ impl HistoricalRating {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "HistoricalRating",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("rating", self.rating.clone().into_bound_py_any(py)?),
+                (
+                    "overall_score",
+                    self.overall_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "discounted_cash_flow_score",
+                    self.discounted_cash_flow_score
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_equity_score",
+                    self.return_on_equity_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "return_on_assets_score",
+                    self.return_on_assets_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_to_equity_score",
+                    self.debt_to_equity_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_earnings_score",
+                    self.price_to_earnings_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_to_book_score",
+                    self.price_to_book_score.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "rating",
+            crate::models::convert::DictValue::dict_value(&self.rating, py)?,
+        )?;
+        dict.set_item(
+            "overall_score",
+            crate::models::convert::DictValue::dict_value(&self.overall_score, py)?,
+        )?;
+        dict.set_item(
+            "discounted_cash_flow_score",
+            crate::models::convert::DictValue::dict_value(&self.discounted_cash_flow_score, py)?,
+        )?;
+        dict.set_item(
+            "return_on_equity_score",
+            crate::models::convert::DictValue::dict_value(&self.return_on_equity_score, py)?,
+        )?;
+        dict.set_item(
+            "return_on_assets_score",
+            crate::models::convert::DictValue::dict_value(&self.return_on_assets_score, py)?,
+        )?;
+        dict.set_item(
+            "debt_to_equity_score",
+            crate::models::convert::DictValue::dict_value(&self.debt_to_equity_score, py)?,
+        )?;
+        dict.set_item(
+            "price_to_earnings_score",
+            crate::models::convert::DictValue::dict_value(&self.price_to_earnings_score, py)?,
+        )?;
+        dict.set_item(
+            "price_to_book_score",
+            crate::models::convert::DictValue::dict_value(&self.price_to_book_score, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::HistoricalRating> for HistoricalRating {
@@ -447,6 +865,12 @@ impl From<libfmp::responses::analyst::HistoricalRating> for HistoricalRating {
             price_to_earnings_score: value.price_to_earnings_score,
             price_to_book_score: value.price_to_book_score,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for HistoricalRating {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -512,6 +936,26 @@ impl PriceTargetSummary {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['last_month_count'], typing.Literal['last_month_avg_price_target'], typing.Literal['last_quarter_count'], typing.Literal['last_quarter_avg_price_target'], typing.Literal['last_year_count'], typing.Literal['last_year_avg_price_target'], typing.Literal['all_time_count'], typing.Literal['all_time_avg_price_target'], typing.Literal['publishers']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "last_month_count",
+                "last_month_avg_price_target",
+                "last_quarter_count",
+                "last_quarter_avg_price_target",
+                "last_year_count",
+                "last_year_avg_price_target",
+                "all_time_count",
+                "all_time_avg_price_target",
+                "publishers",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -562,6 +1006,104 @@ impl PriceTargetSummary {
         kwargs.set_item("publishers", self.publishers.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "PriceTargetSummary",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "last_month_count",
+                    self.last_month_count.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_month_avg_price_target",
+                    self.last_month_avg_price_target
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "last_quarter_count",
+                    self.last_quarter_count.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_quarter_avg_price_target",
+                    self.last_quarter_avg_price_target
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "last_year_count",
+                    self.last_year_count.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_year_avg_price_target",
+                    self.last_year_avg_price_target
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "all_time_count",
+                    self.all_time_count.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "all_time_avg_price_target",
+                    self.all_time_avg_price_target
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                ("publishers", self.publishers.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "last_month_count",
+            crate::models::convert::DictValue::dict_value(&self.last_month_count, py)?,
+        )?;
+        dict.set_item(
+            "last_month_avg_price_target",
+            crate::models::convert::DictValue::dict_value(&self.last_month_avg_price_target, py)?,
+        )?;
+        dict.set_item(
+            "last_quarter_count",
+            crate::models::convert::DictValue::dict_value(&self.last_quarter_count, py)?,
+        )?;
+        dict.set_item(
+            "last_quarter_avg_price_target",
+            crate::models::convert::DictValue::dict_value(&self.last_quarter_avg_price_target, py)?,
+        )?;
+        dict.set_item(
+            "last_year_count",
+            crate::models::convert::DictValue::dict_value(&self.last_year_count, py)?,
+        )?;
+        dict.set_item(
+            "last_year_avg_price_target",
+            crate::models::convert::DictValue::dict_value(&self.last_year_avg_price_target, py)?,
+        )?;
+        dict.set_item(
+            "all_time_count",
+            crate::models::convert::DictValue::dict_value(&self.all_time_count, py)?,
+        )?;
+        dict.set_item(
+            "all_time_avg_price_target",
+            crate::models::convert::DictValue::dict_value(&self.all_time_avg_price_target, py)?,
+        )?;
+        dict.set_item(
+            "publishers",
+            crate::models::convert::DictValue::dict_value(&self.publishers, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::PriceTargetSummary> for PriceTargetSummary {
@@ -578,6 +1120,12 @@ impl From<libfmp::responses::analyst::PriceTargetSummary> for PriceTargetSummary
             all_time_avg_price_target: value.all_time_avg_price_target,
             publishers: value.publishers,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for PriceTargetSummary {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -623,6 +1171,21 @@ impl PriceTargetConsensus {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['target_high'], typing.Literal['target_low'], typing.Literal['target_consensus'], typing.Literal['target_median']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "target_high",
+                "target_low",
+                "target_consensus",
+                "target_median",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -645,6 +1208,56 @@ impl PriceTargetConsensus {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "PriceTargetConsensus",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "target_high",
+                    self.target_high.clone().into_bound_py_any(py)?,
+                ),
+                ("target_low", self.target_low.clone().into_bound_py_any(py)?),
+                (
+                    "target_consensus",
+                    self.target_consensus.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "target_median",
+                    self.target_median.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "target_high",
+            crate::models::convert::DictValue::dict_value(&self.target_high, py)?,
+        )?;
+        dict.set_item(
+            "target_low",
+            crate::models::convert::DictValue::dict_value(&self.target_low, py)?,
+        )?;
+        dict.set_item(
+            "target_consensus",
+            crate::models::convert::DictValue::dict_value(&self.target_consensus, py)?,
+        )?;
+        dict.set_item(
+            "target_median",
+            crate::models::convert::DictValue::dict_value(&self.target_median, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::PriceTargetConsensus> for PriceTargetConsensus {
@@ -656,6 +1269,12 @@ impl From<libfmp::responses::analyst::PriceTargetConsensus> for PriceTargetConse
             target_consensus: value.target_consensus,
             target_median: value.target_median,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for PriceTargetConsensus {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -705,6 +1324,22 @@ impl StockGrade {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['grading_company'], typing.Literal['previous_grade'], typing.Literal['new_grade'], typing.Literal['action']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "grading_company",
+                "previous_grade",
+                "new_grade",
+                "action",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -725,6 +1360,58 @@ impl StockGrade {
         kwargs.set_item("action", self.action.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockGrade",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "grading_company",
+                    self.grading_company.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "previous_grade",
+                    self.previous_grade.clone().into_bound_py_any(py)?,
+                ),
+                ("new_grade", self.new_grade.clone().into_bound_py_any(py)?),
+                ("action", self.action.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "grading_company",
+            crate::models::convert::DictValue::dict_value(&self.grading_company, py)?,
+        )?;
+        dict.set_item(
+            "previous_grade",
+            crate::models::convert::DictValue::dict_value(&self.previous_grade, py)?,
+        )?;
+        dict.set_item(
+            "new_grade",
+            crate::models::convert::DictValue::dict_value(&self.new_grade, py)?,
+        )?;
+        dict.set_item(
+            "action",
+            crate::models::convert::DictValue::dict_value(&self.action, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::StockGrade> for StockGrade {
@@ -737,6 +1424,12 @@ impl From<libfmp::responses::analyst::StockGrade> for StockGrade {
             new_grade: value.new_grade,
             action: value.action,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockGrade {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -790,6 +1483,23 @@ impl HistoricalStockGrade {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['analyst_ratings_strong_buy'], typing.Literal['analyst_ratings_buy'], typing.Literal['analyst_ratings_hold'], typing.Literal['analyst_ratings_sell'], typing.Literal['analyst_ratings_strong_sell']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "analyst_ratings_strong_buy",
+                "analyst_ratings_buy",
+                "analyst_ratings_hold",
+                "analyst_ratings_sell",
+                "analyst_ratings_strong_sell",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -824,6 +1534,76 @@ impl HistoricalStockGrade {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "HistoricalStockGrade",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "analyst_ratings_strong_buy",
+                    self.analyst_ratings_strong_buy
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "analyst_ratings_buy",
+                    self.analyst_ratings_buy.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "analyst_ratings_hold",
+                    self.analyst_ratings_hold.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "analyst_ratings_sell",
+                    self.analyst_ratings_sell.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "analyst_ratings_strong_sell",
+                    self.analyst_ratings_strong_sell
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "analyst_ratings_strong_buy",
+            crate::models::convert::DictValue::dict_value(&self.analyst_ratings_strong_buy, py)?,
+        )?;
+        dict.set_item(
+            "analyst_ratings_buy",
+            crate::models::convert::DictValue::dict_value(&self.analyst_ratings_buy, py)?,
+        )?;
+        dict.set_item(
+            "analyst_ratings_hold",
+            crate::models::convert::DictValue::dict_value(&self.analyst_ratings_hold, py)?,
+        )?;
+        dict.set_item(
+            "analyst_ratings_sell",
+            crate::models::convert::DictValue::dict_value(&self.analyst_ratings_sell, py)?,
+        )?;
+        dict.set_item(
+            "analyst_ratings_strong_sell",
+            crate::models::convert::DictValue::dict_value(&self.analyst_ratings_strong_sell, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::HistoricalStockGrade> for HistoricalStockGrade {
@@ -837,6 +1617,12 @@ impl From<libfmp::responses::analyst::HistoricalStockGrade> for HistoricalStockG
             analyst_ratings_sell: value.analyst_ratings_sell,
             analyst_ratings_strong_sell: value.analyst_ratings_strong_sell,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for HistoricalStockGrade {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -890,6 +1676,23 @@ impl StockGradesSummary {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['strong_buy'], typing.Literal['buy'], typing.Literal['hold'], typing.Literal['sell'], typing.Literal['strong_sell'], typing.Literal['consensus']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "strong_buy",
+                "buy",
+                "hold",
+                "sell",
+                "strong_sell",
+                "consensus",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -908,6 +1711,60 @@ impl StockGradesSummary {
         kwargs.set_item("consensus", self.consensus.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockGradesSummary",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("strong_buy", self.strong_buy.clone().into_bound_py_any(py)?),
+                ("buy", self.buy.clone().into_bound_py_any(py)?),
+                ("hold", self.hold.clone().into_bound_py_any(py)?),
+                ("sell", self.sell.clone().into_bound_py_any(py)?),
+                (
+                    "strong_sell",
+                    self.strong_sell.clone().into_bound_py_any(py)?,
+                ),
+                ("consensus", self.consensus.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "strong_buy",
+            crate::models::convert::DictValue::dict_value(&self.strong_buy, py)?,
+        )?;
+        dict.set_item(
+            "buy",
+            crate::models::convert::DictValue::dict_value(&self.buy, py)?,
+        )?;
+        dict.set_item(
+            "hold",
+            crate::models::convert::DictValue::dict_value(&self.hold, py)?,
+        )?;
+        dict.set_item(
+            "sell",
+            crate::models::convert::DictValue::dict_value(&self.sell, py)?,
+        )?;
+        dict.set_item(
+            "strong_sell",
+            crate::models::convert::DictValue::dict_value(&self.strong_sell, py)?,
+        )?;
+        dict.set_item(
+            "consensus",
+            crate::models::convert::DictValue::dict_value(&self.consensus, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::analyst::StockGradesSummary> for StockGradesSummary {
@@ -921,5 +1778,11 @@ impl From<libfmp::responses::analyst::StockGradesSummary> for StockGradesSummary
             strong_sell: value.strong_sell,
             consensus: value.consensus,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockGradesSummary {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

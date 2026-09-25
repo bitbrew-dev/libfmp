@@ -5,10 +5,80 @@
 //! `serde_json::Number`) share the exact converter used for `dynamic` rows in
 //! [`crate::convert`], so integer literals reach Python as exact `int`s at any
 //! magnitude and non-integer numbers as `float`s on both paths.
+//!
+//! It also holds the shared pieces of the generated `__repr__` and
+//! `to_dict()` methods.
+
+use pyo3::IntoPyObjectExt;
+use pyo3::prelude::*;
+use pyo3::types::PyList;
 
 pub(crate) use crate::convert::{
     dynamic_json_to_py as json_to_py, dynamic_object_to_py as object_to_py, number_to_py,
 };
+
+/// A model field as `to_dict()` stores it: native values as-is, nested models
+/// as their own `to_dict()`, recursively through `Option` and `Vec`.
+pub(crate) trait DictValue {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>>;
+}
+
+macro_rules! native_dict_value {
+    ($($ty:ty),+ $(,)?) => {
+        $(impl DictValue for $ty {
+            fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+                self.clone().into_bound_py_any(py)
+            }
+        })+
+    };
+}
+
+native_dict_value!(
+    String,
+    bool,
+    f32,
+    f64,
+    i8,
+    i16,
+    i32,
+    i64,
+    isize,
+    u8,
+    u16,
+    u32,
+    u64,
+    usize,
+    chrono::NaiveDate,
+    chrono::NaiveDateTime,
+);
+
+impl<T: DictValue> DictValue for Option<T> {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        match self {
+            Some(value) => value.dict_value(py),
+            None => Ok(py.None().into_bound(py)),
+        }
+    }
+}
+
+impl<T: DictValue> DictValue for Vec<T> {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        let items = self
+            .iter()
+            .map(|item| item.dict_value(py))
+            .collect::<PyResult<Vec<_>>>()?;
+        Ok(PyList::new(py, items)?.into_any())
+    }
+}
+
+/// Renders `Name(field=<repr>, ...)` from each field's Python `repr()`.
+pub(crate) fn render_repr(name: &str, fields: &[(&str, Bound<'_, PyAny>)]) -> PyResult<String> {
+    let mut parts = Vec::with_capacity(fields.len());
+    for (field, value) in fields {
+        parts.push(format!("{field}={}", value.repr()?.to_cow()?));
+    }
+    Ok(format!("{name}({})", parts.join(", ")))
+}
 
 #[cfg(test)]
 mod tests {

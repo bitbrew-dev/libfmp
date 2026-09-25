@@ -21,6 +21,15 @@ __all__ = [
 @typing.final
 class AverageDirectionalIndexBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["adx"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -49,11 +58,26 @@ class AverageDirectionalIndexBar:
         adx: builtins.float,
     ) -> AverageDirectionalIndexBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class DoubleExponentialMovingAverageBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["dema"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -82,11 +106,26 @@ class DoubleExponentialMovingAverageBar:
         dema: builtins.float,
     ) -> DoubleExponentialMovingAverageBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class ExponentialMovingAverageBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["ema"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -115,11 +154,26 @@ class ExponentialMovingAverageBar:
         ema: builtins.float,
     ) -> ExponentialMovingAverageBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class RelativeStrengthIndexBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["rsi"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -148,11 +202,26 @@ class RelativeStrengthIndexBar:
         rsi: builtins.float,
     ) -> RelativeStrengthIndexBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class SimpleMovingAverageBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["sma"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -181,11 +250,26 @@ class SimpleMovingAverageBar:
         sma: builtins.float,
     ) -> SimpleMovingAverageBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StandardDeviationBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["standard_deviation"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -214,6 +298,12 @@ class StandardDeviationBar:
         standard_deviation: builtins.float,
     ) -> StandardDeviationBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -343,6 +433,15 @@ class TechnicalIndicatorsNamespace:
 @typing.final
 class TripleExponentialMovingAverageBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["tema"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -371,11 +470,26 @@ class TripleExponentialMovingAverageBar:
         tema: builtins.float,
     ) -> TripleExponentialMovingAverageBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class WeightedMovingAverageBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["wma"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -404,11 +518,26 @@ class WeightedMovingAverageBar:
         wma: builtins.float,
     ) -> WeightedMovingAverageBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class WilliamsBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["williams"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -437,3 +566,9 @@ class WilliamsBar:
         williams: builtins.float,
     ) -> WilliamsBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

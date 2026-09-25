@@ -38,6 +38,12 @@ impl IndexListing {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name'], typing.Literal['exchange'], typing.Literal['currency']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "name", "exchange", "currency"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -50,6 +56,42 @@ impl IndexListing {
         kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "IndexListing",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                ("currency", self.currency.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "currency",
+            crate::models::convert::DictValue::dict_value(&self.currency, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::indexes::IndexListing> for IndexListing {
@@ -60,6 +102,12 @@ impl From<libfmp::responses::indexes::IndexListing> for IndexListing {
             exchange: value.exchange.into_inner(),
             currency: value.currency.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for IndexListing {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -117,6 +165,24 @@ impl IndexConstituent {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name'], typing.Literal['sector'], typing.Literal['sub_sector'], typing.Literal['head_quarter'], typing.Literal['date_first_added'], typing.Literal['cik'], typing.Literal['founded']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "name",
+                "sector",
+                "sub_sector",
+                "head_quarter",
+                "date_first_added",
+                "cik",
+                "founded",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -139,6 +205,68 @@ impl IndexConstituent {
         kwargs.set_item("founded", self.founded.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "IndexConstituent",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("sector", self.sector.clone().into_bound_py_any(py)?),
+                ("sub_sector", self.sub_sector.clone().into_bound_py_any(py)?),
+                (
+                    "head_quarter",
+                    self.head_quarter.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "date_first_added",
+                    self.date_first_added.clone().into_bound_py_any(py)?,
+                ),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("founded", self.founded.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "sector",
+            crate::models::convert::DictValue::dict_value(&self.sector, py)?,
+        )?;
+        dict.set_item(
+            "sub_sector",
+            crate::models::convert::DictValue::dict_value(&self.sub_sector, py)?,
+        )?;
+        dict.set_item(
+            "head_quarter",
+            crate::models::convert::DictValue::dict_value(&self.head_quarter, py)?,
+        )?;
+        dict.set_item(
+            "date_first_added",
+            crate::models::convert::DictValue::dict_value(&self.date_first_added, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "founded",
+            crate::models::convert::DictValue::dict_value(&self.founded, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::indexes::IndexConstituent> for IndexConstituent {
@@ -153,6 +281,12 @@ impl From<libfmp::responses::indexes::IndexConstituent> for IndexConstituent {
             cik: value.cik.into_inner(),
             founded: value.founded.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for IndexConstituent {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -206,6 +340,23 @@ impl HistoricalIndexConstituent {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date_added'], typing.Literal['added_security'], typing.Literal['removed_ticker'], typing.Literal['removed_security'], typing.Literal['date'], typing.Literal['symbol'], typing.Literal['reason']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date_added",
+                "added_security",
+                "removed_ticker",
+                "removed_security",
+                "date",
+                "symbol",
+                "reason",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -230,6 +381,66 @@ impl HistoricalIndexConstituent {
         kwargs.set_item("reason", self.reason.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "HistoricalIndexConstituent",
+            &[
+                ("date_added", self.date_added.clone().into_bound_py_any(py)?),
+                (
+                    "added_security",
+                    self.added_security.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "removed_ticker",
+                    self.removed_ticker.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "removed_security",
+                    self.removed_security.clone().into_bound_py_any(py)?,
+                ),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("reason", self.reason.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date_added",
+            crate::models::convert::DictValue::dict_value(&self.date_added, py)?,
+        )?;
+        dict.set_item(
+            "added_security",
+            crate::models::convert::DictValue::dict_value(&self.added_security, py)?,
+        )?;
+        dict.set_item(
+            "removed_ticker",
+            crate::models::convert::DictValue::dict_value(&self.removed_ticker, py)?,
+        )?;
+        dict.set_item(
+            "removed_security",
+            crate::models::convert::DictValue::dict_value(&self.removed_security, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "reason",
+            crate::models::convert::DictValue::dict_value(&self.reason, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::indexes::HistoricalIndexConstituent> for HistoricalIndexConstituent {
@@ -243,5 +454,11 @@ impl From<libfmp::responses::indexes::HistoricalIndexConstituent> for Historical
             symbol: value.symbol.into_inner(),
             reason: value.reason,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for HistoricalIndexConstituent {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

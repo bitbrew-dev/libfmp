@@ -14,6 +14,16 @@ __all__ = [
 @typing.final
 class Article:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["title"],
+        typing.Literal["date"],
+        typing.Literal["content"],
+        typing.Literal["tickers"],
+        typing.Literal["image"],
+        typing.Literal["link"],
+        typing.Literal["author"],
+        typing.Literal["site"],
+    ]
 
     @property
     def title(self) -> builtins.str: ...
@@ -45,11 +55,27 @@ class Article:
         site: builtins.str,
     ) -> Article: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class NewsArticle:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["published_date"],
+        typing.Literal["publisher"],
+        typing.Literal["title"],
+        typing.Literal["image"],
+        typing.Literal["site"],
+        typing.Literal["text"],
+        typing.Literal["url"],
+    ]
 
     @property
     def symbol(self) -> typing.Optional[builtins.str]: ...
@@ -81,6 +107,12 @@ class NewsArticle:
         url: builtins.str,
     ) -> NewsArticle: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

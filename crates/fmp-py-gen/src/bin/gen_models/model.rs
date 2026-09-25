@@ -130,6 +130,31 @@ impl KeptField {
         matches!(self.kind, KeptKind::Passthrough { .. })
     }
 
+    pub(crate) fn is_secret(&self) -> bool {
+        matches!(self.kind, KeptKind::Secret { .. })
+    }
+
+    /// The field as the Python object its attribute returns.
+    pub(crate) fn python_value(&self) -> String {
+        match &self.kind {
+            KeptKind::Passthrough { .. } => format!("self.{}(py)?", self.field_ident),
+            KeptKind::Scalar { .. } | KeptKind::Secret { .. } => {
+                format!("self.{}.clone().into_bound_py_any(py)?", self.field_ident)
+            }
+        }
+    }
+
+    /// The field as `to_dict()` stores it, with nested models as dicts.
+    pub(crate) fn dict_value(&self) -> String {
+        match &self.kind {
+            KeptKind::Passthrough { .. } => format!("self.{}(py)?", self.field_ident),
+            KeptKind::Scalar { .. } | KeptKind::Secret { .. } => format!(
+                "crate::models::convert::DictValue::dict_value(&self.{}, py)?",
+                self.field_ident
+            ),
+        }
+    }
+
     pub(crate) fn python_ident(&self) -> String {
         self.field_ident.clone()
     }

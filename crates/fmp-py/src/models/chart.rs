@@ -38,6 +38,12 @@ impl StockChartLightBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['price'], typing.Literal['volume']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "date", "price", "volume"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -50,6 +56,42 @@ impl StockChartLightBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockChartLightBar",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("price", self.price.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "price",
+            crate::models::convert::DictValue::dict_value(&self.price, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::chart::StockChartLightBar> for StockChartLightBar {
@@ -60,6 +102,12 @@ impl From<libfmp::responses::chart::StockChartLightBar> for StockChartLightBar {
             price: value.price,
             volume: value.volume,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockChartLightBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -125,6 +173,26 @@ impl StockChartFullBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['open'], typing.Literal['high'], typing.Literal['low'], typing.Literal['close'], typing.Literal['volume'], typing.Literal['change'], typing.Literal['change_percent'], typing.Literal['vwap']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "change",
+                "change_percent",
+                "vwap",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -146,6 +214,75 @@ impl StockChartFullBar {
         kwargs.set_item("vwap", self.vwap.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockChartFullBar",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("change", self.change.clone().into_bound_py_any(py)?),
+                (
+                    "change_percent",
+                    self.change_percent.clone().into_bound_py_any(py)?,
+                ),
+                ("vwap", self.vwap.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "change",
+            crate::models::convert::DictValue::dict_value(&self.change, py)?,
+        )?;
+        dict.set_item(
+            "change_percent",
+            crate::models::convert::DictValue::dict_value(&self.change_percent, py)?,
+        )?;
+        dict.set_item(
+            "vwap",
+            crate::models::convert::DictValue::dict_value(&self.vwap, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::chart::StockChartFullBar> for StockChartFullBar {
@@ -162,6 +299,12 @@ impl From<libfmp::responses::chart::StockChartFullBar> for StockChartFullBar {
             change_percent: value.change_percent,
             vwap: value.vwap,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockChartFullBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -215,6 +358,23 @@ impl StockChartAdjustedBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['adj_open'], typing.Literal['adj_high'], typing.Literal['adj_low'], typing.Literal['adj_close'], typing.Literal['volume']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "adj_open",
+                "adj_high",
+                "adj_low",
+                "adj_close",
+                "volume",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -230,6 +390,57 @@ impl StockChartAdjustedBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockChartAdjustedBar",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("adj_open", self.adj_open.clone().into_bound_py_any(py)?),
+                ("adj_high", self.adj_high.clone().into_bound_py_any(py)?),
+                ("adj_low", self.adj_low.clone().into_bound_py_any(py)?),
+                ("adj_close", self.adj_close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "adj_open",
+            crate::models::convert::DictValue::dict_value(&self.adj_open, py)?,
+        )?;
+        dict.set_item(
+            "adj_high",
+            crate::models::convert::DictValue::dict_value(&self.adj_high, py)?,
+        )?;
+        dict.set_item(
+            "adj_low",
+            crate::models::convert::DictValue::dict_value(&self.adj_low, py)?,
+        )?;
+        dict.set_item(
+            "adj_close",
+            crate::models::convert::DictValue::dict_value(&self.adj_close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::chart::StockChartAdjustedBar> for StockChartAdjustedBar {
@@ -243,6 +454,12 @@ impl From<libfmp::responses::chart::StockChartAdjustedBar> for StockChartAdjuste
             adj_close: value.adj_close,
             volume: value.volume,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockChartAdjustedBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -292,6 +509,12 @@ impl StockChartIntradayBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['open'], typing.Literal['low'], typing.Literal['high'], typing.Literal['close'], typing.Literal['volume']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["date", "open", "low", "high", "close", "volume"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -306,6 +529,52 @@ impl StockChartIntradayBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockChartIntradayBar",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::chart::StockChartIntradayBar> for StockChartIntradayBar {
@@ -318,5 +587,11 @@ impl From<libfmp::responses::chart::StockChartIntradayBar> for StockChartIntrada
             close: value.close,
             volume: value.volume,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockChartIntradayBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

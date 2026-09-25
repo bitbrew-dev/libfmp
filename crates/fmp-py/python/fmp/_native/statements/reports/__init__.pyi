@@ -20,6 +20,11 @@ class FinancialReportDate:
     """
 
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -38,6 +43,12 @@ class FinancialReportDate:
         link_xlsx: builtins.str,
     ) -> FinancialReportDate: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
+
     def expose_secret_url_json(self) -> builtins.str:
         r"""
         Returns the JSON report download URL. The URL embeds the API key:
@@ -60,6 +71,12 @@ class FinancialReportDate:
 @typing.final
 class FinancialReportJson:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["period"],
+        typing.Literal["year"],
+        typing.Literal["sections"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -79,6 +96,12 @@ class FinancialReportJson:
         sections: builtins.str,
     ) -> FinancialReportJson: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

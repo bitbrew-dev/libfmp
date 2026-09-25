@@ -91,6 +91,32 @@ impl CongressionalTrade {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['member_id'], typing.Literal['disclosure_date'], typing.Literal['transaction_date'], typing.Literal['first_name'], typing.Literal['last_name'], typing.Literal['office'], typing.Literal['district'], typing.Literal['owner'], typing.Literal['asset_description'], typing.Literal['asset_type'], typing.Literal['transaction_type'], typing.Literal['amount'], typing.Literal['capital_gains_over_200_usd'], typing.Literal['comment'], typing.Literal['link']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "member_id",
+                "disclosure_date",
+                "transaction_date",
+                "first_name",
+                "last_name",
+                "office",
+                "district",
+                "owner",
+                "asset_description",
+                "asset_type",
+                "transaction_type",
+                "amount",
+                "capital_gains_over_200_usd",
+                "comment",
+                "link",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -132,6 +158,119 @@ impl CongressionalTrade {
         kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CongressionalTrade",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("member_id", self.member_id.clone().into_bound_py_any(py)?),
+                (
+                    "disclosure_date",
+                    self.disclosure_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "transaction_date",
+                    self.transaction_date.clone().into_bound_py_any(py)?,
+                ),
+                ("first_name", self.first_name.clone().into_bound_py_any(py)?),
+                ("last_name", self.last_name.clone().into_bound_py_any(py)?),
+                ("office", self.office.clone().into_bound_py_any(py)?),
+                ("district", self.district.clone().into_bound_py_any(py)?),
+                ("owner", self.owner.clone().into_bound_py_any(py)?),
+                (
+                    "asset_description",
+                    self.asset_description.clone().into_bound_py_any(py)?,
+                ),
+                ("asset_type", self.asset_type.clone().into_bound_py_any(py)?),
+                (
+                    "transaction_type",
+                    self.transaction_type.clone().into_bound_py_any(py)?,
+                ),
+                ("amount", self.amount.clone().into_bound_py_any(py)?),
+                (
+                    "capital_gains_over_200_usd",
+                    self.capital_gains_over_200_usd
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                ("comment", self.comment.clone().into_bound_py_any(py)?),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "member_id",
+            crate::models::convert::DictValue::dict_value(&self.member_id, py)?,
+        )?;
+        dict.set_item(
+            "disclosure_date",
+            crate::models::convert::DictValue::dict_value(&self.disclosure_date, py)?,
+        )?;
+        dict.set_item(
+            "transaction_date",
+            crate::models::convert::DictValue::dict_value(&self.transaction_date, py)?,
+        )?;
+        dict.set_item(
+            "first_name",
+            crate::models::convert::DictValue::dict_value(&self.first_name, py)?,
+        )?;
+        dict.set_item(
+            "last_name",
+            crate::models::convert::DictValue::dict_value(&self.last_name, py)?,
+        )?;
+        dict.set_item(
+            "office",
+            crate::models::convert::DictValue::dict_value(&self.office, py)?,
+        )?;
+        dict.set_item(
+            "district",
+            crate::models::convert::DictValue::dict_value(&self.district, py)?,
+        )?;
+        dict.set_item(
+            "owner",
+            crate::models::convert::DictValue::dict_value(&self.owner, py)?,
+        )?;
+        dict.set_item(
+            "asset_description",
+            crate::models::convert::DictValue::dict_value(&self.asset_description, py)?,
+        )?;
+        dict.set_item(
+            "asset_type",
+            crate::models::convert::DictValue::dict_value(&self.asset_type, py)?,
+        )?;
+        dict.set_item(
+            "transaction_type",
+            crate::models::convert::DictValue::dict_value(&self.transaction_type, py)?,
+        )?;
+        dict.set_item(
+            "amount",
+            crate::models::convert::DictValue::dict_value(&self.amount, py)?,
+        )?;
+        dict.set_item(
+            "capital_gains_over_200_usd",
+            crate::models::convert::DictValue::dict_value(&self.capital_gains_over_200_usd, py)?,
+        )?;
+        dict.set_item(
+            "comment",
+            crate::models::convert::DictValue::dict_value(&self.comment, py)?,
+        )?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::congressional::CongressionalTrade> for CongressionalTrade {
@@ -156,6 +295,12 @@ impl From<libfmp::responses::congressional::CongressionalTrade> for Congressiona
             comment: value.comment,
             link: value.link,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CongressionalTrade {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -221,6 +366,26 @@ impl CongressionalMemberProfile {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['member_id'], typing.Literal['first_name'], typing.Literal['last_name'], typing.Literal['birth_date'], typing.Literal['latest_party'], typing.Literal['latest_state'], typing.Literal['latest_position'], typing.Literal['image'], typing.Literal['active'], typing.Literal['years_active']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "member_id",
+                "first_name",
+                "last_name",
+                "birth_date",
+                "latest_party",
+                "latest_state",
+                "latest_position",
+                "image",
+                "active",
+                "years_active",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -251,6 +416,84 @@ impl CongressionalMemberProfile {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CongressionalMemberProfile",
+            &[
+                ("member_id", self.member_id.clone().into_bound_py_any(py)?),
+                ("first_name", self.first_name.clone().into_bound_py_any(py)?),
+                ("last_name", self.last_name.clone().into_bound_py_any(py)?),
+                ("birth_date", self.birth_date.clone().into_bound_py_any(py)?),
+                (
+                    "latest_party",
+                    self.latest_party.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "latest_state",
+                    self.latest_state.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "latest_position",
+                    self.latest_position.clone().into_bound_py_any(py)?,
+                ),
+                ("image", self.image.clone().into_bound_py_any(py)?),
+                ("active", self.active.clone().into_bound_py_any(py)?),
+                (
+                    "years_active",
+                    self.years_active.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "member_id",
+            crate::models::convert::DictValue::dict_value(&self.member_id, py)?,
+        )?;
+        dict.set_item(
+            "first_name",
+            crate::models::convert::DictValue::dict_value(&self.first_name, py)?,
+        )?;
+        dict.set_item(
+            "last_name",
+            crate::models::convert::DictValue::dict_value(&self.last_name, py)?,
+        )?;
+        dict.set_item(
+            "birth_date",
+            crate::models::convert::DictValue::dict_value(&self.birth_date, py)?,
+        )?;
+        dict.set_item(
+            "latest_party",
+            crate::models::convert::DictValue::dict_value(&self.latest_party, py)?,
+        )?;
+        dict.set_item(
+            "latest_state",
+            crate::models::convert::DictValue::dict_value(&self.latest_state, py)?,
+        )?;
+        dict.set_item(
+            "latest_position",
+            crate::models::convert::DictValue::dict_value(&self.latest_position, py)?,
+        )?;
+        dict.set_item(
+            "image",
+            crate::models::convert::DictValue::dict_value(&self.image, py)?,
+        )?;
+        dict.set_item(
+            "active",
+            crate::models::convert::DictValue::dict_value(&self.active, py)?,
+        )?;
+        dict.set_item(
+            "years_active",
+            crate::models::convert::DictValue::dict_value(&self.years_active, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::congressional::CongressionalMemberProfile>
@@ -269,6 +512,12 @@ impl From<libfmp::responses::congressional::CongressionalMemberProfile>
             active: value.active,
             years_active: value.years_active,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CongressionalMemberProfile {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -326,6 +575,24 @@ impl CongressionalMemberPosition {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['member_id'], typing.Literal['congress_number'], typing.Literal['start_date'], typing.Literal['end_date'], typing.Literal['party'], typing.Literal['position'], typing.Literal['state'], typing.Literal['years_in_term']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "member_id",
+                "congress_number",
+                "start_date",
+                "end_date",
+                "party",
+                "position",
+                "state",
+                "years_in_term",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -348,6 +615,68 @@ impl CongressionalMemberPosition {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CongressionalMemberPosition",
+            &[
+                ("member_id", self.member_id.clone().into_bound_py_any(py)?),
+                (
+                    "congress_number",
+                    self.congress_number.clone().into_bound_py_any(py)?,
+                ),
+                ("start_date", self.start_date.clone().into_bound_py_any(py)?),
+                ("end_date", self.end_date.clone().into_bound_py_any(py)?),
+                ("party", self.party.clone().into_bound_py_any(py)?),
+                ("position", self.position.clone().into_bound_py_any(py)?),
+                ("state", self.state.clone().into_bound_py_any(py)?),
+                (
+                    "years_in_term",
+                    self.years_in_term.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "member_id",
+            crate::models::convert::DictValue::dict_value(&self.member_id, py)?,
+        )?;
+        dict.set_item(
+            "congress_number",
+            crate::models::convert::DictValue::dict_value(&self.congress_number, py)?,
+        )?;
+        dict.set_item(
+            "start_date",
+            crate::models::convert::DictValue::dict_value(&self.start_date, py)?,
+        )?;
+        dict.set_item(
+            "end_date",
+            crate::models::convert::DictValue::dict_value(&self.end_date, py)?,
+        )?;
+        dict.set_item(
+            "party",
+            crate::models::convert::DictValue::dict_value(&self.party, py)?,
+        )?;
+        dict.set_item(
+            "position",
+            crate::models::convert::DictValue::dict_value(&self.position, py)?,
+        )?;
+        dict.set_item(
+            "state",
+            crate::models::convert::DictValue::dict_value(&self.state, py)?,
+        )?;
+        dict.set_item(
+            "years_in_term",
+            crate::models::convert::DictValue::dict_value(&self.years_in_term, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::congressional::CongressionalMemberPosition>
@@ -364,6 +693,12 @@ impl From<libfmp::responses::congressional::CongressionalMemberPosition>
             state: value.state,
             years_in_term: value.years_in_term,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CongressionalMemberPosition {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -391,6 +726,12 @@ impl CongressionalNetWorthRange {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['min'], typing.Literal['max']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["min", "max"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -400,6 +741,32 @@ impl CongressionalNetWorthRange {
         kwargs.set_item("min", self.min.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("max", self.max.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CongressionalNetWorthRange",
+            &[
+                ("min", self.min.clone().into_bound_py_any(py)?),
+                ("max", self.max.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "min",
+            crate::models::convert::DictValue::dict_value(&self.min, py)?,
+        )?;
+        dict.set_item(
+            "max",
+            crate::models::convert::DictValue::dict_value(&self.max, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -411,6 +778,12 @@ impl From<libfmp::responses::congressional::CongressionalNetWorthRange>
             min: value.min,
             max: value.max,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CongressionalNetWorthRange {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -436,6 +809,12 @@ impl CongressionalDebtDetails {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date_incurred']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["date_incurred"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -448,6 +827,28 @@ impl CongressionalDebtDetails {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CongressionalDebtDetails",
+            &[(
+                "date_incurred",
+                self.date_incurred.clone().into_bound_py_any(py)?,
+            )],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date_incurred",
+            crate::models::convert::DictValue::dict_value(&self.date_incurred, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::congressional::CongressionalDebtDetails> for CongressionalDebtDetails {
@@ -455,6 +856,12 @@ impl From<libfmp::responses::congressional::CongressionalDebtDetails> for Congre
         Self {
             date_incurred: value.date_incurred.0,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CongressionalDebtDetails {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -557,6 +964,33 @@ impl CongressionalMemberNetWorth {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['member_id'], typing.Literal['form_type'], typing.Literal['year'], typing.Literal['filing_date'], typing.Literal['section'], typing.Literal['category'], typing.Literal['name'], typing.Literal['asset_type'], typing.Literal['income_type'], typing.Literal['owner'], typing.Literal['comment'], typing.Literal['debt_details'], typing.Literal['value_range'], typing.Literal['value'], typing.Literal['income_range'], typing.Literal['income'], typing.Literal['link']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "member_id",
+                "form_type",
+                "year",
+                "filing_date",
+                "section",
+                "category",
+                "name",
+                "asset_type",
+                "income_type",
+                "owner",
+                "comment",
+                "debt_details",
+                "value_range",
+                "value",
+                "income_range",
+                "income",
+                "link",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -609,6 +1043,119 @@ impl CongressionalMemberNetWorth {
         kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CongressionalMemberNetWorth",
+            &[
+                ("member_id", self.member_id.clone().into_bound_py_any(py)?),
+                ("form_type", self.form_type.clone().into_bound_py_any(py)?),
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                ("section", self.section.clone().into_bound_py_any(py)?),
+                ("category", self.category.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("asset_type", self.asset_type.clone().into_bound_py_any(py)?),
+                (
+                    "income_type",
+                    self.income_type.clone().into_bound_py_any(py)?,
+                ),
+                ("owner", self.owner.clone().into_bound_py_any(py)?),
+                ("comment", self.comment.clone().into_bound_py_any(py)?),
+                (
+                    "debt_details",
+                    self.debt_details.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "value_range",
+                    self.value_range.clone().into_bound_py_any(py)?,
+                ),
+                ("value", self.value.clone().into_bound_py_any(py)?),
+                (
+                    "income_range",
+                    self.income_range.clone().into_bound_py_any(py)?,
+                ),
+                ("income", self.income(py)?),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "member_id",
+            crate::models::convert::DictValue::dict_value(&self.member_id, py)?,
+        )?;
+        dict.set_item(
+            "form_type",
+            crate::models::convert::DictValue::dict_value(&self.form_type, py)?,
+        )?;
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "section",
+            crate::models::convert::DictValue::dict_value(&self.section, py)?,
+        )?;
+        dict.set_item(
+            "category",
+            crate::models::convert::DictValue::dict_value(&self.category, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "asset_type",
+            crate::models::convert::DictValue::dict_value(&self.asset_type, py)?,
+        )?;
+        dict.set_item(
+            "income_type",
+            crate::models::convert::DictValue::dict_value(&self.income_type, py)?,
+        )?;
+        dict.set_item(
+            "owner",
+            crate::models::convert::DictValue::dict_value(&self.owner, py)?,
+        )?;
+        dict.set_item(
+            "comment",
+            crate::models::convert::DictValue::dict_value(&self.comment, py)?,
+        )?;
+        dict.set_item(
+            "debt_details",
+            crate::models::convert::DictValue::dict_value(&self.debt_details, py)?,
+        )?;
+        dict.set_item(
+            "value_range",
+            crate::models::convert::DictValue::dict_value(&self.value_range, py)?,
+        )?;
+        dict.set_item(
+            "value",
+            crate::models::convert::DictValue::dict_value(&self.value, py)?,
+        )?;
+        dict.set_item(
+            "income_range",
+            crate::models::convert::DictValue::dict_value(&self.income_range, py)?,
+        )?;
+        dict.set_item("income", self.income(py)?)?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        Ok(dict)
+    }
 
     #[getter]
     fn income<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -648,6 +1195,12 @@ impl From<libfmp::responses::congressional::CongressionalMemberNetWorth>
             income: value.income,
             link: value.link,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CongressionalMemberNetWorth {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -729,6 +1282,30 @@ impl CongressionalMemberNetWorthAggregate {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['member_id'], typing.Literal['year'], typing.Literal['total'], typing.Literal['real_estate_liabilities'], typing.Literal['cash_and_cash_equivalents'], typing.Literal['business_and_self_employment'], typing.Literal['real_estate'], typing.Literal['ownership_interest'], typing.Literal['stock'], typing.Literal['options'], typing.Literal['revolving_and_credit_lines'], typing.Literal['asset_backed_securities'], typing.Literal['business_liabilities'], typing.Literal['mutual_funds_and_etfs']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "member_id",
+                "year",
+                "total",
+                "real_estate_liabilities",
+                "cash_and_cash_equivalents",
+                "business_and_self_employment",
+                "real_estate",
+                "ownership_interest",
+                "stock",
+                "options",
+                "revolving_and_credit_lines",
+                "asset_backed_securities",
+                "business_liabilities",
+                "mutual_funds_and_etfs",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -784,6 +1361,125 @@ impl CongressionalMemberNetWorthAggregate {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CongressionalMemberNetWorthAggregate",
+            &[
+                ("member_id", self.member_id.clone().into_bound_py_any(py)?),
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                ("total", self.total.clone().into_bound_py_any(py)?),
+                (
+                    "real_estate_liabilities",
+                    self.real_estate_liabilities.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_and_cash_equivalents",
+                    self.cash_and_cash_equivalents
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "business_and_self_employment",
+                    self.business_and_self_employment
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "real_estate",
+                    self.real_estate.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ownership_interest",
+                    self.ownership_interest.clone().into_bound_py_any(py)?,
+                ),
+                ("stock", self.stock.clone().into_bound_py_any(py)?),
+                ("options", self.options.clone().into_bound_py_any(py)?),
+                (
+                    "revolving_and_credit_lines",
+                    self.revolving_and_credit_lines
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "asset_backed_securities",
+                    self.asset_backed_securities.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "business_liabilities",
+                    self.business_liabilities.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "mutual_funds_and_etfs",
+                    self.mutual_funds_and_etfs.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "member_id",
+            crate::models::convert::DictValue::dict_value(&self.member_id, py)?,
+        )?;
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "total",
+            crate::models::convert::DictValue::dict_value(&self.total, py)?,
+        )?;
+        dict.set_item(
+            "real_estate_liabilities",
+            crate::models::convert::DictValue::dict_value(&self.real_estate_liabilities, py)?,
+        )?;
+        dict.set_item(
+            "cash_and_cash_equivalents",
+            crate::models::convert::DictValue::dict_value(&self.cash_and_cash_equivalents, py)?,
+        )?;
+        dict.set_item(
+            "business_and_self_employment",
+            crate::models::convert::DictValue::dict_value(&self.business_and_self_employment, py)?,
+        )?;
+        dict.set_item(
+            "real_estate",
+            crate::models::convert::DictValue::dict_value(&self.real_estate, py)?,
+        )?;
+        dict.set_item(
+            "ownership_interest",
+            crate::models::convert::DictValue::dict_value(&self.ownership_interest, py)?,
+        )?;
+        dict.set_item(
+            "stock",
+            crate::models::convert::DictValue::dict_value(&self.stock, py)?,
+        )?;
+        dict.set_item(
+            "options",
+            crate::models::convert::DictValue::dict_value(&self.options, py)?,
+        )?;
+        dict.set_item(
+            "revolving_and_credit_lines",
+            crate::models::convert::DictValue::dict_value(&self.revolving_and_credit_lines, py)?,
+        )?;
+        dict.set_item(
+            "asset_backed_securities",
+            crate::models::convert::DictValue::dict_value(&self.asset_backed_securities, py)?,
+        )?;
+        dict.set_item(
+            "business_liabilities",
+            crate::models::convert::DictValue::dict_value(&self.business_liabilities, py)?,
+        )?;
+        dict.set_item(
+            "mutual_funds_and_etfs",
+            crate::models::convert::DictValue::dict_value(&self.mutual_funds_and_etfs, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::congressional::CongressionalMemberNetWorthAggregate>
@@ -806,5 +1502,11 @@ impl From<libfmp::responses::congressional::CongressionalMemberNetWorthAggregate
             business_liabilities: value.business_liabilities,
             mutual_funds_and_etfs: value.mutual_funds_and_etfs,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CongressionalMemberNetWorthAggregate {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

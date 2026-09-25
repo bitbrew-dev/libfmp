@@ -14,6 +14,14 @@ __all__ = [
 @typing.final
 class ExchangeHoliday:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["exchange"],
+        typing.Literal["date"],
+        typing.Literal["name"],
+        typing.Literal["is_closed"],
+        typing.Literal["adj_open_time"],
+        typing.Literal["adj_close_time"],
+    ]
 
     @property
     def exchange(self) -> builtins.str: ...
@@ -39,11 +47,25 @@ class ExchangeHoliday:
         adj_close_time: typing.Optional[builtins.str],
     ) -> ExchangeHoliday: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class ExchangeMarketHours:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["exchange"],
+        typing.Literal["name"],
+        typing.Literal["opening_hour"],
+        typing.Literal["closing_hour"],
+        typing.Literal["timezone"],
+        typing.Literal["is_market_open"],
+    ]
 
     @property
     def exchange(self) -> builtins.str: ...
@@ -69,6 +91,12 @@ class ExchangeMarketHours:
         is_market_open: builtins.bool,
     ) -> ExchangeMarketHours: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

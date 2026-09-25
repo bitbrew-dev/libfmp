@@ -34,6 +34,12 @@ impl CotReportListing {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "name"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -44,6 +50,32 @@ impl CotReportListing {
         kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CotReportListing",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::commitment_of_traders::CotReportListing> for CotReportListing {
@@ -52,6 +84,12 @@ impl From<libfmp::responses::commitment_of_traders::CotReportListing> for CotRep
             symbol: value.symbol.into_inner(),
             name: value.name,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CotReportListing {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -146,6 +184,32 @@ impl CotAnalysis {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['name'], typing.Literal['sector'], typing.Literal['exchange'], typing.Literal['current_long_market_situation'], typing.Literal['current_short_market_situation'], typing.Literal['market_situation'], typing.Literal['previous_long_market_situation'], typing.Literal['previous_short_market_situation'], typing.Literal['previous_market_situation'], typing.Literal['net_position'], typing.Literal['previous_net_position'], typing.Literal['change_in_net_position'], typing.Literal['market_sentiment'], typing.Literal['reversal_trend']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "name",
+                "sector",
+                "exchange",
+                "current_long_market_situation",
+                "current_short_market_situation",
+                "market_situation",
+                "previous_long_market_situation",
+                "previous_short_market_situation",
+                "previous_market_situation",
+                "net_position",
+                "previous_net_position",
+                "change_in_net_position",
+                "market_sentiment",
+                "reversal_trend",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -213,6 +277,154 @@ impl CotAnalysis {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CotAnalysis",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("sector", self.sector.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                (
+                    "current_long_market_situation",
+                    self.current_long_market_situation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "current_short_market_situation",
+                    self.current_short_market_situation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "market_situation",
+                    self.market_situation.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "previous_long_market_situation",
+                    self.previous_long_market_situation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "previous_short_market_situation",
+                    self.previous_short_market_situation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "previous_market_situation",
+                    self.previous_market_situation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_position",
+                    self.net_position.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "previous_net_position",
+                    self.previous_net_position.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_net_position",
+                    self.change_in_net_position.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "market_sentiment",
+                    self.market_sentiment.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "reversal_trend",
+                    self.reversal_trend.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "sector",
+            crate::models::convert::DictValue::dict_value(&self.sector, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "current_long_market_situation",
+            crate::models::convert::DictValue::dict_value(&self.current_long_market_situation, py)?,
+        )?;
+        dict.set_item(
+            "current_short_market_situation",
+            crate::models::convert::DictValue::dict_value(
+                &self.current_short_market_situation,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "market_situation",
+            crate::models::convert::DictValue::dict_value(&self.market_situation, py)?,
+        )?;
+        dict.set_item(
+            "previous_long_market_situation",
+            crate::models::convert::DictValue::dict_value(
+                &self.previous_long_market_situation,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "previous_short_market_situation",
+            crate::models::convert::DictValue::dict_value(
+                &self.previous_short_market_situation,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "previous_market_situation",
+            crate::models::convert::DictValue::dict_value(&self.previous_market_situation, py)?,
+        )?;
+        dict.set_item(
+            "net_position",
+            crate::models::convert::DictValue::dict_value(&self.net_position, py)?,
+        )?;
+        dict.set_item(
+            "previous_net_position",
+            crate::models::convert::DictValue::dict_value(&self.previous_net_position, py)?,
+        )?;
+        dict.set_item(
+            "change_in_net_position",
+            crate::models::convert::DictValue::dict_value(&self.change_in_net_position, py)?,
+        )?;
+        dict.set_item(
+            "market_sentiment",
+            crate::models::convert::DictValue::dict_value(&self.market_sentiment, py)?,
+        )?;
+        dict.set_item(
+            "reversal_trend",
+            crate::models::convert::DictValue::dict_value(&self.reversal_trend, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::commitment_of_traders::CotAnalysis> for CotAnalysis {
@@ -235,6 +447,12 @@ impl From<libfmp::responses::commitment_of_traders::CotAnalysis> for CotAnalysis
             market_sentiment: value.market_sentiment,
             reversal_trend: value.reversal_trend,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CotAnalysis {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -1145,6 +1363,144 @@ impl CotReport {
 
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
+
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['name'], typing.Literal['sector'], typing.Literal['market_and_exchange_names'], typing.Literal['cftc_contract_market_code'], typing.Literal['cftc_market_code'], typing.Literal['cftc_region_code'], typing.Literal['cftc_commodity_code'], typing.Literal['open_interest_all'], typing.Literal['noncomm_positions_long_all'], typing.Literal['noncomm_positions_short_all'], typing.Literal['noncomm_positions_spread_all'], typing.Literal['comm_positions_long_all'], typing.Literal['comm_positions_short_all'], typing.Literal['tot_rept_positions_long_all'], typing.Literal['tot_rept_positions_short_all'], typing.Literal['nonrept_positions_long_all'], typing.Literal['nonrept_positions_short_all'], typing.Literal['open_interest_old'], typing.Literal['noncomm_positions_long_old'], typing.Literal['noncomm_positions_short_old'], typing.Literal['noncomm_positions_spread_old'], typing.Literal['comm_positions_long_old'], typing.Literal['comm_positions_short_old'], typing.Literal['tot_rept_positions_long_old'], typing.Literal['tot_rept_positions_short_old'], typing.Literal['nonrept_positions_long_old'], typing.Literal['nonrept_positions_short_old'], typing.Literal['open_interest_other'], typing.Literal['noncomm_positions_long_other'], typing.Literal['noncomm_positions_short_other'], typing.Literal['noncomm_positions_spread_other'], typing.Literal['comm_positions_long_other'], typing.Literal['comm_positions_short_other'], typing.Literal['tot_rept_positions_long_other'], typing.Literal['tot_rept_positions_short_other'], typing.Literal['nonrept_positions_long_other'], typing.Literal['nonrept_positions_short_other'], typing.Literal['change_in_open_interest_all'], typing.Literal['change_in_noncomm_long_all'], typing.Literal['change_in_noncomm_short_all'], typing.Literal['change_in_noncomm_spread_all'], typing.Literal['change_in_comm_long_all'], typing.Literal['change_in_comm_short_all'], typing.Literal['change_in_tot_rept_long_all'], typing.Literal['change_in_tot_rept_short_all'], typing.Literal['change_in_nonrept_long_all'], typing.Literal['change_in_nonrept_short_all'], typing.Literal['pct_of_open_interest_all'], typing.Literal['pct_of_oi_noncomm_long_all'], typing.Literal['pct_of_oi_noncomm_short_all'], typing.Literal['pct_of_oi_noncomm_spread_all'], typing.Literal['pct_of_oi_comm_long_all'], typing.Literal['pct_of_oi_comm_short_all'], typing.Literal['pct_of_oi_tot_rept_long_all'], typing.Literal['pct_of_oi_tot_rept_short_all'], typing.Literal['pct_of_oi_nonrept_long_all'], typing.Literal['pct_of_oi_nonrept_short_all'], typing.Literal['pct_of_open_interest_old'], typing.Literal['pct_of_oi_noncomm_long_old'], typing.Literal['pct_of_oi_noncomm_short_old'], typing.Literal['pct_of_oi_noncomm_spread_old'], typing.Literal['pct_of_oi_comm_long_old'], typing.Literal['pct_of_oi_comm_short_old'], typing.Literal['pct_of_oi_tot_rept_long_old'], typing.Literal['pct_of_oi_tot_rept_short_old'], typing.Literal['pct_of_oi_nonrept_long_old'], typing.Literal['pct_of_oi_nonrept_short_old'], typing.Literal['pct_of_open_interest_other'], typing.Literal['pct_of_oi_noncomm_long_other'], typing.Literal['pct_of_oi_noncomm_short_other'], typing.Literal['pct_of_oi_noncomm_spread_other'], typing.Literal['pct_of_oi_comm_long_other'], typing.Literal['pct_of_oi_comm_short_other'], typing.Literal['pct_of_oi_tot_rept_long_other'], typing.Literal['pct_of_oi_tot_rept_short_other'], typing.Literal['pct_of_oi_nonrept_long_other'], typing.Literal['pct_of_oi_nonrept_short_other'], typing.Literal['traders_tot_all'], typing.Literal['traders_noncomm_long_all'], typing.Literal['traders_noncomm_short_all'], typing.Literal['traders_noncomm_spread_all'], typing.Literal['traders_comm_long_all'], typing.Literal['traders_comm_short_all'], typing.Literal['traders_tot_rept_long_all'], typing.Literal['traders_tot_rept_short_all'], typing.Literal['traders_tot_old'], typing.Literal['traders_noncomm_long_old'], typing.Literal['traders_noncomm_short_old'], typing.Literal['traders_noncomm_spread_old'], typing.Literal['traders_comm_long_old'], typing.Literal['traders_comm_short_old'], typing.Literal['traders_tot_rept_long_old'], typing.Literal['traders_tot_rept_short_old'], typing.Literal['traders_tot_other'], typing.Literal['traders_noncomm_long_other'], typing.Literal['traders_noncomm_short_other'], typing.Literal['traders_noncomm_spread_other'], typing.Literal['traders_comm_long_other'], typing.Literal['traders_comm_short_other'], typing.Literal['traders_tot_rept_long_other'], typing.Literal['traders_tot_rept_short_other'], typing.Literal['conc_gross_le4_tdr_long_all'], typing.Literal['conc_gross_le4_tdr_short_all'], typing.Literal['conc_gross_le8_tdr_long_all'], typing.Literal['conc_gross_le8_tdr_short_all'], typing.Literal['conc_net_le4_tdr_long_all'], typing.Literal['conc_net_le4_tdr_short_all'], typing.Literal['conc_net_le8_tdr_long_all'], typing.Literal['conc_net_le8_tdr_short_all'], typing.Literal['conc_gross_le4_tdr_long_old'], typing.Literal['conc_gross_le4_tdr_short_old'], typing.Literal['conc_gross_le8_tdr_long_old'], typing.Literal['conc_gross_le8_tdr_short_old'], typing.Literal['conc_net_le4_tdr_long_old'], typing.Literal['conc_net_le4_tdr_short_old'], typing.Literal['conc_net_le8_tdr_long_old'], typing.Literal['conc_net_le8_tdr_short_old'], typing.Literal['conc_gross_le4_tdr_long_other'], typing.Literal['conc_gross_le4_tdr_short_other'], typing.Literal['conc_gross_le8_tdr_long_other'], typing.Literal['conc_gross_le8_tdr_short_other'], typing.Literal['conc_net_le4_tdr_long_other'], typing.Literal['conc_net_le4_tdr_short_other'], typing.Literal['conc_net_le8_tdr_long_other'], typing.Literal['conc_net_le8_tdr_short_other'], typing.Literal['contract_units']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "name",
+                "sector",
+                "market_and_exchange_names",
+                "cftc_contract_market_code",
+                "cftc_market_code",
+                "cftc_region_code",
+                "cftc_commodity_code",
+                "open_interest_all",
+                "noncomm_positions_long_all",
+                "noncomm_positions_short_all",
+                "noncomm_positions_spread_all",
+                "comm_positions_long_all",
+                "comm_positions_short_all",
+                "tot_rept_positions_long_all",
+                "tot_rept_positions_short_all",
+                "nonrept_positions_long_all",
+                "nonrept_positions_short_all",
+                "open_interest_old",
+                "noncomm_positions_long_old",
+                "noncomm_positions_short_old",
+                "noncomm_positions_spread_old",
+                "comm_positions_long_old",
+                "comm_positions_short_old",
+                "tot_rept_positions_long_old",
+                "tot_rept_positions_short_old",
+                "nonrept_positions_long_old",
+                "nonrept_positions_short_old",
+                "open_interest_other",
+                "noncomm_positions_long_other",
+                "noncomm_positions_short_other",
+                "noncomm_positions_spread_other",
+                "comm_positions_long_other",
+                "comm_positions_short_other",
+                "tot_rept_positions_long_other",
+                "tot_rept_positions_short_other",
+                "nonrept_positions_long_other",
+                "nonrept_positions_short_other",
+                "change_in_open_interest_all",
+                "change_in_noncomm_long_all",
+                "change_in_noncomm_short_all",
+                "change_in_noncomm_spread_all",
+                "change_in_comm_long_all",
+                "change_in_comm_short_all",
+                "change_in_tot_rept_long_all",
+                "change_in_tot_rept_short_all",
+                "change_in_nonrept_long_all",
+                "change_in_nonrept_short_all",
+                "pct_of_open_interest_all",
+                "pct_of_oi_noncomm_long_all",
+                "pct_of_oi_noncomm_short_all",
+                "pct_of_oi_noncomm_spread_all",
+                "pct_of_oi_comm_long_all",
+                "pct_of_oi_comm_short_all",
+                "pct_of_oi_tot_rept_long_all",
+                "pct_of_oi_tot_rept_short_all",
+                "pct_of_oi_nonrept_long_all",
+                "pct_of_oi_nonrept_short_all",
+                "pct_of_open_interest_old",
+                "pct_of_oi_noncomm_long_old",
+                "pct_of_oi_noncomm_short_old",
+                "pct_of_oi_noncomm_spread_old",
+                "pct_of_oi_comm_long_old",
+                "pct_of_oi_comm_short_old",
+                "pct_of_oi_tot_rept_long_old",
+                "pct_of_oi_tot_rept_short_old",
+                "pct_of_oi_nonrept_long_old",
+                "pct_of_oi_nonrept_short_old",
+                "pct_of_open_interest_other",
+                "pct_of_oi_noncomm_long_other",
+                "pct_of_oi_noncomm_short_other",
+                "pct_of_oi_noncomm_spread_other",
+                "pct_of_oi_comm_long_other",
+                "pct_of_oi_comm_short_other",
+                "pct_of_oi_tot_rept_long_other",
+                "pct_of_oi_tot_rept_short_other",
+                "pct_of_oi_nonrept_long_other",
+                "pct_of_oi_nonrept_short_other",
+                "traders_tot_all",
+                "traders_noncomm_long_all",
+                "traders_noncomm_short_all",
+                "traders_noncomm_spread_all",
+                "traders_comm_long_all",
+                "traders_comm_short_all",
+                "traders_tot_rept_long_all",
+                "traders_tot_rept_short_all",
+                "traders_tot_old",
+                "traders_noncomm_long_old",
+                "traders_noncomm_short_old",
+                "traders_noncomm_spread_old",
+                "traders_comm_long_old",
+                "traders_comm_short_old",
+                "traders_tot_rept_long_old",
+                "traders_tot_rept_short_old",
+                "traders_tot_other",
+                "traders_noncomm_long_other",
+                "traders_noncomm_short_other",
+                "traders_noncomm_spread_other",
+                "traders_comm_long_other",
+                "traders_comm_short_other",
+                "traders_tot_rept_long_other",
+                "traders_tot_rept_short_other",
+                "conc_gross_le4_tdr_long_all",
+                "conc_gross_le4_tdr_short_all",
+                "conc_gross_le8_tdr_long_all",
+                "conc_gross_le8_tdr_short_all",
+                "conc_net_le4_tdr_long_all",
+                "conc_net_le4_tdr_short_all",
+                "conc_net_le8_tdr_long_all",
+                "conc_net_le8_tdr_short_all",
+                "conc_gross_le4_tdr_long_old",
+                "conc_gross_le4_tdr_short_old",
+                "conc_gross_le8_tdr_long_old",
+                "conc_gross_le8_tdr_short_old",
+                "conc_net_le4_tdr_long_old",
+                "conc_net_le4_tdr_short_old",
+                "conc_net_le8_tdr_long_old",
+                "conc_net_le8_tdr_short_old",
+                "conc_gross_le4_tdr_long_other",
+                "conc_gross_le4_tdr_short_other",
+                "conc_gross_le8_tdr_long_other",
+                "conc_gross_le8_tdr_short_other",
+                "conc_net_le4_tdr_long_other",
+                "conc_net_le4_tdr_short_other",
+                "conc_net_le8_tdr_long_other",
+                "conc_net_le8_tdr_short_other",
+                "contract_units",
+            ],
+        )
+    }
 
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
@@ -2082,6 +2438,1132 @@ impl CotReport {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CotReport",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("sector", self.sector.clone().into_bound_py_any(py)?),
+                (
+                    "market_and_exchange_names",
+                    self.market_and_exchange_names
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cftc_contract_market_code",
+                    self.cftc_contract_market_code
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cftc_market_code",
+                    self.cftc_market_code.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cftc_region_code",
+                    self.cftc_region_code.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cftc_commodity_code",
+                    self.cftc_commodity_code.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "open_interest_all",
+                    self.open_interest_all.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_long_all",
+                    self.noncomm_positions_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_short_all",
+                    self.noncomm_positions_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_spread_all",
+                    self.noncomm_positions_spread_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "comm_positions_long_all",
+                    self.comm_positions_long_all.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "comm_positions_short_all",
+                    self.comm_positions_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tot_rept_positions_long_all",
+                    self.tot_rept_positions_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tot_rept_positions_short_all",
+                    self.tot_rept_positions_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "nonrept_positions_long_all",
+                    self.nonrept_positions_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "nonrept_positions_short_all",
+                    self.nonrept_positions_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "open_interest_old",
+                    self.open_interest_old.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_long_old",
+                    self.noncomm_positions_long_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_short_old",
+                    self.noncomm_positions_short_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_spread_old",
+                    self.noncomm_positions_spread_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "comm_positions_long_old",
+                    self.comm_positions_long_old.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "comm_positions_short_old",
+                    self.comm_positions_short_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tot_rept_positions_long_old",
+                    self.tot_rept_positions_long_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tot_rept_positions_short_old",
+                    self.tot_rept_positions_short_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "nonrept_positions_long_old",
+                    self.nonrept_positions_long_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "nonrept_positions_short_old",
+                    self.nonrept_positions_short_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "open_interest_other",
+                    self.open_interest_other.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_long_other",
+                    self.noncomm_positions_long_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_short_other",
+                    self.noncomm_positions_short_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "noncomm_positions_spread_other",
+                    self.noncomm_positions_spread_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "comm_positions_long_other",
+                    self.comm_positions_long_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "comm_positions_short_other",
+                    self.comm_positions_short_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tot_rept_positions_long_other",
+                    self.tot_rept_positions_long_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "tot_rept_positions_short_other",
+                    self.tot_rept_positions_short_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "nonrept_positions_long_other",
+                    self.nonrept_positions_long_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "nonrept_positions_short_other",
+                    self.nonrept_positions_short_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_open_interest_all",
+                    self.change_in_open_interest_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_noncomm_long_all",
+                    self.change_in_noncomm_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_noncomm_short_all",
+                    self.change_in_noncomm_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_noncomm_spread_all",
+                    self.change_in_noncomm_spread_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_comm_long_all",
+                    self.change_in_comm_long_all.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_comm_short_all",
+                    self.change_in_comm_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_tot_rept_long_all",
+                    self.change_in_tot_rept_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_tot_rept_short_all",
+                    self.change_in_tot_rept_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_nonrept_long_all",
+                    self.change_in_nonrept_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_nonrept_short_all",
+                    self.change_in_nonrept_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "pct_of_open_interest_all",
+                    self.pct_of_open_interest_all(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_long_all",
+                    self.pct_of_oi_noncomm_long_all(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_short_all",
+                    self.pct_of_oi_noncomm_short_all(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_spread_all",
+                    self.pct_of_oi_noncomm_spread_all(py)?,
+                ),
+                ("pct_of_oi_comm_long_all", self.pct_of_oi_comm_long_all(py)?),
+                (
+                    "pct_of_oi_comm_short_all",
+                    self.pct_of_oi_comm_short_all(py)?,
+                ),
+                (
+                    "pct_of_oi_tot_rept_long_all",
+                    self.pct_of_oi_tot_rept_long_all(py)?,
+                ),
+                (
+                    "pct_of_oi_tot_rept_short_all",
+                    self.pct_of_oi_tot_rept_short_all(py)?,
+                ),
+                (
+                    "pct_of_oi_nonrept_long_all",
+                    self.pct_of_oi_nonrept_long_all(py)?,
+                ),
+                (
+                    "pct_of_oi_nonrept_short_all",
+                    self.pct_of_oi_nonrept_short_all(py)?,
+                ),
+                (
+                    "pct_of_open_interest_old",
+                    self.pct_of_open_interest_old(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_long_old",
+                    self.pct_of_oi_noncomm_long_old(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_short_old",
+                    self.pct_of_oi_noncomm_short_old(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_spread_old",
+                    self.pct_of_oi_noncomm_spread_old(py)?,
+                ),
+                ("pct_of_oi_comm_long_old", self.pct_of_oi_comm_long_old(py)?),
+                (
+                    "pct_of_oi_comm_short_old",
+                    self.pct_of_oi_comm_short_old(py)?,
+                ),
+                (
+                    "pct_of_oi_tot_rept_long_old",
+                    self.pct_of_oi_tot_rept_long_old(py)?,
+                ),
+                (
+                    "pct_of_oi_tot_rept_short_old",
+                    self.pct_of_oi_tot_rept_short_old(py)?,
+                ),
+                (
+                    "pct_of_oi_nonrept_long_old",
+                    self.pct_of_oi_nonrept_long_old(py)?,
+                ),
+                (
+                    "pct_of_oi_nonrept_short_old",
+                    self.pct_of_oi_nonrept_short_old(py)?,
+                ),
+                (
+                    "pct_of_open_interest_other",
+                    self.pct_of_open_interest_other(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_long_other",
+                    self.pct_of_oi_noncomm_long_other(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_short_other",
+                    self.pct_of_oi_noncomm_short_other(py)?,
+                ),
+                (
+                    "pct_of_oi_noncomm_spread_other",
+                    self.pct_of_oi_noncomm_spread_other(py)?,
+                ),
+                (
+                    "pct_of_oi_comm_long_other",
+                    self.pct_of_oi_comm_long_other(py)?,
+                ),
+                (
+                    "pct_of_oi_comm_short_other",
+                    self.pct_of_oi_comm_short_other(py)?,
+                ),
+                (
+                    "pct_of_oi_tot_rept_long_other",
+                    self.pct_of_oi_tot_rept_long_other(py)?,
+                ),
+                (
+                    "pct_of_oi_tot_rept_short_other",
+                    self.pct_of_oi_tot_rept_short_other(py)?,
+                ),
+                (
+                    "pct_of_oi_nonrept_long_other",
+                    self.pct_of_oi_nonrept_long_other(py)?,
+                ),
+                (
+                    "pct_of_oi_nonrept_short_other",
+                    self.pct_of_oi_nonrept_short_other(py)?,
+                ),
+                (
+                    "traders_tot_all",
+                    self.traders_tot_all.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_long_all",
+                    self.traders_noncomm_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_short_all",
+                    self.traders_noncomm_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_spread_all",
+                    self.traders_noncomm_spread_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_comm_long_all",
+                    self.traders_comm_long_all.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_comm_short_all",
+                    self.traders_comm_short_all.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_rept_long_all",
+                    self.traders_tot_rept_long_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_rept_short_all",
+                    self.traders_tot_rept_short_all
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_old",
+                    self.traders_tot_old.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_long_old",
+                    self.traders_noncomm_long_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_short_old",
+                    self.traders_noncomm_short_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_spread_old",
+                    self.traders_noncomm_spread_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_comm_long_old",
+                    self.traders_comm_long_old.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_comm_short_old",
+                    self.traders_comm_short_old.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_rept_long_old",
+                    self.traders_tot_rept_long_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_rept_short_old",
+                    self.traders_tot_rept_short_old
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_other",
+                    self.traders_tot_other.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_long_other",
+                    self.traders_noncomm_long_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_short_other",
+                    self.traders_noncomm_short_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_noncomm_spread_other",
+                    self.traders_noncomm_spread_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_comm_long_other",
+                    self.traders_comm_long_other.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_comm_short_other",
+                    self.traders_comm_short_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_rept_long_other",
+                    self.traders_tot_rept_long_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "traders_tot_rept_short_other",
+                    self.traders_tot_rept_short_other
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "conc_gross_le4_tdr_long_all",
+                    self.conc_gross_le4_tdr_long_all(py)?,
+                ),
+                (
+                    "conc_gross_le4_tdr_short_all",
+                    self.conc_gross_le4_tdr_short_all(py)?,
+                ),
+                (
+                    "conc_gross_le8_tdr_long_all",
+                    self.conc_gross_le8_tdr_long_all(py)?,
+                ),
+                (
+                    "conc_gross_le8_tdr_short_all",
+                    self.conc_gross_le8_tdr_short_all(py)?,
+                ),
+                (
+                    "conc_net_le4_tdr_long_all",
+                    self.conc_net_le4_tdr_long_all(py)?,
+                ),
+                (
+                    "conc_net_le4_tdr_short_all",
+                    self.conc_net_le4_tdr_short_all(py)?,
+                ),
+                (
+                    "conc_net_le8_tdr_long_all",
+                    self.conc_net_le8_tdr_long_all(py)?,
+                ),
+                (
+                    "conc_net_le8_tdr_short_all",
+                    self.conc_net_le8_tdr_short_all(py)?,
+                ),
+                (
+                    "conc_gross_le4_tdr_long_old",
+                    self.conc_gross_le4_tdr_long_old(py)?,
+                ),
+                (
+                    "conc_gross_le4_tdr_short_old",
+                    self.conc_gross_le4_tdr_short_old(py)?,
+                ),
+                (
+                    "conc_gross_le8_tdr_long_old",
+                    self.conc_gross_le8_tdr_long_old(py)?,
+                ),
+                (
+                    "conc_gross_le8_tdr_short_old",
+                    self.conc_gross_le8_tdr_short_old(py)?,
+                ),
+                (
+                    "conc_net_le4_tdr_long_old",
+                    self.conc_net_le4_tdr_long_old(py)?,
+                ),
+                (
+                    "conc_net_le4_tdr_short_old",
+                    self.conc_net_le4_tdr_short_old(py)?,
+                ),
+                (
+                    "conc_net_le8_tdr_long_old",
+                    self.conc_net_le8_tdr_long_old(py)?,
+                ),
+                (
+                    "conc_net_le8_tdr_short_old",
+                    self.conc_net_le8_tdr_short_old(py)?,
+                ),
+                (
+                    "conc_gross_le4_tdr_long_other",
+                    self.conc_gross_le4_tdr_long_other(py)?,
+                ),
+                (
+                    "conc_gross_le4_tdr_short_other",
+                    self.conc_gross_le4_tdr_short_other(py)?,
+                ),
+                (
+                    "conc_gross_le8_tdr_long_other",
+                    self.conc_gross_le8_tdr_long_other(py)?,
+                ),
+                (
+                    "conc_gross_le8_tdr_short_other",
+                    self.conc_gross_le8_tdr_short_other(py)?,
+                ),
+                (
+                    "conc_net_le4_tdr_long_other",
+                    self.conc_net_le4_tdr_long_other(py)?,
+                ),
+                (
+                    "conc_net_le4_tdr_short_other",
+                    self.conc_net_le4_tdr_short_other(py)?,
+                ),
+                (
+                    "conc_net_le8_tdr_long_other",
+                    self.conc_net_le8_tdr_long_other(py)?,
+                ),
+                (
+                    "conc_net_le8_tdr_short_other",
+                    self.conc_net_le8_tdr_short_other(py)?,
+                ),
+                (
+                    "contract_units",
+                    self.contract_units.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "sector",
+            crate::models::convert::DictValue::dict_value(&self.sector, py)?,
+        )?;
+        dict.set_item(
+            "market_and_exchange_names",
+            crate::models::convert::DictValue::dict_value(&self.market_and_exchange_names, py)?,
+        )?;
+        dict.set_item(
+            "cftc_contract_market_code",
+            crate::models::convert::DictValue::dict_value(&self.cftc_contract_market_code, py)?,
+        )?;
+        dict.set_item(
+            "cftc_market_code",
+            crate::models::convert::DictValue::dict_value(&self.cftc_market_code, py)?,
+        )?;
+        dict.set_item(
+            "cftc_region_code",
+            crate::models::convert::DictValue::dict_value(&self.cftc_region_code, py)?,
+        )?;
+        dict.set_item(
+            "cftc_commodity_code",
+            crate::models::convert::DictValue::dict_value(&self.cftc_commodity_code, py)?,
+        )?;
+        dict.set_item(
+            "open_interest_all",
+            crate::models::convert::DictValue::dict_value(&self.open_interest_all, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_long_all",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_long_all, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_short_all",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_short_all, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_spread_all",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_spread_all, py)?,
+        )?;
+        dict.set_item(
+            "comm_positions_long_all",
+            crate::models::convert::DictValue::dict_value(&self.comm_positions_long_all, py)?,
+        )?;
+        dict.set_item(
+            "comm_positions_short_all",
+            crate::models::convert::DictValue::dict_value(&self.comm_positions_short_all, py)?,
+        )?;
+        dict.set_item(
+            "tot_rept_positions_long_all",
+            crate::models::convert::DictValue::dict_value(&self.tot_rept_positions_long_all, py)?,
+        )?;
+        dict.set_item(
+            "tot_rept_positions_short_all",
+            crate::models::convert::DictValue::dict_value(&self.tot_rept_positions_short_all, py)?,
+        )?;
+        dict.set_item(
+            "nonrept_positions_long_all",
+            crate::models::convert::DictValue::dict_value(&self.nonrept_positions_long_all, py)?,
+        )?;
+        dict.set_item(
+            "nonrept_positions_short_all",
+            crate::models::convert::DictValue::dict_value(&self.nonrept_positions_short_all, py)?,
+        )?;
+        dict.set_item(
+            "open_interest_old",
+            crate::models::convert::DictValue::dict_value(&self.open_interest_old, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_long_old",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_long_old, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_short_old",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_short_old, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_spread_old",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_spread_old, py)?,
+        )?;
+        dict.set_item(
+            "comm_positions_long_old",
+            crate::models::convert::DictValue::dict_value(&self.comm_positions_long_old, py)?,
+        )?;
+        dict.set_item(
+            "comm_positions_short_old",
+            crate::models::convert::DictValue::dict_value(&self.comm_positions_short_old, py)?,
+        )?;
+        dict.set_item(
+            "tot_rept_positions_long_old",
+            crate::models::convert::DictValue::dict_value(&self.tot_rept_positions_long_old, py)?,
+        )?;
+        dict.set_item(
+            "tot_rept_positions_short_old",
+            crate::models::convert::DictValue::dict_value(&self.tot_rept_positions_short_old, py)?,
+        )?;
+        dict.set_item(
+            "nonrept_positions_long_old",
+            crate::models::convert::DictValue::dict_value(&self.nonrept_positions_long_old, py)?,
+        )?;
+        dict.set_item(
+            "nonrept_positions_short_old",
+            crate::models::convert::DictValue::dict_value(&self.nonrept_positions_short_old, py)?,
+        )?;
+        dict.set_item(
+            "open_interest_other",
+            crate::models::convert::DictValue::dict_value(&self.open_interest_other, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_long_other",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_long_other, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_short_other",
+            crate::models::convert::DictValue::dict_value(&self.noncomm_positions_short_other, py)?,
+        )?;
+        dict.set_item(
+            "noncomm_positions_spread_other",
+            crate::models::convert::DictValue::dict_value(
+                &self.noncomm_positions_spread_other,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "comm_positions_long_other",
+            crate::models::convert::DictValue::dict_value(&self.comm_positions_long_other, py)?,
+        )?;
+        dict.set_item(
+            "comm_positions_short_other",
+            crate::models::convert::DictValue::dict_value(&self.comm_positions_short_other, py)?,
+        )?;
+        dict.set_item(
+            "tot_rept_positions_long_other",
+            crate::models::convert::DictValue::dict_value(&self.tot_rept_positions_long_other, py)?,
+        )?;
+        dict.set_item(
+            "tot_rept_positions_short_other",
+            crate::models::convert::DictValue::dict_value(
+                &self.tot_rept_positions_short_other,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "nonrept_positions_long_other",
+            crate::models::convert::DictValue::dict_value(&self.nonrept_positions_long_other, py)?,
+        )?;
+        dict.set_item(
+            "nonrept_positions_short_other",
+            crate::models::convert::DictValue::dict_value(&self.nonrept_positions_short_other, py)?,
+        )?;
+        dict.set_item(
+            "change_in_open_interest_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_open_interest_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_noncomm_long_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_noncomm_long_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_noncomm_short_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_noncomm_short_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_noncomm_spread_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_noncomm_spread_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_comm_long_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_comm_long_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_comm_short_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_comm_short_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_tot_rept_long_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_tot_rept_long_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_tot_rept_short_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_tot_rept_short_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_nonrept_long_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_nonrept_long_all, py)?,
+        )?;
+        dict.set_item(
+            "change_in_nonrept_short_all",
+            crate::models::convert::DictValue::dict_value(&self.change_in_nonrept_short_all, py)?,
+        )?;
+        dict.set_item(
+            "pct_of_open_interest_all",
+            self.pct_of_open_interest_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_long_all",
+            self.pct_of_oi_noncomm_long_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_short_all",
+            self.pct_of_oi_noncomm_short_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_spread_all",
+            self.pct_of_oi_noncomm_spread_all(py)?,
+        )?;
+        dict.set_item("pct_of_oi_comm_long_all", self.pct_of_oi_comm_long_all(py)?)?;
+        dict.set_item(
+            "pct_of_oi_comm_short_all",
+            self.pct_of_oi_comm_short_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_tot_rept_long_all",
+            self.pct_of_oi_tot_rept_long_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_tot_rept_short_all",
+            self.pct_of_oi_tot_rept_short_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_nonrept_long_all",
+            self.pct_of_oi_nonrept_long_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_nonrept_short_all",
+            self.pct_of_oi_nonrept_short_all(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_open_interest_old",
+            self.pct_of_open_interest_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_long_old",
+            self.pct_of_oi_noncomm_long_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_short_old",
+            self.pct_of_oi_noncomm_short_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_spread_old",
+            self.pct_of_oi_noncomm_spread_old(py)?,
+        )?;
+        dict.set_item("pct_of_oi_comm_long_old", self.pct_of_oi_comm_long_old(py)?)?;
+        dict.set_item(
+            "pct_of_oi_comm_short_old",
+            self.pct_of_oi_comm_short_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_tot_rept_long_old",
+            self.pct_of_oi_tot_rept_long_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_tot_rept_short_old",
+            self.pct_of_oi_tot_rept_short_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_nonrept_long_old",
+            self.pct_of_oi_nonrept_long_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_nonrept_short_old",
+            self.pct_of_oi_nonrept_short_old(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_open_interest_other",
+            self.pct_of_open_interest_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_long_other",
+            self.pct_of_oi_noncomm_long_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_short_other",
+            self.pct_of_oi_noncomm_short_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_noncomm_spread_other",
+            self.pct_of_oi_noncomm_spread_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_comm_long_other",
+            self.pct_of_oi_comm_long_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_comm_short_other",
+            self.pct_of_oi_comm_short_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_tot_rept_long_other",
+            self.pct_of_oi_tot_rept_long_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_tot_rept_short_other",
+            self.pct_of_oi_tot_rept_short_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_nonrept_long_other",
+            self.pct_of_oi_nonrept_long_other(py)?,
+        )?;
+        dict.set_item(
+            "pct_of_oi_nonrept_short_other",
+            self.pct_of_oi_nonrept_short_other(py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_long_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_long_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_short_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_short_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_spread_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_spread_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_comm_long_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_comm_long_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_comm_short_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_comm_short_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_rept_long_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_rept_long_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_rept_short_all",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_rept_short_all, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_long_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_long_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_short_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_short_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_spread_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_spread_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_comm_long_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_comm_long_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_comm_short_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_comm_short_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_rept_long_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_rept_long_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_rept_short_old",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_rept_short_old, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_other, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_long_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_long_other, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_short_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_short_other, py)?,
+        )?;
+        dict.set_item(
+            "traders_noncomm_spread_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_noncomm_spread_other, py)?,
+        )?;
+        dict.set_item(
+            "traders_comm_long_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_comm_long_other, py)?,
+        )?;
+        dict.set_item(
+            "traders_comm_short_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_comm_short_other, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_rept_long_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_rept_long_other, py)?,
+        )?;
+        dict.set_item(
+            "traders_tot_rept_short_other",
+            crate::models::convert::DictValue::dict_value(&self.traders_tot_rept_short_other, py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le4_tdr_long_all",
+            self.conc_gross_le4_tdr_long_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le4_tdr_short_all",
+            self.conc_gross_le4_tdr_short_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le8_tdr_long_all",
+            self.conc_gross_le8_tdr_long_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le8_tdr_short_all",
+            self.conc_gross_le8_tdr_short_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le4_tdr_long_all",
+            self.conc_net_le4_tdr_long_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le4_tdr_short_all",
+            self.conc_net_le4_tdr_short_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le8_tdr_long_all",
+            self.conc_net_le8_tdr_long_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le8_tdr_short_all",
+            self.conc_net_le8_tdr_short_all(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le4_tdr_long_old",
+            self.conc_gross_le4_tdr_long_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le4_tdr_short_old",
+            self.conc_gross_le4_tdr_short_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le8_tdr_long_old",
+            self.conc_gross_le8_tdr_long_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le8_tdr_short_old",
+            self.conc_gross_le8_tdr_short_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le4_tdr_long_old",
+            self.conc_net_le4_tdr_long_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le4_tdr_short_old",
+            self.conc_net_le4_tdr_short_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le8_tdr_long_old",
+            self.conc_net_le8_tdr_long_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le8_tdr_short_old",
+            self.conc_net_le8_tdr_short_old(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le4_tdr_long_other",
+            self.conc_gross_le4_tdr_long_other(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le4_tdr_short_other",
+            self.conc_gross_le4_tdr_short_other(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le8_tdr_long_other",
+            self.conc_gross_le8_tdr_long_other(py)?,
+        )?;
+        dict.set_item(
+            "conc_gross_le8_tdr_short_other",
+            self.conc_gross_le8_tdr_short_other(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le4_tdr_long_other",
+            self.conc_net_le4_tdr_long_other(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le4_tdr_short_other",
+            self.conc_net_le4_tdr_short_other(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le8_tdr_long_other",
+            self.conc_net_le8_tdr_long_other(py)?,
+        )?;
+        dict.set_item(
+            "conc_net_le8_tdr_short_other",
+            self.conc_net_le8_tdr_short_other(py)?,
+        )?;
+        dict.set_item(
+            "contract_units",
+            crate::models::convert::DictValue::dict_value(&self.contract_units, py)?,
+        )?;
+        Ok(dict)
+    }
 
     #[getter]
     fn pct_of_open_interest_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -2486,5 +3968,11 @@ impl From<libfmp::responses::commitment_of_traders::CotReport> for CotReport {
             conc_net_le8_tdr_short_other: value.conc_net_le8_tdr_short_other,
             contract_units: value.contract_units,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CotReport {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

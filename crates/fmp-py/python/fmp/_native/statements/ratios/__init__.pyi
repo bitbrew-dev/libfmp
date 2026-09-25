@@ -14,6 +14,74 @@ __all__ = [
 @typing.final
 class FinancialRatios:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["reported_currency"],
+        typing.Literal["gross_profit_margin"],
+        typing.Literal["ebit_margin"],
+        typing.Literal["ebitda_margin"],
+        typing.Literal["operating_profit_margin"],
+        typing.Literal["pretax_profit_margin"],
+        typing.Literal["continuous_operations_profit_margin"],
+        typing.Literal["net_profit_margin"],
+        typing.Literal["bottom_line_profit_margin"],
+        typing.Literal["receivables_turnover"],
+        typing.Literal["payables_turnover"],
+        typing.Literal["inventory_turnover"],
+        typing.Literal["fixed_asset_turnover"],
+        typing.Literal["asset_turnover"],
+        typing.Literal["current_ratio"],
+        typing.Literal["quick_ratio"],
+        typing.Literal["solvency_ratio"],
+        typing.Literal["cash_ratio"],
+        typing.Literal["price_to_earnings_ratio"],
+        typing.Literal["price_to_earnings_growth_ratio"],
+        typing.Literal["forward_price_to_earnings_growth_ratio"],
+        typing.Literal["price_to_earnings_diluted_ratio"],
+        typing.Literal["price_to_earnings_diluted_growth_ratio"],
+        typing.Literal["price_to_book_ratio"],
+        typing.Literal["price_to_sales_ratio"],
+        typing.Literal["price_to_free_cash_flow_ratio"],
+        typing.Literal["price_to_operating_cash_flow_ratio"],
+        typing.Literal["debt_to_assets_ratio"],
+        typing.Literal["debt_to_equity_ratio"],
+        typing.Literal["debt_to_capital_ratio"],
+        typing.Literal["long_term_debt_to_capital_ratio"],
+        typing.Literal["financial_leverage_ratio"],
+        typing.Literal["working_capital_turnover_ratio"],
+        typing.Literal["operating_cash_flow_ratio"],
+        typing.Literal["operating_cash_flow_sales_ratio"],
+        typing.Literal["free_cash_flow_operating_cash_flow_ratio"],
+        typing.Literal["debt_service_coverage_ratio"],
+        typing.Literal["interest_coverage_ratio"],
+        typing.Literal["short_term_operating_cash_flow_coverage_ratio"],
+        typing.Literal["operating_cash_flow_coverage_ratio"],
+        typing.Literal["capital_expenditure_coverage_ratio"],
+        typing.Literal["dividend_paid_and_capex_coverage_ratio"],
+        typing.Literal["dividend_payout_ratio"],
+        typing.Literal["dividend_yield"],
+        typing.Literal["dividend_yield_percentage"],
+        typing.Literal["revenue_per_share"],
+        typing.Literal["net_income_per_share"],
+        typing.Literal["interest_debt_per_share"],
+        typing.Literal["cash_per_share"],
+        typing.Literal["book_value_per_share"],
+        typing.Literal["tangible_book_value_per_share"],
+        typing.Literal["shareholders_equity_per_share"],
+        typing.Literal["operating_cash_flow_per_share"],
+        typing.Literal["capex_per_share"],
+        typing.Literal["free_cash_flow_per_share"],
+        typing.Literal["net_income_per_ebt"],
+        typing.Literal["ebt_per_ebit"],
+        typing.Literal["price_to_fair_value"],
+        typing.Literal["debt_to_market_cap"],
+        typing.Literal["effective_tax_rate"],
+        typing.Literal["enterprise_value_multiple"],
+        typing.Literal["dividend_per_share"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -219,11 +287,81 @@ class FinancialRatios:
         dividend_per_share: builtins.float,
     ) -> FinancialRatios: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class FinancialRatiosTtm:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["gross_profit_margin_ttm"],
+        typing.Literal["ebit_margin_ttm"],
+        typing.Literal["ebitda_margin_ttm"],
+        typing.Literal["operating_profit_margin_ttm"],
+        typing.Literal["pretax_profit_margin_ttm"],
+        typing.Literal["continuous_operations_profit_margin_ttm"],
+        typing.Literal["net_profit_margin_ttm"],
+        typing.Literal["bottom_line_profit_margin_ttm"],
+        typing.Literal["receivables_turnover_ttm"],
+        typing.Literal["payables_turnover_ttm"],
+        typing.Literal["inventory_turnover_ttm"],
+        typing.Literal["fixed_asset_turnover_ttm"],
+        typing.Literal["asset_turnover_ttm"],
+        typing.Literal["current_ratio_ttm"],
+        typing.Literal["quick_ratio_ttm"],
+        typing.Literal["solvency_ratio_ttm"],
+        typing.Literal["cash_ratio_ttm"],
+        typing.Literal["price_to_earnings_ratio_ttm"],
+        typing.Literal["price_to_earnings_growth_ratio_ttm"],
+        typing.Literal["forward_price_to_earnings_growth_ratio_ttm"],
+        typing.Literal["price_to_earnings_diluted_ratio_ttm"],
+        typing.Literal["price_to_earnings_diluted_growth_ratio_ttm"],
+        typing.Literal["price_to_book_ratio_ttm"],
+        typing.Literal["price_to_sales_ratio_ttm"],
+        typing.Literal["price_to_free_cash_flow_ratio_ttm"],
+        typing.Literal["price_to_operating_cash_flow_ratio_ttm"],
+        typing.Literal["debt_to_assets_ratio_ttm"],
+        typing.Literal["debt_to_equity_ratio_ttm"],
+        typing.Literal["debt_to_capital_ratio_ttm"],
+        typing.Literal["long_term_debt_to_capital_ratio_ttm"],
+        typing.Literal["financial_leverage_ratio_ttm"],
+        typing.Literal["working_capital_turnover_ratio_ttm"],
+        typing.Literal["operating_cash_flow_ratio_ttm"],
+        typing.Literal["operating_cash_flow_sales_ratio_ttm"],
+        typing.Literal["free_cash_flow_operating_cash_flow_ratio_ttm"],
+        typing.Literal["debt_service_coverage_ratio_ttm"],
+        typing.Literal["interest_coverage_ratio_ttm"],
+        typing.Literal["short_term_operating_cash_flow_coverage_ratio_ttm"],
+        typing.Literal["operating_cash_flow_coverage_ratio_ttm"],
+        typing.Literal["capital_expenditure_coverage_ratio_ttm"],
+        typing.Literal["dividend_paid_and_capex_coverage_ratio_ttm"],
+        typing.Literal["dividend_payout_ratio_ttm"],
+        typing.Literal["dividend_yield_ttm"],
+        typing.Literal["enterprise_value_ttm"],
+        typing.Literal["revenue_per_share_ttm"],
+        typing.Literal["net_income_per_share_ttm"],
+        typing.Literal["interest_debt_per_share_ttm"],
+        typing.Literal["cash_per_share_ttm"],
+        typing.Literal["book_value_per_share_ttm"],
+        typing.Literal["tangible_book_value_per_share_ttm"],
+        typing.Literal["shareholders_equity_per_share_ttm"],
+        typing.Literal["operating_cash_flow_per_share_ttm"],
+        typing.Literal["capex_per_share_ttm"],
+        typing.Literal["free_cash_flow_per_share_ttm"],
+        typing.Literal["net_income_per_ebt_ttm"],
+        typing.Literal["ebt_per_ebit_ttm"],
+        typing.Literal["price_to_fair_value_ttm"],
+        typing.Literal["debt_to_market_cap_ttm"],
+        typing.Literal["effective_tax_rate_ttm"],
+        typing.Literal["enterprise_value_multiple_ttm"],
+        typing.Literal["dividend_per_share_ttm"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -417,6 +555,12 @@ class FinancialRatiosTtm:
         dividend_per_share_ttm: builtins.float,
     ) -> FinancialRatiosTtm: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

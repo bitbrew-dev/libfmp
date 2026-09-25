@@ -96,6 +96,13 @@ class ForexNamespace:
 @typing.final
 class ForexPair:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["from_currency"],
+        typing.Literal["to_currency"],
+        typing.Literal["from_name"],
+        typing.Literal["to_name"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -118,3 +125,9 @@ class ForexPair:
         to_name: builtins.str,
     ) -> ForexPair: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

@@ -145,6 +145,15 @@ class ChartNamespace:
 @typing.final
 class StockChartAdjustedBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["adj_open"],
+        typing.Literal["adj_high"],
+        typing.Literal["adj_low"],
+        typing.Literal["adj_close"],
+        typing.Literal["volume"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -173,11 +182,29 @@ class StockChartAdjustedBar:
         volume: builtins.float,
     ) -> StockChartAdjustedBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockChartFullBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["high"],
+        typing.Literal["low"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+        typing.Literal["change"],
+        typing.Literal["change_percent"],
+        typing.Literal["vwap"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -215,11 +242,25 @@ class StockChartFullBar:
         vwap: builtins.float,
     ) -> StockChartFullBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockChartIntradayBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["low"],
+        typing.Literal["high"],
+        typing.Literal["close"],
+        typing.Literal["volume"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -245,11 +286,23 @@ class StockChartIntradayBar:
         volume: builtins.float,
     ) -> StockChartIntradayBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockChartLightBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["price"],
+        typing.Literal["volume"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -269,3 +322,9 @@ class StockChartLightBar:
         volume: builtins.float,
     ) -> StockChartLightBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

@@ -18,6 +18,14 @@ __all__ = [
 @typing.final
 class CikSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["cik"],
+        typing.Literal["exchange_full_name"],
+        typing.Literal["exchange"],
+        typing.Literal["currency"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -43,11 +51,23 @@ class CikSearchResult:
         currency: builtins.str,
     ) -> CikSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CusipSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["cusip"],
+        typing.Literal["market_cap"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -67,11 +87,55 @@ class CusipSearchResult:
         market_cap: builtins.float,
     ) -> CusipSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class ExchangeVariant:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["price"],
+        typing.Literal["beta"],
+        typing.Literal["vol_avg"],
+        typing.Literal["market_cap"],
+        typing.Literal["last_div"],
+        typing.Literal["range"],
+        typing.Literal["changes"],
+        typing.Literal["company_name"],
+        typing.Literal["currency"],
+        typing.Literal["cik"],
+        typing.Literal["isin"],
+        typing.Literal["cusip"],
+        typing.Literal["exchange"],
+        typing.Literal["exchange_short_name"],
+        typing.Literal["industry"],
+        typing.Literal["website"],
+        typing.Literal["description"],
+        typing.Literal["ceo"],
+        typing.Literal["sector"],
+        typing.Literal["country"],
+        typing.Literal["full_time_employees"],
+        typing.Literal["phone"],
+        typing.Literal["address"],
+        typing.Literal["city"],
+        typing.Literal["state"],
+        typing.Literal["zip"],
+        typing.Literal["dcf_diff"],
+        typing.Literal["dcf"],
+        typing.Literal["image"],
+        typing.Literal["ipo_date"],
+        typing.Literal["default_image"],
+        typing.Literal["is_etf"],
+        typing.Literal["is_actively_trading"],
+        typing.Literal["is_adr"],
+        typing.Literal["is_fund"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -187,11 +251,23 @@ class ExchangeVariant:
         is_fund: builtins.bool,
     ) -> ExchangeVariant: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class IsinSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["isin"],
+        typing.Literal["market_cap"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -211,11 +287,24 @@ class IsinSearchResult:
         market_cap: builtins.float,
     ) -> IsinSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class NameSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["currency"],
+        typing.Literal["exchange_full_name"],
+        typing.Literal["exchange"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -238,6 +327,12 @@ class NameSearchResult:
         exchange: builtins.str,
     ) -> NameSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -294,6 +389,13 @@ class SearchNamespace:
 @typing.final
 class SymbolSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["currency"],
+        typing.Literal["exchange_full_name"],
+        typing.Literal["exchange"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -316,3 +418,9 @@ class SymbolSearchResult:
         exchange: builtins.str,
     ) -> SymbolSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

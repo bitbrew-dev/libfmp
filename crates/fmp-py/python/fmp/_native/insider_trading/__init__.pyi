@@ -17,6 +17,23 @@ __all__ = [
 @typing.final
 class BeneficialOwnershipAcquisition:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["symbol"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["cusip"],
+        typing.Literal["name_of_reporting_person"],
+        typing.Literal["citizenship_or_place_of_organization"],
+        typing.Literal["sole_voting_power"],
+        typing.Literal["shared_voting_power"],
+        typing.Literal["sole_dispositive_power"],
+        typing.Literal["shared_dispositive_power"],
+        typing.Literal["amount_beneficially_owned"],
+        typing.Literal["percent_of_class"],
+        typing.Literal["type_of_reporting_person"],
+        typing.Literal["url"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -69,11 +86,20 @@ class BeneficialOwnershipAcquisition:
         url: builtins.str,
     ) -> BeneficialOwnershipAcquisition: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class InsiderReportingName:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["reporting_cik"], typing.Literal["reporting_name"]
+    ]
 
     @property
     def reporting_cik(self) -> builtins.str: ...
@@ -84,11 +110,35 @@ class InsiderReportingName:
         cls, *, reporting_cik: builtins.str, reporting_name: builtins.str
     ) -> InsiderReportingName: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class InsiderTrade:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["filing_date"],
+        typing.Literal["transaction_date"],
+        typing.Literal["reporting_cik"],
+        typing.Literal["company_cik"],
+        typing.Literal["transaction_type"],
+        typing.Literal["securities_owned"],
+        typing.Literal["reporting_name"],
+        typing.Literal["type_of_owner"],
+        typing.Literal["acquisition_or_disposition"],
+        typing.Literal["direct_or_indirect"],
+        typing.Literal["form_type"],
+        typing.Literal["securities_transacted"],
+        typing.Literal["price"],
+        typing.Literal["security_name"],
+        typing.Literal["url"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -144,11 +194,32 @@ class InsiderTrade:
         url: builtins.str,
     ) -> InsiderTrade: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class InsiderTradeStatistics:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["year"],
+        typing.Literal["quarter"],
+        typing.Literal["acquired_transactions"],
+        typing.Literal["disposed_transactions"],
+        typing.Literal["acquired_disposed_ratio"],
+        typing.Literal["total_acquired"],
+        typing.Literal["total_disposed"],
+        typing.Literal["average_acquired"],
+        typing.Literal["average_disposed"],
+        typing.Literal["total_purchases"],
+        typing.Literal["total_sales"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -195,6 +266,12 @@ class InsiderTradeStatistics:
         total_sales: builtins.int,
     ) -> InsiderTradeStatistics: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -258,9 +335,16 @@ class InsiderTradingNamespace:
 @typing.final
 class InsiderTransactionType:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["transaction_type"]]
 
     @property
     def transaction_type(self) -> builtins.str: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(cls, *, transaction_type: builtins.str) -> InsiderTransactionType: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

@@ -24,6 +24,16 @@ __all__ = [
 @typing.final
 class CompanyExecutive:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["title"],
+        typing.Literal["name"],
+        typing.Literal["pay"],
+        typing.Literal["currency_pay"],
+        typing.Literal["gender"],
+        typing.Literal["year_born"],
+        typing.Literal["title_since"],
+        typing.Literal["active"],
+    ]
 
     @property
     def title(self) -> builtins.str: ...
@@ -55,11 +65,20 @@ class CompanyExecutive:
         active: builtins.bool,
     ) -> CompanyExecutive: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CompanyMarketCapitalization:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"], typing.Literal["date"], typing.Literal["market_cap"]
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -72,6 +91,12 @@ class CompanyMarketCapitalization:
         cls, *, symbol: builtins.str, date: datetime.date, market_cap: builtins.float
     ) -> CompanyMarketCapitalization: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -205,6 +230,12 @@ class CompanyNamespace:
 @typing.final
 class CompanyNote:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["symbol"],
+        typing.Literal["title"],
+        typing.Literal["exchange"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -224,11 +255,55 @@ class CompanyNote:
         exchange: builtins.str,
     ) -> CompanyNote: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CompanyProfile:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["price"],
+        typing.Literal["market_cap"],
+        typing.Literal["beta"],
+        typing.Literal["last_dividend"],
+        typing.Literal["range"],
+        typing.Literal["change"],
+        typing.Literal["change_percentage"],
+        typing.Literal["volume"],
+        typing.Literal["average_volume"],
+        typing.Literal["company_name"],
+        typing.Literal["currency"],
+        typing.Literal["cik"],
+        typing.Literal["isin"],
+        typing.Literal["cusip"],
+        typing.Literal["exchange_full_name"],
+        typing.Literal["exchange"],
+        typing.Literal["industry"],
+        typing.Literal["website"],
+        typing.Literal["description"],
+        typing.Literal["ceo"],
+        typing.Literal["sector"],
+        typing.Literal["country"],
+        typing.Literal["full_time_employees"],
+        typing.Literal["phone"],
+        typing.Literal["address"],
+        typing.Literal["city"],
+        typing.Literal["state"],
+        typing.Literal["zip"],
+        typing.Literal["image"],
+        typing.Literal["ipo_date"],
+        typing.Literal["default_image"],
+        typing.Literal["is_etf"],
+        typing.Literal["is_actively_trading"],
+        typing.Literal["is_adr"],
+        typing.Literal["is_fund"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -344,11 +419,25 @@ class CompanyProfile:
         is_fund: builtins.bool,
     ) -> CompanyProfile: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CompanyShareFloat:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["free_float"],
+        typing.Literal["float_shares"],
+        typing.Literal["outstanding_shares"],
+        typing.Literal["source"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -374,11 +463,24 @@ class CompanyShareFloat:
         source: builtins.str,
     ) -> CompanyShareFloat: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class DelistedCompany:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["exchange"],
+        typing.Literal["ipo_date"],
+        typing.Literal["delisted_date"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -401,11 +503,28 @@ class DelistedCompany:
         delisted_date: datetime.date,
     ) -> DelistedCompany: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EmployeeCount:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["acceptance_time"],
+        typing.Literal["period_of_report"],
+        typing.Literal["company_name"],
+        typing.Literal["form_type"],
+        typing.Literal["filing_date"],
+        typing.Literal["employee_count"],
+        typing.Literal["source"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -440,11 +559,34 @@ class EmployeeCount:
         source: builtins.str,
     ) -> EmployeeCount: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class ExecutiveCompensation:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["name_and_position"],
+        typing.Literal["year"],
+        typing.Literal["salary"],
+        typing.Literal["bonus"],
+        typing.Literal["stock_award"],
+        typing.Literal["option_award"],
+        typing.Literal["incentive_plan_compensation"],
+        typing.Literal["all_other_compensation"],
+        typing.Literal["total"],
+        typing.Literal["link"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -497,11 +639,22 @@ class ExecutiveCompensation:
         link: builtins.str,
     ) -> ExecutiveCompensation: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class ExecutiveCompensationBenchmark:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["industry_title"],
+        typing.Literal["year"],
+        typing.Literal["average_compensation"],
+    ]
 
     @property
     def industry_title(self) -> builtins.str: ...
@@ -518,11 +671,28 @@ class ExecutiveCompensationBenchmark:
         average_compensation: builtins.float,
     ) -> ExecutiveCompensationBenchmark: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class MergerAcquisition:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["cik"],
+        typing.Literal["targeted_company_name"],
+        typing.Literal["targeted_cik"],
+        typing.Literal["targeted_symbol"],
+        typing.Literal["transaction_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["link"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -557,11 +727,24 @@ class MergerAcquisition:
         link: builtins.str,
     ) -> MergerAcquisition: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class ShareFloat:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["free_float"],
+        typing.Literal["float_shares"],
+        typing.Literal["outstanding_shares"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -584,11 +767,23 @@ class ShareFloat:
         outstanding_shares: builtins.float,
     ) -> ShareFloat: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockPeer:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["price"],
+        typing.Literal["market_cap"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -608,3 +803,9 @@ class StockPeer:
         market_cap: builtins.float,
     ) -> StockPeer: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

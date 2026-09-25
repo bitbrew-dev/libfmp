@@ -40,6 +40,12 @@ impl CrowdfundingOfferingSearchResult {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['cik'], typing.Literal['name'], typing.Literal['date']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["cik", "name", "date"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -63,6 +69,34 @@ impl CrowdfundingOfferingSearchResult {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CrowdfundingOfferingSearchResult",
+            &[
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("date", self.date(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item("date", self.date(py)?)?;
+        Ok(dict)
+    }
 
     #[getter]
     fn date<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -82,6 +116,12 @@ impl From<libfmp::responses::fundraising::CrowdfundingOfferingSearchResult>
             name: value.name,
             date: value.date,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CrowdfundingOfferingSearchResult {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -111,6 +151,12 @@ impl RegulationDOfferingSearchResult {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['cik'], typing.Literal['name'], typing.Literal['date']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["cik", "name", "date"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -121,6 +167,37 @@ impl RegulationDOfferingSearchResult {
         kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "RegulationDOfferingSearchResult",
+            &[
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -133,6 +210,12 @@ impl From<libfmp::responses::fundraising::RegulationDOfferingSearchResult>
             name: value.name,
             date: value.date.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for RegulationDOfferingSearchResult {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -354,6 +437,64 @@ impl CrowdfundingOffering {
 
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
+
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['cik'], typing.Literal['company_name'], typing.Literal['date'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['form_type'], typing.Literal['form_signification'], typing.Literal['name_of_issuer'], typing.Literal['legal_status_form'], typing.Literal['jurisdiction_organization'], typing.Literal['issuer_street'], typing.Literal['issuer_city'], typing.Literal['issuer_state_or_country'], typing.Literal['issuer_zip_code'], typing.Literal['issuer_website'], typing.Literal['intermediary_company_name'], typing.Literal['intermediary_commission_cik'], typing.Literal['intermediary_commission_file_number'], typing.Literal['compensation_amount'], typing.Literal['financial_interest'], typing.Literal['security_offered_type'], typing.Literal['security_offered_other_description'], typing.Literal['number_of_security_offered'], typing.Literal['offering_price'], typing.Literal['offering_amount'], typing.Literal['over_subscription_accepted'], typing.Literal['over_subscription_allocation_type'], typing.Literal['maximum_offering_amount'], typing.Literal['offering_deadline_date'], typing.Literal['current_number_of_employees'], typing.Literal['total_asset_most_recent_fiscal_year'], typing.Literal['total_asset_prior_fiscal_year'], typing.Literal['cash_and_cash_equivalent_most_recent_fiscal_year'], typing.Literal['cash_and_cash_equivalent_prior_fiscal_year'], typing.Literal['accounts_receivable_most_recent_fiscal_year'], typing.Literal['accounts_receivable_prior_fiscal_year'], typing.Literal['short_term_debt_most_recent_fiscal_year'], typing.Literal['short_term_debt_prior_fiscal_year'], typing.Literal['long_term_debt_most_recent_fiscal_year'], typing.Literal['long_term_debt_prior_fiscal_year'], typing.Literal['revenue_most_recent_fiscal_year'], typing.Literal['revenue_prior_fiscal_year'], typing.Literal['cost_goods_sold_most_recent_fiscal_year'], typing.Literal['cost_goods_sold_prior_fiscal_year'], typing.Literal['taxes_paid_most_recent_fiscal_year'], typing.Literal['taxes_paid_prior_fiscal_year'], typing.Literal['net_income_most_recent_fiscal_year'], typing.Literal['net_income_prior_fiscal_year']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "cik",
+                "company_name",
+                "date",
+                "filing_date",
+                "accepted_date",
+                "form_type",
+                "form_signification",
+                "name_of_issuer",
+                "legal_status_form",
+                "jurisdiction_organization",
+                "issuer_street",
+                "issuer_city",
+                "issuer_state_or_country",
+                "issuer_zip_code",
+                "issuer_website",
+                "intermediary_company_name",
+                "intermediary_commission_cik",
+                "intermediary_commission_file_number",
+                "compensation_amount",
+                "financial_interest",
+                "security_offered_type",
+                "security_offered_other_description",
+                "number_of_security_offered",
+                "offering_price",
+                "offering_amount",
+                "over_subscription_accepted",
+                "over_subscription_allocation_type",
+                "maximum_offering_amount",
+                "offering_deadline_date",
+                "current_number_of_employees",
+                "total_asset_most_recent_fiscal_year",
+                "total_asset_prior_fiscal_year",
+                "cash_and_cash_equivalent_most_recent_fiscal_year",
+                "cash_and_cash_equivalent_prior_fiscal_year",
+                "accounts_receivable_most_recent_fiscal_year",
+                "accounts_receivable_prior_fiscal_year",
+                "short_term_debt_most_recent_fiscal_year",
+                "short_term_debt_prior_fiscal_year",
+                "long_term_debt_most_recent_fiscal_year",
+                "long_term_debt_prior_fiscal_year",
+                "revenue_most_recent_fiscal_year",
+                "revenue_prior_fiscal_year",
+                "cost_goods_sold_most_recent_fiscal_year",
+                "cost_goods_sold_prior_fiscal_year",
+                "taxes_paid_most_recent_fiscal_year",
+                "taxes_paid_prior_fiscal_year",
+                "net_income_most_recent_fiscal_year",
+                "net_income_prior_fiscal_year",
+            ],
+        )
+    }
 
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
@@ -606,6 +747,496 @@ impl CrowdfundingOffering {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CrowdfundingOffering",
+            &[
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                ("form_type", self.form_type.clone().into_bound_py_any(py)?),
+                (
+                    "form_signification",
+                    self.form_signification.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "name_of_issuer",
+                    self.name_of_issuer.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "legal_status_form",
+                    self.legal_status_form.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "jurisdiction_organization",
+                    self.jurisdiction_organization
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_street",
+                    self.issuer_street.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_city",
+                    self.issuer_city.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_state_or_country",
+                    self.issuer_state_or_country.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_zip_code",
+                    self.issuer_zip_code.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_website",
+                    self.issuer_website.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "intermediary_company_name",
+                    self.intermediary_company_name
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "intermediary_commission_cik",
+                    self.intermediary_commission_cik
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "intermediary_commission_file_number",
+                    self.intermediary_commission_file_number
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "compensation_amount",
+                    self.compensation_amount.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "financial_interest",
+                    self.financial_interest.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "security_offered_type",
+                    self.security_offered_type.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "security_offered_other_description",
+                    self.security_offered_other_description
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "number_of_security_offered",
+                    self.number_of_security_offered
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                ("offering_price", self.offering_price(py)?),
+                (
+                    "offering_amount",
+                    self.offering_amount.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "over_subscription_accepted",
+                    self.over_subscription_accepted
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "over_subscription_allocation_type",
+                    self.over_subscription_allocation_type
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "maximum_offering_amount",
+                    self.maximum_offering_amount.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "offering_deadline_date",
+                    self.offering_deadline_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "current_number_of_employees",
+                    self.current_number_of_employees
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "total_asset_most_recent_fiscal_year",
+                    self.total_asset_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "total_asset_prior_fiscal_year",
+                    self.total_asset_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_and_cash_equivalent_most_recent_fiscal_year",
+                    self.cash_and_cash_equivalent_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_and_cash_equivalent_prior_fiscal_year",
+                    self.cash_and_cash_equivalent_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "accounts_receivable_most_recent_fiscal_year",
+                    self.accounts_receivable_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "accounts_receivable_prior_fiscal_year",
+                    self.accounts_receivable_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "short_term_debt_most_recent_fiscal_year",
+                    self.short_term_debt_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "short_term_debt_prior_fiscal_year",
+                    self.short_term_debt_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "long_term_debt_most_recent_fiscal_year",
+                    self.long_term_debt_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "long_term_debt_prior_fiscal_year",
+                    self.long_term_debt_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_most_recent_fiscal_year",
+                    self.revenue_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_prior_fiscal_year",
+                    self.revenue_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cost_goods_sold_most_recent_fiscal_year",
+                    self.cost_goods_sold_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cost_goods_sold_prior_fiscal_year",
+                    self.cost_goods_sold_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "taxes_paid_most_recent_fiscal_year",
+                    self.taxes_paid_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "taxes_paid_prior_fiscal_year",
+                    self.taxes_paid_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_income_most_recent_fiscal_year",
+                    self.net_income_most_recent_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_income_prior_fiscal_year",
+                    self.net_income_prior_fiscal_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "form_type",
+            crate::models::convert::DictValue::dict_value(&self.form_type, py)?,
+        )?;
+        dict.set_item(
+            "form_signification",
+            crate::models::convert::DictValue::dict_value(&self.form_signification, py)?,
+        )?;
+        dict.set_item(
+            "name_of_issuer",
+            crate::models::convert::DictValue::dict_value(&self.name_of_issuer, py)?,
+        )?;
+        dict.set_item(
+            "legal_status_form",
+            crate::models::convert::DictValue::dict_value(&self.legal_status_form, py)?,
+        )?;
+        dict.set_item(
+            "jurisdiction_organization",
+            crate::models::convert::DictValue::dict_value(&self.jurisdiction_organization, py)?,
+        )?;
+        dict.set_item(
+            "issuer_street",
+            crate::models::convert::DictValue::dict_value(&self.issuer_street, py)?,
+        )?;
+        dict.set_item(
+            "issuer_city",
+            crate::models::convert::DictValue::dict_value(&self.issuer_city, py)?,
+        )?;
+        dict.set_item(
+            "issuer_state_or_country",
+            crate::models::convert::DictValue::dict_value(&self.issuer_state_or_country, py)?,
+        )?;
+        dict.set_item(
+            "issuer_zip_code",
+            crate::models::convert::DictValue::dict_value(&self.issuer_zip_code, py)?,
+        )?;
+        dict.set_item(
+            "issuer_website",
+            crate::models::convert::DictValue::dict_value(&self.issuer_website, py)?,
+        )?;
+        dict.set_item(
+            "intermediary_company_name",
+            crate::models::convert::DictValue::dict_value(&self.intermediary_company_name, py)?,
+        )?;
+        dict.set_item(
+            "intermediary_commission_cik",
+            crate::models::convert::DictValue::dict_value(&self.intermediary_commission_cik, py)?,
+        )?;
+        dict.set_item(
+            "intermediary_commission_file_number",
+            crate::models::convert::DictValue::dict_value(
+                &self.intermediary_commission_file_number,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "compensation_amount",
+            crate::models::convert::DictValue::dict_value(&self.compensation_amount, py)?,
+        )?;
+        dict.set_item(
+            "financial_interest",
+            crate::models::convert::DictValue::dict_value(&self.financial_interest, py)?,
+        )?;
+        dict.set_item(
+            "security_offered_type",
+            crate::models::convert::DictValue::dict_value(&self.security_offered_type, py)?,
+        )?;
+        dict.set_item(
+            "security_offered_other_description",
+            crate::models::convert::DictValue::dict_value(
+                &self.security_offered_other_description,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "number_of_security_offered",
+            crate::models::convert::DictValue::dict_value(&self.number_of_security_offered, py)?,
+        )?;
+        dict.set_item("offering_price", self.offering_price(py)?)?;
+        dict.set_item(
+            "offering_amount",
+            crate::models::convert::DictValue::dict_value(&self.offering_amount, py)?,
+        )?;
+        dict.set_item(
+            "over_subscription_accepted",
+            crate::models::convert::DictValue::dict_value(&self.over_subscription_accepted, py)?,
+        )?;
+        dict.set_item(
+            "over_subscription_allocation_type",
+            crate::models::convert::DictValue::dict_value(
+                &self.over_subscription_allocation_type,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "maximum_offering_amount",
+            crate::models::convert::DictValue::dict_value(&self.maximum_offering_amount, py)?,
+        )?;
+        dict.set_item(
+            "offering_deadline_date",
+            crate::models::convert::DictValue::dict_value(&self.offering_deadline_date, py)?,
+        )?;
+        dict.set_item(
+            "current_number_of_employees",
+            crate::models::convert::DictValue::dict_value(&self.current_number_of_employees, py)?,
+        )?;
+        dict.set_item(
+            "total_asset_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.total_asset_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "total_asset_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.total_asset_prior_fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "cash_and_cash_equivalent_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.cash_and_cash_equivalent_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "cash_and_cash_equivalent_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.cash_and_cash_equivalent_prior_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "accounts_receivable_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.accounts_receivable_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "accounts_receivable_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.accounts_receivable_prior_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "short_term_debt_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.short_term_debt_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "short_term_debt_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.short_term_debt_prior_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "long_term_debt_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.long_term_debt_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "long_term_debt_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.long_term_debt_prior_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "revenue_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.revenue_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "revenue_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.revenue_prior_fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "cost_goods_sold_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.cost_goods_sold_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "cost_goods_sold_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.cost_goods_sold_prior_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "taxes_paid_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.taxes_paid_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "taxes_paid_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.taxes_paid_prior_fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "net_income_most_recent_fiscal_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.net_income_most_recent_fiscal_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "net_income_prior_fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.net_income_prior_fiscal_year, py)?,
+        )?;
+        Ok(dict)
+    }
 
     #[getter]
     fn offering_price<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -668,6 +1299,12 @@ impl From<libfmp::responses::fundraising::CrowdfundingOffering> for Crowdfunding
             net_income_most_recent_fiscal_year: value.net_income_most_recent_fiscal_year,
             net_income_prior_fiscal_year: value.net_income_prior_fiscal_year,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CrowdfundingOffering {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -864,6 +1501,59 @@ impl RegulationDOffering {
 
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
+
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['cik'], typing.Literal['company_name'], typing.Literal['date'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['form_type'], typing.Literal['form_signification'], typing.Literal['entity_name'], typing.Literal['issuer_street'], typing.Literal['issuer_city'], typing.Literal['issuer_state_or_country'], typing.Literal['issuer_state_or_country_description'], typing.Literal['issuer_zip_code'], typing.Literal['issuer_phone_number'], typing.Literal['jurisdiction_of_incorporation'], typing.Literal['entity_type'], typing.Literal['incorporated_within_five_years'], typing.Literal['year_of_incorporation'], typing.Literal['related_person_first_name'], typing.Literal['related_person_last_name'], typing.Literal['related_person_street'], typing.Literal['related_person_city'], typing.Literal['related_person_state_or_country'], typing.Literal['related_person_state_or_country_description'], typing.Literal['related_person_zip_code'], typing.Literal['related_person_relationship'], typing.Literal['industry_group_type'], typing.Literal['revenue_range'], typing.Literal['federal_exemptions_exclusions'], typing.Literal['is_amendment'], typing.Literal['date_of_first_sale'], typing.Literal['duration_of_offering_is_more_than_year'], typing.Literal['securities_offered_are_of_equity_type'], typing.Literal['is_business_combination_transaction'], typing.Literal['minimum_investment_accepted'], typing.Literal['total_offering_amount'], typing.Literal['total_amount_sold'], typing.Literal['total_amount_remaining'], typing.Literal['has_non_accredited_investors'], typing.Literal['total_number_already_invested'], typing.Literal['sales_commissions'], typing.Literal['finders_fees'], typing.Literal['gross_proceeds_used']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "cik",
+                "company_name",
+                "date",
+                "filing_date",
+                "accepted_date",
+                "form_type",
+                "form_signification",
+                "entity_name",
+                "issuer_street",
+                "issuer_city",
+                "issuer_state_or_country",
+                "issuer_state_or_country_description",
+                "issuer_zip_code",
+                "issuer_phone_number",
+                "jurisdiction_of_incorporation",
+                "entity_type",
+                "incorporated_within_five_years",
+                "year_of_incorporation",
+                "related_person_first_name",
+                "related_person_last_name",
+                "related_person_street",
+                "related_person_city",
+                "related_person_state_or_country",
+                "related_person_state_or_country_description",
+                "related_person_zip_code",
+                "related_person_relationship",
+                "industry_group_type",
+                "revenue_range",
+                "federal_exemptions_exclusions",
+                "is_amendment",
+                "date_of_first_sale",
+                "duration_of_offering_is_more_than_year",
+                "securities_offered_are_of_equity_type",
+                "is_business_combination_transaction",
+                "minimum_investment_accepted",
+                "total_offering_amount",
+                "total_amount_sold",
+                "total_amount_remaining",
+                "has_non_accredited_investors",
+                "total_number_already_invested",
+                "sales_commissions",
+                "finders_fees",
+                "gross_proceeds_used",
+            ],
+        )
+    }
 
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
@@ -1066,6 +1756,408 @@ impl RegulationDOffering {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "RegulationDOffering",
+            &[
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                ("form_type", self.form_type.clone().into_bound_py_any(py)?),
+                (
+                    "form_signification",
+                    self.form_signification.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "entity_name",
+                    self.entity_name.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_street",
+                    self.issuer_street.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_city",
+                    self.issuer_city.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_state_or_country",
+                    self.issuer_state_or_country.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_state_or_country_description",
+                    self.issuer_state_or_country_description
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_zip_code",
+                    self.issuer_zip_code.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "issuer_phone_number",
+                    self.issuer_phone_number.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "jurisdiction_of_incorporation",
+                    self.jurisdiction_of_incorporation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "entity_type",
+                    self.entity_type.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "incorporated_within_five_years",
+                    self.incorporated_within_five_years
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "year_of_incorporation",
+                    self.year_of_incorporation.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_first_name",
+                    self.related_person_first_name
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_last_name",
+                    self.related_person_last_name
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_street",
+                    self.related_person_street.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_city",
+                    self.related_person_city.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_state_or_country",
+                    self.related_person_state_or_country
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_state_or_country_description",
+                    self.related_person_state_or_country_description
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_zip_code",
+                    self.related_person_zip_code.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "related_person_relationship",
+                    self.related_person_relationship
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "industry_group_type",
+                    self.industry_group_type.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_range",
+                    self.revenue_range.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "federal_exemptions_exclusions",
+                    self.federal_exemptions_exclusions
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "is_amendment",
+                    self.is_amendment.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "date_of_first_sale",
+                    self.date_of_first_sale.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "duration_of_offering_is_more_than_year",
+                    self.duration_of_offering_is_more_than_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "securities_offered_are_of_equity_type",
+                    self.securities_offered_are_of_equity_type
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "is_business_combination_transaction",
+                    self.is_business_combination_transaction
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "minimum_investment_accepted",
+                    self.minimum_investment_accepted
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "total_offering_amount",
+                    self.total_offering_amount.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_amount_sold",
+                    self.total_amount_sold.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_amount_remaining",
+                    self.total_amount_remaining.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "has_non_accredited_investors",
+                    self.has_non_accredited_investors
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "total_number_already_invested",
+                    self.total_number_already_invested
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "sales_commissions",
+                    self.sales_commissions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "finders_fees",
+                    self.finders_fees.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "gross_proceeds_used",
+                    self.gross_proceeds_used.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "form_type",
+            crate::models::convert::DictValue::dict_value(&self.form_type, py)?,
+        )?;
+        dict.set_item(
+            "form_signification",
+            crate::models::convert::DictValue::dict_value(&self.form_signification, py)?,
+        )?;
+        dict.set_item(
+            "entity_name",
+            crate::models::convert::DictValue::dict_value(&self.entity_name, py)?,
+        )?;
+        dict.set_item(
+            "issuer_street",
+            crate::models::convert::DictValue::dict_value(&self.issuer_street, py)?,
+        )?;
+        dict.set_item(
+            "issuer_city",
+            crate::models::convert::DictValue::dict_value(&self.issuer_city, py)?,
+        )?;
+        dict.set_item(
+            "issuer_state_or_country",
+            crate::models::convert::DictValue::dict_value(&self.issuer_state_or_country, py)?,
+        )?;
+        dict.set_item(
+            "issuer_state_or_country_description",
+            crate::models::convert::DictValue::dict_value(
+                &self.issuer_state_or_country_description,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "issuer_zip_code",
+            crate::models::convert::DictValue::dict_value(&self.issuer_zip_code, py)?,
+        )?;
+        dict.set_item(
+            "issuer_phone_number",
+            crate::models::convert::DictValue::dict_value(&self.issuer_phone_number, py)?,
+        )?;
+        dict.set_item(
+            "jurisdiction_of_incorporation",
+            crate::models::convert::DictValue::dict_value(&self.jurisdiction_of_incorporation, py)?,
+        )?;
+        dict.set_item(
+            "entity_type",
+            crate::models::convert::DictValue::dict_value(&self.entity_type, py)?,
+        )?;
+        dict.set_item(
+            "incorporated_within_five_years",
+            crate::models::convert::DictValue::dict_value(
+                &self.incorporated_within_five_years,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "year_of_incorporation",
+            crate::models::convert::DictValue::dict_value(&self.year_of_incorporation, py)?,
+        )?;
+        dict.set_item(
+            "related_person_first_name",
+            crate::models::convert::DictValue::dict_value(&self.related_person_first_name, py)?,
+        )?;
+        dict.set_item(
+            "related_person_last_name",
+            crate::models::convert::DictValue::dict_value(&self.related_person_last_name, py)?,
+        )?;
+        dict.set_item(
+            "related_person_street",
+            crate::models::convert::DictValue::dict_value(&self.related_person_street, py)?,
+        )?;
+        dict.set_item(
+            "related_person_city",
+            crate::models::convert::DictValue::dict_value(&self.related_person_city, py)?,
+        )?;
+        dict.set_item(
+            "related_person_state_or_country",
+            crate::models::convert::DictValue::dict_value(
+                &self.related_person_state_or_country,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "related_person_state_or_country_description",
+            crate::models::convert::DictValue::dict_value(
+                &self.related_person_state_or_country_description,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "related_person_zip_code",
+            crate::models::convert::DictValue::dict_value(&self.related_person_zip_code, py)?,
+        )?;
+        dict.set_item(
+            "related_person_relationship",
+            crate::models::convert::DictValue::dict_value(&self.related_person_relationship, py)?,
+        )?;
+        dict.set_item(
+            "industry_group_type",
+            crate::models::convert::DictValue::dict_value(&self.industry_group_type, py)?,
+        )?;
+        dict.set_item(
+            "revenue_range",
+            crate::models::convert::DictValue::dict_value(&self.revenue_range, py)?,
+        )?;
+        dict.set_item(
+            "federal_exemptions_exclusions",
+            crate::models::convert::DictValue::dict_value(&self.federal_exemptions_exclusions, py)?,
+        )?;
+        dict.set_item(
+            "is_amendment",
+            crate::models::convert::DictValue::dict_value(&self.is_amendment, py)?,
+        )?;
+        dict.set_item(
+            "date_of_first_sale",
+            crate::models::convert::DictValue::dict_value(&self.date_of_first_sale, py)?,
+        )?;
+        dict.set_item(
+            "duration_of_offering_is_more_than_year",
+            crate::models::convert::DictValue::dict_value(
+                &self.duration_of_offering_is_more_than_year,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "securities_offered_are_of_equity_type",
+            crate::models::convert::DictValue::dict_value(
+                &self.securities_offered_are_of_equity_type,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "is_business_combination_transaction",
+            crate::models::convert::DictValue::dict_value(
+                &self.is_business_combination_transaction,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "minimum_investment_accepted",
+            crate::models::convert::DictValue::dict_value(&self.minimum_investment_accepted, py)?,
+        )?;
+        dict.set_item(
+            "total_offering_amount",
+            crate::models::convert::DictValue::dict_value(&self.total_offering_amount, py)?,
+        )?;
+        dict.set_item(
+            "total_amount_sold",
+            crate::models::convert::DictValue::dict_value(&self.total_amount_sold, py)?,
+        )?;
+        dict.set_item(
+            "total_amount_remaining",
+            crate::models::convert::DictValue::dict_value(&self.total_amount_remaining, py)?,
+        )?;
+        dict.set_item(
+            "has_non_accredited_investors",
+            crate::models::convert::DictValue::dict_value(&self.has_non_accredited_investors, py)?,
+        )?;
+        dict.set_item(
+            "total_number_already_invested",
+            crate::models::convert::DictValue::dict_value(&self.total_number_already_invested, py)?,
+        )?;
+        dict.set_item(
+            "sales_commissions",
+            crate::models::convert::DictValue::dict_value(&self.sales_commissions, py)?,
+        )?;
+        dict.set_item(
+            "finders_fees",
+            crate::models::convert::DictValue::dict_value(&self.finders_fees, py)?,
+        )?;
+        dict.set_item(
+            "gross_proceeds_used",
+            crate::models::convert::DictValue::dict_value(&self.gross_proceeds_used, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::fundraising::RegulationDOffering> for RegulationDOffering {
@@ -1116,5 +2208,11 @@ impl From<libfmp::responses::fundraising::RegulationDOffering> for RegulationDOf
             finders_fees: value.finders_fees,
             gross_proceeds_used: value.gross_proceeds_used,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for RegulationDOffering {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

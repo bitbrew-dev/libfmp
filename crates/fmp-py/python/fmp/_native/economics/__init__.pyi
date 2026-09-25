@@ -16,6 +16,19 @@ __all__ = [
 @typing.final
 class EconomicCalendarEvent:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["country"],
+        typing.Literal["event"],
+        typing.Literal["currency"],
+        typing.Literal["previous"],
+        typing.Literal["estimate"],
+        typing.Literal["actual"],
+        typing.Literal["change"],
+        typing.Literal["impact"],
+        typing.Literal["change_percentage"],
+        typing.Literal["unit"],
+    ]
 
     @property
     def date(self) -> datetime.datetime: ...
@@ -56,11 +69,20 @@ class EconomicCalendarEvent:
         unit: builtins.str,
     ) -> EconomicCalendarEvent: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EconomicIndicatorObservation:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["name"], typing.Literal["date"], typing.Literal["value"]
+    ]
 
     @property
     def name(self) -> builtins.str: ...
@@ -73,6 +95,12 @@ class EconomicIndicatorObservation:
         cls, *, name: builtins.str, date: datetime.date, value: builtins.float
     ) -> EconomicIndicatorObservation: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -122,6 +150,12 @@ class EconomicsNamespace:
 @typing.final
 class MarketRiskPremium:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["country"],
+        typing.Literal["continent"],
+        typing.Literal["country_risk_premium"],
+        typing.Literal["total_equity_risk_premium"],
+    ]
 
     @property
     def country(self) -> builtins.str: ...
@@ -141,11 +175,32 @@ class MarketRiskPremium:
         total_equity_risk_premium: builtins.float,
     ) -> MarketRiskPremium: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TreasuryRate:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["month_1"],
+        typing.Literal["month_2"],
+        typing.Literal["month_3"],
+        typing.Literal["month_6"],
+        typing.Literal["year_1"],
+        typing.Literal["year_2"],
+        typing.Literal["year_3"],
+        typing.Literal["year_5"],
+        typing.Literal["year_7"],
+        typing.Literal["year_10"],
+        typing.Literal["year_20"],
+        typing.Literal["year_30"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -192,3 +247,9 @@ class TreasuryRate:
         year_30: builtins.float,
     ) -> TreasuryRate: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

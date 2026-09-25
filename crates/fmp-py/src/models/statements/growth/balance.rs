@@ -256,6 +256,72 @@ impl BalanceSheetStatementGrowth {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['fiscal_year'], typing.Literal['period'], typing.Literal['reported_currency'], typing.Literal['growth_cash_and_cash_equivalents'], typing.Literal['growth_short_term_investments'], typing.Literal['growth_cash_and_short_term_investments'], typing.Literal['growth_net_receivables'], typing.Literal['growth_inventory'], typing.Literal['growth_other_current_assets'], typing.Literal['growth_total_current_assets'], typing.Literal['growth_property_plant_equipment_net'], typing.Literal['growth_goodwill'], typing.Literal['growth_intangible_assets'], typing.Literal['growth_goodwill_and_intangible_assets'], typing.Literal['growth_long_term_investments'], typing.Literal['growth_tax_assets'], typing.Literal['growth_other_non_current_assets'], typing.Literal['growth_total_non_current_assets'], typing.Literal['growth_other_assets'], typing.Literal['growth_total_assets'], typing.Literal['growth_account_payables'], typing.Literal['growth_short_term_debt'], typing.Literal['growth_tax_payables'], typing.Literal['growth_deferred_revenue'], typing.Literal['growth_other_current_liabilities'], typing.Literal['growth_total_current_liabilities'], typing.Literal['growth_long_term_debt'], typing.Literal['growth_deferred_revenue_non_current'], typing.Literal['growth_deferred_tax_liabilities_non_current'], typing.Literal['growth_other_non_current_liabilities'], typing.Literal['growth_total_non_current_liabilities'], typing.Literal['growth_other_liabilities'], typing.Literal['growth_total_liabilities'], typing.Literal['growth_preferred_stock'], typing.Literal['growth_common_stock'], typing.Literal['growth_retained_earnings'], typing.Literal['growth_accumulated_other_comprehensive_income_loss'], typing.Literal['growth_other_total_stockholders_equity'], typing.Literal['growth_total_stockholders_equity'], typing.Literal['growth_minority_interest'], typing.Literal['growth_total_equity'], typing.Literal['growth_total_liabilities_and_stockholders_equity'], typing.Literal['growth_total_investments'], typing.Literal['growth_total_debt'], typing.Literal['growth_net_debt'], typing.Literal['growth_accounts_receivables'], typing.Literal['growth_other_receivables'], typing.Literal['growth_prepaids'], typing.Literal['growth_total_payables'], typing.Literal['growth_other_payables'], typing.Literal['growth_accrued_expenses'], typing.Literal['growth_capital_lease_obligations_current'], typing.Literal['growth_additional_paid_in_capital'], typing.Literal['growth_treasury_stock']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "fiscal_year",
+                "period",
+                "reported_currency",
+                "growth_cash_and_cash_equivalents",
+                "growth_short_term_investments",
+                "growth_cash_and_short_term_investments",
+                "growth_net_receivables",
+                "growth_inventory",
+                "growth_other_current_assets",
+                "growth_total_current_assets",
+                "growth_property_plant_equipment_net",
+                "growth_goodwill",
+                "growth_intangible_assets",
+                "growth_goodwill_and_intangible_assets",
+                "growth_long_term_investments",
+                "growth_tax_assets",
+                "growth_other_non_current_assets",
+                "growth_total_non_current_assets",
+                "growth_other_assets",
+                "growth_total_assets",
+                "growth_account_payables",
+                "growth_short_term_debt",
+                "growth_tax_payables",
+                "growth_deferred_revenue",
+                "growth_other_current_liabilities",
+                "growth_total_current_liabilities",
+                "growth_long_term_debt",
+                "growth_deferred_revenue_non_current",
+                "growth_deferred_tax_liabilities_non_current",
+                "growth_other_non_current_liabilities",
+                "growth_total_non_current_liabilities",
+                "growth_other_liabilities",
+                "growth_total_liabilities",
+                "growth_preferred_stock",
+                "growth_common_stock",
+                "growth_retained_earnings",
+                "growth_accumulated_other_comprehensive_income_loss",
+                "growth_other_total_stockholders_equity",
+                "growth_total_stockholders_equity",
+                "growth_minority_interest",
+                "growth_total_equity",
+                "growth_total_liabilities_and_stockholders_equity",
+                "growth_total_investments",
+                "growth_total_debt",
+                "growth_net_debt",
+                "growth_accounts_receivables",
+                "growth_other_receivables",
+                "growth_prepaids",
+                "growth_total_payables",
+                "growth_other_payables",
+                "growth_accrued_expenses",
+                "growth_capital_lease_obligations_current",
+                "growth_additional_paid_in_capital",
+                "growth_treasury_stock",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -539,6 +605,575 @@ impl BalanceSheetStatementGrowth {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BalanceSheetStatementGrowth",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                (
+                    "reported_currency",
+                    self.reported_currency.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_cash_and_cash_equivalents",
+                    self.growth_cash_and_cash_equivalents
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_short_term_investments",
+                    self.growth_short_term_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_cash_and_short_term_investments",
+                    self.growth_cash_and_short_term_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_receivables",
+                    self.growth_net_receivables.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_inventory",
+                    self.growth_inventory.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_current_assets",
+                    self.growth_other_current_assets
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_current_assets",
+                    self.growth_total_current_assets
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_property_plant_equipment_net",
+                    self.growth_property_plant_equipment_net
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_goodwill",
+                    self.growth_goodwill.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_intangible_assets",
+                    self.growth_intangible_assets
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_goodwill_and_intangible_assets",
+                    self.growth_goodwill_and_intangible_assets
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_long_term_investments",
+                    self.growth_long_term_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_tax_assets",
+                    self.growth_tax_assets.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_non_current_assets",
+                    self.growth_other_non_current_assets
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_non_current_assets",
+                    self.growth_total_non_current_assets
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_assets",
+                    self.growth_other_assets.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_assets",
+                    self.growth_total_assets.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_account_payables",
+                    self.growth_account_payables.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_short_term_debt",
+                    self.growth_short_term_debt.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_tax_payables",
+                    self.growth_tax_payables.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_deferred_revenue",
+                    self.growth_deferred_revenue.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_current_liabilities",
+                    self.growth_other_current_liabilities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_current_liabilities",
+                    self.growth_total_current_liabilities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_long_term_debt",
+                    self.growth_long_term_debt.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_deferred_revenue_non_current",
+                    self.growth_deferred_revenue_non_current
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_deferred_tax_liabilities_non_current",
+                    self.growth_deferred_tax_liabilities_non_current
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_non_current_liabilities",
+                    self.growth_other_non_current_liabilities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_non_current_liabilities",
+                    self.growth_total_non_current_liabilities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_liabilities",
+                    self.growth_other_liabilities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_liabilities",
+                    self.growth_total_liabilities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_preferred_stock",
+                    self.growth_preferred_stock.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_common_stock",
+                    self.growth_common_stock.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_retained_earnings",
+                    self.growth_retained_earnings
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_accumulated_other_comprehensive_income_loss",
+                    self.growth_accumulated_other_comprehensive_income_loss
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_total_stockholders_equity",
+                    self.growth_other_total_stockholders_equity
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_stockholders_equity",
+                    self.growth_total_stockholders_equity
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_minority_interest",
+                    self.growth_minority_interest
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_equity",
+                    self.growth_total_equity.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_liabilities_and_stockholders_equity",
+                    self.growth_total_liabilities_and_stockholders_equity
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_investments",
+                    self.growth_total_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_debt",
+                    self.growth_total_debt.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_debt",
+                    self.growth_net_debt.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_accounts_receivables",
+                    self.growth_accounts_receivables
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_receivables",
+                    self.growth_other_receivables
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_prepaids",
+                    self.growth_prepaids.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_payables",
+                    self.growth_total_payables.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_payables",
+                    self.growth_other_payables.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_accrued_expenses",
+                    self.growth_accrued_expenses.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_capital_lease_obligations_current",
+                    self.growth_capital_lease_obligations_current
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_additional_paid_in_capital",
+                    self.growth_additional_paid_in_capital
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_treasury_stock",
+                    self.growth_treasury_stock.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "reported_currency",
+            crate::models::convert::DictValue::dict_value(&self.reported_currency, py)?,
+        )?;
+        dict.set_item(
+            "growth_cash_and_cash_equivalents",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_cash_and_cash_equivalents,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_short_term_investments",
+            crate::models::convert::DictValue::dict_value(&self.growth_short_term_investments, py)?,
+        )?;
+        dict.set_item(
+            "growth_cash_and_short_term_investments",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_cash_and_short_term_investments,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_receivables",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_receivables, py)?,
+        )?;
+        dict.set_item(
+            "growth_inventory",
+            crate::models::convert::DictValue::dict_value(&self.growth_inventory, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_current_assets",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_current_assets, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_current_assets",
+            crate::models::convert::DictValue::dict_value(&self.growth_total_current_assets, py)?,
+        )?;
+        dict.set_item(
+            "growth_property_plant_equipment_net",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_property_plant_equipment_net,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_goodwill",
+            crate::models::convert::DictValue::dict_value(&self.growth_goodwill, py)?,
+        )?;
+        dict.set_item(
+            "growth_intangible_assets",
+            crate::models::convert::DictValue::dict_value(&self.growth_intangible_assets, py)?,
+        )?;
+        dict.set_item(
+            "growth_goodwill_and_intangible_assets",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_goodwill_and_intangible_assets,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_long_term_investments",
+            crate::models::convert::DictValue::dict_value(&self.growth_long_term_investments, py)?,
+        )?;
+        dict.set_item(
+            "growth_tax_assets",
+            crate::models::convert::DictValue::dict_value(&self.growth_tax_assets, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_non_current_assets",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_other_non_current_assets,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_total_non_current_assets",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_total_non_current_assets,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_other_assets",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_assets, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_assets",
+            crate::models::convert::DictValue::dict_value(&self.growth_total_assets, py)?,
+        )?;
+        dict.set_item(
+            "growth_account_payables",
+            crate::models::convert::DictValue::dict_value(&self.growth_account_payables, py)?,
+        )?;
+        dict.set_item(
+            "growth_short_term_debt",
+            crate::models::convert::DictValue::dict_value(&self.growth_short_term_debt, py)?,
+        )?;
+        dict.set_item(
+            "growth_tax_payables",
+            crate::models::convert::DictValue::dict_value(&self.growth_tax_payables, py)?,
+        )?;
+        dict.set_item(
+            "growth_deferred_revenue",
+            crate::models::convert::DictValue::dict_value(&self.growth_deferred_revenue, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_current_liabilities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_other_current_liabilities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_total_current_liabilities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_total_current_liabilities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_long_term_debt",
+            crate::models::convert::DictValue::dict_value(&self.growth_long_term_debt, py)?,
+        )?;
+        dict.set_item(
+            "growth_deferred_revenue_non_current",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_deferred_revenue_non_current,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_deferred_tax_liabilities_non_current",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_deferred_tax_liabilities_non_current,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_other_non_current_liabilities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_other_non_current_liabilities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_total_non_current_liabilities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_total_non_current_liabilities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_other_liabilities",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_liabilities, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_liabilities",
+            crate::models::convert::DictValue::dict_value(&self.growth_total_liabilities, py)?,
+        )?;
+        dict.set_item(
+            "growth_preferred_stock",
+            crate::models::convert::DictValue::dict_value(&self.growth_preferred_stock, py)?,
+        )?;
+        dict.set_item(
+            "growth_common_stock",
+            crate::models::convert::DictValue::dict_value(&self.growth_common_stock, py)?,
+        )?;
+        dict.set_item(
+            "growth_retained_earnings",
+            crate::models::convert::DictValue::dict_value(&self.growth_retained_earnings, py)?,
+        )?;
+        dict.set_item(
+            "growth_accumulated_other_comprehensive_income_loss",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_accumulated_other_comprehensive_income_loss,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_other_total_stockholders_equity",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_other_total_stockholders_equity,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_total_stockholders_equity",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_total_stockholders_equity,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_minority_interest",
+            crate::models::convert::DictValue::dict_value(&self.growth_minority_interest, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_equity",
+            crate::models::convert::DictValue::dict_value(&self.growth_total_equity, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_liabilities_and_stockholders_equity",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_total_liabilities_and_stockholders_equity,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_total_investments",
+            crate::models::convert::DictValue::dict_value(&self.growth_total_investments, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_debt",
+            crate::models::convert::DictValue::dict_value(&self.growth_total_debt, py)?,
+        )?;
+        dict.set_item(
+            "growth_net_debt",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_debt, py)?,
+        )?;
+        dict.set_item(
+            "growth_accounts_receivables",
+            crate::models::convert::DictValue::dict_value(&self.growth_accounts_receivables, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_receivables",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_receivables, py)?,
+        )?;
+        dict.set_item(
+            "growth_prepaids",
+            crate::models::convert::DictValue::dict_value(&self.growth_prepaids, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_payables",
+            crate::models::convert::DictValue::dict_value(&self.growth_total_payables, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_payables",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_payables, py)?,
+        )?;
+        dict.set_item(
+            "growth_accrued_expenses",
+            crate::models::convert::DictValue::dict_value(&self.growth_accrued_expenses, py)?,
+        )?;
+        dict.set_item(
+            "growth_capital_lease_obligations_current",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_capital_lease_obligations_current,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_additional_paid_in_capital",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_additional_paid_in_capital,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_treasury_stock",
+            crate::models::convert::DictValue::dict_value(&self.growth_treasury_stock, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::statements::growth::balance::BalanceSheetStatementGrowth>
@@ -609,5 +1244,11 @@ impl From<libfmp::responses::statements::growth::balance::BalanceSheetStatementG
             growth_additional_paid_in_capital: value.growth_additional_paid_in_capital,
             growth_treasury_stock: value.growth_treasury_stock,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for BalanceSheetStatementGrowth {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

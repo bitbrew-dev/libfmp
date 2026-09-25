@@ -49,6 +49,24 @@ class CommitmentOfTradersNamespace:
 @typing.final
 class CotAnalysis:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["name"],
+        typing.Literal["sector"],
+        typing.Literal["exchange"],
+        typing.Literal["current_long_market_situation"],
+        typing.Literal["current_short_market_situation"],
+        typing.Literal["market_situation"],
+        typing.Literal["previous_long_market_situation"],
+        typing.Literal["previous_short_market_situation"],
+        typing.Literal["previous_market_situation"],
+        typing.Literal["net_position"],
+        typing.Literal["previous_net_position"],
+        typing.Literal["change_in_net_position"],
+        typing.Literal["market_sentiment"],
+        typing.Literal["reversal_trend"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -104,11 +122,147 @@ class CotAnalysis:
         reversal_trend: builtins.bool,
     ) -> CotAnalysis: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CotReport:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["name"],
+        typing.Literal["sector"],
+        typing.Literal["market_and_exchange_names"],
+        typing.Literal["cftc_contract_market_code"],
+        typing.Literal["cftc_market_code"],
+        typing.Literal["cftc_region_code"],
+        typing.Literal["cftc_commodity_code"],
+        typing.Literal["open_interest_all"],
+        typing.Literal["noncomm_positions_long_all"],
+        typing.Literal["noncomm_positions_short_all"],
+        typing.Literal["noncomm_positions_spread_all"],
+        typing.Literal["comm_positions_long_all"],
+        typing.Literal["comm_positions_short_all"],
+        typing.Literal["tot_rept_positions_long_all"],
+        typing.Literal["tot_rept_positions_short_all"],
+        typing.Literal["nonrept_positions_long_all"],
+        typing.Literal["nonrept_positions_short_all"],
+        typing.Literal["open_interest_old"],
+        typing.Literal["noncomm_positions_long_old"],
+        typing.Literal["noncomm_positions_short_old"],
+        typing.Literal["noncomm_positions_spread_old"],
+        typing.Literal["comm_positions_long_old"],
+        typing.Literal["comm_positions_short_old"],
+        typing.Literal["tot_rept_positions_long_old"],
+        typing.Literal["tot_rept_positions_short_old"],
+        typing.Literal["nonrept_positions_long_old"],
+        typing.Literal["nonrept_positions_short_old"],
+        typing.Literal["open_interest_other"],
+        typing.Literal["noncomm_positions_long_other"],
+        typing.Literal["noncomm_positions_short_other"],
+        typing.Literal["noncomm_positions_spread_other"],
+        typing.Literal["comm_positions_long_other"],
+        typing.Literal["comm_positions_short_other"],
+        typing.Literal["tot_rept_positions_long_other"],
+        typing.Literal["tot_rept_positions_short_other"],
+        typing.Literal["nonrept_positions_long_other"],
+        typing.Literal["nonrept_positions_short_other"],
+        typing.Literal["change_in_open_interest_all"],
+        typing.Literal["change_in_noncomm_long_all"],
+        typing.Literal["change_in_noncomm_short_all"],
+        typing.Literal["change_in_noncomm_spread_all"],
+        typing.Literal["change_in_comm_long_all"],
+        typing.Literal["change_in_comm_short_all"],
+        typing.Literal["change_in_tot_rept_long_all"],
+        typing.Literal["change_in_tot_rept_short_all"],
+        typing.Literal["change_in_nonrept_long_all"],
+        typing.Literal["change_in_nonrept_short_all"],
+        typing.Literal["pct_of_open_interest_all"],
+        typing.Literal["pct_of_oi_noncomm_long_all"],
+        typing.Literal["pct_of_oi_noncomm_short_all"],
+        typing.Literal["pct_of_oi_noncomm_spread_all"],
+        typing.Literal["pct_of_oi_comm_long_all"],
+        typing.Literal["pct_of_oi_comm_short_all"],
+        typing.Literal["pct_of_oi_tot_rept_long_all"],
+        typing.Literal["pct_of_oi_tot_rept_short_all"],
+        typing.Literal["pct_of_oi_nonrept_long_all"],
+        typing.Literal["pct_of_oi_nonrept_short_all"],
+        typing.Literal["pct_of_open_interest_old"],
+        typing.Literal["pct_of_oi_noncomm_long_old"],
+        typing.Literal["pct_of_oi_noncomm_short_old"],
+        typing.Literal["pct_of_oi_noncomm_spread_old"],
+        typing.Literal["pct_of_oi_comm_long_old"],
+        typing.Literal["pct_of_oi_comm_short_old"],
+        typing.Literal["pct_of_oi_tot_rept_long_old"],
+        typing.Literal["pct_of_oi_tot_rept_short_old"],
+        typing.Literal["pct_of_oi_nonrept_long_old"],
+        typing.Literal["pct_of_oi_nonrept_short_old"],
+        typing.Literal["pct_of_open_interest_other"],
+        typing.Literal["pct_of_oi_noncomm_long_other"],
+        typing.Literal["pct_of_oi_noncomm_short_other"],
+        typing.Literal["pct_of_oi_noncomm_spread_other"],
+        typing.Literal["pct_of_oi_comm_long_other"],
+        typing.Literal["pct_of_oi_comm_short_other"],
+        typing.Literal["pct_of_oi_tot_rept_long_other"],
+        typing.Literal["pct_of_oi_tot_rept_short_other"],
+        typing.Literal["pct_of_oi_nonrept_long_other"],
+        typing.Literal["pct_of_oi_nonrept_short_other"],
+        typing.Literal["traders_tot_all"],
+        typing.Literal["traders_noncomm_long_all"],
+        typing.Literal["traders_noncomm_short_all"],
+        typing.Literal["traders_noncomm_spread_all"],
+        typing.Literal["traders_comm_long_all"],
+        typing.Literal["traders_comm_short_all"],
+        typing.Literal["traders_tot_rept_long_all"],
+        typing.Literal["traders_tot_rept_short_all"],
+        typing.Literal["traders_tot_old"],
+        typing.Literal["traders_noncomm_long_old"],
+        typing.Literal["traders_noncomm_short_old"],
+        typing.Literal["traders_noncomm_spread_old"],
+        typing.Literal["traders_comm_long_old"],
+        typing.Literal["traders_comm_short_old"],
+        typing.Literal["traders_tot_rept_long_old"],
+        typing.Literal["traders_tot_rept_short_old"],
+        typing.Literal["traders_tot_other"],
+        typing.Literal["traders_noncomm_long_other"],
+        typing.Literal["traders_noncomm_short_other"],
+        typing.Literal["traders_noncomm_spread_other"],
+        typing.Literal["traders_comm_long_other"],
+        typing.Literal["traders_comm_short_other"],
+        typing.Literal["traders_tot_rept_long_other"],
+        typing.Literal["traders_tot_rept_short_other"],
+        typing.Literal["conc_gross_le4_tdr_long_all"],
+        typing.Literal["conc_gross_le4_tdr_short_all"],
+        typing.Literal["conc_gross_le8_tdr_long_all"],
+        typing.Literal["conc_gross_le8_tdr_short_all"],
+        typing.Literal["conc_net_le4_tdr_long_all"],
+        typing.Literal["conc_net_le4_tdr_short_all"],
+        typing.Literal["conc_net_le8_tdr_long_all"],
+        typing.Literal["conc_net_le8_tdr_short_all"],
+        typing.Literal["conc_gross_le4_tdr_long_old"],
+        typing.Literal["conc_gross_le4_tdr_short_old"],
+        typing.Literal["conc_gross_le8_tdr_long_old"],
+        typing.Literal["conc_gross_le8_tdr_short_old"],
+        typing.Literal["conc_net_le4_tdr_long_old"],
+        typing.Literal["conc_net_le4_tdr_short_old"],
+        typing.Literal["conc_net_le8_tdr_long_old"],
+        typing.Literal["conc_net_le8_tdr_short_old"],
+        typing.Literal["conc_gross_le4_tdr_long_other"],
+        typing.Literal["conc_gross_le4_tdr_short_other"],
+        typing.Literal["conc_gross_le8_tdr_long_other"],
+        typing.Literal["conc_gross_le8_tdr_short_other"],
+        typing.Literal["conc_net_le4_tdr_long_other"],
+        typing.Literal["conc_net_le4_tdr_short_other"],
+        typing.Literal["conc_net_le8_tdr_long_other"],
+        typing.Literal["conc_net_le8_tdr_short_other"],
+        typing.Literal["contract_units"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -500,11 +654,18 @@ class CotReport:
         contract_units: builtins.str,
     ) -> CotReport: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CotReportListing:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["symbol"], typing.Literal["name"]]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -515,3 +676,9 @@ class CotReportListing:
         cls, *, symbol: builtins.str, name: builtins.str
     ) -> CotReportListing: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

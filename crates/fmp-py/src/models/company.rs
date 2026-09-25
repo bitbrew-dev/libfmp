@@ -171,6 +171,52 @@ impl CompanyProfile {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['price'], typing.Literal['market_cap'], typing.Literal['beta'], typing.Literal['last_dividend'], typing.Literal['range'], typing.Literal['change'], typing.Literal['change_percentage'], typing.Literal['volume'], typing.Literal['average_volume'], typing.Literal['company_name'], typing.Literal['currency'], typing.Literal['cik'], typing.Literal['isin'], typing.Literal['cusip'], typing.Literal['exchange_full_name'], typing.Literal['exchange'], typing.Literal['industry'], typing.Literal['website'], typing.Literal['description'], typing.Literal['ceo'], typing.Literal['sector'], typing.Literal['country'], typing.Literal['full_time_employees'], typing.Literal['phone'], typing.Literal['address'], typing.Literal['city'], typing.Literal['state'], typing.Literal['zip'], typing.Literal['image'], typing.Literal['ipo_date'], typing.Literal['default_image'], typing.Literal['is_etf'], typing.Literal['is_actively_trading'], typing.Literal['is_adr'], typing.Literal['is_fund']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "price",
+                "market_cap",
+                "beta",
+                "last_dividend",
+                "range",
+                "change",
+                "change_percentage",
+                "volume",
+                "average_volume",
+                "company_name",
+                "currency",
+                "cik",
+                "isin",
+                "cusip",
+                "exchange_full_name",
+                "exchange",
+                "industry",
+                "website",
+                "description",
+                "ceo",
+                "sector",
+                "country",
+                "full_time_employees",
+                "phone",
+                "address",
+                "city",
+                "state",
+                "zip",
+                "image",
+                "ipo_date",
+                "default_image",
+                "is_etf",
+                "is_actively_trading",
+                "is_adr",
+                "is_fund",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -242,6 +288,229 @@ impl CompanyProfile {
         kwargs.set_item("is_fund", self.is_fund.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CompanyProfile",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("price", self.price.clone().into_bound_py_any(py)?),
+                ("market_cap", self.market_cap.clone().into_bound_py_any(py)?),
+                ("beta", self.beta.clone().into_bound_py_any(py)?),
+                (
+                    "last_dividend",
+                    self.last_dividend.clone().into_bound_py_any(py)?,
+                ),
+                ("range", self.range.clone().into_bound_py_any(py)?),
+                ("change", self.change.clone().into_bound_py_any(py)?),
+                (
+                    "change_percentage",
+                    self.change_percentage.clone().into_bound_py_any(py)?,
+                ),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                (
+                    "average_volume",
+                    self.average_volume.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("currency", self.currency.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("isin", self.isin.clone().into_bound_py_any(py)?),
+                ("cusip", self.cusip.clone().into_bound_py_any(py)?),
+                (
+                    "exchange_full_name",
+                    self.exchange_full_name.clone().into_bound_py_any(py)?,
+                ),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                ("industry", self.industry.clone().into_bound_py_any(py)?),
+                ("website", self.website.clone().into_bound_py_any(py)?),
+                (
+                    "description",
+                    self.description.clone().into_bound_py_any(py)?,
+                ),
+                ("ceo", self.ceo.clone().into_bound_py_any(py)?),
+                ("sector", self.sector.clone().into_bound_py_any(py)?),
+                ("country", self.country.clone().into_bound_py_any(py)?),
+                (
+                    "full_time_employees",
+                    self.full_time_employees.clone().into_bound_py_any(py)?,
+                ),
+                ("phone", self.phone.clone().into_bound_py_any(py)?),
+                ("address", self.address.clone().into_bound_py_any(py)?),
+                ("city", self.city.clone().into_bound_py_any(py)?),
+                ("state", self.state.clone().into_bound_py_any(py)?),
+                ("zip", self.zip.clone().into_bound_py_any(py)?),
+                ("image", self.image.clone().into_bound_py_any(py)?),
+                ("ipo_date", self.ipo_date.clone().into_bound_py_any(py)?),
+                (
+                    "default_image",
+                    self.default_image.clone().into_bound_py_any(py)?,
+                ),
+                ("is_etf", self.is_etf.clone().into_bound_py_any(py)?),
+                (
+                    "is_actively_trading",
+                    self.is_actively_trading.clone().into_bound_py_any(py)?,
+                ),
+                ("is_adr", self.is_adr.clone().into_bound_py_any(py)?),
+                ("is_fund", self.is_fund.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "price",
+            crate::models::convert::DictValue::dict_value(&self.price, py)?,
+        )?;
+        dict.set_item(
+            "market_cap",
+            crate::models::convert::DictValue::dict_value(&self.market_cap, py)?,
+        )?;
+        dict.set_item(
+            "beta",
+            crate::models::convert::DictValue::dict_value(&self.beta, py)?,
+        )?;
+        dict.set_item(
+            "last_dividend",
+            crate::models::convert::DictValue::dict_value(&self.last_dividend, py)?,
+        )?;
+        dict.set_item(
+            "range",
+            crate::models::convert::DictValue::dict_value(&self.range, py)?,
+        )?;
+        dict.set_item(
+            "change",
+            crate::models::convert::DictValue::dict_value(&self.change, py)?,
+        )?;
+        dict.set_item(
+            "change_percentage",
+            crate::models::convert::DictValue::dict_value(&self.change_percentage, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "average_volume",
+            crate::models::convert::DictValue::dict_value(&self.average_volume, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "currency",
+            crate::models::convert::DictValue::dict_value(&self.currency, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "isin",
+            crate::models::convert::DictValue::dict_value(&self.isin, py)?,
+        )?;
+        dict.set_item(
+            "cusip",
+            crate::models::convert::DictValue::dict_value(&self.cusip, py)?,
+        )?;
+        dict.set_item(
+            "exchange_full_name",
+            crate::models::convert::DictValue::dict_value(&self.exchange_full_name, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "industry",
+            crate::models::convert::DictValue::dict_value(&self.industry, py)?,
+        )?;
+        dict.set_item(
+            "website",
+            crate::models::convert::DictValue::dict_value(&self.website, py)?,
+        )?;
+        dict.set_item(
+            "description",
+            crate::models::convert::DictValue::dict_value(&self.description, py)?,
+        )?;
+        dict.set_item(
+            "ceo",
+            crate::models::convert::DictValue::dict_value(&self.ceo, py)?,
+        )?;
+        dict.set_item(
+            "sector",
+            crate::models::convert::DictValue::dict_value(&self.sector, py)?,
+        )?;
+        dict.set_item(
+            "country",
+            crate::models::convert::DictValue::dict_value(&self.country, py)?,
+        )?;
+        dict.set_item(
+            "full_time_employees",
+            crate::models::convert::DictValue::dict_value(&self.full_time_employees, py)?,
+        )?;
+        dict.set_item(
+            "phone",
+            crate::models::convert::DictValue::dict_value(&self.phone, py)?,
+        )?;
+        dict.set_item(
+            "address",
+            crate::models::convert::DictValue::dict_value(&self.address, py)?,
+        )?;
+        dict.set_item(
+            "city",
+            crate::models::convert::DictValue::dict_value(&self.city, py)?,
+        )?;
+        dict.set_item(
+            "state",
+            crate::models::convert::DictValue::dict_value(&self.state, py)?,
+        )?;
+        dict.set_item(
+            "zip",
+            crate::models::convert::DictValue::dict_value(&self.zip, py)?,
+        )?;
+        dict.set_item(
+            "image",
+            crate::models::convert::DictValue::dict_value(&self.image, py)?,
+        )?;
+        dict.set_item(
+            "ipo_date",
+            crate::models::convert::DictValue::dict_value(&self.ipo_date, py)?,
+        )?;
+        dict.set_item(
+            "default_image",
+            crate::models::convert::DictValue::dict_value(&self.default_image, py)?,
+        )?;
+        dict.set_item(
+            "is_etf",
+            crate::models::convert::DictValue::dict_value(&self.is_etf, py)?,
+        )?;
+        dict.set_item(
+            "is_actively_trading",
+            crate::models::convert::DictValue::dict_value(&self.is_actively_trading, py)?,
+        )?;
+        dict.set_item(
+            "is_adr",
+            crate::models::convert::DictValue::dict_value(&self.is_adr, py)?,
+        )?;
+        dict.set_item(
+            "is_fund",
+            crate::models::convert::DictValue::dict_value(&self.is_fund, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::CompanyProfile> for CompanyProfile {
@@ -287,6 +556,12 @@ impl From<libfmp::responses::company::CompanyProfile> for CompanyProfile {
     }
 }
 
+impl crate::models::convert::DictValue for CompanyProfile {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
+    }
+}
+
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.company", frozen, eq, from_py_object)]
 #[derive(Clone, PartialEq)]
@@ -320,6 +595,12 @@ impl CompanyNote {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['cik'], typing.Literal['symbol'], typing.Literal['title'], typing.Literal['exchange']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["cik", "symbol", "title", "exchange"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -332,6 +613,42 @@ impl CompanyNote {
         kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CompanyNote",
+            &[
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("title", self.title.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "title",
+            crate::models::convert::DictValue::dict_value(&self.title, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::CompanyNote> for CompanyNote {
@@ -342,6 +659,12 @@ impl From<libfmp::responses::company::CompanyNote> for CompanyNote {
             title: value.title,
             exchange: value.exchange.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CompanyNote {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -378,6 +701,12 @@ impl StockPeer {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['company_name'], typing.Literal['price'], typing.Literal['market_cap']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "company_name", "price", "market_cap"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -393,6 +722,45 @@ impl StockPeer {
         kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockPeer",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("price", self.price.clone().into_bound_py_any(py)?),
+                ("market_cap", self.market_cap.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "price",
+            crate::models::convert::DictValue::dict_value(&self.price, py)?,
+        )?;
+        dict.set_item(
+            "market_cap",
+            crate::models::convert::DictValue::dict_value(&self.market_cap, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::StockPeer> for StockPeer {
@@ -403,6 +771,12 @@ impl From<libfmp::responses::company::StockPeer> for StockPeer {
             price: value.price,
             market_cap: value.market_cap,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockPeer {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -448,6 +822,21 @@ impl DelistedCompany {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['company_name'], typing.Literal['exchange'], typing.Literal['ipo_date'], typing.Literal['delisted_date']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "company_name",
+                "exchange",
+                "ipo_date",
+                "delisted_date",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -467,6 +856,53 @@ impl DelistedCompany {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "DelistedCompany",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                ("ipo_date", self.ipo_date.clone().into_bound_py_any(py)?),
+                (
+                    "delisted_date",
+                    self.delisted_date.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "ipo_date",
+            crate::models::convert::DictValue::dict_value(&self.ipo_date, py)?,
+        )?;
+        dict.set_item(
+            "delisted_date",
+            crate::models::convert::DictValue::dict_value(&self.delisted_date, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::DelistedCompany> for DelistedCompany {
@@ -478,6 +914,12 @@ impl From<libfmp::responses::company::DelistedCompany> for DelistedCompany {
             ipo_date: value.ipo_date.into_inner(),
             delisted_date: value.delisted_date.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for DelistedCompany {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -539,6 +981,25 @@ impl EmployeeCount {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['cik'], typing.Literal['acceptance_time'], typing.Literal['period_of_report'], typing.Literal['company_name'], typing.Literal['form_type'], typing.Literal['filing_date'], typing.Literal['employee_count'], typing.Literal['source']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "cik",
+                "acceptance_time",
+                "period_of_report",
+                "company_name",
+                "form_type",
+                "filing_date",
+                "employee_count",
+                "source",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -571,6 +1032,82 @@ impl EmployeeCount {
         kwargs.set_item("source", self.source.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EmployeeCount",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "acceptance_time",
+                    self.acceptance_time.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "period_of_report",
+                    self.period_of_report.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("form_type", self.form_type.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "employee_count",
+                    self.employee_count.clone().into_bound_py_any(py)?,
+                ),
+                ("source", self.source.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "acceptance_time",
+            crate::models::convert::DictValue::dict_value(&self.acceptance_time, py)?,
+        )?;
+        dict.set_item(
+            "period_of_report",
+            crate::models::convert::DictValue::dict_value(&self.period_of_report, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "form_type",
+            crate::models::convert::DictValue::dict_value(&self.form_type, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "employee_count",
+            crate::models::convert::DictValue::dict_value(&self.employee_count, py)?,
+        )?;
+        dict.set_item(
+            "source",
+            crate::models::convert::DictValue::dict_value(&self.source, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::EmployeeCount> for EmployeeCount {
@@ -586,6 +1123,12 @@ impl From<libfmp::responses::company::EmployeeCount> for EmployeeCount {
             employee_count: value.employee_count,
             source: value.source,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EmployeeCount {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -619,6 +1162,12 @@ impl CompanyMarketCapitalization {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['market_cap']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "date", "market_cap"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -630,6 +1179,37 @@ impl CompanyMarketCapitalization {
         kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CompanyMarketCapitalization",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("market_cap", self.market_cap.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "market_cap",
+            crate::models::convert::DictValue::dict_value(&self.market_cap, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::CompanyMarketCapitalization> for CompanyMarketCapitalization {
@@ -639,6 +1219,12 @@ impl From<libfmp::responses::company::CompanyMarketCapitalization> for CompanyMa
             date: value.date.into_inner(),
             market_cap: value.market_cap,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CompanyMarketCapitalization {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -688,6 +1274,22 @@ impl CompanyShareFloat {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['free_float'], typing.Literal['float_shares'], typing.Literal['outstanding_shares'], typing.Literal['source']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "free_float",
+                "float_shares",
+                "outstanding_shares",
+                "source",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -708,6 +1310,58 @@ impl CompanyShareFloat {
         kwargs.set_item("source", self.source.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CompanyShareFloat",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("free_float", self.free_float.clone().into_bound_py_any(py)?),
+                (
+                    "float_shares",
+                    self.float_shares.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "outstanding_shares",
+                    self.outstanding_shares.clone().into_bound_py_any(py)?,
+                ),
+                ("source", self.source.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "free_float",
+            crate::models::convert::DictValue::dict_value(&self.free_float, py)?,
+        )?;
+        dict.set_item(
+            "float_shares",
+            crate::models::convert::DictValue::dict_value(&self.float_shares, py)?,
+        )?;
+        dict.set_item(
+            "outstanding_shares",
+            crate::models::convert::DictValue::dict_value(&self.outstanding_shares, py)?,
+        )?;
+        dict.set_item(
+            "source",
+            crate::models::convert::DictValue::dict_value(&self.source, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::CompanyShareFloat> for CompanyShareFloat {
@@ -720,6 +1374,12 @@ impl From<libfmp::responses::company::CompanyShareFloat> for CompanyShareFloat {
             outstanding_shares: value.outstanding_shares,
             source: value.source,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CompanyShareFloat {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -765,6 +1425,21 @@ impl ShareFloat {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['free_float'], typing.Literal['float_shares'], typing.Literal['outstanding_shares']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "free_float",
+                "float_shares",
+                "outstanding_shares",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -784,6 +1459,53 @@ impl ShareFloat {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "ShareFloat",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("free_float", self.free_float.clone().into_bound_py_any(py)?),
+                (
+                    "float_shares",
+                    self.float_shares.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "outstanding_shares",
+                    self.outstanding_shares.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "free_float",
+            crate::models::convert::DictValue::dict_value(&self.free_float, py)?,
+        )?;
+        dict.set_item(
+            "float_shares",
+            crate::models::convert::DictValue::dict_value(&self.float_shares, py)?,
+        )?;
+        dict.set_item(
+            "outstanding_shares",
+            crate::models::convert::DictValue::dict_value(&self.outstanding_shares, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::ShareFloat> for ShareFloat {
@@ -795,6 +1517,12 @@ impl From<libfmp::responses::company::ShareFloat> for ShareFloat {
             float_shares: value.float_shares,
             outstanding_shares: value.outstanding_shares,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for ShareFloat {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -856,6 +1584,25 @@ impl MergerAcquisition {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['company_name'], typing.Literal['cik'], typing.Literal['targeted_company_name'], typing.Literal['targeted_cik'], typing.Literal['targeted_symbol'], typing.Literal['transaction_date'], typing.Literal['accepted_date'], typing.Literal['link']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "company_name",
+                "cik",
+                "targeted_company_name",
+                "targeted_cik",
+                "targeted_symbol",
+                "transaction_date",
+                "accepted_date",
+                "link",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -891,6 +1638,85 @@ impl MergerAcquisition {
         kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "MergerAcquisition",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "targeted_company_name",
+                    self.targeted_company_name.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "targeted_cik",
+                    self.targeted_cik.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "targeted_symbol",
+                    self.targeted_symbol.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "transaction_date",
+                    self.transaction_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "targeted_company_name",
+            crate::models::convert::DictValue::dict_value(&self.targeted_company_name, py)?,
+        )?;
+        dict.set_item(
+            "targeted_cik",
+            crate::models::convert::DictValue::dict_value(&self.targeted_cik, py)?,
+        )?;
+        dict.set_item(
+            "targeted_symbol",
+            crate::models::convert::DictValue::dict_value(&self.targeted_symbol, py)?,
+        )?;
+        dict.set_item(
+            "transaction_date",
+            crate::models::convert::DictValue::dict_value(&self.transaction_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::MergerAcquisition> for MergerAcquisition {
@@ -906,6 +1732,12 @@ impl From<libfmp::responses::company::MergerAcquisition> for MergerAcquisition {
             accepted_date: value.accepted_date.into_inner(),
             link: value.link,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for MergerAcquisition {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -990,6 +1822,24 @@ impl CompanyExecutive {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['title'], typing.Literal['name'], typing.Literal['pay'], typing.Literal['currency_pay'], typing.Literal['gender'], typing.Literal['year_born'], typing.Literal['title_since'], typing.Literal['active']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "title",
+                "name",
+                "pay",
+                "currency_pay",
+                "gender",
+                "year_born",
+                "title_since",
+                "active",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1045,6 +1895,56 @@ impl CompanyExecutive {
         kwargs.set_item("active", self.active.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CompanyExecutive",
+            &[
+                ("title", self.title.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("pay", self.pay(py)?),
+                (
+                    "currency_pay",
+                    self.currency_pay.clone().into_bound_py_any(py)?,
+                ),
+                ("gender", self.gender.clone().into_bound_py_any(py)?),
+                ("year_born", self.year_born(py)?),
+                ("title_since", self.title_since(py)?),
+                ("active", self.active.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "title",
+            crate::models::convert::DictValue::dict_value(&self.title, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item("pay", self.pay(py)?)?;
+        dict.set_item(
+            "currency_pay",
+            crate::models::convert::DictValue::dict_value(&self.currency_pay, py)?,
+        )?;
+        dict.set_item(
+            "gender",
+            crate::models::convert::DictValue::dict_value(&self.gender, py)?,
+        )?;
+        dict.set_item("year_born", self.year_born(py)?)?;
+        dict.set_item("title_since", self.title_since(py)?)?;
+        dict.set_item(
+            "active",
+            crate::models::convert::DictValue::dict_value(&self.active, py)?,
+        )?;
+        Ok(dict)
+    }
 
     #[getter]
     fn pay<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -1083,6 +1983,12 @@ impl From<libfmp::responses::company::CompanyExecutive> for CompanyExecutive {
             title_since: value.title_since,
             active: value.active,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CompanyExecutive {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -1168,6 +2074,31 @@ impl ExecutiveCompensation {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['cik'], typing.Literal['symbol'], typing.Literal['company_name'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['name_and_position'], typing.Literal['year'], typing.Literal['salary'], typing.Literal['bonus'], typing.Literal['stock_award'], typing.Literal['option_award'], typing.Literal['incentive_plan_compensation'], typing.Literal['all_other_compensation'], typing.Literal['total'], typing.Literal['link']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "cik",
+                "symbol",
+                "company_name",
+                "filing_date",
+                "accepted_date",
+                "name_and_position",
+                "year",
+                "salary",
+                "bonus",
+                "stock_award",
+                "option_award",
+                "incentive_plan_compensation",
+                "all_other_compensation",
+                "total",
+                "link",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1217,6 +2148,123 @@ impl ExecutiveCompensation {
         kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "ExecutiveCompensation",
+            &[
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "name_and_position",
+                    self.name_and_position.clone().into_bound_py_any(py)?,
+                ),
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                ("salary", self.salary.clone().into_bound_py_any(py)?),
+                ("bonus", self.bonus.clone().into_bound_py_any(py)?),
+                (
+                    "stock_award",
+                    self.stock_award.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "option_award",
+                    self.option_award.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "incentive_plan_compensation",
+                    self.incentive_plan_compensation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "all_other_compensation",
+                    self.all_other_compensation.clone().into_bound_py_any(py)?,
+                ),
+                ("total", self.total.clone().into_bound_py_any(py)?),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "name_and_position",
+            crate::models::convert::DictValue::dict_value(&self.name_and_position, py)?,
+        )?;
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "salary",
+            crate::models::convert::DictValue::dict_value(&self.salary, py)?,
+        )?;
+        dict.set_item(
+            "bonus",
+            crate::models::convert::DictValue::dict_value(&self.bonus, py)?,
+        )?;
+        dict.set_item(
+            "stock_award",
+            crate::models::convert::DictValue::dict_value(&self.stock_award, py)?,
+        )?;
+        dict.set_item(
+            "option_award",
+            crate::models::convert::DictValue::dict_value(&self.option_award, py)?,
+        )?;
+        dict.set_item(
+            "incentive_plan_compensation",
+            crate::models::convert::DictValue::dict_value(&self.incentive_plan_compensation, py)?,
+        )?;
+        dict.set_item(
+            "all_other_compensation",
+            crate::models::convert::DictValue::dict_value(&self.all_other_compensation, py)?,
+        )?;
+        dict.set_item(
+            "total",
+            crate::models::convert::DictValue::dict_value(&self.total, py)?,
+        )?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::ExecutiveCompensation> for ExecutiveCompensation {
@@ -1238,6 +2286,12 @@ impl From<libfmp::responses::company::ExecutiveCompensation> for ExecutiveCompen
             total: value.total,
             link: value.link,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for ExecutiveCompensation {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -1271,6 +2325,12 @@ impl ExecutiveCompensationBenchmark {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['industry_title'], typing.Literal['year'], typing.Literal['average_compensation']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["industry_title", "year", "average_compensation"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1288,6 +2348,43 @@ impl ExecutiveCompensationBenchmark {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "ExecutiveCompensationBenchmark",
+            &[
+                (
+                    "industry_title",
+                    self.industry_title.clone().into_bound_py_any(py)?,
+                ),
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                (
+                    "average_compensation",
+                    self.average_compensation.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "industry_title",
+            crate::models::convert::DictValue::dict_value(&self.industry_title, py)?,
+        )?;
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "average_compensation",
+            crate::models::convert::DictValue::dict_value(&self.average_compensation, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::company::ExecutiveCompensationBenchmark>
@@ -1299,5 +2396,11 @@ impl From<libfmp::responses::company::ExecutiveCompensationBenchmark>
             year: value.year,
             average_compensation: value.average_compensation,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for ExecutiveCompensationBenchmark {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

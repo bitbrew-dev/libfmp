@@ -59,6 +59,24 @@ impl BulkEodBar {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['open'], typing.Literal['low'], typing.Literal['high'], typing.Literal['close'], typing.Literal['adj_close'], typing.Literal['volume']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "open",
+                "low",
+                "high",
+                "close",
+                "adj_close",
+                "volume",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -75,6 +93,62 @@ impl BulkEodBar {
         kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BulkEodBar",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("open", self.open.clone().into_bound_py_any(py)?),
+                ("low", self.low.clone().into_bound_py_any(py)?),
+                ("high", self.high.clone().into_bound_py_any(py)?),
+                ("close", self.close.clone().into_bound_py_any(py)?),
+                ("adj_close", self.adj_close.clone().into_bound_py_any(py)?),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "open",
+            crate::models::convert::DictValue::dict_value(&self.open, py)?,
+        )?;
+        dict.set_item(
+            "low",
+            crate::models::convert::DictValue::dict_value(&self.low, py)?,
+        )?;
+        dict.set_item(
+            "high",
+            crate::models::convert::DictValue::dict_value(&self.high, py)?,
+        )?;
+        dict.set_item(
+            "close",
+            crate::models::convert::DictValue::dict_value(&self.close, py)?,
+        )?;
+        dict.set_item(
+            "adj_close",
+            crate::models::convert::DictValue::dict_value(&self.adj_close, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkEodBar> for BulkEodBar {
@@ -89,5 +163,11 @@ impl From<libfmp::responses::bulk::BulkEodBar> for BulkEodBar {
             adj_close: value.adj_close.into_inner(),
             volume: value.volume.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for BulkEodBar {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

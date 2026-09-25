@@ -64,6 +64,24 @@ impl InstitutionalOwnershipFiling {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['cik'], typing.Literal['name'], typing.Literal['date'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['form_type'], typing.Literal['link'], typing.Literal['final_link']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "cik",
+                "name",
+                "date",
+                "filing_date",
+                "accepted_date",
+                "form_type",
+                "link",
+                "final_link",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -86,6 +104,68 @@ impl InstitutionalOwnershipFiling {
         kwargs.set_item("final_link", self.final_link.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "InstitutionalOwnershipFiling",
+            &[
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                ("form_type", self.form_type.clone().into_bound_py_any(py)?),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+                ("final_link", self.final_link.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "form_type",
+            crate::models::convert::DictValue::dict_value(&self.form_type, py)?,
+        )?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        dict.set_item(
+            "final_link",
+            crate::models::convert::DictValue::dict_value(&self.final_link, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::InstitutionalOwnershipFiling>
@@ -104,6 +184,12 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalOwnershipFili
             link: value.link,
             final_link: value.final_link,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for InstitutionalOwnershipFiling {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -190,6 +276,30 @@ impl InstitutionalHolding {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['cik'], typing.Literal['security_cusip'], typing.Literal['symbol'], typing.Literal['name_of_issuer'], typing.Literal['shares'], typing.Literal['title_of_class'], typing.Literal['shares_type'], typing.Literal['put_call_share'], typing.Literal['value'], typing.Literal['link'], typing.Literal['final_link']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "filing_date",
+                "accepted_date",
+                "cik",
+                "security_cusip",
+                "symbol",
+                "name_of_issuer",
+                "shares",
+                "title_of_class",
+                "shares_type",
+                "put_call_share",
+                "value",
+                "link",
+                "final_link",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -233,6 +343,113 @@ impl InstitutionalHolding {
         kwargs.set_item("final_link", self.final_link.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "InstitutionalHolding",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "security_cusip",
+                    self.security_cusip.clone().into_bound_py_any(py)?,
+                ),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "name_of_issuer",
+                    self.name_of_issuer.clone().into_bound_py_any(py)?,
+                ),
+                ("shares", self.shares.clone().into_bound_py_any(py)?),
+                (
+                    "title_of_class",
+                    self.title_of_class.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "shares_type",
+                    self.shares_type.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "put_call_share",
+                    self.put_call_share.clone().into_bound_py_any(py)?,
+                ),
+                ("value", self.value.clone().into_bound_py_any(py)?),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+                ("final_link", self.final_link.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "security_cusip",
+            crate::models::convert::DictValue::dict_value(&self.security_cusip, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "name_of_issuer",
+            crate::models::convert::DictValue::dict_value(&self.name_of_issuer, py)?,
+        )?;
+        dict.set_item(
+            "shares",
+            crate::models::convert::DictValue::dict_value(&self.shares, py)?,
+        )?;
+        dict.set_item(
+            "title_of_class",
+            crate::models::convert::DictValue::dict_value(&self.title_of_class, py)?,
+        )?;
+        dict.set_item(
+            "shares_type",
+            crate::models::convert::DictValue::dict_value(&self.shares_type, py)?,
+        )?;
+        dict.set_item(
+            "put_call_share",
+            crate::models::convert::DictValue::dict_value(&self.put_call_share, py)?,
+        )?;
+        dict.set_item(
+            "value",
+            crate::models::convert::DictValue::dict_value(&self.value, py)?,
+        )?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        dict.set_item(
+            "final_link",
+            crate::models::convert::DictValue::dict_value(&self.final_link, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::InstitutionalHolding>
@@ -255,6 +472,12 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalHolding>
             link: value.link,
             final_link: value.final_link,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for InstitutionalHolding {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -293,6 +516,12 @@ impl Form13fFilingDate {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['year'], typing.Literal['quarter']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["date", "year", "quarter"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -304,6 +533,37 @@ impl Form13fFilingDate {
         kwargs.set_item("quarter", self.quarter.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "Form13fFilingDate",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                ("quarter", self.quarter.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "quarter",
+            crate::models::convert::DictValue::dict_value(&self.quarter, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::Form13fFilingDate> for Form13fFilingDate {
@@ -313,6 +573,12 @@ impl From<libfmp::responses::institutional_ownership::Form13fFilingDate> for For
             year: value.year.get(),
             quarter: value.quarter.get(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for Form13fFilingDate {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -499,6 +765,55 @@ impl InstitutionalHolderAnalytics {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['cik'], typing.Literal['filing_date'], typing.Literal['investor_name'], typing.Literal['symbol'], typing.Literal['security_name'], typing.Literal['type_of_security'], typing.Literal['security_cusip'], typing.Literal['shares_type'], typing.Literal['put_call_share'], typing.Literal['investment_discretion'], typing.Literal['industry_title'], typing.Literal['weight'], typing.Literal['last_weight'], typing.Literal['change_in_weight'], typing.Literal['change_in_weight_percentage'], typing.Literal['market_value'], typing.Literal['last_market_value'], typing.Literal['change_in_market_value'], typing.Literal['change_in_market_value_percentage'], typing.Literal['shares_number'], typing.Literal['last_shares_number'], typing.Literal['change_in_shares_number'], typing.Literal['change_in_shares_number_percentage'], typing.Literal['quarter_end_price'], typing.Literal['avg_price_paid'], typing.Literal['is_new'], typing.Literal['is_sold_out'], typing.Literal['ownership'], typing.Literal['last_ownership'], typing.Literal['change_in_ownership'], typing.Literal['change_in_ownership_percentage'], typing.Literal['holding_period'], typing.Literal['first_added'], typing.Literal['performance'], typing.Literal['performance_percentage'], typing.Literal['last_performance'], typing.Literal['change_in_performance'], typing.Literal['is_counted_for_performance']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "cik",
+                "filing_date",
+                "investor_name",
+                "symbol",
+                "security_name",
+                "type_of_security",
+                "security_cusip",
+                "shares_type",
+                "put_call_share",
+                "investment_discretion",
+                "industry_title",
+                "weight",
+                "last_weight",
+                "change_in_weight",
+                "change_in_weight_percentage",
+                "market_value",
+                "last_market_value",
+                "change_in_market_value",
+                "change_in_market_value_percentage",
+                "shares_number",
+                "last_shares_number",
+                "change_in_shares_number",
+                "change_in_shares_number_percentage",
+                "quarter_end_price",
+                "avg_price_paid",
+                "is_new",
+                "is_sold_out",
+                "ownership",
+                "last_ownership",
+                "change_in_ownership",
+                "change_in_ownership_percentage",
+                "holding_period",
+                "first_added",
+                "performance",
+                "performance_percentage",
+                "last_performance",
+                "change_in_performance",
+                "is_counted_for_performance",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -655,6 +970,335 @@ impl InstitutionalHolderAnalytics {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "InstitutionalHolderAnalytics",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "investor_name",
+                    self.investor_name.clone().into_bound_py_any(py)?,
+                ),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "security_name",
+                    self.security_name.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "type_of_security",
+                    self.type_of_security.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "security_cusip",
+                    self.security_cusip.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "shares_type",
+                    self.shares_type.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "put_call_share",
+                    self.put_call_share.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "investment_discretion",
+                    self.investment_discretion.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "industry_title",
+                    self.industry_title.clone().into_bound_py_any(py)?,
+                ),
+                ("weight", self.weight.clone().into_bound_py_any(py)?),
+                (
+                    "last_weight",
+                    self.last_weight.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_weight",
+                    self.change_in_weight.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_weight_percentage",
+                    self.change_in_weight_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "market_value",
+                    self.market_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_market_value",
+                    self.last_market_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_market_value",
+                    self.change_in_market_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_market_value_percentage",
+                    self.change_in_market_value_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "shares_number",
+                    self.shares_number.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_shares_number",
+                    self.last_shares_number.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_shares_number",
+                    self.change_in_shares_number.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_shares_number_percentage",
+                    self.change_in_shares_number_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "quarter_end_price",
+                    self.quarter_end_price.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "avg_price_paid",
+                    self.avg_price_paid.clone().into_bound_py_any(py)?,
+                ),
+                ("is_new", self.is_new.clone().into_bound_py_any(py)?),
+                (
+                    "is_sold_out",
+                    self.is_sold_out.clone().into_bound_py_any(py)?,
+                ),
+                ("ownership", self.ownership.clone().into_bound_py_any(py)?),
+                (
+                    "last_ownership",
+                    self.last_ownership.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_ownership",
+                    self.change_in_ownership.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_ownership_percentage",
+                    self.change_in_ownership_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "holding_period",
+                    self.holding_period.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "first_added",
+                    self.first_added.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance",
+                    self.performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_percentage",
+                    self.performance_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_performance",
+                    self.last_performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_performance",
+                    self.change_in_performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "is_counted_for_performance",
+                    self.is_counted_for_performance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "investor_name",
+            crate::models::convert::DictValue::dict_value(&self.investor_name, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "security_name",
+            crate::models::convert::DictValue::dict_value(&self.security_name, py)?,
+        )?;
+        dict.set_item(
+            "type_of_security",
+            crate::models::convert::DictValue::dict_value(&self.type_of_security, py)?,
+        )?;
+        dict.set_item(
+            "security_cusip",
+            crate::models::convert::DictValue::dict_value(&self.security_cusip, py)?,
+        )?;
+        dict.set_item(
+            "shares_type",
+            crate::models::convert::DictValue::dict_value(&self.shares_type, py)?,
+        )?;
+        dict.set_item(
+            "put_call_share",
+            crate::models::convert::DictValue::dict_value(&self.put_call_share, py)?,
+        )?;
+        dict.set_item(
+            "investment_discretion",
+            crate::models::convert::DictValue::dict_value(&self.investment_discretion, py)?,
+        )?;
+        dict.set_item(
+            "industry_title",
+            crate::models::convert::DictValue::dict_value(&self.industry_title, py)?,
+        )?;
+        dict.set_item(
+            "weight",
+            crate::models::convert::DictValue::dict_value(&self.weight, py)?,
+        )?;
+        dict.set_item(
+            "last_weight",
+            crate::models::convert::DictValue::dict_value(&self.last_weight, py)?,
+        )?;
+        dict.set_item(
+            "change_in_weight",
+            crate::models::convert::DictValue::dict_value(&self.change_in_weight, py)?,
+        )?;
+        dict.set_item(
+            "change_in_weight_percentage",
+            crate::models::convert::DictValue::dict_value(&self.change_in_weight_percentage, py)?,
+        )?;
+        dict.set_item(
+            "market_value",
+            crate::models::convert::DictValue::dict_value(&self.market_value, py)?,
+        )?;
+        dict.set_item(
+            "last_market_value",
+            crate::models::convert::DictValue::dict_value(&self.last_market_value, py)?,
+        )?;
+        dict.set_item(
+            "change_in_market_value",
+            crate::models::convert::DictValue::dict_value(&self.change_in_market_value, py)?,
+        )?;
+        dict.set_item(
+            "change_in_market_value_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.change_in_market_value_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "shares_number",
+            crate::models::convert::DictValue::dict_value(&self.shares_number, py)?,
+        )?;
+        dict.set_item(
+            "last_shares_number",
+            crate::models::convert::DictValue::dict_value(&self.last_shares_number, py)?,
+        )?;
+        dict.set_item(
+            "change_in_shares_number",
+            crate::models::convert::DictValue::dict_value(&self.change_in_shares_number, py)?,
+        )?;
+        dict.set_item(
+            "change_in_shares_number_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.change_in_shares_number_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "quarter_end_price",
+            crate::models::convert::DictValue::dict_value(&self.quarter_end_price, py)?,
+        )?;
+        dict.set_item(
+            "avg_price_paid",
+            crate::models::convert::DictValue::dict_value(&self.avg_price_paid, py)?,
+        )?;
+        dict.set_item(
+            "is_new",
+            crate::models::convert::DictValue::dict_value(&self.is_new, py)?,
+        )?;
+        dict.set_item(
+            "is_sold_out",
+            crate::models::convert::DictValue::dict_value(&self.is_sold_out, py)?,
+        )?;
+        dict.set_item(
+            "ownership",
+            crate::models::convert::DictValue::dict_value(&self.ownership, py)?,
+        )?;
+        dict.set_item(
+            "last_ownership",
+            crate::models::convert::DictValue::dict_value(&self.last_ownership, py)?,
+        )?;
+        dict.set_item(
+            "change_in_ownership",
+            crate::models::convert::DictValue::dict_value(&self.change_in_ownership, py)?,
+        )?;
+        dict.set_item(
+            "change_in_ownership_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.change_in_ownership_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "holding_period",
+            crate::models::convert::DictValue::dict_value(&self.holding_period, py)?,
+        )?;
+        dict.set_item(
+            "first_added",
+            crate::models::convert::DictValue::dict_value(&self.first_added, py)?,
+        )?;
+        dict.set_item(
+            "performance",
+            crate::models::convert::DictValue::dict_value(&self.performance, py)?,
+        )?;
+        dict.set_item(
+            "performance_percentage",
+            crate::models::convert::DictValue::dict_value(&self.performance_percentage, py)?,
+        )?;
+        dict.set_item(
+            "last_performance",
+            crate::models::convert::DictValue::dict_value(&self.last_performance, py)?,
+        )?;
+        dict.set_item(
+            "change_in_performance",
+            crate::models::convert::DictValue::dict_value(&self.change_in_performance, py)?,
+        )?;
+        dict.set_item(
+            "is_counted_for_performance",
+            crate::models::convert::DictValue::dict_value(&self.is_counted_for_performance, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::InstitutionalHolderAnalytics>
@@ -704,6 +1348,12 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalHolderAnalyti
             change_in_performance: value.change_in_performance,
             is_counted_for_performance: value.is_counted_for_performance,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for InstitutionalHolderAnalytics {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -866,6 +1516,49 @@ impl HolderPerformanceSummary {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['cik'], typing.Literal['investor_name'], typing.Literal['portfolio_size'], typing.Literal['securities_added'], typing.Literal['securities_removed'], typing.Literal['market_value'], typing.Literal['previous_market_value'], typing.Literal['change_in_market_value'], typing.Literal['change_in_market_value_percentage'], typing.Literal['average_holding_period'], typing.Literal['average_holding_period_top10'], typing.Literal['average_holding_period_top20'], typing.Literal['turnover'], typing.Literal['turnover_alternate_sell'], typing.Literal['turnover_alternate_buy'], typing.Literal['performance'], typing.Literal['performance_percentage'], typing.Literal['last_performance'], typing.Literal['change_in_performance'], typing.Literal['performance_1_year'], typing.Literal['performance_percentage_1_year'], typing.Literal['performance_3_year'], typing.Literal['performance_percentage_3_year'], typing.Literal['performance_5_year'], typing.Literal['performance_percentage_5_year'], typing.Literal['performance_since_inception'], typing.Literal['performance_since_inception_percentage'], typing.Literal['performance_relative_to_sp500_percentage'], typing.Literal['performance_1_year_relative_to_sp500_percentage'], typing.Literal['performance_3_year_relative_to_sp500_percentage'], typing.Literal['performance_5_year_relative_to_sp500_percentage'], typing.Literal['performance_since_inception_relative_to_sp500_percentage']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "cik",
+                "investor_name",
+                "portfolio_size",
+                "securities_added",
+                "securities_removed",
+                "market_value",
+                "previous_market_value",
+                "change_in_market_value",
+                "change_in_market_value_percentage",
+                "average_holding_period",
+                "average_holding_period_top10",
+                "average_holding_period_top20",
+                "turnover",
+                "turnover_alternate_sell",
+                "turnover_alternate_buy",
+                "performance",
+                "performance_percentage",
+                "last_performance",
+                "change_in_performance",
+                "performance_1_year",
+                "performance_percentage_1_year",
+                "performance_3_year",
+                "performance_percentage_3_year",
+                "performance_5_year",
+                "performance_percentage_5_year",
+                "performance_since_inception",
+                "performance_since_inception_percentage",
+                "performance_relative_to_sp500_percentage",
+                "performance_1_year_relative_to_sp500_percentage",
+                "performance_3_year_relative_to_sp500_percentage",
+                "performance_5_year_relative_to_sp500_percentage",
+                "performance_since_inception_relative_to_sp500_percentage",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1023,6 +1716,324 @@ impl HolderPerformanceSummary {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "HolderPerformanceSummary",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "investor_name",
+                    self.investor_name.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "portfolio_size",
+                    self.portfolio_size.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "securities_added",
+                    self.securities_added.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "securities_removed",
+                    self.securities_removed.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "market_value",
+                    self.market_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "previous_market_value",
+                    self.previous_market_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_market_value",
+                    self.change_in_market_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_market_value_percentage",
+                    self.change_in_market_value_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "average_holding_period",
+                    self.average_holding_period.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "average_holding_period_top10",
+                    self.average_holding_period_top10
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "average_holding_period_top20",
+                    self.average_holding_period_top20
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                ("turnover", self.turnover.clone().into_bound_py_any(py)?),
+                (
+                    "turnover_alternate_sell",
+                    self.turnover_alternate_sell.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "turnover_alternate_buy",
+                    self.turnover_alternate_buy.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance",
+                    self.performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_percentage",
+                    self.performance_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_performance",
+                    self.last_performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_performance",
+                    self.change_in_performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_1_year",
+                    self.performance_1_year.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_percentage_1_year",
+                    self.performance_percentage_1_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_3_year",
+                    self.performance_3_year.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_percentage_3_year",
+                    self.performance_percentage_3_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_5_year",
+                    self.performance_5_year.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_percentage_5_year",
+                    self.performance_percentage_5_year
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_since_inception",
+                    self.performance_since_inception
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_since_inception_percentage",
+                    self.performance_since_inception_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_relative_to_sp500_percentage",
+                    self.performance_relative_to_sp500_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_1_year_relative_to_sp500_percentage",
+                    self.performance_1_year_relative_to_sp500_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_3_year_relative_to_sp500_percentage",
+                    self.performance_3_year_relative_to_sp500_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_5_year_relative_to_sp500_percentage",
+                    self.performance_5_year_relative_to_sp500_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_since_inception_relative_to_sp500_percentage",
+                    self.performance_since_inception_relative_to_sp500_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "investor_name",
+            crate::models::convert::DictValue::dict_value(&self.investor_name, py)?,
+        )?;
+        dict.set_item(
+            "portfolio_size",
+            crate::models::convert::DictValue::dict_value(&self.portfolio_size, py)?,
+        )?;
+        dict.set_item(
+            "securities_added",
+            crate::models::convert::DictValue::dict_value(&self.securities_added, py)?,
+        )?;
+        dict.set_item(
+            "securities_removed",
+            crate::models::convert::DictValue::dict_value(&self.securities_removed, py)?,
+        )?;
+        dict.set_item(
+            "market_value",
+            crate::models::convert::DictValue::dict_value(&self.market_value, py)?,
+        )?;
+        dict.set_item(
+            "previous_market_value",
+            crate::models::convert::DictValue::dict_value(&self.previous_market_value, py)?,
+        )?;
+        dict.set_item(
+            "change_in_market_value",
+            crate::models::convert::DictValue::dict_value(&self.change_in_market_value, py)?,
+        )?;
+        dict.set_item(
+            "change_in_market_value_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.change_in_market_value_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "average_holding_period",
+            crate::models::convert::DictValue::dict_value(&self.average_holding_period, py)?,
+        )?;
+        dict.set_item(
+            "average_holding_period_top10",
+            crate::models::convert::DictValue::dict_value(&self.average_holding_period_top10, py)?,
+        )?;
+        dict.set_item(
+            "average_holding_period_top20",
+            crate::models::convert::DictValue::dict_value(&self.average_holding_period_top20, py)?,
+        )?;
+        dict.set_item(
+            "turnover",
+            crate::models::convert::DictValue::dict_value(&self.turnover, py)?,
+        )?;
+        dict.set_item(
+            "turnover_alternate_sell",
+            crate::models::convert::DictValue::dict_value(&self.turnover_alternate_sell, py)?,
+        )?;
+        dict.set_item(
+            "turnover_alternate_buy",
+            crate::models::convert::DictValue::dict_value(&self.turnover_alternate_buy, py)?,
+        )?;
+        dict.set_item(
+            "performance",
+            crate::models::convert::DictValue::dict_value(&self.performance, py)?,
+        )?;
+        dict.set_item(
+            "performance_percentage",
+            crate::models::convert::DictValue::dict_value(&self.performance_percentage, py)?,
+        )?;
+        dict.set_item(
+            "last_performance",
+            crate::models::convert::DictValue::dict_value(&self.last_performance, py)?,
+        )?;
+        dict.set_item(
+            "change_in_performance",
+            crate::models::convert::DictValue::dict_value(&self.change_in_performance, py)?,
+        )?;
+        dict.set_item(
+            "performance_1_year",
+            crate::models::convert::DictValue::dict_value(&self.performance_1_year, py)?,
+        )?;
+        dict.set_item(
+            "performance_percentage_1_year",
+            crate::models::convert::DictValue::dict_value(&self.performance_percentage_1_year, py)?,
+        )?;
+        dict.set_item(
+            "performance_3_year",
+            crate::models::convert::DictValue::dict_value(&self.performance_3_year, py)?,
+        )?;
+        dict.set_item(
+            "performance_percentage_3_year",
+            crate::models::convert::DictValue::dict_value(&self.performance_percentage_3_year, py)?,
+        )?;
+        dict.set_item(
+            "performance_5_year",
+            crate::models::convert::DictValue::dict_value(&self.performance_5_year, py)?,
+        )?;
+        dict.set_item(
+            "performance_percentage_5_year",
+            crate::models::convert::DictValue::dict_value(&self.performance_percentage_5_year, py)?,
+        )?;
+        dict.set_item(
+            "performance_since_inception",
+            crate::models::convert::DictValue::dict_value(&self.performance_since_inception, py)?,
+        )?;
+        dict.set_item(
+            "performance_since_inception_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.performance_since_inception_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "performance_relative_to_sp500_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.performance_relative_to_sp500_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "performance_1_year_relative_to_sp500_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.performance_1_year_relative_to_sp500_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "performance_3_year_relative_to_sp500_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.performance_3_year_relative_to_sp500_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "performance_5_year_relative_to_sp500_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.performance_5_year_relative_to_sp500_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "performance_since_inception_relative_to_sp500_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.performance_since_inception_relative_to_sp500_percentage,
+                py,
+            )?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::HolderPerformanceSummary>
@@ -1069,6 +2080,12 @@ impl From<libfmp::responses::institutional_ownership::HolderPerformanceSummary>
             performance_since_inception_relative_to_sp500_percentage: value
                 .performance_since_inception_relative_to_sp500_percentage,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for HolderPerformanceSummary {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -1147,6 +2164,28 @@ impl HolderIndustryBreakdown {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['cik'], typing.Literal['investor_name'], typing.Literal['industry_title'], typing.Literal['weight'], typing.Literal['last_weight'], typing.Literal['change_in_weight'], typing.Literal['change_in_weight_percentage'], typing.Literal['performance'], typing.Literal['performance_percentage'], typing.Literal['last_performance'], typing.Literal['change_in_performance']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "cik",
+                "investor_name",
+                "industry_title",
+                "weight",
+                "last_weight",
+                "change_in_weight",
+                "change_in_weight_percentage",
+                "performance",
+                "performance_percentage",
+                "last_performance",
+                "change_in_performance",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1196,6 +2235,111 @@ impl HolderIndustryBreakdown {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "HolderIndustryBreakdown",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "investor_name",
+                    self.investor_name.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "industry_title",
+                    self.industry_title.clone().into_bound_py_any(py)?,
+                ),
+                ("weight", self.weight.clone().into_bound_py_any(py)?),
+                (
+                    "last_weight",
+                    self.last_weight.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_weight",
+                    self.change_in_weight.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_weight_percentage",
+                    self.change_in_weight_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "performance",
+                    self.performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "performance_percentage",
+                    self.performance_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_performance",
+                    self.last_performance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_performance",
+                    self.change_in_performance.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "investor_name",
+            crate::models::convert::DictValue::dict_value(&self.investor_name, py)?,
+        )?;
+        dict.set_item(
+            "industry_title",
+            crate::models::convert::DictValue::dict_value(&self.industry_title, py)?,
+        )?;
+        dict.set_item(
+            "weight",
+            crate::models::convert::DictValue::dict_value(&self.weight, py)?,
+        )?;
+        dict.set_item(
+            "last_weight",
+            crate::models::convert::DictValue::dict_value(&self.last_weight, py)?,
+        )?;
+        dict.set_item(
+            "change_in_weight",
+            crate::models::convert::DictValue::dict_value(&self.change_in_weight, py)?,
+        )?;
+        dict.set_item(
+            "change_in_weight_percentage",
+            crate::models::convert::DictValue::dict_value(&self.change_in_weight_percentage, py)?,
+        )?;
+        dict.set_item(
+            "performance",
+            crate::models::convert::DictValue::dict_value(&self.performance, py)?,
+        )?;
+        dict.set_item(
+            "performance_percentage",
+            crate::models::convert::DictValue::dict_value(&self.performance_percentage, py)?,
+        )?;
+        dict.set_item(
+            "last_performance",
+            crate::models::convert::DictValue::dict_value(&self.last_performance, py)?,
+        )?;
+        dict.set_item(
+            "change_in_performance",
+            crate::models::convert::DictValue::dict_value(&self.change_in_performance, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::HolderIndustryBreakdown>
@@ -1216,6 +2360,12 @@ impl From<libfmp::responses::institutional_ownership::HolderIndustryBreakdown>
             last_performance: value.last_performance,
             change_in_performance: value.change_in_performance,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for HolderIndustryBreakdown {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -1390,6 +2540,52 @@ impl InstitutionalPositionSummary {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['cik'], typing.Literal['date'], typing.Literal['investors_holding'], typing.Literal['last_investors_holding'], typing.Literal['investors_holding_change'], typing.Literal['number_of_13f_shares'], typing.Literal['last_number_of_13f_shares'], typing.Literal['number_of_13f_shares_change'], typing.Literal['total_invested'], typing.Literal['last_total_invested'], typing.Literal['total_invested_change'], typing.Literal['ownership_percent'], typing.Literal['last_ownership_percent'], typing.Literal['ownership_percent_change'], typing.Literal['new_positions'], typing.Literal['last_new_positions'], typing.Literal['new_positions_change'], typing.Literal['increased_positions'], typing.Literal['last_increased_positions'], typing.Literal['increased_positions_change'], typing.Literal['closed_positions'], typing.Literal['last_closed_positions'], typing.Literal['closed_positions_change'], typing.Literal['reduced_positions'], typing.Literal['last_reduced_positions'], typing.Literal['reduced_positions_change'], typing.Literal['total_calls'], typing.Literal['last_total_calls'], typing.Literal['total_calls_change'], typing.Literal['total_puts'], typing.Literal['last_total_puts'], typing.Literal['total_puts_change'], typing.Literal['put_call_ratio'], typing.Literal['last_put_call_ratio'], typing.Literal['put_call_ratio_change']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "cik",
+                "date",
+                "investors_holding",
+                "last_investors_holding",
+                "investors_holding_change",
+                "number_of_13f_shares",
+                "last_number_of_13f_shares",
+                "number_of_13f_shares_change",
+                "total_invested",
+                "last_total_invested",
+                "total_invested_change",
+                "ownership_percent",
+                "last_ownership_percent",
+                "ownership_percent_change",
+                "new_positions",
+                "last_new_positions",
+                "new_positions_change",
+                "increased_positions",
+                "last_increased_positions",
+                "increased_positions_change",
+                "closed_positions",
+                "last_closed_positions",
+                "closed_positions_change",
+                "reduced_positions",
+                "last_reduced_positions",
+                "reduced_positions_change",
+                "total_calls",
+                "last_total_calls",
+                "total_calls_change",
+                "total_puts",
+                "last_total_puts",
+                "total_puts_change",
+                "put_call_ratio",
+                "last_put_call_ratio",
+                "put_call_ratio_change",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1544,6 +2740,312 @@ impl InstitutionalPositionSummary {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "InstitutionalPositionSummary",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "investors_holding",
+                    self.investors_holding.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_investors_holding",
+                    self.last_investors_holding.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "investors_holding_change",
+                    self.investors_holding_change
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "number_of_13f_shares",
+                    self.number_of_13f_shares.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_number_of_13f_shares",
+                    self.last_number_of_13f_shares
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "number_of_13f_shares_change",
+                    self.number_of_13f_shares_change
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "total_invested",
+                    self.total_invested.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_total_invested",
+                    self.last_total_invested.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_invested_change",
+                    self.total_invested_change.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ownership_percent",
+                    self.ownership_percent.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_ownership_percent",
+                    self.last_ownership_percent.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ownership_percent_change",
+                    self.ownership_percent_change
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "new_positions",
+                    self.new_positions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_new_positions",
+                    self.last_new_positions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "new_positions_change",
+                    self.new_positions_change.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "increased_positions",
+                    self.increased_positions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_increased_positions",
+                    self.last_increased_positions
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "increased_positions_change",
+                    self.increased_positions_change
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "closed_positions",
+                    self.closed_positions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_closed_positions",
+                    self.last_closed_positions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "closed_positions_change",
+                    self.closed_positions_change.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "reduced_positions",
+                    self.reduced_positions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_reduced_positions",
+                    self.last_reduced_positions.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "reduced_positions_change",
+                    self.reduced_positions_change
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "total_calls",
+                    self.total_calls.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_total_calls",
+                    self.last_total_calls.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_calls_change",
+                    self.total_calls_change.clone().into_bound_py_any(py)?,
+                ),
+                ("total_puts", self.total_puts.clone().into_bound_py_any(py)?),
+                (
+                    "last_total_puts",
+                    self.last_total_puts.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_puts_change",
+                    self.total_puts_change.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "put_call_ratio",
+                    self.put_call_ratio.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_put_call_ratio",
+                    self.last_put_call_ratio.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "put_call_ratio_change",
+                    self.put_call_ratio_change.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "investors_holding",
+            crate::models::convert::DictValue::dict_value(&self.investors_holding, py)?,
+        )?;
+        dict.set_item(
+            "last_investors_holding",
+            crate::models::convert::DictValue::dict_value(&self.last_investors_holding, py)?,
+        )?;
+        dict.set_item(
+            "investors_holding_change",
+            crate::models::convert::DictValue::dict_value(&self.investors_holding_change, py)?,
+        )?;
+        dict.set_item(
+            "number_of_13f_shares",
+            crate::models::convert::DictValue::dict_value(&self.number_of_13f_shares, py)?,
+        )?;
+        dict.set_item(
+            "last_number_of_13f_shares",
+            crate::models::convert::DictValue::dict_value(&self.last_number_of_13f_shares, py)?,
+        )?;
+        dict.set_item(
+            "number_of_13f_shares_change",
+            crate::models::convert::DictValue::dict_value(&self.number_of_13f_shares_change, py)?,
+        )?;
+        dict.set_item(
+            "total_invested",
+            crate::models::convert::DictValue::dict_value(&self.total_invested, py)?,
+        )?;
+        dict.set_item(
+            "last_total_invested",
+            crate::models::convert::DictValue::dict_value(&self.last_total_invested, py)?,
+        )?;
+        dict.set_item(
+            "total_invested_change",
+            crate::models::convert::DictValue::dict_value(&self.total_invested_change, py)?,
+        )?;
+        dict.set_item(
+            "ownership_percent",
+            crate::models::convert::DictValue::dict_value(&self.ownership_percent, py)?,
+        )?;
+        dict.set_item(
+            "last_ownership_percent",
+            crate::models::convert::DictValue::dict_value(&self.last_ownership_percent, py)?,
+        )?;
+        dict.set_item(
+            "ownership_percent_change",
+            crate::models::convert::DictValue::dict_value(&self.ownership_percent_change, py)?,
+        )?;
+        dict.set_item(
+            "new_positions",
+            crate::models::convert::DictValue::dict_value(&self.new_positions, py)?,
+        )?;
+        dict.set_item(
+            "last_new_positions",
+            crate::models::convert::DictValue::dict_value(&self.last_new_positions, py)?,
+        )?;
+        dict.set_item(
+            "new_positions_change",
+            crate::models::convert::DictValue::dict_value(&self.new_positions_change, py)?,
+        )?;
+        dict.set_item(
+            "increased_positions",
+            crate::models::convert::DictValue::dict_value(&self.increased_positions, py)?,
+        )?;
+        dict.set_item(
+            "last_increased_positions",
+            crate::models::convert::DictValue::dict_value(&self.last_increased_positions, py)?,
+        )?;
+        dict.set_item(
+            "increased_positions_change",
+            crate::models::convert::DictValue::dict_value(&self.increased_positions_change, py)?,
+        )?;
+        dict.set_item(
+            "closed_positions",
+            crate::models::convert::DictValue::dict_value(&self.closed_positions, py)?,
+        )?;
+        dict.set_item(
+            "last_closed_positions",
+            crate::models::convert::DictValue::dict_value(&self.last_closed_positions, py)?,
+        )?;
+        dict.set_item(
+            "closed_positions_change",
+            crate::models::convert::DictValue::dict_value(&self.closed_positions_change, py)?,
+        )?;
+        dict.set_item(
+            "reduced_positions",
+            crate::models::convert::DictValue::dict_value(&self.reduced_positions, py)?,
+        )?;
+        dict.set_item(
+            "last_reduced_positions",
+            crate::models::convert::DictValue::dict_value(&self.last_reduced_positions, py)?,
+        )?;
+        dict.set_item(
+            "reduced_positions_change",
+            crate::models::convert::DictValue::dict_value(&self.reduced_positions_change, py)?,
+        )?;
+        dict.set_item(
+            "total_calls",
+            crate::models::convert::DictValue::dict_value(&self.total_calls, py)?,
+        )?;
+        dict.set_item(
+            "last_total_calls",
+            crate::models::convert::DictValue::dict_value(&self.last_total_calls, py)?,
+        )?;
+        dict.set_item(
+            "total_calls_change",
+            crate::models::convert::DictValue::dict_value(&self.total_calls_change, py)?,
+        )?;
+        dict.set_item(
+            "total_puts",
+            crate::models::convert::DictValue::dict_value(&self.total_puts, py)?,
+        )?;
+        dict.set_item(
+            "last_total_puts",
+            crate::models::convert::DictValue::dict_value(&self.last_total_puts, py)?,
+        )?;
+        dict.set_item(
+            "total_puts_change",
+            crate::models::convert::DictValue::dict_value(&self.total_puts_change, py)?,
+        )?;
+        dict.set_item(
+            "put_call_ratio",
+            crate::models::convert::DictValue::dict_value(&self.put_call_ratio, py)?,
+        )?;
+        dict.set_item(
+            "last_put_call_ratio",
+            crate::models::convert::DictValue::dict_value(&self.last_put_call_ratio, py)?,
+        )?;
+        dict.set_item(
+            "put_call_ratio_change",
+            crate::models::convert::DictValue::dict_value(&self.put_call_ratio_change, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::InstitutionalPositionSummary>
@@ -1593,6 +3095,12 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalPositionSumma
     }
 }
 
+impl crate::models::convert::DictValue for InstitutionalPositionSummary {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
+    }
+}
+
 #[gen_stub_pyclass]
 #[pyclass(
     module = "fmp._native.institutional_ownership",
@@ -1628,6 +3136,12 @@ impl InstitutionalIndustrySummary {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['industry_title'], typing.Literal['industry_value'], typing.Literal['date']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["industry_title", "industry_value", "date"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -1645,6 +3159,43 @@ impl InstitutionalIndustrySummary {
         kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "InstitutionalIndustrySummary",
+            &[
+                (
+                    "industry_title",
+                    self.industry_title.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "industry_value",
+                    self.industry_value.clone().into_bound_py_any(py)?,
+                ),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "industry_title",
+            crate::models::convert::DictValue::dict_value(&self.industry_title, py)?,
+        )?;
+        dict.set_item(
+            "industry_value",
+            crate::models::convert::DictValue::dict_value(&self.industry_value, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::institutional_ownership::InstitutionalIndustrySummary>
@@ -1658,5 +3209,11 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalIndustrySumma
             industry_value: value.industry_value,
             date: value.date.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for InstitutionalIndustrySummary {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

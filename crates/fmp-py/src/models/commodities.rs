@@ -47,6 +47,15 @@ impl CommodityListing {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name'], typing.Literal['exchange'], typing.Literal['trade_month'], typing.Literal['currency']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["symbol", "name", "exchange", "trade_month", "currency"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -63,6 +72,50 @@ impl CommodityListing {
         kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CommodityListing",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                (
+                    "trade_month",
+                    self.trade_month.clone().into_bound_py_any(py)?,
+                ),
+                ("currency", self.currency.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "trade_month",
+            crate::models::convert::DictValue::dict_value(&self.trade_month, py)?,
+        )?;
+        dict.set_item(
+            "currency",
+            crate::models::convert::DictValue::dict_value(&self.currency, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::commodities::CommodityListing> for CommodityListing {
@@ -74,5 +127,11 @@ impl From<libfmp::responses::commodities::CommodityListing> for CommodityListing
             trade_month: value.trade_month,
             currency: value.currency.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CommodityListing {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

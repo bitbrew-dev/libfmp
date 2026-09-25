@@ -63,6 +63,25 @@ impl DividendEvent {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['record_date'], typing.Literal['payment_date'], typing.Literal['declaration_date'], typing.Literal['adj_dividend'], typing.Literal['dividend'], typing.Literal['yield_'], typing.Literal['frequency']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "record_date",
+                "payment_date",
+                "declaration_date",
+                "adj_dividend",
+                "dividend",
+                "yield_",
+                "frequency",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -92,6 +111,79 @@ impl DividendEvent {
         kwargs.set_item("frequency", self.frequency.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "DividendEvent",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "record_date",
+                    self.record_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "payment_date",
+                    self.payment_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "declaration_date",
+                    self.declaration_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "adj_dividend",
+                    self.adj_dividend.clone().into_bound_py_any(py)?,
+                ),
+                ("dividend", self.dividend.clone().into_bound_py_any(py)?),
+                ("yield_", self.yield_.clone().into_bound_py_any(py)?),
+                ("frequency", self.frequency.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "record_date",
+            crate::models::convert::DictValue::dict_value(&self.record_date, py)?,
+        )?;
+        dict.set_item(
+            "payment_date",
+            crate::models::convert::DictValue::dict_value(&self.payment_date, py)?,
+        )?;
+        dict.set_item(
+            "declaration_date",
+            crate::models::convert::DictValue::dict_value(&self.declaration_date, py)?,
+        )?;
+        dict.set_item(
+            "adj_dividend",
+            crate::models::convert::DictValue::dict_value(&self.adj_dividend, py)?,
+        )?;
+        dict.set_item(
+            "dividend",
+            crate::models::convert::DictValue::dict_value(&self.dividend, py)?,
+        )?;
+        dict.set_item(
+            "yield_",
+            crate::models::convert::DictValue::dict_value(&self.yield_, py)?,
+        )?;
+        dict.set_item(
+            "frequency",
+            crate::models::convert::DictValue::dict_value(&self.frequency, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::calendar::DividendEvent> for DividendEvent {
@@ -107,6 +199,12 @@ impl From<libfmp::responses::calendar::DividendEvent> for DividendEvent {
             yield_: value.r#yield,
             frequency: value.frequency,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for DividendEvent {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -160,6 +258,23 @@ impl EarningsEvent {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['eps_actual'], typing.Literal['eps_estimated'], typing.Literal['revenue_actual'], typing.Literal['revenue_estimated'], typing.Literal['last_updated']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "eps_actual",
+                "eps_estimated",
+                "revenue_actual",
+                "revenue_estimated",
+                "last_updated",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -187,6 +302,69 @@ impl EarningsEvent {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EarningsEvent",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("eps_actual", self.eps_actual.clone().into_bound_py_any(py)?),
+                (
+                    "eps_estimated",
+                    self.eps_estimated.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_actual",
+                    self.revenue_actual.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_estimated",
+                    self.revenue_estimated.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "last_updated",
+                    self.last_updated.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "eps_actual",
+            crate::models::convert::DictValue::dict_value(&self.eps_actual, py)?,
+        )?;
+        dict.set_item(
+            "eps_estimated",
+            crate::models::convert::DictValue::dict_value(&self.eps_estimated, py)?,
+        )?;
+        dict.set_item(
+            "revenue_actual",
+            crate::models::convert::DictValue::dict_value(&self.revenue_actual, py)?,
+        )?;
+        dict.set_item(
+            "revenue_estimated",
+            crate::models::convert::DictValue::dict_value(&self.revenue_estimated, py)?,
+        )?;
+        dict.set_item(
+            "last_updated",
+            crate::models::convert::DictValue::dict_value(&self.last_updated, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::calendar::EarningsEvent> for EarningsEvent {
@@ -200,6 +378,12 @@ impl From<libfmp::responses::calendar::EarningsEvent> for EarningsEvent {
             revenue_estimated: value.revenue_estimated,
             last_updated: value.last_updated.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EarningsEvent {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -288,6 +472,25 @@ impl IpoCalendarEvent {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['daa'], typing.Literal['company'], typing.Literal['exchange'], typing.Literal['actions'], typing.Literal['shares'], typing.Literal['price_range'], typing.Literal['market_cap']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "daa",
+                "company",
+                "exchange",
+                "actions",
+                "shares",
+                "price_range",
+                "market_cap",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -341,6 +544,58 @@ impl IpoCalendarEvent {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "IpoCalendarEvent",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("daa", self.daa.clone().into_bound_py_any(py)?),
+                ("company", self.company.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                ("actions", self.actions.clone().into_bound_py_any(py)?),
+                ("shares", self.shares(py)?),
+                ("price_range", self.price_range(py)?),
+                ("market_cap", self.market_cap(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "daa",
+            crate::models::convert::DictValue::dict_value(&self.daa, py)?,
+        )?;
+        dict.set_item(
+            "company",
+            crate::models::convert::DictValue::dict_value(&self.company, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "actions",
+            crate::models::convert::DictValue::dict_value(&self.actions, py)?,
+        )?;
+        dict.set_item("shares", self.shares(py)?)?;
+        dict.set_item("price_range", self.price_range(py)?)?;
+        dict.set_item("market_cap", self.market_cap(py)?)?;
+        Ok(dict)
+    }
 
     #[getter]
     fn shares<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -380,6 +635,12 @@ impl From<libfmp::responses::calendar::IpoCalendarEvent> for IpoCalendarEvent {
             price_range: value.price_range,
             market_cap: value.market_cap,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for IpoCalendarEvent {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -433,6 +694,23 @@ impl IpoDisclosure {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['effectiveness_date'], typing.Literal['cik'], typing.Literal['form'], typing.Literal['url']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "filing_date",
+                "accepted_date",
+                "effectiveness_date",
+                "cik",
+                "form",
+                "url",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -457,6 +735,66 @@ impl IpoDisclosure {
         kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "IpoDisclosure",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "effectiveness_date",
+                    self.effectiveness_date.clone().into_bound_py_any(py)?,
+                ),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("form", self.form.clone().into_bound_py_any(py)?),
+                ("url", self.url.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "effectiveness_date",
+            crate::models::convert::DictValue::dict_value(&self.effectiveness_date, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "form",
+            crate::models::convert::DictValue::dict_value(&self.form, py)?,
+        )?;
+        dict.set_item(
+            "url",
+            crate::models::convert::DictValue::dict_value(&self.url, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::calendar::IpoDisclosure> for IpoDisclosure {
@@ -470,6 +808,12 @@ impl From<libfmp::responses::calendar::IpoDisclosure> for IpoDisclosure {
             form: value.form,
             url: value.url,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for IpoDisclosure {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -547,6 +891,29 @@ impl IpoProspectus {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['accepted_date'], typing.Literal['filing_date'], typing.Literal['ipo_date'], typing.Literal['cik'], typing.Literal['price_public_per_share'], typing.Literal['price_public_total'], typing.Literal['discounts_and_commissions_per_share'], typing.Literal['discounts_and_commissions_total'], typing.Literal['proceeds_before_expenses_per_share'], typing.Literal['proceeds_before_expenses_total'], typing.Literal['form'], typing.Literal['url']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "accepted_date",
+                "filing_date",
+                "ipo_date",
+                "cik",
+                "price_public_per_share",
+                "price_public_total",
+                "discounts_and_commissions_per_share",
+                "discounts_and_commissions_total",
+                "proceeds_before_expenses_per_share",
+                "proceeds_before_expenses_total",
+                "form",
+                "url",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -600,6 +967,131 @@ impl IpoProspectus {
         kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "IpoProspectus",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                ("ipo_date", self.ipo_date.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "price_public_per_share",
+                    self.price_public_per_share.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_public_total",
+                    self.price_public_total.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "discounts_and_commissions_per_share",
+                    self.discounts_and_commissions_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "discounts_and_commissions_total",
+                    self.discounts_and_commissions_total
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "proceeds_before_expenses_per_share",
+                    self.proceeds_before_expenses_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "proceeds_before_expenses_total",
+                    self.proceeds_before_expenses_total
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                ("form", self.form.clone().into_bound_py_any(py)?),
+                ("url", self.url.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "ipo_date",
+            crate::models::convert::DictValue::dict_value(&self.ipo_date, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "price_public_per_share",
+            crate::models::convert::DictValue::dict_value(&self.price_public_per_share, py)?,
+        )?;
+        dict.set_item(
+            "price_public_total",
+            crate::models::convert::DictValue::dict_value(&self.price_public_total, py)?,
+        )?;
+        dict.set_item(
+            "discounts_and_commissions_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.discounts_and_commissions_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "discounts_and_commissions_total",
+            crate::models::convert::DictValue::dict_value(
+                &self.discounts_and_commissions_total,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "proceeds_before_expenses_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.proceeds_before_expenses_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "proceeds_before_expenses_total",
+            crate::models::convert::DictValue::dict_value(
+                &self.proceeds_before_expenses_total,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "form",
+            crate::models::convert::DictValue::dict_value(&self.form, py)?,
+        )?;
+        dict.set_item(
+            "url",
+            crate::models::convert::DictValue::dict_value(&self.url, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::calendar::IpoProspectus> for IpoProspectus {
@@ -619,6 +1111,12 @@ impl From<libfmp::responses::calendar::IpoProspectus> for IpoProspectus {
             form: value.form,
             url: value.url,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for IpoProspectus {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -664,6 +1162,15 @@ impl StockSplitEvent {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['numerator'], typing.Literal['denominator'], typing.Literal['split_type']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            ["symbol", "date", "numerator", "denominator", "split_type"],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -680,6 +1187,50 @@ impl StockSplitEvent {
         kwargs.set_item("split_type", self.split_type.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "StockSplitEvent",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("numerator", self.numerator.clone().into_bound_py_any(py)?),
+                (
+                    "denominator",
+                    self.denominator.clone().into_bound_py_any(py)?,
+                ),
+                ("split_type", self.split_type.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "numerator",
+            crate::models::convert::DictValue::dict_value(&self.numerator, py)?,
+        )?;
+        dict.set_item(
+            "denominator",
+            crate::models::convert::DictValue::dict_value(&self.denominator, py)?,
+        )?;
+        dict.set_item(
+            "split_type",
+            crate::models::convert::DictValue::dict_value(&self.split_type, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::calendar::StockSplitEvent> for StockSplitEvent {
@@ -691,5 +1242,11 @@ impl From<libfmp::responses::calendar::StockSplitEvent> for StockSplitEvent {
             denominator: value.denominator,
             split_type: value.split_type,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for StockSplitEvent {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

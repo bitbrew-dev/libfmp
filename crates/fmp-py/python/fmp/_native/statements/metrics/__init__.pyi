@@ -14,6 +14,55 @@ __all__ = [
 @typing.final
 class KeyMetrics:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["reported_currency"],
+        typing.Literal["market_cap"],
+        typing.Literal["enterprise_value"],
+        typing.Literal["ev_to_sales"],
+        typing.Literal["ev_to_operating_cash_flow"],
+        typing.Literal["ev_to_free_cash_flow"],
+        typing.Literal["ev_to_ebitda"],
+        typing.Literal["net_debt_to_ebitda"],
+        typing.Literal["current_ratio"],
+        typing.Literal["income_quality"],
+        typing.Literal["graham_number"],
+        typing.Literal["graham_net_net"],
+        typing.Literal["tax_burden"],
+        typing.Literal["interest_burden"],
+        typing.Literal["working_capital"],
+        typing.Literal["invested_capital"],
+        typing.Literal["return_on_assets"],
+        typing.Literal["operating_return_on_assets"],
+        typing.Literal["return_on_tangible_assets"],
+        typing.Literal["return_on_equity"],
+        typing.Literal["return_on_invested_capital"],
+        typing.Literal["return_on_capital_employed"],
+        typing.Literal["earnings_yield"],
+        typing.Literal["free_cash_flow_yield"],
+        typing.Literal["capex_to_operating_cash_flow"],
+        typing.Literal["capex_to_depreciation"],
+        typing.Literal["capex_to_revenue"],
+        typing.Literal["sales_general_and_administrative_to_revenue"],
+        typing.Literal["research_and_developement_to_revenue"],
+        typing.Literal["stock_based_compensation_to_revenue"],
+        typing.Literal["intangibles_to_total_assets"],
+        typing.Literal["average_receivables"],
+        typing.Literal["average_payables"],
+        typing.Literal["average_inventory"],
+        typing.Literal["days_of_sales_outstanding"],
+        typing.Literal["days_of_payables_outstanding"],
+        typing.Literal["days_of_inventory_outstanding"],
+        typing.Literal["operating_cycle"],
+        typing.Literal["cash_conversion_cycle"],
+        typing.Literal["free_cash_flow_to_equity"],
+        typing.Literal["free_cash_flow_to_firm"],
+        typing.Literal["tangible_asset_value"],
+        typing.Literal["net_current_asset_value"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -162,11 +211,62 @@ class KeyMetrics:
         net_current_asset_value: builtins.float,
     ) -> KeyMetrics: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class KeyMetricsTtm:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["market_cap"],
+        typing.Literal["enterprise_value_ttm"],
+        typing.Literal["ev_to_sales_ttm"],
+        typing.Literal["ev_to_operating_cash_flow_ttm"],
+        typing.Literal["ev_to_free_cash_flow_ttm"],
+        typing.Literal["ev_to_ebitda_ttm"],
+        typing.Literal["net_debt_to_ebitda_ttm"],
+        typing.Literal["current_ratio_ttm"],
+        typing.Literal["income_quality_ttm"],
+        typing.Literal["graham_number_ttm"],
+        typing.Literal["graham_net_net_ttm"],
+        typing.Literal["tax_burden_ttm"],
+        typing.Literal["interest_burden_ttm"],
+        typing.Literal["working_capital_ttm"],
+        typing.Literal["invested_capital_ttm"],
+        typing.Literal["return_on_assets_ttm"],
+        typing.Literal["operating_return_on_assets_ttm"],
+        typing.Literal["return_on_tangible_assets_ttm"],
+        typing.Literal["return_on_equity_ttm"],
+        typing.Literal["return_on_invested_capital_ttm"],
+        typing.Literal["return_on_capital_employed_ttm"],
+        typing.Literal["earnings_yield_ttm"],
+        typing.Literal["free_cash_flow_yield_ttm"],
+        typing.Literal["capex_to_operating_cash_flow_ttm"],
+        typing.Literal["capex_to_depreciation_ttm"],
+        typing.Literal["capex_to_revenue_ttm"],
+        typing.Literal["sales_general_and_administrative_to_revenue_ttm"],
+        typing.Literal["research_and_developement_to_revenue_ttm"],
+        typing.Literal["stock_based_compensation_to_revenue_ttm"],
+        typing.Literal["intangibles_to_total_assets_ttm"],
+        typing.Literal["average_receivables_ttm"],
+        typing.Literal["average_payables_ttm"],
+        typing.Literal["average_inventory_ttm"],
+        typing.Literal["days_of_sales_outstanding_ttm"],
+        typing.Literal["days_of_payables_outstanding_ttm"],
+        typing.Literal["days_of_inventory_outstanding_ttm"],
+        typing.Literal["operating_cycle_ttm"],
+        typing.Literal["cash_conversion_cycle_ttm"],
+        typing.Literal["free_cash_flow_to_equity_ttm"],
+        typing.Literal["free_cash_flow_to_firm_ttm"],
+        typing.Literal["tangible_asset_value_ttm"],
+        typing.Literal["net_current_asset_value_ttm"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -303,6 +403,12 @@ class KeyMetricsTtm:
         net_current_asset_value_ttm: builtins.float,
     ) -> KeyMetricsTtm: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

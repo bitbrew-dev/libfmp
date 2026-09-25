@@ -38,6 +38,12 @@ impl DcfValuation {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['dcf'], typing.Literal['stock_price']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "date", "dcf", "stock_price"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -53,6 +59,45 @@ impl DcfValuation {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "DcfValuation",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("dcf", self.dcf.clone().into_bound_py_any(py)?),
+                (
+                    "stock_price",
+                    self.stock_price.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "dcf",
+            crate::models::convert::DictValue::dict_value(&self.dcf, py)?,
+        )?;
+        dict.set_item(
+            "stock_price",
+            crate::models::convert::DictValue::dict_value(&self.stock_price, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::dcf::DcfValuation> for DcfValuation {
@@ -63,6 +108,12 @@ impl From<libfmp::responses::dcf::DcfValuation> for DcfValuation {
             dcf: value.dcf,
             stock_price: value.stock_price,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for DcfValuation {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -276,6 +327,63 @@ impl CustomDcfValuation {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['year'], typing.Literal['symbol'], typing.Literal['revenue'], typing.Literal['revenue_percentage'], typing.Literal['ebitda'], typing.Literal['ebitda_percentage'], typing.Literal['ebit'], typing.Literal['ebit_percentage'], typing.Literal['depreciation'], typing.Literal['depreciation_percentage'], typing.Literal['total_cash'], typing.Literal['total_cash_percentage'], typing.Literal['receivables'], typing.Literal['receivables_percentage'], typing.Literal['inventories'], typing.Literal['inventories_percentage'], typing.Literal['payable'], typing.Literal['payable_percentage'], typing.Literal['capital_expenditure'], typing.Literal['capital_expenditure_percentage'], typing.Literal['price'], typing.Literal['beta'], typing.Literal['diluted_shares_outstanding'], typing.Literal['cost_of_debt'], typing.Literal['tax_rate'], typing.Literal['after_tax_cost_of_debt'], typing.Literal['risk_free_rate'], typing.Literal['market_risk_premium'], typing.Literal['cost_of_equity'], typing.Literal['total_debt'], typing.Literal['total_equity'], typing.Literal['total_capital'], typing.Literal['debt_weighting'], typing.Literal['equity_weighting'], typing.Literal['wacc'], typing.Literal['tax_rate_cash'], typing.Literal['ebiat'], typing.Literal['ufcf'], typing.Literal['sum_pv_ufcf'], typing.Literal['long_term_growth_rate'], typing.Literal['terminal_value'], typing.Literal['present_terminal_value'], typing.Literal['enterprise_value'], typing.Literal['net_debt'], typing.Literal['equity_value'], typing.Literal['equity_value_per_share'], typing.Literal['free_cash_flow_t1']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "year",
+                "symbol",
+                "revenue",
+                "revenue_percentage",
+                "ebitda",
+                "ebitda_percentage",
+                "ebit",
+                "ebit_percentage",
+                "depreciation",
+                "depreciation_percentage",
+                "total_cash",
+                "total_cash_percentage",
+                "receivables",
+                "receivables_percentage",
+                "inventories",
+                "inventories_percentage",
+                "payable",
+                "payable_percentage",
+                "capital_expenditure",
+                "capital_expenditure_percentage",
+                "price",
+                "beta",
+                "diluted_shares_outstanding",
+                "cost_of_debt",
+                "tax_rate",
+                "after_tax_cost_of_debt",
+                "risk_free_rate",
+                "market_risk_premium",
+                "cost_of_equity",
+                "total_debt",
+                "total_equity",
+                "total_capital",
+                "debt_weighting",
+                "equity_weighting",
+                "wacc",
+                "tax_rate_cash",
+                "ebiat",
+                "ufcf",
+                "sum_pv_ufcf",
+                "long_term_growth_rate",
+                "terminal_value",
+                "present_terminal_value",
+                "enterprise_value",
+                "net_debt",
+                "equity_value",
+                "equity_value_per_share",
+                "free_cash_flow_t1",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -431,6 +539,360 @@ impl CustomDcfValuation {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CustomDcfValuation",
+            &[
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("revenue", self.revenue.clone().into_bound_py_any(py)?),
+                (
+                    "revenue_percentage",
+                    self.revenue_percentage.clone().into_bound_py_any(py)?,
+                ),
+                ("ebitda", self.ebitda.clone().into_bound_py_any(py)?),
+                (
+                    "ebitda_percentage",
+                    self.ebitda_percentage.clone().into_bound_py_any(py)?,
+                ),
+                ("ebit", self.ebit.clone().into_bound_py_any(py)?),
+                (
+                    "ebit_percentage",
+                    self.ebit_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "depreciation",
+                    self.depreciation.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "depreciation_percentage",
+                    self.depreciation_percentage.clone().into_bound_py_any(py)?,
+                ),
+                ("total_cash", self.total_cash.clone().into_bound_py_any(py)?),
+                (
+                    "total_cash_percentage",
+                    self.total_cash_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "receivables",
+                    self.receivables.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "receivables_percentage",
+                    self.receivables_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "inventories",
+                    self.inventories.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "inventories_percentage",
+                    self.inventories_percentage.clone().into_bound_py_any(py)?,
+                ),
+                ("payable", self.payable.clone().into_bound_py_any(py)?),
+                (
+                    "payable_percentage",
+                    self.payable_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "capital_expenditure",
+                    self.capital_expenditure.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "capital_expenditure_percentage",
+                    self.capital_expenditure_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                ("price", self.price.clone().into_bound_py_any(py)?),
+                ("beta", self.beta.clone().into_bound_py_any(py)?),
+                (
+                    "diluted_shares_outstanding",
+                    self.diluted_shares_outstanding
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cost_of_debt",
+                    self.cost_of_debt.clone().into_bound_py_any(py)?,
+                ),
+                ("tax_rate", self.tax_rate.clone().into_bound_py_any(py)?),
+                (
+                    "after_tax_cost_of_debt",
+                    self.after_tax_cost_of_debt.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "risk_free_rate",
+                    self.risk_free_rate.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "market_risk_premium",
+                    self.market_risk_premium.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cost_of_equity",
+                    self.cost_of_equity.clone().into_bound_py_any(py)?,
+                ),
+                ("total_debt", self.total_debt.clone().into_bound_py_any(py)?),
+                (
+                    "total_equity",
+                    self.total_equity.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_capital",
+                    self.total_capital.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_weighting",
+                    self.debt_weighting.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "equity_weighting",
+                    self.equity_weighting.clone().into_bound_py_any(py)?,
+                ),
+                ("wacc", self.wacc.clone().into_bound_py_any(py)?),
+                (
+                    "tax_rate_cash",
+                    self.tax_rate_cash.clone().into_bound_py_any(py)?,
+                ),
+                ("ebiat", self.ebiat.clone().into_bound_py_any(py)?),
+                ("ufcf", self.ufcf.clone().into_bound_py_any(py)?),
+                (
+                    "sum_pv_ufcf",
+                    self.sum_pv_ufcf.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "long_term_growth_rate",
+                    self.long_term_growth_rate.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "terminal_value",
+                    self.terminal_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "present_terminal_value",
+                    self.present_terminal_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "enterprise_value",
+                    self.enterprise_value.clone().into_bound_py_any(py)?,
+                ),
+                ("net_debt", self.net_debt.clone().into_bound_py_any(py)?),
+                (
+                    "equity_value",
+                    self.equity_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "equity_value_per_share",
+                    self.equity_value_per_share.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_t1",
+                    self.free_cash_flow_t1.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "revenue",
+            crate::models::convert::DictValue::dict_value(&self.revenue, py)?,
+        )?;
+        dict.set_item(
+            "revenue_percentage",
+            crate::models::convert::DictValue::dict_value(&self.revenue_percentage, py)?,
+        )?;
+        dict.set_item(
+            "ebitda",
+            crate::models::convert::DictValue::dict_value(&self.ebitda, py)?,
+        )?;
+        dict.set_item(
+            "ebitda_percentage",
+            crate::models::convert::DictValue::dict_value(&self.ebitda_percentage, py)?,
+        )?;
+        dict.set_item(
+            "ebit",
+            crate::models::convert::DictValue::dict_value(&self.ebit, py)?,
+        )?;
+        dict.set_item(
+            "ebit_percentage",
+            crate::models::convert::DictValue::dict_value(&self.ebit_percentage, py)?,
+        )?;
+        dict.set_item(
+            "depreciation",
+            crate::models::convert::DictValue::dict_value(&self.depreciation, py)?,
+        )?;
+        dict.set_item(
+            "depreciation_percentage",
+            crate::models::convert::DictValue::dict_value(&self.depreciation_percentage, py)?,
+        )?;
+        dict.set_item(
+            "total_cash",
+            crate::models::convert::DictValue::dict_value(&self.total_cash, py)?,
+        )?;
+        dict.set_item(
+            "total_cash_percentage",
+            crate::models::convert::DictValue::dict_value(&self.total_cash_percentage, py)?,
+        )?;
+        dict.set_item(
+            "receivables",
+            crate::models::convert::DictValue::dict_value(&self.receivables, py)?,
+        )?;
+        dict.set_item(
+            "receivables_percentage",
+            crate::models::convert::DictValue::dict_value(&self.receivables_percentage, py)?,
+        )?;
+        dict.set_item(
+            "inventories",
+            crate::models::convert::DictValue::dict_value(&self.inventories, py)?,
+        )?;
+        dict.set_item(
+            "inventories_percentage",
+            crate::models::convert::DictValue::dict_value(&self.inventories_percentage, py)?,
+        )?;
+        dict.set_item(
+            "payable",
+            crate::models::convert::DictValue::dict_value(&self.payable, py)?,
+        )?;
+        dict.set_item(
+            "payable_percentage",
+            crate::models::convert::DictValue::dict_value(&self.payable_percentage, py)?,
+        )?;
+        dict.set_item(
+            "capital_expenditure",
+            crate::models::convert::DictValue::dict_value(&self.capital_expenditure, py)?,
+        )?;
+        dict.set_item(
+            "capital_expenditure_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.capital_expenditure_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "price",
+            crate::models::convert::DictValue::dict_value(&self.price, py)?,
+        )?;
+        dict.set_item(
+            "beta",
+            crate::models::convert::DictValue::dict_value(&self.beta, py)?,
+        )?;
+        dict.set_item(
+            "diluted_shares_outstanding",
+            crate::models::convert::DictValue::dict_value(&self.diluted_shares_outstanding, py)?,
+        )?;
+        dict.set_item(
+            "cost_of_debt",
+            crate::models::convert::DictValue::dict_value(&self.cost_of_debt, py)?,
+        )?;
+        dict.set_item(
+            "tax_rate",
+            crate::models::convert::DictValue::dict_value(&self.tax_rate, py)?,
+        )?;
+        dict.set_item(
+            "after_tax_cost_of_debt",
+            crate::models::convert::DictValue::dict_value(&self.after_tax_cost_of_debt, py)?,
+        )?;
+        dict.set_item(
+            "risk_free_rate",
+            crate::models::convert::DictValue::dict_value(&self.risk_free_rate, py)?,
+        )?;
+        dict.set_item(
+            "market_risk_premium",
+            crate::models::convert::DictValue::dict_value(&self.market_risk_premium, py)?,
+        )?;
+        dict.set_item(
+            "cost_of_equity",
+            crate::models::convert::DictValue::dict_value(&self.cost_of_equity, py)?,
+        )?;
+        dict.set_item(
+            "total_debt",
+            crate::models::convert::DictValue::dict_value(&self.total_debt, py)?,
+        )?;
+        dict.set_item(
+            "total_equity",
+            crate::models::convert::DictValue::dict_value(&self.total_equity, py)?,
+        )?;
+        dict.set_item(
+            "total_capital",
+            crate::models::convert::DictValue::dict_value(&self.total_capital, py)?,
+        )?;
+        dict.set_item(
+            "debt_weighting",
+            crate::models::convert::DictValue::dict_value(&self.debt_weighting, py)?,
+        )?;
+        dict.set_item(
+            "equity_weighting",
+            crate::models::convert::DictValue::dict_value(&self.equity_weighting, py)?,
+        )?;
+        dict.set_item(
+            "wacc",
+            crate::models::convert::DictValue::dict_value(&self.wacc, py)?,
+        )?;
+        dict.set_item(
+            "tax_rate_cash",
+            crate::models::convert::DictValue::dict_value(&self.tax_rate_cash, py)?,
+        )?;
+        dict.set_item(
+            "ebiat",
+            crate::models::convert::DictValue::dict_value(&self.ebiat, py)?,
+        )?;
+        dict.set_item(
+            "ufcf",
+            crate::models::convert::DictValue::dict_value(&self.ufcf, py)?,
+        )?;
+        dict.set_item(
+            "sum_pv_ufcf",
+            crate::models::convert::DictValue::dict_value(&self.sum_pv_ufcf, py)?,
+        )?;
+        dict.set_item(
+            "long_term_growth_rate",
+            crate::models::convert::DictValue::dict_value(&self.long_term_growth_rate, py)?,
+        )?;
+        dict.set_item(
+            "terminal_value",
+            crate::models::convert::DictValue::dict_value(&self.terminal_value, py)?,
+        )?;
+        dict.set_item(
+            "present_terminal_value",
+            crate::models::convert::DictValue::dict_value(&self.present_terminal_value, py)?,
+        )?;
+        dict.set_item(
+            "enterprise_value",
+            crate::models::convert::DictValue::dict_value(&self.enterprise_value, py)?,
+        )?;
+        dict.set_item(
+            "net_debt",
+            crate::models::convert::DictValue::dict_value(&self.net_debt, py)?,
+        )?;
+        dict.set_item(
+            "equity_value",
+            crate::models::convert::DictValue::dict_value(&self.equity_value, py)?,
+        )?;
+        dict.set_item(
+            "equity_value_per_share",
+            crate::models::convert::DictValue::dict_value(&self.equity_value_per_share, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_t1",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow_t1, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::dcf::CustomDcfValuation> for CustomDcfValuation {
@@ -484,6 +946,12 @@ impl From<libfmp::responses::dcf::CustomDcfValuation> for CustomDcfValuation {
             equity_value_per_share: value.equity_value_per_share,
             free_cash_flow_t1: value.free_cash_flow_t1,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CustomDcfValuation {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -645,6 +1113,50 @@ impl CustomLeveredDcfValuation {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['year'], typing.Literal['symbol'], typing.Literal['revenue'], typing.Literal['revenue_percentage'], typing.Literal['capital_expenditure'], typing.Literal['capital_expenditure_percentage'], typing.Literal['price'], typing.Literal['beta'], typing.Literal['diluted_shares_outstanding'], typing.Literal['cost_of_debt'], typing.Literal['tax_rate'], typing.Literal['after_tax_cost_of_debt'], typing.Literal['risk_free_rate'], typing.Literal['market_risk_premium'], typing.Literal['cost_of_equity'], typing.Literal['total_debt'], typing.Literal['total_equity'], typing.Literal['total_capital'], typing.Literal['debt_weighting'], typing.Literal['equity_weighting'], typing.Literal['wacc'], typing.Literal['operating_cash_flow'], typing.Literal['pv_lfcf'], typing.Literal['sum_pv_lfcf'], typing.Literal['long_term_growth_rate'], typing.Literal['free_cash_flow'], typing.Literal['terminal_value'], typing.Literal['present_terminal_value'], typing.Literal['enterprise_value'], typing.Literal['net_debt'], typing.Literal['equity_value'], typing.Literal['equity_value_per_share'], typing.Literal['free_cash_flow_t1'], typing.Literal['operating_cash_flow_percentage']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "year",
+                "symbol",
+                "revenue",
+                "revenue_percentage",
+                "capital_expenditure",
+                "capital_expenditure_percentage",
+                "price",
+                "beta",
+                "diluted_shares_outstanding",
+                "cost_of_debt",
+                "tax_rate",
+                "after_tax_cost_of_debt",
+                "risk_free_rate",
+                "market_risk_premium",
+                "cost_of_equity",
+                "total_debt",
+                "total_equity",
+                "total_capital",
+                "debt_weighting",
+                "equity_weighting",
+                "wacc",
+                "operating_cash_flow",
+                "pv_lfcf",
+                "sum_pv_lfcf",
+                "long_term_growth_rate",
+                "free_cash_flow",
+                "terminal_value",
+                "present_terminal_value",
+                "enterprise_value",
+                "net_debt",
+                "equity_value",
+                "equity_value_per_share",
+                "free_cash_flow_t1",
+                "operating_cash_flow_percentage",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -765,6 +1277,276 @@ impl CustomLeveredDcfValuation {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CustomLeveredDcfValuation",
+            &[
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("revenue", self.revenue.clone().into_bound_py_any(py)?),
+                (
+                    "revenue_percentage",
+                    self.revenue_percentage.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "capital_expenditure",
+                    self.capital_expenditure.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "capital_expenditure_percentage",
+                    self.capital_expenditure_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                ("price", self.price.clone().into_bound_py_any(py)?),
+                ("beta", self.beta.clone().into_bound_py_any(py)?),
+                (
+                    "diluted_shares_outstanding",
+                    self.diluted_shares_outstanding
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "cost_of_debt",
+                    self.cost_of_debt.clone().into_bound_py_any(py)?,
+                ),
+                ("tax_rate", self.tax_rate.clone().into_bound_py_any(py)?),
+                (
+                    "after_tax_cost_of_debt",
+                    self.after_tax_cost_of_debt.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "risk_free_rate",
+                    self.risk_free_rate.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "market_risk_premium",
+                    self.market_risk_premium.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cost_of_equity",
+                    self.cost_of_equity.clone().into_bound_py_any(py)?,
+                ),
+                ("total_debt", self.total_debt.clone().into_bound_py_any(py)?),
+                (
+                    "total_equity",
+                    self.total_equity.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_capital",
+                    self.total_capital.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_weighting",
+                    self.debt_weighting.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "equity_weighting",
+                    self.equity_weighting.clone().into_bound_py_any(py)?,
+                ),
+                ("wacc", self.wacc.clone().into_bound_py_any(py)?),
+                (
+                    "operating_cash_flow",
+                    self.operating_cash_flow.clone().into_bound_py_any(py)?,
+                ),
+                ("pv_lfcf", self.pv_lfcf.clone().into_bound_py_any(py)?),
+                (
+                    "sum_pv_lfcf",
+                    self.sum_pv_lfcf.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "long_term_growth_rate",
+                    self.long_term_growth_rate.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow",
+                    self.free_cash_flow.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "terminal_value",
+                    self.terminal_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "present_terminal_value",
+                    self.present_terminal_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "enterprise_value",
+                    self.enterprise_value.clone().into_bound_py_any(py)?,
+                ),
+                ("net_debt", self.net_debt.clone().into_bound_py_any(py)?),
+                (
+                    "equity_value",
+                    self.equity_value.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "equity_value_per_share",
+                    self.equity_value_per_share.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_t1",
+                    self.free_cash_flow_t1.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cash_flow_percentage",
+                    self.operating_cash_flow_percentage
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "revenue",
+            crate::models::convert::DictValue::dict_value(&self.revenue, py)?,
+        )?;
+        dict.set_item(
+            "revenue_percentage",
+            crate::models::convert::DictValue::dict_value(&self.revenue_percentage, py)?,
+        )?;
+        dict.set_item(
+            "capital_expenditure",
+            crate::models::convert::DictValue::dict_value(&self.capital_expenditure, py)?,
+        )?;
+        dict.set_item(
+            "capital_expenditure_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.capital_expenditure_percentage,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "price",
+            crate::models::convert::DictValue::dict_value(&self.price, py)?,
+        )?;
+        dict.set_item(
+            "beta",
+            crate::models::convert::DictValue::dict_value(&self.beta, py)?,
+        )?;
+        dict.set_item(
+            "diluted_shares_outstanding",
+            crate::models::convert::DictValue::dict_value(&self.diluted_shares_outstanding, py)?,
+        )?;
+        dict.set_item(
+            "cost_of_debt",
+            crate::models::convert::DictValue::dict_value(&self.cost_of_debt, py)?,
+        )?;
+        dict.set_item(
+            "tax_rate",
+            crate::models::convert::DictValue::dict_value(&self.tax_rate, py)?,
+        )?;
+        dict.set_item(
+            "after_tax_cost_of_debt",
+            crate::models::convert::DictValue::dict_value(&self.after_tax_cost_of_debt, py)?,
+        )?;
+        dict.set_item(
+            "risk_free_rate",
+            crate::models::convert::DictValue::dict_value(&self.risk_free_rate, py)?,
+        )?;
+        dict.set_item(
+            "market_risk_premium",
+            crate::models::convert::DictValue::dict_value(&self.market_risk_premium, py)?,
+        )?;
+        dict.set_item(
+            "cost_of_equity",
+            crate::models::convert::DictValue::dict_value(&self.cost_of_equity, py)?,
+        )?;
+        dict.set_item(
+            "total_debt",
+            crate::models::convert::DictValue::dict_value(&self.total_debt, py)?,
+        )?;
+        dict.set_item(
+            "total_equity",
+            crate::models::convert::DictValue::dict_value(&self.total_equity, py)?,
+        )?;
+        dict.set_item(
+            "total_capital",
+            crate::models::convert::DictValue::dict_value(&self.total_capital, py)?,
+        )?;
+        dict.set_item(
+            "debt_weighting",
+            crate::models::convert::DictValue::dict_value(&self.debt_weighting, py)?,
+        )?;
+        dict.set_item(
+            "equity_weighting",
+            crate::models::convert::DictValue::dict_value(&self.equity_weighting, py)?,
+        )?;
+        dict.set_item(
+            "wacc",
+            crate::models::convert::DictValue::dict_value(&self.wacc, py)?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow",
+            crate::models::convert::DictValue::dict_value(&self.operating_cash_flow, py)?,
+        )?;
+        dict.set_item(
+            "pv_lfcf",
+            crate::models::convert::DictValue::dict_value(&self.pv_lfcf, py)?,
+        )?;
+        dict.set_item(
+            "sum_pv_lfcf",
+            crate::models::convert::DictValue::dict_value(&self.sum_pv_lfcf, py)?,
+        )?;
+        dict.set_item(
+            "long_term_growth_rate",
+            crate::models::convert::DictValue::dict_value(&self.long_term_growth_rate, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow, py)?,
+        )?;
+        dict.set_item(
+            "terminal_value",
+            crate::models::convert::DictValue::dict_value(&self.terminal_value, py)?,
+        )?;
+        dict.set_item(
+            "present_terminal_value",
+            crate::models::convert::DictValue::dict_value(&self.present_terminal_value, py)?,
+        )?;
+        dict.set_item(
+            "enterprise_value",
+            crate::models::convert::DictValue::dict_value(&self.enterprise_value, py)?,
+        )?;
+        dict.set_item(
+            "net_debt",
+            crate::models::convert::DictValue::dict_value(&self.net_debt, py)?,
+        )?;
+        dict.set_item(
+            "equity_value",
+            crate::models::convert::DictValue::dict_value(&self.equity_value, py)?,
+        )?;
+        dict.set_item(
+            "equity_value_per_share",
+            crate::models::convert::DictValue::dict_value(&self.equity_value_per_share, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_t1",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow_t1, py)?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow_percentage",
+            crate::models::convert::DictValue::dict_value(
+                &self.operating_cash_flow_percentage,
+                py,
+            )?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::dcf::CustomLeveredDcfValuation> for CustomLeveredDcfValuation {
@@ -805,5 +1587,11 @@ impl From<libfmp::responses::dcf::CustomLeveredDcfValuation> for CustomLeveredDc
             free_cash_flow_t1: value.free_cash_flow_t1,
             operating_cash_flow_percentage: value.operating_cash_flow_percentage,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CustomLeveredDcfValuation {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

@@ -9,7 +9,7 @@ use std::process::Command;
 use fmp_py_gen::responses::{StructDef, Wrap, peel};
 
 use crate::classify::classify;
-use crate::dunder::emit_dunders;
+use crate::dunder::{emit_dict_value_impl, emit_dunders};
 use crate::model::{Class, KeptField, Registry, Transform};
 use crate::{BoxError, GENERATED_HEADER, RUST_EDITION};
 
@@ -143,7 +143,7 @@ pub(crate) fn emit_struct(
     }
     out.push_str("    }\n\n");
 
-    emit_dunders(out, &kept);
+    emit_dunders(out, &def.name, &kept);
     for field in &kept {
         if let Some(getter) = field.getter_method() {
             out.push('\n');
@@ -160,6 +160,7 @@ pub(crate) fn emit_struct(
     }
     out.push_str("        }\n");
     out.push_str("    }\n}\n\n");
+    emit_dict_value_impl(out, &def.name);
 }
 
 /// Resolves the public libfmp path of a struct, following `pub use` re-exports.
