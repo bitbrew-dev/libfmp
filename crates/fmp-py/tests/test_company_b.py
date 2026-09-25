@@ -326,3 +326,14 @@ def test_decode_error_on_a_non_json_body(client: Any, fixture_server: FixtureSer
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.company.stock_peers("AAPL")
     assert raised.value.endpoint == "stock-peers"
+
+
+def test_shares_float_decodes_fractional_share_counts(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: fractional and integral-float share amounts decode as ``float``."""
+    fixture_server.route("/shares-float", load_fixture("company_shares_float_fractional_synthetic.json"))
+    rows = client.company.shares_float("AAPL")
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].float_shares, float)
+    assert rows[0].float_shares == 14_662_387_495.5
+    assert rows[0].outstanding_shares == 14_687_356_000.0
