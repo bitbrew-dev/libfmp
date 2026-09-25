@@ -171,18 +171,18 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// Form13fFilingDate is one available Form 13F reporting date and its numeric
+// Form13FFilingDate is one available Form 13F reporting date and its numeric
 // calendar period.
-type Form13fFilingDate struct {
+type Form13FFilingDate struct {
 	Date    Date   `json:"date"`
 	Year    uint32 `json:"year"`
 	Quarter uint8  `json:"quarter"`
 }
 
-// form13fFilingDateShadow mirrors Form13fFilingDate with a pointer or raw
+// form13FFilingDateShadow mirrors Form13FFilingDate with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
-type form13fFilingDateShadow struct {
+type form13FFilingDateShadow struct {
 	Date    *Date   `json:"date"`
 	Year    *uint32 `json:"year"`
 	Quarter *uint8  `json:"quarter"`
@@ -191,20 +191,20 @@ type form13fFilingDateShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *Form13fFilingDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow form13fFilingDateShadow
+func (m *Form13FFilingDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow form13FFilingDateShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Date == nil:
-		return missingMemberError("Form13fFilingDate", "date")
+		return missingMemberError("Form13FFilingDate", "date")
 	case shadow.Year == nil:
-		return missingMemberError("Form13fFilingDate", "year")
+		return missingMemberError("Form13FFilingDate", "year")
 	case shadow.Quarter == nil:
-		return missingMemberError("Form13fFilingDate", "quarter")
+		return missingMemberError("Form13FFilingDate", "quarter")
 	}
-	*m = Form13fFilingDate{
+	*m = Form13FFilingDate{
 		Date:    *shadow.Date,
 		Year:    *shadow.Year,
 		Quarter: *shadow.Quarter,
@@ -719,9 +719,9 @@ type InstitutionalPositionSummary struct {
 	InvestorsHolding         uint64  `json:"investorsHolding"`
 	LastInvestorsHolding     uint64  `json:"lastInvestorsHolding"`
 	InvestorsHoldingChange   int64   `json:"investorsHoldingChange"`
-	NumberOf13fShares        float64 `json:"numberOf13Fshares"`
-	LastNumberOf13fShares    float64 `json:"lastNumberOf13Fshares"`
-	NumberOf13fSharesChange  float64 `json:"numberOf13FsharesChange"`
+	NumberOf13FShares        float64 `json:"numberOf13Fshares"`
+	LastNumberOf13FShares    float64 `json:"lastNumberOf13Fshares"`
+	NumberOf13FSharesChange  float64 `json:"numberOf13FsharesChange"`
 	TotalInvested            float64 `json:"totalInvested"`
 	LastTotalInvested        float64 `json:"lastTotalInvested"`
 	TotalInvestedChange      float64 `json:"totalInvestedChange"`
@@ -761,9 +761,9 @@ type institutionalPositionSummaryShadow struct {
 	InvestorsHolding         *uint64  `json:"investorsHolding"`
 	LastInvestorsHolding     *uint64  `json:"lastInvestorsHolding"`
 	InvestorsHoldingChange   *int64   `json:"investorsHoldingChange"`
-	NumberOf13fShares        *float64 `json:"numberOf13Fshares"`
-	LastNumberOf13fShares    *float64 `json:"lastNumberOf13Fshares"`
-	NumberOf13fSharesChange  *float64 `json:"numberOf13FsharesChange"`
+	NumberOf13FShares        *float64 `json:"numberOf13Fshares"`
+	LastNumberOf13FShares    *float64 `json:"lastNumberOf13Fshares"`
+	NumberOf13FSharesChange  *float64 `json:"numberOf13FsharesChange"`
 	TotalInvested            *float64 `json:"totalInvested"`
 	LastTotalInvested        *float64 `json:"lastTotalInvested"`
 	TotalInvestedChange      *float64 `json:"totalInvestedChange"`
@@ -814,11 +814,11 @@ func (m *InstitutionalPositionSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		return missingMemberError("InstitutionalPositionSummary", "lastInvestorsHolding")
 	case shadow.InvestorsHoldingChange == nil:
 		return missingMemberError("InstitutionalPositionSummary", "investorsHoldingChange")
-	case shadow.NumberOf13fShares == nil:
+	case shadow.NumberOf13FShares == nil:
 		return missingMemberError("InstitutionalPositionSummary", "numberOf13Fshares")
-	case shadow.LastNumberOf13fShares == nil:
+	case shadow.LastNumberOf13FShares == nil:
 		return missingMemberError("InstitutionalPositionSummary", "lastNumberOf13Fshares")
-	case shadow.NumberOf13fSharesChange == nil:
+	case shadow.NumberOf13FSharesChange == nil:
 		return missingMemberError("InstitutionalPositionSummary", "numberOf13FsharesChange")
 	case shadow.TotalInvested == nil:
 		return missingMemberError("InstitutionalPositionSummary", "totalInvested")
@@ -882,9 +882,9 @@ func (m *InstitutionalPositionSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		InvestorsHolding:         *shadow.InvestorsHolding,
 		LastInvestorsHolding:     *shadow.LastInvestorsHolding,
 		InvestorsHoldingChange:   *shadow.InvestorsHoldingChange,
-		NumberOf13fShares:        *shadow.NumberOf13fShares,
-		LastNumberOf13fShares:    *shadow.LastNumberOf13fShares,
-		NumberOf13fSharesChange:  *shadow.NumberOf13fSharesChange,
+		NumberOf13FShares:        *shadow.NumberOf13FShares,
+		LastNumberOf13FShares:    *shadow.LastNumberOf13FShares,
+		NumberOf13FSharesChange:  *shadow.NumberOf13FSharesChange,
 		TotalInvested:            *shadow.TotalInvested,
 		LastTotalInvested:        *shadow.LastTotalInvested,
 		TotalInvestedChange:      *shadow.TotalInvestedChange,

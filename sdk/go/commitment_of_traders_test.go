@@ -12,7 +12,7 @@ import (
 // cotRoutes is the exact path and query table of the three COT endpoints
 // (crates/libfmp/tests/cot_endpoints.rs), keyed by "path?rawquery" under the
 // test client's "/router/stable" prefix. The same path appears with two
-// queries because every CotQuery parameter is independently optional.
+// queries because every COTQuery parameter is independently optional.
 var cotRoutes = map[string]string{
 	"/router/stable/commitment-of-traders-report?symbol=VX+%2F+Index&from=2024-01-01&to=2024-03-01":   "cot_report.json",
 	"/router/stable/commitment-of-traders-analysis?symbol=VX+%2F+Index&from=2024-01-01&to=2024-03-01": "cot_analysis.json",
@@ -40,7 +40,7 @@ func TestCommitmentOfTradersMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	server, rec := newServer(t, cotRouter(t))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
-	full := NewCotQuery().WithSymbol("VX / Index").WithFrom(mustParseDate(t, "2024-01-01")).
+	full := NewCOTQuery().WithSymbol("VX / Index").WithFrom(mustParseDate(t, "2024-01-01")).
 		WithTo(mustParseDate(t, "2024-03-01"))
 
 	reports, err := client.CommitmentOfTraders.Report(ctx, full)
@@ -55,10 +55,10 @@ func TestCommitmentOfTradersMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if err != nil || len(listings) != 1 || listings[0].Symbol != "NG" {
 		t.Fatalf("ReportList = %+v, %v", listings, err)
 	}
-	if _, err := client.CommitmentOfTraders.Report(ctx, NewCotQuery().WithTo(mustParseDate(t, "2024-03-01"))); err != nil {
+	if _, err := client.CommitmentOfTraders.Report(ctx, NewCOTQuery().WithTo(mustParseDate(t, "2024-03-01"))); err != nil {
 		t.Fatalf("Report with only to: %v", err)
 	}
-	if _, err := client.CommitmentOfTraders.Analysis(ctx, NewCotQuery().WithSymbol("PA")); err != nil {
+	if _, err := client.CommitmentOfTraders.Analysis(ctx, NewCOTQuery().WithSymbol("PA")); err != nil {
 		t.Fatalf("Analysis with only symbol: %v", err)
 	}
 
@@ -93,14 +93,14 @@ func TestCommitmentOfTradersQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	ctx := context.Background()
 	cases := []struct {
 		name   string
-		query  CotQuery
+		query  COTQuery
 		member string
 		reason error
 	}{
-		{"comma in symbol", NewCotQuery().WithSymbol("VX,PA"), "symbol", ErrCommaInTicker},
-		{"blank symbol", NewCotQuery().WithSymbol(" "), "symbol", ErrEmptyValue},
-		{"zero from", NewCotQuery().WithFrom(Date{}), "from", ErrZeroTemporalValue},
-		{"zero to", NewCotQuery().WithSymbol("VX").WithTo(Date{}), "to", ErrZeroTemporalValue},
+		{"comma in symbol", NewCOTQuery().WithSymbol("VX,PA"), "symbol", ErrCommaInTicker},
+		{"blank symbol", NewCOTQuery().WithSymbol(" "), "symbol", ErrEmptyValue},
+		{"zero from", NewCOTQuery().WithFrom(Date{}), "from", ErrZeroTemporalValue},
+		{"zero to", NewCOTQuery().WithSymbol("VX").WithTo(Date{}), "to", ErrZeroTemporalValue},
 	}
 	for _, tc := range cases {
 		_, err := client.CommitmentOfTraders.Report(ctx, tc.query)
@@ -116,11 +116,11 @@ func TestCommitmentOfTradersQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	if rec.count() != 0 {
 		t.Fatalf("validation failures sent %d requests", rec.count())
 	}
-	empty := NewCotQuery()
+	empty := NewCOTQuery()
 	if empty.Symbol() != nil || empty.From() != nil || empty.To() != nil {
-		t.Fatalf("NewCotQuery() set a parameter: %+v", empty)
+		t.Fatalf("NewCOTQuery() set a parameter: %+v", empty)
 	}
-	if q := NewCotQuery().WithSymbol(" VX "); q.Symbol() == nil || *q.Symbol() != " VX " {
+	if q := NewCOTQuery().WithSymbol(" VX "); q.Symbol() == nil || *q.Symbol() != " VX " {
 		t.Fatalf("Symbol() normalized the ticker: %v", q.Symbol())
 	}
 }
@@ -135,7 +135,7 @@ func TestCommitmentOfTradersMethodsReportNumberKindAsDecodeError(t *testing.T) {
 	server, _ := newServer(t, jsonHandler(corrupted))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
-	_, err := client.CommitmentOfTraders.Report(context.Background(), NewCotQuery())
+	_, err := client.CommitmentOfTraders.Report(context.Background(), NewCOTQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "commitment-of-traders-report")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"pctOfOpenInterestAll"`) ||
 		!strings.Contains(cause.Error(), "JSON number") {

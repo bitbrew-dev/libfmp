@@ -21,54 +21,54 @@ func newCommitmentOfTradersNamespace(client *Client) CommitmentOfTradersNamespac
 	}
 }
 
-// CotQuery holds the query parameters of the endpoints that take it:
-// NewCotQuery takes the required arguments and each With method sets an
+// COTQuery holds the query parameters of the endpoints that take it:
+// NewCOTQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type CotQuery struct {
+type COTQuery struct {
 	symbol *string
 	from   *Date
 	to     *Date
 }
 
-// NewCotQuery creates the query from its required arguments.
-func NewCotQuery() CotQuery {
-	return CotQuery{}
+// NewCOTQuery creates the query from its required arguments.
+func NewCOTQuery() COTQuery {
+	return COTQuery{}
 }
 
 // WithSymbol sets the optional symbol parameter and returns the updated query.
-func (q CotQuery) WithSymbol(symbol string) CotQuery {
+func (q COTQuery) WithSymbol(symbol string) COTQuery {
 	q.symbol = &symbol
 	return q
 }
 
 // Symbol returns the optional symbol parameter, or nil when it is unset.
-func (q CotQuery) Symbol() *string {
+func (q COTQuery) Symbol() *string {
 	return q.symbol
 }
 
 // WithFrom sets the optional from parameter and returns the updated query.
-func (q CotQuery) WithFrom(from Date) CotQuery {
+func (q COTQuery) WithFrom(from Date) COTQuery {
 	q.from = &from
 	return q
 }
 
 // From returns the optional from parameter, or nil when it is unset.
-func (q CotQuery) From() *Date {
+func (q COTQuery) From() *Date {
 	return q.from
 }
 
 // WithTo sets the optional to parameter and returns the updated query.
-func (q CotQuery) WithTo(to Date) CotQuery {
+func (q COTQuery) WithTo(to Date) COTQuery {
 	q.to = &to
 	return q
 }
 
 // To returns the optional to parameter, or nil when it is unset.
-func (q CotQuery) To() *Date {
+func (q COTQuery) To() *Date {
 	return q.to
 }
 
-func (q CotQuery) params() ([]queryParam, error) {
+func (q COTQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 3)
 	if q.symbol != nil {
 		symbol, err := tickerParam("symbol", *q.symbol)
@@ -97,12 +97,12 @@ func (q CotQuery) params() ([]queryParam, error) {
 // Report retrieves detailed Commitment of Traders reports.
 //
 // GET commitment-of-traders-report?symbol=&from=&to=
-func (n *CommitmentOfTradersNamespace) Report(ctx context.Context, q CotQuery) ([]CotReport, error) {
+func (n *CommitmentOfTradersNamespace) Report(ctx context.Context, q COTQuery) ([]COTReport, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CotReport
+	var out []COTReport
 	if err := n.client.getJSON(ctx, "commitment-of-traders-report", "commitment-of-traders-report", params, &out); err != nil {
 		return nil, err
 	}
@@ -112,12 +112,12 @@ func (n *CommitmentOfTradersNamespace) Report(ctx context.Context, q CotQuery) (
 // Analysis retrieves derived Commitment of Traders market analysis.
 //
 // GET commitment-of-traders-analysis?symbol=&from=&to=
-func (n *CommitmentOfTradersNamespace) Analysis(ctx context.Context, q CotQuery) ([]CotAnalysis, error) {
+func (n *CommitmentOfTradersNamespace) Analysis(ctx context.Context, q COTQuery) ([]COTAnalysis, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CotAnalysis
+	var out []COTAnalysis
 	if err := n.client.getJSON(ctx, "commitment-of-traders-analysis", "commitment-of-traders-analysis", params, &out); err != nil {
 		return nil, err
 	}
@@ -128,8 +128,8 @@ func (n *CommitmentOfTradersNamespace) Analysis(ctx context.Context, q CotQuery)
 // provider.
 //
 // GET commitment-of-traders-list
-func (n *CommitmentOfTradersNamespace) ReportList(ctx context.Context) ([]CotReportListing, error) {
-	var out []CotReportListing
+func (n *CommitmentOfTradersNamespace) ReportList(ctx context.Context) ([]COTReportListing, error) {
+	var out []COTReportListing
 	if err := n.client.getJSON(ctx, "commitment-of-traders-list", "commitment-of-traders-list", nil, &out); err != nil {
 		return nil, err
 	}

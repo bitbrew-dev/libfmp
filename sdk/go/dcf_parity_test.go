@@ -12,23 +12,23 @@ import (
 
 func TestDcfFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[DcfValuation](t, "discounted_cash_flow.json")
-	assertFixtureParity[DcfValuation](t, "levered_discounted_cash_flow.json")
-	assertFixtureParity[CustomDcfValuation](t, "custom_discounted_cash_flow.json")
-	assertFixtureParity[CustomLeveredDcfValuation](t, "custom_levered_discounted_cash_flow.json")
+	assertFixtureParity[DCFValuation](t, "discounted_cash_flow.json")
+	assertFixtureParity[DCFValuation](t, "levered_discounted_cash_flow.json")
+	assertFixtureParity[CustomDCFValuation](t, "custom_discounted_cash_flow.json")
+	assertFixtureParity[CustomLeveredDCFValuation](t, "custom_levered_discounted_cash_flow.json")
 }
 
 // Exact values copied from crates/libfmp/tests/dcf_responses.rs.
 func TestDcfOuterFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	standard := assertFixtureParity[DcfValuation](t, "discounted_cash_flow.json")
-	want := DcfValuation{Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), Dcf: 147.10881272667325,
+	standard := assertFixtureParity[DCFValuation](t, "discounted_cash_flow.json")
+	want := DCFValuation{Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), DCF: 147.10881272667325,
 		StockPrice: 338.19}
 	if len(standard) != 1 || standard[0] != want {
 		t.Fatalf("discounted_cash_flow = %+v, want %+v", standard, want)
 	}
-	levered := assertFixtureParity[DcfValuation](t, "levered_discounted_cash_flow.json")
-	if len(levered) != 1 || levered[0].Dcf != 140.6429495133426 || levered[0].StockPrice != 338.19 {
+	levered := assertFixtureParity[DCFValuation](t, "levered_discounted_cash_flow.json")
+	if len(levered) != 1 || levered[0].DCF != 140.6429495133426 || levered[0].StockPrice != 338.19 {
 		t.Fatalf("levered_discounted_cash_flow = %+v", levered)
 	}
 	if members := memberSet(t, standard[0]); !slices.Contains(members, "Stock Price") ||
@@ -40,13 +40,13 @@ func TestDcfOuterFixturesDecodeExactValues(t *testing.T) {
 // Exact values copied from crates/libfmp/tests/dcf_custom_responses.rs.
 func TestDcfCustomFixturesDecodeExactValuesIntoDistinctModels(t *testing.T) {
 	t.Parallel()
-	custom := assertFixtureParity[CustomDcfValuation](t, "custom_discounted_cash_flow.json")
+	custom := assertFixtureParity[CustomDCFValuation](t, "custom_discounted_cash_flow.json")
 	if len(custom) != 1 || custom[0].Year != "2030" || custom[0].Symbol != "AAPL" ||
 		custom[0].CapitalExpenditure != -14_907_445_037 || custom[0].DilutedSharesOutstanding != 15_004_697_000 ||
 		custom[0].EquityValuePerShare != 147.18 || custom[0].CostOfDebt != 4.37 {
 		t.Fatalf("custom_discounted_cash_flow = %+v", custom)
 	}
-	levered := assertFixtureParity[CustomLeveredDcfValuation](t, "custom_levered_discounted_cash_flow.json")
+	levered := assertFixtureParity[CustomLeveredDCFValuation](t, "custom_levered_discounted_cash_flow.json")
 	if len(levered) != 1 || levered[0].OperatingCashFlow != 153_867_620_418 || levered[0].PvLfcf != 88_605_139_549 ||
 		levered[0].EquityValuePerShare != 140.71 || levered[0].CostOfDebt != 4.37 {
 		t.Fatalf("custom_levered_discounted_cash_flow = %+v", levered)
@@ -67,11 +67,11 @@ func TestDcfCustomFixturesDecodeExactValuesIntoDistinctModels(t *testing.T) {
 // naming that member, and a future member is accepted.
 func TestDcfEveryDocumentedMemberIsRequiredNonNull(t *testing.T) {
 	t.Parallel()
-	dcfAssertEveryMemberRequired[DcfValuation](t, "discounted_cash_flow.json")
-	dcfAssertEveryMemberRequired[CustomDcfValuation](t, "custom_discounted_cash_flow.json")
-	dcfAssertEveryMemberRequired[CustomLeveredDcfValuation](t, "custom_levered_discounted_cash_flow.json")
+	dcfAssertEveryMemberRequired[DCFValuation](t, "discounted_cash_flow.json")
+	dcfAssertEveryMemberRequired[CustomDCFValuation](t, "custom_discounted_cash_flow.json")
+	dcfAssertEveryMemberRequired[CustomLeveredDCFValuation](t, "custom_levered_discounted_cash_flow.json")
 
-	var rows []DcfValuation
+	var rows []DCFValuation
 	if err := json.Unmarshal([]byte("[]"), &rows); err != nil || len(rows) != 0 {
 		t.Fatalf("bare empty array = %v, %v", rows, err)
 	}

@@ -445,12 +445,12 @@ func (n *FundsNamespace) SearchDisclosureHolders(ctx context.Context, q FundDisc
 // DisclosureDates retrieves available US fund-disclosure reporting dates.
 //
 // GET funds/disclosure-dates?symbol=&cik=
-func (n *FundsNamespace) DisclosureDates(ctx context.Context, q FundDisclosureDatesQuery) ([]Form13fFilingDate, error) {
+func (n *FundsNamespace) DisclosureDates(ctx context.Context, q FundDisclosureDatesQuery) ([]Form13FFilingDate, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []Form13fFilingDate
+	var out []Form13FFilingDate
 	if err := n.client.getJSON(ctx, "funds/disclosure-dates", "funds/disclosure-dates", params, &out); err != nil {
 		return nil, err
 	}

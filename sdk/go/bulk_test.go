@@ -62,9 +62,9 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(ratings) != 1 || ratings[0].Rating != "B+" {
 		t.Fatalf("StockRatings = %+v, %v", ratings, err)
 	}
-	dcf, err := client.Bulk.DcfValuations(ctx)
+	dcf, err := client.Bulk.DCFValuations(ctx)
 	if err != nil || len(dcf) != 1 || dcf[0].StockPrice != "6.54" {
-		t.Fatalf("DcfValuations = %+v, %v", dcf, err)
+		t.Fatalf("DCFValuations = %+v, %v", dcf, err)
 	}
 	scores, err := client.Bulk.FinancialScores(ctx)
 	if err != nil || len(scores) != 1 || scores[0].PiotroskiScore != "5" {

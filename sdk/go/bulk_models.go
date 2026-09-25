@@ -2343,46 +2343,46 @@ func (m *BulkStockRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// BulkDcfValuation is one worldwide discounted-cash-flow bulk row.
-type BulkDcfValuation struct {
+// BulkDCFValuation is one worldwide discounted-cash-flow bulk row.
+type BulkDCFValuation struct {
 	Symbol     string `json:"symbol"`
 	Date       Date   `json:"date"`
-	Dcf        string `json:"dcf"`
+	DCF        string `json:"dcf"`
 	StockPrice string `json:"Stock Price"`
 }
 
-// bulkDcfValuationShadow mirrors BulkDcfValuation with a pointer or raw value
+// bulkDCFValuationShadow mirrors BulkDCFValuation with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
-type bulkDcfValuationShadow struct {
+type bulkDCFValuationShadow struct {
 	Symbol     *string `json:"symbol"`
 	Date       *Date   `json:"date"`
-	Dcf        *string `json:"dcf"`
+	DCF        *string `json:"dcf"`
 	StockPrice *string `json:"Stock Price"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *BulkDcfValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow bulkDcfValuationShadow
+func (m *BulkDCFValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow bulkDCFValuationShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("BulkDcfValuation", "symbol")
+		return missingMemberError("BulkDCFValuation", "symbol")
 	case shadow.Date == nil:
-		return missingMemberError("BulkDcfValuation", "date")
-	case shadow.Dcf == nil:
-		return missingMemberError("BulkDcfValuation", "dcf")
+		return missingMemberError("BulkDCFValuation", "date")
+	case shadow.DCF == nil:
+		return missingMemberError("BulkDCFValuation", "dcf")
 	case shadow.StockPrice == nil:
-		return missingMemberError("BulkDcfValuation", "Stock Price")
+		return missingMemberError("BulkDCFValuation", "Stock Price")
 	}
-	*m = BulkDcfValuation{
+	*m = BulkDCFValuation{
 		Symbol:     *shadow.Symbol,
 		Date:       *shadow.Date,
-		Dcf:        *shadow.Dcf,
+		DCF:        *shadow.DCF,
 		StockPrice: *shadow.StockPrice,
 	}
 	return nil

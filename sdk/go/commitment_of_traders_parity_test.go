@@ -11,9 +11,9 @@ import (
 
 func TestCommitmentOfTradersFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[CotReport](t, "cot_report.json")
-	assertFixtureParity[CotAnalysis](t, "cot_analysis.json")
-	assertFixtureParity[CotReportListing](t, "cot_report_list.json")
+	assertFixtureParity[COTReport](t, "cot_report.json")
+	assertFixtureParity[COTAnalysis](t, "cot_analysis.json")
+	assertFixtureParity[COTReportListing](t, "cot_report_list.json")
 }
 
 // Exact values and wire-key hazards copied from
@@ -21,7 +21,7 @@ func TestCommitmentOfTradersFixturesDecodeAndReencodeToTheSameMemberSet(t *testi
 // the model must keep those spellings rather than the corrected ones.
 func TestDocumentedCotReportDecodesExactValuesAndKeepsWireHazards(t *testing.T) {
 	t.Parallel()
-	reports := assertFixtureParity[CotReport](t, "cot_report.json")
+	reports := assertFixtureParity[COTReport](t, "cot_report.json")
 	if len(reports) != 1 {
 		t.Fatalf("rows = %d, want 1", len(reports))
 	}
@@ -53,7 +53,7 @@ func TestDocumentedCotReportDecodesExactValuesAndKeepsWireHazards(t *testing.T) 
 // stays 20.6, which a float64 round trip would not guarantee.
 func TestCotReportPreservesIntegerAndDecimalNumberSpellings(t *testing.T) {
 	t.Parallel()
-	report := assertFixtureParity[CotReport](t, "cot_report.json")[0]
+	report := assertFixtureParity[COTReport](t, "cot_report.json")[0]
 	if string(report.PctOfOpenInterestAll) != "100" || string(report.PctOfOiNoncommLongAll) != "20.6" {
 		t.Fatalf("raw numbers = %s and %s", report.PctOfOpenInterestAll, report.PctOfOiNoncommLongAll)
 	}
@@ -78,7 +78,7 @@ func TestCotReportPreservesIntegerAndDecimalNumberSpellings(t *testing.T) {
 // Exact values copied from crates/libfmp/tests/cot_responses.rs.
 func TestDocumentedCotAnalysisAndListingDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	analyses := assertFixtureParity[CotAnalysis](t, "cot_analysis.json")
+	analyses := assertFixtureParity[COTAnalysis](t, "cot_analysis.json")
 	if len(analyses) != 1 {
 		t.Fatalf("rows = %d, want 1", len(analyses))
 	}
@@ -91,8 +91,8 @@ func TestDocumentedCotAnalysisAndListingDecodeExactValues(t *testing.T) {
 	if members := memberSet(t, analysis); len(members) != 16 || !slices.Contains(members, "netPostion") {
 		t.Fatalf("analysis members = %v, want 16 including the netPostion wire key", members)
 	}
-	listings := assertFixtureParity[CotReportListing](t, "cot_report_list.json")
-	if want := (CotReportListing{Symbol: "NG", Name: "Natural Gas (NG)"}); len(listings) != 1 || listings[0] != want {
+	listings := assertFixtureParity[COTReportListing](t, "cot_report_list.json")
+	if want := (COTReportListing{Symbol: "NG", Name: "Natural Gas (NG)"}); len(listings) != 1 || listings[0] != want {
 		t.Fatalf("cot_report_list = %+v", listings)
 	}
 }
@@ -127,20 +127,20 @@ func TestCotRequiredMembersAndNumberKindsAreEnforcedLikeSerde(t *testing.T) {
 		message string
 	}{
 		{"missing number", mutate("pctOfOpenInterestAll", nil),
-			`required member "pctOfOpenInterestAll" of CotReport is missing or null`},
+			`required member "pctOfOpenInterestAll" of COTReport is missing or null`},
 		{"null number", mutate("pctOfOpenInterestAll", jsontext.Value(`null`)),
-			`required member "pctOfOpenInterestAll" of CotReport is missing or null`},
+			`required member "pctOfOpenInterestAll" of COTReport is missing or null`},
 		{"string number", mutate("pctOfOpenInterestAll", jsontext.Value(`"100"`)),
-			`member "pctOfOpenInterestAll" of CotReport must be a JSON number`},
+			`member "pctOfOpenInterestAll" of COTReport must be a JSON number`},
 		{"missing integer", mutate("changeInNoncommSpeadAll", nil),
-			`required member "changeInNoncommSpeadAll" of CotReport is missing or null`},
+			`required member "changeInNoncommSpeadAll" of COTReport is missing or null`},
 		{"missing text", mutate("contractUnits", nil),
-			`required member "contractUnits" of CotReport is missing or null`},
+			`required member "contractUnits" of COTReport is missing or null`},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			var decoded []CotReport
+			var decoded []COTReport
 			err := json.Unmarshal(tc.wire, &decoded)
 			var typed *Error
 			if !errors.As(err, &typed) || typed.Category != CategoryDecode || typed.Message != tc.message {
@@ -148,14 +148,14 @@ func TestCotRequiredMembersAndNumberKindsAreEnforcedLikeSerde(t *testing.T) {
 			}
 		})
 	}
-	var analyses []CotAnalysis
+	var analyses []COTAnalysis
 	err := json.Unmarshal([]byte(`[{"symbol":"PA","date":"2024-02-27 00:00:00"}]`), &analyses)
 	var typed *Error
 	if !errors.As(err, &typed) || !strings.Contains(typed.Message, `"name"`) {
-		t.Fatalf("CotAnalysis error = %v, want the first missing member name", err)
+		t.Fatalf("COTAnalysis error = %v, want the first missing member name", err)
 	}
-	var listings []CotReportListing
+	var listings []COTReportListing
 	if err := json.Unmarshal([]byte(`[{"symbol":"NG","name":null}]`), &listings); err == nil {
-		t.Fatal("a null name decoded into CotReportListing")
+		t.Fatal("a null name decoded into COTReportListing")
 	}
 }

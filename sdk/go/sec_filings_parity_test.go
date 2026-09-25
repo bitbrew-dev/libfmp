@@ -15,17 +15,17 @@ import (
 // write back as null.
 func TestSecFilingsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[SecFiling](t, "latest_8k_sec_filings.json")
-	assertFixtureParity[SecFiling](t, "latest_sec_filings.json")
+	assertFixtureParity[SECFiling](t, "latest_8k_sec_filings.json")
+	assertFixtureParity[SECFiling](t, "latest_sec_filings.json")
 	omitted := []string{"hasFinancials"}
-	assertFixtureParityNullWhenOmitted[SecFiling](t, "sec_filings_by_form_type.json", omitted)
-	assertFixtureParityNullWhenOmitted[SecFiling](t, "sec_filings_by_symbol.json", omitted)
-	assertFixtureParityNullWhenOmitted[SecFiling](t, "sec_filings_by_cik.json", omitted)
-	assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_name.json")
-	assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_symbol.json")
-	assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_cik.json")
-	assertFixtureParity[SecCompanySearchResult](t, "all_industry_classifications.json")
-	assertFixtureParity[SecCompanyProfile](t, "sec_company_profile.json")
+	assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_form_type.json", omitted)
+	assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_symbol.json", omitted)
+	assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_cik.json", omitted)
+	assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_name.json")
+	assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_symbol.json")
+	assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_cik.json")
+	assertFixtureParity[SECCompanySearchResult](t, "all_industry_classifications.json")
+	assertFixtureParity[SECCompanyProfile](t, "sec_company_profile.json")
 	assertFixtureParity[SicClassification](t, "industry_classifications.json")
 	assertFixtureParity[jsontext.Value](t, "industry_classification_search.json")
 }
@@ -36,7 +36,7 @@ func TestSecFilingsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 // three search rows omit it.
 func TestDocumentedSecFilingRowsDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	latest8k := assertFixtureParity[SecFiling](t, "latest_8k_sec_filings.json")
+	latest8k := assertFixtureParity[SECFiling](t, "latest_8k_sec_filings.json")
 	if len(latest8k) != 1 {
 		t.Fatalf("latest_8k_sec_filings = %+v, want one row", latest8k)
 	}
@@ -49,14 +49,14 @@ func TestDocumentedSecFilingRowsDecodeExactValues(t *testing.T) {
 		t.Fatalf("latest_8k_sec_filings[0] = %+v", row)
 	}
 
-	latest := assertFixtureParity[SecFiling](t, "latest_sec_filings.json")
+	latest := assertFixtureParity[SECFiling](t, "latest_sec_filings.json")
 	if len(latest) != 1 || latest[0].Symbol != "DNN" || latest[0].HasFinancials == nil || !*latest[0].HasFinancials {
 		t.Fatalf("latest_sec_filings = %+v, want DNN with hasFinancials true", latest)
 	}
 
 	omitted := []string{"hasFinancials"}
 	for _, fixture := range []string{"sec_filings_by_form_type.json", "sec_filings_by_symbol.json", "sec_filings_by_cik.json"} {
-		rows := assertFixtureParityNullWhenOmitted[SecFiling](t, fixture, omitted)
+		rows := assertFixtureParityNullWhenOmitted[SECFiling](t, fixture, omitted)
 		if len(rows) != 1 || rows[0].HasFinancials != nil {
 			t.Fatalf("%s = %+v, want one row without hasFinancials", fixture, rows)
 		}
@@ -68,8 +68,8 @@ func TestDocumentedSecFilingRowsDecodeExactValues(t *testing.T) {
 			t.Fatalf("%s re-encoded = %s, want hasFinancials null as serde writes None", fixture, encoded)
 		}
 	}
-	bySymbol := assertFixtureParityNullWhenOmitted[SecFiling](t, "sec_filings_by_symbol.json", omitted)
-	byCik := assertFixtureParityNullWhenOmitted[SecFiling](t, "sec_filings_by_cik.json", omitted)
+	bySymbol := assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_symbol.json", omitted)
+	byCik := assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_cik.json", omitted)
 	if bySymbol[0].Symbol != "AAPL" || byCik[0].CIK != "0000320193" || bySymbol[0].FormType != "4" ||
 		byCik[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
 		t.Fatalf("by_symbol = %+v, by_cik = %+v", bySymbol[0], byCik[0])
@@ -81,8 +81,8 @@ func TestDocumentedSecFilingRowsDecodeExactValues(t *testing.T) {
 // the literal "None" symbol, empty strings, and leading zeroes survive.
 func TestDocumentedSecCompanySearchRowsDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	names := assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_name.json")
-	wantName := SecCompanySearchResult{
+	names := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_name.json")
+	wantName := SECCompanySearchResult{
 		Symbol:          "None",
 		Name:            "BERKSHIRE MULTIFAMILY VALUE FUND II LP",
 		CIK:             "0001418405",
@@ -95,14 +95,14 @@ func TestDocumentedSecCompanySearchRowsDecodeExactValues(t *testing.T) {
 		t.Fatalf("sec_companies_by_name = %+v, want %+v", names, wantName)
 	}
 
-	bySymbol := assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_symbol.json")
-	byCik := assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_cik.json")
+	bySymbol := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_symbol.json")
+	byCik := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_cik.json")
 	if len(bySymbol) != 1 || len(byCik) != 1 || bySymbol[0] != byCik[0] ||
 		bySymbol[0].Symbol != "AAPL" || bySymbol[0].Name != "APPLE INC." || byCik[0].CIK != "0000320193" {
 		t.Fatalf("by_symbol = %+v, by_cik = %+v, want the same AAPL row", bySymbol, byCik)
 	}
 
-	all := assertFixtureParity[SecCompanySearchResult](t, "all_industry_classifications.json")
+	all := assertFixtureParity[SECCompanySearchResult](t, "all_industry_classifications.json")
 	if len(all) != 1 || all[0].Symbol != "0Q16.L" || all[0].CIK != "0000070858" ||
 		all[0].BusinessAddress != "['BANK OF AMERICA CORPORATE CENTER', 'CHARLOTTE NC 28255']" {
 		t.Fatalf("all_industry_classifications = %+v", all)
@@ -116,7 +116,7 @@ func TestDocumentedSecCompanySearchRowsDecodeExactValues(t *testing.T) {
 // kept verbatim.
 func TestDocumentedSecCompanyProfileDecodesExactValues(t *testing.T) {
 	t.Parallel()
-	rows := assertFixtureParity[SecCompanyProfile](t, "sec_company_profile.json")
+	rows := assertFixtureParity[SECCompanyProfile](t, "sec_company_profile.json")
 	if len(rows) != 1 {
 		t.Fatalf("sec_company_profile = %+v, want one row", rows)
 	}
@@ -134,7 +134,7 @@ func TestDocumentedSecCompanyProfileDecodesExactValues(t *testing.T) {
 	future := `{"providerKind":["stock",1,true,null]}`
 	source := strings.Replace(string(readFixture(t, "sec_company_profile.json")),
 		`"securityType": null`, `"securityType": `+future, 1)
-	var typed []SecCompanyProfile
+	var typed []SECCompanyProfile
 	if err := json.Unmarshal([]byte(source), &typed); err != nil {
 		t.Fatalf("profile with a future securityType: %v", err)
 	}
@@ -147,7 +147,7 @@ func TestDocumentedSecCompanyProfileDecodesExactValues(t *testing.T) {
 
 	missing := strings.Replace(string(readFixture(t, "sec_company_profile.json")),
 		`"securityType": null,`, ``, 1)
-	var rejected []SecCompanyProfile
+	var rejected []SECCompanyProfile
 	err := json.Unmarshal([]byte(missing), &rejected)
 	var typedErr *Error
 	if !errors.As(err, &typedErr) || typedErr.Category != CategoryDecode || !strings.Contains(typedErr.Message, `"securityType"`) {
@@ -188,16 +188,16 @@ func TestSecFilingsContractsAreBareArrays(t *testing.T) {
 	t.Parallel()
 	row := strings.TrimSpace(string(readFixture(t, "latest_sec_filings.json")))
 	row = strings.TrimSuffix(strings.TrimPrefix(row, "["), "]")
-	var two []SecFiling
+	var two []SECFiling
 	if err := json.Unmarshal([]byte("["+row+","+row+"]"), &two); err != nil || len(two) != 2 ||
 		two[0].Symbol != two[1].Symbol || *two[0].HasFinancials != *two[1].HasFinancials {
 		t.Fatalf("two-row array = %+v, %v", two, err)
 	}
-	var empty []SecFiling
+	var empty []SECFiling
 	if err := json.Unmarshal([]byte(`[]`), &empty); err != nil || len(empty) != 0 {
 		t.Fatalf("empty array = %+v, %v", empty, err)
 	}
-	var enveloped []SecFiling
+	var enveloped []SECFiling
 	if err := json.Unmarshal([]byte(`{"data":[]}`), &enveloped); err == nil {
 		t.Fatal("an object envelope decoded into a bare-array contract")
 	}
@@ -232,17 +232,17 @@ func TestSecFilingsRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 			}
 		})
 	}
-	var rows []SecFiling
+	var rows []SECFiling
 	malformed := strings.Replace(string(readFixture(t, "latest_sec_filings.json")),
 		`"acceptedDate": "2024-03-01 16:52:35"`, `"acceptedDate": "2024-03-01T16:52:35Z"`, 1)
 	if err := json.Unmarshal([]byte(malformed), &rows); err == nil {
 		t.Fatal("a malformed date-time decoded into a DateTime member")
 	}
-	var filings []SecFiling
+	var filings []SECFiling
 	err := json.Unmarshal([]byte(`[{"symbol":"DNN","cik":"0001063259","filingDate":"2024-03-01 00:00:00",`+
 		`"acceptedDate":"2024-03-01 16:52:35","formType":"6-K","hasFinancials":true,"link":null,"finalLink":"x"}]`), &filings)
 	var typed *Error
 	if !errors.As(err, &typed) || !strings.Contains(typed.Message, `"link"`) {
-		t.Fatalf("SecFiling error = %v, want it to name the null member link", err)
+		t.Fatalf("SECFiling error = %v, want it to name the null member link", err)
 	}
 }

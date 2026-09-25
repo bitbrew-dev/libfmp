@@ -285,8 +285,8 @@ type ExchangeVariant struct {
 	City              string  `json:"city"`
 	State             string  `json:"state"`
 	Zip               string  `json:"zip"`
-	DcfDiff           float64 `json:"dcfDiff"`
-	Dcf               float64 `json:"dcf"`
+	DCFDiff           float64 `json:"dcfDiff"`
+	DCF               float64 `json:"dcf"`
 	Image             string  `json:"image"`
 	IpoDate           Date    `json:"ipoDate"`
 	DefaultImage      bool    `json:"defaultImage"`
@@ -327,8 +327,8 @@ type exchangeVariantShadow struct {
 	City              *string  `json:"city"`
 	State             *string  `json:"state"`
 	Zip               *string  `json:"zip"`
-	DcfDiff           *float64 `json:"dcfDiff"`
-	Dcf               *float64 `json:"dcf"`
+	DCFDiff           *float64 `json:"dcfDiff"`
+	DCF               *float64 `json:"dcf"`
 	Image             *string  `json:"image"`
 	IpoDate           *Date    `json:"ipoDate"`
 	DefaultImage      *bool    `json:"defaultImage"`
@@ -401,9 +401,9 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeVariant", "state")
 	case shadow.Zip == nil:
 		return missingMemberError("ExchangeVariant", "zip")
-	case shadow.DcfDiff == nil:
+	case shadow.DCFDiff == nil:
 		return missingMemberError("ExchangeVariant", "dcfDiff")
-	case shadow.Dcf == nil:
+	case shadow.DCF == nil:
 		return missingMemberError("ExchangeVariant", "dcf")
 	case shadow.Image == nil:
 		return missingMemberError("ExchangeVariant", "image")
@@ -448,8 +448,8 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		City:              *shadow.City,
 		State:             *shadow.State,
 		Zip:               *shadow.Zip,
-		DcfDiff:           *shadow.DcfDiff,
-		Dcf:               *shadow.Dcf,
+		DCFDiff:           *shadow.DCFDiff,
+		DCF:               *shadow.DCF,
 		Image:             *shadow.Image,
 		IpoDate:           *shadow.IpoDate,
 		DefaultImage:      *shadow.DefaultImage,

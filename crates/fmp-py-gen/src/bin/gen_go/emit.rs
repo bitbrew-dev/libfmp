@@ -16,9 +16,13 @@ const DOC_WIDTH: usize = 79;
 /// and the TipRanks brand, keyed by the lowercase word. `ipos` follows the
 /// ADR (`IposCalendar` -> `IPOCalendar`).
 const WORDS: &[(&str, &str)] = &[
+    ("8k", "8K"),
+    ("13f", "13F"),
     ("api", "API"),
     ("cik", "CIK"),
     ("ciks", "CIKs"),
+    ("cot", "COT"),
+    ("dcf", "DCF"),
     ("eps", "EPS"),
     ("etf", "ETF"),
     ("etfs", "ETFs"),
@@ -27,6 +31,7 @@ const WORDS: &[(&str, &str)] = &[
     ("id", "ID"),
     ("ids", "IDs"),
     ("json", "JSON"),
+    ("sec", "SEC"),
     ("ttm", "TTM"),
     ("url", "URL"),
     ("urls", "URLs"),

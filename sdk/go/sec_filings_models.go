@@ -10,9 +10,9 @@ import (
 	"encoding/json/v2"
 )
 
-// SecFiling is one SEC filing row shared by all five filing feeds and
+// SECFiling is one SEC filing row shared by all five filing feeds and
 // searches.
-type SecFiling struct {
+type SECFiling struct {
 	Symbol        string   `json:"symbol"`
 	CIK           string   `json:"cik"`
 	FilingDate    DateTime `json:"filingDate"`
@@ -23,7 +23,7 @@ type SecFiling struct {
 	FinalLink     string   `json:"finalLink"`
 }
 
-// secFilingShadow mirrors SecFiling with a pointer or raw value for every
+// secFilingShadow mirrors SECFiling with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type secFilingShadow struct {
 	Symbol        *string   `json:"symbol"`
@@ -39,28 +39,28 @@ type secFilingShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *SecFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *SECFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow secFilingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("SecFiling", "symbol")
+		return missingMemberError("SECFiling", "symbol")
 	case shadow.CIK == nil:
-		return missingMemberError("SecFiling", "cik")
+		return missingMemberError("SECFiling", "cik")
 	case shadow.FilingDate == nil:
-		return missingMemberError("SecFiling", "filingDate")
+		return missingMemberError("SECFiling", "filingDate")
 	case shadow.AcceptedDate == nil:
-		return missingMemberError("SecFiling", "acceptedDate")
+		return missingMemberError("SECFiling", "acceptedDate")
 	case shadow.FormType == nil:
-		return missingMemberError("SecFiling", "formType")
+		return missingMemberError("SECFiling", "formType")
 	case shadow.Link == nil:
-		return missingMemberError("SecFiling", "link")
+		return missingMemberError("SECFiling", "link")
 	case shadow.FinalLink == nil:
-		return missingMemberError("SecFiling", "finalLink")
+		return missingMemberError("SECFiling", "finalLink")
 	}
-	*m = SecFiling{
+	*m = SECFiling{
 		Symbol:        *shadow.Symbol,
 		CIK:           *shadow.CIK,
 		FilingDate:    *shadow.FilingDate,
@@ -73,9 +73,9 @@ func (m *SecFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// SecCompanySearchResult is one company identity returned by the three SEC
+// SECCompanySearchResult is one company identity returned by the three SEC
 // company-search routes.
-type SecCompanySearchResult struct {
+type SECCompanySearchResult struct {
 	Symbol          string `json:"symbol"`
 	Name            string `json:"name"`
 	CIK             string `json:"cik"`
@@ -85,7 +85,7 @@ type SecCompanySearchResult struct {
 	PhoneNumber     string `json:"phoneNumber"`
 }
 
-// secCompanySearchResultShadow mirrors SecCompanySearchResult with a pointer
+// secCompanySearchResultShadow mirrors SECCompanySearchResult with a pointer
 // or raw value for every required member so a missing or null member is
 // observable after decoding.
 type secCompanySearchResultShadow struct {
@@ -101,28 +101,28 @@ type secCompanySearchResultShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *SecCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *SECCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow secCompanySearchResultShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("SecCompanySearchResult", "symbol")
+		return missingMemberError("SECCompanySearchResult", "symbol")
 	case shadow.Name == nil:
-		return missingMemberError("SecCompanySearchResult", "name")
+		return missingMemberError("SECCompanySearchResult", "name")
 	case shadow.CIK == nil:
-		return missingMemberError("SecCompanySearchResult", "cik")
+		return missingMemberError("SECCompanySearchResult", "cik")
 	case shadow.SicCode == nil:
-		return missingMemberError("SecCompanySearchResult", "sicCode")
+		return missingMemberError("SECCompanySearchResult", "sicCode")
 	case shadow.IndustryTitle == nil:
-		return missingMemberError("SecCompanySearchResult", "industryTitle")
+		return missingMemberError("SECCompanySearchResult", "industryTitle")
 	case shadow.BusinessAddress == nil:
-		return missingMemberError("SecCompanySearchResult", "businessAddress")
+		return missingMemberError("SECCompanySearchResult", "businessAddress")
 	case shadow.PhoneNumber == nil:
-		return missingMemberError("SecCompanySearchResult", "phoneNumber")
+		return missingMemberError("SECCompanySearchResult", "phoneNumber")
 	}
-	*m = SecCompanySearchResult{
+	*m = SECCompanySearchResult{
 		Symbol:          *shadow.Symbol,
 		Name:            *shadow.Name,
 		CIK:             *shadow.CIK,
@@ -134,8 +134,8 @@ func (m *SecCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	return nil
 }
 
-// SecCompanyProfile is one full SEC company profile.
-type SecCompanyProfile struct {
+// SECCompanyProfile is one full SEC company profile.
+type SECCompanyProfile struct {
 	Symbol                  string          `json:"symbol"`
 	CIK                     string          `json:"cik"`
 	RegistrantName          string          `json:"registrantName"`
@@ -159,7 +159,7 @@ type SecCompanyProfile struct {
 	FiscalYearEnd           string          `json:"fiscalYearEnd"`
 	IpoDate                 Date            `json:"ipoDate"`
 	Employees               string          `json:"employees"`
-	SecFilingsURL           string          `json:"secFilingsUrl"`
+	SECFilingsURL           string          `json:"secFilingsUrl"`
 	TaxIdentificationNumber string          `json:"taxIdentificationNumber"`
 	FiftyTwoWeekRange       string          `json:"fiftyTwoWeekRange"`
 	IsActive                bool            `json:"isActive"`
@@ -173,7 +173,7 @@ type SecCompanyProfile struct {
 	IsFund                  bool            `json:"isFund"`
 }
 
-// secCompanyProfileShadow mirrors SecCompanyProfile with a pointer or raw
+// secCompanyProfileShadow mirrors SECCompanyProfile with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type secCompanyProfileShadow struct {
@@ -200,7 +200,7 @@ type secCompanyProfileShadow struct {
 	FiscalYearEnd           *string        `json:"fiscalYearEnd"`
 	IpoDate                 *Date          `json:"ipoDate"`
 	Employees               *string        `json:"employees"`
-	SecFilingsURL           *string        `json:"secFilingsUrl"`
+	SECFilingsURL           *string        `json:"secFilingsUrl"`
 	TaxIdentificationNumber *string        `json:"taxIdentificationNumber"`
 	FiftyTwoWeekRange       *string        `json:"fiftyTwoWeekRange"`
 	IsActive                *bool          `json:"isActive"`
@@ -217,82 +217,82 @@ type secCompanyProfileShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow secCompanyProfileShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("SecCompanyProfile", "symbol")
+		return missingMemberError("SECCompanyProfile", "symbol")
 	case shadow.CIK == nil:
-		return missingMemberError("SecCompanyProfile", "cik")
+		return missingMemberError("SECCompanyProfile", "cik")
 	case shadow.RegistrantName == nil:
-		return missingMemberError("SecCompanyProfile", "registrantName")
+		return missingMemberError("SECCompanyProfile", "registrantName")
 	case shadow.SicCode == nil:
-		return missingMemberError("SecCompanyProfile", "sicCode")
+		return missingMemberError("SECCompanyProfile", "sicCode")
 	case shadow.SicDescription == nil:
-		return missingMemberError("SecCompanyProfile", "sicDescription")
+		return missingMemberError("SECCompanyProfile", "sicDescription")
 	case shadow.SicGroup == nil:
-		return missingMemberError("SecCompanyProfile", "sicGroup")
+		return missingMemberError("SECCompanyProfile", "sicGroup")
 	case shadow.Isin == nil:
-		return missingMemberError("SecCompanyProfile", "isin")
+		return missingMemberError("SECCompanyProfile", "isin")
 	case shadow.BusinessAddress == nil:
-		return missingMemberError("SecCompanyProfile", "businessAddress")
+		return missingMemberError("SECCompanyProfile", "businessAddress")
 	case shadow.MailingAddress == nil:
-		return missingMemberError("SecCompanyProfile", "mailingAddress")
+		return missingMemberError("SECCompanyProfile", "mailingAddress")
 	case shadow.PhoneNumber == nil:
-		return missingMemberError("SecCompanyProfile", "phoneNumber")
+		return missingMemberError("SECCompanyProfile", "phoneNumber")
 	case shadow.PostalCode == nil:
-		return missingMemberError("SecCompanyProfile", "postalCode")
+		return missingMemberError("SECCompanyProfile", "postalCode")
 	case shadow.City == nil:
-		return missingMemberError("SecCompanyProfile", "city")
+		return missingMemberError("SECCompanyProfile", "city")
 	case shadow.State == nil:
-		return missingMemberError("SecCompanyProfile", "state")
+		return missingMemberError("SECCompanyProfile", "state")
 	case shadow.Country == nil:
-		return missingMemberError("SecCompanyProfile", "country")
+		return missingMemberError("SECCompanyProfile", "country")
 	case shadow.Description == nil:
-		return missingMemberError("SecCompanyProfile", "description")
+		return missingMemberError("SECCompanyProfile", "description")
 	case shadow.Ceo == nil:
-		return missingMemberError("SecCompanyProfile", "ceo")
+		return missingMemberError("SECCompanyProfile", "ceo")
 	case shadow.Website == nil:
-		return missingMemberError("SecCompanyProfile", "website")
+		return missingMemberError("SECCompanyProfile", "website")
 	case shadow.Exchange == nil:
-		return missingMemberError("SecCompanyProfile", "exchange")
+		return missingMemberError("SECCompanyProfile", "exchange")
 	case shadow.StateLocation == nil:
-		return missingMemberError("SecCompanyProfile", "stateLocation")
+		return missingMemberError("SECCompanyProfile", "stateLocation")
 	case shadow.StateOfIncorporation == nil:
-		return missingMemberError("SecCompanyProfile", "stateOfIncorporation")
+		return missingMemberError("SECCompanyProfile", "stateOfIncorporation")
 	case shadow.FiscalYearEnd == nil:
-		return missingMemberError("SecCompanyProfile", "fiscalYearEnd")
+		return missingMemberError("SECCompanyProfile", "fiscalYearEnd")
 	case shadow.IpoDate == nil:
-		return missingMemberError("SecCompanyProfile", "ipoDate")
+		return missingMemberError("SECCompanyProfile", "ipoDate")
 	case shadow.Employees == nil:
-		return missingMemberError("SecCompanyProfile", "employees")
-	case shadow.SecFilingsURL == nil:
-		return missingMemberError("SecCompanyProfile", "secFilingsUrl")
+		return missingMemberError("SECCompanyProfile", "employees")
+	case shadow.SECFilingsURL == nil:
+		return missingMemberError("SECCompanyProfile", "secFilingsUrl")
 	case shadow.TaxIdentificationNumber == nil:
-		return missingMemberError("SecCompanyProfile", "taxIdentificationNumber")
+		return missingMemberError("SECCompanyProfile", "taxIdentificationNumber")
 	case shadow.FiftyTwoWeekRange == nil:
-		return missingMemberError("SecCompanyProfile", "fiftyTwoWeekRange")
+		return missingMemberError("SECCompanyProfile", "fiftyTwoWeekRange")
 	case shadow.IsActive == nil:
-		return missingMemberError("SecCompanyProfile", "isActive")
+		return missingMemberError("SECCompanyProfile", "isActive")
 	case shadow.AssetType == nil:
-		return missingMemberError("SecCompanyProfile", "assetType")
+		return missingMemberError("SECCompanyProfile", "assetType")
 	case shadow.OpenFigiComposite == nil:
-		return missingMemberError("SecCompanyProfile", "openFigiComposite")
+		return missingMemberError("SECCompanyProfile", "openFigiComposite")
 	case shadow.PriceCurrency == nil:
-		return missingMemberError("SecCompanyProfile", "priceCurrency")
+		return missingMemberError("SECCompanyProfile", "priceCurrency")
 	case shadow.MarketSector == nil:
-		return missingMemberError("SecCompanyProfile", "marketSector")
+		return missingMemberError("SECCompanyProfile", "marketSector")
 	case len(shadow.SecurityType) == 0:
-		return missingMemberError("SecCompanyProfile", "securityType")
+		return missingMemberError("SECCompanyProfile", "securityType")
 	case shadow.IsETF == nil:
-		return missingMemberError("SecCompanyProfile", "isEtf")
+		return missingMemberError("SECCompanyProfile", "isEtf")
 	case shadow.IsAdr == nil:
-		return missingMemberError("SecCompanyProfile", "isAdr")
+		return missingMemberError("SECCompanyProfile", "isAdr")
 	case shadow.IsFund == nil:
-		return missingMemberError("SecCompanyProfile", "isFund")
+		return missingMemberError("SECCompanyProfile", "isFund")
 	}
 	var securityType *jsontext.Value
 	if shadow.SecurityType.Kind() != 'n' {
@@ -302,7 +302,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		securityType = &value
 	}
-	*m = SecCompanyProfile{
+	*m = SECCompanyProfile{
 		Symbol:                  *shadow.Symbol,
 		CIK:                     *shadow.CIK,
 		RegistrantName:          *shadow.RegistrantName,
@@ -326,7 +326,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		FiscalYearEnd:           *shadow.FiscalYearEnd,
 		IpoDate:                 *shadow.IpoDate,
 		Employees:               *shadow.Employees,
-		SecFilingsURL:           *shadow.SecFilingsURL,
+		SECFilingsURL:           *shadow.SECFilingsURL,
 		TaxIdentificationNumber: *shadow.TaxIdentificationNumber,
 		FiftyTwoWeekRange:       *shadow.FiftyTwoWeekRange,
 		IsActive:                *shadow.IsActive,

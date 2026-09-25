@@ -10,13 +10,13 @@ import (
 	"encoding/json/v2"
 )
 
-// CotReportListing is one provider-listed Commitment of Traders report.
-type CotReportListing struct {
+// COTReportListing is one provider-listed Commitment of Traders report.
+type COTReportListing struct {
 	Symbol string `json:"symbol"`
 	Name   string `json:"name"`
 }
 
-// cotReportListingShadow mirrors CotReportListing with a pointer or raw value
+// cotReportListingShadow mirrors COTReportListing with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type cotReportListingShadow struct {
@@ -27,27 +27,27 @@ type cotReportListingShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CotReportListing) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *COTReportListing) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow cotReportListingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("CotReportListing", "symbol")
+		return missingMemberError("COTReportListing", "symbol")
 	case shadow.Name == nil:
-		return missingMemberError("CotReportListing", "name")
+		return missingMemberError("COTReportListing", "name")
 	}
-	*m = CotReportListing{
+	*m = COTReportListing{
 		Symbol: *shadow.Symbol,
 		Name:   *shadow.Name,
 	}
 	return nil
 }
 
-// CotAnalysis is provider-derived market positioning and sentiment for one
+// COTAnalysis is provider-derived market positioning and sentiment for one
 // contract.
-type CotAnalysis struct {
+type COTAnalysis struct {
 	Symbol                       string   `json:"symbol"`
 	Date                         DateTime `json:"date"`
 	Name                         string   `json:"name"`
@@ -66,7 +66,7 @@ type CotAnalysis struct {
 	ReversalTrend                bool     `json:"reversalTrend"`
 }
 
-// cotAnalysisShadow mirrors CotAnalysis with a pointer or raw value for every
+// cotAnalysisShadow mirrors COTAnalysis with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type cotAnalysisShadow struct {
 	Symbol                       *string   `json:"symbol"`
@@ -90,46 +90,46 @@ type cotAnalysisShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CotAnalysis) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *COTAnalysis) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow cotAnalysisShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("CotAnalysis", "symbol")
+		return missingMemberError("COTAnalysis", "symbol")
 	case shadow.Date == nil:
-		return missingMemberError("CotAnalysis", "date")
+		return missingMemberError("COTAnalysis", "date")
 	case shadow.Name == nil:
-		return missingMemberError("CotAnalysis", "name")
+		return missingMemberError("COTAnalysis", "name")
 	case shadow.Sector == nil:
-		return missingMemberError("CotAnalysis", "sector")
+		return missingMemberError("COTAnalysis", "sector")
 	case shadow.Exchange == nil:
-		return missingMemberError("CotAnalysis", "exchange")
+		return missingMemberError("COTAnalysis", "exchange")
 	case shadow.CurrentLongMarketSituation == nil:
-		return missingMemberError("CotAnalysis", "currentLongMarketSituation")
+		return missingMemberError("COTAnalysis", "currentLongMarketSituation")
 	case shadow.CurrentShortMarketSituation == nil:
-		return missingMemberError("CotAnalysis", "currentShortMarketSituation")
+		return missingMemberError("COTAnalysis", "currentShortMarketSituation")
 	case shadow.MarketSituation == nil:
-		return missingMemberError("CotAnalysis", "marketSituation")
+		return missingMemberError("COTAnalysis", "marketSituation")
 	case shadow.PreviousLongMarketSituation == nil:
-		return missingMemberError("CotAnalysis", "previousLongMarketSituation")
+		return missingMemberError("COTAnalysis", "previousLongMarketSituation")
 	case shadow.PreviousShortMarketSituation == nil:
-		return missingMemberError("CotAnalysis", "previousShortMarketSituation")
+		return missingMemberError("COTAnalysis", "previousShortMarketSituation")
 	case shadow.PreviousMarketSituation == nil:
-		return missingMemberError("CotAnalysis", "previousMarketSituation")
+		return missingMemberError("COTAnalysis", "previousMarketSituation")
 	case shadow.NetPosition == nil:
-		return missingMemberError("CotAnalysis", "netPostion")
+		return missingMemberError("COTAnalysis", "netPostion")
 	case shadow.PreviousNetPosition == nil:
-		return missingMemberError("CotAnalysis", "previousNetPosition")
+		return missingMemberError("COTAnalysis", "previousNetPosition")
 	case shadow.ChangeInNetPosition == nil:
-		return missingMemberError("CotAnalysis", "changeInNetPosition")
+		return missingMemberError("COTAnalysis", "changeInNetPosition")
 	case shadow.MarketSentiment == nil:
-		return missingMemberError("CotAnalysis", "marketSentiment")
+		return missingMemberError("COTAnalysis", "marketSentiment")
 	case shadow.ReversalTrend == nil:
-		return missingMemberError("CotAnalysis", "reversalTrend")
+		return missingMemberError("COTAnalysis", "reversalTrend")
 	}
-	*m = CotAnalysis{
+	*m = COTAnalysis{
 		Symbol:                       *shadow.Symbol,
 		Date:                         *shadow.Date,
 		Name:                         *shadow.Name,
@@ -150,8 +150,8 @@ func (m *CotAnalysis) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// CotReport is a complete, lossless provider Commitment of Traders report row.
-type CotReport struct {
+// COTReport is a complete, lossless provider Commitment of Traders report row.
+type COTReport struct {
 	Symbol                      string         `json:"symbol"`
 	Date                        DateTime       `json:"date"`
 	Name                        string         `json:"name"`
@@ -282,7 +282,7 @@ type CotReport struct {
 	ContractUnits               string         `json:"contractUnits"`
 }
 
-// cotReportShadow mirrors CotReport with a pointer or raw value for every
+// cotReportShadow mirrors COTReport with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type cotReportShadow struct {
 	Symbol                      *string         `json:"symbol"`
@@ -418,432 +418,432 @@ type cotReportShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CotReport) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *COTReport) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow cotReportShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("CotReport", "symbol")
+		return missingMemberError("COTReport", "symbol")
 	case shadow.Date == nil:
-		return missingMemberError("CotReport", "date")
+		return missingMemberError("COTReport", "date")
 	case shadow.Name == nil:
-		return missingMemberError("CotReport", "name")
+		return missingMemberError("COTReport", "name")
 	case shadow.Sector == nil:
-		return missingMemberError("CotReport", "sector")
+		return missingMemberError("COTReport", "sector")
 	case shadow.MarketAndExchangeNames == nil:
-		return missingMemberError("CotReport", "marketAndExchangeNames")
+		return missingMemberError("COTReport", "marketAndExchangeNames")
 	case shadow.CftcContractMarketCode == nil:
-		return missingMemberError("CotReport", "cftcContractMarketCode")
+		return missingMemberError("COTReport", "cftcContractMarketCode")
 	case shadow.CftcMarketCode == nil:
-		return missingMemberError("CotReport", "cftcMarketCode")
+		return missingMemberError("COTReport", "cftcMarketCode")
 	case shadow.CftcRegionCode == nil:
-		return missingMemberError("CotReport", "cftcRegionCode")
+		return missingMemberError("COTReport", "cftcRegionCode")
 	case shadow.CftcCommodityCode == nil:
-		return missingMemberError("CotReport", "cftcCommodityCode")
+		return missingMemberError("COTReport", "cftcCommodityCode")
 	case shadow.OpenInterestAll == nil:
-		return missingMemberError("CotReport", "openInterestAll")
+		return missingMemberError("COTReport", "openInterestAll")
 	case shadow.NoncommPositionsLongAll == nil:
-		return missingMemberError("CotReport", "noncommPositionsLongAll")
+		return missingMemberError("COTReport", "noncommPositionsLongAll")
 	case shadow.NoncommPositionsShortAll == nil:
-		return missingMemberError("CotReport", "noncommPositionsShortAll")
+		return missingMemberError("COTReport", "noncommPositionsShortAll")
 	case shadow.NoncommPositionsSpreadAll == nil:
-		return missingMemberError("CotReport", "noncommPositionsSpreadAll")
+		return missingMemberError("COTReport", "noncommPositionsSpreadAll")
 	case shadow.CommPositionsLongAll == nil:
-		return missingMemberError("CotReport", "commPositionsLongAll")
+		return missingMemberError("COTReport", "commPositionsLongAll")
 	case shadow.CommPositionsShortAll == nil:
-		return missingMemberError("CotReport", "commPositionsShortAll")
+		return missingMemberError("COTReport", "commPositionsShortAll")
 	case shadow.TotReptPositionsLongAll == nil:
-		return missingMemberError("CotReport", "totReptPositionsLongAll")
+		return missingMemberError("COTReport", "totReptPositionsLongAll")
 	case shadow.TotReptPositionsShortAll == nil:
-		return missingMemberError("CotReport", "totReptPositionsShortAll")
+		return missingMemberError("COTReport", "totReptPositionsShortAll")
 	case shadow.NonreptPositionsLongAll == nil:
-		return missingMemberError("CotReport", "nonreptPositionsLongAll")
+		return missingMemberError("COTReport", "nonreptPositionsLongAll")
 	case shadow.NonreptPositionsShortAll == nil:
-		return missingMemberError("CotReport", "nonreptPositionsShortAll")
+		return missingMemberError("COTReport", "nonreptPositionsShortAll")
 	case shadow.OpenInterestOld == nil:
-		return missingMemberError("CotReport", "openInterestOld")
+		return missingMemberError("COTReport", "openInterestOld")
 	case shadow.NoncommPositionsLongOld == nil:
-		return missingMemberError("CotReport", "noncommPositionsLongOld")
+		return missingMemberError("COTReport", "noncommPositionsLongOld")
 	case shadow.NoncommPositionsShortOld == nil:
-		return missingMemberError("CotReport", "noncommPositionsShortOld")
+		return missingMemberError("COTReport", "noncommPositionsShortOld")
 	case shadow.NoncommPositionsSpreadOld == nil:
-		return missingMemberError("CotReport", "noncommPositionsSpreadOld")
+		return missingMemberError("COTReport", "noncommPositionsSpreadOld")
 	case shadow.CommPositionsLongOld == nil:
-		return missingMemberError("CotReport", "commPositionsLongOld")
+		return missingMemberError("COTReport", "commPositionsLongOld")
 	case shadow.CommPositionsShortOld == nil:
-		return missingMemberError("CotReport", "commPositionsShortOld")
+		return missingMemberError("COTReport", "commPositionsShortOld")
 	case shadow.TotReptPositionsLongOld == nil:
-		return missingMemberError("CotReport", "totReptPositionsLongOld")
+		return missingMemberError("COTReport", "totReptPositionsLongOld")
 	case shadow.TotReptPositionsShortOld == nil:
-		return missingMemberError("CotReport", "totReptPositionsShortOld")
+		return missingMemberError("COTReport", "totReptPositionsShortOld")
 	case shadow.NonreptPositionsLongOld == nil:
-		return missingMemberError("CotReport", "nonreptPositionsLongOld")
+		return missingMemberError("COTReport", "nonreptPositionsLongOld")
 	case shadow.NonreptPositionsShortOld == nil:
-		return missingMemberError("CotReport", "nonreptPositionsShortOld")
+		return missingMemberError("COTReport", "nonreptPositionsShortOld")
 	case shadow.OpenInterestOther == nil:
-		return missingMemberError("CotReport", "openInterestOther")
+		return missingMemberError("COTReport", "openInterestOther")
 	case shadow.NoncommPositionsLongOther == nil:
-		return missingMemberError("CotReport", "noncommPositionsLongOther")
+		return missingMemberError("COTReport", "noncommPositionsLongOther")
 	case shadow.NoncommPositionsShortOther == nil:
-		return missingMemberError("CotReport", "noncommPositionsShortOther")
+		return missingMemberError("COTReport", "noncommPositionsShortOther")
 	case shadow.NoncommPositionsSpreadOther == nil:
-		return missingMemberError("CotReport", "noncommPositionsSpreadOther")
+		return missingMemberError("COTReport", "noncommPositionsSpreadOther")
 	case shadow.CommPositionsLongOther == nil:
-		return missingMemberError("CotReport", "commPositionsLongOther")
+		return missingMemberError("COTReport", "commPositionsLongOther")
 	case shadow.CommPositionsShortOther == nil:
-		return missingMemberError("CotReport", "commPositionsShortOther")
+		return missingMemberError("COTReport", "commPositionsShortOther")
 	case shadow.TotReptPositionsLongOther == nil:
-		return missingMemberError("CotReport", "totReptPositionsLongOther")
+		return missingMemberError("COTReport", "totReptPositionsLongOther")
 	case shadow.TotReptPositionsShortOther == nil:
-		return missingMemberError("CotReport", "totReptPositionsShortOther")
+		return missingMemberError("COTReport", "totReptPositionsShortOther")
 	case shadow.NonreptPositionsLongOther == nil:
-		return missingMemberError("CotReport", "nonreptPositionsLongOther")
+		return missingMemberError("COTReport", "nonreptPositionsLongOther")
 	case shadow.NonreptPositionsShortOther == nil:
-		return missingMemberError("CotReport", "nonreptPositionsShortOther")
+		return missingMemberError("COTReport", "nonreptPositionsShortOther")
 	case shadow.ChangeInOpenInterestAll == nil:
-		return missingMemberError("CotReport", "changeInOpenInterestAll")
+		return missingMemberError("COTReport", "changeInOpenInterestAll")
 	case shadow.ChangeInNoncommLongAll == nil:
-		return missingMemberError("CotReport", "changeInNoncommLongAll")
+		return missingMemberError("COTReport", "changeInNoncommLongAll")
 	case shadow.ChangeInNoncommShortAll == nil:
-		return missingMemberError("CotReport", "changeInNoncommShortAll")
+		return missingMemberError("COTReport", "changeInNoncommShortAll")
 	case shadow.ChangeInNoncommSpreadAll == nil:
-		return missingMemberError("CotReport", "changeInNoncommSpeadAll")
+		return missingMemberError("COTReport", "changeInNoncommSpeadAll")
 	case shadow.ChangeInCommLongAll == nil:
-		return missingMemberError("CotReport", "changeInCommLongAll")
+		return missingMemberError("COTReport", "changeInCommLongAll")
 	case shadow.ChangeInCommShortAll == nil:
-		return missingMemberError("CotReport", "changeInCommShortAll")
+		return missingMemberError("COTReport", "changeInCommShortAll")
 	case shadow.ChangeInTotReptLongAll == nil:
-		return missingMemberError("CotReport", "changeInTotReptLongAll")
+		return missingMemberError("COTReport", "changeInTotReptLongAll")
 	case shadow.ChangeInTotReptShortAll == nil:
-		return missingMemberError("CotReport", "changeInTotReptShortAll")
+		return missingMemberError("COTReport", "changeInTotReptShortAll")
 	case shadow.ChangeInNonreptLongAll == nil:
-		return missingMemberError("CotReport", "changeInNonreptLongAll")
+		return missingMemberError("COTReport", "changeInNonreptLongAll")
 	case shadow.ChangeInNonreptShortAll == nil:
-		return missingMemberError("CotReport", "changeInNonreptShortAll")
+		return missingMemberError("COTReport", "changeInNonreptShortAll")
 	case shadow.PctOfOpenInterestAll == nil:
-		return missingMemberError("CotReport", "pctOfOpenInterestAll")
+		return missingMemberError("COTReport", "pctOfOpenInterestAll")
 	case shadow.PctOfOiNoncommLongAll == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommLongAll")
+		return missingMemberError("COTReport", "pctOfOiNoncommLongAll")
 	case shadow.PctOfOiNoncommShortAll == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommShortAll")
+		return missingMemberError("COTReport", "pctOfOiNoncommShortAll")
 	case shadow.PctOfOiNoncommSpreadAll == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommSpreadAll")
+		return missingMemberError("COTReport", "pctOfOiNoncommSpreadAll")
 	case shadow.PctOfOiCommLongAll == nil:
-		return missingMemberError("CotReport", "pctOfOiCommLongAll")
+		return missingMemberError("COTReport", "pctOfOiCommLongAll")
 	case shadow.PctOfOiCommShortAll == nil:
-		return missingMemberError("CotReport", "pctOfOiCommShortAll")
+		return missingMemberError("COTReport", "pctOfOiCommShortAll")
 	case shadow.PctOfOiTotReptLongAll == nil:
-		return missingMemberError("CotReport", "pctOfOiTotReptLongAll")
+		return missingMemberError("COTReport", "pctOfOiTotReptLongAll")
 	case shadow.PctOfOiTotReptShortAll == nil:
-		return missingMemberError("CotReport", "pctOfOiTotReptShortAll")
+		return missingMemberError("COTReport", "pctOfOiTotReptShortAll")
 	case shadow.PctOfOiNonreptLongAll == nil:
-		return missingMemberError("CotReport", "pctOfOiNonreptLongAll")
+		return missingMemberError("COTReport", "pctOfOiNonreptLongAll")
 	case shadow.PctOfOiNonreptShortAll == nil:
-		return missingMemberError("CotReport", "pctOfOiNonreptShortAll")
+		return missingMemberError("COTReport", "pctOfOiNonreptShortAll")
 	case shadow.PctOfOpenInterestOld == nil:
-		return missingMemberError("CotReport", "pctOfOpenInterestOl")
+		return missingMemberError("COTReport", "pctOfOpenInterestOl")
 	case shadow.PctOfOiNoncommLongOld == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommLongOl")
+		return missingMemberError("COTReport", "pctOfOiNoncommLongOl")
 	case shadow.PctOfOiNoncommShortOld == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommShortOl")
+		return missingMemberError("COTReport", "pctOfOiNoncommShortOl")
 	case shadow.PctOfOiNoncommSpreadOld == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommSpreadOl")
+		return missingMemberError("COTReport", "pctOfOiNoncommSpreadOl")
 	case shadow.PctOfOiCommLongOld == nil:
-		return missingMemberError("CotReport", "pctOfOiCommLongOl")
+		return missingMemberError("COTReport", "pctOfOiCommLongOl")
 	case shadow.PctOfOiCommShortOld == nil:
-		return missingMemberError("CotReport", "pctOfOiCommShortOl")
+		return missingMemberError("COTReport", "pctOfOiCommShortOl")
 	case shadow.PctOfOiTotReptLongOld == nil:
-		return missingMemberError("CotReport", "pctOfOiTotReptLongOl")
+		return missingMemberError("COTReport", "pctOfOiTotReptLongOl")
 	case shadow.PctOfOiTotReptShortOld == nil:
-		return missingMemberError("CotReport", "pctOfOiTotReptShortOl")
+		return missingMemberError("COTReport", "pctOfOiTotReptShortOl")
 	case shadow.PctOfOiNonreptLongOld == nil:
-		return missingMemberError("CotReport", "pctOfOiNonreptLongOl")
+		return missingMemberError("COTReport", "pctOfOiNonreptLongOl")
 	case shadow.PctOfOiNonreptShortOld == nil:
-		return missingMemberError("CotReport", "pctOfOiNonreptShortOl")
+		return missingMemberError("COTReport", "pctOfOiNonreptShortOl")
 	case shadow.PctOfOpenInterestOther == nil:
-		return missingMemberError("CotReport", "pctOfOpenInterestOther")
+		return missingMemberError("COTReport", "pctOfOpenInterestOther")
 	case shadow.PctOfOiNoncommLongOther == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommLongOther")
+		return missingMemberError("COTReport", "pctOfOiNoncommLongOther")
 	case shadow.PctOfOiNoncommShortOther == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommShortOther")
+		return missingMemberError("COTReport", "pctOfOiNoncommShortOther")
 	case shadow.PctOfOiNoncommSpreadOther == nil:
-		return missingMemberError("CotReport", "pctOfOiNoncommSpreadOther")
+		return missingMemberError("COTReport", "pctOfOiNoncommSpreadOther")
 	case shadow.PctOfOiCommLongOther == nil:
-		return missingMemberError("CotReport", "pctOfOiCommLongOther")
+		return missingMemberError("COTReport", "pctOfOiCommLongOther")
 	case shadow.PctOfOiCommShortOther == nil:
-		return missingMemberError("CotReport", "pctOfOiCommShortOther")
+		return missingMemberError("COTReport", "pctOfOiCommShortOther")
 	case shadow.PctOfOiTotReptLongOther == nil:
-		return missingMemberError("CotReport", "pctOfOiTotReptLongOther")
+		return missingMemberError("COTReport", "pctOfOiTotReptLongOther")
 	case shadow.PctOfOiTotReptShortOther == nil:
-		return missingMemberError("CotReport", "pctOfOiTotReptShortOther")
+		return missingMemberError("COTReport", "pctOfOiTotReptShortOther")
 	case shadow.PctOfOiNonreptLongOther == nil:
-		return missingMemberError("CotReport", "pctOfOiNonreptLongOther")
+		return missingMemberError("COTReport", "pctOfOiNonreptLongOther")
 	case shadow.PctOfOiNonreptShortOther == nil:
-		return missingMemberError("CotReport", "pctOfOiNonreptShortOther")
+		return missingMemberError("COTReport", "pctOfOiNonreptShortOther")
 	case shadow.TradersTotAll == nil:
-		return missingMemberError("CotReport", "tradersTotAll")
+		return missingMemberError("COTReport", "tradersTotAll")
 	case shadow.TradersNoncommLongAll == nil:
-		return missingMemberError("CotReport", "tradersNoncommLongAll")
+		return missingMemberError("COTReport", "tradersNoncommLongAll")
 	case shadow.TradersNoncommShortAll == nil:
-		return missingMemberError("CotReport", "tradersNoncommShortAll")
+		return missingMemberError("COTReport", "tradersNoncommShortAll")
 	case shadow.TradersNoncommSpreadAll == nil:
-		return missingMemberError("CotReport", "tradersNoncommSpreadAll")
+		return missingMemberError("COTReport", "tradersNoncommSpreadAll")
 	case shadow.TradersCommLongAll == nil:
-		return missingMemberError("CotReport", "tradersCommLongAll")
+		return missingMemberError("COTReport", "tradersCommLongAll")
 	case shadow.TradersCommShortAll == nil:
-		return missingMemberError("CotReport", "tradersCommShortAll")
+		return missingMemberError("COTReport", "tradersCommShortAll")
 	case shadow.TradersTotReptLongAll == nil:
-		return missingMemberError("CotReport", "tradersTotReptLongAll")
+		return missingMemberError("COTReport", "tradersTotReptLongAll")
 	case shadow.TradersTotReptShortAll == nil:
-		return missingMemberError("CotReport", "tradersTotReptShortAll")
+		return missingMemberError("COTReport", "tradersTotReptShortAll")
 	case shadow.TradersTotOld == nil:
-		return missingMemberError("CotReport", "tradersTotOl")
+		return missingMemberError("COTReport", "tradersTotOl")
 	case shadow.TradersNoncommLongOld == nil:
-		return missingMemberError("CotReport", "tradersNoncommLongOl")
+		return missingMemberError("COTReport", "tradersNoncommLongOl")
 	case shadow.TradersNoncommShortOld == nil:
-		return missingMemberError("CotReport", "tradersNoncommShortOl")
+		return missingMemberError("COTReport", "tradersNoncommShortOl")
 	case shadow.TradersNoncommSpreadOld == nil:
-		return missingMemberError("CotReport", "tradersNoncommSpeadOl")
+		return missingMemberError("COTReport", "tradersNoncommSpeadOl")
 	case shadow.TradersCommLongOld == nil:
-		return missingMemberError("CotReport", "tradersCommLongOl")
+		return missingMemberError("COTReport", "tradersCommLongOl")
 	case shadow.TradersCommShortOld == nil:
-		return missingMemberError("CotReport", "tradersCommShortOl")
+		return missingMemberError("COTReport", "tradersCommShortOl")
 	case shadow.TradersTotReptLongOld == nil:
-		return missingMemberError("CotReport", "tradersTotReptLongOl")
+		return missingMemberError("COTReport", "tradersTotReptLongOl")
 	case shadow.TradersTotReptShortOld == nil:
-		return missingMemberError("CotReport", "tradersTotReptShortOl")
+		return missingMemberError("COTReport", "tradersTotReptShortOl")
 	case shadow.TradersTotOther == nil:
-		return missingMemberError("CotReport", "tradersTotOther")
+		return missingMemberError("COTReport", "tradersTotOther")
 	case shadow.TradersNoncommLongOther == nil:
-		return missingMemberError("CotReport", "tradersNoncommLongOther")
+		return missingMemberError("COTReport", "tradersNoncommLongOther")
 	case shadow.TradersNoncommShortOther == nil:
-		return missingMemberError("CotReport", "tradersNoncommShortOther")
+		return missingMemberError("COTReport", "tradersNoncommShortOther")
 	case shadow.TradersNoncommSpreadOther == nil:
-		return missingMemberError("CotReport", "tradersNoncommSpreadOther")
+		return missingMemberError("COTReport", "tradersNoncommSpreadOther")
 	case shadow.TradersCommLongOther == nil:
-		return missingMemberError("CotReport", "tradersCommLongOther")
+		return missingMemberError("COTReport", "tradersCommLongOther")
 	case shadow.TradersCommShortOther == nil:
-		return missingMemberError("CotReport", "tradersCommShortOther")
+		return missingMemberError("COTReport", "tradersCommShortOther")
 	case shadow.TradersTotReptLongOther == nil:
-		return missingMemberError("CotReport", "tradersTotReptLongOther")
+		return missingMemberError("COTReport", "tradersTotReptLongOther")
 	case shadow.TradersTotReptShortOther == nil:
-		return missingMemberError("CotReport", "tradersTotReptShortOther")
+		return missingMemberError("COTReport", "tradersTotReptShortOther")
 	case shadow.ConcGrossLe4TdrLongAll == nil:
-		return missingMemberError("CotReport", "concGrossLe4TdrLongAll")
+		return missingMemberError("COTReport", "concGrossLe4TdrLongAll")
 	case shadow.ConcGrossLe4TdrShortAll == nil:
-		return missingMemberError("CotReport", "concGrossLe4TdrShortAll")
+		return missingMemberError("COTReport", "concGrossLe4TdrShortAll")
 	case shadow.ConcGrossLe8TdrLongAll == nil:
-		return missingMemberError("CotReport", "concGrossLe8TdrLongAll")
+		return missingMemberError("COTReport", "concGrossLe8TdrLongAll")
 	case shadow.ConcGrossLe8TdrShortAll == nil:
-		return missingMemberError("CotReport", "concGrossLe8TdrShortAll")
+		return missingMemberError("COTReport", "concGrossLe8TdrShortAll")
 	case shadow.ConcNetLe4TdrLongAll == nil:
-		return missingMemberError("CotReport", "concNetLe4TdrLongAll")
+		return missingMemberError("COTReport", "concNetLe4TdrLongAll")
 	case shadow.ConcNetLe4TdrShortAll == nil:
-		return missingMemberError("CotReport", "concNetLe4TdrShortAll")
+		return missingMemberError("COTReport", "concNetLe4TdrShortAll")
 	case shadow.ConcNetLe8TdrLongAll == nil:
-		return missingMemberError("CotReport", "concNetLe8TdrLongAll")
+		return missingMemberError("COTReport", "concNetLe8TdrLongAll")
 	case shadow.ConcNetLe8TdrShortAll == nil:
-		return missingMemberError("CotReport", "concNetLe8TdrShortAll")
+		return missingMemberError("COTReport", "concNetLe8TdrShortAll")
 	case shadow.ConcGrossLe4TdrLongOld == nil:
-		return missingMemberError("CotReport", "concGrossLe4TdrLongOl")
+		return missingMemberError("COTReport", "concGrossLe4TdrLongOl")
 	case shadow.ConcGrossLe4TdrShortOld == nil:
-		return missingMemberError("CotReport", "concGrossLe4TdrShortOl")
+		return missingMemberError("COTReport", "concGrossLe4TdrShortOl")
 	case shadow.ConcGrossLe8TdrLongOld == nil:
-		return missingMemberError("CotReport", "concGrossLe8TdrLongOl")
+		return missingMemberError("COTReport", "concGrossLe8TdrLongOl")
 	case shadow.ConcGrossLe8TdrShortOld == nil:
-		return missingMemberError("CotReport", "concGrossLe8TdrShortOl")
+		return missingMemberError("COTReport", "concGrossLe8TdrShortOl")
 	case shadow.ConcNetLe4TdrLongOld == nil:
-		return missingMemberError("CotReport", "concNetLe4TdrLongOl")
+		return missingMemberError("COTReport", "concNetLe4TdrLongOl")
 	case shadow.ConcNetLe4TdrShortOld == nil:
-		return missingMemberError("CotReport", "concNetLe4TdrShortOl")
+		return missingMemberError("COTReport", "concNetLe4TdrShortOl")
 	case shadow.ConcNetLe8TdrLongOld == nil:
-		return missingMemberError("CotReport", "concNetLe8TdrLongOl")
+		return missingMemberError("COTReport", "concNetLe8TdrLongOl")
 	case shadow.ConcNetLe8TdrShortOld == nil:
-		return missingMemberError("CotReport", "concNetLe8TdrShortOl")
+		return missingMemberError("COTReport", "concNetLe8TdrShortOl")
 	case shadow.ConcGrossLe4TdrLongOther == nil:
-		return missingMemberError("CotReport", "concGrossLe4TdrLongOther")
+		return missingMemberError("COTReport", "concGrossLe4TdrLongOther")
 	case shadow.ConcGrossLe4TdrShortOther == nil:
-		return missingMemberError("CotReport", "concGrossLe4TdrShortOther")
+		return missingMemberError("COTReport", "concGrossLe4TdrShortOther")
 	case shadow.ConcGrossLe8TdrLongOther == nil:
-		return missingMemberError("CotReport", "concGrossLe8TdrLongOther")
+		return missingMemberError("COTReport", "concGrossLe8TdrLongOther")
 	case shadow.ConcGrossLe8TdrShortOther == nil:
-		return missingMemberError("CotReport", "concGrossLe8TdrShortOther")
+		return missingMemberError("COTReport", "concGrossLe8TdrShortOther")
 	case shadow.ConcNetLe4TdrLongOther == nil:
-		return missingMemberError("CotReport", "concNetLe4TdrLongOther")
+		return missingMemberError("COTReport", "concNetLe4TdrLongOther")
 	case shadow.ConcNetLe4TdrShortOther == nil:
-		return missingMemberError("CotReport", "concNetLe4TdrShortOther")
+		return missingMemberError("COTReport", "concNetLe4TdrShortOther")
 	case shadow.ConcNetLe8TdrLongOther == nil:
-		return missingMemberError("CotReport", "concNetLe8TdrLongOther")
+		return missingMemberError("COTReport", "concNetLe8TdrLongOther")
 	case shadow.ConcNetLe8TdrShortOther == nil:
-		return missingMemberError("CotReport", "concNetLe8TdrShortOther")
+		return missingMemberError("COTReport", "concNetLe8TdrShortOther")
 	case shadow.ContractUnits == nil:
-		return missingMemberError("CotReport", "contractUnits")
+		return missingMemberError("COTReport", "contractUnits")
 	}
 	if shadow.PctOfOpenInterestAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOpenInterestAll", "number")
+		return invalidMemberError("COTReport", "pctOfOpenInterestAll", "number")
 	}
 	if shadow.PctOfOiNoncommLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommLongAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommLongAll", "number")
 	}
 	if shadow.PctOfOiNoncommShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommShortAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommShortAll", "number")
 	}
 	if shadow.PctOfOiNoncommSpreadAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommSpreadAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommSpreadAll", "number")
 	}
 	if shadow.PctOfOiCommLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiCommLongAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiCommLongAll", "number")
 	}
 	if shadow.PctOfOiCommShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiCommShortAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiCommShortAll", "number")
 	}
 	if shadow.PctOfOiTotReptLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiTotReptLongAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiTotReptLongAll", "number")
 	}
 	if shadow.PctOfOiTotReptShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiTotReptShortAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiTotReptShortAll", "number")
 	}
 	if shadow.PctOfOiNonreptLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNonreptLongAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiNonreptLongAll", "number")
 	}
 	if shadow.PctOfOiNonreptShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNonreptShortAll", "number")
+		return invalidMemberError("COTReport", "pctOfOiNonreptShortAll", "number")
 	}
 	if shadow.PctOfOpenInterestOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOpenInterestOl", "number")
+		return invalidMemberError("COTReport", "pctOfOpenInterestOl", "number")
 	}
 	if shadow.PctOfOiNoncommLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommLongOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommLongOl", "number")
 	}
 	if shadow.PctOfOiNoncommShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommShortOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommShortOl", "number")
 	}
 	if shadow.PctOfOiNoncommSpreadOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommSpreadOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommSpreadOl", "number")
 	}
 	if shadow.PctOfOiCommLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiCommLongOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiCommLongOl", "number")
 	}
 	if shadow.PctOfOiCommShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiCommShortOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiCommShortOl", "number")
 	}
 	if shadow.PctOfOiTotReptLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiTotReptLongOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiTotReptLongOl", "number")
 	}
 	if shadow.PctOfOiTotReptShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiTotReptShortOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiTotReptShortOl", "number")
 	}
 	if shadow.PctOfOiNonreptLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNonreptLongOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiNonreptLongOl", "number")
 	}
 	if shadow.PctOfOiNonreptShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNonreptShortOl", "number")
+		return invalidMemberError("COTReport", "pctOfOiNonreptShortOl", "number")
 	}
 	if shadow.PctOfOpenInterestOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOpenInterestOther", "number")
+		return invalidMemberError("COTReport", "pctOfOpenInterestOther", "number")
 	}
 	if shadow.PctOfOiNoncommLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommLongOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommLongOther", "number")
 	}
 	if shadow.PctOfOiNoncommShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommShortOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommShortOther", "number")
 	}
 	if shadow.PctOfOiNoncommSpreadOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNoncommSpreadOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiNoncommSpreadOther", "number")
 	}
 	if shadow.PctOfOiCommLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiCommLongOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiCommLongOther", "number")
 	}
 	if shadow.PctOfOiCommShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiCommShortOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiCommShortOther", "number")
 	}
 	if shadow.PctOfOiTotReptLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiTotReptLongOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiTotReptLongOther", "number")
 	}
 	if shadow.PctOfOiTotReptShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiTotReptShortOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiTotReptShortOther", "number")
 	}
 	if shadow.PctOfOiNonreptLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNonreptLongOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiNonreptLongOther", "number")
 	}
 	if shadow.PctOfOiNonreptShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "pctOfOiNonreptShortOther", "number")
+		return invalidMemberError("COTReport", "pctOfOiNonreptShortOther", "number")
 	}
 	if shadow.ConcGrossLe4TdrLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe4TdrLongAll", "number")
+		return invalidMemberError("COTReport", "concGrossLe4TdrLongAll", "number")
 	}
 	if shadow.ConcGrossLe4TdrShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe4TdrShortAll", "number")
+		return invalidMemberError("COTReport", "concGrossLe4TdrShortAll", "number")
 	}
 	if shadow.ConcGrossLe8TdrLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe8TdrLongAll", "number")
+		return invalidMemberError("COTReport", "concGrossLe8TdrLongAll", "number")
 	}
 	if shadow.ConcGrossLe8TdrShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe8TdrShortAll", "number")
+		return invalidMemberError("COTReport", "concGrossLe8TdrShortAll", "number")
 	}
 	if shadow.ConcNetLe4TdrLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe4TdrLongAll", "number")
+		return invalidMemberError("COTReport", "concNetLe4TdrLongAll", "number")
 	}
 	if shadow.ConcNetLe4TdrShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe4TdrShortAll", "number")
+		return invalidMemberError("COTReport", "concNetLe4TdrShortAll", "number")
 	}
 	if shadow.ConcNetLe8TdrLongAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe8TdrLongAll", "number")
+		return invalidMemberError("COTReport", "concNetLe8TdrLongAll", "number")
 	}
 	if shadow.ConcNetLe8TdrShortAll.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe8TdrShortAll", "number")
+		return invalidMemberError("COTReport", "concNetLe8TdrShortAll", "number")
 	}
 	if shadow.ConcGrossLe4TdrLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe4TdrLongOl", "number")
+		return invalidMemberError("COTReport", "concGrossLe4TdrLongOl", "number")
 	}
 	if shadow.ConcGrossLe4TdrShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe4TdrShortOl", "number")
+		return invalidMemberError("COTReport", "concGrossLe4TdrShortOl", "number")
 	}
 	if shadow.ConcGrossLe8TdrLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe8TdrLongOl", "number")
+		return invalidMemberError("COTReport", "concGrossLe8TdrLongOl", "number")
 	}
 	if shadow.ConcGrossLe8TdrShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe8TdrShortOl", "number")
+		return invalidMemberError("COTReport", "concGrossLe8TdrShortOl", "number")
 	}
 	if shadow.ConcNetLe4TdrLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe4TdrLongOl", "number")
+		return invalidMemberError("COTReport", "concNetLe4TdrLongOl", "number")
 	}
 	if shadow.ConcNetLe4TdrShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe4TdrShortOl", "number")
+		return invalidMemberError("COTReport", "concNetLe4TdrShortOl", "number")
 	}
 	if shadow.ConcNetLe8TdrLongOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe8TdrLongOl", "number")
+		return invalidMemberError("COTReport", "concNetLe8TdrLongOl", "number")
 	}
 	if shadow.ConcNetLe8TdrShortOld.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe8TdrShortOl", "number")
+		return invalidMemberError("COTReport", "concNetLe8TdrShortOl", "number")
 	}
 	if shadow.ConcGrossLe4TdrLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe4TdrLongOther", "number")
+		return invalidMemberError("COTReport", "concGrossLe4TdrLongOther", "number")
 	}
 	if shadow.ConcGrossLe4TdrShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe4TdrShortOther", "number")
+		return invalidMemberError("COTReport", "concGrossLe4TdrShortOther", "number")
 	}
 	if shadow.ConcGrossLe8TdrLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe8TdrLongOther", "number")
+		return invalidMemberError("COTReport", "concGrossLe8TdrLongOther", "number")
 	}
 	if shadow.ConcGrossLe8TdrShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concGrossLe8TdrShortOther", "number")
+		return invalidMemberError("COTReport", "concGrossLe8TdrShortOther", "number")
 	}
 	if shadow.ConcNetLe4TdrLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe4TdrLongOther", "number")
+		return invalidMemberError("COTReport", "concNetLe4TdrLongOther", "number")
 	}
 	if shadow.ConcNetLe4TdrShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe4TdrShortOther", "number")
+		return invalidMemberError("COTReport", "concNetLe4TdrShortOther", "number")
 	}
 	if shadow.ConcNetLe8TdrLongOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe8TdrLongOther", "number")
+		return invalidMemberError("COTReport", "concNetLe8TdrLongOther", "number")
 	}
 	if shadow.ConcNetLe8TdrShortOther.Kind() != '0' {
-		return invalidMemberError("CotReport", "concNetLe8TdrShortOther", "number")
+		return invalidMemberError("COTReport", "concNetLe8TdrShortOther", "number")
 	}
-	*m = CotReport{
+	*m = COTReport{
 		Symbol:                      *shadow.Symbol,
 		Date:                        *shadow.Date,
 		Name:                        *shadow.Name,

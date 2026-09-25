@@ -158,12 +158,12 @@ func (n *BulkNamespace) StockRatings(ctx context.Context) ([]BulkStockRating, er
 	return out, nil
 }
 
-// DcfValuations retrieves worldwide discounted-cash-flow valuations in one
+// DCFValuations retrieves worldwide discounted-cash-flow valuations in one
 // provider bulk response.
 //
 // GET dcf-bulk
-func (n *BulkNamespace) DcfValuations(ctx context.Context) ([]BulkDcfValuation, error) {
-	var out []BulkDcfValuation
+func (n *BulkNamespace) DCFValuations(ctx context.Context) ([]BulkDCFValuation, error) {
+	var out []BulkDCFValuation
 	if err := n.client.getJSON(ctx, "dcf-bulk", "dcf-bulk", nil, &out); err != nil {
 		return nil, err
 	}
