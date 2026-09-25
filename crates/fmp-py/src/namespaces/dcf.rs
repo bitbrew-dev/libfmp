@@ -30,8 +30,8 @@ impl DcfNamespace {
 impl DcfNamespace {
     /// Retrieves the standard discounted-cash-flow valuation for one company.
     #[pyo3(signature = (symbol))]
-    fn discounted_cash_flow(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<DcfValuation>> {
-        let query = discounted_cash_flow_query(symbol)?;
+    fn standard(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<DcfValuation>> {
+        let query = standard_query(symbol)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -44,12 +44,8 @@ impl DcfNamespace {
 
     /// Retrieves the levered discounted-cash-flow valuation for one company.
     #[pyo3(signature = (symbol))]
-    fn levered_discounted_cash_flow(
-        &self,
-        py: Python<'_>,
-        symbol: &str,
-    ) -> PyResult<Vec<DcfValuation>> {
-        let query = levered_discounted_cash_flow_query(symbol)?;
+    fn levered(&self, py: Python<'_>, symbol: &str) -> PyResult<Vec<DcfValuation>> {
+        let query = levered_query(symbol)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -63,7 +59,7 @@ impl DcfNamespace {
     /// Retrieves a custom unlevered discounted-cash-flow valuation.
     #[pyo3(signature = (symbol, *, revenue_growth_pct=None, ebitda_pct=None, depreciation_and_amortization_pct=None, cash_and_short_term_investments_pct=None, receivables_pct=None, inventories_pct=None, payable_pct=None, ebit_pct=None, capital_expenditure_pct=None, operating_cash_flow_pct=None, selling_general_and_administrative_expenses_pct=None, tax_rate=None, long_term_growth_rate=None, cost_of_debt=None, cost_of_equity=None, market_risk_premium=None, beta=None, risk_free_rate=None))]
     #[allow(clippy::too_many_arguments)]
-    fn custom_discounted_cash_flow(
+    fn custom(
         &self,
         py: Python<'_>,
         symbol: &str,
@@ -86,7 +82,7 @@ impl DcfNamespace {
         beta: Option<f64>,
         risk_free_rate: Option<f64>,
     ) -> PyResult<Vec<CustomDcfValuation>> {
-        let query = custom_discounted_cash_flow_query(
+        let query = custom_query(
             symbol,
             revenue_growth_pct,
             ebitda_pct,
@@ -120,7 +116,7 @@ impl DcfNamespace {
     /// Retrieves a custom levered discounted-cash-flow valuation.
     #[pyo3(signature = (symbol, *, revenue_growth_pct=None, ebitda_pct=None, depreciation_and_amortization_pct=None, cash_and_short_term_investments_pct=None, receivables_pct=None, inventories_pct=None, payable_pct=None, ebit_pct=None, capital_expenditure_pct=None, operating_cash_flow_pct=None, selling_general_and_administrative_expenses_pct=None, tax_rate=None, long_term_growth_rate=None, cost_of_debt=None, cost_of_equity=None, market_risk_premium=None, beta=None, risk_free_rate=None))]
     #[allow(clippy::too_many_arguments)]
-    fn custom_levered_discounted_cash_flow(
+    fn custom_levered(
         &self,
         py: Python<'_>,
         symbol: &str,
@@ -143,7 +139,7 @@ impl DcfNamespace {
         beta: Option<f64>,
         risk_free_rate: Option<f64>,
     ) -> PyResult<Vec<CustomLeveredDcfValuation>> {
-        let query = custom_levered_discounted_cash_flow_query(
+        let query = custom_levered_query(
             symbol,
             revenue_growth_pct,
             ebitda_pct,
@@ -180,21 +176,21 @@ impl DcfNamespace {
     }
 }
 
-/// Builds the `DcfQuery` for `DcfNamespace::discounted_cash_flow` from validated Python arguments.
-fn discounted_cash_flow_query(symbol: &str) -> PyResult<DcfQuery> {
+/// Builds the `DcfQuery` for `DcfNamespace::standard` from validated Python arguments.
+fn standard_query(symbol: &str) -> PyResult<DcfQuery> {
     let symbol = args::ticker("symbol", symbol)?;
     Ok(DcfQuery::new(symbol))
 }
 
-/// Builds the `DcfQuery` for `DcfNamespace::levered_discounted_cash_flow` from validated Python arguments.
-fn levered_discounted_cash_flow_query(symbol: &str) -> PyResult<DcfQuery> {
+/// Builds the `DcfQuery` for `DcfNamespace::levered` from validated Python arguments.
+fn levered_query(symbol: &str) -> PyResult<DcfQuery> {
     let symbol = args::ticker("symbol", symbol)?;
     Ok(DcfQuery::new(symbol))
 }
 
-/// Builds the `CustomDcfQuery` for `DcfNamespace::custom_discounted_cash_flow` from validated Python arguments.
+/// Builds the `CustomDcfQuery` for `DcfNamespace::custom` from validated Python arguments.
 #[allow(clippy::too_many_arguments)]
-fn custom_discounted_cash_flow_query(
+fn custom_query(
     symbol: &str,
     revenue_growth_pct: Option<f64>,
     ebitda_pct: Option<f64>,
@@ -330,9 +326,9 @@ fn custom_discounted_cash_flow_query(
     Ok(CustomDcfQuery::new(symbol, assumptions))
 }
 
-/// Builds the `CustomDcfQuery` for `DcfNamespace::custom_levered_discounted_cash_flow` from validated Python arguments.
+/// Builds the `CustomDcfQuery` for `DcfNamespace::custom_levered` from validated Python arguments.
 #[allow(clippy::too_many_arguments)]
-fn custom_levered_discounted_cash_flow_query(
+fn custom_levered_query(
     symbol: &str,
     revenue_growth_pct: Option<f64>,
     ebitda_pct: Option<f64>,

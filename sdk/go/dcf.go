@@ -448,11 +448,11 @@ func (q DcfQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// DiscountedCashFlow retrieves the standard discounted-cash-flow valuation for
-// one company.
+// Standard retrieves the standard discounted-cash-flow valuation for one
+// company.
 //
 // GET discounted-cash-flow?symbol=
-func (n *DcfNamespace) DiscountedCashFlow(ctx context.Context, q DcfQuery) ([]DcfValuation, error) {
+func (n *DcfNamespace) Standard(ctx context.Context, q DcfQuery) ([]DcfValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -464,11 +464,11 @@ func (n *DcfNamespace) DiscountedCashFlow(ctx context.Context, q DcfQuery) ([]Dc
 	return out, nil
 }
 
-// LeveredDiscountedCashFlow retrieves the levered discounted-cash-flow
-// valuation for one company.
+// Levered retrieves the levered discounted-cash-flow valuation for one
+// company.
 //
 // GET levered-discounted-cash-flow?symbol=
-func (n *DcfNamespace) LeveredDiscountedCashFlow(ctx context.Context, q DcfQuery) ([]DcfValuation, error) {
+func (n *DcfNamespace) Levered(ctx context.Context, q DcfQuery) ([]DcfValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -480,11 +480,10 @@ func (n *DcfNamespace) LeveredDiscountedCashFlow(ctx context.Context, q DcfQuery
 	return out, nil
 }
 
-// CustomDiscountedCashFlow retrieves a custom unlevered discounted-cash-flow
-// valuation.
+// Custom retrieves a custom unlevered discounted-cash-flow valuation.
 //
 // GET custom-discounted-cash-flow?symbol=&revenueGrowthPct=&ebitdaPct=&depreciationAndAmortizationPct=&cashAndShortTermInvestmentsPct=&receivablesPct=&inventoriesPct=&payablePct=&ebitPct=&capitalExpenditurePct=&operatingCashFlowPct=&sellingGeneralAndAdministrativeExpensesPct=&taxRate=&longTermGrowthRate=&costOfDebt=&costOfEquity=&marketRiskPremium=&beta=&riskFreeRate=
-func (n *DcfNamespace) CustomDiscountedCashFlow(ctx context.Context, q CustomDcfQuery) ([]CustomDcfValuation, error) {
+func (n *DcfNamespace) Custom(ctx context.Context, q CustomDcfQuery) ([]CustomDcfValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -496,11 +495,10 @@ func (n *DcfNamespace) CustomDiscountedCashFlow(ctx context.Context, q CustomDcf
 	return out, nil
 }
 
-// CustomLeveredDiscountedCashFlow retrieves a custom levered
-// discounted-cash-flow valuation.
+// CustomLevered retrieves a custom levered discounted-cash-flow valuation.
 //
 // GET custom-levered-discounted-cash-flow?symbol=&revenueGrowthPct=&ebitdaPct=&depreciationAndAmortizationPct=&cashAndShortTermInvestmentsPct=&receivablesPct=&inventoriesPct=&payablePct=&ebitPct=&capitalExpenditurePct=&operatingCashFlowPct=&sellingGeneralAndAdministrativeExpensesPct=&taxRate=&longTermGrowthRate=&costOfDebt=&costOfEquity=&marketRiskPremium=&beta=&riskFreeRate=
-func (n *DcfNamespace) CustomLeveredDiscountedCashFlow(ctx context.Context, q CustomDcfQuery) ([]CustomLeveredDcfValuation, error) {
+func (n *DcfNamespace) CustomLevered(ctx context.Context, q CustomDcfQuery) ([]CustomLeveredDcfValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

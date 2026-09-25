@@ -277,19 +277,17 @@ class DcfNamespace:
     Dcf endpoints for a single client, exposed as `client.dcf`.
     """
 
-    def discounted_cash_flow(self, symbol: builtins.str) -> builtins.list[DcfValuation]:
+    def standard(self, symbol: builtins.str) -> builtins.list[DcfValuation]:
         r"""
         Retrieves the standard discounted-cash-flow valuation for one company.
         """
 
-    def levered_discounted_cash_flow(
-        self, symbol: builtins.str
-    ) -> builtins.list[DcfValuation]:
+    def levered(self, symbol: builtins.str) -> builtins.list[DcfValuation]:
         r"""
         Retrieves the levered discounted-cash-flow valuation for one company.
         """
 
-    def custom_discounted_cash_flow(
+    def custom(
         self,
         symbol: builtins.str,
         *,
@@ -318,7 +316,7 @@ class DcfNamespace:
         Retrieves a custom unlevered discounted-cash-flow valuation.
         """
 
-    def custom_levered_discounted_cash_flow(
+    def custom_levered(
         self,
         symbol: builtins.str,
         *,

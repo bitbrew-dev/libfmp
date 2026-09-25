@@ -6,7 +6,7 @@
 # keyword-only parameters, listed here in the order the query encodes them.
 
 [[endpoint]]
-name = "discounted_cash_flow"
+name = "standard"
 method = "discounted_cash_flow"
 query = "DcfQuery"
 response = "dcf::DcfValuation"
@@ -14,7 +14,7 @@ doc = "Retrieves the standard discounted-cash-flow valuation for one company."
 args = [{ name = "symbol", kind = "ticker" }]
 
 [[endpoint]]
-name = "levered_discounted_cash_flow"
+name = "levered"
 method = "levered_discounted_cash_flow"
 query = "DcfQuery"
 response = "dcf::DcfValuation"
@@ -22,7 +22,7 @@ doc = "Retrieves the levered discounted-cash-flow valuation for one company."
 args = [{ name = "symbol", kind = "ticker" }]
 
 [[endpoint]]
-name = "custom_discounted_cash_flow"
+name = "custom"
 method = "custom_discounted_cash_flow"
 query = "CustomDcfQuery"
 response = "dcf::CustomDcfValuation"
@@ -52,7 +52,7 @@ args = [
 ]
 
 [[endpoint]]
-name = "custom_levered_discounted_cash_flow"
+name = "custom_levered"
 method = "custom_levered_discounted_cash_flow"
 query = "CustomDcfQuery"
 response = "dcf::CustomLeveredDcfValuation"

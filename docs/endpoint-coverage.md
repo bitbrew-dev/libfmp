@@ -273,10 +273,10 @@ served by the single method that owns the path:
 | `commodities` | `commodities.chart_one_minute` | `commodity_chart_one_minute` | supported | supported |  |
 | `commodities` | `commodities.chart_five_minutes` | `commodity_chart_five_minutes` | supported | supported |  |
 | `commodities` | `commodities.chart_one_hour` | `commodity_chart_one_hour` | supported | supported |  |
-| `dcf` | `dcf.discounted_cash_flow` | `discounted_cash_flow` | supported | supported |  |
-| `dcf` | `dcf.levered_discounted_cash_flow` | `levered_discounted_cash_flow` | supported | supported |  |
-| `dcf` | `dcf.custom_discounted_cash_flow` | `custom_discounted_cash_flow` | supported | supported |  |
-| `dcf` | `dcf.custom_levered_discounted_cash_flow` | `custom_levered_discounted_cash_flow` | supported | supported |  |
+| `dcf` | `dcf.standard` | `discounted_cash_flow` | supported | supported |  |
+| `dcf` | `dcf.levered` | `levered_discounted_cash_flow` | supported | supported |  |
+| `dcf` | `dcf.custom` | `custom_discounted_cash_flow` | supported | supported |  |
+| `dcf` | `dcf.custom_levered` | `custom_levered_discounted_cash_flow` | supported | supported |  |
 | `forex` | `forex.list` | `forex_list` | supported | supported |  |
 | `forex` | `forex.quote` | `forex_quote` | supported | supported |  |
 | `forex` | `forex.quote_short` | `forex_quote_short` | supported | supported |  |
