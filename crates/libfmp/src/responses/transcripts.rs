@@ -11,6 +11,7 @@ use crate::{
 
 /// One latest worldwide earnings-transcript metadata row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct LatestEarningsTranscript {
     pub symbol: Ticker,
@@ -21,6 +22,7 @@ pub struct LatestEarningsTranscript {
 
 /// One complete worldwide earnings-call transcript.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EarningsTranscript {
     pub symbol: Ticker,
@@ -32,6 +34,7 @@ pub struct EarningsTranscript {
 
 /// One available transcript date and its numeric fiscal quarter/year.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EarningsTranscriptDate {
     pub quarter: CalendarQuarter,

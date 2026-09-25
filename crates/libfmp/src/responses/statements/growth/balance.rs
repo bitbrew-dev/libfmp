@@ -10,6 +10,7 @@ use crate::{
 
 /// One worldwide balance-sheet-statement-growth row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BalanceSheetStatementGrowth {
     pub symbol: Ticker,

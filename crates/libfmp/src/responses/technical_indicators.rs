@@ -8,6 +8,7 @@ macro_rules! technical_indicator_row {
     ($name:ident, $metric:ident, $metric_type:ty) => {
         #[doc = concat!("One ", stringify!($metric), " technical-indicator row.")]
         #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+        #[non_exhaustive]
         #[serde(rename_all = "camelCase")]
         pub struct $name {
             pub date: ApiDateTime,

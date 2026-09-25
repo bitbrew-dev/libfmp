@@ -11,6 +11,7 @@ use crate::types::{
 
 /// A company or instrument returned by symbol search.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SymbolSearchResult {
     pub symbol: Ticker,
@@ -22,6 +23,7 @@ pub struct SymbolSearchResult {
 
 /// A company or instrument returned by name search.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct NameSearchResult {
     pub symbol: Ticker,
@@ -33,6 +35,7 @@ pub struct NameSearchResult {
 
 /// A US company returned by CIK search.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CikSearchResult {
     pub symbol: Ticker,
@@ -45,6 +48,7 @@ pub struct CikSearchResult {
 
 /// A security returned by CUSIP search.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CusipSearchResult {
     pub symbol: Ticker,
@@ -56,6 +60,7 @@ pub struct CusipSearchResult {
 
 /// A security returned by ISIN search.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IsinSearchResult {
     pub symbol: Ticker,
@@ -67,6 +72,7 @@ pub struct IsinSearchResult {
 
 /// One exchange listing returned by exchange-variants search.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ExchangeVariant {
     pub symbol: Ticker,

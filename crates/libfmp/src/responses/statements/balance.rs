@@ -10,6 +10,7 @@ use crate::{
 
 /// One historical worldwide balance-sheet statement.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BalanceSheetStatement {
     pub date: Date,
@@ -134,6 +135,7 @@ pub struct BalanceSheetStatement {
 /// `capitalLeaseObligationsNonCurrent`, so this is intentionally distinct from
 /// [`BalanceSheetStatement`].
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BalanceSheetStatementTtm {
     pub date: Date,

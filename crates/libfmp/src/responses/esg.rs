@@ -8,6 +8,7 @@ use crate::types::{CalendarYear, Cik, Date, Industry, Sector, Ticker};
 
 /// One company ESG disclosure filing and its component scores.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EsgDisclosure {
     pub date: Date,
@@ -26,6 +27,7 @@ pub struct EsgDisclosure {
 
 /// One company's ESG risk rating for a fiscal year.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EsgRating {
     pub symbol: Ticker,
@@ -40,6 +42,7 @@ pub struct EsgRating {
 
 /// One sector ESG benchmark for a fiscal year.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EsgBenchmark {
     pub fiscal_year: CalendarYear,

@@ -10,6 +10,7 @@ use crate::{
 
 /// One worldwide bulk cash-flow-statement row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkCashFlowStatement {
     pub date: Date,
@@ -63,6 +64,7 @@ pub struct BulkCashFlowStatement {
 
 /// One worldwide bulk cash-flow-statement-growth row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkCashFlowStatementGrowth {
     pub symbol: Ticker,

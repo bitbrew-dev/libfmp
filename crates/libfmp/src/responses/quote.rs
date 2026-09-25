@@ -9,6 +9,7 @@ use crate::types::{
 
 /// A detailed real-time stock quote.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Quote {
     pub symbol: Ticker,
@@ -34,6 +35,7 @@ pub struct Quote {
 
 /// The compact response returned by quote-short endpoints across asset classes.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct QuoteShort {
     pub symbol: Ticker,
@@ -45,6 +47,7 @@ pub struct QuoteShort {
 
 /// One trade executed after regular US market hours.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct AftermarketTrade {
     pub symbol: Ticker,
@@ -56,6 +59,7 @@ pub struct AftermarketTrade {
 
 /// One bid-and-ask quote observed after regular US market hours.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct AftermarketQuote {
     pub symbol: Ticker,
@@ -72,6 +76,7 @@ pub struct AftermarketQuote {
 
 /// Percentage changes for one stock across the provider's documented periods.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct StockPriceChange {
     pub symbol: Ticker,
     #[serde(rename = "1D")]

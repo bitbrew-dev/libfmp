@@ -9,6 +9,7 @@ use crate::{
 
 /// One worldwide bulk end-of-day price row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkEodBar {
     pub symbol: Ticker,

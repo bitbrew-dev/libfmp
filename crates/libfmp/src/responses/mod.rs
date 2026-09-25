@@ -1,4 +1,8 @@
 //! Typed models for FMP API responses.
+//!
+//! Every public response struct is `#[non_exhaustive]` so a field the provider
+//! starts sending is a minor release: build rows by deserializing JSON, not with
+//! struct literals (ADR 0031, `docs/adr/0031-pre-1.0-contract-decisions.md`).
 
 pub mod analyst;
 pub mod bulk;

@@ -16,6 +16,7 @@ use crate::{
 
 /// One insider trade shared by the latest and search feeds.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InsiderTrade {
     pub symbol: Ticker,
@@ -40,6 +41,7 @@ pub struct InsiderTrade {
 
 /// One reporting-person identity returned by reporting-name search.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InsiderReportingName {
     pub reporting_cik: Cik,
@@ -48,6 +50,7 @@ pub struct InsiderReportingName {
 
 /// One open insider transaction-type taxonomy entry.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InsiderTransactionType {
     pub transaction_type: TransactionTypeCode,
@@ -55,6 +58,7 @@ pub struct InsiderTransactionType {
 
 /// One quarterly aggregate of insider-trade activity.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InsiderTradeStatistics {
     pub symbol: Ticker,
@@ -76,6 +80,7 @@ pub struct InsiderTradeStatistics {
 
 /// One beneficial-ownership acquisition filing row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BeneficialOwnershipAcquisition {
     pub cik: Cik,

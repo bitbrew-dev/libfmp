@@ -10,6 +10,7 @@ pub use super::quote::{Quote, QuoteShort};
 
 /// One currency pair in the provider's documented forex catalog.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ForexPair {
     pub symbol: Ticker,

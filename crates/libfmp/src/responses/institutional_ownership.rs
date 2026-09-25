@@ -9,6 +9,7 @@ use crate::types::{
 
 /// One recent institutional-ownership filing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InstitutionalOwnershipFiling {
     pub cik: Cik,
@@ -23,6 +24,7 @@ pub struct InstitutionalOwnershipFiling {
 
 /// One security position extracted from an institutional-ownership filing.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InstitutionalHolding {
     pub date: Date,
@@ -45,6 +47,7 @@ pub struct InstitutionalHolding {
 
 /// One available Form 13F reporting date and its numeric calendar period.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct Form13fFilingDate {
     pub date: Date,
@@ -54,6 +57,7 @@ pub struct Form13fFilingDate {
 
 /// One holder's analytical position in a security for a filing period.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InstitutionalHolderAnalytics {
     pub date: Date,
@@ -108,6 +112,7 @@ pub struct InstitutionalHolderAnalytics {
 
 /// One institutional holder's portfolio and benchmark performance summary.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct HolderPerformanceSummary {
     pub date: Date,
@@ -171,6 +176,7 @@ pub struct HolderPerformanceSummary {
 
 /// One industry allocation and performance row for an institutional holder.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct HolderIndustryBreakdown {
     pub date: Date,
@@ -192,6 +198,7 @@ pub struct HolderIndustryBreakdown {
 
 /// Cross-holder position totals and changes for one security and filing period.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InstitutionalPositionSummary {
     pub symbol: Ticker,
@@ -249,6 +256,7 @@ pub struct InstitutionalPositionSummary {
 
 /// Aggregate value for one US industry and filing date.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct InstitutionalIndustrySummary {
     pub industry_title: String,

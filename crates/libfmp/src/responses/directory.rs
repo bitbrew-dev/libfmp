@@ -11,6 +11,7 @@ use crate::{
 
 /// One worldwide company or instrument in the company-symbol directory.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CompanySymbol {
     pub symbol: Ticker,
@@ -19,6 +20,7 @@ pub struct CompanySymbol {
 
 /// One worldwide company with financial statements available from FMP.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FinancialStatementSymbol {
     pub symbol: Ticker,
@@ -29,6 +31,7 @@ pub struct FinancialStatementSymbol {
 
 /// One US SEC entity in the CIK directory.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CikEntry {
     pub cik: Cik,
@@ -37,6 +40,7 @@ pub struct CikEntry {
 
 /// One US company symbol change.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SymbolChange {
     pub date: Date,
@@ -47,6 +51,7 @@ pub struct SymbolChange {
 
 /// One worldwide exchange-traded fund in the ETF symbol directory.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfSymbol {
     pub symbol: Ticker,
@@ -55,6 +60,7 @@ pub struct EtfSymbol {
 
 /// One worldwide company or instrument in the actively-trading directory.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ActivelyTradingSymbol {
     pub symbol: Ticker,
@@ -63,6 +69,7 @@ pub struct ActivelyTradingSymbol {
 
 /// One US company with the count of available earnings transcripts.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EarningsTranscriptAvailability {
     pub symbol: Ticker,
@@ -72,6 +79,7 @@ pub struct EarningsTranscriptAvailability {
 
 /// One stock exchange supported by FMP.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct AvailableExchange {
     pub exchange: ExchangeCode,
@@ -84,18 +92,21 @@ pub struct AvailableExchange {
 
 /// One sector accepted by provider sector filters.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct AvailableSector {
     pub sector: Sector,
 }
 
 /// One industry accepted by provider industry filters.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct AvailableIndustry {
     pub industry: Industry,
 }
 
 /// One country accepted by provider country filters.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct AvailableCountry {
     pub country: CountryCode,
 }

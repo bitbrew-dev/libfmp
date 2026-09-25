@@ -10,6 +10,7 @@ use crate::{
 
 /// One as-reported financial statement with provider-native data keys.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct AsReportedFinancialStatement {
     pub symbol: Ticker,

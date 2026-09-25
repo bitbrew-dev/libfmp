@@ -14,6 +14,7 @@ where
 
 /// One Financial Modeling Prep editorial article.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FmpArticle {
     pub title: String,
@@ -28,6 +29,7 @@ pub struct FmpArticle {
 
 /// One provider-news article shared across general and market-specific feeds.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct NewsArticle {
     #[serde(deserialize_with = "required_option")]

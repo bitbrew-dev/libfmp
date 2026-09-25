@@ -20,6 +20,7 @@ where
 
 /// One stock-market index in the provider's worldwide index directory.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IndexListing {
     pub symbol: Ticker,
@@ -30,6 +31,7 @@ pub struct IndexListing {
 
 /// One company currently included in a major US stock-market index.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IndexConstituent {
     pub symbol: Ticker,
@@ -45,6 +47,7 @@ pub struct IndexConstituent {
 
 /// One documented historical addition to and removal from a major US index.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct HistoricalIndexConstituent {
     pub date_added: OpaqueDateText,

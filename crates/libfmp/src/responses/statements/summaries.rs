@@ -13,6 +13,7 @@ use crate::{
 
 /// One recently added financial-statement filing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct LatestFinancialStatement {
     pub symbol: Ticker,
@@ -24,6 +25,7 @@ pub struct LatestFinancialStatement {
 
 /// One company's documented financial-health scores and source values.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FinancialScore {
     pub symbol: Ticker,
@@ -48,6 +50,7 @@ pub struct FinancialScore {
 
 /// One company's owner-earnings calculation.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct OwnerEarnings {
     pub symbol: Ticker,
@@ -68,6 +71,7 @@ pub struct OwnerEarnings {
 
 /// One historical enterprise-value calculation.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EnterpriseValue {
     pub symbol: Ticker,

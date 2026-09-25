@@ -16,6 +16,7 @@ use crate::{
 
 /// One SEC filing row shared by all five filing feeds and searches.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SecFiling {
     pub symbol: Ticker,
@@ -31,6 +32,7 @@ pub struct SecFiling {
 
 /// One company identity returned by the three SEC company-search routes.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SecCompanySearchResult {
     pub symbol: Ticker,
@@ -44,6 +46,7 @@ pub struct SecCompanySearchResult {
 
 /// One full SEC company profile.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SecCompanyProfile {
     pub symbol: Ticker,
@@ -94,6 +97,7 @@ where
 
 /// One Standard Industrial Classification directory row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SicClassification {
     pub office: String,

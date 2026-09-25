@@ -10,6 +10,7 @@ use crate::{
 
 /// One historical worldwide key-metrics row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct KeyMetrics {
     pub symbol: Ticker,
@@ -81,6 +82,7 @@ pub struct KeyMetrics {
 /// year, period, or reported currency, and its metric keys carry provider `TTM`
 /// suffixes except for the documented unsuffixed `marketCap`.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct KeyMetricsTtm {
     pub symbol: Ticker,
     #[serde(rename = "marketCap")]

@@ -18,6 +18,7 @@ where
 
 /// One commodity in the provider's documented commodity catalog.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CommodityListing {
     pub symbol: Ticker,

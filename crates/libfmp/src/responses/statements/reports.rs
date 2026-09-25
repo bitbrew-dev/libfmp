@@ -11,6 +11,7 @@ use crate::{
 
 /// One available financial-report period and its protected download links.
 #[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FinancialReportDate {
     pub symbol: Ticker,
@@ -22,6 +23,7 @@ pub struct FinancialReportDate {
 
 /// One dynamic financial report with strict identifying headers.
 #[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive]
 pub struct FinancialReportJson {
     pub symbol: Ticker,
     pub period: FiscalPeriod,

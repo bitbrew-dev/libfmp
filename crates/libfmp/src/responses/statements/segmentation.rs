@@ -10,6 +10,7 @@ use crate::{
 
 /// One product or geographic revenue-segmentation row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct RevenueSegmentation {
     pub symbol: Ticker,

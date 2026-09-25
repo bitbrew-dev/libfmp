@@ -10,6 +10,7 @@ use crate::{
 
 /// One worldwide income-statement-growth row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IncomeStatementGrowth {
     pub symbol: Ticker,

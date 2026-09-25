@@ -9,6 +9,7 @@ use crate::{
 
 /// One standard or levered discounted-cash-flow valuation.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct DcfValuation {
     pub symbol: Ticker,
     pub date: Date,
@@ -19,6 +20,7 @@ pub struct DcfValuation {
 
 /// One detailed valuation returned by the custom unlevered DCF route.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CustomDcfValuation {
     pub year: FiscalYearString,
@@ -96,6 +98,7 @@ pub struct CustomDcfValuation {
 
 /// One detailed valuation returned by the custom levered DCF route.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CustomLeveredDcfValuation {
     pub year: FiscalYearString,
