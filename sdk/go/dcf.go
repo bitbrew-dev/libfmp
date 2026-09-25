@@ -8,22 +8,22 @@ package fmp
 
 import "context"
 
-// DcfNamespace groups the dcf endpoints. It is reached as Client.Dcf and is
+// DCFNamespace groups the dcf endpoints. It is reached as Client.DCF and is
 // valid only when obtained from a Client built by NewClient.
-type DcfNamespace struct {
+type DCFNamespace struct {
 	client *Client
 }
 
-func newDcfNamespace(client *Client) DcfNamespace {
-	return DcfNamespace{
+func newDCFNamespace(client *Client) DCFNamespace {
+	return DCFNamespace{
 		client: client,
 	}
 }
 
-// CustomDcfQuery holds the query parameters of the endpoints that take it:
-// NewCustomDcfQuery takes the required arguments and each With method sets an
+// CustomDCFQuery holds the query parameters of the endpoints that take it:
+// NewCustomDCFQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type CustomDcfQuery struct {
+type CustomDCFQuery struct {
 	symbol                                     string
 	revenueGrowthPct                           *float64
 	ebitdaPct                                  *float64
@@ -45,149 +45,149 @@ type CustomDcfQuery struct {
 	riskFreeRate                               *float64
 }
 
-// NewCustomDcfQuery creates the query from its required arguments.
-func NewCustomDcfQuery(symbol string) CustomDcfQuery {
-	return CustomDcfQuery{symbol: symbol}
+// NewCustomDCFQuery creates the query from its required arguments.
+func NewCustomDCFQuery(symbol string) CustomDCFQuery {
+	return CustomDCFQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q CustomDcfQuery) Symbol() string {
+func (q CustomDCFQuery) Symbol() string {
 	return q.symbol
 }
 
 // WithRevenueGrowthPct sets the optional revenue_growth_pct parameter and
 // returns the updated query.
-func (q CustomDcfQuery) WithRevenueGrowthPct(revenueGrowthPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithRevenueGrowthPct(revenueGrowthPct float64) CustomDCFQuery {
 	q.revenueGrowthPct = &revenueGrowthPct
 	return q
 }
 
 // RevenueGrowthPct returns the optional revenue_growth_pct parameter, or nil
 // when it is unset.
-func (q CustomDcfQuery) RevenueGrowthPct() *float64 {
+func (q CustomDCFQuery) RevenueGrowthPct() *float64 {
 	return q.revenueGrowthPct
 }
 
 // WithEbitdaPct sets the optional ebitda_pct parameter and returns the updated
 // query.
-func (q CustomDcfQuery) WithEbitdaPct(ebitdaPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithEbitdaPct(ebitdaPct float64) CustomDCFQuery {
 	q.ebitdaPct = &ebitdaPct
 	return q
 }
 
 // EbitdaPct returns the optional ebitda_pct parameter, or nil when it is
 // unset.
-func (q CustomDcfQuery) EbitdaPct() *float64 {
+func (q CustomDCFQuery) EbitdaPct() *float64 {
 	return q.ebitdaPct
 }
 
 // WithDepreciationAndAmortizationPct sets the optional
 // depreciation_and_amortization_pct parameter and returns the updated query.
-func (q CustomDcfQuery) WithDepreciationAndAmortizationPct(depreciationAndAmortizationPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithDepreciationAndAmortizationPct(depreciationAndAmortizationPct float64) CustomDCFQuery {
 	q.depreciationAndAmortizationPct = &depreciationAndAmortizationPct
 	return q
 }
 
 // DepreciationAndAmortizationPct returns the optional
 // depreciation_and_amortization_pct parameter, or nil when it is unset.
-func (q CustomDcfQuery) DepreciationAndAmortizationPct() *float64 {
+func (q CustomDCFQuery) DepreciationAndAmortizationPct() *float64 {
 	return q.depreciationAndAmortizationPct
 }
 
 // WithCashAndShortTermInvestmentsPct sets the optional
 // cash_and_short_term_investments_pct parameter and returns the updated query.
-func (q CustomDcfQuery) WithCashAndShortTermInvestmentsPct(cashAndShortTermInvestmentsPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithCashAndShortTermInvestmentsPct(cashAndShortTermInvestmentsPct float64) CustomDCFQuery {
 	q.cashAndShortTermInvestmentsPct = &cashAndShortTermInvestmentsPct
 	return q
 }
 
 // CashAndShortTermInvestmentsPct returns the optional
 // cash_and_short_term_investments_pct parameter, or nil when it is unset.
-func (q CustomDcfQuery) CashAndShortTermInvestmentsPct() *float64 {
+func (q CustomDCFQuery) CashAndShortTermInvestmentsPct() *float64 {
 	return q.cashAndShortTermInvestmentsPct
 }
 
 // WithReceivablesPct sets the optional receivables_pct parameter and returns
 // the updated query.
-func (q CustomDcfQuery) WithReceivablesPct(receivablesPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithReceivablesPct(receivablesPct float64) CustomDCFQuery {
 	q.receivablesPct = &receivablesPct
 	return q
 }
 
 // ReceivablesPct returns the optional receivables_pct parameter, or nil when
 // it is unset.
-func (q CustomDcfQuery) ReceivablesPct() *float64 {
+func (q CustomDCFQuery) ReceivablesPct() *float64 {
 	return q.receivablesPct
 }
 
 // WithInventoriesPct sets the optional inventories_pct parameter and returns
 // the updated query.
-func (q CustomDcfQuery) WithInventoriesPct(inventoriesPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithInventoriesPct(inventoriesPct float64) CustomDCFQuery {
 	q.inventoriesPct = &inventoriesPct
 	return q
 }
 
 // InventoriesPct returns the optional inventories_pct parameter, or nil when
 // it is unset.
-func (q CustomDcfQuery) InventoriesPct() *float64 {
+func (q CustomDCFQuery) InventoriesPct() *float64 {
 	return q.inventoriesPct
 }
 
 // WithPayablePct sets the optional payable_pct parameter and returns the
 // updated query.
-func (q CustomDcfQuery) WithPayablePct(payablePct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithPayablePct(payablePct float64) CustomDCFQuery {
 	q.payablePct = &payablePct
 	return q
 }
 
 // PayablePct returns the optional payable_pct parameter, or nil when it is
 // unset.
-func (q CustomDcfQuery) PayablePct() *float64 {
+func (q CustomDCFQuery) PayablePct() *float64 {
 	return q.payablePct
 }
 
 // WithEbitPct sets the optional ebit_pct parameter and returns the updated
 // query.
-func (q CustomDcfQuery) WithEbitPct(ebitPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithEbitPct(ebitPct float64) CustomDCFQuery {
 	q.ebitPct = &ebitPct
 	return q
 }
 
 // EbitPct returns the optional ebit_pct parameter, or nil when it is unset.
-func (q CustomDcfQuery) EbitPct() *float64 {
+func (q CustomDCFQuery) EbitPct() *float64 {
 	return q.ebitPct
 }
 
 // WithCapitalExpenditurePct sets the optional capital_expenditure_pct
 // parameter and returns the updated query.
-func (q CustomDcfQuery) WithCapitalExpenditurePct(capitalExpenditurePct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithCapitalExpenditurePct(capitalExpenditurePct float64) CustomDCFQuery {
 	q.capitalExpenditurePct = &capitalExpenditurePct
 	return q
 }
 
 // CapitalExpenditurePct returns the optional capital_expenditure_pct
 // parameter, or nil when it is unset.
-func (q CustomDcfQuery) CapitalExpenditurePct() *float64 {
+func (q CustomDCFQuery) CapitalExpenditurePct() *float64 {
 	return q.capitalExpenditurePct
 }
 
 // WithOperatingCashFlowPct sets the optional operating_cash_flow_pct parameter
 // and returns the updated query.
-func (q CustomDcfQuery) WithOperatingCashFlowPct(operatingCashFlowPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithOperatingCashFlowPct(operatingCashFlowPct float64) CustomDCFQuery {
 	q.operatingCashFlowPct = &operatingCashFlowPct
 	return q
 }
 
 // OperatingCashFlowPct returns the optional operating_cash_flow_pct parameter,
 // or nil when it is unset.
-func (q CustomDcfQuery) OperatingCashFlowPct() *float64 {
+func (q CustomDCFQuery) OperatingCashFlowPct() *float64 {
 	return q.operatingCashFlowPct
 }
 
 // WithSellingGeneralAndAdministrativeExpensesPct sets the optional
 // selling_general_and_administrative_expenses_pct parameter and returns the
 // updated query.
-func (q CustomDcfQuery) WithSellingGeneralAndAdministrativeExpensesPct(sellingGeneralAndAdministrativeExpensesPct float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithSellingGeneralAndAdministrativeExpensesPct(sellingGeneralAndAdministrativeExpensesPct float64) CustomDCFQuery {
 	q.sellingGeneralAndAdministrativeExpensesPct = &sellingGeneralAndAdministrativeExpensesPct
 	return q
 }
@@ -195,99 +195,99 @@ func (q CustomDcfQuery) WithSellingGeneralAndAdministrativeExpensesPct(sellingGe
 // SellingGeneralAndAdministrativeExpensesPct returns the optional
 // selling_general_and_administrative_expenses_pct parameter, or nil when it is
 // unset.
-func (q CustomDcfQuery) SellingGeneralAndAdministrativeExpensesPct() *float64 {
+func (q CustomDCFQuery) SellingGeneralAndAdministrativeExpensesPct() *float64 {
 	return q.sellingGeneralAndAdministrativeExpensesPct
 }
 
 // WithTaxRate sets the optional tax_rate parameter and returns the updated
 // query.
-func (q CustomDcfQuery) WithTaxRate(taxRate float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithTaxRate(taxRate float64) CustomDCFQuery {
 	q.taxRate = &taxRate
 	return q
 }
 
 // TaxRate returns the optional tax_rate parameter, or nil when it is unset.
-func (q CustomDcfQuery) TaxRate() *float64 {
+func (q CustomDCFQuery) TaxRate() *float64 {
 	return q.taxRate
 }
 
 // WithLongTermGrowthRate sets the optional long_term_growth_rate parameter and
 // returns the updated query.
-func (q CustomDcfQuery) WithLongTermGrowthRate(longTermGrowthRate float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithLongTermGrowthRate(longTermGrowthRate float64) CustomDCFQuery {
 	q.longTermGrowthRate = &longTermGrowthRate
 	return q
 }
 
 // LongTermGrowthRate returns the optional long_term_growth_rate parameter, or
 // nil when it is unset.
-func (q CustomDcfQuery) LongTermGrowthRate() *float64 {
+func (q CustomDCFQuery) LongTermGrowthRate() *float64 {
 	return q.longTermGrowthRate
 }
 
 // WithCostOfDebt sets the optional cost_of_debt parameter and returns the
 // updated query.
-func (q CustomDcfQuery) WithCostOfDebt(costOfDebt float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithCostOfDebt(costOfDebt float64) CustomDCFQuery {
 	q.costOfDebt = &costOfDebt
 	return q
 }
 
 // CostOfDebt returns the optional cost_of_debt parameter, or nil when it is
 // unset.
-func (q CustomDcfQuery) CostOfDebt() *float64 {
+func (q CustomDCFQuery) CostOfDebt() *float64 {
 	return q.costOfDebt
 }
 
 // WithCostOfEquity sets the optional cost_of_equity parameter and returns the
 // updated query.
-func (q CustomDcfQuery) WithCostOfEquity(costOfEquity float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithCostOfEquity(costOfEquity float64) CustomDCFQuery {
 	q.costOfEquity = &costOfEquity
 	return q
 }
 
 // CostOfEquity returns the optional cost_of_equity parameter, or nil when it
 // is unset.
-func (q CustomDcfQuery) CostOfEquity() *float64 {
+func (q CustomDCFQuery) CostOfEquity() *float64 {
 	return q.costOfEquity
 }
 
 // WithMarketRiskPremium sets the optional market_risk_premium parameter and
 // returns the updated query.
-func (q CustomDcfQuery) WithMarketRiskPremium(marketRiskPremium float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithMarketRiskPremium(marketRiskPremium float64) CustomDCFQuery {
 	q.marketRiskPremium = &marketRiskPremium
 	return q
 }
 
 // MarketRiskPremium returns the optional market_risk_premium parameter, or nil
 // when it is unset.
-func (q CustomDcfQuery) MarketRiskPremium() *float64 {
+func (q CustomDCFQuery) MarketRiskPremium() *float64 {
 	return q.marketRiskPremium
 }
 
 // WithBeta sets the optional beta parameter and returns the updated query.
-func (q CustomDcfQuery) WithBeta(beta float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithBeta(beta float64) CustomDCFQuery {
 	q.beta = &beta
 	return q
 }
 
 // Beta returns the optional beta parameter, or nil when it is unset.
-func (q CustomDcfQuery) Beta() *float64 {
+func (q CustomDCFQuery) Beta() *float64 {
 	return q.beta
 }
 
 // WithRiskFreeRate sets the optional risk_free_rate parameter and returns the
 // updated query.
-func (q CustomDcfQuery) WithRiskFreeRate(riskFreeRate float64) CustomDcfQuery {
+func (q CustomDCFQuery) WithRiskFreeRate(riskFreeRate float64) CustomDCFQuery {
 	q.riskFreeRate = &riskFreeRate
 	return q
 }
 
 // RiskFreeRate returns the optional risk_free_rate parameter, or nil when it
 // is unset.
-func (q CustomDcfQuery) RiskFreeRate() *float64 {
+func (q CustomDCFQuery) RiskFreeRate() *float64 {
 	return q.riskFreeRate
 }
 
-func (q CustomDcfQuery) params() ([]queryParam, error) {
+func (q CustomDCFQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 19)
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
@@ -423,24 +423,24 @@ func (q CustomDcfQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// DcfQuery holds the query parameters of the endpoints that take it:
-// NewDcfQuery takes the required arguments and each With method sets an
+// DCFQuery holds the query parameters of the endpoints that take it:
+// NewDCFQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type DcfQuery struct {
+type DCFQuery struct {
 	symbol string
 }
 
-// NewDcfQuery creates the query from its required arguments.
-func NewDcfQuery(symbol string) DcfQuery {
-	return DcfQuery{symbol: symbol}
+// NewDCFQuery creates the query from its required arguments.
+func NewDCFQuery(symbol string) DCFQuery {
+	return DCFQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q DcfQuery) Symbol() string {
+func (q DCFQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q DcfQuery) params() ([]queryParam, error) {
+func (q DCFQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -452,12 +452,12 @@ func (q DcfQuery) params() ([]queryParam, error) {
 // company.
 //
 // GET discounted-cash-flow?symbol=
-func (n *DcfNamespace) Standard(ctx context.Context, q DcfQuery) ([]DcfValuation, error) {
+func (n *DCFNamespace) Standard(ctx context.Context, q DCFQuery) ([]DCFValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []DcfValuation
+	var out []DCFValuation
 	if err := n.client.getJSON(ctx, "discounted-cash-flow", "discounted-cash-flow", params, &out); err != nil {
 		return nil, err
 	}
@@ -468,12 +468,12 @@ func (n *DcfNamespace) Standard(ctx context.Context, q DcfQuery) ([]DcfValuation
 // company.
 //
 // GET levered-discounted-cash-flow?symbol=
-func (n *DcfNamespace) Levered(ctx context.Context, q DcfQuery) ([]DcfValuation, error) {
+func (n *DCFNamespace) Levered(ctx context.Context, q DCFQuery) ([]DCFValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []DcfValuation
+	var out []DCFValuation
 	if err := n.client.getJSON(ctx, "levered-discounted-cash-flow", "levered-discounted-cash-flow", params, &out); err != nil {
 		return nil, err
 	}
@@ -483,12 +483,12 @@ func (n *DcfNamespace) Levered(ctx context.Context, q DcfQuery) ([]DcfValuation,
 // Custom retrieves a custom unlevered discounted-cash-flow valuation.
 //
 // GET custom-discounted-cash-flow?symbol=&revenueGrowthPct=&ebitdaPct=&depreciationAndAmortizationPct=&cashAndShortTermInvestmentsPct=&receivablesPct=&inventoriesPct=&payablePct=&ebitPct=&capitalExpenditurePct=&operatingCashFlowPct=&sellingGeneralAndAdministrativeExpensesPct=&taxRate=&longTermGrowthRate=&costOfDebt=&costOfEquity=&marketRiskPremium=&beta=&riskFreeRate=
-func (n *DcfNamespace) Custom(ctx context.Context, q CustomDcfQuery) ([]CustomDcfValuation, error) {
+func (n *DCFNamespace) Custom(ctx context.Context, q CustomDCFQuery) ([]CustomDCFValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CustomDcfValuation
+	var out []CustomDCFValuation
 	if err := n.client.getJSON(ctx, "custom-discounted-cash-flow", "custom-discounted-cash-flow", params, &out); err != nil {
 		return nil, err
 	}
@@ -498,12 +498,12 @@ func (n *DcfNamespace) Custom(ctx context.Context, q CustomDcfQuery) ([]CustomDc
 // CustomLevered retrieves a custom levered discounted-cash-flow valuation.
 //
 // GET custom-levered-discounted-cash-flow?symbol=&revenueGrowthPct=&ebitdaPct=&depreciationAndAmortizationPct=&cashAndShortTermInvestmentsPct=&receivablesPct=&inventoriesPct=&payablePct=&ebitPct=&capitalExpenditurePct=&operatingCashFlowPct=&sellingGeneralAndAdministrativeExpensesPct=&taxRate=&longTermGrowthRate=&costOfDebt=&costOfEquity=&marketRiskPremium=&beta=&riskFreeRate=
-func (n *DcfNamespace) CustomLevered(ctx context.Context, q CustomDcfQuery) ([]CustomLeveredDcfValuation, error) {
+func (n *DCFNamespace) CustomLevered(ctx context.Context, q CustomDCFQuery) ([]CustomLeveredDCFValuation, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CustomLeveredDcfValuation
+	var out []CustomLeveredDCFValuation
 	if err := n.client.getJSON(ctx, "custom-levered-discounted-cash-flow", "custom-levered-discounted-cash-flow", params, &out); err != nil {
 		return nil, err
 	}

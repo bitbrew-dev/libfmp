@@ -16,7 +16,7 @@ func TestInstitutionalOwnershipFixturesDecodeAndReencodeToTheSameMemberSet(t *te
 	t.Parallel()
 	assertFixtureParity[InstitutionalOwnershipFiling](t, "latest_institutional_ownership_filings.json")
 	assertFixtureParity[InstitutionalHolding](t, "institutional_ownership_extract.json")
-	assertFixtureParity[Form13fFilingDate](t, "form_13f_filing_dates.json")
+	assertFixtureParity[Form13FFilingDate](t, "form_13f_filing_dates.json")
 	assertFixtureParity[InstitutionalHolderAnalytics](t, "institutional_holder_analytics.json")
 	assertFixtureParity[HolderPerformanceSummary](t, "holder_performance_summary.json")
 	assertFixtureParity[HolderIndustryBreakdown](t, "holder_industry_breakdown.json")
@@ -58,8 +58,8 @@ func TestDocumentedFilingExtractAndDatesFixturesDecodeExactly(t *testing.T) {
 		t.Fatalf("re-encoded holding members = %d, want 14", len(got))
 	}
 
-	dates := assertFixtureParity[Form13fFilingDate](t, "form_13f_filing_dates.json")
-	wantDate := Form13fFilingDate{Date: mustParseDate(t, "2026-03-31"), Year: 2026, Quarter: 1}
+	dates := assertFixtureParity[Form13FFilingDate](t, "form_13f_filing_dates.json")
+	wantDate := Form13FFilingDate{Date: mustParseDate(t, "2026-03-31"), Year: 2026, Quarter: 1}
 	if len(dates) != 1 || dates[0] != wantDate {
 		t.Fatalf("form_13f_filing_dates = %+v, want %+v", dates, wantDate)
 	}
@@ -113,7 +113,7 @@ func TestDocumentedPositionAndIndustrySummaryFixturesDecodeExactly(t *testing.T)
 	positions := assertFixtureParity[InstitutionalPositionSummary](t, "institutional_positions_summary.json")
 	if len(positions) != 1 || positions[0].Symbol != "AAPL" || positions[0].CIK != "0000320193" ||
 		positions[0].Date != mustParseDate(t, "2023-09-30") || positions[0].InvestorsHolding != 4_863 ||
-		positions[0].NumberOf13fShares != 9_139_920_744 || positions[0].NumberOf13fSharesChange != -221_018_965 ||
+		positions[0].NumberOf13FShares != 9_139_920_744 || positions[0].NumberOf13FSharesChange != -221_018_965 ||
 		positions[0].TotalInvestedChange != -245_052_087_186 || positions[0].OwnershipPercent != 58.5914 ||
 		positions[0].NewPositionsChange != -29 || positions[0].PutCallRatioChange != 22.0952 {
 		t.Fatalf("institutional_positions_summary = %+v", positions)

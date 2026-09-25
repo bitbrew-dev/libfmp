@@ -10,54 +10,54 @@ import (
 	"encoding/json/v2"
 )
 
-// DcfValuation is one standard or levered discounted-cash-flow valuation.
-type DcfValuation struct {
+// DCFValuation is one standard or levered discounted-cash-flow valuation.
+type DCFValuation struct {
 	Symbol     string  `json:"symbol"`
 	Date       Date    `json:"date"`
-	Dcf        float64 `json:"dcf"`
+	DCF        float64 `json:"dcf"`
 	StockPrice float64 `json:"Stock Price"`
 }
 
-// dcfValuationShadow mirrors DcfValuation with a pointer or raw value for
+// dcfValuationShadow mirrors DCFValuation with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type dcfValuationShadow struct {
 	Symbol     *string  `json:"symbol"`
 	Date       *Date    `json:"date"`
-	Dcf        *float64 `json:"dcf"`
+	DCF        *float64 `json:"dcf"`
 	StockPrice *float64 `json:"Stock Price"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *DcfValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *DCFValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow dcfValuationShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("DcfValuation", "symbol")
+		return missingMemberError("DCFValuation", "symbol")
 	case shadow.Date == nil:
-		return missingMemberError("DcfValuation", "date")
-	case shadow.Dcf == nil:
-		return missingMemberError("DcfValuation", "dcf")
+		return missingMemberError("DCFValuation", "date")
+	case shadow.DCF == nil:
+		return missingMemberError("DCFValuation", "dcf")
 	case shadow.StockPrice == nil:
-		return missingMemberError("DcfValuation", "Stock Price")
+		return missingMemberError("DCFValuation", "Stock Price")
 	}
-	*m = DcfValuation{
+	*m = DCFValuation{
 		Symbol:     *shadow.Symbol,
 		Date:       *shadow.Date,
-		Dcf:        *shadow.Dcf,
+		DCF:        *shadow.DCF,
 		StockPrice: *shadow.StockPrice,
 	}
 	return nil
 }
 
-// CustomDcfValuation is one detailed valuation returned by the custom
+// CustomDCFValuation is one detailed valuation returned by the custom
 // unlevered DCF route.
-type CustomDcfValuation struct {
+type CustomDCFValuation struct {
 	Year                         string  `json:"year"`
 	Symbol                       string  `json:"symbol"`
 	Revenue                      float64 `json:"revenue"`
@@ -107,10 +107,10 @@ type CustomDcfValuation struct {
 	FreeCashFlowT1               float64 `json:"freeCashFlowT1"`
 }
 
-// customDcfValuationShadow mirrors CustomDcfValuation with a pointer or raw
+// customDCFValuationShadow mirrors CustomDCFValuation with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
-type customDcfValuationShadow struct {
+type customDCFValuationShadow struct {
 	Year                         *string  `json:"year"`
 	Symbol                       *string  `json:"symbol"`
 	Revenue                      *float64 `json:"revenue"`
@@ -163,108 +163,108 @@ type customDcfValuationShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CustomDcfValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow customDcfValuationShadow
+func (m *CustomDCFValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow customDCFValuationShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Year == nil:
-		return missingMemberError("CustomDcfValuation", "year")
+		return missingMemberError("CustomDCFValuation", "year")
 	case shadow.Symbol == nil:
-		return missingMemberError("CustomDcfValuation", "symbol")
+		return missingMemberError("CustomDCFValuation", "symbol")
 	case shadow.Revenue == nil:
-		return missingMemberError("CustomDcfValuation", "revenue")
+		return missingMemberError("CustomDCFValuation", "revenue")
 	case shadow.RevenuePercentage == nil:
-		return missingMemberError("CustomDcfValuation", "revenuePercentage")
+		return missingMemberError("CustomDCFValuation", "revenuePercentage")
 	case shadow.Ebitda == nil:
-		return missingMemberError("CustomDcfValuation", "ebitda")
+		return missingMemberError("CustomDCFValuation", "ebitda")
 	case shadow.EbitdaPercentage == nil:
-		return missingMemberError("CustomDcfValuation", "ebitdaPercentage")
+		return missingMemberError("CustomDCFValuation", "ebitdaPercentage")
 	case shadow.Ebit == nil:
-		return missingMemberError("CustomDcfValuation", "ebit")
+		return missingMemberError("CustomDCFValuation", "ebit")
 	case shadow.EbitPercentage == nil:
-		return missingMemberError("CustomDcfValuation", "ebitPercentage")
+		return missingMemberError("CustomDCFValuation", "ebitPercentage")
 	case shadow.Depreciation == nil:
-		return missingMemberError("CustomDcfValuation", "depreciation")
+		return missingMemberError("CustomDCFValuation", "depreciation")
 	case shadow.DepreciationPercentage == nil:
-		return missingMemberError("CustomDcfValuation", "depreciationPercentage")
+		return missingMemberError("CustomDCFValuation", "depreciationPercentage")
 	case shadow.TotalCash == nil:
-		return missingMemberError("CustomDcfValuation", "totalCash")
+		return missingMemberError("CustomDCFValuation", "totalCash")
 	case shadow.TotalCashPercentage == nil:
-		return missingMemberError("CustomDcfValuation", "totalCashPercentage")
+		return missingMemberError("CustomDCFValuation", "totalCashPercentage")
 	case shadow.Receivables == nil:
-		return missingMemberError("CustomDcfValuation", "receivables")
+		return missingMemberError("CustomDCFValuation", "receivables")
 	case shadow.ReceivablesPercentage == nil:
-		return missingMemberError("CustomDcfValuation", "receivablesPercentage")
+		return missingMemberError("CustomDCFValuation", "receivablesPercentage")
 	case shadow.Inventories == nil:
-		return missingMemberError("CustomDcfValuation", "inventories")
+		return missingMemberError("CustomDCFValuation", "inventories")
 	case shadow.InventoriesPercentage == nil:
-		return missingMemberError("CustomDcfValuation", "inventoriesPercentage")
+		return missingMemberError("CustomDCFValuation", "inventoriesPercentage")
 	case shadow.Payable == nil:
-		return missingMemberError("CustomDcfValuation", "payable")
+		return missingMemberError("CustomDCFValuation", "payable")
 	case shadow.PayablePercentage == nil:
-		return missingMemberError("CustomDcfValuation", "payablePercentage")
+		return missingMemberError("CustomDCFValuation", "payablePercentage")
 	case shadow.CapitalExpenditure == nil:
-		return missingMemberError("CustomDcfValuation", "capitalExpenditure")
+		return missingMemberError("CustomDCFValuation", "capitalExpenditure")
 	case shadow.CapitalExpenditurePercentage == nil:
-		return missingMemberError("CustomDcfValuation", "capitalExpenditurePercentage")
+		return missingMemberError("CustomDCFValuation", "capitalExpenditurePercentage")
 	case shadow.Price == nil:
-		return missingMemberError("CustomDcfValuation", "price")
+		return missingMemberError("CustomDCFValuation", "price")
 	case shadow.Beta == nil:
-		return missingMemberError("CustomDcfValuation", "beta")
+		return missingMemberError("CustomDCFValuation", "beta")
 	case shadow.DilutedSharesOutstanding == nil:
-		return missingMemberError("CustomDcfValuation", "dilutedSharesOutstanding")
+		return missingMemberError("CustomDCFValuation", "dilutedSharesOutstanding")
 	case shadow.CostOfDebt == nil:
-		return missingMemberError("CustomDcfValuation", "costofDebt")
+		return missingMemberError("CustomDCFValuation", "costofDebt")
 	case shadow.TaxRate == nil:
-		return missingMemberError("CustomDcfValuation", "taxRate")
+		return missingMemberError("CustomDCFValuation", "taxRate")
 	case shadow.AfterTaxCostOfDebt == nil:
-		return missingMemberError("CustomDcfValuation", "afterTaxCostOfDebt")
+		return missingMemberError("CustomDCFValuation", "afterTaxCostOfDebt")
 	case shadow.RiskFreeRate == nil:
-		return missingMemberError("CustomDcfValuation", "riskFreeRate")
+		return missingMemberError("CustomDCFValuation", "riskFreeRate")
 	case shadow.MarketRiskPremium == nil:
-		return missingMemberError("CustomDcfValuation", "marketRiskPremium")
+		return missingMemberError("CustomDCFValuation", "marketRiskPremium")
 	case shadow.CostOfEquity == nil:
-		return missingMemberError("CustomDcfValuation", "costOfEquity")
+		return missingMemberError("CustomDCFValuation", "costOfEquity")
 	case shadow.TotalDebt == nil:
-		return missingMemberError("CustomDcfValuation", "totalDebt")
+		return missingMemberError("CustomDCFValuation", "totalDebt")
 	case shadow.TotalEquity == nil:
-		return missingMemberError("CustomDcfValuation", "totalEquity")
+		return missingMemberError("CustomDCFValuation", "totalEquity")
 	case shadow.TotalCapital == nil:
-		return missingMemberError("CustomDcfValuation", "totalCapital")
+		return missingMemberError("CustomDCFValuation", "totalCapital")
 	case shadow.DebtWeighting == nil:
-		return missingMemberError("CustomDcfValuation", "debtWeighting")
+		return missingMemberError("CustomDCFValuation", "debtWeighting")
 	case shadow.EquityWeighting == nil:
-		return missingMemberError("CustomDcfValuation", "equityWeighting")
+		return missingMemberError("CustomDCFValuation", "equityWeighting")
 	case shadow.Wacc == nil:
-		return missingMemberError("CustomDcfValuation", "wacc")
+		return missingMemberError("CustomDCFValuation", "wacc")
 	case shadow.TaxRateCash == nil:
-		return missingMemberError("CustomDcfValuation", "taxRateCash")
+		return missingMemberError("CustomDCFValuation", "taxRateCash")
 	case shadow.Ebiat == nil:
-		return missingMemberError("CustomDcfValuation", "ebiat")
+		return missingMemberError("CustomDCFValuation", "ebiat")
 	case shadow.Ufcf == nil:
-		return missingMemberError("CustomDcfValuation", "ufcf")
+		return missingMemberError("CustomDCFValuation", "ufcf")
 	case shadow.SumPvUfcf == nil:
-		return missingMemberError("CustomDcfValuation", "sumPvUfcf")
+		return missingMemberError("CustomDCFValuation", "sumPvUfcf")
 	case shadow.LongTermGrowthRate == nil:
-		return missingMemberError("CustomDcfValuation", "longTermGrowthRate")
+		return missingMemberError("CustomDCFValuation", "longTermGrowthRate")
 	case shadow.TerminalValue == nil:
-		return missingMemberError("CustomDcfValuation", "terminalValue")
+		return missingMemberError("CustomDCFValuation", "terminalValue")
 	case shadow.PresentTerminalValue == nil:
-		return missingMemberError("CustomDcfValuation", "presentTerminalValue")
+		return missingMemberError("CustomDCFValuation", "presentTerminalValue")
 	case shadow.EnterpriseValue == nil:
-		return missingMemberError("CustomDcfValuation", "enterpriseValue")
+		return missingMemberError("CustomDCFValuation", "enterpriseValue")
 	case shadow.NetDebt == nil:
-		return missingMemberError("CustomDcfValuation", "netDebt")
+		return missingMemberError("CustomDCFValuation", "netDebt")
 	case shadow.EquityValue == nil:
-		return missingMemberError("CustomDcfValuation", "equityValue")
+		return missingMemberError("CustomDCFValuation", "equityValue")
 	case shadow.EquityValuePerShare == nil:
-		return missingMemberError("CustomDcfValuation", "equityValuePerShare")
+		return missingMemberError("CustomDCFValuation", "equityValuePerShare")
 	case shadow.FreeCashFlowT1 == nil:
-		return missingMemberError("CustomDcfValuation", "freeCashFlowT1")
+		return missingMemberError("CustomDCFValuation", "freeCashFlowT1")
 	}
-	*m = CustomDcfValuation{
+	*m = CustomDCFValuation{
 		Year:                         *shadow.Year,
 		Symbol:                       *shadow.Symbol,
 		Revenue:                      *shadow.Revenue,
@@ -316,9 +316,9 @@ func (m *CustomDcfValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// CustomLeveredDcfValuation is one detailed valuation returned by the custom
+// CustomLeveredDCFValuation is one detailed valuation returned by the custom
 // levered DCF route.
-type CustomLeveredDcfValuation struct {
+type CustomLeveredDCFValuation struct {
 	Year                         string  `json:"year"`
 	Symbol                       string  `json:"symbol"`
 	Revenue                      float64 `json:"revenue"`
@@ -355,10 +355,10 @@ type CustomLeveredDcfValuation struct {
 	OperatingCashFlowPercentage  float64 `json:"operatingCashFlowPercentage"`
 }
 
-// customLeveredDcfValuationShadow mirrors CustomLeveredDcfValuation with a
+// customLeveredDCFValuationShadow mirrors CustomLeveredDCFValuation with a
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
-type customLeveredDcfValuationShadow struct {
+type customLeveredDCFValuationShadow struct {
 	Year                         *string  `json:"year"`
 	Symbol                       *string  `json:"symbol"`
 	Revenue                      *float64 `json:"revenue"`
@@ -398,82 +398,82 @@ type customLeveredDcfValuationShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CustomLeveredDcfValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow customLeveredDcfValuationShadow
+func (m *CustomLeveredDCFValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow customLeveredDCFValuationShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Year == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "year")
+		return missingMemberError("CustomLeveredDCFValuation", "year")
 	case shadow.Symbol == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "symbol")
+		return missingMemberError("CustomLeveredDCFValuation", "symbol")
 	case shadow.Revenue == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "revenue")
+		return missingMemberError("CustomLeveredDCFValuation", "revenue")
 	case shadow.RevenuePercentage == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "revenuePercentage")
+		return missingMemberError("CustomLeveredDCFValuation", "revenuePercentage")
 	case shadow.CapitalExpenditure == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "capitalExpenditure")
+		return missingMemberError("CustomLeveredDCFValuation", "capitalExpenditure")
 	case shadow.CapitalExpenditurePercentage == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "capitalExpenditurePercentage")
+		return missingMemberError("CustomLeveredDCFValuation", "capitalExpenditurePercentage")
 	case shadow.Price == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "price")
+		return missingMemberError("CustomLeveredDCFValuation", "price")
 	case shadow.Beta == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "beta")
+		return missingMemberError("CustomLeveredDCFValuation", "beta")
 	case shadow.DilutedSharesOutstanding == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "dilutedSharesOutstanding")
+		return missingMemberError("CustomLeveredDCFValuation", "dilutedSharesOutstanding")
 	case shadow.CostOfDebt == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "costofDebt")
+		return missingMemberError("CustomLeveredDCFValuation", "costofDebt")
 	case shadow.TaxRate == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "taxRate")
+		return missingMemberError("CustomLeveredDCFValuation", "taxRate")
 	case shadow.AfterTaxCostOfDebt == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "afterTaxCostOfDebt")
+		return missingMemberError("CustomLeveredDCFValuation", "afterTaxCostOfDebt")
 	case shadow.RiskFreeRate == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "riskFreeRate")
+		return missingMemberError("CustomLeveredDCFValuation", "riskFreeRate")
 	case shadow.MarketRiskPremium == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "marketRiskPremium")
+		return missingMemberError("CustomLeveredDCFValuation", "marketRiskPremium")
 	case shadow.CostOfEquity == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "costOfEquity")
+		return missingMemberError("CustomLeveredDCFValuation", "costOfEquity")
 	case shadow.TotalDebt == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "totalDebt")
+		return missingMemberError("CustomLeveredDCFValuation", "totalDebt")
 	case shadow.TotalEquity == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "totalEquity")
+		return missingMemberError("CustomLeveredDCFValuation", "totalEquity")
 	case shadow.TotalCapital == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "totalCapital")
+		return missingMemberError("CustomLeveredDCFValuation", "totalCapital")
 	case shadow.DebtWeighting == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "debtWeighting")
+		return missingMemberError("CustomLeveredDCFValuation", "debtWeighting")
 	case shadow.EquityWeighting == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "equityWeighting")
+		return missingMemberError("CustomLeveredDCFValuation", "equityWeighting")
 	case shadow.Wacc == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "wacc")
+		return missingMemberError("CustomLeveredDCFValuation", "wacc")
 	case shadow.OperatingCashFlow == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "operatingCashFlow")
+		return missingMemberError("CustomLeveredDCFValuation", "operatingCashFlow")
 	case shadow.PvLfcf == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "pvLfcf")
+		return missingMemberError("CustomLeveredDCFValuation", "pvLfcf")
 	case shadow.SumPvLfcf == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "sumPvLfcf")
+		return missingMemberError("CustomLeveredDCFValuation", "sumPvLfcf")
 	case shadow.LongTermGrowthRate == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "longTermGrowthRate")
+		return missingMemberError("CustomLeveredDCFValuation", "longTermGrowthRate")
 	case shadow.FreeCashFlow == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "freeCashFlow")
+		return missingMemberError("CustomLeveredDCFValuation", "freeCashFlow")
 	case shadow.TerminalValue == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "terminalValue")
+		return missingMemberError("CustomLeveredDCFValuation", "terminalValue")
 	case shadow.PresentTerminalValue == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "presentTerminalValue")
+		return missingMemberError("CustomLeveredDCFValuation", "presentTerminalValue")
 	case shadow.EnterpriseValue == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "enterpriseValue")
+		return missingMemberError("CustomLeveredDCFValuation", "enterpriseValue")
 	case shadow.NetDebt == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "netDebt")
+		return missingMemberError("CustomLeveredDCFValuation", "netDebt")
 	case shadow.EquityValue == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "equityValue")
+		return missingMemberError("CustomLeveredDCFValuation", "equityValue")
 	case shadow.EquityValuePerShare == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "equityValuePerShare")
+		return missingMemberError("CustomLeveredDCFValuation", "equityValuePerShare")
 	case shadow.FreeCashFlowT1 == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "freeCashFlowT1")
+		return missingMemberError("CustomLeveredDCFValuation", "freeCashFlowT1")
 	case shadow.OperatingCashFlowPercentage == nil:
-		return missingMemberError("CustomLeveredDcfValuation", "operatingCashFlowPercentage")
+		return missingMemberError("CustomLeveredDCFValuation", "operatingCashFlowPercentage")
 	}
-	*m = CustomLeveredDcfValuation{
+	*m = CustomLeveredDCFValuation{
 		Year:                         *shadow.Year,
 		Symbol:                       *shadow.Symbol,
 		Revenue:                      *shadow.Revenue,

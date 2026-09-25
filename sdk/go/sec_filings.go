@@ -11,15 +11,15 @@ import (
 	"encoding/json/jsontext"
 )
 
-// SecFilingsNamespace groups the sec_filings endpoints. It is reached as
-// Client.SecFilings and is valid only when obtained from a Client built by
+// SECFilingsNamespace groups the sec_filings endpoints. It is reached as
+// Client.SECFilings and is valid only when obtained from a Client built by
 // NewClient.
-type SecFilingsNamespace struct {
+type SECFilingsNamespace struct {
 	client *Client
 }
 
-func newSecFilingsNamespace(client *Client) SecFilingsNamespace {
-	return SecFilingsNamespace{
+func newSECFilingsNamespace(client *Client) SECFilingsNamespace {
+	return SECFilingsNamespace{
 		client: client,
 	}
 }
@@ -215,55 +215,55 @@ func (q IndustryClassificationsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// Latest8kSecFilingsQuery holds the query parameters of the endpoints that
-// take it: NewLatest8kSecFilingsQuery takes the required arguments and each
+// Latest8KSECFilingsQuery holds the query parameters of the endpoints that
+// take it: NewLatest8KSECFilingsQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type Latest8kSecFilingsQuery struct {
+type Latest8KSECFilingsQuery struct {
 	from  Date
 	to    Date
 	page  *uint32
 	limit *uint32
 }
 
-// NewLatest8kSecFilingsQuery creates the query from its required arguments.
-func NewLatest8kSecFilingsQuery(from Date, to Date) Latest8kSecFilingsQuery {
-	return Latest8kSecFilingsQuery{from: from, to: to}
+// NewLatest8KSECFilingsQuery creates the query from its required arguments.
+func NewLatest8KSECFilingsQuery(from Date, to Date) Latest8KSECFilingsQuery {
+	return Latest8KSECFilingsQuery{from: from, to: to}
 }
 
 // From returns the from argument as given.
-func (q Latest8kSecFilingsQuery) From() Date {
+func (q Latest8KSECFilingsQuery) From() Date {
 	return q.from
 }
 
 // To returns the to argument as given.
-func (q Latest8kSecFilingsQuery) To() Date {
+func (q Latest8KSECFilingsQuery) To() Date {
 	return q.to
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q Latest8kSecFilingsQuery) WithPage(page uint32) Latest8kSecFilingsQuery {
+func (q Latest8KSECFilingsQuery) WithPage(page uint32) Latest8KSECFilingsQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q Latest8kSecFilingsQuery) Page() *uint32 {
+func (q Latest8KSECFilingsQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q Latest8kSecFilingsQuery) WithLimit(limit uint32) Latest8kSecFilingsQuery {
+func (q Latest8KSECFilingsQuery) WithLimit(limit uint32) Latest8KSECFilingsQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q Latest8kSecFilingsQuery) Limit() *uint32 {
+func (q Latest8KSECFilingsQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q Latest8kSecFilingsQuery) params() ([]queryParam, error) {
+func (q Latest8KSECFilingsQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 4)
 	from, err := dateParam("from", q.from)
 	if err != nil {
@@ -292,54 +292,54 @@ func (q Latest8kSecFilingsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// LatestSecFilingsQuery holds the query parameters of the endpoints that take
-// it: NewLatestSecFilingsQuery takes the required arguments and each With
+// LatestSECFilingsQuery holds the query parameters of the endpoints that take
+// it: NewLatestSECFilingsQuery takes the required arguments and each With
 // method sets an optional one. Values are validated when the request is built.
-type LatestSecFilingsQuery struct {
+type LatestSECFilingsQuery struct {
 	from  Date
 	to    Date
 	page  *uint32
 	limit *uint32
 }
 
-// NewLatestSecFilingsQuery creates the query from its required arguments.
-func NewLatestSecFilingsQuery(from Date, to Date) LatestSecFilingsQuery {
-	return LatestSecFilingsQuery{from: from, to: to}
+// NewLatestSECFilingsQuery creates the query from its required arguments.
+func NewLatestSECFilingsQuery(from Date, to Date) LatestSECFilingsQuery {
+	return LatestSECFilingsQuery{from: from, to: to}
 }
 
 // From returns the from argument as given.
-func (q LatestSecFilingsQuery) From() Date {
+func (q LatestSECFilingsQuery) From() Date {
 	return q.from
 }
 
 // To returns the to argument as given.
-func (q LatestSecFilingsQuery) To() Date {
+func (q LatestSECFilingsQuery) To() Date {
 	return q.to
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q LatestSecFilingsQuery) WithPage(page uint32) LatestSecFilingsQuery {
+func (q LatestSECFilingsQuery) WithPage(page uint32) LatestSECFilingsQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q LatestSecFilingsQuery) Page() *uint32 {
+func (q LatestSECFilingsQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q LatestSecFilingsQuery) WithLimit(limit uint32) LatestSecFilingsQuery {
+func (q LatestSECFilingsQuery) WithLimit(limit uint32) LatestSECFilingsQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q LatestSecFilingsQuery) Limit() *uint32 {
+func (q LatestSECFilingsQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q LatestSecFilingsQuery) params() ([]queryParam, error) {
+func (q LatestSECFilingsQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 4)
 	from, err := dateParam("from", q.from)
 	if err != nil {
@@ -368,24 +368,24 @@ func (q LatestSecFilingsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// SecCompaniesByCIKQuery holds the query parameters of the endpoints that take
-// it: NewSecCompaniesByCIKQuery takes the required arguments and each With
+// SECCompaniesByCIKQuery holds the query parameters of the endpoints that take
+// it: NewSECCompaniesByCIKQuery takes the required arguments and each With
 // method sets an optional one. Values are validated when the request is built.
-type SecCompaniesByCIKQuery struct {
+type SECCompaniesByCIKQuery struct {
 	cik string
 }
 
-// NewSecCompaniesByCIKQuery creates the query from its required arguments.
-func NewSecCompaniesByCIKQuery(cik string) SecCompaniesByCIKQuery {
-	return SecCompaniesByCIKQuery{cik: cik}
+// NewSECCompaniesByCIKQuery creates the query from its required arguments.
+func NewSECCompaniesByCIKQuery(cik string) SECCompaniesByCIKQuery {
+	return SECCompaniesByCIKQuery{cik: cik}
 }
 
 // CIK returns the cik argument as given.
-func (q SecCompaniesByCIKQuery) CIK() string {
+func (q SECCompaniesByCIKQuery) CIK() string {
 	return q.cik
 }
 
-func (q SecCompaniesByCIKQuery) params() ([]queryParam, error) {
+func (q SECCompaniesByCIKQuery) params() ([]queryParam, error) {
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
 		return nil, err
@@ -393,25 +393,25 @@ func (q SecCompaniesByCIKQuery) params() ([]queryParam, error) {
 	return []queryParam{cik}, nil
 }
 
-// SecCompaniesByNameQuery holds the query parameters of the endpoints that
-// take it: NewSecCompaniesByNameQuery takes the required arguments and each
+// SECCompaniesByNameQuery holds the query parameters of the endpoints that
+// take it: NewSECCompaniesByNameQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type SecCompaniesByNameQuery struct {
+type SECCompaniesByNameQuery struct {
 	company string
 }
 
-// NewSecCompaniesByNameQuery creates the query from its required arguments.
-func NewSecCompaniesByNameQuery(company string) SecCompaniesByNameQuery {
-	return SecCompaniesByNameQuery{company: company}
+// NewSECCompaniesByNameQuery creates the query from its required arguments.
+func NewSECCompaniesByNameQuery(company string) SECCompaniesByNameQuery {
+	return SECCompaniesByNameQuery{company: company}
 }
 
 // Company returns the company argument as given.
-func (q SecCompaniesByNameQuery) Company() string {
+func (q SECCompaniesByNameQuery) Company() string {
 	return q.company
 }
 
-func (q SecCompaniesByNameQuery) params() ([]queryParam, error) {
+func (q SECCompaniesByNameQuery) params() ([]queryParam, error) {
 	company, err := stringParam("company", q.company)
 	if err != nil {
 		return nil, err
@@ -419,25 +419,25 @@ func (q SecCompaniesByNameQuery) params() ([]queryParam, error) {
 	return []queryParam{company}, nil
 }
 
-// SecCompaniesBySymbolQuery holds the query parameters of the endpoints that
-// take it: NewSecCompaniesBySymbolQuery takes the required arguments and each
+// SECCompaniesBySymbolQuery holds the query parameters of the endpoints that
+// take it: NewSECCompaniesBySymbolQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type SecCompaniesBySymbolQuery struct {
+type SECCompaniesBySymbolQuery struct {
 	symbol string
 }
 
-// NewSecCompaniesBySymbolQuery creates the query from its required arguments.
-func NewSecCompaniesBySymbolQuery(symbol string) SecCompaniesBySymbolQuery {
-	return SecCompaniesBySymbolQuery{symbol: symbol}
+// NewSECCompaniesBySymbolQuery creates the query from its required arguments.
+func NewSECCompaniesBySymbolQuery(symbol string) SECCompaniesBySymbolQuery {
+	return SECCompaniesBySymbolQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q SecCompaniesBySymbolQuery) Symbol() string {
+func (q SECCompaniesBySymbolQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q SecCompaniesBySymbolQuery) params() ([]queryParam, error) {
+func (q SECCompaniesBySymbolQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -445,36 +445,36 @@ func (q SecCompaniesBySymbolQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// SecCompanyProfileQuery holds the query parameters of the endpoints that take
-// it: NewSecCompanyProfileQuery takes the required arguments and each With
+// SECCompanyProfileQuery holds the query parameters of the endpoints that take
+// it: NewSECCompanyProfileQuery takes the required arguments and each With
 // method sets an optional one. Values are validated when the request is built.
-type SecCompanyProfileQuery struct {
+type SECCompanyProfileQuery struct {
 	symbol string
 	cikA   *string
 }
 
-// NewSecCompanyProfileQuery creates the query from its required arguments.
-func NewSecCompanyProfileQuery(symbol string) SecCompanyProfileQuery {
-	return SecCompanyProfileQuery{symbol: symbol}
+// NewSECCompanyProfileQuery creates the query from its required arguments.
+func NewSECCompanyProfileQuery(symbol string) SECCompanyProfileQuery {
+	return SECCompanyProfileQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q SecCompanyProfileQuery) Symbol() string {
+func (q SECCompanyProfileQuery) Symbol() string {
 	return q.symbol
 }
 
 // WithCIKA sets the optional cik_a parameter and returns the updated query.
-func (q SecCompanyProfileQuery) WithCIKA(cikA string) SecCompanyProfileQuery {
+func (q SECCompanyProfileQuery) WithCIKA(cikA string) SECCompanyProfileQuery {
 	q.cikA = &cikA
 	return q
 }
 
 // CIKA returns the optional cik_a parameter, or nil when it is unset.
-func (q SecCompanyProfileQuery) CIKA() *string {
+func (q SECCompanyProfileQuery) CIKA() *string {
 	return q.cikA
 }
 
-func (q SecCompanyProfileQuery) params() ([]queryParam, error) {
+func (q SECCompanyProfileQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
@@ -491,10 +491,10 @@ func (q SecCompanyProfileQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// SecFilingsByCIKQuery holds the query parameters of the endpoints that take
-// it: NewSecFilingsByCIKQuery takes the required arguments and each With
+// SECFilingsByCIKQuery holds the query parameters of the endpoints that take
+// it: NewSECFilingsByCIKQuery takes the required arguments and each With
 // method sets an optional one. Values are validated when the request is built.
-type SecFilingsByCIKQuery struct {
+type SECFilingsByCIKQuery struct {
 	cik   string
 	from  Date
 	to    Date
@@ -502,49 +502,49 @@ type SecFilingsByCIKQuery struct {
 	limit *uint32
 }
 
-// NewSecFilingsByCIKQuery creates the query from its required arguments.
-func NewSecFilingsByCIKQuery(cik string, from Date, to Date) SecFilingsByCIKQuery {
-	return SecFilingsByCIKQuery{cik: cik, from: from, to: to}
+// NewSECFilingsByCIKQuery creates the query from its required arguments.
+func NewSECFilingsByCIKQuery(cik string, from Date, to Date) SECFilingsByCIKQuery {
+	return SECFilingsByCIKQuery{cik: cik, from: from, to: to}
 }
 
 // CIK returns the cik argument as given.
-func (q SecFilingsByCIKQuery) CIK() string {
+func (q SECFilingsByCIKQuery) CIK() string {
 	return q.cik
 }
 
 // From returns the from argument as given.
-func (q SecFilingsByCIKQuery) From() Date {
+func (q SECFilingsByCIKQuery) From() Date {
 	return q.from
 }
 
 // To returns the to argument as given.
-func (q SecFilingsByCIKQuery) To() Date {
+func (q SECFilingsByCIKQuery) To() Date {
 	return q.to
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q SecFilingsByCIKQuery) WithPage(page uint32) SecFilingsByCIKQuery {
+func (q SECFilingsByCIKQuery) WithPage(page uint32) SECFilingsByCIKQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q SecFilingsByCIKQuery) Page() *uint32 {
+func (q SECFilingsByCIKQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q SecFilingsByCIKQuery) WithLimit(limit uint32) SecFilingsByCIKQuery {
+func (q SECFilingsByCIKQuery) WithLimit(limit uint32) SECFilingsByCIKQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q SecFilingsByCIKQuery) Limit() *uint32 {
+func (q SECFilingsByCIKQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q SecFilingsByCIKQuery) params() ([]queryParam, error) {
+func (q SECFilingsByCIKQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 5)
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
@@ -578,11 +578,11 @@ func (q SecFilingsByCIKQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// SecFilingsByFormTypeQuery holds the query parameters of the endpoints that
-// take it: NewSecFilingsByFormTypeQuery takes the required arguments and each
+// SECFilingsByFormTypeQuery holds the query parameters of the endpoints that
+// take it: NewSECFilingsByFormTypeQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type SecFilingsByFormTypeQuery struct {
+type SECFilingsByFormTypeQuery struct {
 	formType string
 	from     Date
 	to       Date
@@ -590,49 +590,49 @@ type SecFilingsByFormTypeQuery struct {
 	limit    *uint32
 }
 
-// NewSecFilingsByFormTypeQuery creates the query from its required arguments.
-func NewSecFilingsByFormTypeQuery(formType string, from Date, to Date) SecFilingsByFormTypeQuery {
-	return SecFilingsByFormTypeQuery{formType: formType, from: from, to: to}
+// NewSECFilingsByFormTypeQuery creates the query from its required arguments.
+func NewSECFilingsByFormTypeQuery(formType string, from Date, to Date) SECFilingsByFormTypeQuery {
+	return SECFilingsByFormTypeQuery{formType: formType, from: from, to: to}
 }
 
 // FormType returns the form_type argument as given.
-func (q SecFilingsByFormTypeQuery) FormType() string {
+func (q SECFilingsByFormTypeQuery) FormType() string {
 	return q.formType
 }
 
 // From returns the from argument as given.
-func (q SecFilingsByFormTypeQuery) From() Date {
+func (q SECFilingsByFormTypeQuery) From() Date {
 	return q.from
 }
 
 // To returns the to argument as given.
-func (q SecFilingsByFormTypeQuery) To() Date {
+func (q SECFilingsByFormTypeQuery) To() Date {
 	return q.to
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q SecFilingsByFormTypeQuery) WithPage(page uint32) SecFilingsByFormTypeQuery {
+func (q SECFilingsByFormTypeQuery) WithPage(page uint32) SECFilingsByFormTypeQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q SecFilingsByFormTypeQuery) Page() *uint32 {
+func (q SECFilingsByFormTypeQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q SecFilingsByFormTypeQuery) WithLimit(limit uint32) SecFilingsByFormTypeQuery {
+func (q SECFilingsByFormTypeQuery) WithLimit(limit uint32) SECFilingsByFormTypeQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q SecFilingsByFormTypeQuery) Limit() *uint32 {
+func (q SECFilingsByFormTypeQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q SecFilingsByFormTypeQuery) params() ([]queryParam, error) {
+func (q SECFilingsByFormTypeQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 5)
 	formType, err := stringParam("formType", q.formType)
 	if err != nil {
@@ -666,11 +666,11 @@ func (q SecFilingsByFormTypeQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// SecFilingsBySymbolQuery holds the query parameters of the endpoints that
-// take it: NewSecFilingsBySymbolQuery takes the required arguments and each
+// SECFilingsBySymbolQuery holds the query parameters of the endpoints that
+// take it: NewSECFilingsBySymbolQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type SecFilingsBySymbolQuery struct {
+type SECFilingsBySymbolQuery struct {
 	symbol string
 	from   Date
 	to     Date
@@ -678,49 +678,49 @@ type SecFilingsBySymbolQuery struct {
 	limit  *uint32
 }
 
-// NewSecFilingsBySymbolQuery creates the query from its required arguments.
-func NewSecFilingsBySymbolQuery(symbol string, from Date, to Date) SecFilingsBySymbolQuery {
-	return SecFilingsBySymbolQuery{symbol: symbol, from: from, to: to}
+// NewSECFilingsBySymbolQuery creates the query from its required arguments.
+func NewSECFilingsBySymbolQuery(symbol string, from Date, to Date) SECFilingsBySymbolQuery {
+	return SECFilingsBySymbolQuery{symbol: symbol, from: from, to: to}
 }
 
 // Symbol returns the symbol argument as given.
-func (q SecFilingsBySymbolQuery) Symbol() string {
+func (q SECFilingsBySymbolQuery) Symbol() string {
 	return q.symbol
 }
 
 // From returns the from argument as given.
-func (q SecFilingsBySymbolQuery) From() Date {
+func (q SECFilingsBySymbolQuery) From() Date {
 	return q.from
 }
 
 // To returns the to argument as given.
-func (q SecFilingsBySymbolQuery) To() Date {
+func (q SECFilingsBySymbolQuery) To() Date {
 	return q.to
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q SecFilingsBySymbolQuery) WithPage(page uint32) SecFilingsBySymbolQuery {
+func (q SECFilingsBySymbolQuery) WithPage(page uint32) SECFilingsBySymbolQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q SecFilingsBySymbolQuery) Page() *uint32 {
+func (q SECFilingsBySymbolQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q SecFilingsBySymbolQuery) WithLimit(limit uint32) SecFilingsBySymbolQuery {
+func (q SECFilingsBySymbolQuery) WithLimit(limit uint32) SECFilingsBySymbolQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q SecFilingsBySymbolQuery) Limit() *uint32 {
+func (q SECFilingsBySymbolQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q SecFilingsBySymbolQuery) params() ([]queryParam, error) {
+func (q SECFilingsBySymbolQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 5)
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
@@ -754,16 +754,16 @@ func (q SecFilingsBySymbolQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// Latest8k retrieves the latest US 8-K SEC filings within the required date
+// Latest8K retrieves the latest US 8-K SEC filings within the required date
 // range.
 //
 // GET sec-filings-8k?from=&to=&page=&limit=
-func (n *SecFilingsNamespace) Latest8k(ctx context.Context, q Latest8kSecFilingsQuery) ([]SecFiling, error) {
+func (n *SECFilingsNamespace) Latest8K(ctx context.Context, q Latest8KSECFilingsQuery) ([]SECFiling, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecFiling
+	var out []SECFiling
 	if err := n.client.getJSON(ctx, "sec-filings-8k", "sec-filings-8k", params, &out); err != nil {
 		return nil, err
 	}
@@ -774,12 +774,12 @@ func (n *SecFilingsNamespace) Latest8k(ctx context.Context, q Latest8kSecFilings
 // date range.
 //
 // GET sec-filings-financials?from=&to=&page=&limit=
-func (n *SecFilingsNamespace) Latest(ctx context.Context, q LatestSecFilingsQuery) ([]SecFiling, error) {
+func (n *SECFilingsNamespace) Latest(ctx context.Context, q LatestSECFilingsQuery) ([]SECFiling, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecFiling
+	var out []SECFiling
 	if err := n.client.getJSON(ctx, "sec-filings-financials", "sec-filings-financials", params, &out); err != nil {
 		return nil, err
 	}
@@ -789,12 +789,12 @@ func (n *SecFilingsNamespace) Latest(ctx context.Context, q LatestSecFilingsQuer
 // ByFormType retrieves US SEC filings by their open form type.
 //
 // GET sec-filings-search/form-type?formType=&from=&to=&page=&limit=
-func (n *SecFilingsNamespace) ByFormType(ctx context.Context, q SecFilingsByFormTypeQuery) ([]SecFiling, error) {
+func (n *SECFilingsNamespace) ByFormType(ctx context.Context, q SECFilingsByFormTypeQuery) ([]SECFiling, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecFiling
+	var out []SECFiling
 	if err := n.client.getJSON(ctx, "sec-filings-search/form-type", "sec-filings-search/form-type", params, &out); err != nil {
 		return nil, err
 	}
@@ -804,12 +804,12 @@ func (n *SecFilingsNamespace) ByFormType(ctx context.Context, q SecFilingsByForm
 // BySymbol retrieves US SEC filings for a ticker.
 //
 // GET sec-filings-search/symbol?symbol=&from=&to=&page=&limit=
-func (n *SecFilingsNamespace) BySymbol(ctx context.Context, q SecFilingsBySymbolQuery) ([]SecFiling, error) {
+func (n *SECFilingsNamespace) BySymbol(ctx context.Context, q SECFilingsBySymbolQuery) ([]SECFiling, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecFiling
+	var out []SECFiling
 	if err := n.client.getJSON(ctx, "sec-filings-search/symbol", "sec-filings-search/symbol", params, &out); err != nil {
 		return nil, err
 	}
@@ -819,12 +819,12 @@ func (n *SecFilingsNamespace) BySymbol(ctx context.Context, q SecFilingsBySymbol
 // ByCIK retrieves US SEC filings for a string-backed CIK.
 //
 // GET sec-filings-search/cik?cik=&from=&to=&page=&limit=
-func (n *SecFilingsNamespace) ByCIK(ctx context.Context, q SecFilingsByCIKQuery) ([]SecFiling, error) {
+func (n *SECFilingsNamespace) ByCIK(ctx context.Context, q SECFilingsByCIKQuery) ([]SECFiling, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecFiling
+	var out []SECFiling
 	if err := n.client.getJSON(ctx, "sec-filings-search/cik", "sec-filings-search/cik", params, &out); err != nil {
 		return nil, err
 	}
@@ -834,12 +834,12 @@ func (n *SecFilingsNamespace) ByCIK(ctx context.Context, q SecFilingsByCIKQuery)
 // SearchCompaniesByName searches US SEC companies by company-name text.
 //
 // GET sec-filings-company-search/name?company=
-func (n *SecFilingsNamespace) SearchCompaniesByName(ctx context.Context, q SecCompaniesByNameQuery) ([]SecCompanySearchResult, error) {
+func (n *SECFilingsNamespace) SearchCompaniesByName(ctx context.Context, q SECCompaniesByNameQuery) ([]SECCompanySearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecCompanySearchResult
+	var out []SECCompanySearchResult
 	if err := n.client.getJSON(ctx, "sec-filings-company-search/name", "sec-filings-company-search/name", params, &out); err != nil {
 		return nil, err
 	}
@@ -849,12 +849,12 @@ func (n *SecFilingsNamespace) SearchCompaniesByName(ctx context.Context, q SecCo
 // SearchCompaniesBySymbol searches US SEC companies by ticker.
 //
 // GET sec-filings-company-search/symbol?symbol=
-func (n *SecFilingsNamespace) SearchCompaniesBySymbol(ctx context.Context, q SecCompaniesBySymbolQuery) ([]SecCompanySearchResult, error) {
+func (n *SECFilingsNamespace) SearchCompaniesBySymbol(ctx context.Context, q SECCompaniesBySymbolQuery) ([]SECCompanySearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecCompanySearchResult
+	var out []SECCompanySearchResult
 	if err := n.client.getJSON(ctx, "sec-filings-company-search/symbol", "sec-filings-company-search/symbol", params, &out); err != nil {
 		return nil, err
 	}
@@ -864,12 +864,12 @@ func (n *SecFilingsNamespace) SearchCompaniesBySymbol(ctx context.Context, q Sec
 // SearchCompaniesByCIK searches US SEC companies by string-backed CIK.
 //
 // GET sec-filings-company-search/cik?cik=
-func (n *SecFilingsNamespace) SearchCompaniesByCIK(ctx context.Context, q SecCompaniesByCIKQuery) ([]SecCompanySearchResult, error) {
+func (n *SECFilingsNamespace) SearchCompaniesByCIK(ctx context.Context, q SECCompaniesByCIKQuery) ([]SECCompanySearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecCompanySearchResult
+	var out []SECCompanySearchResult
 	if err := n.client.getJSON(ctx, "sec-filings-company-search/cik", "sec-filings-company-search/cik", params, &out); err != nil {
 		return nil, err
 	}
@@ -879,12 +879,12 @@ func (n *SecFilingsNamespace) SearchCompaniesByCIK(ctx context.Context, q SecCom
 // CompanyProfile retrieves the full US SEC company profile for a ticker.
 //
 // GET sec-profile?symbol=&cik-A=
-func (n *SecFilingsNamespace) CompanyProfile(ctx context.Context, q SecCompanyProfileQuery) ([]SecCompanyProfile, error) {
+func (n *SECFilingsNamespace) CompanyProfile(ctx context.Context, q SECCompanyProfileQuery) ([]SECCompanyProfile, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecCompanyProfile
+	var out []SECCompanyProfile
 	if err := n.client.getJSON(ctx, "sec-profile", "sec-profile", params, &out); err != nil {
 		return nil, err
 	}
@@ -895,7 +895,7 @@ func (n *SecFilingsNamespace) CompanyProfile(ctx context.Context, q SecCompanyPr
 // directory.
 //
 // GET standard-industrial-classification-list?industryTitle=&sicCode=
-func (n *SecFilingsNamespace) IndustryClassifications(ctx context.Context, q IndustryClassificationsQuery) ([]SicClassification, error) {
+func (n *SECFilingsNamespace) IndustryClassifications(ctx context.Context, q IndustryClassificationsQuery) ([]SicClassification, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -911,12 +911,12 @@ func (n *SecFilingsNamespace) IndustryClassifications(ctx context.Context, q Ind
 // industry-classification feed.
 //
 // GET all-industry-classification?page=&limit=
-func (n *SecFilingsNamespace) AllIndustryClassifications(ctx context.Context, q AllIndustryClassificationsQuery) ([]SecCompanySearchResult, error) {
+func (n *SECFilingsNamespace) AllIndustryClassifications(ctx context.Context, q AllIndustryClassificationsQuery) ([]SECCompanySearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []SecCompanySearchResult
+	var out []SECCompanySearchResult
 	if err := n.client.getJSON(ctx, "all-industry-classification", "all-industry-classification", params, &out); err != nil {
 		return nil, err
 	}
@@ -927,7 +927,7 @@ func (n *SecFilingsNamespace) AllIndustryClassifications(ctx context.Context, q 
 // preserving raw documented rows.
 //
 // GET industry-classification-search?symbol=&cik=&sicCode=
-func (n *SecFilingsNamespace) SearchIndustryClassifications(ctx context.Context, q IndustryClassificationSearchQuery) ([]jsontext.Value, error) {
+func (n *SECFilingsNamespace) SearchIndustryClassifications(ctx context.Context, q IndustryClassificationSearchQuery) ([]jsontext.Value, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

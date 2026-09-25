@@ -58,9 +58,9 @@ func TestInstitutionalOwnershipMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if err != nil || len(holdings) != 1 || holdings[0].SecurityCusip != "674215207" {
 		t.Fatalf("Extract = %+v, %v", holdings, err)
 	}
-	dates, err := ns.Form13fFilingDates(ctx, NewForm13fFilingDatesQuery("0001067983"))
+	dates, err := ns.Form13FFilingDates(ctx, NewForm13FFilingDatesQuery("0001067983"))
 	if err != nil || len(dates) != 1 || dates[0].Quarter != 1 {
-		t.Fatalf("Form13fFilingDates = %+v, %v", dates, err)
+		t.Fatalf("Form13FFilingDates = %+v, %v", dates, err)
 	}
 	analytics, err := ns.HolderAnalytics(ctx,
 		NewInstitutionalHolderAnalyticsQuery("AAPL", 2023, QuarterQ3).WithPage(0).WithLimit(10))
@@ -145,7 +145,7 @@ func TestInstitutionalOwnershipMethodsReportMissingMembersAsDecodeErrors(t *test
 	server, rec := newServer(t, jsonHandler(`[{"date":"2026-03-31","year":2026}]`))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
-	_, err := client.InstitutionalOwnership.Form13fFilingDates(context.Background(), NewForm13fFilingDatesQuery("0001067983"))
+	_, err := client.InstitutionalOwnership.Form13FFilingDates(context.Background(), NewForm13FFilingDatesQuery("0001067983"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "institutional-ownership/dates")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"quarter"`) {
 		t.Fatalf("cause = %v, want it to name the missing member quarter", cause)

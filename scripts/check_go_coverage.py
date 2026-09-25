@@ -52,9 +52,13 @@ METHOD_RE = re.compile(
 # The gen_go initialism table (emit.rs `WORDS`, ADR 0032), keyed by the
 # lowercase word.
 WORDS = {
+    "8k": "8K",
+    "13f": "13F",
     "api": "API",
     "cik": "CIK",
     "ciks": "CIKs",
+    "cot": "COT",
+    "dcf": "DCF",
     "eps": "EPS",
     "etf": "ETF",
     "etfs": "ETFs",
@@ -63,6 +67,7 @@ WORDS = {
     "id": "ID",
     "ids": "IDs",
     "json": "JSON",
+    "sec": "SEC",
     "ttm": "TTM",
     "url": "URL",
     "urls": "URLs",

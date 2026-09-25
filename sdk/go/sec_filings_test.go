@@ -59,73 +59,73 @@ func TestSecFilingsMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	from := mustParseDate(t, "2024-01-01")
 	to := mustParseDate(t, "2024-03-01")
 
-	latest8k, err := client.SecFilings.Latest8k(ctx, NewLatest8kSecFilingsQuery(from, to).WithLimit(math.MaxUint32).WithPage(0))
+	latest8k, err := client.SECFilings.Latest8K(ctx, NewLatest8KSECFilingsQuery(from, to).WithLimit(math.MaxUint32).WithPage(0))
 	if err != nil || len(latest8k) != 1 || latest8k[0].Symbol != "SUNE" || latest8k[0].HasFinancials != nil {
-		t.Fatalf("Latest8k = %+v, %v", latest8k, err)
+		t.Fatalf("Latest8K = %+v, %v", latest8k, err)
 	}
-	if bare, err := client.SecFilings.Latest8k(ctx, NewLatest8kSecFilingsQuery(from, to)); err != nil || len(bare) != 1 {
-		t.Fatalf("Latest8k without setters = %+v, %v", bare, err)
+	if bare, err := client.SECFilings.Latest8K(ctx, NewLatest8KSECFilingsQuery(from, to)); err != nil || len(bare) != 1 {
+		t.Fatalf("Latest8K without setters = %+v, %v", bare, err)
 	}
-	latest, err := client.SecFilings.Latest(ctx, NewLatestSecFilingsQuery(from, to))
+	latest, err := client.SECFilings.Latest(ctx, NewLatestSECFilingsQuery(from, to))
 	if err != nil || len(latest) != 1 || latest[0].Symbol != "DNN" || latest[0].HasFinancials == nil || !*latest[0].HasFinancials {
 		t.Fatalf("Latest = %+v, %v", latest, err)
 	}
-	byForm, err := client.SecFilings.ByFormType(ctx, NewSecFilingsByFormTypeQuery("8-K", from, to).WithLimit(0).WithPage(0))
+	byForm, err := client.SECFilings.ByFormType(ctx, NewSECFilingsByFormTypeQuery("8-K", from, to).WithLimit(0).WithPage(0))
 	if err != nil || len(byForm) != 1 || byForm[0].FormType != "8-K" || byForm[0].HasFinancials != nil {
 		t.Fatalf("ByFormType = %+v, %v", byForm, err)
 	}
-	bySymbol, err := client.SecFilings.BySymbol(ctx, NewSecFilingsBySymbolQuery("BRK.B / Class A", from, to))
+	bySymbol, err := client.SECFilings.BySymbol(ctx, NewSECFilingsBySymbolQuery("BRK.B / Class A", from, to))
 	if err != nil || len(bySymbol) != 1 || bySymbol[0].Symbol != "AAPL" {
 		t.Fatalf("BySymbol = %+v, %v", bySymbol, err)
 	}
-	byCik, err := client.SecFilings.ByCIK(ctx, NewSecFilingsByCIKQuery("0000320193", from, to).
+	byCik, err := client.SECFilings.ByCIK(ctx, NewSECFilingsByCIKQuery("0000320193", from, to).
 		WithLimit(math.MaxUint32).WithPage(math.MaxUint32))
 	if err != nil || len(byCik) != 1 || byCik[0].CIK != "0000320193" || byCik[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
 		t.Fatalf("ByCIK = %+v, %v", byCik, err)
 	}
 
-	byName, err := client.SecFilings.SearchCompaniesByName(ctx, NewSecCompaniesByNameQuery("Berkshire, Hathaway / Fund"))
+	byName, err := client.SECFilings.SearchCompaniesByName(ctx, NewSECCompaniesByNameQuery("Berkshire, Hathaway / Fund"))
 	if err != nil || len(byName) != 1 || byName[0].Symbol != "None" || byName[0].CIK != "0001418405" {
 		t.Fatalf("SearchCompaniesByName = %+v, %v", byName, err)
 	}
-	companyBySymbol, err := client.SecFilings.SearchCompaniesBySymbol(ctx, NewSecCompaniesBySymbolQuery("BRK.B / Class A"))
+	companyBySymbol, err := client.SECFilings.SearchCompaniesBySymbol(ctx, NewSECCompaniesBySymbolQuery("BRK.B / Class A"))
 	if err != nil || len(companyBySymbol) != 1 || companyBySymbol[0].Name != "APPLE INC." {
 		t.Fatalf("SearchCompaniesBySymbol = %+v, %v", companyBySymbol, err)
 	}
-	companyByCik, err := client.SecFilings.SearchCompaniesByCIK(ctx, NewSecCompaniesByCIKQuery("0000320193"))
+	companyByCik, err := client.SECFilings.SearchCompaniesByCIK(ctx, NewSECCompaniesByCIKQuery("0000320193"))
 	if err != nil || len(companyByCik) != 1 || companyByCik[0] != companyBySymbol[0] {
 		t.Fatalf("SearchCompaniesByCIK = %+v, %v", companyByCik, err)
 	}
-	profile, err := client.SecFilings.CompanyProfile(ctx, NewSecCompanyProfileQuery("AAPL").WithCIKA("0000320193"))
+	profile, err := client.SECFilings.CompanyProfile(ctx, NewSECCompanyProfileQuery("AAPL").WithCIKA("0000320193"))
 	if err != nil || len(profile) != 1 || profile[0].Symbol != "AAPL" || profile[0].SecurityType != nil {
 		t.Fatalf("CompanyProfile = %+v, %v", profile, err)
 	}
-	if bare, err := client.SecFilings.CompanyProfile(ctx, NewSecCompanyProfileQuery("AAPL")); err != nil || len(bare) != 1 {
+	if bare, err := client.SECFilings.CompanyProfile(ctx, NewSECCompanyProfileQuery("AAPL")); err != nil || len(bare) != 1 {
 		t.Fatalf("CompanyProfile without cik-A = %+v, %v", bare, err)
 	}
 
-	classifications, err := client.SecFilings.IndustryClassifications(ctx, NewIndustryClassificationsQuery().
+	classifications, err := client.SECFilings.IndustryClassifications(ctx, NewIndustryClassificationsQuery().
 		WithSicCode("07371").WithIndustryTitle("SERVICES, NEC / OTHER"))
 	if err != nil || len(classifications) != 1 || classifications[0].SicCode != "100" {
 		t.Fatalf("IndustryClassifications = %+v, %v", classifications, err)
 	}
-	if bare, err := client.SecFilings.IndustryClassifications(ctx, NewIndustryClassificationsQuery()); err != nil || len(bare) != 1 {
+	if bare, err := client.SECFilings.IndustryClassifications(ctx, NewIndustryClassificationsQuery()); err != nil || len(bare) != 1 {
 		t.Fatalf("IndustryClassifications without filters = %+v, %v", bare, err)
 	}
-	search, err := client.SecFilings.SearchIndustryClassifications(ctx, NewIndustryClassificationSearchQuery().
+	search, err := client.SECFilings.SearchIndustryClassifications(ctx, NewIndustryClassificationSearchQuery().
 		WithSicCode("07371").WithCIK("0000320193").WithSymbol("BRK.B / Class A"))
 	if err != nil || len(search) != 1 || strings.TrimSpace(string(search[0])) != "{}" {
 		t.Fatalf("SearchIndustryClassifications = %s, %v", search, err)
 	}
-	if bare, err := client.SecFilings.SearchIndustryClassifications(ctx, NewIndustryClassificationSearchQuery()); err != nil || len(bare) != 1 {
+	if bare, err := client.SECFilings.SearchIndustryClassifications(ctx, NewIndustryClassificationSearchQuery()); err != nil || len(bare) != 1 {
 		t.Fatalf("SearchIndustryClassifications without filters = %s, %v", bare, err)
 	}
-	all, err := client.SecFilings.AllIndustryClassifications(ctx, NewAllIndustryClassificationsQuery().
+	all, err := client.SECFilings.AllIndustryClassifications(ctx, NewAllIndustryClassificationsQuery().
 		WithLimit(math.MaxUint32).WithPage(0))
 	if err != nil || len(all) != 1 || all[0].Symbol != "0Q16.L" {
 		t.Fatalf("AllIndustryClassifications = %+v, %v", all, err)
 	}
-	if bare, err := client.SecFilings.AllIndustryClassifications(ctx, NewAllIndustryClassificationsQuery()); err != nil || len(bare) != 1 {
+	if bare, err := client.SECFilings.AllIndustryClassifications(ctx, NewAllIndustryClassificationsQuery()); err != nil || len(bare) != 1 {
 		t.Fatalf("AllIndustryClassifications without pagination = %+v, %v", bare, err)
 	}
 
@@ -152,7 +152,7 @@ func TestSecFilingsDynamicSearchRowsSurviveByteIdenticalAndMustBeObjects(t *test
 	body := `[{"future":[1,true,null],"nested":{"sicCode":"07371"}},{}]`
 	server, _ := newServer(t, jsonHandler(body))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
-	rows, err := client.SecFilings.SearchIndustryClassifications(context.Background(), NewIndustryClassificationSearchQuery())
+	rows, err := client.SECFilings.SearchIndustryClassifications(context.Background(), NewIndustryClassificationSearchQuery())
 	if err != nil || len(rows) != 2 {
 		t.Fatalf("SearchIndustryClassifications = %s, %v", rows, err)
 	}
@@ -166,7 +166,7 @@ func TestSecFilingsDynamicSearchRowsSurviveByteIdenticalAndMustBeObjects(t *test
 
 	scalar, rec := newServer(t, jsonHandler(`[{"sicCode":"07371"},1]`))
 	client = newClient(t, scalar, WithAuthentication(FMPHeader("route-secret")))
-	_, err = client.SecFilings.SearchIndustryClassifications(context.Background(), NewIndustryClassificationSearchQuery())
+	_, err = client.SECFilings.SearchIndustryClassifications(context.Background(), NewIndustryClassificationSearchQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, 0, "industry-classification-search")
 	if !strings.Contains(typed.Message, "row 1") {
 		t.Fatalf("message = %q, want it to name row 1", typed.Message)
@@ -194,39 +194,39 @@ func TestSecFilingsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		reason error
 	}{
 		{"filings comma ticker", func() error {
-			_, err := client.SecFilings.BySymbol(ctx, NewSecFilingsBySymbolQuery("AAPL,MSFT", from, to))
+			_, err := client.SECFilings.BySymbol(ctx, NewSECFilingsBySymbolQuery("AAPL,MSFT", from, to))
 			return err
 		}, "symbol", ErrCommaInTicker},
 		{"filings empty cik", func() error {
-			_, err := client.SecFilings.ByCIK(ctx, NewSecFilingsByCIKQuery(" ", from, to))
+			_, err := client.SECFilings.ByCIK(ctx, NewSECFilingsByCIKQuery(" ", from, to))
 			return err
 		}, "cik", ErrEmptyValue},
 		{"filings control form type", func() error {
-			_, err := client.SecFilings.ByFormType(ctx, NewSecFilingsByFormTypeQuery("8-\tK", from, to))
+			_, err := client.SECFilings.ByFormType(ctx, NewSECFilingsByFormTypeQuery("8-\tK", from, to))
 			return err
 		}, "formType", ErrControlCharacterValue},
 		{"latest zero from", func() error {
-			_, err := client.SecFilings.Latest8k(ctx, NewLatest8kSecFilingsQuery(Date{}, to))
+			_, err := client.SECFilings.Latest8K(ctx, NewLatest8KSECFilingsQuery(Date{}, to))
 			return err
 		}, "from", ErrZeroTemporalValue},
 		{"latest zero to", func() error {
-			_, err := client.SecFilings.Latest(ctx, NewLatestSecFilingsQuery(from, Date{}))
+			_, err := client.SECFilings.Latest(ctx, NewLatestSECFilingsQuery(from, Date{}))
 			return err
 		}, "to", ErrZeroTemporalValue},
 		{"company name empty", func() error {
-			_, err := client.SecFilings.SearchCompaniesByName(ctx, NewSecCompaniesByNameQuery(""))
+			_, err := client.SECFilings.SearchCompaniesByName(ctx, NewSECCompaniesByNameQuery(""))
 			return err
 		}, "company", ErrEmptyValue},
 		{"profile empty cik-A", func() error {
-			_, err := client.SecFilings.CompanyProfile(ctx, NewSecCompanyProfileQuery("AAPL").WithCIKA(""))
+			_, err := client.SECFilings.CompanyProfile(ctx, NewSECCompanyProfileQuery("AAPL").WithCIKA(""))
 			return err
 		}, "cik-A", ErrEmptyValue},
 		{"classification search comma ticker", func() error {
-			_, err := client.SecFilings.SearchIndustryClassifications(ctx, NewIndustryClassificationSearchQuery().WithSymbol("AAPL,MSFT"))
+			_, err := client.SECFilings.SearchIndustryClassifications(ctx, NewIndustryClassificationSearchQuery().WithSymbol("AAPL,MSFT"))
 			return err
 		}, "symbol", ErrCommaInTicker},
 		{"classification list control title", func() error {
-			_, err := client.SecFilings.IndustryClassifications(ctx, NewIndustryClassificationsQuery().WithIndustryTitle("SERVICES\n"))
+			_, err := client.SECFilings.IndustryClassifications(ctx, NewIndustryClassificationsQuery().WithIndustryTitle("SERVICES\n"))
 			return err
 		}, "industryTitle", ErrControlCharacterValue},
 	}
@@ -243,16 +243,16 @@ func TestSecFilingsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 
 	// Getters return the values as given, never normalized, and the setters
 	// copy the query instead of mutating the receiver.
-	base := NewSecCompanyProfileQuery(" AAPL ")
+	base := NewSECCompanyProfileQuery(" AAPL ")
 	set := base.WithCIKA("0000320193")
 	if base.CIKA() != nil || set.CIKA() == nil || *set.CIKA() != "0000320193" || set.Symbol() != " AAPL " {
-		t.Fatalf("SecCompanyProfileQuery setters mutated the receiver or normalized a value: %+v %+v", base, set)
+		t.Fatalf("SECCompanyProfileQuery setters mutated the receiver or normalized a value: %+v %+v", base, set)
 	}
-	filings := NewSecFilingsByFormTypeQuery("8-K", from, to)
+	filings := NewSECFilingsByFormTypeQuery("8-K", from, to)
 	paged := filings.WithPage(3)
 	if filings.Page() != nil || paged.Page() == nil || *paged.Page() != 3 || paged.From() != from || paged.To() != to ||
 		paged.FormType() != "8-K" || paged.Limit() != nil {
-		t.Fatalf("SecFilingsByFormTypeQuery setters mutated the receiver: %+v %+v", filings, paged)
+		t.Fatalf("SECFilingsByFormTypeQuery setters mutated the receiver: %+v %+v", filings, paged)
 	}
 }
 
@@ -264,7 +264,7 @@ func TestSecFilingsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	from := mustParseDate(t, "2024-01-01")
 	to := mustParseDate(t, "2024-03-01")
 
-	_, err := client.SecFilings.Latest8k(context.Background(), NewLatest8kSecFilingsQuery(from, to))
+	_, err := client.SECFilings.Latest8K(context.Background(), NewLatest8KSECFilingsQuery(from, to))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "sec-filings-8k")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"link"`) {
 		t.Fatalf("cause = %v, want it to name the missing member link", cause)

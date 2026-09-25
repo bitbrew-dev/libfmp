@@ -117,7 +117,7 @@ func TestDocumentedExchangeVariantDecodesExactValues(t *testing.T) {
 		ExchangeShortName: "NASDAQ", Industry: "Consumer Electronics", Website: "https://www.apple.com",
 		Description: row.Description, Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US",
 		FullTimeEmployees: "166000", Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino",
-		State: "CA", Zip: "95014", DcfDiff: 191.60731, Dcf: 140.70269296445176,
+		State: "CA", Zip: "95014", DCFDiff: 191.60731, DCF: 140.70269296445176,
 		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IpoDate: mustParseDate(t, "1980-12-12"),
 		DefaultImage: false, IsETF: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
 	}

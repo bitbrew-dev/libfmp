@@ -17,7 +17,7 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
 	assertFixtureParity[CompanyProfile](t, "bulk_company_profiles.json")
 	assertFixtureParity[BulkStockRating](t, "bulk_stock_ratings.json")
-	assertFixtureParity[BulkDcfValuation](t, "bulk_dcf_valuations.json")
+	assertFixtureParity[BulkDCFValuation](t, "bulk_dcf_valuations.json")
 	assertFixtureParity[BulkFinancialScore](t, "bulk_financial_scores.json")
 	assertFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.json")
 	assertFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.json")
@@ -51,9 +51,9 @@ func TestDocumentedBulkSnapshotsDecodeExactValues(t *testing.T) {
 		PriceToEarningsScore: "4", PriceToBookScore: "4"}); len(ratings) != 1 || ratings[0] != want {
 		t.Fatalf("bulk_stock_ratings = %+v", ratings)
 	}
-	dcf := assertFixtureParity[BulkDcfValuation](t, "bulk_dcf_valuations.json")
-	if want := (BulkDcfValuation{Symbol: "000002.SZ", Date: mustParseDate(t, "2025-07-09"),
-		Dcf: "179.6654688379575", StockPrice: "6.54"}); len(dcf) != 1 || dcf[0] != want {
+	dcf := assertFixtureParity[BulkDCFValuation](t, "bulk_dcf_valuations.json")
+	if want := (BulkDCFValuation{Symbol: "000002.SZ", Date: mustParseDate(t, "2025-07-09"),
+		DCF: "179.6654688379575", StockPrice: "6.54"}); len(dcf) != 1 || dcf[0] != want {
 		t.Fatalf("bulk_dcf_valuations = %+v", dcf)
 	}
 	if encoded, err := json.Marshal(dcf[0]); err != nil || !strings.Contains(string(encoded), `"Stock Price":"6.54"`) {

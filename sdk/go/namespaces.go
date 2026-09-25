@@ -27,8 +27,8 @@ type Namespaces struct {
 	Congressional CongressionalNamespace
 	// Crypto holds the crypto endpoints.
 	Crypto CryptoNamespace
-	// Dcf holds the dcf endpoints.
-	Dcf DcfNamespace
+	// DCF holds the dcf endpoints.
+	DCF DCFNamespace
 	// Directory holds the directory endpoints.
 	Directory DirectoryNamespace
 	// Economics holds the economics endpoints.
@@ -59,8 +59,8 @@ type Namespaces struct {
 	Screener ScreenerNamespace
 	// Search holds the search endpoints.
 	Search SearchNamespace
-	// SecFilings holds the sec_filings endpoints.
-	SecFilings SecFilingsNamespace
+	// SECFilings holds the sec_filings endpoints.
+	SECFilings SECFilingsNamespace
 	// Statements holds the statements endpoints.
 	Statements StatementsNamespace
 	// TechnicalIndicators holds the technical_indicators endpoints.
@@ -82,7 +82,7 @@ func (c *Client) bindNamespaces() {
 	c.Company = newCompanyNamespace(c)
 	c.Congressional = newCongressionalNamespace(c)
 	c.Crypto = newCryptoNamespace(c)
-	c.Dcf = newDcfNamespace(c)
+	c.DCF = newDCFNamespace(c)
 	c.Directory = newDirectoryNamespace(c)
 	c.Economics = newEconomicsNamespace(c)
 	c.Esg = newEsgNamespace(c)
@@ -98,7 +98,7 @@ func (c *Client) bindNamespaces() {
 	c.Quote = newQuoteNamespace(c)
 	c.Screener = newScreenerNamespace(c)
 	c.Search = newSearchNamespace(c)
-	c.SecFilings = newSecFilingsNamespace(c)
+	c.SECFilings = newSECFilingsNamespace(c)
 	c.Statements = newStatementsNamespace(c)
 	c.TechnicalIndicators = newTechnicalIndicatorsNamespace(c)
 	c.Tipranks = newTipranksNamespace(c)

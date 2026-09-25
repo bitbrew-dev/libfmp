@@ -80,7 +80,7 @@ func TestQuantityAndAmountFieldsDecodeFractionalForms(t *testing.T) {
 		t.Fatalf("earnings_calendar_fractional_synthetic = %+v", earnings)
 	}
 
-	dcf := assertFixtureParity[CustomDcfValuation](t, "custom_discounted_cash_flow_fractional_synthetic.json")
+	dcf := assertFixtureParity[CustomDCFValuation](t, "custom_discounted_cash_flow_fractional_synthetic.json")
 	if len(dcf) != 1 || dcf[0].DilutedSharesOutstanding != 15_004_697_000.5 {
 		t.Fatalf("custom_discounted_cash_flow_fractional_synthetic = %+v", dcf)
 	}

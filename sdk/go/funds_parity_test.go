@@ -13,7 +13,7 @@ import (
 // The nine funds fixtures, one per registry method. Every member is required
 // and non-null in the Rust models, so no fixture carries an intentionally
 // unknown member. fund_disclosure_dates.json decodes into the reused
-// institutional_ownership Form13fFilingDate model.
+// institutional_ownership Form13FFilingDate model.
 func TestFundsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
 	assertFixtureParity[ETFFundHolding](t, "etf_fund_holdings.json")
@@ -24,7 +24,7 @@ func TestFundsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[FundDisclosureHolder](t, "latest_fund_disclosure_holders.json")
 	assertFixtureParity[FundDisclosure](t, "fund_disclosures.json")
 	assertFixtureParity[FundDisclosureSearchResult](t, "fund_disclosure_holder_search.json")
-	assertFixtureParity[Form13fFilingDate](t, "fund_disclosure_dates.json")
+	assertFixtureParity[Form13FFilingDate](t, "fund_disclosure_dates.json")
 }
 
 // Exact values copied from crates/libfmp/tests/funds_responses.rs; the member
@@ -119,7 +119,7 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 		Symbol: "000089.SZ", Name: "Shenzhen Airport Co Ltd", Lei: "3003009W045RIKRBZI44", Title: "SHENZ AIRPORT-A",
 		Cusip: "N/A", Isin: "CNE000000VK1", Balance: 2_438_784, Units: "NS", CurrencyCode: "CNY",
 		ValUsd: 2_255_873.6, PctVal: 0.0023838966190458206, PayoffProfile: "Long", AssetCat: "EC", IssuerCat: "CORP",
-		InvCountry: "CN", IsRestrictedSec: "N", FairValLevel: "2", IsCashCollateral: "N", IsNonCashCollateral: "N",
+		InvCountry: "CN", IsRestrictedSEC: "N", FairValLevel: "2", IsCashCollateral: "N", IsNonCashCollateral: "N",
 		IsLoanByFund: "N",
 	}
 	if len(disclosures) != 1 || disclosures[0] != wantDisclosure {
@@ -145,8 +145,8 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 		t.Fatalf("re-encoded search members = %d, want 13", len(got))
 	}
 
-	dates := assertFixtureParity[Form13fFilingDate](t, "fund_disclosure_dates.json")
-	wantDate := Form13fFilingDate{Date: mustParseDate(t, "2026-04-30"), Year: 2026, Quarter: 2}
+	dates := assertFixtureParity[Form13FFilingDate](t, "fund_disclosure_dates.json")
+	wantDate := Form13FFilingDate{Date: mustParseDate(t, "2026-04-30"), Year: 2026, Quarter: 2}
 	if len(dates) != 1 || dates[0] != wantDate {
 		t.Fatalf("fund_disclosure_dates = %+v, want %+v", dates, wantDate)
 	}

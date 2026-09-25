@@ -21,25 +21,25 @@ func newInstitutionalOwnershipNamespace(client *Client) InstitutionalOwnershipNa
 	}
 }
 
-// Form13fFilingDatesQuery holds the query parameters of the endpoints that
-// take it: NewForm13fFilingDatesQuery takes the required arguments and each
+// Form13FFilingDatesQuery holds the query parameters of the endpoints that
+// take it: NewForm13FFilingDatesQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type Form13fFilingDatesQuery struct {
+type Form13FFilingDatesQuery struct {
 	cik string
 }
 
-// NewForm13fFilingDatesQuery creates the query from its required arguments.
-func NewForm13fFilingDatesQuery(cik string) Form13fFilingDatesQuery {
-	return Form13fFilingDatesQuery{cik: cik}
+// NewForm13FFilingDatesQuery creates the query from its required arguments.
+func NewForm13FFilingDatesQuery(cik string) Form13FFilingDatesQuery {
+	return Form13FFilingDatesQuery{cik: cik}
 }
 
 // CIK returns the cik argument as given.
-func (q Form13fFilingDatesQuery) CIK() string {
+func (q Form13FFilingDatesQuery) CIK() string {
 	return q.cik
 }
 
-func (q Form13fFilingDatesQuery) params() ([]queryParam, error) {
+func (q Form13FFilingDatesQuery) params() ([]queryParam, error) {
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
 		return nil, err
@@ -449,16 +449,16 @@ func (n *InstitutionalOwnershipNamespace) Extract(ctx context.Context, q Institu
 	return out, nil
 }
 
-// Form13fFilingDates retrieves available Form 13F filing dates for one US
+// Form13FFilingDates retrieves available Form 13F filing dates for one US
 // institutional holder.
 //
 // GET institutional-ownership/dates?cik=
-func (n *InstitutionalOwnershipNamespace) Form13fFilingDates(ctx context.Context, q Form13fFilingDatesQuery) ([]Form13fFilingDate, error) {
+func (n *InstitutionalOwnershipNamespace) Form13FFilingDates(ctx context.Context, q Form13FFilingDatesQuery) ([]Form13FFilingDate, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []Form13fFilingDate
+	var out []Form13FFilingDate
 	if err := n.client.getJSON(ctx, "institutional-ownership/dates", "institutional-ownership/dates", params, &out); err != nil {
 		return nil, err
 	}

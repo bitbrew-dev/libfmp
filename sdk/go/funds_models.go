@@ -444,7 +444,7 @@ type FundDisclosure struct {
 	AssetCat            string   `json:"assetCat"`
 	IssuerCat           string   `json:"issuerCat"`
 	InvCountry          string   `json:"invCountry"`
-	IsRestrictedSec     string   `json:"isRestrictedSec"`
+	IsRestrictedSEC     string   `json:"isRestrictedSec"`
 	FairValLevel        string   `json:"fairValLevel"`
 	IsCashCollateral    string   `json:"isCashCollateral"`
 	IsNonCashCollateral string   `json:"isNonCashCollateral"`
@@ -473,7 +473,7 @@ type fundDisclosureShadow struct {
 	AssetCat            *string   `json:"assetCat"`
 	IssuerCat           *string   `json:"issuerCat"`
 	InvCountry          *string   `json:"invCountry"`
-	IsRestrictedSec     *string   `json:"isRestrictedSec"`
+	IsRestrictedSEC     *string   `json:"isRestrictedSec"`
 	FairValLevel        *string   `json:"fairValLevel"`
 	IsCashCollateral    *string   `json:"isCashCollateral"`
 	IsNonCashCollateral *string   `json:"isNonCashCollateral"`
@@ -525,7 +525,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FundDisclosure", "issuerCat")
 	case shadow.InvCountry == nil:
 		return missingMemberError("FundDisclosure", "invCountry")
-	case shadow.IsRestrictedSec == nil:
+	case shadow.IsRestrictedSEC == nil:
 		return missingMemberError("FundDisclosure", "isRestrictedSec")
 	case shadow.FairValLevel == nil:
 		return missingMemberError("FundDisclosure", "fairValLevel")
@@ -555,7 +555,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		AssetCat:            *shadow.AssetCat,
 		IssuerCat:           *shadow.IssuerCat,
 		InvCountry:          *shadow.InvCountry,
-		IsRestrictedSec:     *shadow.IsRestrictedSec,
+		IsRestrictedSEC:     *shadow.IsRestrictedSEC,
 		FairValLevel:        *shadow.FairValLevel,
 		IsCashCollateral:    *shadow.IsCashCollateral,
 		IsNonCashCollateral: *shadow.IsNonCashCollateral,
