@@ -221,8 +221,8 @@ fn qualify(line: &str, name: &str, qualified: &str) -> String {
 }
 
 /// Rewrites the `__hash__ = None` class attribute of the value-equality models
-/// to the typeshed spelling, so type checkers reject a model used as a `set`
-/// member or `dict` key instead of flagging the stub itself.
+/// to the typeshed spelling, so the stub itself type-checks and pyright rejects
+/// a model used as a `set` member or `dict` key (mypy does not check that).
 fn mark_unhashable(content: &str) -> String {
     content.replace(UNHASHABLE_STUB, UNHASHABLE_TYPESHED)
 }
