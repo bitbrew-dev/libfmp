@@ -1,0 +1,36 @@
+[
+  {
+    "beta": 1.097,
+    "companyName": "Apple Inc.",
+    "country": "US",
+    "exchange": "NASDAQ Global Select",
+    "exchangeShortName": "NASDAQ",
+    "industry": "Consumer Electronics",
+    "isActivelyTrading": true,
+    "isEtf": false,
+    "isFund": false,
+    "lastAnnualDividend": 1.05,
+    "marketCap": 4885602246714.0,
+    "price": 332.64001,
+    "sector": "Technology",
+    "symbol": "AAPL",
+    "volume": 29909012
+  },
+  {
+    "beta": 0.5,
+    "companyName": "Fractional Cap Inc.",
+    "country": "US",
+    "exchange": "NASDAQ Global Select",
+    "exchangeShortName": "NASDAQ",
+    "industry": "Consumer Electronics",
+    "isActivelyTrading": true,
+    "isEtf": false,
+    "isFund": false,
+    "lastAnnualDividend": 0,
+    "marketCap": 1234567.5,
+    "price": 1.25,
+    "sector": "Technology",
+    "symbol": "FRAC",
+    "volume": 1.0
+  }
+]

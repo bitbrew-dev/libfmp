@@ -49,6 +49,17 @@ def test_list_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> 
     assert row.total_supply == 4_788_606_639
 
 
+def test_list_decodes_integral_float_and_fractional_supplies(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #339: a fractional or integral-float supply decodes as a ``float``."""
+    fixture_server.route("/cryptocurrency-list", load_fixture("cryptocurrency_list_fractional_synthetic.json"))
+    rows = client.crypto.list()
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].circulating_supply, float)
+    assert rows[0].circulating_supply == 4_232_705_124.5
+    assert rows[0].total_supply == 4_788_606_639.0
+
+
 def test_quote_reuses_the_shared_quote_route(client: Any, fixture_server: FixtureServer) -> None:
     """``quote`` reuses the generic ``/quote`` route and decodes the full quote row."""
     fixture_server.route("/quote", load_fixture("cryptocurrency_quote.json"))
