@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestUsDateAcceptsExactlyTheUsWireShape(t *testing.T) {
+func TestUSDateAcceptsExactlyTheUSWireShape(t *testing.T) {
 	t.Parallel()
 	parsed, err := ParseUSDate("02-29-2024")
 	if err != nil {
@@ -29,7 +29,7 @@ func TestUsDateAcceptsExactlyTheUsWireShape(t *testing.T) {
 	}
 }
 
-func TestUsDateRoundTripsThroughJSONAndRejectsZero(t *testing.T) {
+func TestUSDateRoundTripsThroughJSONAndRejectsZero(t *testing.T) {
 	t.Parallel()
 	var row struct {
 		Date    USDate  `json:"date"`
