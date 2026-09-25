@@ -194,3 +194,16 @@ def test_holder_analytics_accepts_the_u32_boundary(client: Any, fixture_server: 
 
     assert fixture_server.requests[0].query["page"] == ["4294967295"]
     assert fixture_server.requests[0].query["limit"] == ["4294967295"]
+
+
+def test_extract_decodes_fractional_shares_and_value(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: fractional shares and an integral-float value decode as ``float``."""
+    fixture_server.route(
+        "/institutional-ownership/extract", load_fixture("institutional_ownership_extract_fractional_synthetic.json")
+    )
+    rows = client.institutional_ownership.extract(HOLDER_CIK, YEAR_2023, Q3)
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].shares, float)
+    assert rows[0].shares == 13_280.5
+    assert rows[0].value == 1.0

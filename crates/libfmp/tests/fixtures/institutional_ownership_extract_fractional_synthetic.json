@@ -1,0 +1,18 @@
+[
+  {
+    "acceptedDate": "2023-11-13",
+    "cik": "0001388838",
+    "date": "2023-09-30",
+    "filingDate": "2023-11-13",
+    "finalLink": "https://www.sec.gov/Archives/edgar/data/1388838/000117266123003760/infotable.xml",
+    "link": "https://www.sec.gov/Archives/edgar/data/1388838/000117266123003760/0001172661-23-003760-index.htm",
+    "nameOfIssuer": "CHORD ENERGY CORPORATION",
+    "putCallShare": "",
+    "securityCusip": "674215207",
+    "shares": 13280.5,
+    "sharesType": "SH",
+    "symbol": "CHRD",
+    "titleOfClass": "COM NEW",
+    "value": 1.0
+  }
+]

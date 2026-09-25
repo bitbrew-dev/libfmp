@@ -321,3 +321,13 @@ def test_decode_error_names_the_custom_levered_endpoint(
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.dcf.custom_levered_discounted_cash_flow("AAPL")
     assert raised.value.endpoint == "custom-levered-discounted-cash-flow"
+
+
+def test_custom_dcf_decodes_fractional_diluted_shares(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: a fractional diluted share count decodes as ``float``."""
+    fixture_server.route(CUSTOM_PATH, load_fixture("custom_discounted_cash_flow_fractional_synthetic.json"))
+    rows = client.dcf.custom_discounted_cash_flow("AAPL")
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].diluted_shares_outstanding, float)
+    assert rows[0].diluted_shares_outstanding == 15_004_697_000.5

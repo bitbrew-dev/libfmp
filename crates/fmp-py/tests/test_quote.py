@@ -235,3 +235,13 @@ def test_batch_status_error_names_the_batch_endpoint(
     assert error.endpoint == "batch-quote-short"
     assert error.status == 403
     assert error.body == '{"error": "denied"}'
+
+
+def test_aftermarket_trade_decodes_a_fractional_trade_size(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: a fractional trade size decodes as ``float``."""
+    fixture_server.route("/aftermarket-trade", load_fixture("aftermarket_trade_fractional_synthetic.json"))
+    rows = client.quote.aftermarket_trade("AAPL")
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].trade_size, float)
+    assert rows[0].trade_size == 16.5
