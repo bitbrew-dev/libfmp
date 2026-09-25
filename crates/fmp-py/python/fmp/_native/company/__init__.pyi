@@ -5,8 +5,8 @@ import datetime
 import typing
 
 __all__ = [
-    "AllSharesFloatRecord",
     "CompanyExecutive",
+    "CompanyMarketCapitalization",
     "CompanyNamespace",
     "CompanyNote",
     "CompanyProfile",
@@ -15,33 +15,10 @@ __all__ = [
     "EmployeeCount",
     "ExecutiveCompensation",
     "ExecutiveCompensationBenchmark",
-    "MarketCapitalizationRecord",
     "MergerAcquisition",
+    "ShareFloat",
     "StockPeer",
 ]
-
-
-@typing.final
-class AllSharesFloatRecord:
-    @property
-    def symbol(self) -> builtins.str: ...
-    @property
-    def date(self) -> datetime.datetime: ...
-    @property
-    def free_float(self) -> builtins.float: ...
-    @property
-    def float_shares(self) -> builtins.float: ...
-    @property
-    def outstanding_shares(self) -> builtins.float: ...
-    def __new__(
-        cls,
-        symbol: builtins.str,
-        date: datetime.datetime,
-        free_float: builtins.float,
-        float_shares: builtins.float,
-        outstanding_shares: builtins.float,
-    ) -> AllSharesFloatRecord: ...
-    def __getnewargs__(self) -> tuple: ...
 
 
 @typing.final
@@ -73,6 +50,20 @@ class CompanyExecutive:
         title_since: typing.Optional[builtins.str],
         active: builtins.bool,
     ) -> CompanyExecutive: ...
+    def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class CompanyMarketCapitalization:
+    @property
+    def symbol(self) -> builtins.str: ...
+    @property
+    def date(self) -> datetime.date: ...
+    @property
+    def market_cap(self) -> builtins.float: ...
+    def __new__(
+        cls, symbol: builtins.str, date: datetime.date, market_cap: builtins.float
+    ) -> CompanyMarketCapitalization: ...
     def __getnewargs__(self) -> tuple: ...
 
 
@@ -128,14 +119,14 @@ class CompanyNamespace:
 
     def market_capitalization(
         self, symbol: builtins.str
-    ) -> builtins.list[MarketCapitalizationRecord]:
+    ) -> builtins.list[CompanyMarketCapitalization]:
         r"""
         Retrieves current worldwide market capitalization for one company.
         """
 
-    def market_capitalization_batch(
+    def batch_market_capitalization(
         self, symbols: builtins.str | typing.Sequence[builtins.str]
-    ) -> builtins.list[MarketCapitalizationRecord]:
+    ) -> builtins.list[CompanyMarketCapitalization]:
         r"""
         Retrieves current worldwide market capitalization for multiple companies.
         """
@@ -147,7 +138,7 @@ class CompanyNamespace:
         limit: typing.Optional[builtins.int] = None,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[MarketCapitalizationRecord]:
+    ) -> builtins.list[CompanyMarketCapitalization]:
         r"""
         Retrieves historical worldwide market capitalization for one company.
         """
@@ -157,17 +148,17 @@ class CompanyNamespace:
         Retrieves current worldwide share-float data for one company.
         """
 
-    def shares_float_all(
+    def all_shares_float(
         self,
         *,
         page: typing.Optional[builtins.int] = None,
         limit: typing.Optional[builtins.int] = None,
-    ) -> builtins.list[AllSharesFloatRecord]:
+    ) -> builtins.list[ShareFloat]:
         r"""
         Retrieves paginated worldwide share-float data for all companies.
         """
 
-    def mergers_acquisitions_latest(
+    def latest_mergers_acquisitions(
         self,
         *,
         page: typing.Optional[builtins.int] = None,
@@ -177,7 +168,7 @@ class CompanyNamespace:
         Retrieves the latest US mergers and acquisitions with optional pagination.
         """
 
-    def mergers_acquisitions_search(
+    def search_mergers_acquisitions(
         self, name: builtins.str
     ) -> builtins.list[MergerAcquisition]:
         r"""
@@ -495,20 +486,6 @@ class ExecutiveCompensationBenchmark:
 
 
 @typing.final
-class MarketCapitalizationRecord:
-    @property
-    def symbol(self) -> builtins.str: ...
-    @property
-    def date(self) -> datetime.date: ...
-    @property
-    def market_cap(self) -> builtins.float: ...
-    def __new__(
-        cls, symbol: builtins.str, date: datetime.date, market_cap: builtins.float
-    ) -> MarketCapitalizationRecord: ...
-    def __getnewargs__(self) -> tuple: ...
-
-
-@typing.final
 class MergerAcquisition:
     @property
     def symbol(self) -> builtins.str: ...
@@ -540,6 +517,29 @@ class MergerAcquisition:
         accepted_date: datetime.datetime,
         link: builtins.str,
     ) -> MergerAcquisition: ...
+    def __getnewargs__(self) -> tuple: ...
+
+
+@typing.final
+class ShareFloat:
+    @property
+    def symbol(self) -> builtins.str: ...
+    @property
+    def date(self) -> datetime.datetime: ...
+    @property
+    def free_float(self) -> builtins.float: ...
+    @property
+    def float_shares(self) -> builtins.float: ...
+    @property
+    def outstanding_shares(self) -> builtins.float: ...
+    def __new__(
+        cls,
+        symbol: builtins.str,
+        date: datetime.datetime,
+        free_float: builtins.float,
+        float_shares: builtins.float,
+        outstanding_shares: builtins.float,
+    ) -> ShareFloat: ...
     def __getnewargs__(self) -> tuple: ...
 
 

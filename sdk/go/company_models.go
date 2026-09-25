@@ -424,18 +424,18 @@ func (m *EmployeeCount) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// MarketCapitalizationRecord is one current or historical worldwide
+// CompanyMarketCapitalization is one current or historical worldwide
 // market-capitalization observation.
-type MarketCapitalizationRecord struct {
+type CompanyMarketCapitalization struct {
 	Symbol    string  `json:"symbol"`
 	Date      Date    `json:"date"`
 	MarketCap float64 `json:"marketCap"`
 }
 
-// marketCapitalizationRecordShadow mirrors MarketCapitalizationRecord with a
+// companyMarketCapitalizationShadow mirrors CompanyMarketCapitalization with a
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
-type marketCapitalizationRecordShadow struct {
+type companyMarketCapitalizationShadow struct {
 	Symbol    *string  `json:"symbol"`
 	Date      *Date    `json:"date"`
 	MarketCap *float64 `json:"marketCap"`
@@ -444,20 +444,20 @@ type marketCapitalizationRecordShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *MarketCapitalizationRecord) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow marketCapitalizationRecordShadow
+func (m *CompanyMarketCapitalization) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow companyMarketCapitalizationShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("MarketCapitalizationRecord", "symbol")
+		return missingMemberError("CompanyMarketCapitalization", "symbol")
 	case shadow.Date == nil:
-		return missingMemberError("MarketCapitalizationRecord", "date")
+		return missingMemberError("CompanyMarketCapitalization", "date")
 	case shadow.MarketCap == nil:
-		return missingMemberError("MarketCapitalizationRecord", "marketCap")
+		return missingMemberError("CompanyMarketCapitalization", "marketCap")
 	}
-	*m = MarketCapitalizationRecord{
+	*m = CompanyMarketCapitalization{
 		Symbol:    *shadow.Symbol,
 		Date:      *shadow.Date,
 		MarketCap: *shadow.MarketCap,
@@ -521,9 +521,9 @@ func (m *CompanyShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// AllSharesFloatRecord is one all-company share-float observation, whose
-// payload has no source field.
-type AllSharesFloatRecord struct {
+// ShareFloat is one all-company share-float observation, whose payload has no
+// source field.
+type ShareFloat struct {
 	Symbol            string   `json:"symbol"`
 	Date              DateTime `json:"date"`
 	FreeFloat         float64  `json:"freeFloat"`
@@ -531,10 +531,9 @@ type AllSharesFloatRecord struct {
 	OutstandingShares float64  `json:"outstandingShares"`
 }
 
-// allSharesFloatRecordShadow mirrors AllSharesFloatRecord with a pointer or
-// raw value for every required member so a missing or null member is
-// observable after decoding.
-type allSharesFloatRecordShadow struct {
+// shareFloatShadow mirrors ShareFloat with a pointer or raw value for every
+// required member so a missing or null member is observable after decoding.
+type shareFloatShadow struct {
 	Symbol            *string   `json:"symbol"`
 	Date              *DateTime `json:"date"`
 	FreeFloat         *float64  `json:"freeFloat"`
@@ -545,24 +544,24 @@ type allSharesFloatRecordShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *AllSharesFloatRecord) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow allSharesFloatRecordShadow
+func (m *ShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow shareFloatShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("AllSharesFloatRecord", "symbol")
+		return missingMemberError("ShareFloat", "symbol")
 	case shadow.Date == nil:
-		return missingMemberError("AllSharesFloatRecord", "date")
+		return missingMemberError("ShareFloat", "date")
 	case shadow.FreeFloat == nil:
-		return missingMemberError("AllSharesFloatRecord", "freeFloat")
+		return missingMemberError("ShareFloat", "freeFloat")
 	case shadow.FloatShares == nil:
-		return missingMemberError("AllSharesFloatRecord", "floatShares")
+		return missingMemberError("ShareFloat", "floatShares")
 	case shadow.OutstandingShares == nil:
-		return missingMemberError("AllSharesFloatRecord", "outstandingShares")
+		return missingMemberError("ShareFloat", "outstandingShares")
 	}
-	*m = AllSharesFloatRecord{
+	*m = ShareFloat{
 		Symbol:            *shadow.Symbol,
 		Date:              *shadow.Date,
 		FreeFloat:         *shadow.FreeFloat,

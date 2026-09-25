@@ -73,15 +73,15 @@ setters = [{ arg = "limit" }]
 name = "market_capitalization"
 method = "market_capitalization"
 query = "MarketCapitalizationQuery"
-response = "company::MarketCapitalizationRecord"
+response = "company::CompanyMarketCapitalization"
 doc = "Retrieves current worldwide market capitalization for one company."
 args = [{ name = "symbol", kind = "ticker" }]
 
 [[endpoint]]
-name = "market_capitalization_batch"
-method = "market_capitalization_batch"
-query = "MarketCapitalizationBatchQuery"
-response = "company::MarketCapitalizationRecord"
+name = "batch_market_capitalization"
+method = "batch_market_capitalization"
+query = "BatchMarketCapitalizationQuery"
+response = "company::CompanyMarketCapitalization"
 doc = "Retrieves current worldwide market capitalization for multiple companies."
 args = [{ name = "symbols", kind = "ticker_list" }]
 
@@ -89,7 +89,7 @@ args = [{ name = "symbols", kind = "ticker_list" }]
 name = "historical_market_capitalization"
 method = "historical_market_capitalization"
 query = "HistoricalMarketCapitalizationQuery"
-response = "company::MarketCapitalizationRecord"
+response = "company::CompanyMarketCapitalization"
 doc = "Retrieves historical worldwide market capitalization for one company."
 args = [
     { name = "symbol", kind = "ticker" },
@@ -108,10 +108,10 @@ doc = "Retrieves current worldwide share-float data for one company."
 args = [{ name = "symbol", kind = "ticker" }]
 
 [[endpoint]]
-name = "shares_float_all"
-method = "shares_float_all"
-query = "SharesFloatAllQuery"
-response = "company::AllSharesFloatRecord"
+name = "all_shares_float"
+method = "all_shares_float"
+query = "AllSharesFloatQuery"
+response = "company::ShareFloat"
 doc = "Retrieves paginated worldwide share-float data for all companies."
 args = [
     { name = "page", kind = "page", required = false },
@@ -120,9 +120,9 @@ args = [
 setters = [{ arg = "page" }, { arg = "limit" }]
 
 [[endpoint]]
-name = "mergers_acquisitions_latest"
-method = "mergers_acquisitions_latest"
-query = "MergersAcquisitionsLatestQuery"
+name = "latest_mergers_acquisitions"
+method = "latest_mergers_acquisitions"
+query = "LatestMergersAcquisitionsQuery"
 response = "company::MergerAcquisition"
 doc = "Retrieves the latest US mergers and acquisitions with optional pagination."
 args = [
@@ -132,9 +132,9 @@ args = [
 setters = [{ arg = "page" }, { arg = "limit" }]
 
 [[endpoint]]
-name = "mergers_acquisitions_search"
-method = "mergers_acquisitions_search"
-query = "MergersAcquisitionsSearchQuery"
+name = "search_mergers_acquisitions"
+method = "search_mergers_acquisitions"
+query = "SearchMergersAcquisitionsQuery"
 response = "company::MergerAcquisition"
 doc = "Searches US mergers and acquisitions by representation-preserving company name."
 args = [{ name = "name", kind = "search_term" }]

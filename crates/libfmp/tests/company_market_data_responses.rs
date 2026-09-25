@@ -1,10 +1,8 @@
-use libfmp::responses::company::{
-    AllSharesFloatRecord, CompanyShareFloat, MarketCapitalizationRecord,
-};
+use libfmp::responses::company::{CompanyMarketCapitalization, CompanyShareFloat, ShareFloat};
 
 #[test]
 fn documented_market_capitalization_decodes_every_exact_field_and_wire_type() {
-    let rows: Vec<MarketCapitalizationRecord> =
+    let rows: Vec<CompanyMarketCapitalization> =
         serde_json::from_str(include_str!("fixtures/company_market_capitalization.json")).unwrap();
 
     assert_eq!(rows.len(), 1);
@@ -19,7 +17,7 @@ fn documented_market_capitalization_decodes_every_exact_field_and_wire_type() {
     assert!(wire["marketCap"].is_u64());
     assert!(wire.get("market_cap").is_none());
 
-    let historical: Vec<MarketCapitalizationRecord> = serde_json::from_str(include_str!(
+    let historical: Vec<CompanyMarketCapitalization> = serde_json::from_str(include_str!(
         "fixtures/company_historical_market_capitalization.json"
     ))
     .unwrap();
@@ -58,7 +56,7 @@ fn documented_company_share_float_decodes_source_and_exact_wire_types() {
 
 #[test]
 fn documented_all_share_float_is_a_separate_source_free_shape() {
-    let rows: Vec<AllSharesFloatRecord> =
+    let rows: Vec<ShareFloat> =
         serde_json::from_str(include_str!("fixtures/company_shares_float_all.json")).unwrap();
 
     assert_eq!(rows.len(), 1);
@@ -82,7 +80,7 @@ fn documented_all_share_float_is_a_separate_source_free_shape() {
 #[test]
 fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_large_values() {
     assert!(
-        serde_json::from_str::<Vec<MarketCapitalizationRecord>>("[]")
+        serde_json::from_str::<Vec<CompanyMarketCapitalization>>("[]")
             .unwrap()
             .is_empty()
     );
@@ -92,12 +90,12 @@ fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_large_values() 
             .is_empty()
     );
     assert!(
-        serde_json::from_str::<Vec<AllSharesFloatRecord>>("[]")
+        serde_json::from_str::<Vec<ShareFloat>>("[]")
             .unwrap()
             .is_empty()
     );
 
-    let market_caps: Vec<MarketCapitalizationRecord> = serde_json::from_str(
+    let market_caps: Vec<CompanyMarketCapitalization> = serde_json::from_str(
         r#"[
           {"symbol":"AAPL","date":"2026-07-30","marketCap":18446744073709551615,"future":true},
           {"symbol":"MSFT","date":"2026-07-30","marketCap":9007199254740993}
@@ -122,7 +120,7 @@ fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_large_values() 
         9_007_199_254_740_992.0
     );
 
-    let all_floats: Vec<AllSharesFloatRecord> = serde_json::from_str(
+    let all_floats: Vec<ShareFloat> = serde_json::from_str(
         r#"[
           {"symbol":"000001.SZ","date":"2026-07-29 14:23:30","freeFloat":41.409,"floatShares":18446744073709551615,"outstandingShares":9007199254740993,"future":null},
           {"symbol":"000002.SZ","date":"2026-07-29 14:23:30","freeFloat":42.0,"floatShares":3,"outstandingShares":4}

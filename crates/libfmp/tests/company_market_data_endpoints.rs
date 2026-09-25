@@ -8,10 +8,10 @@ use libfmp::{
     endpoints::{
         EndpointSpec,
         company::{
-            HistoricalMarketCapitalizationQuery, MarketCapitalizationBatchQuery,
-            MarketCapitalizationQuery, SharesFloatAllQuery, SharesFloatQuery,
-            historical_market_capitalization, market_capitalization, market_capitalization_batch,
-            shares_float, shares_float_all,
+            AllSharesFloatQuery, BatchMarketCapitalizationQuery,
+            HistoricalMarketCapitalizationQuery, MarketCapitalizationQuery, SharesFloatQuery,
+            all_shares_float, batch_market_capitalization, historical_market_capitalization,
+            market_capitalization, shares_float,
         },
         metadata::{AccessRequirement, GeographicAvailability},
     },
@@ -36,7 +36,7 @@ fn descriptors_use_exact_paths_queries_geography_and_response_row_metadata() {
         .with_limit(Limit(5_001))
         .with_from(Date::from_str("2026-04-16").unwrap())
         .with_to(Date::from_str("2026-07-16").unwrap());
-    let all_query = SharesFloatAllQuery::new()
+    let all_query = AllSharesFloatQuery::new()
         .with_page(Page(u32::MAX))
         .with_limit(Limit(5_001));
 
@@ -47,7 +47,7 @@ fn descriptors_use_exact_paths_queries_geography_and_response_row_metadata() {
         "AAPL"
     );
     assert_eq!(
-        MarketCapitalizationBatchQuery::new(symbols.clone())
+        BatchMarketCapitalizationQuery::new(symbols.clone())
             .symbols()
             .as_slice(),
         symbols.as_slice()
@@ -61,10 +61,10 @@ fn descriptors_use_exact_paths_queries_geography_and_response_row_metadata() {
     assert_eq!(all_query.limit(), Some(Limit(5_001)));
 
     let current = market_capitalization(MarketCapitalizationQuery::new(symbol.clone()));
-    let batch = market_capitalization_batch(MarketCapitalizationBatchQuery::new(symbols));
+    let batch = batch_market_capitalization(BatchMarketCapitalizationQuery::new(symbols));
     let historical = historical_market_capitalization(historical_query);
     let float = shares_float(SharesFloatQuery::new(symbol));
-    let all = shares_float_all(all_query);
+    let all = all_shares_float(all_query);
 
     for (endpoint, expected) in [
         (facts(&current), "market-capitalization"),
@@ -128,7 +128,7 @@ async fn proxy_client_preserves_exact_omission_order_encoding_and_independent_da
         .await
         .unwrap();
     client
-        .market_capitalization_batch(
+        .batch_market_capitalization(
             TickerList::new(vec![
                 Ticker::new("AAPL").unwrap(),
                 Ticker::new("^VIX").unwrap(),
@@ -168,12 +168,12 @@ async fn proxy_client_preserves_exact_omission_order_encoding_and_independent_da
         .await
         .unwrap();
     client
-        .shares_float_all(SharesFloatAllQuery::new())
+        .all_shares_float(AllSharesFloatQuery::new())
         .await
         .unwrap();
     client
-        .shares_float_all(
-            SharesFloatAllQuery::new()
+        .all_shares_float(
+            AllSharesFloatQuery::new()
                 .with_page(Page(0))
                 .with_limit(Limit(5_001)),
         )
@@ -226,7 +226,7 @@ async fn every_market_data_client_method_preserves_empty_arrays() {
     );
     assert!(
         client
-            .market_capitalization_batch(
+            .batch_market_capitalization(
                 TickerList::new(vec![Ticker::new("AAPL").unwrap()]).unwrap()
             )
             .await
@@ -249,7 +249,7 @@ async fn every_market_data_client_method_preserves_empty_arrays() {
     );
     assert!(
         client
-            .shares_float_all(SharesFloatAllQuery::new())
+            .all_shares_float(AllSharesFloatQuery::new())
             .await
             .unwrap()
             .is_empty()
@@ -289,7 +289,7 @@ async fn direct_fmp_header_and_query_auth_use_the_same_market_data_contracts() {
                 .unwrap();
         } else {
             client
-                .market_capitalization_batch(
+                .batch_market_capitalization(
                     TickerList::new(vec![
                         Ticker::new("AAPL").unwrap(),
                         Ticker::new("MSFT").unwrap(),

@@ -14,9 +14,9 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     responses::company::{
-        AllSharesFloatRecord, CompanyExecutive, CompanyNote, CompanyProfile, CompanyShareFloat,
-        DelistedCompany, EmployeeCount, ExecutiveCompensation, ExecutiveCompensationBenchmark,
-        MarketCapitalizationRecord, MergerAcquisition, StockPeer,
+        CompanyExecutive, CompanyMarketCapitalization, CompanyNote, CompanyProfile,
+        CompanyShareFloat, DelistedCompany, EmployeeCount, ExecutiveCompensation,
+        ExecutiveCompensationBenchmark, MergerAcquisition, ShareFloat, StockPeer,
     },
     types::{BenchmarkYear, Cik, Date, Limit, Page, SearchTerm, Ticker, TickerList},
 };
@@ -70,7 +70,7 @@ required_query!(
 );
 required_query!(
     "Required company-name search term for US mergers and acquisitions.",
-    MergersAcquisitionsSearchQuery,
+    SearchMergersAcquisitionsQuery,
     name,
     SearchTerm,
     "name"
@@ -122,12 +122,12 @@ impl QueryParameters for ExecutiveCompensationBenchmarkQuery {
 
 /// Optional pagination parameters for the latest US mergers and acquisitions.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-pub struct MergersAcquisitionsLatestQuery {
+pub struct LatestMergersAcquisitionsQuery {
     page: Option<Page>,
     limit: Option<Limit>,
 }
 
-impl MergersAcquisitionsLatestQuery {
+impl LatestMergersAcquisitionsQuery {
     /// Creates a query without undocumented pagination defaults.
     pub const fn new() -> Self {
         Self {
@@ -159,7 +159,7 @@ impl MergersAcquisitionsLatestQuery {
     }
 }
 
-impl QueryParameters for MergersAcquisitionsLatestQuery {
+impl QueryParameters for LatestMergersAcquisitionsQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.optional("page", self.page);
         encoder.optional("limit", self.limit);
@@ -174,7 +174,7 @@ required_query!(
 );
 required_query!(
     "Required query parameters for a worldwide batch market-capitalization lookup.",
-    MarketCapitalizationBatchQuery,
+    BatchMarketCapitalizationQuery,
     symbols,
     TickerList,
     "symbols"
@@ -269,12 +269,12 @@ impl QueryParameters for HistoricalMarketCapitalizationQuery {
 
 /// Optional pagination parameters for worldwide all-company share-float data.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-pub struct SharesFloatAllQuery {
+pub struct AllSharesFloatQuery {
     page: Option<Page>,
     limit: Option<Limit>,
 }
 
-impl SharesFloatAllQuery {
+impl AllSharesFloatQuery {
     /// Creates a query without undocumented pagination defaults.
     pub const fn new() -> Self {
         Self {
@@ -306,7 +306,7 @@ impl SharesFloatAllQuery {
     }
 }
 
-impl QueryParameters for SharesFloatAllQuery {
+impl QueryParameters for AllSharesFloatQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.optional("page", self.page);
         encoder.optional("limit", self.limit);
@@ -512,15 +512,15 @@ pub fn historical_employee_count(
 /// Describes `GET market-capitalization` without binding it to a transport.
 pub fn market_capitalization(
     query: MarketCapitalizationQuery,
-) -> EndpointSpec<MarketCapitalizationQuery, Vec<MarketCapitalizationRecord>> {
+) -> EndpointSpec<MarketCapitalizationQuery, Vec<CompanyMarketCapitalization>> {
     EndpointSpec::get("market-capitalization", "market-capitalization", query)
         .with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET market-capitalization-batch` without binding it to a transport.
-pub fn market_capitalization_batch(
-    query: MarketCapitalizationBatchQuery,
-) -> EndpointSpec<MarketCapitalizationBatchQuery, Vec<MarketCapitalizationRecord>> {
+pub fn batch_market_capitalization(
+    query: BatchMarketCapitalizationQuery,
+) -> EndpointSpec<BatchMarketCapitalizationQuery, Vec<CompanyMarketCapitalization>> {
     EndpointSpec::get(
         "market-capitalization-batch",
         "market-capitalization-batch",
@@ -532,7 +532,7 @@ pub fn market_capitalization_batch(
 /// Describes `GET historical-market-capitalization` without binding it to a transport.
 pub fn historical_market_capitalization(
     query: HistoricalMarketCapitalizationQuery,
-) -> EndpointSpec<HistoricalMarketCapitalizationQuery, Vec<MarketCapitalizationRecord>> {
+) -> EndpointSpec<HistoricalMarketCapitalizationQuery, Vec<CompanyMarketCapitalization>> {
     EndpointSpec::get(
         "historical-market-capitalization",
         "historical-market-capitalization",
@@ -549,16 +549,16 @@ pub fn shares_float(
 }
 
 /// Describes `GET shares-float-all` without binding it to a transport.
-pub fn shares_float_all(
-    query: SharesFloatAllQuery,
-) -> EndpointSpec<SharesFloatAllQuery, Vec<AllSharesFloatRecord>> {
+pub fn all_shares_float(
+    query: AllSharesFloatQuery,
+) -> EndpointSpec<AllSharesFloatQuery, Vec<ShareFloat>> {
     EndpointSpec::get("shares-float-all", "shares-float-all", query).with_metadata(MARKET_DATA_5K)
 }
 
 /// Describes `GET mergers-acquisitions-latest` without binding it to a transport.
-pub fn mergers_acquisitions_latest(
-    query: MergersAcquisitionsLatestQuery,
-) -> EndpointSpec<MergersAcquisitionsLatestQuery, Vec<MergerAcquisition>> {
+pub fn latest_mergers_acquisitions(
+    query: LatestMergersAcquisitionsQuery,
+) -> EndpointSpec<LatestMergersAcquisitionsQuery, Vec<MergerAcquisition>> {
     EndpointSpec::get(
         "mergers-acquisitions-latest",
         "mergers-acquisitions-latest",
@@ -568,9 +568,9 @@ pub fn mergers_acquisitions_latest(
 }
 
 /// Describes `GET mergers-acquisitions-search` without binding it to a transport.
-pub fn mergers_acquisitions_search(
-    query: MergersAcquisitionsSearchQuery,
-) -> EndpointSpec<MergersAcquisitionsSearchQuery, Vec<MergerAcquisition>> {
+pub fn search_mergers_acquisitions(
+    query: SearchMergersAcquisitionsQuery,
+) -> EndpointSpec<SearchMergersAcquisitionsQuery, Vec<MergerAcquisition>> {
     EndpointSpec::get(
         "mergers-acquisitions-search",
         "mergers-acquisitions-search",
@@ -665,16 +665,16 @@ impl Client {
     pub async fn market_capitalization(
         &self,
         query: impl Into<MarketCapitalizationQuery>,
-    ) -> Result<Vec<MarketCapitalizationRecord>> {
+    ) -> Result<Vec<CompanyMarketCapitalization>> {
         self.execute(&market_capitalization(query.into())).await
     }
 
     /// Retrieves current worldwide market capitalization for multiple companies.
-    pub async fn market_capitalization_batch(
+    pub async fn batch_market_capitalization(
         &self,
-        query: impl Into<MarketCapitalizationBatchQuery>,
-    ) -> Result<Vec<MarketCapitalizationRecord>> {
-        self.execute(&market_capitalization_batch(query.into()))
+        query: impl Into<BatchMarketCapitalizationQuery>,
+    ) -> Result<Vec<CompanyMarketCapitalization>> {
+        self.execute(&batch_market_capitalization(query.into()))
             .await
     }
 
@@ -682,7 +682,7 @@ impl Client {
     pub async fn historical_market_capitalization(
         &self,
         query: impl Into<HistoricalMarketCapitalizationQuery>,
-    ) -> Result<Vec<MarketCapitalizationRecord>> {
+    ) -> Result<Vec<CompanyMarketCapitalization>> {
         self.execute(&historical_market_capitalization(query.into()))
             .await
     }
@@ -696,27 +696,24 @@ impl Client {
     }
 
     /// Retrieves paginated worldwide share-float data for all companies.
-    pub async fn shares_float_all(
-        &self,
-        query: SharesFloatAllQuery,
-    ) -> Result<Vec<AllSharesFloatRecord>> {
-        self.execute(&shares_float_all(query)).await
+    pub async fn all_shares_float(&self, query: AllSharesFloatQuery) -> Result<Vec<ShareFloat>> {
+        self.execute(&all_shares_float(query)).await
     }
 
     /// Retrieves the latest US mergers and acquisitions with optional pagination.
-    pub async fn mergers_acquisitions_latest(
+    pub async fn latest_mergers_acquisitions(
         &self,
-        query: MergersAcquisitionsLatestQuery,
+        query: LatestMergersAcquisitionsQuery,
     ) -> Result<Vec<MergerAcquisition>> {
-        self.execute(&mergers_acquisitions_latest(query)).await
+        self.execute(&latest_mergers_acquisitions(query)).await
     }
 
     /// Searches US mergers and acquisitions by representation-preserving company name.
-    pub async fn mergers_acquisitions_search(
+    pub async fn search_mergers_acquisitions(
         &self,
-        query: impl Into<MergersAcquisitionsSearchQuery>,
+        query: impl Into<SearchMergersAcquisitionsQuery>,
     ) -> Result<Vec<MergerAcquisition>> {
-        self.execute(&mergers_acquisitions_search(query.into()))
+        self.execute(&search_mergers_acquisitions(query.into()))
             .await
     }
 

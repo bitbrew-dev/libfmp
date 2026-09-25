@@ -25,7 +25,7 @@ from fmp.commitment_of_traders import (
     CotReportListing,
 )
 from fmp.commodities import CommoditiesNamespace, CommodityListing
-from fmp.company import CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark, MarketCapitalizationRecord
+from fmp.company import CompanyMarketCapitalization, CompanyNamespace, CompanyProfile, ExecutiveCompensationBenchmark
 from fmp.congressional import (
     CongressionalMemberNetWorthAggregate,
     CongressionalMemberNetWorthEntry,
@@ -154,11 +154,11 @@ def check_company_contract(client: FmpClient) -> None:
     company: CompanyNamespace = client.company
     profiles: list[CompanyProfile] = company.profile("AAPL")
     ipo_date: datetime.date = profiles[0].ipo_date
-    history: list[MarketCapitalizationRecord] = client.company.historical_market_capitalization(
+    history: list[CompanyMarketCapitalization] = client.company.historical_market_capitalization(
         "AAPL", limit=5001, from_=datetime.date(2026, 4, 16), to="2026-07-16"
     )
     market_cap: float = history[0].market_cap
-    batch: list[MarketCapitalizationRecord] = client.company.market_capitalization_batch(["AAPL", "MSFT"])
+    batch: list[CompanyMarketCapitalization] = client.company.batch_market_capitalization(["AAPL", "MSFT"])
     benchmarks: list[ExecutiveCompensationBenchmark] = client.company.executive_compensation_benchmark(year="2024")
     average: float = benchmarks[0].average_compensation
     _ = (ipo_date, market_cap, batch, average)

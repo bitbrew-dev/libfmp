@@ -56,13 +56,13 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(byCik) != 1 || byCik[0].Symbol != "AAPL" {
 		t.Fatalf("ProfileByCik = %+v, %v", byCik, err)
 	}
-	batch, err := client.Company.MarketCapitalizationBatch(ctx, NewMarketCapitalizationBatchQuery([]string{"AAPL", "MSFT"}))
+	batch, err := client.Company.BatchMarketCapitalization(ctx, NewBatchMarketCapitalizationQuery([]string{"AAPL", "MSFT"}))
 	if err != nil || len(batch) != 1 || batch[0].MarketCap != 4_874_072_686_740 {
-		t.Fatalf("MarketCapitalizationBatch = %+v, %v", batch, err)
+		t.Fatalf("BatchMarketCapitalization = %+v, %v", batch, err)
 	}
-	search, err := client.Company.MergersAcquisitionsSearch(ctx, NewMergersAcquisitionsSearchQuery("Pineapple Energy"))
+	search, err := client.Company.SearchMergersAcquisitions(ctx, NewSearchMergersAcquisitionsQuery("Pineapple Energy"))
 	if err != nil || len(search) != 1 || search[0].TargetedSymbol != "JCS" {
-		t.Fatalf("MergersAcquisitionsSearch = %+v, %v", search, err)
+		t.Fatalf("SearchMergersAcquisitions = %+v, %v", search, err)
 	}
 
 	delisted, err := client.Company.DelistedCompanies(ctx, NewDelistedCompaniesQuery())
@@ -135,11 +135,11 @@ func TestCompanyQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "cik", ErrEmptyValue},
 		{"whitespace search term", func() error {
-			_, err := client.Company.MergersAcquisitionsSearch(ctx, NewMergersAcquisitionsSearchQuery(" \t"))
+			_, err := client.Company.SearchMergersAcquisitions(ctx, NewSearchMergersAcquisitionsQuery(" \t"))
 			return err
 		}, "name", ErrEmptyValue},
 		{"comma in batch ticker", func() error {
-			_, err := client.Company.MarketCapitalizationBatch(ctx, NewMarketCapitalizationBatchQuery([]string{"AAPL,MSFT"}))
+			_, err := client.Company.BatchMarketCapitalization(ctx, NewBatchMarketCapitalizationQuery([]string{"AAPL,MSFT"}))
 			return err
 		}, "symbols", ErrCommaInTicker},
 		{"control character ticker", func() error {

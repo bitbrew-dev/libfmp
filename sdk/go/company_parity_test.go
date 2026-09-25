@@ -22,10 +22,10 @@ func TestCompanyFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[EmployeeCount](t, "company_employee_count.json")
 	for _, name := range []string{"company_market_capitalization.json",
 		"company_historical_market_capitalization.json"} {
-		assertFixtureParity[MarketCapitalizationRecord](t, name)
+		assertFixtureParity[CompanyMarketCapitalization](t, name)
 	}
 	assertFixtureParity[CompanyShareFloat](t, "company_shares_float.json")
-	assertFixtureParity[AllSharesFloatRecord](t, "company_shares_float_all.json")
+	assertFixtureParity[ShareFloat](t, "company_shares_float_all.json")
 	for _, name := range []string{"company_mergers_acquisitions_latest.json",
 		"company_mergers_acquisitions_search.json", "company_mergers_acquisitions_multiple.json"} {
 		assertFixtureParity[MergerAcquisition](t, name)
@@ -119,12 +119,12 @@ func TestDocumentedWorkforceAndMarketDataFixturesDecodeExactValues(t *testing.T)
 		t.Fatalf("company_employee_count = %+v", employees)
 	}
 
-	caps := assertFixtureParity[MarketCapitalizationRecord](t, "company_market_capitalization.json")
-	if want := (MarketCapitalizationRecord{Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), MarketCap: 4_874_072_686_740}); len(caps) != 1 ||
+	caps := assertFixtureParity[CompanyMarketCapitalization](t, "company_market_capitalization.json")
+	if want := (CompanyMarketCapitalization{Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), MarketCap: 4_874_072_686_740}); len(caps) != 1 ||
 		caps[0] != want {
 		t.Fatalf("company_market_capitalization = %+v", caps)
 	}
-	historical := assertFixtureParity[MarketCapitalizationRecord](t, "company_historical_market_capitalization.json")
+	historical := assertFixtureParity[CompanyMarketCapitalization](t, "company_historical_market_capitalization.json")
 	if len(historical) != 1 || historical[0].Symbol != "AAPL" || historical[0].MarketCap != 4_879_177_245_542 {
 		t.Fatalf("company_historical_market_capitalization = %+v", historical)
 	}
@@ -135,10 +135,10 @@ func TestDocumentedWorkforceAndMarketDataFixturesDecodeExactValues(t *testing.T)
 		floats[0] != want {
 		t.Fatalf("company_shares_float = %+v", floats)
 	}
-	all := assertFixtureParity[AllSharesFloatRecord](t, "company_shares_float_all.json")
-	if want := (AllSharesFloatRecord{Symbol: "000001.SZ", Date: mustParseDateTime(t, "2026-07-29 14:23:30"), FreeFloat: 41.40900000201062,
+	all := assertFixtureParity[ShareFloat](t, "company_shares_float_all.json")
+	if want := (ShareFloat{Symbol: "000001.SZ", Date: mustParseDateTime(t, "2026-07-29 14:23:30"), FreeFloat: 41.40900000201062,
 		FloatShares: 8_035_796_667, OutstandingShares: 19_405_918_198}); len(all) != 1 || all[0] != want {
-		t.Fatalf("company_shares_float_all = %+v", all)
+		t.Fatalf("company_all_shares_float = %+v", all)
 	}
 }
 
@@ -152,12 +152,12 @@ func TestDocumentedMergerAndGovernanceFixturesDecodeExactValues(t *testing.T) {
 		TransactionDate: mustParseDate(t, "2026-07-29"), AcceptedDate: mustParseDateTime(t, "2026-07-29 16:00:46"),
 		Link: "https://www.sec.gov/Archives/edgar/data/2009312/000149315226035181/forms-4.htm"}); len(latest) != 1 ||
 		latest[0] != want {
-		t.Fatalf("company_mergers_acquisitions_latest = %+v", latest)
+		t.Fatalf("company_latest_mergers_acquisitions = %+v", latest)
 	}
 	search := assertFixtureParity[MergerAcquisition](t, "company_mergers_acquisitions_search.json")
 	if len(search) != 1 || search[0].Symbol != "PEGY" || search[0].Cik != "0000022701" || search[0].TargetedSymbol != "JCS" ||
 		search[0].TransactionDate != mustParseDate(t, "2021-11-12") {
-		t.Fatalf("company_mergers_acquisitions_search = %+v", search)
+		t.Fatalf("company_search_mergers_acquisitions = %+v", search)
 	}
 	multiple := assertFixtureParity[MergerAcquisition](t, "company_mergers_acquisitions_multiple.json")
 	if len(multiple) != 2 || multiple[0].TargetedSymbol != "PUSA" || multiple[1].TargetedSymbol != "JCS" {
@@ -226,8 +226,8 @@ func TestCompanyRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			var rows []MarketCapitalizationRecord
-			assertCompanyDecodeError(t, json.Unmarshal([]byte(tc.wire), &rows), "MarketCapitalizationRecord", tc.member)
+			var rows []CompanyMarketCapitalization
+			assertCompanyDecodeError(t, json.Unmarshal([]byte(tc.wire), &rows), "CompanyMarketCapitalization", tc.member)
 		})
 	}
 
