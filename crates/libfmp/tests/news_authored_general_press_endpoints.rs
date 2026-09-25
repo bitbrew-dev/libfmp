@@ -9,7 +9,7 @@ use libfmp::{
         EndpointSpec,
         metadata::{AccessRequirement, EndpointBounds, GeographicAvailability},
         news::{
-            FmpArticlesQuery, LatestGeneralNewsQuery, LatestPressReleasesQuery, fmp_articles,
+            ArticlesQuery, LatestGeneralNewsQuery, LatestPressReleasesQuery, articles,
             latest_general_news, latest_press_releases,
         },
     },
@@ -26,7 +26,7 @@ const PRESS_RELEASES: &[u8] = include_bytes!("fixtures/latest_press_releases.jso
 #[test]
 fn descriptors_use_exact_paths_vec_rows_and_only_documented_metadata() {
     assert_facts(
-        &fmp_articles(FmpArticlesQuery::new()),
+        &articles(ArticlesQuery::new()),
         "fmp-articles",
         GeographicAvailability::UsOnly,
         EndpointBounds::new(),
@@ -94,8 +94,8 @@ async fn custom_proxy_preserves_exact_query_order_auth_headers_and_bare_arrays()
     let to = Date::from_str("2026-04-28").unwrap();
 
     let authored = client
-        .fmp_articles(
-            FmpArticlesQuery::new()
+        .articles(
+            ArticlesQuery::new()
                 .with_page(Page(0))
                 .with_limit(Limit(20)),
         )
@@ -184,7 +184,7 @@ async fn direct_header_and_query_auth_preserve_omission_and_independent_dates() 
         let to = Date::from_str("2026-04-28").unwrap();
 
         client
-            .fmp_articles(FmpArticlesQuery::new().with_page(Page(0)))
+            .articles(ArticlesQuery::new().with_page(Page(0)))
             .await
             .unwrap();
         client

@@ -6,18 +6,18 @@ use crate::{
         EndpointSpec, QueryEncoder, QueryParameters,
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
-    responses::news::{FmpArticle, NewsArticle},
+    responses::news::{Article, NewsArticle},
     types::{Date, Limit, Page, TickerList},
 };
 
 /// Optional page and limit for Financial Modeling Prep articles.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
-pub struct FmpArticlesQuery {
+pub struct ArticlesQuery {
     page: Option<Page>,
     limit: Option<Limit>,
 }
 
-impl FmpArticlesQuery {
+impl ArticlesQuery {
     /// Creates a query without undocumented page or limit defaults.
     pub const fn new() -> Self {
         Self {
@@ -49,7 +49,7 @@ impl FmpArticlesQuery {
     }
 }
 
-impl QueryParameters for FmpArticlesQuery {
+impl QueryParameters for ArticlesQuery {
     fn encode(&self, encoder: &mut QueryEncoder<'_>) {
         encoder.optional("page", self.page);
         encoder.optional("limit", self.limit);
@@ -282,7 +282,7 @@ const MARKET_NEWS_METADATA: EndpointMetadata = EndpointMetadata::new()
     .with_bounds(EndpointBounds::new().with_response_rows(250).with_page(100));
 
 /// Describes `GET fmp-articles` without binding a transport.
-pub fn fmp_articles(query: FmpArticlesQuery) -> EndpointSpec<FmpArticlesQuery, Vec<FmpArticle>> {
+pub fn articles(query: ArticlesQuery) -> EndpointSpec<ArticlesQuery, Vec<Article>> {
     EndpointSpec::get("fmp-articles", "fmp-articles", query).with_metadata(FMP_ARTICLES_METADATA)
 }
 
@@ -361,11 +361,8 @@ pub fn search_forex_news(
 
 impl Client {
     /// Retrieves US-authored Financial Modeling Prep articles.
-    pub async fn fmp_articles(
-        &self,
-        query: impl Into<FmpArticlesQuery>,
-    ) -> Result<Vec<FmpArticle>> {
-        self.execute(&fmp_articles(query.into())).await
+    pub async fn articles(&self, query: impl Into<ArticlesQuery>) -> Result<Vec<Article>> {
+        self.execute(&articles(query.into())).await
     }
 
     /// Retrieves the latest worldwide general-news articles.
@@ -457,11 +454,9 @@ mod tests {
     }
 
     #[test]
-    fn fmp_articles_encodes_page_then_limit_and_preserves_omission() {
-        assert!(pairs(&FmpArticlesQuery::new()).is_empty());
-        let query = FmpArticlesQuery::new()
-            .with_page(Page(0))
-            .with_limit(Limit(0));
+    fn articles_encodes_page_then_limit_and_preserves_omission() {
+        assert!(pairs(&ArticlesQuery::new()).is_empty());
+        let query = ArticlesQuery::new().with_page(Page(0)).with_limit(Limit(0));
         assert_eq!(
             pairs(&query),
             [

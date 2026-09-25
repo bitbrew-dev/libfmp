@@ -175,7 +175,7 @@ served by the single method that owns the path:
 | `transcripts` | `transcripts.latest` | `latest_earnings_transcripts` | supported | supported |  |
 | `transcripts` | `transcripts.by_quarter` | `earnings_transcript` | supported | supported |  |
 | `transcripts` | `transcripts.dates` | `earnings_transcript_dates` | supported | supported |  |
-| `news` | `news.fmp_articles` | `fmp_articles` | supported | supported |  |
+| `news` | `news.articles` | `articles` | supported | supported |  |
 | `news` | `news.latest_general_news` | `latest_general_news` | supported | supported |  |
 | `news` | `news.latest_press_releases` | `latest_press_releases` | supported | supported |  |
 | `news` | `news.latest_stock_news` | `latest_stock_news` | supported | supported |  |

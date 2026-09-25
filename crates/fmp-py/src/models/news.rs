@@ -8,7 +8,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.news", frozen, from_py_object)]
 #[derive(Clone)]
-pub(crate) struct FmpArticle {
+pub(crate) struct Article {
     #[pyo3(get)]
     pub title: String,
     #[pyo3(get)]
@@ -29,7 +29,7 @@ pub(crate) struct FmpArticle {
 
 #[gen_stub_pymethods]
 #[pymethods]
-impl FmpArticle {
+impl Article {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
@@ -72,8 +72,8 @@ impl FmpArticle {
     }
 }
 
-impl From<libfmp::responses::news::FmpArticle> for FmpArticle {
-    fn from(value: libfmp::responses::news::FmpArticle) -> Self {
+impl From<libfmp::responses::news::Article> for Article {
+    fn from(value: libfmp::responses::news::Article) -> Self {
         Self {
             title: value.title,
             date: value.date.into_inner(),

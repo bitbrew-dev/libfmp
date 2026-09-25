@@ -5,14 +5,14 @@ import datetime
 import typing
 
 __all__ = [
-    "FmpArticle",
+    "Article",
     "NewsArticle",
     "NewsNamespace",
 ]
 
 
 @typing.final
-class FmpArticle:
+class Article:
     @property
     def title(self) -> builtins.str: ...
     @property
@@ -39,7 +39,7 @@ class FmpArticle:
         link: builtins.str,
         author: builtins.str,
         site: builtins.str,
-    ) -> FmpArticle: ...
+    ) -> Article: ...
     def __getnewargs__(self) -> tuple: ...
 
 
@@ -81,12 +81,12 @@ class NewsNamespace:
     News endpoints for a single client, exposed as `client.news`.
     """
 
-    def fmp_articles(
+    def articles(
         self,
         *,
         page: typing.Optional[builtins.int] = None,
         limit: typing.Optional[builtins.int] = None,
-    ) -> builtins.list[FmpArticle]:
+    ) -> builtins.list[Article]:
         r"""
         Retrieves US-authored Financial Modeling Prep articles.
         """

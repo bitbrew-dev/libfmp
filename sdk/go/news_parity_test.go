@@ -33,7 +33,7 @@ const newsAppleText = "CUPERTINO, Calif.--(BUSINESS WIRE)--Apple® today announc
 
 func TestNewsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[FmpArticle](t, "fmp_articles.json")
+	assertFixtureParity[Article](t, "fmp_articles.json")
 	for _, tc := range newsArticleFixtures {
 		assertFixtureParity[NewsArticle](t, tc.fixture)
 	}
@@ -41,13 +41,13 @@ func TestNewsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 
 // Mirrors exact_fmp_fixture_preserves_all_eight_required_opaque_fields: the
 // HTML content is an opaque string, never parsed or normalized.
-func TestFmpArticleFixturePreservesAllEightRequiredOpaqueFields(t *testing.T) {
+func TestArticleFixturePreservesAllEightRequiredOpaqueFields(t *testing.T) {
 	t.Parallel()
-	rows := assertFixtureParity[FmpArticle](t, "fmp_articles.json")
+	rows := assertFixtureParity[Article](t, "fmp_articles.json")
 	if len(rows) != 1 {
 		t.Fatalf("rows = %d, want 1", len(rows))
 	}
-	want := FmpArticle{
+	want := Article{
 		Title:   "Centerra Gold (NYSE:CGAU) Drives Growth with North American Investments and Strong Financials",
 		Date:    mustParseDateTime(t, "2026-07-30 16:11:45"),
 		Content: rows[0].Content,
@@ -58,7 +58,7 @@ func TestFmpArticleFixturePreservesAllEightRequiredOpaqueFields(t *testing.T) {
 		Site:    "Financial Modeling Prep",
 	}
 	if rows[0] != want {
-		t.Fatalf("fmp_articles = %+v, want %+v", rows[0], want)
+		t.Fatalf("articles = %+v, want %+v", rows[0], want)
 	}
 	content := rows[0].Content
 	if !strings.HasPrefix(content, "<ul>\n    <li><strong>") || !strings.Contains(content, "<strong>$450 million</strong>") ||
@@ -165,11 +165,11 @@ func TestNewsSymbolKeyIsRequiredButExplicitNullIsPreserved(t *testing.T) {
 			}
 		})
 	}
-	var articles []FmpArticle
+	var articles []Article
 	err = json.Unmarshal([]byte(`[{"title":"t","date":"2026-07-30 16:11:45"}]`), &articles)
 	var typed *Error
 	if !errors.As(err, &typed) || !strings.Contains(typed.Message, `"content"`) {
-		t.Fatalf("FmpArticle error = %v, want the first missing member content", err)
+		t.Fatalf("Article error = %v, want the first missing member content", err)
 	}
 }
 
@@ -179,7 +179,7 @@ func TestNewsSymbolKeyIsRequiredButExplicitNullIsPreserved(t *testing.T) {
 func TestNewsResponseStringAndDateTimeKindsAreStrict(t *testing.T) {
 	t.Parallel()
 	article := string(readFixture(t, "fmp_articles.json"))
-	var articles []FmpArticle
+	var articles []Article
 	if err := json.Unmarshal([]byte(strings.Replace(article, `"2026-07-30 16:11:45"`, `20260730161145`, 1)),
 		&articles); err == nil {
 		t.Fatal("a numeric date decoded into a DateTime member")
@@ -211,9 +211,9 @@ func TestNewsResponseStringAndDateTimeKindsAreStrict(t *testing.T) {
 // Mirrors both_rows_are_bare_arrays_preserving_empty_multiple_and_large_opaque_strings.
 func TestNewsRowsAreBareArraysPreservingEmptyMultipleAndLargeOpaqueStrings(t *testing.T) {
 	t.Parallel()
-	var articles []FmpArticle
+	var articles []Article
 	if err := json.Unmarshal([]byte(`[]`), &articles); err != nil || articles == nil || len(articles) != 0 {
-		t.Fatalf("empty FmpArticle array = %#v, %v", articles, err)
+		t.Fatalf("empty Article array = %#v, %v", articles, err)
 	}
 	var rows []NewsArticle
 	if err := json.Unmarshal([]byte(`[]`), &rows); err != nil || rows == nil || len(rows) != 0 {
