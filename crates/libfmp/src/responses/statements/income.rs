@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     codecs::FiscalYearString,
     query::FiscalPeriod,
-    types::{ApiDateTime, Cik, Count, CurrencyCode, Date, StatementAmount, Ticker},
+    types::{ApiDateTime, Cik, CurrencyCode, Date, Quantity, StatementAmount, Ticker},
 };
 
 /// One historical or trailing-twelve-month worldwide income statement.
@@ -49,6 +49,8 @@ pub struct IncomeStatement {
     pub bottom_line_net_income: StatementAmount,
     pub eps: f64,
     pub eps_diluted: f64,
-    pub weighted_average_shs_out: Count,
-    pub weighted_average_shs_out_dil: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub weighted_average_shs_out: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub weighted_average_shs_out_dil: Quantity,
 }

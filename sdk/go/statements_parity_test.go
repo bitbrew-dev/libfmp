@@ -149,13 +149,13 @@ func statementsRoundTripExtreme[T any](t *testing.T, fixture, member, digits str
 
 // The i64 and u64 extremes of statements_income_responses.rs,
 // statements_balance_responses.rs, statements_cash_flow_responses.rs, and
-// statements_summary_responses.rs: StatementAmount is int64 and Count is
-// uint64, so every extreme survives without a float64 round trip.
-func TestStatementAmountsAndShareCountsPreserveI64AndU64Extremes(t *testing.T) {
+// statements_summary_responses.rs: StatementAmount is int64, so every extreme
+// survives without a float64 round trip; share quantities are float64 and
+// keep a fractional value.
+func TestStatementAmountsPreserveI64ExtremesAndShareQuantitiesKeepFractions(t *testing.T) {
 	t.Parallel()
 	maxI64 := strconv.FormatInt(math.MaxInt64, 10)
 	minI64 := strconv.FormatInt(math.MinInt64, 10)
-	maxU64 := strconv.FormatUint(math.MaxUint64, 10)
 
 	income := statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "revenue", maxI64)
 	if income.Revenue != math.MaxInt64 {
@@ -165,9 +165,9 @@ func TestStatementAmountsAndShareCountsPreserveI64AndU64Extremes(t *testing.T) {
 	if income.TotalOtherIncomeExpensesNet != math.MinInt64 {
 		t.Fatalf("totalOtherIncomeExpensesNet = %d", income.TotalOtherIncomeExpensesNet)
 	}
-	income = statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "weightedAverageShsOutDil", maxU64)
-	if income.WeightedAverageShsOutDil != math.MaxUint64 {
-		t.Fatalf("weightedAverageShsOutDil = %d", income.WeightedAverageShsOutDil)
+	income = statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "weightedAverageShsOutDil", "15004697000.5")
+	if income.WeightedAverageShsOutDil != 15_004_697_000.5 {
+		t.Fatalf("weightedAverageShsOutDil = %v", income.WeightedAverageShsOutDil)
 	}
 
 	balance := statementsRoundTripExtreme[BalanceSheetStatement](t, "balance_sheet_statement.json", "totalAssets", maxI64)

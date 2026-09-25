@@ -23,7 +23,7 @@ fn both_exact_outer_md_fixtures_round_trip_as_the_shared_43_key_row() {
 }
 
 #[test]
-fn typed_fields_preserve_ciks_temporals_empty_sentinels_and_nonnegative_integers() {
+fn typed_fields_preserve_ciks_temporals_empty_sentinels_and_amounts() {
     let latest = rows::<RegulationDOffering>(LATEST).remove(0);
     assert_eq!(latest.cik.as_str(), "0002127786");
     assert_eq!(latest.date.to_string(), "2026-07-30");
@@ -40,7 +40,7 @@ fn typed_fields_preserve_ciks_temporals_empty_sentinels_and_nonnegative_integers
     assert_eq!(by_cik.incorporated_within_five_years, None);
     assert_eq!(by_cik.year_of_incorporation, "");
     assert_eq!(by_cik.date_of_first_sale.unwrap().to_string(), "2014-02-14");
-    assert_eq!(by_cik.total_offering_amount, 71_999_990);
+    assert_eq!(by_cik.total_offering_amount, 71_999_990.0);
     assert_eq!(by_cik.total_number_already_invested, 24);
 }
 
@@ -73,7 +73,7 @@ fn incorporated_flag_is_required_present_nullable_and_every_other_key_is_non_nul
 }
 
 #[test]
-fn exact_temporal_boolean_and_nonnegative_integer_wire_shapes_are_enforced() {
+fn exact_temporal_boolean_count_and_amount_wire_shapes_are_enforced() {
     let source: Value = serde_json::from_slice(LATEST).unwrap();
     let row = source[0].as_object().unwrap();
 
@@ -121,21 +121,27 @@ fn exact_temporal_boolean_and_nonnegative_integer_wire_shapes_are_enforced() {
         );
     }
 
+    let mut candidate = row.clone();
+    candidate.insert("totalNumberAlreadyInvested".into(), json!(-1));
+    assert!(serde_json::from_value::<RegulationDOffering>(Value::Object(candidate)).is_err());
+
     for field in [
         "minimumInvestmentAccepted",
         "totalOfferingAmount",
         "totalAmountSold",
         "totalAmountRemaining",
-        "totalNumberAlreadyInvested",
         "salesCommissions",
         "findersFees",
         "grossProceedsUsed",
     ] {
         let mut candidate = row.clone();
-        candidate.insert(field.into(), json!(-1));
-        assert!(
-            serde_json::from_value::<RegulationDOffering>(Value::Object(candidate)).is_err(),
-            "field {field} accepted a negative integer"
+        candidate.insert(field.into(), json!(1_250.75));
+        let offering: RegulationDOffering =
+            serde_json::from_value(Value::Object(candidate)).unwrap();
+        assert_eq!(
+            serde_json::to_value(offering).unwrap()[field],
+            1_250.75,
+            "field {field} lost a fractional amount"
         );
     }
 }

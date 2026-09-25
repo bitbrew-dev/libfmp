@@ -621,7 +621,7 @@ def check_public_contract(client: FmpClient) -> None:
     trades: list[AftermarketTrade] = client.quote.batch_aftermarket_trade("AAPL")
     changes: list[StockPriceChange] = client.quote.stock_price_change("AAPL")
     exchange_rows: list[QuoteShort] = client.quote.exchange("NASDAQ")
-    trade_size: int = trades[0].trade_size
+    trade_size: float = trades[0].trade_size
     ten_years: float = changes[0].ten_years
     symbol: str = short_rows[0].symbol
     price: float = full_rows[0].price

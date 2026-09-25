@@ -7,7 +7,7 @@ use serde_json::Number;
 
 use crate::{
     codecs::{DynamicJson, UsDate, YnFlag, empty_date},
-    types::{ApiDateTime, Cik, Count, Date, FormType, StatementAmount},
+    types::{ApiDateTime, Cik, Count, Date, FormType, MarketValue, Quantity, StatementAmount},
 };
 
 fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
@@ -47,7 +47,7 @@ pub struct RegulationDOfferingSearchResult {
 /// alternative description is the sole nullable value, but its key must remain
 /// present. [`Number`] preserves whether the provider spells `offeringPrice` as
 /// an integer or decimal JSON number.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CrowdfundingOffering {
     pub cik: Cik,
@@ -73,7 +73,8 @@ pub struct CrowdfundingOffering {
     pub security_offered_type: String,
     #[serde(deserialize_with = "required_option")]
     pub security_offered_other_description: Option<String>,
-    pub number_of_security_offered: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub number_of_security_offered: Quantity,
     pub offering_price: Number,
     pub offering_amount: StatementAmount,
     pub over_subscription_accepted: YnFlag,
@@ -109,7 +110,7 @@ pub struct CrowdfundingOffering {
 /// only required-present nullable field documented by the two routes.
 /// `dateOfFirstSale` uses the provider's empty-string sentinel rather than
 /// JSON null. Amounts and investor counts are nonnegative JSON integers.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct RegulationDOffering {
     pub cik: Cik,
@@ -148,13 +149,20 @@ pub struct RegulationDOffering {
     pub duration_of_offering_is_more_than_year: bool,
     pub securities_offered_are_of_equity_type: bool,
     pub is_business_combination_transaction: bool,
-    pub minimum_investment_accepted: u64,
-    pub total_offering_amount: u64,
-    pub total_amount_sold: u64,
-    pub total_amount_remaining: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub minimum_investment_accepted: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_offering_amount: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_amount_sold: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_amount_remaining: MarketValue,
     pub has_non_accredited_investors: bool,
     pub total_number_already_invested: Count,
-    pub sales_commissions: u64,
-    pub finders_fees: u64,
-    pub gross_proceeds_used: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub sales_commissions: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub finders_fees: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub gross_proceeds_used: MarketValue,
 }

@@ -84,9 +84,9 @@ pub(crate) struct IncomeStatement {
     #[pyo3(get)]
     pub eps_diluted: f64,
     #[pyo3(get)]
-    pub weighted_average_shs_out: u64,
+    pub weighted_average_shs_out: f64,
     #[pyo3(get)]
-    pub weighted_average_shs_out_dil: u64,
+    pub weighted_average_shs_out_dil: f64,
 }
 
 #[gen_stub_pymethods]
@@ -134,8 +134,8 @@ impl IncomeStatement {
         bottom_line_net_income: i64,
         eps: f64,
         eps_diluted: f64,
-        weighted_average_shs_out: u64,
-        weighted_average_shs_out_dil: u64,
+        weighted_average_shs_out: f64,
+        weighted_average_shs_out_dil: f64,
     ) -> Self {
         Self {
             date,

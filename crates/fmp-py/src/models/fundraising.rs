@@ -172,7 +172,7 @@ pub(crate) struct CrowdfundingOffering {
     #[pyo3(get)]
     pub security_offered_other_description: Option<String>,
     #[pyo3(get)]
-    pub number_of_security_offered: u64,
+    pub number_of_security_offered: f64,
     offering_price: ::serde_json::Number,
     #[pyo3(get)]
     pub offering_amount: i64,
@@ -254,7 +254,7 @@ impl CrowdfundingOffering {
         financial_interest: String,
         security_offered_type: String,
         security_offered_other_description: Option<String>,
-        number_of_security_offered: u64,
+        number_of_security_offered: f64,
         offering_price: String,
         offering_amount: i64,
         over_subscription_accepted: String,
@@ -591,23 +591,23 @@ pub(crate) struct RegulationDOffering {
     #[pyo3(get)]
     pub is_business_combination_transaction: bool,
     #[pyo3(get)]
-    pub minimum_investment_accepted: u64,
+    pub minimum_investment_accepted: f64,
     #[pyo3(get)]
-    pub total_offering_amount: u64,
+    pub total_offering_amount: f64,
     #[pyo3(get)]
-    pub total_amount_sold: u64,
+    pub total_amount_sold: f64,
     #[pyo3(get)]
-    pub total_amount_remaining: u64,
+    pub total_amount_remaining: f64,
     #[pyo3(get)]
     pub has_non_accredited_investors: bool,
     #[pyo3(get)]
     pub total_number_already_invested: u64,
     #[pyo3(get)]
-    pub sales_commissions: u64,
+    pub sales_commissions: f64,
     #[pyo3(get)]
-    pub finders_fees: u64,
+    pub finders_fees: f64,
     #[pyo3(get)]
-    pub gross_proceeds_used: u64,
+    pub gross_proceeds_used: f64,
 }
 
 #[gen_stub_pymethods]
@@ -652,15 +652,15 @@ impl RegulationDOffering {
         duration_of_offering_is_more_than_year: bool,
         securities_offered_are_of_equity_type: bool,
         is_business_combination_transaction: bool,
-        minimum_investment_accepted: u64,
-        total_offering_amount: u64,
-        total_amount_sold: u64,
-        total_amount_remaining: u64,
+        minimum_investment_accepted: f64,
+        total_offering_amount: f64,
+        total_amount_sold: f64,
+        total_amount_remaining: f64,
         has_non_accredited_investors: bool,
         total_number_already_invested: u64,
-        sales_commissions: u64,
-        finders_fees: u64,
-        gross_proceeds_used: u64,
+        sales_commissions: f64,
+        finders_fees: f64,
+        gross_proceeds_used: f64,
     ) -> Self {
         Self {
             cik,

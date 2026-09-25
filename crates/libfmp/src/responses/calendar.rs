@@ -41,8 +41,10 @@ pub struct EarningsEvent {
     pub eps_actual: Option<f64>,
     pub eps_estimated: f64,
     #[serde(deserialize_with = "required_option")]
-    pub revenue_actual: Option<u64>,
-    pub revenue_estimated: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub revenue_actual: Option<MarketValue>,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub revenue_estimated: MarketValue,
     pub last_updated: Date,
 }
 

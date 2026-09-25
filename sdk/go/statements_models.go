@@ -2007,8 +2007,8 @@ type IncomeStatement struct {
 	BottomLineNetIncome                     int64    `json:"bottomLineNetIncome"`
 	Eps                                     float64  `json:"eps"`
 	EpsDiluted                              float64  `json:"epsDiluted"`
-	WeightedAverageShsOut                   uint64   `json:"weightedAverageShsOut"`
-	WeightedAverageShsOutDil                uint64   `json:"weightedAverageShsOutDil"`
+	WeightedAverageShsOut                   float64  `json:"weightedAverageShsOut"`
+	WeightedAverageShsOutDil                float64  `json:"weightedAverageShsOutDil"`
 }
 
 // incomeStatementShadow mirrors IncomeStatement with a pointer or raw value
@@ -2052,8 +2052,8 @@ type incomeStatementShadow struct {
 	BottomLineNetIncome                     *int64    `json:"bottomLineNetIncome"`
 	Eps                                     *float64  `json:"eps"`
 	EpsDiluted                              *float64  `json:"epsDiluted"`
-	WeightedAverageShsOut                   *uint64   `json:"weightedAverageShsOut"`
-	WeightedAverageShsOutDil                *uint64   `json:"weightedAverageShsOutDil"`
+	WeightedAverageShsOut                   *float64  `json:"weightedAverageShsOut"`
+	WeightedAverageShsOutDil                *float64  `json:"weightedAverageShsOutDil"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -3746,7 +3746,7 @@ type EnterpriseValue struct {
 	Symbol                      string  `json:"symbol"`
 	Date                        Date    `json:"date"`
 	StockPrice                  float64 `json:"stockPrice"`
-	NumberOfShares              uint64  `json:"numberOfShares"`
+	NumberOfShares              float64 `json:"numberOfShares"`
 	MarketCapitalization        float64 `json:"marketCapitalization"`
 	MinusCashAndCashEquivalents int64   `json:"minusCashAndCashEquivalents"`
 	AddTotalDebt                int64   `json:"addTotalDebt"`
@@ -3760,7 +3760,7 @@ type enterpriseValueShadow struct {
 	Symbol                      *string  `json:"symbol"`
 	Date                        *Date    `json:"date"`
 	StockPrice                  *float64 `json:"stockPrice"`
-	NumberOfShares              *uint64  `json:"numberOfShares"`
+	NumberOfShares              *float64 `json:"numberOfShares"`
 	MarketCapitalization        *float64 `json:"marketCapitalization"`
 	MinusCashAndCashEquivalents *int64   `json:"minusCashAndCashEquivalents"`
 	AddTotalDebt                *int64   `json:"addTotalDebt"`

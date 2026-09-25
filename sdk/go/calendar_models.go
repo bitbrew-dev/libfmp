@@ -90,8 +90,8 @@ type EarningsEvent struct {
 	Date             Date     `json:"date"`
 	EpsActual        *float64 `json:"epsActual"`
 	EpsEstimated     float64  `json:"epsEstimated"`
-	RevenueActual    *uint64  `json:"revenueActual"`
-	RevenueEstimated uint64   `json:"revenueEstimated"`
+	RevenueActual    *float64 `json:"revenueActual"`
+	RevenueEstimated float64  `json:"revenueEstimated"`
 	LastUpdated      Date     `json:"lastUpdated"`
 }
 
@@ -104,7 +104,7 @@ type earningsEventShadow struct {
 	EpsActual        jsontext.Value `json:"epsActual"`
 	EpsEstimated     *float64       `json:"epsEstimated"`
 	RevenueActual    jsontext.Value `json:"revenueActual"`
-	RevenueEstimated *uint64        `json:"revenueEstimated"`
+	RevenueEstimated *float64       `json:"revenueEstimated"`
 	LastUpdated      *Date          `json:"lastUpdated"`
 }
 
@@ -140,9 +140,9 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		epsActual = &value
 	}
-	var revenueActual *uint64
+	var revenueActual *float64
 	if shadow.RevenueActual.Kind() != 'n' {
-		var value uint64
+		var value float64
 		if err := json.Unmarshal(shadow.RevenueActual, &value); err != nil {
 			return err
 		}

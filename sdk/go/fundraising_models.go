@@ -124,7 +124,7 @@ type CrowdfundingOffering struct {
 	FinancialInterest                         string         `json:"financialInterest"`
 	SecurityOfferedType                       string         `json:"securityOfferedType"`
 	SecurityOfferedOtherDescription           *string        `json:"securityOfferedOtherDescription"`
-	NumberOfSecurityOffered                   uint64         `json:"numberOfSecurityOffered"`
+	NumberOfSecurityOffered                   float64        `json:"numberOfSecurityOffered"`
 	OfferingPrice                             jsontext.Value `json:"offeringPrice"`
 	OfferingAmount                            int64          `json:"offeringAmount"`
 	OverSubscriptionAccepted                  string         `json:"overSubscriptionAccepted"`
@@ -178,7 +178,7 @@ type crowdfundingOfferingShadow struct {
 	FinancialInterest                         *string         `json:"financialInterest"`
 	SecurityOfferedType                       *string         `json:"securityOfferedType"`
 	SecurityOfferedOtherDescription           jsontext.Value  `json:"securityOfferedOtherDescription"`
-	NumberOfSecurityOffered                   *uint64         `json:"numberOfSecurityOffered"`
+	NumberOfSecurityOffered                   *float64        `json:"numberOfSecurityOffered"`
 	OfferingPrice                             *jsontext.Value `json:"offeringPrice"`
 	OfferingAmount                            *int64          `json:"offeringAmount"`
 	OverSubscriptionAccepted                  *string         `json:"overSubscriptionAccepted"`
@@ -412,15 +412,15 @@ type RegulationDOffering struct {
 	DurationOfOfferingIsMoreThanYear       bool     `json:"durationOfOfferingIsMoreThanYear"`
 	SecuritiesOfferedAreOfEquityType       bool     `json:"securitiesOfferedAreOfEquityType"`
 	IsBusinessCombinationTransaction       bool     `json:"isBusinessCombinationTransaction"`
-	MinimumInvestmentAccepted              uint64   `json:"minimumInvestmentAccepted"`
-	TotalOfferingAmount                    uint64   `json:"totalOfferingAmount"`
-	TotalAmountSold                        uint64   `json:"totalAmountSold"`
-	TotalAmountRemaining                   uint64   `json:"totalAmountRemaining"`
+	MinimumInvestmentAccepted              float64  `json:"minimumInvestmentAccepted"`
+	TotalOfferingAmount                    float64  `json:"totalOfferingAmount"`
+	TotalAmountSold                        float64  `json:"totalAmountSold"`
+	TotalAmountRemaining                   float64  `json:"totalAmountRemaining"`
 	HasNonAccreditedInvestors              bool     `json:"hasNonAccreditedInvestors"`
 	TotalNumberAlreadyInvested             uint64   `json:"totalNumberAlreadyInvested"`
-	SalesCommissions                       uint64   `json:"salesCommissions"`
-	FindersFees                            uint64   `json:"findersFees"`
-	GrossProceedsUsed                      uint64   `json:"grossProceedsUsed"`
+	SalesCommissions                       float64  `json:"salesCommissions"`
+	FindersFees                            float64  `json:"findersFees"`
+	GrossProceedsUsed                      float64  `json:"grossProceedsUsed"`
 }
 
 // regulationDOfferingShadow mirrors RegulationDOffering with a pointer or raw
@@ -461,15 +461,15 @@ type regulationDOfferingShadow struct {
 	DurationOfOfferingIsMoreThanYear       *bool          `json:"durationOfOfferingIsMoreThanYear"`
 	SecuritiesOfferedAreOfEquityType       *bool          `json:"securitiesOfferedAreOfEquityType"`
 	IsBusinessCombinationTransaction       *bool          `json:"isBusinessCombinationTransaction"`
-	MinimumInvestmentAccepted              *uint64        `json:"minimumInvestmentAccepted"`
-	TotalOfferingAmount                    *uint64        `json:"totalOfferingAmount"`
-	TotalAmountSold                        *uint64        `json:"totalAmountSold"`
-	TotalAmountRemaining                   *uint64        `json:"totalAmountRemaining"`
+	MinimumInvestmentAccepted              *float64       `json:"minimumInvestmentAccepted"`
+	TotalOfferingAmount                    *float64       `json:"totalOfferingAmount"`
+	TotalAmountSold                        *float64       `json:"totalAmountSold"`
+	TotalAmountRemaining                   *float64       `json:"totalAmountRemaining"`
 	HasNonAccreditedInvestors              *bool          `json:"hasNonAccreditedInvestors"`
 	TotalNumberAlreadyInvested             *uint64        `json:"totalNumberAlreadyInvested"`
-	SalesCommissions                       *uint64        `json:"salesCommissions"`
-	FindersFees                            *uint64        `json:"findersFees"`
-	GrossProceedsUsed                      *uint64        `json:"grossProceedsUsed"`
+	SalesCommissions                       *float64       `json:"salesCommissions"`
+	FindersFees                            *float64       `json:"findersFees"`
+	GrossProceedsUsed                      *float64       `json:"grossProceedsUsed"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode

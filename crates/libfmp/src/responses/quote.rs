@@ -3,8 +3,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::types::{
-    Change, Count, ExchangeCode, MarketCapitalization, Percentage, Price, Ticker, UnixMilliseconds,
-    UnixSeconds, Volume,
+    Change, ExchangeCode, MarketCapitalization, Percentage, Price, Quantity, Ticker,
+    UnixMilliseconds, UnixSeconds, Volume,
 };
 
 /// A detailed real-time stock quote.
@@ -49,7 +49,8 @@ pub struct QuoteShort {
 pub struct AftermarketTrade {
     pub symbol: Ticker,
     pub price: Price,
-    pub trade_size: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub trade_size: Quantity,
     pub timestamp: UnixMilliseconds,
 }
 
@@ -58,9 +59,11 @@ pub struct AftermarketTrade {
 #[serde(rename_all = "camelCase")]
 pub struct AftermarketQuote {
     pub symbol: Ticker,
-    pub bid_size: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub bid_size: Quantity,
     pub bid_price: Price,
-    pub ask_size: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub ask_size: Quantity,
     pub ask_price: Price,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub volume: Volume,

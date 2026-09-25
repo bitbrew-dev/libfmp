@@ -572,9 +572,9 @@ pub(crate) struct CompanyShareFloat {
     #[pyo3(get)]
     pub free_float: f64,
     #[pyo3(get)]
-    pub float_shares: u64,
+    pub float_shares: f64,
     #[pyo3(get)]
-    pub outstanding_shares: u64,
+    pub outstanding_shares: f64,
     #[pyo3(get)]
     pub source: String,
 }
@@ -590,8 +590,8 @@ impl CompanyShareFloat {
         symbol: String,
         date: ::chrono::NaiveDateTime,
         free_float: f64,
-        float_shares: u64,
-        outstanding_shares: u64,
+        float_shares: f64,
+        outstanding_shares: f64,
         source: String,
     ) -> Self {
         Self {
@@ -642,9 +642,9 @@ pub(crate) struct AllSharesFloatRecord {
     #[pyo3(get)]
     pub free_float: f64,
     #[pyo3(get)]
-    pub float_shares: u64,
+    pub float_shares: f64,
     #[pyo3(get)]
-    pub outstanding_shares: u64,
+    pub outstanding_shares: f64,
 }
 
 #[gen_stub_pymethods]
@@ -658,8 +658,8 @@ impl AllSharesFloatRecord {
         symbol: String,
         date: ::chrono::NaiveDateTime,
         free_float: f64,
-        float_shares: u64,
-        outstanding_shares: u64,
+        float_shares: f64,
+        outstanding_shares: f64,
     ) -> Self {
         Self {
             symbol,
@@ -962,19 +962,19 @@ pub(crate) struct ExecutiveCompensation {
     #[pyo3(get)]
     pub year: i64,
     #[pyo3(get)]
-    pub salary: u64,
+    pub salary: f64,
     #[pyo3(get)]
-    pub bonus: u64,
+    pub bonus: f64,
     #[pyo3(get)]
-    pub stock_award: u64,
+    pub stock_award: f64,
     #[pyo3(get)]
-    pub option_award: u64,
+    pub option_award: f64,
     #[pyo3(get)]
-    pub incentive_plan_compensation: u64,
+    pub incentive_plan_compensation: f64,
     #[pyo3(get)]
-    pub all_other_compensation: u64,
+    pub all_other_compensation: f64,
     #[pyo3(get)]
-    pub total: u64,
+    pub total: f64,
     #[pyo3(get)]
     pub link: String,
 }
@@ -994,13 +994,13 @@ impl ExecutiveCompensation {
         accepted_date: ::chrono::NaiveDateTime,
         name_and_position: String,
         year: i64,
-        salary: u64,
-        bonus: u64,
-        stock_award: u64,
-        option_award: u64,
-        incentive_plan_compensation: u64,
-        all_other_compensation: u64,
-        total: u64,
+        salary: f64,
+        bonus: f64,
+        stock_award: f64,
+        option_award: f64,
+        incentive_plan_compensation: f64,
+        all_other_compensation: f64,
+        total: f64,
         link: String,
     ) -> Self {
         Self {

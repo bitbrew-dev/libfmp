@@ -203,7 +203,7 @@ pub(crate) struct AftermarketTrade {
     #[pyo3(get)]
     pub price: f64,
     #[pyo3(get)]
-    pub trade_size: u64,
+    pub trade_size: f64,
     #[pyo3(get)]
     pub timestamp: i64,
 }
@@ -215,7 +215,7 @@ impl AftermarketTrade {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (symbol, price, trade_size, timestamp))]
-    fn new(symbol: String, price: f64, trade_size: u64, timestamp: i64) -> Self {
+    fn new(symbol: String, price: f64, trade_size: f64, timestamp: i64) -> Self {
         Self {
             symbol,
             price,
@@ -254,11 +254,11 @@ pub(crate) struct AftermarketQuote {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub bid_size: u64,
+    pub bid_size: f64,
     #[pyo3(get)]
     pub bid_price: f64,
     #[pyo3(get)]
-    pub ask_size: u64,
+    pub ask_size: f64,
     #[pyo3(get)]
     pub ask_price: f64,
     #[pyo3(get)]
@@ -276,9 +276,9 @@ impl AftermarketQuote {
     #[pyo3(signature = (symbol, bid_size, bid_price, ask_size, ask_price, volume, timestamp))]
     fn new(
         symbol: String,
-        bid_size: u64,
+        bid_size: f64,
         bid_price: f64,
-        ask_size: u64,
+        ask_size: f64,
         ask_price: f64,
         volume: f64,
         timestamp: i64,

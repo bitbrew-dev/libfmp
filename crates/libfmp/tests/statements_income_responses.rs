@@ -46,11 +46,14 @@ fn fiscal_year_rejects_a_numeric_json_value() {
 }
 
 #[test]
-fn statement_amounts_and_share_counts_preserve_i64_and_u64_extremes() {
+fn statement_amounts_preserve_i64_extremes_and_share_quantities_keep_fractions() {
     for (field, extreme) in [
         ("revenue", serde_json::json!(i64::MAX)),
         ("totalOtherIncomeExpensesNet", serde_json::json!(i64::MIN)),
-        ("weightedAverageShsOutDil", serde_json::json!(u64::MAX)),
+        (
+            "weightedAverageShsOutDil",
+            serde_json::json!(15_004_697_000.5),
+        ),
     ] {
         let mut value: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
         value[0][field] = extreme.clone();
@@ -98,8 +101,8 @@ fn historical_expected() -> IncomeStatement {
         bottom_line_net_income: 112_010_000_000,
         eps: 7.49,
         eps_diluted: 7.46,
-        weighted_average_shs_out: 14_948_500_000,
-        weighted_average_shs_out_dil: 15_004_697_000,
+        weighted_average_shs_out: 14_948_500_000.0,
+        weighted_average_shs_out_dil: 15_004_697_000.0,
     }
 }
 
@@ -142,7 +145,7 @@ fn ttm_expected() -> IncomeStatement {
         bottom_line_net_income: 122_575_000_000,
         eps: 8.29,
         eps_diluted: 8.27,
-        weighted_average_shs_out: 14_710_718_000,
-        weighted_average_shs_out_dil: 14_768_115_000,
+        weighted_average_shs_out: 14_710_718_000.0,
+        weighted_average_shs_out_dil: 14_768_115_000.0,
     }
 }

@@ -59,7 +59,7 @@ class CustomDcfValuation:
     @property
     def beta(self) -> builtins.float: ...
     @property
-    def diluted_shares_outstanding(self) -> builtins.int: ...
+    def diluted_shares_outstanding(self) -> builtins.float: ...
     @property
     def cost_of_debt(self) -> builtins.float: ...
     @property
@@ -132,7 +132,7 @@ class CustomDcfValuation:
         capital_expenditure_percentage: builtins.float,
         price: builtins.float,
         beta: builtins.float,
-        diluted_shares_outstanding: builtins.int,
+        diluted_shares_outstanding: builtins.float,
         cost_of_debt: builtins.float,
         tax_rate: builtins.float,
         after_tax_cost_of_debt: builtins.float,
@@ -180,7 +180,7 @@ class CustomLeveredDcfValuation:
     @property
     def beta(self) -> builtins.float: ...
     @property
-    def diluted_shares_outstanding(self) -> builtins.int: ...
+    def diluted_shares_outstanding(self) -> builtins.float: ...
     @property
     def cost_of_debt(self) -> builtins.float: ...
     @property
@@ -241,7 +241,7 @@ class CustomLeveredDcfValuation:
         capital_expenditure_percentage: builtins.float,
         price: builtins.float,
         beta: builtins.float,
-        diluted_shares_outstanding: builtins.int,
+        diluted_shares_outstanding: builtins.float,
         cost_of_debt: builtins.float,
         tax_rate: builtins.float,
         after_tax_cost_of_debt: builtins.float,

@@ -471,8 +471,8 @@ type CompanyShareFloat struct {
 	Symbol            string   `json:"symbol"`
 	Date              DateTime `json:"date"`
 	FreeFloat         float64  `json:"freeFloat"`
-	FloatShares       uint64   `json:"floatShares"`
-	OutstandingShares uint64   `json:"outstandingShares"`
+	FloatShares       float64  `json:"floatShares"`
+	OutstandingShares float64  `json:"outstandingShares"`
 	Source            string   `json:"source"`
 }
 
@@ -483,8 +483,8 @@ type companyShareFloatShadow struct {
 	Symbol            *string   `json:"symbol"`
 	Date              *DateTime `json:"date"`
 	FreeFloat         *float64  `json:"freeFloat"`
-	FloatShares       *uint64   `json:"floatShares"`
-	OutstandingShares *uint64   `json:"outstandingShares"`
+	FloatShares       *float64  `json:"floatShares"`
+	OutstandingShares *float64  `json:"outstandingShares"`
 	Source            *string   `json:"source"`
 }
 
@@ -527,8 +527,8 @@ type AllSharesFloatRecord struct {
 	Symbol            string   `json:"symbol"`
 	Date              DateTime `json:"date"`
 	FreeFloat         float64  `json:"freeFloat"`
-	FloatShares       uint64   `json:"floatShares"`
-	OutstandingShares uint64   `json:"outstandingShares"`
+	FloatShares       float64  `json:"floatShares"`
+	OutstandingShares float64  `json:"outstandingShares"`
 }
 
 // allSharesFloatRecordShadow mirrors AllSharesFloatRecord with a pointer or
@@ -538,8 +538,8 @@ type allSharesFloatRecordShadow struct {
 	Symbol            *string   `json:"symbol"`
 	Date              *DateTime `json:"date"`
 	FreeFloat         *float64  `json:"freeFloat"`
-	FloatShares       *uint64   `json:"floatShares"`
-	OutstandingShares *uint64   `json:"outstandingShares"`
+	FloatShares       *float64  `json:"floatShares"`
+	OutstandingShares *float64  `json:"outstandingShares"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -713,13 +713,13 @@ type ExecutiveCompensation struct {
 	AcceptedDate              DateTime `json:"acceptedDate"`
 	NameAndPosition           string   `json:"nameAndPosition"`
 	Year                      int64    `json:"year"`
-	Salary                    uint64   `json:"salary"`
-	Bonus                     uint64   `json:"bonus"`
-	StockAward                uint64   `json:"stockAward"`
-	OptionAward               uint64   `json:"optionAward"`
-	IncentivePlanCompensation uint64   `json:"incentivePlanCompensation"`
-	AllOtherCompensation      uint64   `json:"allOtherCompensation"`
-	Total                     uint64   `json:"total"`
+	Salary                    float64  `json:"salary"`
+	Bonus                     float64  `json:"bonus"`
+	StockAward                float64  `json:"stockAward"`
+	OptionAward               float64  `json:"optionAward"`
+	IncentivePlanCompensation float64  `json:"incentivePlanCompensation"`
+	AllOtherCompensation      float64  `json:"allOtherCompensation"`
+	Total                     float64  `json:"total"`
 	Link                      string   `json:"link"`
 }
 
@@ -734,13 +734,13 @@ type executiveCompensationShadow struct {
 	AcceptedDate              *DateTime `json:"acceptedDate"`
 	NameAndPosition           *string   `json:"nameAndPosition"`
 	Year                      *int64    `json:"year"`
-	Salary                    *uint64   `json:"salary"`
-	Bonus                     *uint64   `json:"bonus"`
-	StockAward                *uint64   `json:"stockAward"`
-	OptionAward               *uint64   `json:"optionAward"`
-	IncentivePlanCompensation *uint64   `json:"incentivePlanCompensation"`
-	AllOtherCompensation      *uint64   `json:"allOtherCompensation"`
-	Total                     *uint64   `json:"total"`
+	Salary                    *float64  `json:"salary"`
+	Bonus                     *float64  `json:"bonus"`
+	StockAward                *float64  `json:"stockAward"`
+	OptionAward               *float64  `json:"optionAward"`
+	IncentivePlanCompensation *float64  `json:"incentivePlanCompensation"`
+	AllOtherCompensation      *float64  `json:"allOtherCompensation"`
+	Total                     *float64  `json:"total"`
 	Link                      *string   `json:"link"`
 }
 

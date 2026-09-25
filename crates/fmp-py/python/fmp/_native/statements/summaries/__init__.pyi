@@ -22,7 +22,7 @@ class EnterpriseValue:
     @property
     def stock_price(self) -> builtins.float: ...
     @property
-    def number_of_shares(self) -> builtins.int: ...
+    def number_of_shares(self) -> builtins.float: ...
     @property
     def market_capitalization(self) -> builtins.float: ...
     @property
@@ -36,7 +36,7 @@ class EnterpriseValue:
         symbol: builtins.str,
         date: datetime.date,
         stock_price: builtins.float,
-        number_of_shares: builtins.int,
+        number_of_shares: builtins.float,
         market_capitalization: builtins.float,
         minus_cash_and_cash_equivalents: builtins.int,
         add_total_debt: builtins.int,
