@@ -11,6 +11,7 @@ use crate::types::{
 
 /// One worldwide company returned by the stock screener.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CompanyScreenerEntry {
     pub symbol: Ticker,

@@ -17,6 +17,7 @@ where
 
 /// One company or market-wide dividend event.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct DividendEvent {
     pub symbol: Ticker,
@@ -33,6 +34,7 @@ pub struct DividendEvent {
 
 /// One company or market-wide earnings event.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EarningsEvent {
     pub symbol: Ticker,
@@ -50,6 +52,7 @@ pub struct EarningsEvent {
 
 /// One worldwide IPO calendar event.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IpoCalendarEvent {
     pub symbol: Ticker,
@@ -68,6 +71,7 @@ pub struct IpoCalendarEvent {
 
 /// One US IPO disclosure filing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IpoDisclosure {
     pub symbol: Ticker,
@@ -81,6 +85,7 @@ pub struct IpoDisclosure {
 
 /// One US IPO prospectus filing and its documented offering values.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IpoProspectus {
     pub symbol: Ticker,
@@ -103,6 +108,7 @@ pub struct IpoProspectus {
 
 /// One company or market-wide stock-split event.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockSplitEvent {
     pub symbol: Ticker,

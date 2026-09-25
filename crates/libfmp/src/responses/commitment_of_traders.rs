@@ -7,6 +7,7 @@ use crate::types::{ApiDateTime, Sector, Ticker};
 
 /// One provider-listed Commitment of Traders report.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CotReportListing {
     pub symbol: Ticker,
@@ -15,6 +16,7 @@ pub struct CotReportListing {
 
 /// Provider-derived market positioning and sentiment for one contract.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CotAnalysis {
     pub symbol: Ticker,
@@ -42,6 +44,7 @@ pub struct CotAnalysis {
 /// distinguishes integer JSON spellings such as `100` from decimal spellings
 /// such as `20.6` in the same response.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CotReport {
     pub symbol: Ticker,

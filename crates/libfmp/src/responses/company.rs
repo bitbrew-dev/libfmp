@@ -17,6 +17,7 @@ use crate::{
 
 /// A detailed worldwide company profile returned by symbol or US CIK lookup.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CompanyProfile {
     pub symbol: Ticker,
@@ -64,6 +65,7 @@ pub struct CompanyProfile {
 
 /// One US company-issued note.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CompanyNote {
     pub cik: Cik,
@@ -74,6 +76,7 @@ pub struct CompanyNote {
 
 /// One worldwide stock peer selected by the provider.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockPeer {
     pub symbol: Ticker,
@@ -86,6 +89,7 @@ pub struct StockPeer {
 
 /// One US company that has been removed from an exchange.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct DelistedCompany {
     pub symbol: Ticker,
@@ -97,6 +101,7 @@ pub struct DelistedCompany {
 
 /// One current or historical US employee-count filing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EmployeeCount {
     pub symbol: Ticker,
@@ -112,6 +117,7 @@ pub struct EmployeeCount {
 
 /// One current or historical worldwide market-capitalization observation.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct MarketCapitalizationRecord {
     pub symbol: Ticker,
@@ -122,6 +128,7 @@ pub struct MarketCapitalizationRecord {
 
 /// One worldwide company share-float observation with its filing source.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CompanyShareFloat {
     pub symbol: Ticker,
@@ -136,6 +143,7 @@ pub struct CompanyShareFloat {
 
 /// One all-company share-float observation, whose payload has no source field.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct AllSharesFloatRecord {
     pub symbol: Ticker,
@@ -149,6 +157,7 @@ pub struct AllSharesFloatRecord {
 
 /// One US merger or acquisition transaction and its official filing link.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct MergerAcquisition {
     pub symbol: Ticker,
@@ -164,6 +173,7 @@ pub struct MergerAcquisition {
 
 /// One executive in a worldwide company's current leadership data.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CompanyExecutive {
     pub title: String,
@@ -178,6 +188,7 @@ pub struct CompanyExecutive {
 
 /// One executive-compensation filing row for a US company.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ExecutiveCompensation {
     pub cik: Cik,
@@ -206,6 +217,7 @@ pub struct ExecutiveCompensation {
 
 /// One US industry executive-compensation benchmark.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ExecutiveCompensationBenchmark {
     pub industry_title: Industry,

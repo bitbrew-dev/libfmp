@@ -10,6 +10,7 @@ use crate::{
 
 /// One historical worldwide financial-ratios row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FinancialRatios {
     pub symbol: Ticker,
@@ -83,6 +84,7 @@ pub struct FinancialRatios {
 
 /// One trailing-twelve-month worldwide financial-ratios row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct FinancialRatiosTtm {
     pub symbol: Ticker,
     #[serde(rename = "grossProfitMarginTTM")]

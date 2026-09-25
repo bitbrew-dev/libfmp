@@ -9,6 +9,7 @@ use crate::{
 
 /// One worldwide stock-rating bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkStockRating {
     pub symbol: Ticker,
@@ -24,6 +25,7 @@ pub struct BulkStockRating {
 
 /// One worldwide discounted-cash-flow bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkDcfValuation {
     pub symbol: Ticker,
@@ -35,6 +37,7 @@ pub struct BulkDcfValuation {
 
 /// One worldwide financial-score bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkFinancialScore {
     pub symbol: Ticker,
@@ -52,6 +55,7 @@ pub struct BulkFinancialScore {
 
 /// One US price-target-summary bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkPriceTargetSummary {
     pub symbol: Ticker,
@@ -68,6 +72,7 @@ pub struct BulkPriceTargetSummary {
 
 /// One worldwide ETF holding bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkEtfHolding {
     pub symbol: Ticker,
@@ -84,6 +89,7 @@ pub struct BulkEtfHolding {
 
 /// One worldwide upgrades/downgrades-consensus bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkUpgradesDowngradesConsensus {
     pub symbol: String,

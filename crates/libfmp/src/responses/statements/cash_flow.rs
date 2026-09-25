@@ -10,6 +10,7 @@ use crate::{
 
 /// One historical or trailing-twelve-month worldwide cash-flow statement.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CashFlowStatement {
     pub date: Date,

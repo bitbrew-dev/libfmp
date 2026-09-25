@@ -25,6 +25,7 @@ where
 /// House members. `symbol` deliberately remains a string because the
 /// documented Senate-by-name response contains an empty value.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CongressionalTrade {
     pub symbol: String,
@@ -53,6 +54,7 @@ pub struct CongressionalTrade {
 
 /// One current or historical profile for a member of Congress.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CongressionalMemberProfile {
     #[serde(rename = "senateID")]
@@ -70,6 +72,7 @@ pub struct CongressionalMemberProfile {
 
 /// One congressional position held by a member.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CongressionalMemberPosition {
     #[serde(rename = "senateID")]
@@ -86,6 +89,7 @@ pub struct CongressionalMemberPosition {
 
 /// A minimum and maximum value disclosed for a congressional asset or income.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CongressionalNetWorthRange {
     pub min: i64,
@@ -94,6 +98,7 @@ pub struct CongressionalNetWorthRange {
 
 /// Opaque provider details for a disclosed debt.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CongressionalDebtDetails {
     pub date_incurred: OpaqueDateText,
@@ -101,6 +106,7 @@ pub struct CongressionalDebtDetails {
 
 /// One itemized congressional net-worth disclosure.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CongressionalMemberNetWorthEntry {
     #[serde(rename = "senateID")]
@@ -131,6 +137,7 @@ pub struct CongressionalMemberNetWorthEntry {
 
 /// Aggregated congressional net-worth totals for one filing year.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CongressionalMemberNetWorthAggregate {
     #[serde(rename = "senateID")]

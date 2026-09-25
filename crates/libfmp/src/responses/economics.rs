@@ -9,6 +9,7 @@ use crate::{
 
 /// Treasury rates across all twelve documented maturities for one date.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TreasuryRate {
     pub date: Date,
@@ -28,6 +29,7 @@ pub struct TreasuryRate {
 
 /// One observation of a documented or validated open economic indicator.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EconomicIndicatorObservation {
     pub name: EconomicIndicator,
@@ -37,6 +39,7 @@ pub struct EconomicIndicatorObservation {
 
 /// One scheduled economic data release.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EconomicCalendarEvent {
     pub date: ApiDateTime,
@@ -54,6 +57,7 @@ pub struct EconomicCalendarEvent {
 
 /// One country's documented market and total-equity risk premiums.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct MarketRiskPremium {
     /// Full country name, not a provider country code.

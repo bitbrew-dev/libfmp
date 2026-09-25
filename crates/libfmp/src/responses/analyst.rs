@@ -6,6 +6,7 @@ use crate::types::{Count, Date, Price, StatementAmount, Ticker};
 
 /// One dated set of analyst financial estimates.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FinancialEstimate {
     pub symbol: Ticker,
@@ -49,6 +50,7 @@ pub struct FinancialEstimate {
 
 /// One current financial-rating snapshot.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct RatingSnapshot {
     pub symbol: Ticker,
@@ -64,6 +66,7 @@ pub struct RatingSnapshot {
 
 /// One dated historical financial rating.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct HistoricalRating {
     pub symbol: Ticker,
@@ -80,6 +83,7 @@ pub struct HistoricalRating {
 
 /// Price-target averages and publisher text across documented time windows.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct PriceTargetSummary {
     pub symbol: Ticker,
@@ -97,6 +101,7 @@ pub struct PriceTargetSummary {
 
 /// Aggregated high, low, consensus, and median analyst price targets.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct PriceTargetConsensus {
     pub symbol: Ticker,
@@ -108,6 +113,7 @@ pub struct PriceTargetConsensus {
 
 /// One dated stock-grade action from an analyst or institution.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockGrade {
     pub symbol: Ticker,
@@ -120,6 +126,7 @@ pub struct StockGrade {
 
 /// One dated historical count of analyst rating buckets.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct HistoricalStockGrade {
     pub symbol: Ticker,
@@ -133,6 +140,7 @@ pub struct HistoricalStockGrade {
 
 /// Current analyst rating-bucket counts and their consensus label.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockGradesSummary {
     pub symbol: Ticker,

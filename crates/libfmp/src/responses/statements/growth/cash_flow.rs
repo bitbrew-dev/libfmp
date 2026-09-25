@@ -10,6 +10,7 @@ use crate::{
 
 /// One historical cash-flow-statement growth row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CashFlowStatementGrowth {
     pub symbol: Ticker,

@@ -6,6 +6,7 @@ use crate::types::{ApiDateTime, Change, Date, Percentage, Price, Ticker, Volume}
 
 /// One compact end-of-day stock chart row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockChartLightBar {
     pub symbol: Ticker,
@@ -17,6 +18,7 @@ pub struct StockChartLightBar {
 
 /// One detailed end-of-day stock chart row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockChartFullBar {
     pub symbol: Ticker,
@@ -34,6 +36,7 @@ pub struct StockChartFullBar {
 
 /// One split-unadjusted or dividend-adjusted end-of-day stock chart row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockChartAdjustedBar {
     pub symbol: Ticker,
@@ -56,6 +59,7 @@ pub struct StockChartAdjustedBar {
 /// timestamp is therefore represented by the strict timezone-less
 /// [`ApiDateTime`] unit.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct StockChartIntradayBar {
     pub date: ApiDateTime,

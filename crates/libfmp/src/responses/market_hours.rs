@@ -21,6 +21,7 @@ where
 
 /// Trading hours and current status for one exchange.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ExchangeMarketHours {
     pub exchange: ExchangeCode,
@@ -33,6 +34,7 @@ pub struct ExchangeMarketHours {
 
 /// One holiday or non-trading day for an exchange.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct ExchangeHoliday {
     pub exchange: ExchangeCode,

@@ -20,6 +20,7 @@ where
 
 /// One individual analyst rating returned by the TipRanks ratings search.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksRatingSearchResult {
     pub symbol: Ticker,
@@ -40,6 +41,7 @@ pub struct TipRanksRatingSearchResult {
 
 /// One analyst's active rating in a point-in-time symbol or analyst snapshot.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksPointInTimeRating {
     pub symbol: Ticker,
@@ -67,6 +69,7 @@ pub struct TipRanksPointInTimeRating {
 
 /// Recommendation counts in a TipRanks ratings summary.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksRecommendationCounts {
     pub buy: Count,
@@ -76,6 +79,7 @@ pub struct TipRanksRecommendationCounts {
 
 /// Analyst-action counts in a TipRanks ratings summary.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksAnalystActionCounts {
     pub initiated: Count,
@@ -88,6 +92,7 @@ pub struct TipRanksAnalystActionCounts {
 
 /// Aggregated TipRanks ratings for one ticker over a date window.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksSymbolSummary {
     pub symbol: Ticker,
@@ -110,6 +115,7 @@ pub struct TipRanksSymbolSummary {
 
 /// Aggregated TipRanks ratings for one analyst over a date window.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksAnalystSummary {
     #[serde(rename = "expertUID")]
@@ -133,6 +139,7 @@ pub struct TipRanksAnalystSummary {
 
 /// Aggregated TipRanks ratings for one firm over a date window.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksFirmSummary {
     pub firm_name: String,
@@ -155,6 +162,7 @@ pub struct TipRanksFirmSummary {
 
 /// One analyst profile returned by the TipRanks directory.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksAnalystProfile {
     #[serde(rename = "expertUID")]

@@ -6,6 +6,7 @@ use crate::types::{Change, Date, ExchangeCode, Industry, Percentage, Price, Sect
 
 /// One dated sector-level average market change.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SectorPerformance {
     pub date: Date,
@@ -16,6 +17,7 @@ pub struct SectorPerformance {
 
 /// One dated industry-level average market change.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IndustryPerformance {
     pub date: Date,
@@ -26,6 +28,7 @@ pub struct IndustryPerformance {
 
 /// One dated sector-level price-to-earnings ratio.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct SectorPe {
     pub date: Date,
@@ -36,6 +39,7 @@ pub struct SectorPe {
 
 /// One dated industry-level price-to-earnings ratio.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct IndustryPe {
     pub date: Date,
@@ -46,6 +50,7 @@ pub struct IndustryPe {
 
 /// One stock in a provider-ranked market-mover list.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct MarketMover {
     pub symbol: Ticker,

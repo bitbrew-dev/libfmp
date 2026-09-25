@@ -24,6 +24,7 @@ where
 /// therefore remains deliberately raw until the provider documentation proves
 /// a stable representation. The key itself is required.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CrowdfundingOfferingSearchResult {
     pub cik: Cik,
@@ -34,6 +35,7 @@ pub struct CrowdfundingOfferingSearchResult {
 
 /// One compact Regulation D offering search result.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct RegulationDOfferingSearchResult {
     pub cik: Cik,
@@ -48,6 +50,7 @@ pub struct RegulationDOfferingSearchResult {
 /// present. [`Number`] preserves whether the provider spells `offeringPrice` as
 /// an integer or decimal JSON number.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CrowdfundingOffering {
     pub cik: Cik,
@@ -131,6 +134,7 @@ pub struct CrowdfundingOffering {
 /// `dateOfFirstSale` uses the provider's empty-string sentinel rather than
 /// JSON null. Amounts and investor counts are nonnegative JSON integers.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct RegulationDOffering {
     pub cik: Cik,

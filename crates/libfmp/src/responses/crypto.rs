@@ -10,6 +10,7 @@ pub use super::quote::{Quote, QuoteShort};
 
 /// One cryptocurrency in the provider's documented cryptocurrency catalog.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct CryptocurrencyListing {
     pub symbol: Ticker,

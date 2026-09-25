@@ -10,6 +10,7 @@ use crate::{
 
 /// One combined financial-statement growth row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FinancialStatementGrowth {
     pub symbol: Ticker,

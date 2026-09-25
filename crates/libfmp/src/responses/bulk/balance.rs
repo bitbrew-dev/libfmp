@@ -10,6 +10,7 @@ use crate::{
 
 /// One worldwide bulk balance-sheet-statement row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkBalanceSheetStatement {
     pub date: Date,
@@ -77,6 +78,7 @@ pub struct BulkBalanceSheetStatement {
 
 /// One worldwide bulk balance-sheet-statement-growth row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkBalanceSheetStatementGrowth {
     pub symbol: Ticker,

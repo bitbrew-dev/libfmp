@@ -9,6 +9,7 @@ use crate::{
 
 /// One worldwide key-metrics trailing-twelve-month bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct BulkKeyMetricsTtm {
     pub symbol: Ticker,
     #[serde(rename = "marketCap")]
@@ -99,6 +100,7 @@ pub struct BulkKeyMetricsTtm {
 
 /// One worldwide financial-ratios trailing-twelve-month bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct BulkFinancialRatiosTtm {
     pub symbol: Ticker,
     #[serde(rename = "grossProfitMarginTTM")]
@@ -223,6 +225,7 @@ pub struct BulkFinancialRatiosTtm {
 
 /// One worldwide stock-peer bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 pub struct BulkStockPeers {
     pub symbol: Ticker,
     pub peers: String,
@@ -230,6 +233,7 @@ pub struct BulkStockPeers {
 
 /// One worldwide annual earnings-surprise bulk row.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct BulkEarningsSurprise {
     pub symbol: Ticker,

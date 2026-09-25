@@ -12,6 +12,7 @@ use crate::{
 
 /// One asset held by an ETF or mutual fund.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfFundHolding {
     pub symbol: Ticker,
@@ -29,6 +30,7 @@ pub struct EtfFundHolding {
 
 /// One sector exposure nested within a fund-information row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfSectorExposure {
     pub industry: Industry,
@@ -37,6 +39,7 @@ pub struct EtfSectorExposure {
 
 /// Descriptive, structural, and trading information for an ETF or mutual fund.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfFundInfo {
     pub symbol: Ticker,
@@ -64,6 +67,7 @@ pub struct EtfFundInfo {
 
 /// One country allocation reported as an exact percent-bearing string.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfCountryWeighting {
     pub country: String,
@@ -72,6 +76,7 @@ pub struct EtfCountryWeighting {
 
 /// One ETF's exposure to a requested asset.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfAssetExposure {
     pub symbol: Ticker,
@@ -85,6 +90,7 @@ pub struct EtfAssetExposure {
 
 /// One numeric sector allocation for an ETF or mutual fund.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfSectorWeighting {
     pub symbol: Ticker,
@@ -94,6 +100,7 @@ pub struct EtfSectorWeighting {
 
 /// One fund holder from the latest disclosure for a security.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FundDisclosureHolder {
     pub cik: Cik,
@@ -109,6 +116,7 @@ pub struct FundDisclosureHolder {
 
 /// One position in a mutual-fund disclosure filing.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FundDisclosure {
     pub cik: Cik,
@@ -141,6 +149,7 @@ pub struct FundDisclosure {
 
 /// One result from searching disclosure holders by fund or ETF name.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct FundDisclosureSearchResult {
     pub symbol: Ticker,
