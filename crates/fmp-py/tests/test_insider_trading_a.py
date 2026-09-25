@@ -179,3 +179,14 @@ def test_search_and_latest_decode_the_same_row(client: Any, fixture_server: Fixt
     assert type(latest[0]) is type(searched[0])
     assert latest[0].filing_date == searched[0].filing_date
     assert latest[0].securities_owned == searched[0].securities_owned
+
+
+def test_latest_trades_decode_fractional_share_quantities(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: fractional and integral-float share quantities decode as ``float``."""
+    fixture_server.route("/insider-trading/latest", load_fixture("latest_insider_trades_fractional_synthetic.json"))
+    rows = client.insider_trading.latest_trades()
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].securities_owned, float)
+    assert rows[0].securities_owned == 62_959.5
+    assert rows[0].securities_transacted == 1.0

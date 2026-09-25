@@ -7,13 +7,24 @@
 //! integral value back as a JSON integer.
 
 use libfmp::responses::{
-    calendar::StockSplitEvent, crypto::CryptocurrencyListing, screener::CompanyScreenerEntry,
+    calendar::{EarningsEvent, StockSplitEvent},
+    company::CompanyShareFloat,
+    crypto::CryptocurrencyListing,
+    fundraising::RegulationDOffering,
+    funds::FundDisclosure,
+    insider_trading::InsiderTrade,
+    screener::CompanyScreenerEntry,
 };
 use serde_json::json;
 
 const SCREENER: &[u8] = include_bytes!("fixtures/company_screener_fractional_synthetic.json");
 const CRYPTO: &[u8] = include_bytes!("fixtures/cryptocurrency_list_fractional_synthetic.json");
 const SPLITS: &[u8] = include_bytes!("fixtures/stock_splits_fractional_synthetic.json");
+const INSIDER: &[u8] = include_bytes!("fixtures/latest_insider_trades_fractional_synthetic.json");
+const DISCLOSURES: &[u8] = include_bytes!("fixtures/fund_disclosures_fractional_synthetic.json");
+const FLOAT: &[u8] = include_bytes!("fixtures/company_shares_float_fractional_synthetic.json");
+const REG_D: &[u8] = include_bytes!("fixtures/fundraising_by_cik_fractional_synthetic.json");
+const EARNINGS: &[u8] = include_bytes!("fixtures/earnings_calendar_fractional_synthetic.json");
 
 #[test]
 fn market_cap_decodes_integral_float_and_fractional_forms() {
@@ -48,6 +59,59 @@ fn split_terms_decode_fractional_and_integral_float_forms() {
     let wire = serde_json::to_value(&rows).unwrap();
     assert_eq!(wire[0]["numerator"], json!(1.5));
     assert_eq!(wire[0]["denominator"], json!(1_u64));
+}
+
+#[test]
+fn insider_share_quantities_decode_fractional_and_integral_float_forms() {
+    let rows: Vec<InsiderTrade> = serde_json::from_slice(INSIDER).unwrap();
+
+    assert_eq!(rows[0].securities_owned, 62_959.5);
+    assert_eq!(rows[0].securities_transacted, 1.0);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["securitiesOwned"], json!(62_959.5));
+    assert_eq!(wire[0]["securitiesTransacted"], json!(1_u64));
+}
+
+#[test]
+fn fund_disclosure_balance_decodes_a_negative_fractional_short() {
+    let rows: Vec<FundDisclosure> = serde_json::from_slice(DISCLOSURES).unwrap();
+
+    assert_eq!(rows[0].balance, -2_438_784.5);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["balance"], json!(-2_438_784.5));
+}
+
+#[test]
+fn company_share_float_decodes_fractional_and_integral_float_forms() {
+    let rows: Vec<CompanyShareFloat> = serde_json::from_slice(FLOAT).unwrap();
+
+    assert_eq!(rows[0].float_shares, 14_662_387_495.5);
+    assert_eq!(rows[0].outstanding_shares, 14_687_356_000.0);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["floatShares"], json!(14_662_387_495.5));
+    assert_eq!(wire[0]["outstandingShares"], json!(14_687_356_000_u64));
+}
+
+#[test]
+fn regulation_d_amounts_decode_fractional_and_integral_float_forms() {
+    let rows: Vec<RegulationDOffering> = serde_json::from_slice(REG_D).unwrap();
+
+    assert_eq!(rows[0].total_offering_amount, 71_999_990.5);
+    assert_eq!(rows[0].total_amount_sold, 1.0);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["totalOfferingAmount"], json!(71_999_990.5));
+    assert_eq!(wire[0]["totalAmountSold"], json!(1_u64));
+}
+
+#[test]
+fn earnings_revenue_decodes_fractional_and_integral_float_forms() {
+    let rows: Vec<EarningsEvent> = serde_json::from_slice(EARNINGS).unwrap();
+
+    assert_eq!(rows[0].revenue_estimated, 1_086_300_000.5);
+    assert_eq!(rows[0].revenue_actual, Some(1_101_500_000.0));
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["revenueEstimated"], json!(1_086_300_000.5));
+    assert_eq!(wire[0]["revenueActual"], json!(1_101_500_000_u64));
 }
 
 #[test]

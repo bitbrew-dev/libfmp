@@ -203,3 +203,14 @@ def test_stock_splits_calendar_omits_from_independently(client: Any, fixture_ser
 
     assert fixture_server.requests[0].target == "/splits-calendar?to=2026-04-27&page=0"
     assert len(rows) == 1
+
+
+def test_earnings_calendar_decodes_fractional_revenue(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: fractional and integral-float revenue decodes as ``float``."""
+    fixture_server.route("/earnings-calendar", load_fixture("earnings_calendar_fractional_synthetic.json"))
+    rows = client.calendar.earnings_calendar()
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].revenue_estimated, float)
+    assert rows[0].revenue_estimated == 1_086_300_000.5
+    assert rows[0].revenue_actual == 1_101_500_000.0

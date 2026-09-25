@@ -47,3 +47,36 @@ func TestIntegralFloatFieldsDecodeExponentForms(t *testing.T) {
 		t.Fatalf("StockSplitEvent = %+v, %v", split, err)
 	}
 }
+
+// Issue #340: share quantities and money amounts documented as JSON integers
+// decode a fractional, negative, or integral-float number too. The synthetic
+// fixtures mirror crates/libfmp/tests/integral_f64_responses.rs.
+func TestQuantityAndAmountFieldsDecodeFractionalForms(t *testing.T) {
+	t.Parallel()
+
+	insider := assertFixtureParity[InsiderTrade](t, "latest_insider_trades_fractional_synthetic.json")
+	if len(insider) != 1 || insider[0].SecuritiesOwned != 62_959.5 || insider[0].SecuritiesTransacted != 1 {
+		t.Fatalf("latest_insider_trades_fractional_synthetic = %+v", insider)
+	}
+
+	disclosures := assertFixtureParity[FundDisclosure](t, "fund_disclosures_fractional_synthetic.json")
+	if len(disclosures) != 1 || disclosures[0].Balance != -2_438_784.5 {
+		t.Fatalf("fund_disclosures_fractional_synthetic = %+v", disclosures)
+	}
+
+	shareFloat := assertFixtureParity[CompanyShareFloat](t, "company_shares_float_fractional_synthetic.json")
+	if len(shareFloat) != 1 || shareFloat[0].FloatShares != 14_662_387_495.5 || shareFloat[0].OutstandingShares != 14_687_356_000 {
+		t.Fatalf("company_shares_float_fractional_synthetic = %+v", shareFloat)
+	}
+
+	offerings := assertFixtureParity[RegulationDOffering](t, "fundraising_by_cik_fractional_synthetic.json")
+	if len(offerings) != 1 || offerings[0].TotalOfferingAmount != 71_999_990.5 || offerings[0].TotalAmountSold != 1 {
+		t.Fatalf("fundraising_by_cik_fractional_synthetic = %+v", offerings)
+	}
+
+	earnings := assertFixtureParity[EarningsEvent](t, "earnings_calendar_fractional_synthetic.json")
+	if len(earnings) != 1 || earnings[0].RevenueEstimated != 1_086_300_000.5 ||
+		earnings[0].RevenueActual == nil || *earnings[0].RevenueActual != 1_101_500_000 {
+		t.Fatalf("earnings_calendar_fractional_synthetic = %+v", earnings)
+	}
+}

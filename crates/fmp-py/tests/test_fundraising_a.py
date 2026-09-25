@@ -261,3 +261,14 @@ def test_regulation_d_offerings_by_cik_accepts_the_keyword(client: Any, fixture_
     assert len(rows) == 1
     with pytest.raises(TypeError):
         client.fundraising.regulation_d_offerings_by_cik(NJOY_CIK, page=0)
+
+
+def test_regulation_d_offerings_decode_fractional_amounts(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: fractional and integral-float offering amounts decode as ``float``."""
+    fixture_server.route("/fundraising", load_fixture("fundraising_by_cik_fractional_synthetic.json"))
+    rows = client.fundraising.regulation_d_offerings_by_cik(NJOY_CIK)
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].total_offering_amount, float)
+    assert rows[0].total_offering_amount == 71_999_990.5
+    assert rows[0].total_amount_sold == 1.0

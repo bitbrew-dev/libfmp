@@ -1,0 +1,20 @@
+[
+  {
+    "acquisitionOrDisposition": "A",
+    "companyCik": "0000036146",
+    "directOrIndirect": "D",
+    "filingDate": "2026-07-30",
+    "formType": "4",
+    "price": 0,
+    "reportingCik": "0001661867",
+    "reportingName": "Tate Granville Jr",
+    "securitiesOwned": 62959.5,
+    "securitiesTransacted": 1.0,
+    "securityName": "Common Stock",
+    "symbol": "TRMK",
+    "transactionDate": "2026-07-28",
+    "transactionType": "A-Award",
+    "typeOfOwner": "officer: Secretary",
+    "url": "https://www.sec.gov/Archives/edgar/data/36146/000003614626000087/0000036146-26-000087-index.htm"
+  }
+]

@@ -259,3 +259,13 @@ def test_wrong_percent_kind_is_a_decode_error(
     fixture_server.route("/etf/country-weightings", body)
     with pytest.raises(errors.FmpDecodeError):
         client.funds.etf_country_weightings("SPY")
+
+
+def test_fund_disclosures_decode_a_negative_fractional_balance(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: a short position's fractional, negative balance decodes as ``float``."""
+    fixture_server.route("/funds/disclosure", load_fixture("fund_disclosures_fractional_synthetic.json"))
+    rows = client.funds.fund_disclosures("VWO", 2023, 4)
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].balance, float)
+    assert rows[0].balance == -2_438_784.5
