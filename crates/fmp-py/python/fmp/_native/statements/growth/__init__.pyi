@@ -3,9 +3,13 @@
 import builtins
 import typing
 from fmp._native.statements.growth import balance
+import fmp._native.statements.growth.balance
 from fmp._native.statements.growth import cash_flow
+import fmp._native.statements.growth.cash_flow
 from fmp._native.statements.growth import combined
+import fmp._native.statements.growth.combined
 from fmp._native.statements.growth import income
+import fmp._native.statements.growth.income
 
 __all__ = [
     "StatementsGrowthNamespace",
@@ -28,7 +32,7 @@ class StatementsGrowthNamespace:
         *,
         limit: typing.Optional[builtins.int] = None,
         period: typing.Optional[builtins.str] = None,
-    ) -> builtins.list[income.IncomeStatementGrowth]:
+    ) -> builtins.list[fmp._native.statements.growth.income.IncomeStatementGrowth]:
         r"""
         Retrieves worldwide income-statement growth for one company.
         """
@@ -39,7 +43,9 @@ class StatementsGrowthNamespace:
         *,
         limit: typing.Optional[builtins.int] = None,
         period: typing.Optional[builtins.str] = None,
-    ) -> builtins.list[balance.BalanceSheetStatementGrowth]:
+    ) -> builtins.list[
+        fmp._native.statements.growth.balance.BalanceSheetStatementGrowth
+    ]:
         r"""
         Retrieves worldwide balance-sheet-statement growth for one company.
         """
@@ -50,7 +56,7 @@ class StatementsGrowthNamespace:
         *,
         limit: typing.Optional[builtins.int] = None,
         period: typing.Optional[builtins.str] = None,
-    ) -> builtins.list[cash_flow.CashFlowStatementGrowth]:
+    ) -> builtins.list[fmp._native.statements.growth.cash_flow.CashFlowStatementGrowth]:
         r"""
         Retrieves worldwide cash-flow-statement growth for one company.
         """
@@ -61,7 +67,7 @@ class StatementsGrowthNamespace:
         *,
         limit: typing.Optional[builtins.int] = None,
         period: typing.Optional[builtins.str] = None,
-    ) -> builtins.list[combined.FinancialStatementGrowth]:
+    ) -> builtins.list[fmp._native.statements.growth.combined.FinancialStatementGrowth]:
         r"""
         Retrieves combined worldwide financial-statement growth for one company.
         """

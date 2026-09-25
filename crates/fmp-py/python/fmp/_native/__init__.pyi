@@ -3,36 +3,67 @@
 import builtins
 import typing
 from fmp._native import analyst
+import fmp._native.analyst
 from fmp._native import bulk
+import fmp._native.bulk
 from fmp._native import calendar
+import fmp._native.calendar
 from fmp._native import chart
+import fmp._native.chart
 from fmp._native import commitment_of_traders
+import fmp._native.commitment_of_traders
 from fmp._native import commodities
+import fmp._native.commodities
 from fmp._native import company
+import fmp._native.company
 from fmp._native import congressional
+import fmp._native.congressional
 from fmp._native import crypto
+import fmp._native.crypto
 from fmp._native import dcf
+import fmp._native.dcf
 from fmp._native import directory
+import fmp._native.directory
 from fmp._native import economics
+import fmp._native.economics
 from fmp._native import errors
+import fmp._native.errors
 from fmp._native import esg
+import fmp._native.esg
 from fmp._native import forex
+import fmp._native.forex
 from fmp._native import fundraising
+import fmp._native.fundraising
 from fmp._native import funds
+import fmp._native.funds
 from fmp._native import indexes
+import fmp._native.indexes
 from fmp._native import insider_trading
+import fmp._native.insider_trading
 from fmp._native import institutional_ownership
+import fmp._native.institutional_ownership
 from fmp._native import market
+import fmp._native.market
 from fmp._native import market_hours
+import fmp._native.market_hours
 from fmp._native import news
+import fmp._native.news
 from fmp._native import quote
+import fmp._native.quote
 from fmp._native import screener
+import fmp._native.screener
 from fmp._native import search
+import fmp._native.search
 from fmp._native import sec_filings
+import fmp._native.sec_filings
 from fmp._native import statements
+import fmp._native.statements
 from fmp._native import technical_indicators
+import fmp._native.technical_indicators
 from fmp._native import tipranks
+import fmp._native.tipranks
 from fmp._native import transcripts
+import fmp._native.transcripts
 
 __all__ = [
     "BinaryPayload",
@@ -146,25 +177,25 @@ class FmpClient:
     """
 
     @property
-    def analyst(self) -> analyst.AnalystNamespace:
+    def analyst(self) -> fmp._native.analyst.AnalystNamespace:
         r"""
         The `analyst` endpoints, reached as `client.analyst`.
         """
 
     @property
-    def bulk(self) -> bulk.BulkNamespace:
+    def bulk(self) -> fmp._native.bulk.BulkNamespace:
         r"""
         The `bulk` endpoints, reached as `client.bulk`.
         """
 
     @property
-    def calendar(self) -> calendar.CalendarNamespace:
+    def calendar(self) -> fmp._native.calendar.CalendarNamespace:
         r"""
         The `calendar` endpoints, reached as `client.calendar`.
         """
 
     @property
-    def chart(self) -> chart.ChartNamespace:
+    def chart(self) -> fmp._native.chart.ChartNamespace:
         r"""
         The `chart` endpoints, reached as `client.chart`.
         """
@@ -172,85 +203,85 @@ class FmpClient:
     @property
     def commitment_of_traders(
         self,
-    ) -> commitment_of_traders.CommitmentOfTradersNamespace:
+    ) -> fmp._native.commitment_of_traders.CommitmentOfTradersNamespace:
         r"""
         The `commitment_of_traders` endpoints, reached as `client.commitment_of_traders`.
         """
 
     @property
-    def commodities(self) -> commodities.CommoditiesNamespace:
+    def commodities(self) -> fmp._native.commodities.CommoditiesNamespace:
         r"""
         The `commodities` endpoints, reached as `client.commodities`.
         """
 
     @property
-    def company(self) -> company.CompanyNamespace:
+    def company(self) -> fmp._native.company.CompanyNamespace:
         r"""
         The `company` endpoints, reached as `client.company`.
         """
 
     @property
-    def congressional(self) -> congressional.CongressionalNamespace:
+    def congressional(self) -> fmp._native.congressional.CongressionalNamespace:
         r"""
         The `congressional` endpoints, reached as `client.congressional`.
         """
 
     @property
-    def crypto(self) -> crypto.CryptoNamespace:
+    def crypto(self) -> fmp._native.crypto.CryptoNamespace:
         r"""
         The `crypto` endpoints, reached as `client.crypto`.
         """
 
     @property
-    def dcf(self) -> dcf.DcfNamespace:
+    def dcf(self) -> fmp._native.dcf.DcfNamespace:
         r"""
         The `dcf` endpoints, reached as `client.dcf`.
         """
 
     @property
-    def directory(self) -> directory.DirectoryNamespace:
+    def directory(self) -> fmp._native.directory.DirectoryNamespace:
         r"""
         The `directory` endpoints, reached as `client.directory`.
         """
 
     @property
-    def economics(self) -> economics.EconomicsNamespace:
+    def economics(self) -> fmp._native.economics.EconomicsNamespace:
         r"""
         The `economics` endpoints, reached as `client.economics`.
         """
 
     @property
-    def esg(self) -> esg.EsgNamespace:
+    def esg(self) -> fmp._native.esg.EsgNamespace:
         r"""
         The `esg` endpoints, reached as `client.esg`.
         """
 
     @property
-    def forex(self) -> forex.ForexNamespace:
+    def forex(self) -> fmp._native.forex.ForexNamespace:
         r"""
         The `forex` endpoints, reached as `client.forex`.
         """
 
     @property
-    def fundraising(self) -> fundraising.FundraisingNamespace:
+    def fundraising(self) -> fmp._native.fundraising.FundraisingNamespace:
         r"""
         The `fundraising` endpoints, reached as `client.fundraising`.
         """
 
     @property
-    def funds(self) -> funds.FundsNamespace:
+    def funds(self) -> fmp._native.funds.FundsNamespace:
         r"""
         The `funds` endpoints, reached as `client.funds`.
         """
 
     @property
-    def indexes(self) -> indexes.IndexesNamespace:
+    def indexes(self) -> fmp._native.indexes.IndexesNamespace:
         r"""
         The `indexes` endpoints, reached as `client.indexes`.
         """
 
     @property
-    def insider_trading(self) -> insider_trading.InsiderTradingNamespace:
+    def insider_trading(self) -> fmp._native.insider_trading.InsiderTradingNamespace:
         r"""
         The `insider_trading` endpoints, reached as `client.insider_trading`.
         """
@@ -258,73 +289,75 @@ class FmpClient:
     @property
     def institutional_ownership(
         self,
-    ) -> institutional_ownership.InstitutionalOwnershipNamespace:
+    ) -> fmp._native.institutional_ownership.InstitutionalOwnershipNamespace:
         r"""
         The `institutional_ownership` endpoints, reached as `client.institutional_ownership`.
         """
 
     @property
-    def market(self) -> market.MarketNamespace:
+    def market(self) -> fmp._native.market.MarketNamespace:
         r"""
         The `market` endpoints, reached as `client.market`.
         """
 
     @property
-    def market_hours(self) -> market_hours.MarketHoursNamespace:
+    def market_hours(self) -> fmp._native.market_hours.MarketHoursNamespace:
         r"""
         The `market_hours` endpoints, reached as `client.market_hours`.
         """
 
     @property
-    def news(self) -> news.NewsNamespace:
+    def news(self) -> fmp._native.news.NewsNamespace:
         r"""
         The `news` endpoints, reached as `client.news`.
         """
 
     @property
-    def quote(self) -> quote.QuoteNamespace:
+    def quote(self) -> fmp._native.quote.QuoteNamespace:
         r"""
         The `quote` endpoints, reached as `client.quote`.
         """
 
     @property
-    def screener(self) -> screener.ScreenerNamespace:
+    def screener(self) -> fmp._native.screener.ScreenerNamespace:
         r"""
         The `screener` endpoints, reached as `client.screener`.
         """
 
     @property
-    def search(self) -> search.SearchNamespace:
+    def search(self) -> fmp._native.search.SearchNamespace:
         r"""
         The `search` endpoints, reached as `client.search`.
         """
 
     @property
-    def sec_filings(self) -> sec_filings.SecFilingsNamespace:
+    def sec_filings(self) -> fmp._native.sec_filings.SecFilingsNamespace:
         r"""
         The `sec_filings` endpoints, reached as `client.sec_filings`.
         """
 
     @property
-    def statements(self) -> statements.StatementsNamespace:
+    def statements(self) -> fmp._native.statements.StatementsNamespace:
         r"""
         The `statements` endpoints, reached as `client.statements`.
         """
 
     @property
-    def technical_indicators(self) -> technical_indicators.TechnicalIndicatorsNamespace:
+    def technical_indicators(
+        self,
+    ) -> fmp._native.technical_indicators.TechnicalIndicatorsNamespace:
         r"""
         The `technical_indicators` endpoints, reached as `client.technical_indicators`.
         """
 
     @property
-    def tipranks(self) -> tipranks.TipranksNamespace:
+    def tipranks(self) -> fmp._native.tipranks.TipranksNamespace:
         r"""
         The `tipranks` endpoints, reached as `client.tipranks`.
         """
 
     @property
-    def transcripts(self) -> transcripts.TranscriptsNamespace:
+    def transcripts(self) -> fmp._native.transcripts.TranscriptsNamespace:
         r"""
         The `transcripts` endpoints, reached as `client.transcripts`.
         """

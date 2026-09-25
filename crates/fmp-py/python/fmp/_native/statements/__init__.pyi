@@ -2,15 +2,25 @@
 
 import typing
 from fmp._native.statements import as_reported
+import fmp._native.statements.as_reported
 from fmp._native.statements import balance
+import fmp._native.statements.balance
 from fmp._native.statements import cash_flow
+import fmp._native.statements.cash_flow
 from fmp._native.statements import growth
+import fmp._native.statements.growth
 from fmp._native.statements import income
+import fmp._native.statements.income
 from fmp._native.statements import metrics
+import fmp._native.statements.metrics
 from fmp._native.statements import ratios
+import fmp._native.statements.ratios
 from fmp._native.statements import reports
+import fmp._native.statements.reports
 from fmp._native.statements import segmentation
+import fmp._native.statements.segmentation
 from fmp._native.statements import summaries
+import fmp._native.statements.summaries
 
 __all__ = [
     "StatementsNamespace",
@@ -34,61 +44,67 @@ class StatementsNamespace:
     """
 
     @property
-    def as_reported(self) -> as_reported.StatementsAsReportedNamespace:
+    def as_reported(
+        self,
+    ) -> fmp._native.statements.as_reported.StatementsAsReportedNamespace:
         r"""
         The `statements.as_reported` endpoints, reached as `client.statements.as_reported`.
         """
 
     @property
-    def balance(self) -> balance.StatementsBalanceNamespace:
+    def balance(self) -> fmp._native.statements.balance.StatementsBalanceNamespace:
         r"""
         The `statements.balance` endpoints, reached as `client.statements.balance`.
         """
 
     @property
-    def cash_flow(self) -> cash_flow.StatementsCashFlowNamespace:
+    def cash_flow(self) -> fmp._native.statements.cash_flow.StatementsCashFlowNamespace:
         r"""
         The `statements.cash_flow` endpoints, reached as `client.statements.cash_flow`.
         """
 
     @property
-    def growth(self) -> growth.StatementsGrowthNamespace:
+    def growth(self) -> fmp._native.statements.growth.StatementsGrowthNamespace:
         r"""
         The `statements.growth` endpoints, reached as `client.statements.growth`.
         """
 
     @property
-    def income(self) -> income.StatementsIncomeNamespace:
+    def income(self) -> fmp._native.statements.income.StatementsIncomeNamespace:
         r"""
         The `statements.income` endpoints, reached as `client.statements.income`.
         """
 
     @property
-    def metrics(self) -> metrics.StatementsMetricsNamespace:
+    def metrics(self) -> fmp._native.statements.metrics.StatementsMetricsNamespace:
         r"""
         The `statements.metrics` endpoints, reached as `client.statements.metrics`.
         """
 
     @property
-    def ratios(self) -> ratios.StatementsRatiosNamespace:
+    def ratios(self) -> fmp._native.statements.ratios.StatementsRatiosNamespace:
         r"""
         The `statements.ratios` endpoints, reached as `client.statements.ratios`.
         """
 
     @property
-    def reports(self) -> reports.StatementsReportsNamespace:
+    def reports(self) -> fmp._native.statements.reports.StatementsReportsNamespace:
         r"""
         The `statements.reports` endpoints, reached as `client.statements.reports`.
         """
 
     @property
-    def segmentation(self) -> segmentation.StatementsSegmentationNamespace:
+    def segmentation(
+        self,
+    ) -> fmp._native.statements.segmentation.StatementsSegmentationNamespace:
         r"""
         The `statements.segmentation` endpoints, reached as `client.statements.segmentation`.
         """
 
     @property
-    def summaries(self) -> summaries.StatementsSummariesNamespace:
+    def summaries(
+        self,
+    ) -> fmp._native.statements.summaries.StatementsSummariesNamespace:
         r"""
         The `statements.summaries` endpoints, reached as `client.statements.summaries`.
         """

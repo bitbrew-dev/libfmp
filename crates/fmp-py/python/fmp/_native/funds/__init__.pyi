@@ -3,6 +3,7 @@
 import builtins
 import datetime
 from fmp._native import institutional_ownership
+import fmp._native.institutional_ownership
 import typing
 
 __all__ = [
@@ -401,7 +402,7 @@ class FundsNamespace:
 
     def disclosure_dates(
         self, symbol: builtins.str, *, cik: typing.Optional[builtins.str] = None
-    ) -> builtins.list[institutional_ownership.Form13fFilingDate]:
+    ) -> builtins.list[fmp._native.institutional_ownership.Form13fFilingDate]:
         r"""
         Retrieves available US fund-disclosure reporting dates.
         """
