@@ -22,16 +22,23 @@ const WORDS: &[(&str, &str)] = &[
     ("cik", "CIK"),
     ("ciks", "CIKs"),
     ("cot", "COT"),
+    ("cusip", "CUSIP"),
     ("dcf", "DCF"),
     ("eps", "EPS"),
+    ("esg", "ESG"),
     ("etf", "ETF"),
     ("etfs", "ETFs"),
     ("fmp", "FMP"),
     ("http", "HTTP"),
     ("id", "ID"),
     ("ids", "IDs"),
+    ("ipo", "IPO"),
+    ("ipos", "IPO"),
+    ("isin", "ISIN"),
     ("json", "JSON"),
     ("sec", "SEC"),
+    ("sp500", "SP500"),
+    ("tipranks", "TipRanks"),
     ("ttm", "TTM"),
     ("url", "URL"),
     ("urls", "URLs"),
@@ -245,11 +252,36 @@ mod tests {
     fn casing_follows_the_initialism_table() {
         assert_eq!(exported("batch_quote_short"), "BatchQuoteShort");
         assert_eq!(exported("price_avg_50"), "PriceAvg50");
-        assert_eq!(exported("r#type"), "Type");
+        assert_eq!(exported("etfs"), "ETFs");
+        assert_eq!(exported("eps_ttm"), "EPSTTM");
+        assert_eq!(exported("latest_8k"), "Latest8K");
+        assert_eq!(exported("number_of_13f_shares"), "NumberOf13FShares");
+        assert_eq!(exported("ipos_calendar"), "IPOCalendar");
+        assert_eq!(exported("tipranks"), "TipRanks");
+        assert_eq!(exported("sec_filings_url"), "SECFilingsURL");
+        assert_eq!(exported("security_cusip"), "SecurityCUSIP");
+        assert_eq!(go_name("Form13fFilingDate"), "Form13FFilingDate");
+        assert_eq!(
+            go_name("Latest8kSecFilingsQuery"),
+            "Latest8KSECFilingsQuery"
+        );
+        assert_eq!(go_name("Sp500Constituent"), "SP500Constituent");
+        assert_eq!(
+            go_name("Performance1YearRelativeToSp500Percentage"),
+            "Performance1YearRelativeToSP500Percentage"
+        );
+        assert_eq!(go_name("TipRanksExpertUid"), "TipRanksExpertUid");
         assert_eq!(go_name("UsDate"), "USDate");
+        assert_eq!(lower_first("CIKListing"), "cikListing");
+        assert_eq!(lower_first("ETFsQuery"), "etfsQuery");
+        assert_eq!(lower_first("SP500Constituent"), "sp500Constituent");
+        assert_eq!(lower_first("TipRanksSummary"), "tipRanksSummary");
+        assert_eq!(lower_first("IDValue"), "idValue");
+        assert_eq!(lower_first("Identifier"), "identifier");
+        assert_eq!(local_ident("cik"), "cik");
+        assert_eq!(local_ident("member_id"), "memberID");
+        assert_eq!(exported("r#type"), "Type");
         assert_eq!(lower_first("QuoteShort"), "quoteShort");
-        assert_eq!(lower_first("USDate"), "usDate");
-        assert_eq!(lower_first("Usage"), "usage");
         assert_eq!(local_ident("symbol"), "symbol");
         assert_eq!(local_ident("from_date"), "fromDate");
         assert_eq!(local_ident("type"), "type_");

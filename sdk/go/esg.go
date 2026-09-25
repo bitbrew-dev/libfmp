@@ -8,42 +8,42 @@ package fmp
 
 import "context"
 
-// EsgNamespace groups the esg endpoints. It is reached as Client.Esg and is
+// ESGNamespace groups the esg endpoints. It is reached as Client.ESG and is
 // valid only when obtained from a Client built by NewClient.
-type EsgNamespace struct {
+type ESGNamespace struct {
 	client *Client
 }
 
-func newEsgNamespace(client *Client) EsgNamespace {
-	return EsgNamespace{
+func newESGNamespace(client *Client) ESGNamespace {
+	return ESGNamespace{
 		client: client,
 	}
 }
 
-// EsgBenchmarkQuery holds the query parameters of the endpoints that take it:
-// NewEsgBenchmarkQuery takes the required arguments and each With method sets
+// ESGBenchmarkQuery holds the query parameters of the endpoints that take it:
+// NewESGBenchmarkQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
-type EsgBenchmarkQuery struct {
+type ESGBenchmarkQuery struct {
 	year *string
 }
 
-// NewEsgBenchmarkQuery creates the query from its required arguments.
-func NewEsgBenchmarkQuery() EsgBenchmarkQuery {
-	return EsgBenchmarkQuery{}
+// NewESGBenchmarkQuery creates the query from its required arguments.
+func NewESGBenchmarkQuery() ESGBenchmarkQuery {
+	return ESGBenchmarkQuery{}
 }
 
 // WithYear sets the optional year parameter and returns the updated query.
-func (q EsgBenchmarkQuery) WithYear(year string) EsgBenchmarkQuery {
+func (q ESGBenchmarkQuery) WithYear(year string) ESGBenchmarkQuery {
 	q.year = &year
 	return q
 }
 
 // Year returns the optional year parameter, or nil when it is unset.
-func (q EsgBenchmarkQuery) Year() *string {
+func (q ESGBenchmarkQuery) Year() *string {
 	return q.year
 }
 
-func (q EsgBenchmarkQuery) params() ([]queryParam, error) {
+func (q ESGBenchmarkQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 1)
 	if q.year != nil {
 		year, err := stringParam("year", *q.year)
@@ -55,24 +55,24 @@ func (q EsgBenchmarkQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// EsgSymbolQuery holds the query parameters of the endpoints that take it:
-// NewEsgSymbolQuery takes the required arguments and each With method sets an
+// ESGSymbolQuery holds the query parameters of the endpoints that take it:
+// NewESGSymbolQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type EsgSymbolQuery struct {
+type ESGSymbolQuery struct {
 	symbol string
 }
 
-// NewEsgSymbolQuery creates the query from its required arguments.
-func NewEsgSymbolQuery(symbol string) EsgSymbolQuery {
-	return EsgSymbolQuery{symbol: symbol}
+// NewESGSymbolQuery creates the query from its required arguments.
+func NewESGSymbolQuery(symbol string) ESGSymbolQuery {
+	return ESGSymbolQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q EsgSymbolQuery) Symbol() string {
+func (q ESGSymbolQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q EsgSymbolQuery) params() ([]queryParam, error) {
+func (q ESGSymbolQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -83,12 +83,12 @@ func (q EsgSymbolQuery) params() ([]queryParam, error) {
 // Disclosures retrieves ESG disclosure filings for one company.
 //
 // GET esg-disclosures?symbol=
-func (n *EsgNamespace) Disclosures(ctx context.Context, q EsgSymbolQuery) ([]EsgDisclosure, error) {
+func (n *ESGNamespace) Disclosures(ctx context.Context, q ESGSymbolQuery) ([]ESGDisclosure, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EsgDisclosure
+	var out []ESGDisclosure
 	if err := n.client.getJSON(ctx, "esg-disclosures", "esg-disclosures", params, &out); err != nil {
 		return nil, err
 	}
@@ -98,12 +98,12 @@ func (n *EsgNamespace) Disclosures(ctx context.Context, q EsgSymbolQuery) ([]Esg
 // Ratings retrieves ESG ratings for one company.
 //
 // GET esg-ratings?symbol=
-func (n *EsgNamespace) Ratings(ctx context.Context, q EsgSymbolQuery) ([]EsgRating, error) {
+func (n *ESGNamespace) Ratings(ctx context.Context, q ESGSymbolQuery) ([]ESGRating, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EsgRating
+	var out []ESGRating
 	if err := n.client.getJSON(ctx, "esg-ratings", "esg-ratings", params, &out); err != nil {
 		return nil, err
 	}
@@ -114,12 +114,12 @@ func (n *EsgNamespace) Ratings(ctx context.Context, q EsgSymbolQuery) ([]EsgRati
 // string.
 //
 // GET esg-benchmark?year=
-func (n *EsgNamespace) Benchmark(ctx context.Context, q EsgBenchmarkQuery) ([]EsgBenchmark, error) {
+func (n *ESGNamespace) Benchmark(ctx context.Context, q ESGBenchmarkQuery) ([]ESGBenchmark, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EsgBenchmark
+	var out []ESGBenchmark
 	if err := n.client.getJSON(ctx, "esg-benchmark", "esg-benchmark", params, &out); err != nil {
 		return nil, err
 	}

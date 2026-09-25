@@ -33,8 +33,8 @@ type Namespaces struct {
 	Directory DirectoryNamespace
 	// Economics holds the economics endpoints.
 	Economics EconomicsNamespace
-	// Esg holds the esg endpoints.
-	Esg EsgNamespace
+	// ESG holds the esg endpoints.
+	ESG ESGNamespace
 	// Forex holds the forex endpoints.
 	Forex ForexNamespace
 	// Fundraising holds the fundraising endpoints.
@@ -65,8 +65,8 @@ type Namespaces struct {
 	Statements StatementsNamespace
 	// TechnicalIndicators holds the technical_indicators endpoints.
 	TechnicalIndicators TechnicalIndicatorsNamespace
-	// Tipranks holds the tipranks endpoints.
-	Tipranks TipranksNamespace
+	// TipRanks holds the tipranks endpoints.
+	TipRanks TipRanksNamespace
 	// Transcripts holds the transcripts endpoints.
 	Transcripts TranscriptsNamespace
 }
@@ -85,7 +85,7 @@ func (c *Client) bindNamespaces() {
 	c.DCF = newDCFNamespace(c)
 	c.Directory = newDirectoryNamespace(c)
 	c.Economics = newEconomicsNamespace(c)
-	c.Esg = newEsgNamespace(c)
+	c.ESG = newESGNamespace(c)
 	c.Forex = newForexNamespace(c)
 	c.Fundraising = newFundraisingNamespace(c)
 	c.Funds = newFundsNamespace(c)
@@ -101,6 +101,6 @@ func (c *Client) bindNamespaces() {
 	c.SECFilings = newSECFilingsNamespace(c)
 	c.Statements = newStatementsNamespace(c)
 	c.TechnicalIndicators = newTechnicalIndicatorsNamespace(c)
-	c.Tipranks = newTipranksNamespace(c)
+	c.TipRanks = newTipRanksNamespace(c)
 	c.Transcripts = newTranscriptsNamespace(c)
 }

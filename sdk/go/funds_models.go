@@ -15,8 +15,8 @@ type ETFFundHolding struct {
 	Symbol           string   `json:"symbol"`
 	Asset            string   `json:"asset"`
 	Name             string   `json:"name"`
-	Isin             string   `json:"isin"`
-	SecurityCusip    string   `json:"securityCusip"`
+	ISIN             string   `json:"isin"`
+	SecurityCUSIP    string   `json:"securityCusip"`
 	SharesNumber     float64  `json:"sharesNumber"`
 	WeightPercentage float64  `json:"weightPercentage"`
 	MarketValue      float64  `json:"marketValue"`
@@ -30,8 +30,8 @@ type etfFundHoldingShadow struct {
 	Symbol           *string   `json:"symbol"`
 	Asset            *string   `json:"asset"`
 	Name             *string   `json:"name"`
-	Isin             *string   `json:"isin"`
-	SecurityCusip    *string   `json:"securityCusip"`
+	ISIN             *string   `json:"isin"`
+	SecurityCUSIP    *string   `json:"securityCusip"`
 	SharesNumber     *float64  `json:"sharesNumber"`
 	WeightPercentage *float64  `json:"weightPercentage"`
 	MarketValue      *float64  `json:"marketValue"`
@@ -53,9 +53,9 @@ func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ETFFundHolding", "asset")
 	case shadow.Name == nil:
 		return missingMemberError("ETFFundHolding", "name")
-	case shadow.Isin == nil:
+	case shadow.ISIN == nil:
 		return missingMemberError("ETFFundHolding", "isin")
-	case shadow.SecurityCusip == nil:
+	case shadow.SecurityCUSIP == nil:
 		return missingMemberError("ETFFundHolding", "securityCusip")
 	case shadow.SharesNumber == nil:
 		return missingMemberError("ETFFundHolding", "sharesNumber")
@@ -70,8 +70,8 @@ func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Symbol:           *shadow.Symbol,
 		Asset:            *shadow.Asset,
 		Name:             *shadow.Name,
-		Isin:             *shadow.Isin,
-		SecurityCusip:    *shadow.SecurityCusip,
+		ISIN:             *shadow.ISIN,
+		SecurityCUSIP:    *shadow.SecurityCUSIP,
 		SharesNumber:     *shadow.SharesNumber,
 		WeightPercentage: *shadow.WeightPercentage,
 		MarketValue:      *shadow.MarketValue,
@@ -122,9 +122,9 @@ type ETFFundInfo struct {
 	Symbol                string              `json:"symbol"`
 	Name                  string              `json:"name"`
 	Description           string              `json:"description"`
-	Isin                  string              `json:"isin"`
+	ISIN                  string              `json:"isin"`
 	AssetClass            string              `json:"assetClass"`
-	SecurityCusip         string              `json:"securityCusip"`
+	SecurityCUSIP         string              `json:"securityCusip"`
 	Domicile              string              `json:"domicile"`
 	Website               string              `json:"website"`
 	ETFCompany            string              `json:"etfCompany"`
@@ -146,9 +146,9 @@ type etfFundInfoShadow struct {
 	Symbol                *string              `json:"symbol"`
 	Name                  *string              `json:"name"`
 	Description           *string              `json:"description"`
-	Isin                  *string              `json:"isin"`
+	ISIN                  *string              `json:"isin"`
 	AssetClass            *string              `json:"assetClass"`
-	SecurityCusip         *string              `json:"securityCusip"`
+	SecurityCUSIP         *string              `json:"securityCusip"`
 	Domicile              *string              `json:"domicile"`
 	Website               *string              `json:"website"`
 	ETFCompany            *string              `json:"etfCompany"`
@@ -179,11 +179,11 @@ func (m *ETFFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ETFFundInfo", "name")
 	case shadow.Description == nil:
 		return missingMemberError("ETFFundInfo", "description")
-	case shadow.Isin == nil:
+	case shadow.ISIN == nil:
 		return missingMemberError("ETFFundInfo", "isin")
 	case shadow.AssetClass == nil:
 		return missingMemberError("ETFFundInfo", "assetClass")
-	case shadow.SecurityCusip == nil:
+	case shadow.SecurityCUSIP == nil:
 		return missingMemberError("ETFFundInfo", "securityCusip")
 	case shadow.Domicile == nil:
 		return missingMemberError("ETFFundInfo", "domicile")
@@ -216,9 +216,9 @@ func (m *ETFFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Symbol:                *shadow.Symbol,
 		Name:                  *shadow.Name,
 		Description:           *shadow.Description,
-		Isin:                  *shadow.Isin,
+		ISIN:                  *shadow.ISIN,
 		AssetClass:            *shadow.AssetClass,
-		SecurityCusip:         *shadow.SecurityCusip,
+		SecurityCUSIP:         *shadow.SecurityCUSIP,
 		Domicile:              *shadow.Domicile,
 		Website:               *shadow.Website,
 		ETFCompany:            *shadow.ETFCompany,
@@ -368,7 +368,7 @@ func (m *ETFSectorWeighting) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type FundDisclosureHolder struct {
 	CIK           string  `json:"cik"`
 	Holder        string  `json:"holder"`
-	SecurityCusip string  `json:"securityCusip"`
+	SecurityCUSIP string  `json:"securityCusip"`
 	Shares        float64 `json:"shares"`
 	DateReported  Date    `json:"dateReported"`
 	Change        float64 `json:"change"`
@@ -381,7 +381,7 @@ type FundDisclosureHolder struct {
 type fundDisclosureHolderShadow struct {
 	CIK           *string  `json:"cik"`
 	Holder        *string  `json:"holder"`
-	SecurityCusip *string  `json:"securityCusip"`
+	SecurityCUSIP *string  `json:"securityCusip"`
 	Shares        *float64 `json:"shares"`
 	DateReported  *Date    `json:"dateReported"`
 	Change        *float64 `json:"change"`
@@ -401,7 +401,7 @@ func (m *FundDisclosureHolder) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FundDisclosureHolder", "cik")
 	case shadow.Holder == nil:
 		return missingMemberError("FundDisclosureHolder", "holder")
-	case shadow.SecurityCusip == nil:
+	case shadow.SecurityCUSIP == nil:
 		return missingMemberError("FundDisclosureHolder", "securityCusip")
 	case shadow.Shares == nil:
 		return missingMemberError("FundDisclosureHolder", "shares")
@@ -415,7 +415,7 @@ func (m *FundDisclosureHolder) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	*m = FundDisclosureHolder{
 		CIK:           *shadow.CIK,
 		Holder:        *shadow.Holder,
-		SecurityCusip: *shadow.SecurityCusip,
+		SecurityCUSIP: *shadow.SecurityCUSIP,
 		Shares:        *shadow.Shares,
 		DateReported:  *shadow.DateReported,
 		Change:        *shadow.Change,
@@ -433,8 +433,8 @@ type FundDisclosure struct {
 	Name                string   `json:"name"`
 	Lei                 string   `json:"lei"`
 	Title               string   `json:"title"`
-	Cusip               string   `json:"cusip"`
-	Isin                string   `json:"isin"`
+	CUSIP               string   `json:"cusip"`
+	ISIN                string   `json:"isin"`
 	Balance             float64  `json:"balance"`
 	Units               string   `json:"units"`
 	CurrencyCode        string   `json:"cur_cd"`
@@ -462,8 +462,8 @@ type fundDisclosureShadow struct {
 	Name                *string   `json:"name"`
 	Lei                 *string   `json:"lei"`
 	Title               *string   `json:"title"`
-	Cusip               *string   `json:"cusip"`
-	Isin                *string   `json:"isin"`
+	CUSIP               *string   `json:"cusip"`
+	ISIN                *string   `json:"isin"`
 	Balance             *float64  `json:"balance"`
 	Units               *string   `json:"units"`
 	CurrencyCode        *string   `json:"cur_cd"`
@@ -503,9 +503,9 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FundDisclosure", "lei")
 	case shadow.Title == nil:
 		return missingMemberError("FundDisclosure", "title")
-	case shadow.Cusip == nil:
+	case shadow.CUSIP == nil:
 		return missingMemberError("FundDisclosure", "cusip")
-	case shadow.Isin == nil:
+	case shadow.ISIN == nil:
 		return missingMemberError("FundDisclosure", "isin")
 	case shadow.Balance == nil:
 		return missingMemberError("FundDisclosure", "balance")
@@ -544,8 +544,8 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Name:                *shadow.Name,
 		Lei:                 *shadow.Lei,
 		Title:               *shadow.Title,
-		Cusip:               *shadow.Cusip,
-		Isin:                *shadow.Isin,
+		CUSIP:               *shadow.CUSIP,
+		ISIN:                *shadow.ISIN,
 		Balance:             *shadow.Balance,
 		Units:               *shadow.Units,
 		CurrencyCode:        *shadow.CurrencyCode,

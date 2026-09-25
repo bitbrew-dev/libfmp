@@ -10,9 +10,9 @@ import (
 
 func TestEsgFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[EsgDisclosure](t, "esg_disclosures.json")
-	assertFixtureParity[EsgRating](t, "esg_ratings.json")
-	assertFixtureParity[EsgBenchmark](t, "esg_benchmark.json")
+	assertFixtureParity[ESGDisclosure](t, "esg_disclosures.json")
+	assertFixtureParity[ESGRating](t, "esg_ratings.json")
+	assertFixtureParity[ESGBenchmark](t, "esg_benchmark.json")
 }
 
 // Exact values and wire-key hazards copied from
@@ -21,7 +21,7 @@ func TestEsgFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 // spellings rather than the camelCase ones.
 func TestDocumentedEsgDisclosureDecodesExactValuesAndKeepsAcronymKey(t *testing.T) {
 	t.Parallel()
-	disclosures := assertFixtureParity[EsgDisclosure](t, "esg_disclosures.json")
+	disclosures := assertFixtureParity[ESGDisclosure](t, "esg_disclosures.json")
 	if len(disclosures) != 1 {
 		t.Fatalf("rows = %d, want 1", len(disclosures))
 	}
@@ -29,7 +29,7 @@ func TestDocumentedEsgDisclosureDecodesExactValuesAndKeepsAcronymKey(t *testing.
 	if disclosure.Date.String() != "2026-03-28" || disclosure.AcceptedDate.String() != "2026-04-30" ||
 		disclosure.Symbol != "AAPL" || disclosure.CIK != "0000320193" || disclosure.CompanyName != "Apple Inc." ||
 		disclosure.FormType != "8-K" || disclosure.EnvironmentalScore != 66.29 || disclosure.SocialScore != 45.21 ||
-		disclosure.GovernanceScore != 58.87 || disclosure.EsgScore != 56.79 ||
+		disclosure.GovernanceScore != 58.87 || disclosure.ESGScore != 56.79 ||
 		disclosure.URL != "https://www.sec.gov/Archives/edgar/data/320193/000032019326000011/0000320193-26-000011-index.htm" {
 		t.Fatalf("esg_disclosures = %+v", disclosure)
 	}
@@ -42,13 +42,13 @@ func TestDocumentedEsgDisclosureDecodesExactValuesAndKeepsAcronymKey(t *testing.
 // Exact values copied from crates/libfmp/tests/esg_responses.rs.
 func TestDocumentedEsgRatingAndBenchmarkDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	ratings := assertFixtureParity[EsgRating](t, "esg_ratings.json")
+	ratings := assertFixtureParity[ESGRating](t, "esg_ratings.json")
 	if len(ratings) != 1 {
 		t.Fatalf("rows = %d, want 1", len(ratings))
 	}
 	rating := ratings[0]
 	if rating.Symbol != "AAPL" || rating.CIK != "0000320193" || rating.CompanyName != "Apple Inc." ||
-		rating.Industry != "CONSUMER ELECTRONICS" || rating.FiscalYear != 2025 || rating.EsgRiskRating != "B" ||
+		rating.Industry != "CONSUMER ELECTRONICS" || rating.FiscalYear != 2025 || rating.ESGRiskRating != "B" ||
 		rating.IndustryRank != "17 out of 20" {
 		t.Fatalf("esg_ratings = %+v", rating)
 	}
@@ -57,9 +57,9 @@ func TestDocumentedEsgRatingAndBenchmarkDecodeExactValues(t *testing.T) {
 		t.Fatalf("rating members = %v, want the documented 7 including the exact ESGRiskRating key", members)
 	}
 
-	benchmarks := assertFixtureParity[EsgBenchmark](t, "esg_benchmark.json")
-	want := EsgBenchmark{FiscalYear: 2023, Sector: "APPAREL RETAIL", EnvironmentalScore: 61.36, SocialScore: 67.44,
-		GovernanceScore: 68.1, EsgScore: 65.63}
+	benchmarks := assertFixtureParity[ESGBenchmark](t, "esg_benchmark.json")
+	want := ESGBenchmark{FiscalYear: 2023, Sector: "APPAREL RETAIL", EnvironmentalScore: 61.36, SocialScore: 67.44,
+		GovernanceScore: 68.1, ESGScore: 65.63}
 	if len(benchmarks) != 1 || benchmarks[0] != want {
 		t.Fatalf("esg_benchmark = %+v, want %+v", benchmarks, want)
 	}
@@ -98,18 +98,18 @@ func TestEsgRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		message string
 	}{
 		{"missing acronym score", mutate("ESGScore", nil),
-			`required member "ESGScore" of EsgDisclosure is missing or null`},
+			`required member "ESGScore" of ESGDisclosure is missing or null`},
 		{"null acronym score", mutate("ESGScore", jsontext.Value(`null`)),
-			`required member "ESGScore" of EsgDisclosure is missing or null`},
+			`required member "ESGScore" of ESGDisclosure is missing or null`},
 		{"missing date", mutate("acceptedDate", nil),
-			`required member "acceptedDate" of EsgDisclosure is missing or null`},
+			`required member "acceptedDate" of ESGDisclosure is missing or null`},
 		{"null text", mutate("url", jsontext.Value(`null`)),
-			`required member "url" of EsgDisclosure is missing or null`},
+			`required member "url" of ESGDisclosure is missing or null`},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			var decoded []EsgDisclosure
+			var decoded []ESGDisclosure
 			err := json.Unmarshal(tc.wire, &decoded)
 			var typed *Error
 			if !errors.As(err, &typed) || typed.Category != CategoryDecode || typed.Message != tc.message {
@@ -117,15 +117,15 @@ func TestEsgRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 			}
 		})
 	}
-	var ratings []EsgRating
+	var ratings []ESGRating
 	err := json.Unmarshal([]byte(`[{"symbol":"AAPL","cik":"0000320193","companyName":"Apple Inc.",`+
 		`"industry":"CONSUMER ELECTRONICS","fiscalYear":null,"ESGRiskRating":"B","industryRank":"17 out of 20"}]`), &ratings)
 	var typed *Error
-	if !errors.As(err, &typed) || typed.Message != `required member "fiscalYear" of EsgRating is missing or null` {
-		t.Fatalf("EsgRating error = %v, want the null fiscalYear member", err)
+	if !errors.As(err, &typed) || typed.Message != `required member "fiscalYear" of ESGRating is missing or null` {
+		t.Fatalf("ESGRating error = %v, want the null fiscalYear member", err)
 	}
-	var benchmarks []EsgBenchmark
+	var benchmarks []ESGBenchmark
 	if err := json.Unmarshal([]byte(`[{"fiscalYear":2023,"sector":"APPAREL RETAIL"}]`), &benchmarks); err == nil {
-		t.Fatal("a benchmark without scores decoded into EsgBenchmark")
+		t.Fatal("a benchmark without scores decoded into ESGBenchmark")
 	}
 }

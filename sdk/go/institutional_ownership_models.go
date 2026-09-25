@@ -82,7 +82,7 @@ type InstitutionalHolding struct {
 	FilingDate    Date    `json:"filingDate"`
 	AcceptedDate  Date    `json:"acceptedDate"`
 	CIK           string  `json:"cik"`
-	SecurityCusip string  `json:"securityCusip"`
+	SecurityCUSIP string  `json:"securityCusip"`
 	Symbol        string  `json:"symbol"`
 	NameOfIssuer  string  `json:"nameOfIssuer"`
 	Shares        float64 `json:"shares"`
@@ -102,7 +102,7 @@ type institutionalHoldingShadow struct {
 	FilingDate    *Date    `json:"filingDate"`
 	AcceptedDate  *Date    `json:"acceptedDate"`
 	CIK           *string  `json:"cik"`
-	SecurityCusip *string  `json:"securityCusip"`
+	SecurityCUSIP *string  `json:"securityCusip"`
 	Symbol        *string  `json:"symbol"`
 	NameOfIssuer  *string  `json:"nameOfIssuer"`
 	Shares        *float64 `json:"shares"`
@@ -131,7 +131,7 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("InstitutionalHolding", "acceptedDate")
 	case shadow.CIK == nil:
 		return missingMemberError("InstitutionalHolding", "cik")
-	case shadow.SecurityCusip == nil:
+	case shadow.SecurityCUSIP == nil:
 		return missingMemberError("InstitutionalHolding", "securityCusip")
 	case shadow.Symbol == nil:
 		return missingMemberError("InstitutionalHolding", "symbol")
@@ -157,7 +157,7 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		FilingDate:    *shadow.FilingDate,
 		AcceptedDate:  *shadow.AcceptedDate,
 		CIK:           *shadow.CIK,
-		SecurityCusip: *shadow.SecurityCusip,
+		SecurityCUSIP: *shadow.SecurityCUSIP,
 		Symbol:        *shadow.Symbol,
 		NameOfIssuer:  *shadow.NameOfIssuer,
 		Shares:        *shadow.Shares,
@@ -222,7 +222,7 @@ type InstitutionalHolderAnalytics struct {
 	Symbol                         string  `json:"symbol"`
 	SecurityName                   string  `json:"securityName"`
 	TypeOfSecurity                 string  `json:"typeOfSecurity"`
-	SecurityCusip                  string  `json:"securityCusip"`
+	SecurityCUSIP                  string  `json:"securityCusip"`
 	SharesType                     string  `json:"sharesType"`
 	PutCallShare                   string  `json:"putCallShare"`
 	InvestmentDiscretion           string  `json:"investmentDiscretion"`
@@ -267,7 +267,7 @@ type institutionalHolderAnalyticsShadow struct {
 	Symbol                         *string  `json:"symbol"`
 	SecurityName                   *string  `json:"securityName"`
 	TypeOfSecurity                 *string  `json:"typeOfSecurity"`
-	SecurityCusip                  *string  `json:"securityCusip"`
+	SecurityCUSIP                  *string  `json:"securityCusip"`
 	SharesType                     *string  `json:"sharesType"`
 	PutCallShare                   *string  `json:"putCallShare"`
 	InvestmentDiscretion           *string  `json:"investmentDiscretion"`
@@ -324,7 +324,7 @@ func (m *InstitutionalHolderAnalytics) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		return missingMemberError("InstitutionalHolderAnalytics", "securityName")
 	case shadow.TypeOfSecurity == nil:
 		return missingMemberError("InstitutionalHolderAnalytics", "typeOfSecurity")
-	case shadow.SecurityCusip == nil:
+	case shadow.SecurityCUSIP == nil:
 		return missingMemberError("InstitutionalHolderAnalytics", "securityCusip")
 	case shadow.SharesType == nil:
 		return missingMemberError("InstitutionalHolderAnalytics", "sharesType")
@@ -397,7 +397,7 @@ func (m *InstitutionalHolderAnalytics) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		Symbol:                         *shadow.Symbol,
 		SecurityName:                   *shadow.SecurityName,
 		TypeOfSecurity:                 *shadow.TypeOfSecurity,
-		SecurityCusip:                  *shadow.SecurityCusip,
+		SecurityCUSIP:                  *shadow.SecurityCUSIP,
 		SharesType:                     *shadow.SharesType,
 		PutCallShare:                   *shadow.PutCallShare,
 		InvestmentDiscretion:           *shadow.InvestmentDiscretion,
@@ -464,11 +464,11 @@ type HolderPerformanceSummary struct {
 	PerformancePercentage5Year                         float64 `json:"performancePercentage5year"`
 	PerformanceSinceInception                          float64 `json:"performanceSinceInception"`
 	PerformanceSinceInceptionPercentage                float64 `json:"performanceSinceInceptionPercentage"`
-	PerformanceRelativeToSp500Percentage               float64 `json:"performanceRelativeToSP500Percentage"`
-	Performance1YearRelativeToSp500Percentage          float64 `json:"performance1yearRelativeToSP500Percentage"`
-	Performance3YearRelativeToSp500Percentage          float64 `json:"performance3yearRelativeToSP500Percentage"`
-	Performance5YearRelativeToSp500Percentage          float64 `json:"performance5yearRelativeToSP500Percentage"`
-	PerformanceSinceInceptionRelativeToSp500Percentage float64 `json:"performanceSinceInceptionRelativeToSP500Percentage"`
+	PerformanceRelativeToSP500Percentage               float64 `json:"performanceRelativeToSP500Percentage"`
+	Performance1YearRelativeToSP500Percentage          float64 `json:"performance1yearRelativeToSP500Percentage"`
+	Performance3YearRelativeToSP500Percentage          float64 `json:"performance3yearRelativeToSP500Percentage"`
+	Performance5YearRelativeToSP500Percentage          float64 `json:"performance5yearRelativeToSP500Percentage"`
+	PerformanceSinceInceptionRelativeToSP500Percentage float64 `json:"performanceSinceInceptionRelativeToSP500Percentage"`
 }
 
 // holderPerformanceSummaryShadow mirrors HolderPerformanceSummary with a
@@ -503,11 +503,11 @@ type holderPerformanceSummaryShadow struct {
 	PerformancePercentage5Year                         *float64 `json:"performancePercentage5year"`
 	PerformanceSinceInception                          *float64 `json:"performanceSinceInception"`
 	PerformanceSinceInceptionPercentage                *float64 `json:"performanceSinceInceptionPercentage"`
-	PerformanceRelativeToSp500Percentage               *float64 `json:"performanceRelativeToSP500Percentage"`
-	Performance1YearRelativeToSp500Percentage          *float64 `json:"performance1yearRelativeToSP500Percentage"`
-	Performance3YearRelativeToSp500Percentage          *float64 `json:"performance3yearRelativeToSP500Percentage"`
-	Performance5YearRelativeToSp500Percentage          *float64 `json:"performance5yearRelativeToSP500Percentage"`
-	PerformanceSinceInceptionRelativeToSp500Percentage *float64 `json:"performanceSinceInceptionRelativeToSP500Percentage"`
+	PerformanceRelativeToSP500Percentage               *float64 `json:"performanceRelativeToSP500Percentage"`
+	Performance1YearRelativeToSP500Percentage          *float64 `json:"performance1yearRelativeToSP500Percentage"`
+	Performance3YearRelativeToSP500Percentage          *float64 `json:"performance3yearRelativeToSP500Percentage"`
+	Performance5YearRelativeToSP500Percentage          *float64 `json:"performance5yearRelativeToSP500Percentage"`
+	PerformanceSinceInceptionRelativeToSP500Percentage *float64 `json:"performanceSinceInceptionRelativeToSP500Percentage"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -575,15 +575,15 @@ func (m *HolderPerformanceSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 		return missingMemberError("HolderPerformanceSummary", "performanceSinceInception")
 	case shadow.PerformanceSinceInceptionPercentage == nil:
 		return missingMemberError("HolderPerformanceSummary", "performanceSinceInceptionPercentage")
-	case shadow.PerformanceRelativeToSp500Percentage == nil:
+	case shadow.PerformanceRelativeToSP500Percentage == nil:
 		return missingMemberError("HolderPerformanceSummary", "performanceRelativeToSP500Percentage")
-	case shadow.Performance1YearRelativeToSp500Percentage == nil:
+	case shadow.Performance1YearRelativeToSP500Percentage == nil:
 		return missingMemberError("HolderPerformanceSummary", "performance1yearRelativeToSP500Percentage")
-	case shadow.Performance3YearRelativeToSp500Percentage == nil:
+	case shadow.Performance3YearRelativeToSP500Percentage == nil:
 		return missingMemberError("HolderPerformanceSummary", "performance3yearRelativeToSP500Percentage")
-	case shadow.Performance5YearRelativeToSp500Percentage == nil:
+	case shadow.Performance5YearRelativeToSP500Percentage == nil:
 		return missingMemberError("HolderPerformanceSummary", "performance5yearRelativeToSP500Percentage")
-	case shadow.PerformanceSinceInceptionRelativeToSp500Percentage == nil:
+	case shadow.PerformanceSinceInceptionRelativeToSP500Percentage == nil:
 		return missingMemberError("HolderPerformanceSummary", "performanceSinceInceptionRelativeToSP500Percentage")
 	}
 	*m = HolderPerformanceSummary{
@@ -615,11 +615,11 @@ func (m *HolderPerformanceSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 		PerformancePercentage5Year:           *shadow.PerformancePercentage5Year,
 		PerformanceSinceInception:            *shadow.PerformanceSinceInception,
 		PerformanceSinceInceptionPercentage:  *shadow.PerformanceSinceInceptionPercentage,
-		PerformanceRelativeToSp500Percentage: *shadow.PerformanceRelativeToSp500Percentage,
-		Performance1YearRelativeToSp500Percentage:          *shadow.Performance1YearRelativeToSp500Percentage,
-		Performance3YearRelativeToSp500Percentage:          *shadow.Performance3YearRelativeToSp500Percentage,
-		Performance5YearRelativeToSp500Percentage:          *shadow.Performance5YearRelativeToSp500Percentage,
-		PerformanceSinceInceptionRelativeToSp500Percentage: *shadow.PerformanceSinceInceptionRelativeToSp500Percentage,
+		PerformanceRelativeToSP500Percentage: *shadow.PerformanceRelativeToSP500Percentage,
+		Performance1YearRelativeToSP500Percentage:          *shadow.Performance1YearRelativeToSP500Percentage,
+		Performance3YearRelativeToSP500Percentage:          *shadow.Performance3YearRelativeToSP500Percentage,
+		Performance5YearRelativeToSP500Percentage:          *shadow.Performance5YearRelativeToSP500Percentage,
+		PerformanceSinceInceptionRelativeToSP500Percentage: *shadow.PerformanceSinceInceptionRelativeToSP500Percentage,
 	}
 	return nil
 }

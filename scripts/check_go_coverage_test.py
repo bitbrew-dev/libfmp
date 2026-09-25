@@ -69,6 +69,12 @@ func (n *QuoteNamespace) helper(ctx context.Context) error {
 class CasingTest(unittest.TestCase):
     def test_exported_follows_the_initialism_table(self) -> None:
         cases = {
+            "etfs": "ETFs",
+            "ipos_calendar": "IPOCalendar",
+            "latest_8k": "Latest8K",
+            "eps_ttm": "EPSTTM",
+            "tipranks": "TipRanks",
+            "security_cusip": "SecurityCUSIP",
             "batch_quote_short": "BatchQuoteShort",
             "price_avg_50": "PriceAvg50",
             "r#type": "Type",
@@ -83,6 +89,19 @@ class CasingTest(unittest.TestCase):
         self.assertEqual(cov.struct_name(["quote"]), "QuoteNamespace")
         self.assertEqual(cov.struct_name(["statements", "income"]), "StatementsIncomeNamespace")
         self.assertEqual(cov.struct_name(["statements", "cash_flow"]), "StatementsCashFlowNamespace")
+        self.assertEqual(cov.struct_name(["sec_filings"]), "SECFilingsNamespace")
+
+    def test_go_name_recases_rust_type_names(self) -> None:
+        cases = {
+            "Form13fFilingDate": "Form13FFilingDate",
+            "Latest8kSecFilingsQuery": "Latest8KSECFilingsQuery",
+            "Sp500Constituent": "SP500Constituent",
+            "PriceAvg50": "PriceAvg50",
+            "TipRanksExpertUid": "TipRanksExpertUid",
+        }
+        for camel, want in cases.items():
+            with self.subTest(camel=camel):
+                self.assertEqual(cov.go_name(camel), want)
 
 
 class RegistryTest(unittest.TestCase):

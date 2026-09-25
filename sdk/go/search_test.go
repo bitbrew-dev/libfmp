@@ -62,13 +62,13 @@ func TestSearchMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(ciks) != 1 || ciks[0].CIK != "0000320193" {
 		t.Fatalf("CIK = %+v, %v", ciks, err)
 	}
-	cusips, err := client.Search.Cusip(ctx, NewCusipSearchQuery("037833100"))
+	cusips, err := client.Search.CUSIP(ctx, NewCUSIPSearchQuery("037833100"))
 	if err != nil || len(cusips) != 1 || cusips[0].Symbol != "APC.F" {
-		t.Fatalf("Cusip = %+v, %v", cusips, err)
+		t.Fatalf("CUSIP = %+v, %v", cusips, err)
 	}
-	isins, err := client.Search.Isin(ctx, NewIsinSearchQuery("US0378331005"))
+	isins, err := client.Search.ISIN(ctx, NewISINSearchQuery("US0378331005"))
 	if err != nil || len(isins) != 1 || isins[0].MarketCap != 4_874_072_686_740 {
-		t.Fatalf("Isin = %+v, %v", isins, err)
+		t.Fatalf("ISIN = %+v, %v", isins, err)
 	}
 	variants, err := client.Search.ExchangeVariants(ctx, NewExchangeVariantsQuery("^VIX"))
 	if err != nil || len(variants) != 1 || variants[0].ExchangeShortName != "NASDAQ" {
@@ -121,11 +121,11 @@ func TestSearchQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "cik", ErrEmptyValue},
 		{"cusip control", func() error {
-			_, err := client.Search.Cusip(ctx, NewCusipSearchQuery("0378\x0033100"))
+			_, err := client.Search.CUSIP(ctx, NewCUSIPSearchQuery("0378\x0033100"))
 			return err
 		}, "cusip", ErrControlCharacterValue},
 		{"isin whitespace", func() error {
-			_, err := client.Search.Isin(ctx, NewIsinSearchQuery("   "))
+			_, err := client.Search.ISIN(ctx, NewISINSearchQuery("   "))
 			return err
 		}, "isin", ErrEmptyValue},
 		{"variants comma ticker", func() error {

@@ -278,7 +278,7 @@ type BeneficialOwnershipAcquisition struct {
 	Symbol                           string `json:"symbol"`
 	FilingDate                       Date   `json:"filingDate"`
 	AcceptedDate                     Date   `json:"acceptedDate"`
-	Cusip                            string `json:"cusip"`
+	CUSIP                            string `json:"cusip"`
 	NameOfReportingPerson            string `json:"nameOfReportingPerson"`
 	CitizenshipOrPlaceOfOrganization string `json:"citizenshipOrPlaceOfOrganization"`
 	SoleVotingPower                  string `json:"soleVotingPower"`
@@ -299,7 +299,7 @@ type beneficialOwnershipAcquisitionShadow struct {
 	Symbol                           *string `json:"symbol"`
 	FilingDate                       *Date   `json:"filingDate"`
 	AcceptedDate                     *Date   `json:"acceptedDate"`
-	Cusip                            *string `json:"cusip"`
+	CUSIP                            *string `json:"cusip"`
 	NameOfReportingPerson            *string `json:"nameOfReportingPerson"`
 	CitizenshipOrPlaceOfOrganization *string `json:"citizenshipOrPlaceOfOrganization"`
 	SoleVotingPower                  *string `json:"soleVotingPower"`
@@ -329,7 +329,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 		return missingMemberError("BeneficialOwnershipAcquisition", "filingDate")
 	case shadow.AcceptedDate == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "acceptedDate")
-	case shadow.Cusip == nil:
+	case shadow.CUSIP == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "cusip")
 	case shadow.NameOfReportingPerson == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "nameOfReportingPerson")
@@ -357,7 +357,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 		Symbol:                           *shadow.Symbol,
 		FilingDate:                       *shadow.FilingDate,
 		AcceptedDate:                     *shadow.AcceptedDate,
-		Cusip:                            *shadow.Cusip,
+		CUSIP:                            *shadow.CUSIP,
 		NameOfReportingPerson:            *shadow.NameOfReportingPerson,
 		CitizenshipOrPlaceOfOrganization: *shadow.CitizenshipOrPlaceOfOrganization,
 		SoleVotingPower:                  *shadow.SoleVotingPower,

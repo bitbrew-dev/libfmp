@@ -111,7 +111,7 @@ func TestIndexesMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 		call   func(context.Context) ([]IndexConstituent, error)
 		symbol string
 	}{
-		{"Sp500Constituents", client.Indexes.Sp500Constituents, "HONA"},
+		{"SP500Constituents", client.Indexes.SP500Constituents, "HONA"},
 		{"NasdaqConstituents", client.Indexes.NasdaqConstituents, "ADBE"},
 		{"DowJonesConstituents", client.Indexes.DowJonesConstituents, "GOOGL"},
 	}
@@ -126,7 +126,7 @@ func TestIndexesMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 		call   func(context.Context) ([]HistoricalIndexConstituent, error)
 		symbol string
 	}{
-		{"HistoricalSp500Constituents", client.Indexes.HistoricalSp500Constituents, "HONA"},
+		{"HistoricalSP500Constituents", client.Indexes.HistoricalSP500Constituents, "HONA"},
 		{"HistoricalNasdaqConstituents", client.Indexes.HistoricalNasdaqConstituents, "SPCX"},
 		{"HistoricalDowJonesConstituents", client.Indexes.HistoricalDowJonesConstituents, "GOOGL"},
 	}
@@ -212,7 +212,7 @@ func TestIndexesMethodsReportMalformedBodiesAsDecodeErrors(t *testing.T) {
 	server, _ := newServer(t, jsonHandler(`{}`))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
-	_, err := client.Indexes.Sp500Constituents(context.Background())
+	_, err := client.Indexes.SP500Constituents(context.Background())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "sp500-constituent")
 	if typed.Unwrap() == nil {
 		t.Fatal("decode error carries no cause")

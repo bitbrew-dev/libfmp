@@ -73,20 +73,20 @@ func TestCalendarMethodsUseExactPathsAndWireQueryOrder(t *testing.T) {
 	if err != nil || len(earningsCalendar) != 1 || earningsCalendar[0].Symbol != "GRG.L" {
 		t.Fatalf("EarningsCalendar = %+v, %v", earningsCalendar, err)
 	}
-	ipos, err := client.Calendar.IposCalendar(ctx, NewIposCalendarQuery())
+	ipos, err := client.Calendar.IPOCalendar(ctx, NewIPOCalendarQuery())
 	if err != nil || len(ipos) != 1 || ipos[0].Symbol != "IMC" {
-		t.Fatalf("IposCalendar (no query) = %+v, %v", ipos, err)
+		t.Fatalf("IPOCalendar (no query) = %+v, %v", ipos, err)
 	}
-	if _, err := client.Calendar.IposCalendar(ctx, NewIposCalendarQuery().WithFrom(mar6)); err != nil {
-		t.Fatalf("IposCalendar (from only): %v", err)
+	if _, err := client.Calendar.IPOCalendar(ctx, NewIPOCalendarQuery().WithFrom(mar6)); err != nil {
+		t.Fatalf("IPOCalendar (from only): %v", err)
 	}
-	disclosures, err := client.Calendar.IposDisclosure(ctx, NewIposDisclosureQuery().WithTo(jun6))
+	disclosures, err := client.Calendar.IPODisclosure(ctx, NewIPODisclosureQuery().WithTo(jun6))
 	if err != nil || len(disclosures) != 1 || disclosures[0].CIK != "0001415726" {
-		t.Fatalf("IposDisclosure = %+v, %v", disclosures, err)
+		t.Fatalf("IPODisclosure = %+v, %v", disclosures, err)
 	}
-	prospectuses, err := client.Calendar.IposProspectus(ctx, NewIposProspectusQuery().WithFrom(mar6).WithTo(jun6))
+	prospectuses, err := client.Calendar.IPOProspectus(ctx, NewIPOProspectusQuery().WithFrom(mar6).WithTo(jun6))
 	if err != nil || len(prospectuses) != 1 || prospectuses[0].PricePublicTotal != 434 {
-		t.Fatalf("IposProspectus = %+v, %v", prospectuses, err)
+		t.Fatalf("IPOProspectus = %+v, %v", prospectuses, err)
 	}
 	splits, err := client.Calendar.StockSplits(ctx, NewStockSplitsQuery("AAPL").WithLimit(0))
 	if err != nil || len(splits) != 1 || splits[0].Numerator != 4 {
@@ -145,7 +145,7 @@ func TestCalendarQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	if !errors.Is(err, ErrCommaInTicker) || typed.Message != "symbol: "+ErrCommaInTicker.Error() {
 		t.Fatalf("comma ticker: %v", err)
 	}
-	_, err = client.Calendar.IposCalendar(ctx, NewIposCalendarQuery().WithFrom(Date{}))
+	_, err = client.Calendar.IPOCalendar(ctx, NewIPOCalendarQuery().WithFrom(Date{}))
 	typed = assertQuoteError(t, err, CategoryValidation, 0, "")
 	if !errors.Is(err, ErrZeroTemporalValue) || typed.Message != "from: "+ErrZeroTemporalValue.Error() {
 		t.Fatalf("zero from date: %v", err)

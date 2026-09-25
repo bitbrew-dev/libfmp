@@ -20,8 +20,8 @@ func TestSearchFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[SymbolSearchResult](t, "search_symbol_unknown.json", "futureProviderField")
 	assertFixtureParity[NameSearchResult](t, "search_name.json")
 	assertFixtureParity[CIKSearchResult](t, "search_cik.json")
-	assertFixtureParity[CusipSearchResult](t, "search_cusip.json")
-	assertFixtureParity[IsinSearchResult](t, "search_isin.json")
+	assertFixtureParity[CUSIPSearchResult](t, "search_cusip.json")
+	assertFixtureParity[ISINSearchResult](t, "search_isin.json")
 	assertFixtureParity[ExchangeVariant](t, "search_exchange_variants.json")
 }
 
@@ -73,13 +73,13 @@ func TestDocumentedIdentifierResultsDecodeExactValues(t *testing.T) {
 	if len(cik) != 1 || cik[0] != wantCik {
 		t.Fatalf("search_cik = %+v, want %+v", cik, wantCik)
 	}
-	cusip := assertFixtureParity[CusipSearchResult](t, "search_cusip.json")
-	wantCusip := CusipSearchResult{Symbol: "APC.F", CompanyName: "Apple Inc.", Cusip: "037833100", MarketCap: 4_227_021_056_800}
+	cusip := assertFixtureParity[CUSIPSearchResult](t, "search_cusip.json")
+	wantCusip := CUSIPSearchResult{Symbol: "APC.F", CompanyName: "Apple Inc.", CUSIP: "037833100", MarketCap: 4_227_021_056_800}
 	if len(cusip) != 1 || cusip[0] != wantCusip || cusip[0].MarketCap <= math.MaxUint32 {
 		t.Fatalf("search_cusip = %+v, want %+v", cusip, wantCusip)
 	}
-	isin := assertFixtureParity[IsinSearchResult](t, "search_isin.json")
-	wantIsin := IsinSearchResult{Symbol: "AAPL", Name: "Apple Inc.", Isin: "US0378331005", MarketCap: 4_874_072_686_740}
+	isin := assertFixtureParity[ISINSearchResult](t, "search_isin.json")
+	wantIsin := ISINSearchResult{Symbol: "AAPL", Name: "Apple Inc.", ISIN: "US0378331005", MarketCap: 4_874_072_686_740}
 	if len(isin) != 1 || isin[0] != wantIsin || isin[0].MarketCap <= math.MaxUint32 {
 		t.Fatalf("search_isin = %+v, want %+v", isin, wantIsin)
 	}
@@ -113,12 +113,12 @@ func TestDocumentedExchangeVariantDecodesExactValues(t *testing.T) {
 	want := ExchangeVariant{
 		Symbol: "AAPL", Price: 331.85501, Beta: 1.097, VolAvg: 55_309_000, MarketCap: 4_874_072_686_740,
 		LastDiv: 1.05, Range: "201.5-344.57", Changes: -6.33498, CompanyName: "Apple Inc.", Currency: "USD",
-		CIK: "0000320193", Isin: "US0378331005", Cusip: "037833100", Exchange: "NASDAQ Global Select",
+		CIK: "0000320193", ISIN: "US0378331005", CUSIP: "037833100", Exchange: "NASDAQ Global Select",
 		ExchangeShortName: "NASDAQ", Industry: "Consumer Electronics", Website: "https://www.apple.com",
 		Description: row.Description, Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US",
 		FullTimeEmployees: "166000", Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino",
 		State: "CA", Zip: "95014", DCFDiff: 191.60731, DCF: 140.70269296445176,
-		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IpoDate: mustParseDate(t, "1980-12-12"),
+		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IPODate: mustParseDate(t, "1980-12-12"),
 		DefaultImage: false, IsETF: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
 	}
 	if row != want {

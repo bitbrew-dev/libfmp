@@ -26,8 +26,8 @@ type CompanyProfile struct {
 	CompanyName       string  `json:"companyName"`
 	Currency          string  `json:"currency"`
 	CIK               string  `json:"cik"`
-	Isin              string  `json:"isin"`
-	Cusip             string  `json:"cusip"`
+	ISIN              string  `json:"isin"`
+	CUSIP             string  `json:"cusip"`
 	ExchangeFullName  string  `json:"exchangeFullName"`
 	Exchange          string  `json:"exchange"`
 	Industry          string  `json:"industry"`
@@ -43,7 +43,7 @@ type CompanyProfile struct {
 	State             string  `json:"state"`
 	Zip               string  `json:"zip"`
 	Image             string  `json:"image"`
-	IpoDate           Date    `json:"ipoDate"`
+	IPODate           Date    `json:"ipoDate"`
 	DefaultImage      bool    `json:"defaultImage"`
 	IsETF             bool    `json:"isEtf"`
 	IsActivelyTrading bool    `json:"isActivelyTrading"`
@@ -68,8 +68,8 @@ type companyProfileShadow struct {
 	CompanyName       *string  `json:"companyName"`
 	Currency          *string  `json:"currency"`
 	CIK               *string  `json:"cik"`
-	Isin              *string  `json:"isin"`
-	Cusip             *string  `json:"cusip"`
+	ISIN              *string  `json:"isin"`
+	CUSIP             *string  `json:"cusip"`
 	ExchangeFullName  *string  `json:"exchangeFullName"`
 	Exchange          *string  `json:"exchange"`
 	Industry          *string  `json:"industry"`
@@ -85,7 +85,7 @@ type companyProfileShadow struct {
 	State             *string  `json:"state"`
 	Zip               *string  `json:"zip"`
 	Image             *string  `json:"image"`
-	IpoDate           *Date    `json:"ipoDate"`
+	IPODate           *Date    `json:"ipoDate"`
 	DefaultImage      *bool    `json:"defaultImage"`
 	IsETF             *bool    `json:"isEtf"`
 	IsActivelyTrading *bool    `json:"isActivelyTrading"`
@@ -128,9 +128,9 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "currency")
 	case shadow.CIK == nil:
 		return missingMemberError("CompanyProfile", "cik")
-	case shadow.Isin == nil:
+	case shadow.ISIN == nil:
 		return missingMemberError("CompanyProfile", "isin")
-	case shadow.Cusip == nil:
+	case shadow.CUSIP == nil:
 		return missingMemberError("CompanyProfile", "cusip")
 	case shadow.ExchangeFullName == nil:
 		return missingMemberError("CompanyProfile", "exchangeFullName")
@@ -162,7 +162,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "zip")
 	case shadow.Image == nil:
 		return missingMemberError("CompanyProfile", "image")
-	case shadow.IpoDate == nil:
+	case shadow.IPODate == nil:
 		return missingMemberError("CompanyProfile", "ipoDate")
 	case shadow.DefaultImage == nil:
 		return missingMemberError("CompanyProfile", "defaultImage")
@@ -189,8 +189,8 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		CompanyName:       *shadow.CompanyName,
 		Currency:          *shadow.Currency,
 		CIK:               *shadow.CIK,
-		Isin:              *shadow.Isin,
-		Cusip:             *shadow.Cusip,
+		ISIN:              *shadow.ISIN,
+		CUSIP:             *shadow.CUSIP,
 		ExchangeFullName:  *shadow.ExchangeFullName,
 		Exchange:          *shadow.Exchange,
 		Industry:          *shadow.Industry,
@@ -206,7 +206,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		State:             *shadow.State,
 		Zip:               *shadow.Zip,
 		Image:             *shadow.Image,
-		IpoDate:           *shadow.IpoDate,
+		IPODate:           *shadow.IPODate,
 		DefaultImage:      *shadow.DefaultImage,
 		IsETF:             *shadow.IsETF,
 		IsActivelyTrading: *shadow.IsActivelyTrading,
@@ -309,7 +309,7 @@ type DelistedCompany struct {
 	Symbol       string `json:"symbol"`
 	CompanyName  string `json:"companyName"`
 	Exchange     string `json:"exchange"`
-	IpoDate      Date   `json:"ipoDate"`
+	IPODate      Date   `json:"ipoDate"`
 	DelistedDate Date   `json:"delistedDate"`
 }
 
@@ -320,7 +320,7 @@ type delistedCompanyShadow struct {
 	Symbol       *string `json:"symbol"`
 	CompanyName  *string `json:"companyName"`
 	Exchange     *string `json:"exchange"`
-	IpoDate      *Date   `json:"ipoDate"`
+	IPODate      *Date   `json:"ipoDate"`
 	DelistedDate *Date   `json:"delistedDate"`
 }
 
@@ -339,7 +339,7 @@ func (m *DelistedCompany) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("DelistedCompany", "companyName")
 	case shadow.Exchange == nil:
 		return missingMemberError("DelistedCompany", "exchange")
-	case shadow.IpoDate == nil:
+	case shadow.IPODate == nil:
 		return missingMemberError("DelistedCompany", "ipoDate")
 	case shadow.DelistedDate == nil:
 		return missingMemberError("DelistedCompany", "delistedDate")
@@ -348,7 +348,7 @@ func (m *DelistedCompany) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Symbol:       *shadow.Symbol,
 		CompanyName:  *shadow.CompanyName,
 		Exchange:     *shadow.Exchange,
-		IpoDate:      *shadow.IpoDate,
+		IPODate:      *shadow.IPODate,
 		DelistedDate: *shadow.DelistedDate,
 	}
 	return nil

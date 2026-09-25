@@ -49,7 +49,7 @@ func TestTipranksMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	server, rec := newServer(t, tipranksRouter(t))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
-	tip := client.Tipranks
+	tip := client.TipRanks
 	from := mustParseDate(t, "2025-06-10")
 	to := mustParseDate(t, "2026-06-10")
 
@@ -138,7 +138,7 @@ func TestTipranksQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	server, rec := newServer(t, tipranksRouter(t))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
-	tip := client.Tipranks
+	tip := client.TipRanks
 	cases := []struct {
 		name   string
 		call   func() error
@@ -208,7 +208,7 @@ func TestTipranksMethodsReportNumberKindAndMissingMembersAsDecodeErrors(t *testi
 	server, rec := newServer(t, jsonHandler(corrupted))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
-	_, err := client.Tipranks.SearchRatings(context.Background(), NewTipRanksSearchQuery())
+	_, err := client.TipRanks.SearchRatings(context.Background(), NewTipRanksSearchQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "tipranks-search")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"priceTarget"`) ||
 		!strings.Contains(cause.Error(), "JSON number") {
@@ -217,7 +217,7 @@ func TestTipranksMethodsReportNumberKindAndMissingMembersAsDecodeErrors(t *testi
 
 	missing, _ := newServer(t, jsonHandler(`[{"expertUID":"0458","analystName":"Sujeeva De Silva","firmName":"Roth MKM"}]`))
 	client = newClient(t, missing, WithAuthentication(FMPHeader("route-secret")))
-	_, err = client.Tipranks.Analysts(context.Background(), NewTipRanksAnalystsQuery())
+	_, err = client.TipRanks.Analysts(context.Background(), NewTipRanksAnalystsQuery())
 	typed = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "tipranks-analysts")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"successRate"`) {
 		t.Fatalf("cause = %v, want it to name the first missing member successRate", cause)
