@@ -22,7 +22,13 @@ network connection.
 - **Synthetic and dynamic shapes.** `*_synthetic.json` and `*_dynamic.json`
   are constructed by hand for edge cases the documentation does not show
   (mixed numeric forms, dynamic JSON recursion). Their file name marks them as
-  not provider-observed.
+  not provider-observed. The three `*_fractional_synthetic.json` files
+  (`company_screener`, `cryptocurrency_list`, `stock_splits`) carry
+  fractional and `1.0`-form numbers in integer-documented fields (the
+  JSON formatter hook rewrites exponent spellings, so exponent-form cases are
+  inline in the Rust and Go tests); they are the issue #339 decode proof in
+  `integral_f64_responses.rs`, the fmp-py screener, crypto, and calendar
+  tests, and `sdk/go/integral_f64_parity_test.go`.
 - **Observed-shape reproductions.** `quote_short_fractional_volume.json`
   reproduces the one live `quote-short` row that motivated issue #337 (seen
   2026-09-23: a fractional `volume`, `20201922.82733`); the four values are
