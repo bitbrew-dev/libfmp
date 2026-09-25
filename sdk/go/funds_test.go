@@ -71,22 +71,22 @@ func TestFundsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if err != nil || len(sectors) != 1 || sectors[0].Sector != "Basic Materials" {
 		t.Fatalf("EtfSectorWeightings = %+v, %v", sectors, err)
 	}
-	holders, err := ns.LatestFundDisclosureHolders(ctx, NewLatestFundDisclosureHoldersQuery("AAPL"))
+	holders, err := ns.LatestDisclosureHolders(ctx, NewLatestFundDisclosureHoldersQuery("AAPL"))
 	if err != nil || len(holders) != 1 || holders[0].Change != -316_881 {
-		t.Fatalf("LatestFundDisclosureHolders = %+v, %v", holders, err)
+		t.Fatalf("LatestDisclosureHolders = %+v, %v", holders, err)
 	}
-	disclosures, err := ns.FundDisclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4).WithCik("0000857489"))
+	disclosures, err := ns.Disclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4).WithCik("0000857489"))
 	if err != nil || len(disclosures) != 1 || disclosures[0].Cusip != "N/A" || disclosures[0].CurrencyCode != "CNY" {
-		t.Fatalf("FundDisclosures = %+v, %v", disclosures, err)
+		t.Fatalf("Disclosures = %+v, %v", disclosures, err)
 	}
-	results, err := ns.SearchFundDisclosureHolders(ctx,
+	results, err := ns.SearchDisclosureHolders(ctx,
 		NewFundDisclosureHolderSearchQuery("Federated Hermes Government Income Securities, Inc."))
 	if err != nil || len(results) != 1 || results[0].EntityOrgType != "30" {
-		t.Fatalf("SearchFundDisclosureHolders = %+v, %v", results, err)
+		t.Fatalf("SearchDisclosureHolders = %+v, %v", results, err)
 	}
-	dates, err := ns.FundDisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCik("0000036405"))
+	dates, err := ns.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCik("0000036405"))
 	if err != nil || len(dates) != 1 || dates[0].Year != 2026 || dates[0].Quarter != 2 {
-		t.Fatalf("FundDisclosureDates = %+v, %v", dates, err)
+		t.Fatalf("DisclosureDates = %+v, %v", dates, err)
 	}
 
 	requests := rec.all()
@@ -123,13 +123,13 @@ func TestFundsOptionalCikIsOmittedWhenUnset(t *testing.T) {
 	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
 	ctx := context.Background()
 
-	disclosures, err := client.Funds.FundDisclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4))
+	disclosures, err := client.Funds.Disclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4))
 	if err != nil || len(disclosures) != 0 {
-		t.Fatalf("FundDisclosures = %+v, %v", disclosures, err)
+		t.Fatalf("Disclosures = %+v, %v", disclosures, err)
 	}
-	dates, err := client.Funds.FundDisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO"))
+	dates, err := client.Funds.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO"))
 	if err != nil || len(dates) != 0 {
-		t.Fatalf("FundDisclosureDates = %+v, %v", dates, err)
+		t.Fatalf("DisclosureDates = %+v, %v", dates, err)
 	}
 	if rec.count() != 2 {
 		t.Fatalf("requests = %d, want 2", rec.count())
@@ -154,19 +154,19 @@ func TestFundsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		t.Fatalf("comma ticker: error = %v", err)
 	}
 	for _, quarter := range []Quarter{"5", "Q4", "", "4 "} {
-		_, err := ns.FundDisclosures(ctx, NewFundDisclosureQuery("VWO", 2023, quarter))
+		_, err := ns.Disclosures(ctx, NewFundDisclosureQuery("VWO", 2023, quarter))
 		typed := assertQuoteError(t, err, CategoryValidation, 0, "")
 		if !errors.Is(err, ErrUnknownWireValue) ||
 			typed.Message != "quarter: "+ErrUnknownWireValue.Error()+", expected one of 1, 2, 3, 4" {
 			t.Fatalf("quarter %q: error = %v", quarter, err)
 		}
 	}
-	_, err = ns.FundDisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCik(" "))
+	_, err = ns.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCik(" "))
 	if typed := assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrEmptyValue) ||
 		typed.Message != "cik: "+ErrEmptyValue.Error() {
 		t.Fatalf("blank optional cik: error = %v", err)
 	}
-	_, err = ns.SearchFundDisclosureHolders(ctx, NewFundDisclosureHolderSearchQuery("Vanguard\x00"))
+	_, err = ns.SearchDisclosureHolders(ctx, NewFundDisclosureHolderSearchQuery("Vanguard\x00"))
 	if typed := assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrControlCharacterValue) ||
 		typed.Message != "name: "+ErrControlCharacterValue.Error() {
 		t.Fatalf("control character name: error = %v", err)

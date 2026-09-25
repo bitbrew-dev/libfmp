@@ -373,14 +373,14 @@ class FundsNamespace:
         Retrieves the worldwide sector allocation for one ETF or mutual fund.
         """
 
-    def latest_fund_disclosure_holders(
+    def latest_disclosure_holders(
         self, symbol: builtins.str
     ) -> builtins.list[FundDisclosureHolder]:
         r"""
         Retrieves the latest US fund disclosures holding one requested asset.
         """
 
-    def fund_disclosures(
+    def disclosures(
         self,
         symbol: builtins.str,
         year: builtins.int,
@@ -392,14 +392,14 @@ class FundsNamespace:
         Retrieves positions from one US mutual-fund disclosure period.
         """
 
-    def search_fund_disclosure_holders(
+    def search_disclosure_holders(
         self, name: builtins.str
     ) -> builtins.list[FundDisclosureSearchResult]:
         r"""
         Searches US mutual-fund and ETF disclosure holders by exact name text.
         """
 
-    def fund_disclosure_dates(
+    def disclosure_dates(
         self, symbol: builtins.str, *, cik: typing.Optional[builtins.str] = None
     ) -> builtins.list[institutional_ownership.Form13fFilingDate]:
         r"""

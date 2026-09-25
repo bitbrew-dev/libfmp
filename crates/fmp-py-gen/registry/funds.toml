@@ -42,7 +42,7 @@ doc = "Retrieves the worldwide sector allocation for one ETF or mutual fund."
 args = [{ name = "symbol", kind = "ticker" }]
 
 [[endpoint]]
-name = "latest_fund_disclosure_holders"
+name = "latest_disclosure_holders"
 method = "latest_fund_disclosure_holders"
 query = "LatestFundDisclosureHoldersQuery"
 response = "funds::FundDisclosureHolder"
@@ -50,7 +50,7 @@ doc = "Retrieves the latest US fund disclosures holding one requested asset."
 args = [{ name = "symbol", kind = "ticker" }]
 
 [[endpoint]]
-name = "fund_disclosures"
+name = "disclosures"
 method = "fund_disclosures"
 query = "FundDisclosureQuery"
 response = "funds::FundDisclosure"
@@ -64,7 +64,7 @@ args = [
 setters = [{ arg = "cik" }]
 
 [[endpoint]]
-name = "search_fund_disclosure_holders"
+name = "search_disclosure_holders"
 method = "search_fund_disclosure_holders"
 query = "FundDisclosureHolderSearchQuery"
 response = "funds::FundDisclosureSearchResult"
@@ -72,7 +72,7 @@ doc = "Searches US mutual-fund and ETF disclosure holders by exact name text."
 args = [{ name = "name", kind = "search_term" }]
 
 [[endpoint]]
-name = "fund_disclosure_dates"
+name = "disclosure_dates"
 method = "fund_disclosure_dates"
 query = "FundDisclosureDatesQuery"
 response = "institutional_ownership::Form13fFilingDate"

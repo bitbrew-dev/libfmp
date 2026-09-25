@@ -2,7 +2,7 @@
 
 Covers ``etf_holdings``, ``etf_info``, ``etf_country_weightings``,
 ``etf_asset_exposure``, ``etf_sector_weightings``, and
-``latest_fund_disclosure_holders``: one test per method routes the documented
+``latest_disclosure_holders``: one test per method routes the documented
 fixture body, calls the method with its single required ticker, and asserts
 the exact request target plus a few typed fields (including the
 ``datetime.date`` and ``datetime.datetime`` ones). The expected targets are
@@ -141,9 +141,9 @@ def test_etf_sector_weightings_decode_the_sector_row(client: Any, fixture_server
 
 
 def test_latest_fund_disclosure_holders_keep_signed_change(client: Any, fixture_server: FixtureServer) -> None:
-    """``latest_fund_disclosure_holders`` preserves the leading-zero CIK and the negative change."""
+    """``latest_disclosure_holders`` preserves the leading-zero CIK and the negative change."""
     fixture_server.route("/funds/disclosure-holders-latest", load_fixture("latest_fund_disclosure_holders.json"))
-    rows = client.funds.latest_fund_disclosure_holders("AAPL")
+    rows = client.funds.latest_disclosure_holders("AAPL")
 
     assert fixture_server.requests[0].target == "/funds/disclosure-holders-latest?symbol=AAPL"
     assert len(rows) == 1
@@ -165,7 +165,7 @@ def test_symbol_only_methods_reject_keywords_and_missing_symbol(client: Any) -> 
     with pytest.raises(TypeError):
         client.funds.etf_country_weightings("SPY", "extra")
     with pytest.raises(TypeError):
-        client.funds.latest_fund_disclosure_holders("AAPL", limit=1)
+        client.funds.latest_disclosure_holders("AAPL", limit=1)
 
 
 def test_ticker_methods_decode_an_empty_array(client: Any, fixture_server: FixtureServer) -> None:
@@ -185,7 +185,7 @@ def test_ticker_methods_decode_an_empty_array(client: Any, fixture_server: Fixtu
     assert client.funds.etf_country_weightings("SPY") == []
     assert client.funds.etf_asset_exposure("AAPL") == []
     assert client.funds.etf_sector_weightings("SPY") == []
-    assert client.funds.latest_fund_disclosure_holders("AAPL") == []
+    assert client.funds.latest_disclosure_holders("AAPL") == []
     assert [request.target for request in fixture_server.requests] == [
         "/etf/holdings?symbol=SPY",
         "/etf/info?symbol=SPY",

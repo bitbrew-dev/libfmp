@@ -395,11 +395,11 @@ func (n *FundsNamespace) EtfSectorWeightings(ctx context.Context, q EtfSectorWei
 	return out, nil
 }
 
-// LatestFundDisclosureHolders retrieves the latest US fund disclosures holding
-// one requested asset.
+// LatestDisclosureHolders retrieves the latest US fund disclosures holding one
+// requested asset.
 //
 // GET funds/disclosure-holders-latest?symbol=
-func (n *FundsNamespace) LatestFundDisclosureHolders(ctx context.Context, q LatestFundDisclosureHoldersQuery) ([]FundDisclosureHolder, error) {
+func (n *FundsNamespace) LatestDisclosureHolders(ctx context.Context, q LatestFundDisclosureHoldersQuery) ([]FundDisclosureHolder, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -411,11 +411,10 @@ func (n *FundsNamespace) LatestFundDisclosureHolders(ctx context.Context, q Late
 	return out, nil
 }
 
-// FundDisclosures retrieves positions from one US mutual-fund disclosure
-// period.
+// Disclosures retrieves positions from one US mutual-fund disclosure period.
 //
 // GET funds/disclosure?symbol=&year=&quarter=&cik=
-func (n *FundsNamespace) FundDisclosures(ctx context.Context, q FundDisclosureQuery) ([]FundDisclosure, error) {
+func (n *FundsNamespace) Disclosures(ctx context.Context, q FundDisclosureQuery) ([]FundDisclosure, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -427,11 +426,11 @@ func (n *FundsNamespace) FundDisclosures(ctx context.Context, q FundDisclosureQu
 	return out, nil
 }
 
-// SearchFundDisclosureHolders searches US mutual-fund and ETF disclosure
-// holders by exact name text.
+// SearchDisclosureHolders searches US mutual-fund and ETF disclosure holders
+// by exact name text.
 //
 // GET funds/disclosure-holders-search?name=
-func (n *FundsNamespace) SearchFundDisclosureHolders(ctx context.Context, q FundDisclosureHolderSearchQuery) ([]FundDisclosureSearchResult, error) {
+func (n *FundsNamespace) SearchDisclosureHolders(ctx context.Context, q FundDisclosureHolderSearchQuery) ([]FundDisclosureSearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -443,10 +442,10 @@ func (n *FundsNamespace) SearchFundDisclosureHolders(ctx context.Context, q Fund
 	return out, nil
 }
 
-// FundDisclosureDates retrieves available US fund-disclosure reporting dates.
+// DisclosureDates retrieves available US fund-disclosure reporting dates.
 //
 // GET funds/disclosure-dates?symbol=&cik=
-func (n *FundsNamespace) FundDisclosureDates(ctx context.Context, q FundDisclosureDatesQuery) ([]Form13fFilingDate, error) {
+func (n *FundsNamespace) DisclosureDates(ctx context.Context, q FundDisclosureDatesQuery) ([]Form13fFilingDate, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
