@@ -26,7 +26,7 @@ func newTipRanksNamespace(client *Client) TipRanksNamespace {
 // arguments and each With method sets an optional one. Values are validated
 // when the request is built.
 type PointInTimeRatingsByAnalystQuery struct {
-	expertUid   *string
+	expertUID   *string
 	analystName *string
 	date        *Date
 	limit       *uint32
@@ -40,17 +40,17 @@ func NewPointInTimeRatingsByAnalystQuery() PointInTimeRatingsByAnalystQuery {
 	return PointInTimeRatingsByAnalystQuery{}
 }
 
-// WithExpertUid sets the optional expert_uid parameter and returns the updated
+// WithExpertUID sets the optional expert_uid parameter and returns the updated
 // query.
-func (q PointInTimeRatingsByAnalystQuery) WithExpertUid(expertUid string) PointInTimeRatingsByAnalystQuery {
-	q.expertUid = &expertUid
+func (q PointInTimeRatingsByAnalystQuery) WithExpertUID(expertUID string) PointInTimeRatingsByAnalystQuery {
+	q.expertUID = &expertUID
 	return q
 }
 
-// ExpertUid returns the optional expert_uid parameter, or nil when it is
+// ExpertUID returns the optional expert_uid parameter, or nil when it is
 // unset.
-func (q PointInTimeRatingsByAnalystQuery) ExpertUid() *string {
-	return q.expertUid
+func (q PointInTimeRatingsByAnalystQuery) ExpertUID() *string {
+	return q.expertUID
 }
 
 // WithAnalystName sets the optional analyst_name parameter and returns the
@@ -114,12 +114,12 @@ func (q PointInTimeRatingsByAnalystQuery) Nonadjusted() *bool {
 
 func (q PointInTimeRatingsByAnalystQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 6)
-	if q.expertUid != nil {
-		expertUid, err := stringParam("expertUID", *q.expertUid)
+	if q.expertUID != nil {
+		expertUID, err := stringParam("expertUID", *q.expertUID)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, expertUid)
+		params = append(params, expertUID)
 	}
 	if q.analystName != nil {
 		analystName, err := stringParam("analystName", *q.analystName)
@@ -271,20 +271,20 @@ func (q PointInTimeRatingsBySymbolQuery) params() ([]queryParam, error) {
 // each With method sets an optional one. Values are validated when the request
 // is built.
 type TipRanksAnalystSummaryQuery struct {
-	expertUid string
+	expertUID string
 	from      *Date
 	to        *Date
 }
 
 // NewTipRanksAnalystSummaryQuery creates the query from its required
 // arguments.
-func NewTipRanksAnalystSummaryQuery(expertUid string) TipRanksAnalystSummaryQuery {
-	return TipRanksAnalystSummaryQuery{expertUid: expertUid}
+func NewTipRanksAnalystSummaryQuery(expertUID string) TipRanksAnalystSummaryQuery {
+	return TipRanksAnalystSummaryQuery{expertUID: expertUID}
 }
 
-// ExpertUid returns the expert_uid argument as given.
-func (q TipRanksAnalystSummaryQuery) ExpertUid() string {
-	return q.expertUid
+// ExpertUID returns the expert_uid argument as given.
+func (q TipRanksAnalystSummaryQuery) ExpertUID() string {
+	return q.expertUID
 }
 
 // WithFrom sets the optional from parameter and returns the updated query.
@@ -311,11 +311,11 @@ func (q TipRanksAnalystSummaryQuery) To() *Date {
 
 func (q TipRanksAnalystSummaryQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 3)
-	expertUid, err := stringParam("expertUID", q.expertUid)
+	expertUID, err := stringParam("expertUID", q.expertUID)
 	if err != nil {
 		return nil, err
 	}
-	params = append(params, expertUid)
+	params = append(params, expertUID)
 	if q.from != nil {
 		from, err := dateParam("from", *q.from)
 		if err != nil {
@@ -498,7 +498,7 @@ func (q TipRanksFirmSummaryQuery) params() ([]queryParam, error) {
 // it: NewTipRanksSearchQuery takes the required arguments and each With method
 // sets an optional one. Values are validated when the request is built.
 type TipRanksSearchQuery struct {
-	expertUid   *string
+	expertUID   *string
 	symbol      *string
 	from        *Date
 	to          *Date
@@ -512,17 +512,17 @@ func NewTipRanksSearchQuery() TipRanksSearchQuery {
 	return TipRanksSearchQuery{}
 }
 
-// WithExpertUid sets the optional expert_uid parameter and returns the updated
+// WithExpertUID sets the optional expert_uid parameter and returns the updated
 // query.
-func (q TipRanksSearchQuery) WithExpertUid(expertUid string) TipRanksSearchQuery {
-	q.expertUid = &expertUid
+func (q TipRanksSearchQuery) WithExpertUID(expertUID string) TipRanksSearchQuery {
+	q.expertUID = &expertUID
 	return q
 }
 
-// ExpertUid returns the optional expert_uid parameter, or nil when it is
+// ExpertUID returns the optional expert_uid parameter, or nil when it is
 // unset.
-func (q TipRanksSearchQuery) ExpertUid() *string {
-	return q.expertUid
+func (q TipRanksSearchQuery) ExpertUID() *string {
+	return q.expertUID
 }
 
 // WithSymbol sets the optional symbol parameter and returns the updated query.
@@ -595,12 +595,12 @@ func (q TipRanksSearchQuery) Nonadjusted() *bool {
 
 func (q TipRanksSearchQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 7)
-	if q.expertUid != nil {
-		expertUid, err := stringParam("expertUID", *q.expertUid)
+	if q.expertUID != nil {
+		expertUID, err := stringParam("expertUID", *q.expertUID)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, expertUid)
+		params = append(params, expertUID)
 	}
 	if q.symbol != nil {
 		symbol, err := tickerParam("symbol", *q.symbol)

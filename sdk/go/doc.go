@@ -91,7 +91,7 @@
 //     same way (client.Statements.Income).
 //   - Casing: registry names in UpperCamelCase, with one initialism table
 //     (ADR 0032) applied to every generated and hand-written identifier:
-//     ID, URL, JSON, API, HTTP, FMP, SEC, US, COT, ETF, CIK, CUSIP, ISIN,
+//     ID, UID, URL, JSON, API, HTTP, FMP, SEC, US, COT, ETF, CIK, CUSIP, ISIN,
 //     IPO, SP500, ESG, DCF, EPS, TTM, and the form names 8K and 13F are all
 //     caps, and TipRanks keeps its brand casing. So etfs is ETFs,
 //     latest_8k is Latest8K, and the Rust KeyMetricsTtm is KeyMetricsTTM.

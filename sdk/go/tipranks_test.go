@@ -57,7 +57,7 @@ func TestTipranksMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if err != nil || len(search) != 1 || search[0].Symbol != "RR.L" {
 		t.Fatalf("SearchRatings = %+v, %v", search, err)
 	}
-	full := NewTipRanksSearchQuery().WithExpertUid("expert / one").WithSymbol("RR.L").WithFrom(from).WithTo(to).
+	full := NewTipRanksSearchQuery().WithExpertUID("expert / one").WithSymbol("RR.L").WithFrom(from).WithTo(to).
 		WithLimit(5_000).WithPage(0).WithNonadjusted(false)
 	if _, err := tip.SearchRatings(ctx, full); err != nil {
 		t.Fatalf("SearchRatings with every setter: %v", err)
@@ -74,7 +74,7 @@ func TestTipranksMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if err != nil || len(pitAnalyst) != 1 || pitAnalyst[0].Symbol != "0J3K.L" || pitAnalyst[0].PriceTarget != nil {
 		t.Fatalf("PointInTimeRatingsByAnalyst = %+v, %v", pitAnalyst, err)
 	}
-	if _, err := tip.PointInTimeRatingsByAnalyst(ctx, NewPointInTimeRatingsByAnalystQuery().WithExpertUid("expert / one").
+	if _, err := tip.PointInTimeRatingsByAnalyst(ctx, NewPointInTimeRatingsByAnalystQuery().WithExpertUID("expert / one").
 		WithAnalystName("Keegan Cox").WithDate(to).WithLimit(100).WithPage(0).WithNonadjusted(false)); err != nil {
 		t.Fatalf("PointInTimeRatingsByAnalyst with every setter: %v", err)
 	}
@@ -150,7 +150,7 @@ func TestTipranksQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "expertUID", ErrEmptyValue},
 		{"control character in optional expert uid", func() error {
-			_, err := tip.SearchRatings(ctx, NewTipRanksSearchQuery().WithExpertUid("expert\nuid"))
+			_, err := tip.SearchRatings(ctx, NewTipRanksSearchQuery().WithExpertUID("expert\nuid"))
 			return err
 		}, "expertUID", ErrControlCharacterValue},
 		{"comma in optional ticker", func() error {
@@ -186,15 +186,15 @@ func TestTipranksQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	}
 
 	empty := NewTipRanksSearchQuery()
-	if empty.ExpertUid() != nil || empty.Symbol() != nil || empty.From() != nil || empty.To() != nil ||
+	if empty.ExpertUID() != nil || empty.Symbol() != nil || empty.From() != nil || empty.To() != nil ||
 		empty.Limit() != nil || empty.Page() != nil || empty.Nonadjusted() != nil {
 		t.Fatalf("NewTipRanksSearchQuery() set a parameter: %+v", empty)
 	}
 	if flag := empty.WithNonadjusted(false).Nonadjusted(); flag == nil || *flag || empty.Nonadjusted() != nil {
 		t.Fatalf("WithNonadjusted(false) lost the explicit false or mutated the receiver: %v %v", flag, empty.Nonadjusted())
 	}
-	if q := NewTipRanksAnalystSummaryQuery("expert / one"); q.ExpertUid() != "expert / one" || q.From() != nil {
-		t.Fatalf("ExpertUid() normalized the identifier: %q", q.ExpertUid())
+	if q := NewTipRanksAnalystSummaryQuery("expert / one"); q.ExpertUID() != "expert / one" || q.From() != nil {
+		t.Fatalf("ExpertUID() normalized the identifier: %q", q.ExpertUID())
 	}
 }
 

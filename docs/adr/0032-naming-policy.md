@@ -56,7 +56,7 @@ one initialism table in `gen_go`:
 
 | Group | Initialisms |
 | --- | --- |
-| Web and data | `ID`, `URL`, `JSON`, `API`, `HTTP` |
+| Web and data | `ID`, `UID`, `URL`, `JSON`, `API`, `HTTP` |
 | Provider and regulators | `FMP`, `SEC`, `US`, `COT` |
 | Instruments and identifiers | `ETF`, `CIK`, `CUSIP`, `ISIN`, `IPO`, `SP500` |
 | Metrics | `ESG`, `DCF`, `EPS`, `TTM` |
