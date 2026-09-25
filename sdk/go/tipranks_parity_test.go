@@ -35,7 +35,7 @@ func TestDocumentedTipranksRatingSearchDecodesAllThirteenFields(t *testing.T) {
 		row.FirmName != "Morgan Stanley" || row.Recommendation != "buy" || row.AnalystAction != "maintained" ||
 		row.ArticleSite != "TipRanks Contributor" || string(row.PriceTarget) != "1500" ||
 		row.PriceTargetCurrency != "GBX" || !strings.HasPrefix(row.Url, "https://www.tipranks.com/news/blurbs/") {
-		t.Fatalf("tipranks_ratings_search = %+v", row)
+		t.Fatalf("search_tipranks_ratings = %+v", row)
 	}
 	members := memberSet(t, row)
 	if len(members) != 13 {

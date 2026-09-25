@@ -22,10 +22,10 @@ BLANK_MESSAGE = "value must not be empty or whitespace-only"
     ("method", "args", "kwargs", "message"),
     [
         pytest.param("point_in_time_ratings_by_symbol", ("  ",), {}, f"symbol: {BLANK_MESSAGE}", id="ticker-required"),
-        pytest.param("ratings_search", (), {"symbol": ""}, f"symbol: {BLANK_MESSAGE}", id="ticker-optional"),
+        pytest.param("search_ratings", (), {"symbol": ""}, f"symbol: {BLANK_MESSAGE}", id="ticker-optional"),
         pytest.param("analyst_summary", ("  ",), {}, f"expert_uid: {BLANK_MESSAGE}", id="expert-uid-required"),
         pytest.param(
-            "ratings_search", (), {"expert_uid": ""}, f"expert_uid: {BLANK_MESSAGE}", id="expert-uid-optional"
+            "search_ratings", (), {"expert_uid": ""}, f"expert_uid: {BLANK_MESSAGE}", id="expert-uid-optional"
         ),
         pytest.param("firm_summary", ("",), {}, f"firm_name: {BLANK_MESSAGE}", id="search-term-required"),
         pytest.param(
@@ -60,7 +60,7 @@ BLANK_MESSAGE = "value must not be empty or whitespace-only"
             id="date",
         ),
         pytest.param(
-            "ratings_search", (), {"page": -1}, f"page: must be an integer from 0 through {U32_MAX}", id="page"
+            "search_ratings", (), {"page": -1}, f"page: must be an integer from 0 through {U32_MAX}", id="page"
         ),
         pytest.param(
             "analysts", (), {"limit": U32_MAX + 1}, f"limit: must be an integer from 0 through {U32_MAX}", id="limit"
@@ -89,7 +89,7 @@ def test_invalid_values_name_the_argument(
 def test_bool_typed_flag_rejects_non_bool_shapes(client: Any, fixture_server: FixtureServer, value: Any) -> None:
     """``nonadjusted`` (``boolean``) accepts only ``bool`` on all three methods that expose it."""
     with pytest.raises(TypeError):
-        client.tipranks.ratings_search(nonadjusted=value)
+        client.tipranks.search_ratings(nonadjusted=value)
     with pytest.raises(TypeError):
         client.tipranks.point_in_time_ratings_by_symbol("AAPL", nonadjusted=value)
     with pytest.raises(TypeError):
@@ -109,7 +109,7 @@ def test_summary_methods_reject_the_flag(client: Any, fixture_server: FixtureSer
 def test_optionals_are_keyword_only(client: Any, fixture_server: FixtureServer) -> None:
     """A positional value where the query has only setters is a ``TypeError``, never a silent filter."""
     with pytest.raises(TypeError):
-        client.tipranks.ratings_search("RR.L")
+        client.tipranks.search_ratings("RR.L")
     with pytest.raises(TypeError):
         client.tipranks.symbol_summary("AAPL", "2025-06-10")
     with pytest.raises(TypeError):
@@ -146,7 +146,7 @@ def test_status_error_names_the_search_endpoint(
     """A non-success status carries the libfmp endpoint id, status, and body."""
     fixture_server.route("/tipranks-search", {"error": "add-on required"}, status=403)
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.tipranks.ratings_search(symbol="RR.L")
+        client.tipranks.search_ratings(symbol="RR.L")
     error = raised.value
     assert error.endpoint == "tipranks-search"
     assert error.status == 403
@@ -211,7 +211,7 @@ def test_wrongly_shaped_row_is_a_decode_error(
 
 def test_empty_array_decodes_to_no_rows(client: Any, fixture_server: FixtureServer) -> None:
     """A bare ``[]`` body decodes to an empty list on every route (the default route body)."""
-    assert client.tipranks.ratings_search() == []
+    assert client.tipranks.search_ratings() == []
     assert client.tipranks.symbol_summary("AAPL") == []
     assert client.tipranks.analysts() == []
     assert [request.path for request in fixture_server.requests] == [

@@ -76,7 +76,7 @@ ANNOTATIONS: dict[str, tuple[str, str]] = {
     "quote.cryptocurrencies": ("gated", SHORT_ONLY),
     "quote.forex": ("gated", SHORT_ONLY),
     "quote.indexes": ("gated", SHORT_ONLY),
-    "tipranks.ratings_search": ("gated", TIPRANKS + "; Enterprise plan for history older than 3 years"),
+    "tipranks.search_ratings": ("gated", TIPRANKS + "; Enterprise plan for history older than 3 years"),
     "tipranks.point_in_time_ratings_by_symbol": ("gated", TIPRANKS),
     "tipranks.point_in_time_ratings_by_analyst": ("gated", TIPRANKS),
     "tipranks.symbol_summary": ("gated", TIPRANKS),

@@ -335,7 +335,7 @@ served by the single method that owns the path:
 | `bulk` | `bulk.cash_flow_statements` | `bulk_cash_flow_statements` | supported | supported |  |
 | `bulk` | `bulk.cash_flow_statement_growth` | `bulk_cash_flow_statement_growth` | supported | supported |  |
 | `bulk` | `bulk.eod` | `bulk_eod` | supported | supported |  |
-| `tipranks` | `tipranks.ratings_search` | `tipranks_ratings_search` | gated | supported | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`); Enterprise plan for history older than 3 years |
+| `tipranks` | `tipranks.search_ratings` | `search_tipranks_ratings` | gated | supported | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`); Enterprise plan for history older than 3 years |
 | `tipranks` | `tipranks.point_in_time_ratings_by_symbol` | `tipranks_point_in_time_ratings_by_symbol` | gated | supported | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
 | `tipranks` | `tipranks.point_in_time_ratings_by_analyst` | `tipranks_point_in_time_ratings_by_analyst` | gated | supported | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |
 | `tipranks` | `tipranks.symbol_summary` | `tipranks_symbol_summary` | gated | supported | requires the TipRanks add-on (`AccessRequirement::NamedAddOn`) |

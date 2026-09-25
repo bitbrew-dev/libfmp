@@ -713,10 +713,10 @@ func (q TipRanksSymbolSummaryQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// RatingsSearch retrieves individual analyst ratings from the TipRanks add-on.
+// SearchRatings retrieves individual analyst ratings from the TipRanks add-on.
 //
 // GET tipranks-search?expertUID=&symbol=&from=&to=&limit=&page=&nonadjusted=
-func (n *TipranksNamespace) RatingsSearch(ctx context.Context, q TipRanksSearchQuery) ([]TipRanksRatingSearchResult, error) {
+func (n *TipranksNamespace) SearchRatings(ctx context.Context, q TipRanksSearchQuery) ([]TipRanksRatingSearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

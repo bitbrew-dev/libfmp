@@ -2,8 +2,8 @@
 # `client.tipranks`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
 
 [[endpoint]]
-name = "ratings_search"
-method = "tipranks_ratings_search"
+name = "search_ratings"
+method = "search_tipranks_ratings"
 query = "TipRanksSearchQuery"
 response = "tipranks::TipRanksRatingSearchResult"
 doc = "Retrieves individual analyst ratings from the TipRanks add-on."

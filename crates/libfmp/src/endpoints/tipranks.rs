@@ -591,7 +591,7 @@ const TIPRANKS_DIRECTORY_METADATA: EndpointMetadata =
     EndpointMetadata::new().with_access(AccessRequirement::NamedAddOn("TipRanks"));
 
 /// Describes `GET tipranks-search` without binding a transport.
-pub fn tipranks_ratings_search(
+pub fn search_tipranks_ratings(
     query: TipRanksSearchQuery,
 ) -> EndpointSpec<TipRanksSearchQuery, Vec<TipRanksRatingSearchResult>> {
     EndpointSpec::get("tipranks-search", "tipranks-search", query)
@@ -652,11 +652,11 @@ pub fn tipranks_analysts(
 
 impl Client {
     /// Retrieves individual analyst ratings from the TipRanks add-on.
-    pub async fn tipranks_ratings_search(
+    pub async fn search_tipranks_ratings(
         &self,
         query: TipRanksSearchQuery,
     ) -> Result<Vec<TipRanksRatingSearchResult>> {
-        self.execute(&tipranks_ratings_search(query)).await
+        self.execute(&search_tipranks_ratings(query)).await
     }
 
     /// Retrieves a ticker's analyst ratings as of an optional snapshot date.

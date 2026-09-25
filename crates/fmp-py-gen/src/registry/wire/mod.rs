@@ -354,7 +354,7 @@ mod tests {
                 ..WireMetadata::default()
             })
         );
-        let tipranks = &surface.endpoints["tipranks_ratings_search"];
+        let tipranks = &surface.endpoints["search_tipranks_ratings"];
         assert_eq!(
             tipranks.metadata,
             Some(WireMetadata {
