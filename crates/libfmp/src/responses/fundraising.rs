@@ -76,31 +76,51 @@ pub struct CrowdfundingOffering {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub number_of_security_offered: Quantity,
     pub offering_price: Number,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub offering_amount: StatementAmount,
     pub over_subscription_accepted: YnFlag,
     pub over_subscription_allocation_type: String,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub maximum_offering_amount: StatementAmount,
     pub offering_deadline_date: UsDate,
     pub current_number_of_employees: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub total_asset_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub total_asset_prior_fiscal_year: StatementAmount,
     #[serde(rename = "cashAndCashEquiValentMostRecentFiscalYear")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub cash_and_cash_equivalent_most_recent_fiscal_year: StatementAmount,
     #[serde(rename = "cashAndCashEquiValentPriorFiscalYear")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub cash_and_cash_equivalent_prior_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub accounts_receivable_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub accounts_receivable_prior_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub short_term_debt_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub short_term_debt_prior_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub long_term_debt_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub long_term_debt_prior_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub revenue_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub revenue_prior_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub cost_goods_sold_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub cost_goods_sold_prior_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub taxes_paid_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub taxes_paid_prior_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_income_most_recent_fiscal_year: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_income_prior_fiscal_year: StatementAmount,
 }
 

@@ -19,6 +19,7 @@ pub struct KeyMetrics {
     pub reported_currency: CurrencyCode,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub enterprise_value: StatementAmount,
     pub ev_to_sales: f64,
     pub ev_to_operating_cash_flow: f64,
@@ -33,7 +34,9 @@ pub struct KeyMetrics {
     pub graham_net_net: f64,
     pub tax_burden: f64,
     pub interest_burden: f64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub working_capital: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub invested_capital: StatementAmount,
     pub return_on_assets: f64,
     pub operating_return_on_assets: f64,
@@ -51,17 +54,24 @@ pub struct KeyMetrics {
     pub research_and_developement_to_revenue: f64,
     pub stock_based_compensation_to_revenue: f64,
     pub intangibles_to_total_assets: f64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub average_receivables: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub average_payables: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub average_inventory: StatementAmount,
     pub days_of_sales_outstanding: f64,
     pub days_of_payables_outstanding: f64,
     pub days_of_inventory_outstanding: f64,
     pub operating_cycle: f64,
     pub cash_conversion_cycle: f64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub free_cash_flow_to_equity: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub free_cash_flow_to_firm: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub tangible_asset_value: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_current_asset_value: StatementAmount,
 }
 
@@ -77,6 +87,7 @@ pub struct KeyMetricsTtm {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     #[serde(rename = "enterpriseValueTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub enterprise_value_ttm: StatementAmount,
     #[serde(rename = "evToSalesTTM")]
     pub ev_to_sales_ttm: f64,
@@ -101,8 +112,10 @@ pub struct KeyMetricsTtm {
     #[serde(rename = "interestBurdenTTM")]
     pub interest_burden_ttm: f64,
     #[serde(rename = "workingCapitalTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub working_capital_ttm: StatementAmount,
     #[serde(rename = "investedCapitalTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub invested_capital_ttm: StatementAmount,
     #[serde(rename = "returnOnAssetsTTM")]
     pub return_on_assets_ttm: f64,
@@ -135,10 +148,13 @@ pub struct KeyMetricsTtm {
     #[serde(rename = "intangiblesToTotalAssetsTTM")]
     pub intangibles_to_total_assets_ttm: f64,
     #[serde(rename = "averageReceivablesTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub average_receivables_ttm: StatementAmount,
     #[serde(rename = "averagePayablesTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub average_payables_ttm: StatementAmount,
     #[serde(rename = "averageInventoryTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub average_inventory_ttm: StatementAmount,
     #[serde(rename = "daysOfSalesOutstandingTTM")]
     pub days_of_sales_outstanding_ttm: f64,
@@ -151,11 +167,15 @@ pub struct KeyMetricsTtm {
     #[serde(rename = "cashConversionCycleTTM")]
     pub cash_conversion_cycle_ttm: f64,
     #[serde(rename = "freeCashFlowToEquityTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub free_cash_flow_to_equity_ttm: StatementAmount,
     #[serde(rename = "freeCashFlowToFirmTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub free_cash_flow_to_firm_ttm: StatementAmount,
     #[serde(rename = "tangibleAssetValueTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub tangible_asset_value_ttm: StatementAmount,
     #[serde(rename = "netCurrentAssetValueTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_current_asset_value_ttm: StatementAmount,
 }

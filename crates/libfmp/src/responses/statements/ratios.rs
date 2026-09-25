@@ -172,6 +172,7 @@ pub struct FinancialRatiosTtm {
     #[serde(rename = "dividendYieldTTM")]
     pub dividend_yield_ttm: f64,
     #[serde(rename = "enterpriseValueTTM")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub enterprise_value_ttm: StatementAmount,
     #[serde(rename = "revenuePerShareTTM")]
     pub revenue_per_share_ttm: f64,
