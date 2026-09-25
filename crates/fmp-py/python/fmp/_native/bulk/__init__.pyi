@@ -111,42 +111,42 @@ class BulkNamespace:
         """
 
     def income_statements(
-        self, year: builtins.int, period: builtins.str
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
     ) -> builtins.list[fmp._native.bulk.income.BulkIncomeStatement]:
         r"""
         Retrieves worldwide bulk income statements for one year and fiscal period.
         """
 
     def income_statement_growth(
-        self, year: builtins.int, period: builtins.str
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
     ) -> builtins.list[fmp._native.bulk.income.BulkIncomeStatementGrowth]:
         r"""
         Retrieves worldwide bulk income-statement growth for one year and fiscal period.
         """
 
     def balance_sheet_statements(
-        self, year: builtins.int, period: builtins.str
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
     ) -> builtins.list[fmp._native.bulk.balance.BulkBalanceSheetStatement]:
         r"""
         Retrieves worldwide bulk balance sheets for one year and fiscal period.
         """
 
     def balance_sheet_statement_growth(
-        self, year: builtins.int, period: builtins.str
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
     ) -> builtins.list[fmp._native.bulk.balance.BulkBalanceSheetStatementGrowth]:
         r"""
         Retrieves worldwide bulk balance-sheet growth for one year and fiscal period.
         """
 
     def cash_flow_statements(
-        self, year: builtins.int, period: builtins.str
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
     ) -> builtins.list[fmp._native.bulk.cash_flow.BulkCashFlowStatement]:
         r"""
         Retrieves worldwide bulk cash-flow statements for one year and fiscal period.
         """
 
     def cash_flow_statement_growth(
-        self, year: builtins.int, period: builtins.str
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
     ) -> builtins.list[fmp._native.bulk.cash_flow.BulkCashFlowStatementGrowth]:
         r"""
         Retrieves worldwide bulk cash-flow growth for one year and fiscal period.

@@ -52,6 +52,7 @@ impl StatementsReportsNamespace {
         py: Python<'_>,
         symbol: &str,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<Vec<FinancialReportJson>> {
         let query = json_query(symbol, year, period)?;
@@ -72,6 +73,7 @@ impl StatementsReportsNamespace {
         py: Python<'_>,
         symbol: &str,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<BinaryPayload> {
         let query = xlsx_query(symbol, year, period)?;

@@ -29,8 +29,9 @@ fn params(endpoint: &Endpoint) -> Vec<&Arg> {
 }
 
 /// `name: &str` or `name: Option<i64>`, with `args::` prefixed onto the
-/// crate-defined input enums (`SymbolsArg`, `DateArg`, ...).
-fn param_decl(arg: &Arg) -> String {
+/// crate-defined input enums (`SymbolsArg`, `DateArg`, ...). With `stub`, a
+/// closed-vocabulary kind also carries its `typing.Literal` stub override.
+fn param_decl(arg: &Arg, stub: bool) -> String {
     let mut ty = String::new();
     let mut word = String::new();
     for c in arg.kind.input_type().chars().chain(std::iter::once(' ')) {
@@ -46,17 +47,26 @@ fn param_decl(arg: &Arg) -> String {
         ty.push(c);
     }
     let ty = ty.trim_end();
+    let literal = arg.kind.python_literal().filter(|_| stub);
+    let override_attr = literal.map_or_else(String::new, |literal| {
+        let repr = if arg.required {
+            literal.to_owned()
+        } else {
+            format!("typing.Optional[{literal}]")
+        };
+        format!("#[gen_stub(override_type(type_repr = {repr:?}, imports = (\"typing\",)))] ")
+    });
     if arg.required {
-        format!("{}: {ty}", arg.python_name())
+        format!("{override_attr}{}: {ty}", arg.python_name())
     } else {
-        format!("{}: Option<{ty}>", arg.python_name())
+        format!("{override_attr}{}: Option<{ty}>", arg.python_name())
     }
 }
 
-fn param_list(endpoint: &Endpoint) -> String {
+fn param_list(endpoint: &Endpoint, stub: bool) -> String {
     params(endpoint)
         .iter()
-        .map(|arg| param_decl(arg))
+        .map(|arg| param_decl(arg, stub))
         .collect::<Vec<_>>()
         .join(", ")
 }
@@ -108,7 +118,7 @@ pub(crate) fn render_method(out: &mut String, endpoint: &Endpoint) {
     let mut decl = String::from("&self, py: Python<'_>");
     if !args.is_empty() {
         decl.push_str(", ");
-        decl.push_str(&param_list(endpoint));
+        decl.push_str(&param_list(endpoint, true));
     }
     let _ = writeln!(out, "    fn {name}({decl}) -> PyResult<{result}> {{");
     let call = if endpoint.query_type.is_some() {
@@ -175,7 +185,7 @@ pub(crate) fn render_query_fn(out: &mut String, endpoint: &Endpoint, struct_name
     let _ = writeln!(
         out,
         "fn {name}_query({}) -> PyResult<{query}> {{",
-        param_list(endpoint)
+        param_list(endpoint, false)
     );
     for arg in params(endpoint) {
         let python = arg.python_name();

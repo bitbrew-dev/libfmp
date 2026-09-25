@@ -31,7 +31,9 @@ class StatementsGrowthNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
     ) -> builtins.list[fmp._native.statements.growth.income.IncomeStatementGrowth]:
         r"""
         Retrieves worldwide income-statement growth for one company.
@@ -42,7 +44,9 @@ class StatementsGrowthNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
     ) -> builtins.list[
         fmp._native.statements.growth.balance.BalanceSheetStatementGrowth
     ]:
@@ -55,7 +59,9 @@ class StatementsGrowthNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
     ) -> builtins.list[fmp._native.statements.growth.cash_flow.CashFlowStatementGrowth]:
         r"""
         Retrieves worldwide cash-flow-statement growth for one company.
@@ -66,7 +72,9 @@ class StatementsGrowthNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
     ) -> builtins.list[fmp._native.statements.growth.combined.FinancialStatementGrowth]:
         r"""
         Retrieves combined worldwide financial-statement growth for one company.

@@ -39,6 +39,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -66,6 +67,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -93,6 +95,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -120,6 +123,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -148,6 +152,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -176,6 +181,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -203,6 +209,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -225,6 +232,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
@@ -248,6 +256,7 @@ impl TechnicalIndicatorsNamespace {
         py: Python<'_>,
         symbol: &str,
         period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
         timeframe: &str,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,

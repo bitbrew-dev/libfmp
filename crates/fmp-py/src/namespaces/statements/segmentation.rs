@@ -36,7 +36,9 @@ impl StatementsSegmentationNamespace {
         &self,
         py: Python<'_>,
         symbol: &str,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
         period: Option<&str>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"flat\"]]", imports = ("typing",)))]
         structure: Option<&str>,
     ) -> PyResult<Vec<RevenueSegmentation>> {
         let query = revenue_product_query(symbol, period, structure)?;
@@ -56,7 +58,9 @@ impl StatementsSegmentationNamespace {
         &self,
         py: Python<'_>,
         symbol: &str,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
         period: Option<&str>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"flat\"]]", imports = ("typing",)))]
         structure: Option<&str>,
     ) -> PyResult<Vec<RevenueSegmentation>> {
         let query = revenue_geographic_query(symbol, period, structure)?;

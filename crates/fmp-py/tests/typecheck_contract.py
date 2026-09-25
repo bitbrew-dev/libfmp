@@ -1,7 +1,8 @@
 """Static-only contract exercised by pyright and mypy against the shipped stubs."""
 
 import datetime
-from typing import Any
+from types import MappingProxyType
+from typing import Any, Literal
 
 import fmp
 from fmp import BinaryPayload, FmpClient, FmpError
@@ -668,6 +669,32 @@ def check_error_contract(client: FmpClient) -> None:
         _ = (base, top_level)
 
 
+def check_closed_vocabulary_contract(client: FmpClient) -> None:
+    """Type-check the ``Literal`` spellings of closed string arguments."""
+    frequency: Literal["annual", "quarter"] = "quarter"
+    client.analyst.financial_estimates("AAPL", frequency)
+    client.statements.income.statement("AAPL", period="FY")
+    client.statements.growth.income("AAPL", period="quarter")
+    client.statements.segmentation.revenue_product("AAPL", period="annual", structure="flat")
+    client.bulk.income_statements(2026, "Q4")
+
+
+def check_model_protocol_contract(quote: QuoteShort, report: CotReport) -> None:
+    """Type-check the protocol every generated model carries."""
+    rebuilt = QuoteShort(symbol=quote.symbol, price=quote.price, change=quote.change, volume=quote.volume)
+    same: bool = rebuilt == quote
+    as_dict: dict[str, Any] = quote.to_dict()
+    names: tuple[str, ...] = QuoteShort.__match_args__
+    text: str = repr(quote)
+    match quote:
+        case QuoteShort(symbol, price):
+            matched: tuple[str, float] = (symbol, price)
+            _ = matched
+    share: int | float = report.pct_of_open_interest_all
+    _ = (same, as_dict, names, text, share)
+
+
+FmpClient(auth_mode="bearer", token="t", headers=MappingProxyType({"X-Tenant": "blue"}))
 FmpClient()
 FmpClient(
     token="proxy-token",

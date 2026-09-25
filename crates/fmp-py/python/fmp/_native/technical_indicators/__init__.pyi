@@ -316,7 +316,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -329,7 +331,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -342,7 +346,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -355,7 +361,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -368,7 +376,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -381,7 +391,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -394,7 +406,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -407,7 +421,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
@@ -420,7 +436,9 @@ class TechnicalIndicatorsNamespace:
         self,
         symbol: builtins.str,
         period_length: builtins.int,
-        timeframe: builtins.str,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,

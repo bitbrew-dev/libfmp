@@ -11,7 +11,7 @@ use libfmp::{
 };
 use pyo3::{
     prelude::*,
-    types::{PyDict, PyInt},
+    types::{PyInt, PyMapping},
 };
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
@@ -187,10 +187,12 @@ impl FmpClient {
         token: Option<String>,
         base_url: Option<String>,
         path_prefix: Option<String>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"none\", \"fmp_header\", \"fmp_query\", \"bearer\", \"custom_header\", \"custom_query\"]]", imports = ("typing",)))]
         auth_mode: Option<&str>,
         auth_name: Option<String>,
         auth_prefix: Option<String>,
-        headers: Option<&Bound<'_, PyDict>>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Mapping[builtins.str, builtins.str]]", imports = ("builtins", "typing")))]
+        headers: Option<&Bound<'_, PyMapping>>,
         timeout: Option<f64>,
         connect_timeout: Option<f64>,
         #[gen_stub(override_type(type_repr = "typing.Optional[builtins.int]", imports = ("builtins", "typing")))]
@@ -208,7 +210,8 @@ impl FmpClient {
             builder = builder.path_prefix(path_prefix);
         }
         if let Some(headers) = headers {
-            for (name, value) in headers.iter() {
+            for item in headers.items()?.iter() {
+                let (name, value): (Bound<'_, PyAny>, Bound<'_, PyAny>) = item.extract()?;
                 builder = builder.default_header(header_text(&name)?, header_text(&value)?);
             }
         }

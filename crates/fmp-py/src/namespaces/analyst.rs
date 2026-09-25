@@ -41,6 +41,7 @@ impl AnalystNamespace {
         &self,
         py: Python<'_>,
         symbol: &str,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"annual\", \"quarter\"]", imports = ("typing",)))]
         period: &str,
         page: Option<i64>,
         limit: Option<i64>,

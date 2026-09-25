@@ -546,7 +546,9 @@ class StatementsBalanceNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
     ) -> builtins.list[BalanceSheetStatement]:
         r"""
         Retrieves historical worldwide balance sheets for one company.

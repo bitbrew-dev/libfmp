@@ -35,6 +35,7 @@ impl StatementsCashFlowNamespace {
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
         period: Option<&str>,
     ) -> PyResult<Vec<CashFlowStatement>> {
         let query = statement_query(symbol, limit, period)?;

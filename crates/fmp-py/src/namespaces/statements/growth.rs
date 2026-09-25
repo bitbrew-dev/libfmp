@@ -41,6 +41,7 @@ impl StatementsGrowthNamespace {
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
         period: Option<&str>,
     ) -> PyResult<Vec<IncomeStatementGrowth>> {
         let query = income_query(symbol, limit, period)?;
@@ -61,6 +62,7 @@ impl StatementsGrowthNamespace {
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
         period: Option<&str>,
     ) -> PyResult<Vec<BalanceSheetStatementGrowth>> {
         let query = balance_sheet_query(symbol, limit, period)?;
@@ -86,6 +88,7 @@ impl StatementsGrowthNamespace {
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
         period: Option<&str>,
     ) -> PyResult<Vec<CashFlowStatementGrowth>> {
         let query = cash_flow_query(symbol, limit, period)?;
@@ -111,6 +114,7 @@ impl StatementsGrowthNamespace {
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
         period: Option<&str>,
     ) -> PyResult<Vec<FinancialStatementGrowth>> {
         let query = financial_query(symbol, limit, period)?;

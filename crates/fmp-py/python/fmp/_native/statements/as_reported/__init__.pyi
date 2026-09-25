@@ -65,7 +65,7 @@ class StatementsAsReportedNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
     ) -> builtins.list[AsReportedFinancialStatement]:
         r"""
         Retrieves income statements as reported by one company.
@@ -76,7 +76,7 @@ class StatementsAsReportedNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
     ) -> builtins.list[AsReportedFinancialStatement]:
         r"""
         Retrieves balance sheets as reported by one company.
@@ -87,7 +87,7 @@ class StatementsAsReportedNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
     ) -> builtins.list[AsReportedFinancialStatement]:
         r"""
         Retrieves cash-flow statements as reported by one company.
@@ -98,7 +98,7 @@ class StatementsAsReportedNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
     ) -> builtins.list[AsReportedFinancialStatement]:
         r"""
         Retrieves complete financial statements as reported by one company.
