@@ -68,7 +68,7 @@ fn both_exact_earnings_fixtures_preserve_only_nullable_actual_values() {
             eps_actual: None,
             eps_estimated: 1.88,
             revenue_actual: None,
-            revenue_estimated: 109_038_900_000,
+            revenue_estimated: 109_038_900_000.0,
             last_updated: Date::from_str("2026-07-30").unwrap(),
         }]
     );
@@ -77,8 +77,8 @@ fn both_exact_earnings_fixtures_preserve_only_nullable_actual_values() {
     assert_eq!(calendar[0].symbol.as_str(), "GRG.L");
     assert_eq!(calendar[0].eps_actual, Some(0.549));
     assert_eq!(calendar[0].eps_estimated, 0.501);
-    assert_eq!(calendar[0].revenue_actual, Some(1_101_500_000));
-    assert_eq!(calendar[0].revenue_estimated, 1_086_300_000);
+    assert_eq!(calendar[0].revenue_actual, Some(1_101_500_000.0));
+    assert_eq!(calendar[0].revenue_estimated, 1_086_300_000.0);
 }
 
 #[test]

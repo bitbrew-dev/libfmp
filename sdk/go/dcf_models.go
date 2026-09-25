@@ -80,7 +80,7 @@ type CustomDcfValuation struct {
 	CapitalExpenditurePercentage float64 `json:"capitalExpenditurePercentage"`
 	Price                        float64 `json:"price"`
 	Beta                         float64 `json:"beta"`
-	DilutedSharesOutstanding     uint64  `json:"dilutedSharesOutstanding"`
+	DilutedSharesOutstanding     float64 `json:"dilutedSharesOutstanding"`
 	CostOfDebt                   float64 `json:"costofDebt"`
 	TaxRate                      float64 `json:"taxRate"`
 	AfterTaxCostOfDebt           float64 `json:"afterTaxCostOfDebt"`
@@ -133,7 +133,7 @@ type customDcfValuationShadow struct {
 	CapitalExpenditurePercentage *float64 `json:"capitalExpenditurePercentage"`
 	Price                        *float64 `json:"price"`
 	Beta                         *float64 `json:"beta"`
-	DilutedSharesOutstanding     *uint64  `json:"dilutedSharesOutstanding"`
+	DilutedSharesOutstanding     *float64 `json:"dilutedSharesOutstanding"`
 	CostOfDebt                   *float64 `json:"costofDebt"`
 	TaxRate                      *float64 `json:"taxRate"`
 	AfterTaxCostOfDebt           *float64 `json:"afterTaxCostOfDebt"`
@@ -327,7 +327,7 @@ type CustomLeveredDcfValuation struct {
 	CapitalExpenditurePercentage float64 `json:"capitalExpenditurePercentage"`
 	Price                        float64 `json:"price"`
 	Beta                         float64 `json:"beta"`
-	DilutedSharesOutstanding     uint64  `json:"dilutedSharesOutstanding"`
+	DilutedSharesOutstanding     float64 `json:"dilutedSharesOutstanding"`
 	CostOfDebt                   float64 `json:"costofDebt"`
 	TaxRate                      float64 `json:"taxRate"`
 	AfterTaxCostOfDebt           float64 `json:"afterTaxCostOfDebt"`
@@ -367,7 +367,7 @@ type customLeveredDcfValuationShadow struct {
 	CapitalExpenditurePercentage *float64 `json:"capitalExpenditurePercentage"`
 	Price                        *float64 `json:"price"`
 	Beta                         *float64 `json:"beta"`
-	DilutedSharesOutstanding     *uint64  `json:"dilutedSharesOutstanding"`
+	DilutedSharesOutstanding     *float64 `json:"dilutedSharesOutstanding"`
 	CostOfDebt                   *float64 `json:"costofDebt"`
 	TaxRate                      *float64 `json:"taxRate"`
 	AfterTaxCostOfDebt           *float64 `json:"afterTaxCostOfDebt"`

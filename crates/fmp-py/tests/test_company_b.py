@@ -203,7 +203,7 @@ def test_executive_compensation_maps_to_the_governance_path(client: Any, fixture
 
 
 def test_executive_compensation_decodes_large_amounts(client: Any, fixture_server: FixtureServer) -> None:
-    """Amounts above ``2**32`` decode as exact Python integers."""
+    """Amounts above ``2**32`` decode as floats that are exact below ``2**53``."""
     fixture_server.route(
         "/governance-executive-compensation", load_fixture("company_executive_compensation_large.json")
     )

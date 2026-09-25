@@ -103,7 +103,7 @@ fn both_outer_fixtures_round_trip_exactly_into_distinct_models() {
     assert_eq!(custom[0].year.as_str(), "2030");
     assert_eq!(custom[0].symbol.as_str(), "AAPL");
     assert_eq!(custom[0].capital_expenditure, -14_907_445_037);
-    assert_eq!(custom[0].diluted_shares_outstanding, 15_004_697_000);
+    assert_eq!(custom[0].diluted_shares_outstanding, 15_004_697_000.0);
     assert_eq!(custom[0].equity_value_per_share, 147.18);
     assert_eq!(levered[0].operating_cash_flow, 153_867_620_418);
     assert_eq!(levered[0].pv_lfcf, 88_605_139_549);

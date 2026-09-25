@@ -128,7 +128,7 @@ async fn proxy_client_uses_exact_get_paths_and_required_symbol_encoding() {
 
     assert_eq!(quotes[0].name, "Apple Inc.");
     assert_eq!(short_quotes[0].volume, 28_718_014.0);
-    assert_eq!(trades[0].trade_size, 16);
+    assert_eq!(trades[0].trade_size, 16.0);
     assert_eq!(
         aftermarket_quotes[0].timestamp,
         UnixMilliseconds(1_785_430_813_000)

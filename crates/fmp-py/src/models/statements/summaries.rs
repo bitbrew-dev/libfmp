@@ -278,7 +278,7 @@ pub(crate) struct EnterpriseValue {
     #[pyo3(get)]
     pub stock_price: f64,
     #[pyo3(get)]
-    pub number_of_shares: u64,
+    pub number_of_shares: f64,
     #[pyo3(get)]
     pub market_capitalization: f64,
     #[pyo3(get)]
@@ -300,7 +300,7 @@ impl EnterpriseValue {
         symbol: String,
         date: ::chrono::NaiveDate,
         stock_price: f64,
-        number_of_shares: u64,
+        number_of_shares: f64,
         market_capitalization: f64,
         minus_cash_and_cash_equivalents: i64,
         add_total_debt: i64,

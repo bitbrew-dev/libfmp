@@ -107,7 +107,7 @@ pub(crate) struct CustomDcfValuation {
     #[pyo3(get)]
     pub beta: f64,
     #[pyo3(get)]
-    pub diluted_shares_outstanding: u64,
+    pub diluted_shares_outstanding: f64,
     #[pyo3(get)]
     pub cost_of_debt: f64,
     #[pyo3(get)]
@@ -188,7 +188,7 @@ impl CustomDcfValuation {
         capital_expenditure_percentage: f64,
         price: f64,
         beta: f64,
-        diluted_shares_outstanding: u64,
+        diluted_shares_outstanding: f64,
         cost_of_debt: f64,
         tax_rate: f64,
         after_tax_cost_of_debt: f64,
@@ -399,7 +399,7 @@ pub(crate) struct CustomLeveredDcfValuation {
     #[pyo3(get)]
     pub beta: f64,
     #[pyo3(get)]
-    pub diluted_shares_outstanding: u64,
+    pub diluted_shares_outstanding: f64,
     #[pyo3(get)]
     pub cost_of_debt: f64,
     #[pyo3(get)]
@@ -468,7 +468,7 @@ impl CustomLeveredDcfValuation {
         capital_expenditure_percentage: f64,
         price: f64,
         beta: f64,
-        diluted_shares_outstanding: u64,
+        diluted_shares_outstanding: f64,
         cost_of_debt: f64,
         tax_rate: f64,
         after_tax_cost_of_debt: f64,

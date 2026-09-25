@@ -36,7 +36,7 @@ fn typed_fields_preserve_dates_ciks_flags_prices_counts_and_signed_financials() 
     assert_eq!(latest.offering_deadline_date.to_string(), "10-31-2026");
     assert_eq!(latest.form_type.as_str(), "C/A");
     assert_eq!(latest.over_subscription_accepted, YnFlag::True);
-    assert_eq!(latest.number_of_security_offered, 100_000);
+    assert_eq!(latest.number_of_security_offered, 100_000.0);
     assert_eq!(latest.current_number_of_employees, 5);
     assert_eq!(latest.offering_price.to_string(), "0.1");
     assert_eq!(latest.net_income_most_recent_fiscal_year, -152_577);
@@ -132,11 +132,14 @@ fn exact_temporal_flag_and_numeric_wire_shapes_are_enforced() {
         assert!(serde_json::from_value::<CrowdfundingOffering>(Value::Object(candidate)).is_ok());
     }
 
-    for field in ["numberOfSecurityOffered", "currentNumberOfEmployees"] {
-        let mut negative = row.clone();
-        negative.insert(field.into(), json!(-1));
-        assert!(serde_json::from_value::<CrowdfundingOffering>(Value::Object(negative)).is_err());
-    }
+    let mut negative = row.clone();
+    negative.insert("currentNumberOfEmployees".into(), json!(-1));
+    assert!(serde_json::from_value::<CrowdfundingOffering>(Value::Object(negative)).is_err());
+
+    let mut fractional = row.clone();
+    fractional.insert("numberOfSecurityOffered".into(), json!(2_500.5));
+    let offering: CrowdfundingOffering = serde_json::from_value(Value::Object(fractional)).unwrap();
+    assert_eq!(offering.number_of_security_offered, 2_500.5);
 }
 
 #[test]

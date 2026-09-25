@@ -152,7 +152,7 @@ async fn governance_array_contracts_preserve_multiple_dynamic_large_and_empty_pa
         .await
         .unwrap();
     assert_eq!(compensation.len(), 2);
-    assert_eq!(compensation[1].total, u64::MAX);
+    assert_eq!(compensation[1].total, u64::MAX as f64);
 
     assert!(
         client

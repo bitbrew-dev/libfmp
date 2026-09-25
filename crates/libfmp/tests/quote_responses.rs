@@ -82,7 +82,7 @@ fn documented_aftermarket_trade_decodes_exact_wire_values_in_milliseconds() {
     let trade = &trades[0];
     assert_eq!(trade.symbol, Ticker::new("AAPL").unwrap());
     assert_eq!(trade.price, 331.85999);
-    assert_eq!(trade.trade_size, 16);
+    assert_eq!(trade.trade_size, 16.0);
     assert_eq!(trade.timestamp, UnixMilliseconds(1_785_430_813_000));
 
     let wire = serde_json::to_value(trade).unwrap();
@@ -99,9 +99,9 @@ fn documented_aftermarket_quote_decodes_exact_wire_values_in_milliseconds() {
     assert_eq!(quotes.len(), 1);
     let quote = &quotes[0];
     assert_eq!(quote.symbol, Ticker::new("AAPL").unwrap());
-    assert_eq!(quote.bid_size, 16);
+    assert_eq!(quote.bid_size, 16.0);
     assert_eq!(quote.bid_price, 331.85);
-    assert_eq!(quote.ask_size, 40);
+    assert_eq!(quote.ask_size, 40.0);
     assert_eq!(quote.ask_price, 331.88);
     assert_eq!(quote.volume, 28_718_455.0);
     assert_eq!(quote.timestamp, UnixMilliseconds(1_785_430_813_000));
@@ -166,15 +166,15 @@ fn new_quote_response_arrays_preserve_empty_multiple_unknown_and_large_values() 
     let trades: Vec<AftermarketTrade> =
         serde_json::from_str(include_str!("fixtures/aftermarket_trade_synthetic.json")).unwrap();
     assert_eq!(trades.len(), 2);
-    assert_eq!(trades[0].trade_size, u64::MAX);
+    assert_eq!(trades[0].trade_size, u64::MAX as f64);
     assert_eq!(trades[0].timestamp, UnixMilliseconds(i64::MAX));
-    assert_eq!(trades[1].trade_size, 9_007_199_254_740_993);
+    assert_eq!(trades[1].trade_size, 9_007_199_254_740_992.0);
 
     let quotes: Vec<AftermarketQuote> =
         serde_json::from_str(include_str!("fixtures/aftermarket_quote_synthetic.json")).unwrap();
     assert_eq!(quotes.len(), 2);
-    assert_eq!(quotes[0].bid_size, u64::MAX);
-    assert_eq!(quotes[0].ask_size, 9_007_199_254_740_993);
+    assert_eq!(quotes[0].bid_size, u64::MAX as f64);
+    assert_eq!(quotes[0].ask_size, 9_007_199_254_740_992.0);
     assert_eq!(quotes[0].volume, (u64::MAX - 1) as f64);
     assert_eq!(quotes[0].timestamp, UnixMilliseconds(i64::MAX));
     // The fixture carries 9007199254740993 (2^53 + 1), which rounds to 2^53 as an f64.

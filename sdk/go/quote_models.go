@@ -166,7 +166,7 @@ func (m *QuoteShort) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type AftermarketTrade struct {
 	Symbol    string           `json:"symbol"`
 	Price     float64          `json:"price"`
-	TradeSize uint64           `json:"tradeSize"`
+	TradeSize float64          `json:"tradeSize"`
 	Timestamp UnixMilliseconds `json:"timestamp"`
 }
 
@@ -176,7 +176,7 @@ type AftermarketTrade struct {
 type aftermarketTradeShadow struct {
 	Symbol    *string           `json:"symbol"`
 	Price     *float64          `json:"price"`
-	TradeSize *uint64           `json:"tradeSize"`
+	TradeSize *float64          `json:"tradeSize"`
 	Timestamp *UnixMilliseconds `json:"timestamp"`
 }
 
@@ -211,9 +211,9 @@ func (m *AftermarketTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // hours.
 type AftermarketQuote struct {
 	Symbol    string           `json:"symbol"`
-	BidSize   uint64           `json:"bidSize"`
+	BidSize   float64          `json:"bidSize"`
 	BidPrice  float64          `json:"bidPrice"`
-	AskSize   uint64           `json:"askSize"`
+	AskSize   float64          `json:"askSize"`
 	AskPrice  float64          `json:"askPrice"`
 	Volume    float64          `json:"volume"`
 	Timestamp UnixMilliseconds `json:"timestamp"`
@@ -224,9 +224,9 @@ type AftermarketQuote struct {
 // decoding.
 type aftermarketQuoteShadow struct {
 	Symbol    *string           `json:"symbol"`
-	BidSize   *uint64           `json:"bidSize"`
+	BidSize   *float64          `json:"bidSize"`
 	BidPrice  *float64          `json:"bidPrice"`
-	AskSize   *uint64           `json:"askSize"`
+	AskSize   *float64          `json:"askSize"`
 	AskPrice  *float64          `json:"askPrice"`
 	Volume    *float64          `json:"volume"`
 	Timestamp *UnixMilliseconds `json:"timestamp"`

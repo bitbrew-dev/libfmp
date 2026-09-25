@@ -7,7 +7,7 @@ use crate::{
     query::FiscalPeriod,
     types::{
         ApiDateTime, CalendarYear, Count, CurrencyCode, Date, MarketCapitalization, Price,
-        StatementAmount, Ticker,
+        Quantity, StatementAmount, Ticker,
     },
 };
 
@@ -64,7 +64,8 @@ pub struct EnterpriseValue {
     pub symbol: Ticker,
     pub date: Date,
     pub stock_price: Price,
-    pub number_of_shares: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub number_of_shares: Quantity,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_capitalization: MarketCapitalization,
     pub minus_cash_and_cash_equivalents: StatementAmount,

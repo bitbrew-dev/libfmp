@@ -74,13 +74,13 @@ fn documented_executive_compensation_decodes_dates_integer_year_and_amounts() {
         "Luca Maestri Former Senior Vice President, Chief Financial Officer"
     );
     assert_eq!(row.year, 2025);
-    assert_eq!(row.salary, 819_231);
-    assert_eq!(row.bonus, 0);
-    assert_eq!(row.stock_award, 13_003_031);
-    assert_eq!(row.option_award, 0);
-    assert_eq!(row.incentive_plan_compensation, 1_638_462);
-    assert_eq!(row.all_other_compensation, 22_204);
-    assert_eq!(row.total, 15_482_928);
+    assert_eq!(row.salary, 819_231.0);
+    assert_eq!(row.bonus, 0.0);
+    assert_eq!(row.stock_award, 13_003_031.0);
+    assert_eq!(row.option_award, 0.0);
+    assert_eq!(row.incentive_plan_compensation, 1_638_462.0);
+    assert_eq!(row.all_other_compensation, 22_204.0);
+    assert_eq!(row.total, 15_482_928.0);
     assert_eq!(
         row.link,
         "https://www.sec.gov/Archives/edgar/data/320193/000130817926000008/0001308179-26-000008-index.htm"
@@ -88,12 +88,12 @@ fn documented_executive_compensation_decodes_dates_integer_year_and_amounts() {
 }
 
 #[test]
-fn executive_compensation_arrays_preserve_large_u64_amounts_and_exact_casing() {
+fn executive_compensation_arrays_decode_large_amounts_and_preserve_exact_casing() {
     let rows: Vec<ExecutiveCompensation> = serde_json::from_slice(COMPENSATION_LARGE).unwrap();
     assert_eq!(rows.len(), 2);
-    assert_eq!(rows[1].salary, 5_000_000_000);
-    assert_eq!(rows[1].all_other_compensation, 10_000_000_000);
-    assert_eq!(rows[1].total, u64::MAX);
+    assert_eq!(rows[1].salary, 5_000_000_000.0);
+    assert_eq!(rows[1].all_other_compensation, 10_000_000_000.0);
+    assert_eq!(rows[1].total, u64::MAX as f64);
 
     let encoded = serde_json::to_value(&rows[0]).unwrap();
     assert_eq!(encoded["companyName"], "Apple Inc.");

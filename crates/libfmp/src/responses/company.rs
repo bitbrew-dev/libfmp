@@ -10,8 +10,8 @@ use crate::{
     codecs::{DynamicJson, NumericString},
     types::{
         ApiDateTime, Change, Cik, Count, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode,
-        Industry, Isin, MarketCapitalization, MarketValue, Percentage, Price, Sector, Ticker,
-        Volume,
+        Industry, Isin, MarketCapitalization, MarketValue, Percentage, Price, Quantity, Sector,
+        Ticker, Volume,
     },
 };
 
@@ -127,8 +127,10 @@ pub struct CompanyShareFloat {
     pub symbol: Ticker,
     pub date: ApiDateTime,
     pub free_float: Percentage,
-    pub float_shares: Count,
-    pub outstanding_shares: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub float_shares: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub outstanding_shares: Quantity,
     pub source: String,
 }
 
@@ -139,8 +141,10 @@ pub struct AllSharesFloatRecord {
     pub symbol: Ticker,
     pub date: ApiDateTime,
     pub free_float: Percentage,
-    pub float_shares: Count,
-    pub outstanding_shares: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub float_shares: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub outstanding_shares: Quantity,
 }
 
 /// One US merger or acquisition transaction and its official filing link.
@@ -173,7 +177,7 @@ pub struct CompanyExecutive {
 }
 
 /// One executive-compensation filing row for a US company.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ExecutiveCompensation {
     pub cik: Cik,
@@ -183,13 +187,20 @@ pub struct ExecutiveCompensation {
     pub accepted_date: ApiDateTime,
     pub name_and_position: String,
     pub year: i64,
-    pub salary: u64,
-    pub bonus: u64,
-    pub stock_award: u64,
-    pub option_award: u64,
-    pub incentive_plan_compensation: u64,
-    pub all_other_compensation: u64,
-    pub total: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub salary: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub bonus: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub stock_award: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub option_award: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub incentive_plan_compensation: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub all_other_compensation: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total: MarketValue,
     pub link: String,
 }
 

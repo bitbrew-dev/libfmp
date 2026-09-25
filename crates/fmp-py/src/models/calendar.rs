@@ -106,9 +106,9 @@ pub(crate) struct EarningsEvent {
     #[pyo3(get)]
     pub eps_estimated: f64,
     #[pyo3(get)]
-    pub revenue_actual: Option<u64>,
+    pub revenue_actual: Option<f64>,
     #[pyo3(get)]
-    pub revenue_estimated: u64,
+    pub revenue_estimated: f64,
     #[pyo3(get)]
     pub last_updated: ::chrono::NaiveDate,
 }
@@ -125,8 +125,8 @@ impl EarningsEvent {
         date: ::chrono::NaiveDate,
         eps_actual: Option<f64>,
         eps_estimated: f64,
-        revenue_actual: Option<u64>,
-        revenue_estimated: u64,
+        revenue_actual: Option<f64>,
+        revenue_estimated: f64,
         last_updated: ::chrono::NaiveDate,
     ) -> Self {
         Self {

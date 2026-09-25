@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     codecs::FiscalYearString,
-    types::{Count, Date, Percentage, Price, StatementAmount, Ticker},
+    types::{Date, Percentage, Price, Quantity, StatementAmount, Ticker},
 };
 
 /// One standard or levered discounted-cash-flow valuation.
@@ -43,7 +43,8 @@ pub struct CustomDcfValuation {
     pub capital_expenditure_percentage: Percentage,
     pub price: Price,
     pub beta: f64,
-    pub diluted_shares_outstanding: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub diluted_shares_outstanding: Quantity,
     #[serde(rename = "costofDebt")]
     pub cost_of_debt: Percentage,
     pub tax_rate: Percentage,
@@ -83,7 +84,8 @@ pub struct CustomLeveredDcfValuation {
     pub capital_expenditure_percentage: Percentage,
     pub price: Price,
     pub beta: f64,
-    pub diluted_shares_outstanding: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub diluted_shares_outstanding: Quantity,
     #[serde(rename = "costofDebt")]
     pub cost_of_debt: Percentage,
     pub tax_rate: Percentage,

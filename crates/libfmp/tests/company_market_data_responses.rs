@@ -39,8 +39,8 @@ fn documented_company_share_float_decodes_source_and_exact_wire_types() {
     assert_eq!(row.symbol.as_str(), "AAPL");
     assert_eq!(row.date.to_string(), "2026-07-30 15:48:00");
     assert!((row.free_float - 99.83000000136171).abs() < 1e-12);
-    assert_eq!(row.float_shares, 14_662_387_495);
-    assert_eq!(row.outstanding_shares, 14_687_356_000);
+    assert_eq!(row.float_shares, 14_662_387_495.0);
+    assert_eq!(row.outstanding_shares, 14_687_356_000.0);
     assert_eq!(
         row.source,
         "https://www.sec.gov/Archives/edgar/data/320193/000032019326000013/aapl-20260328.htm"
@@ -66,8 +66,8 @@ fn documented_all_share_float_is_a_separate_source_free_shape() {
     assert_eq!(row.symbol.as_str(), "000001.SZ");
     assert_eq!(row.date.to_string(), "2026-07-29 14:23:30");
     assert_eq!(row.free_float, 41.40900000201062);
-    assert_eq!(row.float_shares, 8_035_796_667);
-    assert_eq!(row.outstanding_shares, 19_405_918_198);
+    assert_eq!(row.float_shares, 8_035_796_667.0);
+    assert_eq!(row.outstanding_shares, 19_405_918_198.0);
 
     let wire = serde_json::to_value(row).unwrap();
     assert!(wire.get("source").is_none());
@@ -80,7 +80,7 @@ fn documented_all_share_float_is_a_separate_source_free_shape() {
 }
 
 #[test]
-fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_u64_values() {
+fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_large_values() {
     assert!(
         serde_json::from_str::<Vec<MarketCapitalizationRecord>>("[]")
             .unwrap()
@@ -116,8 +116,11 @@ fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_u64_values() {
     )
     .unwrap();
     assert_eq!(company_floats.len(), 2);
-    assert_eq!(company_floats[0].float_shares, u64::MAX);
-    assert_eq!(company_floats[0].outstanding_shares, 9_007_199_254_740_993);
+    assert_eq!(company_floats[0].float_shares, u64::MAX as f64);
+    assert_eq!(
+        company_floats[0].outstanding_shares,
+        9_007_199_254_740_992.0
+    );
 
     let all_floats: Vec<AllSharesFloatRecord> = serde_json::from_str(
         r#"[
@@ -127,6 +130,6 @@ fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_u64_values() {
     )
     .unwrap();
     assert_eq!(all_floats.len(), 2);
-    assert_eq!(all_floats[0].float_shares, u64::MAX);
-    assert_eq!(all_floats[0].outstanding_shares, 9_007_199_254_740_993);
+    assert_eq!(all_floats[0].float_shares, u64::MAX as f64);
+    assert_eq!(all_floats[0].outstanding_shares, 9_007_199_254_740_992.0);
 }
