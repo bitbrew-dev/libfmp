@@ -99,7 +99,7 @@ func TestNewsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	}
 	searchStock, err := client.News.SearchStockNews(ctx,
 		NewSearchStockNewsQuery(symbols).WithFrom(from).WithTo(to).WithPage(0).WithLimit(20))
-	if err != nil || len(searchStock) != 1 || searchStock[0].Url != "https://www.youtube.com/watch?v=ZKMD80U8dRM" {
+	if err != nil || len(searchStock) != 1 || searchStock[0].URL != "https://www.youtube.com/watch?v=ZKMD80U8dRM" {
 		t.Fatalf("SearchStockNews = %+v, %v", searchStock, err)
 	}
 	if searchStock, err = client.News.SearchStockNews(ctx, NewSearchStockNewsQuery(symbols).WithTo(to)); err != nil ||

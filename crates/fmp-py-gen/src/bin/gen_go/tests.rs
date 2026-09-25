@@ -93,7 +93,7 @@ fn committed_domains_regenerate_to_the_committed_files() {
         "{table}"
     );
     assert!(
-        table.contains("\t\"Analyst.PriceTargetConsensus\": {Geography: GeographyUsOnly},\n"),
+        table.contains("\t\"Analyst.PriceTargetConsensus\": {Geography: GeographyUSOnly},\n"),
         "{table}"
     );
     if committed_set.len() == registry.domains.len() {
@@ -187,7 +187,7 @@ fn nested_namespaces_embed_children_by_registry_path() {
         "{models}"
     );
     assert!(
-        models.contains("LinkJson string `json:\"linkJson\"`"),
+        models.contains("LinkJSON string `json:\"linkJson\"`"),
         "{models}"
     );
     assert!(
@@ -526,7 +526,7 @@ fn codec_fields_map_to_the_shadow_shapes_of_the_adr() {
     );
     assert_eq!(
         shape(8),
-        ("Filed", "filed", "UsDate", "*UsDate", Codec::Plain, true)
+        ("Filed", "filed", "USDate", "*USDate", Codec::Plain, true)
     );
     assert_eq!(
         shape(9),

@@ -58,7 +58,7 @@ func TestEndpointMetadataLabelsAreShortAndStable(t *testing.T) {
 		want  string
 	}{
 		{GeographyWorldwide, "worldwide"},
-		{GeographyUsOnly, "us-only"},
+		{GeographyUSOnly, "us-only"},
 		{GeographicAvailability(9), "GeographicAvailability(9)"},
 		{AccessRequirement{Kind: AccessStandard}, "standard"},
 		{AccessRequirement{Kind: AccessNamedAddOn, AddOn: "TipRanks"}, "add-on TipRanks"},
@@ -134,7 +134,7 @@ func TestEndpointMetadataForPinsValuesFromTheRustConsts(t *testing.T) {
 		want   EndpointMetadata
 	}{
 		{"Quote.Full", EndpointMetadata{Geography: GeographyWorldwide, Realtime: metadataNasdaqRealtime()}},
-		{"Quote.AftermarketTrade", EndpointMetadata{Geography: GeographyUsOnly, Realtime: metadataNasdaqRealtime()}},
+		{"Quote.AftermarketTrade", EndpointMetadata{Geography: GeographyUSOnly, Realtime: metadataNasdaqRealtime()}},
 		{"Tipranks.SearchRatings", EndpointMetadata{
 			Access: AccessRequirement{Kind: AccessNamedAddOn, AddOn: "TipRanks"},
 			ConditionalPlan: &ConditionalPlanRequirement{

@@ -4,9 +4,10 @@
 Every registry entry must be reachable as a Go method on its namespace struct
 (ADR 0030, "Verification gates"). The expected set comes from the registry
 TOML under crates/fmp-py-gen/registry/, the actual set from the method
-declarations in sdk/go/*.go. The Go names follow the mechanical casing rule
-of the gen_go emitter (crates/fmp-py-gen/src/bin/gen_go/emit.rs), which this
-script re-implements so that it needs neither Rust nor Go tooling.
+declarations in sdk/go/*.go. The Go names follow the casing rule of the
+gen_go emitter (crates/fmp-py-gen/src/bin/gen_go/emit.rs: UpperCamelCase plus
+the ADR 0032 initialism table), which this script re-implements so that it
+needs neither Rust nor Go tooling.
 
 This is API surface coverage, not execution coverage. A method counts when a
 declaration of the form
@@ -48,14 +49,58 @@ METHOD_RE = re.compile(
 )
 
 
+# The gen_go initialism table (emit.rs `WORDS`, ADR 0032), keyed by the
+# lowercase word.
+WORDS = {
+    "api": "API",
+    "ciks": "CIKs",
+    "fmp": "FMP",
+    "http": "HTTP",
+    "ids": "IDs",
+    "json": "JSON",
+    "url": "URL",
+    "urls": "URLs",
+    "us": "US",
+}
+
+
+def camel_words(camel: str) -> list[str]:
+    """Split CamelCase the way gen_go's `camel_words` does."""
+    words: list[str] = []
+    start = 0
+    for i in range(1, len(camel)):
+        prev, cur = camel[i - 1], camel[i]
+        nxt = camel[i + 1] if i + 1 < len(camel) else ""
+        upper = cur.isupper() and (
+            prev.islower() or prev.isdigit() or (prev.isupper() and nxt.islower())
+        )
+        digit = False
+        if cur.isdigit() and prev.isalpha():
+            end = i
+            while end < len(camel) and camel[end].isdigit():
+                end += 1
+            digit = end < len(camel) and camel[end].islower()
+        if upper or digit:
+            words.append(camel[start:i])
+            start = i
+    if start < len(camel):
+        words.append(camel[start:])
+    return words
+
+
+def go_name(camel: str) -> str:
+    """Recase a CamelCase name through the initialism table."""
+    return "".join(WORDS.get(word.lower(), word) for word in camel_words(camel))
+
+
 def exported(snake: str) -> str:
     """UpperCamelCase a registry name the way gen_go's `exported` does.
 
     `batch_quote_short` -> `BatchQuoteShort`, `price_avg_50` -> `PriceAvg50`,
-    `etfs` -> `Etfs`. Mechanical casing only: no initialism table.
+    `etfs` -> `ETFs`, `latest_8k` -> `Latest8K`.
     """
     base = snake.removeprefix("r#")
-    return "".join(word[0].upper() + word[1:] for word in base.split("_") if word)
+    return go_name("".join(word[0].upper() + word[1:] for word in base.split("_") if word))
 
 
 def struct_name(path: list[str]) -> str:

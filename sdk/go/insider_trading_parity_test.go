@@ -46,7 +46,7 @@ func TestDocumentedInsiderTradeRowsDecodeExactValues(t *testing.T) {
 		SecuritiesTransacted:     1_608,
 		Price:                    0,
 		SecurityName:             "Common Stock",
-		Url:                      "https://www.sec.gov/Archives/edgar/data/36146/000003614626000087/0000036146-26-000087-index.htm",
+		URL:                      "https://www.sec.gov/Archives/edgar/data/36146/000003614626000087/0000036146-26-000087-index.htm",
 	}
 	if latest[0] != want {
 		t.Fatalf("latest_insider_trades[0] = %+v, want %+v", latest[0], want)
@@ -108,7 +108,7 @@ func TestDocumentedInsiderReferenceRowsDecodeExactValues(t *testing.T) {
 		CitizenshipOrPlaceOfOrganization: "PENNSYLVANIA",
 		SoleVotingPower:                  "0", SharedVotingPower: "0", SoleDispositivePower: "0", SharedDispositivePower: "0",
 		AmountBeneficiallyOwned: "1099168953", PercentOfClass: "7.48", TypeOfReportingPerson: "IA",
-		Url: "https://www.sec.gov/Archives/edgar/data/320193/000210011926000139/xslSCHEDULE_13G_X02/primary_doc.xml",
+		URL: "https://www.sec.gov/Archives/edgar/data/320193/000210011926000139/xslSCHEDULE_13G_X02/primary_doc.xml",
 	}
 	if len(ownership) != 1 || ownership[0] != wantOwnership {
 		t.Fatalf("beneficial_ownership_acquisitions = %+v, want %+v", ownership, wantOwnership)

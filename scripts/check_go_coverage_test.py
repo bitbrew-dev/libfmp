@@ -67,9 +67,8 @@ func (n *QuoteNamespace) helper(ctx context.Context) error {
 
 
 class CasingTest(unittest.TestCase):
-    def test_exported_is_mechanical(self) -> None:
+    def test_exported_follows_the_initialism_table(self) -> None:
         cases = {
-            "etfs": "Etfs",
             "batch_quote_short": "BatchQuoteShort",
             "price_avg_50": "PriceAvg50",
             "r#type": "Type",

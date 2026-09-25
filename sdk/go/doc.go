@@ -112,7 +112,7 @@
 //     A member serde skips when None (skip_serializing_if = "Option::is_none")
 //     carries the omitzero tag option, so a nil member is omitted on
 //     re-encoding exactly as the Rust model omits it. A model whose Rust
-//     decoder keeps every unclaimed member in one map (FinancialReportJson)
+//     decoder keeps every unclaimed member in one map (FinancialReportJSON)
 //     holds them in a jsontext.Value tagged json:",embed": always a JSON
 //     object, {} when nothing is left over, re-emitted in place.
 //   - Nested namespaces: a domain with [[namespace]] sub-groups nests one

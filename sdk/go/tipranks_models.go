@@ -25,7 +25,7 @@ type TipRanksRatingSearchResult struct {
 	ArticleSite         string         `json:"articleSite"`
 	PriceTarget         jsontext.Value `json:"priceTarget"`
 	PriceTargetCurrency string         `json:"priceTargetCurrency"`
-	Url                 string         `json:"url"`
+	URL                 string         `json:"url"`
 }
 
 // tipRanksRatingSearchResultShadow mirrors TipRanksRatingSearchResult with a
@@ -44,7 +44,7 @@ type tipRanksRatingSearchResultShadow struct {
 	ArticleSite         *string         `json:"articleSite"`
 	PriceTarget         *jsontext.Value `json:"priceTarget"`
 	PriceTargetCurrency *string         `json:"priceTargetCurrency"`
-	Url                 *string         `json:"url"`
+	URL                 *string         `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -80,7 +80,7 @@ func (m *TipRanksRatingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("TipRanksRatingSearchResult", "priceTarget")
 	case shadow.PriceTargetCurrency == nil:
 		return missingMemberError("TipRanksRatingSearchResult", "priceTargetCurrency")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("TipRanksRatingSearchResult", "url")
 	}
 	if shadow.PriceTarget.Kind() != '0' {
@@ -99,7 +99,7 @@ func (m *TipRanksRatingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		ArticleSite:         *shadow.ArticleSite,
 		PriceTarget:         *shadow.PriceTarget,
 		PriceTargetCurrency: *shadow.PriceTargetCurrency,
-		Url:                 *shadow.Url,
+		URL:                 *shadow.URL,
 	}
 	return nil
 }
@@ -119,7 +119,7 @@ type TipRanksPointInTimeRating struct {
 	ArticleSite            string          `json:"articleSite"`
 	PriceTarget            *jsontext.Value `json:"priceTarget"`
 	PriceTargetCurrency    *string         `json:"priceTargetCurrency"`
-	Url                    string          `json:"url"`
+	URL                    string          `json:"url"`
 	LastAnalystAction      string          `json:"lastAnalystAction"`
 	StockReturn            *jsontext.Value `json:"stockReturn"`
 	BeatTarget             *bool           `json:"beatTarget"`
@@ -141,7 +141,7 @@ type tipRanksPointInTimeRatingShadow struct {
 	ArticleSite            *string         `json:"articleSite"`
 	PriceTarget            jsontext.Value  `json:"priceTarget"`
 	PriceTargetCurrency    jsontext.Value  `json:"priceTargetCurrency"`
-	Url                    *string         `json:"url"`
+	URL                    *string         `json:"url"`
 	LastAnalystAction      *string         `json:"lastAnalystAction"`
 	StockReturn            jsontext.Value  `json:"stockReturn"`
 	BeatTarget             jsontext.Value  `json:"beatTarget"`
@@ -180,7 +180,7 @@ func (m *TipRanksPointInTimeRating) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		return missingMemberError("TipRanksPointInTimeRating", "priceTarget")
 	case len(shadow.PriceTargetCurrency) == 0:
 		return missingMemberError("TipRanksPointInTimeRating", "priceTargetCurrency")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("TipRanksPointInTimeRating", "url")
 	case shadow.LastAnalystAction == nil:
 		return missingMemberError("TipRanksPointInTimeRating", "lastAnalystAction")
@@ -235,7 +235,7 @@ func (m *TipRanksPointInTimeRating) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		ArticleSite:            *shadow.ArticleSite,
 		PriceTarget:            priceTarget,
 		PriceTargetCurrency:    priceTargetCurrency,
-		Url:                    *shadow.Url,
+		URL:                    *shadow.URL,
 		LastAnalystAction:      *shadow.LastAnalystAction,
 		StockReturn:            stockReturn,
 		BeatTarget:             beatTarget,

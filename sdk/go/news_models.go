@@ -84,7 +84,7 @@ type NewsArticle struct {
 	Image         string   `json:"image"`
 	Site          string   `json:"site"`
 	Text          string   `json:"text"`
-	Url           string   `json:"url"`
+	URL           string   `json:"url"`
 }
 
 // newsArticleShadow mirrors NewsArticle with a pointer or raw value for every
@@ -97,7 +97,7 @@ type newsArticleShadow struct {
 	Image         *string        `json:"image"`
 	Site          *string        `json:"site"`
 	Text          *string        `json:"text"`
-	Url           *string        `json:"url"`
+	URL           *string        `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -123,7 +123,7 @@ func (m *NewsArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("NewsArticle", "site")
 	case shadow.Text == nil:
 		return missingMemberError("NewsArticle", "text")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("NewsArticle", "url")
 	}
 	var symbol *string
@@ -142,7 +142,7 @@ func (m *NewsArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Image:         *shadow.Image,
 		Site:          *shadow.Site,
 		Text:          *shadow.Text,
-		Url:           *shadow.Url,
+		URL:           *shadow.URL,
 	}
 	return nil
 }

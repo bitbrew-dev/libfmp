@@ -10,7 +10,7 @@ use fmp_py_gen::registry::wire::{
 };
 use fmp_py_gen::registry::{Domain, Endpoint, Registry};
 
-use crate::emit::{exported, local_ident, lower_first, lower_lead};
+use crate::emit::{exported, go_name, local_ident, lower_first, lower_lead};
 use crate::types::arg_kind_go;
 
 /// One constructor argument or `With` setter of a query type.
@@ -38,8 +38,10 @@ pub(crate) enum ParamPlan {
 /// A Go query type, or a fixed parameter list when it has no arguments.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) struct QueryPlan {
-    /// The Rust query type name, reused as the Go type name.
+    /// The Go type name: the Rust query type name recased by `go_name`.
     pub(crate) name: String,
+    /// The Rust query type name, for docs.
+    pub(crate) rust_name: String,
     pub(crate) args: Vec<ArgPlan>,
     pub(crate) params: Vec<ParamPlan>,
 }
@@ -278,7 +280,7 @@ impl Context<'_> {
                         model.name
                     ));
                 }
-                ResponseKind::Rows(model.name.clone())
+                ResponseKind::Rows(go_name(&model.name))
             }
             (model, contract) => {
                 return Err(format!(
@@ -293,7 +295,7 @@ impl Context<'_> {
                 if plan.is_constant() {
                     (None, Some(plan.var_name()))
                 } else {
-                    (Some(name.clone()), None)
+                    (Some(plan.name.clone()), None)
                 }
             }
         };
@@ -426,7 +428,8 @@ fn plan_query(name: &str, endpoint: &Endpoint, wire: &WireEndpoint) -> Result<Qu
         });
     }
     Ok(QueryPlan {
-        name: name.to_string(),
+        name: go_name(name),
+        rust_name: name.to_string(),
         args,
         params,
     })

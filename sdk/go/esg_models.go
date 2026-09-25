@@ -22,7 +22,7 @@ type EsgDisclosure struct {
 	SocialScore        float64 `json:"socialScore"`
 	GovernanceScore    float64 `json:"governanceScore"`
 	EsgScore           float64 `json:"ESGScore"`
-	Url                string  `json:"url"`
+	URL                string  `json:"url"`
 }
 
 // esgDisclosureShadow mirrors EsgDisclosure with a pointer or raw value for
@@ -39,7 +39,7 @@ type esgDisclosureShadow struct {
 	SocialScore        *float64 `json:"socialScore"`
 	GovernanceScore    *float64 `json:"governanceScore"`
 	EsgScore           *float64 `json:"ESGScore"`
-	Url                *string  `json:"url"`
+	URL                *string  `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -71,7 +71,7 @@ func (m *EsgDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("EsgDisclosure", "governanceScore")
 	case shadow.EsgScore == nil:
 		return missingMemberError("EsgDisclosure", "ESGScore")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("EsgDisclosure", "url")
 	}
 	*m = EsgDisclosure{
@@ -85,7 +85,7 @@ func (m *EsgDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		SocialScore:        *shadow.SocialScore,
 		GovernanceScore:    *shadow.GovernanceScore,
 		EsgScore:           *shadow.EsgScore,
-		Url:                *shadow.Url,
+		URL:                *shadow.URL,
 	}
 	return nil
 }

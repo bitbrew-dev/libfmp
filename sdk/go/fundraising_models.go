@@ -104,7 +104,7 @@ func (m *RegulationDOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decode
 type CrowdfundingOffering struct {
 	Cik                                       string         `json:"cik"`
 	CompanyName                               string         `json:"companyName"`
-	Date                                      UsDate         `json:"date"`
+	Date                                      USDate         `json:"date"`
 	FilingDate                                DateTime       `json:"filingDate"`
 	AcceptedDate                              DateTime       `json:"acceptedDate"`
 	FormType                                  string         `json:"formType"`
@@ -130,7 +130,7 @@ type CrowdfundingOffering struct {
 	OverSubscriptionAccepted                  string         `json:"overSubscriptionAccepted"`
 	OverSubscriptionAllocationType            string         `json:"overSubscriptionAllocationType"`
 	MaximumOfferingAmount                     float64        `json:"maximumOfferingAmount"`
-	OfferingDeadlineDate                      UsDate         `json:"offeringDeadlineDate"`
+	OfferingDeadlineDate                      USDate         `json:"offeringDeadlineDate"`
 	CurrentNumberOfEmployees                  uint64         `json:"currentNumberOfEmployees"`
 	TotalAssetMostRecentFiscalYear            float64        `json:"totalAssetMostRecentFiscalYear"`
 	TotalAssetPriorFiscalYear                 float64        `json:"totalAssetPriorFiscalYear"`
@@ -158,7 +158,7 @@ type CrowdfundingOffering struct {
 type crowdfundingOfferingShadow struct {
 	Cik                                       *string         `json:"cik"`
 	CompanyName                               *string         `json:"companyName"`
-	Date                                      *UsDate         `json:"date"`
+	Date                                      *USDate         `json:"date"`
 	FilingDate                                *DateTime       `json:"filingDate"`
 	AcceptedDate                              *DateTime       `json:"acceptedDate"`
 	FormType                                  *string         `json:"formType"`
@@ -184,7 +184,7 @@ type crowdfundingOfferingShadow struct {
 	OverSubscriptionAccepted                  *string         `json:"overSubscriptionAccepted"`
 	OverSubscriptionAllocationType            *string         `json:"overSubscriptionAllocationType"`
 	MaximumOfferingAmount                     *float64        `json:"maximumOfferingAmount"`
-	OfferingDeadlineDate                      *UsDate         `json:"offeringDeadlineDate"`
+	OfferingDeadlineDate                      *USDate         `json:"offeringDeadlineDate"`
 	CurrentNumberOfEmployees                  *uint64         `json:"currentNumberOfEmployees"`
 	TotalAssetMostRecentFiscalYear            *float64        `json:"totalAssetMostRecentFiscalYear"`
 	TotalAssetPriorFiscalYear                 *float64        `json:"totalAssetPriorFiscalYear"`

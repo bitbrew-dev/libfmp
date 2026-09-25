@@ -391,45 +391,45 @@ const usDateExpected = "MM-DD-YYYY date"
 
 var usDateSeparators = []separator{{2, '-'}, {5, '-'}}
 
-// UsDate is a civil calendar date carried on the wire as exactly "MM-DD-YYYY",
-// the US spelling some fundraising endpoints use. It mirrors UsDate in the
+// USDate is a civil calendar date carried on the wire as exactly "MM-DD-YYYY",
+// the US spelling some fundraising endpoints use. It mirrors USDate in the
 // Rust crate: the same date as Date, a different wire text. The zero value is
 // not a valid date and cannot be encoded; IsZero reports it.
-type UsDate struct {
+type USDate struct {
 	date Date
 }
 
-// NewUsDate validates a proleptic Gregorian date with a four-digit year.
-func NewUsDate(year int, month time.Month, day int) (UsDate, error) {
+// NewUSDate validates a proleptic Gregorian date with a four-digit year.
+func NewUSDate(year int, month time.Month, day int) (USDate, error) {
 	if !validCivilDate(year, month, day) {
-		return UsDate{}, &InvalidTemporalValueError{Expected: usDateExpected}
+		return USDate{}, &InvalidTemporalValueError{Expected: usDateExpected}
 	}
-	return UsDate{date: Date{year: year, month: month, day: day}}, nil
+	return USDate{date: Date{year: year, month: month, day: day}}, nil
 }
 
-// ParseUsDate accepts exactly the "MM-DD-YYYY" shape the Rust crate accepts
+// ParseUSDate accepts exactly the "MM-DD-YYYY" shape the Rust crate accepts
 // and rejects every other spelling, including "YYYY-MM-DD".
-func ParseUsDate(value string) (UsDate, error) {
+func ParseUSDate(value string) (USDate, error) {
 	if !hasExactASCIIShape(value, 10, usDateSeparators) {
-		return UsDate{}, &InvalidTemporalValueError{Expected: usDateExpected}
+		return USDate{}, &InvalidTemporalValueError{Expected: usDateExpected}
 	}
-	return NewUsDate(asciiDigits(value[6:10]), time.Month(asciiDigits(value[0:2])), asciiDigits(value[3:5]))
+	return NewUSDate(asciiDigits(value[6:10]), time.Month(asciiDigits(value[0:2])), asciiDigits(value[3:5]))
 }
 
 // Date returns the same calendar date as a Date, which is the type every
 // other date member uses.
-func (d UsDate) Date() Date { return d.date }
+func (d USDate) Date() Date { return d.date }
 
 // IsZero reports whether d is the zero value, which is not a valid date.
-func (d UsDate) IsZero() bool { return d == UsDate{} }
+func (d USDate) IsZero() bool { return d == USDate{} }
 
 // String returns the exact wire text "MM-DD-YYYY".
-func (d UsDate) String() string {
+func (d USDate) String() string {
 	return fmt.Sprintf("%02d-%02d-%04d", int(d.date.month), d.date.day, d.date.year)
 }
 
 // MarshalText encodes the wire text; the zero value is rejected.
-func (d UsDate) MarshalText() ([]byte, error) {
+func (d USDate) MarshalText() ([]byte, error) {
 	if d.IsZero() {
 		return nil, ErrZeroTemporalValue
 	}
@@ -437,8 +437,8 @@ func (d UsDate) MarshalText() ([]byte, error) {
 }
 
 // UnmarshalText parses the exact wire text.
-func (d *UsDate) UnmarshalText(text []byte) error {
-	parsed, err := ParseUsDate(string(text))
+func (d *USDate) UnmarshalText(text []byte) error {
+	parsed, err := ParseUSDate(string(text))
 	if err != nil {
 		return err
 	}
@@ -447,13 +447,13 @@ func (d *UsDate) UnmarshalText(text []byte) error {
 }
 
 // MarshalJSONTo writes the date as a JSON string; the zero value is rejected.
-func (d UsDate) MarshalJSONTo(enc *jsontext.Encoder) error {
+func (d USDate) MarshalJSONTo(enc *jsontext.Encoder) error {
 	return encodeTemporalString(enc, d.String(), d.IsZero())
 }
 
 // UnmarshalJSONFrom reads one JSON string. Any other JSON kind, including
 // null, is rejected, matching the Rust decoder for a required field.
-func (d *UsDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (d *USDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	value, err := decodeTemporalString(dec, usDateExpected)
 	if err != nil {
 		return err

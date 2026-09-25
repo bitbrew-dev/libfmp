@@ -159,7 +159,7 @@ type SecCompanyProfile struct {
 	FiscalYearEnd           string          `json:"fiscalYearEnd"`
 	IpoDate                 Date            `json:"ipoDate"`
 	Employees               string          `json:"employees"`
-	SecFilingsUrl           string          `json:"secFilingsUrl"`
+	SecFilingsURL           string          `json:"secFilingsUrl"`
 	TaxIdentificationNumber string          `json:"taxIdentificationNumber"`
 	FiftyTwoWeekRange       string          `json:"fiftyTwoWeekRange"`
 	IsActive                bool            `json:"isActive"`
@@ -200,7 +200,7 @@ type secCompanyProfileShadow struct {
 	FiscalYearEnd           *string        `json:"fiscalYearEnd"`
 	IpoDate                 *Date          `json:"ipoDate"`
 	Employees               *string        `json:"employees"`
-	SecFilingsUrl           *string        `json:"secFilingsUrl"`
+	SecFilingsURL           *string        `json:"secFilingsUrl"`
 	TaxIdentificationNumber *string        `json:"taxIdentificationNumber"`
 	FiftyTwoWeekRange       *string        `json:"fiftyTwoWeekRange"`
 	IsActive                *bool          `json:"isActive"`
@@ -269,7 +269,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("SecCompanyProfile", "ipoDate")
 	case shadow.Employees == nil:
 		return missingMemberError("SecCompanyProfile", "employees")
-	case shadow.SecFilingsUrl == nil:
+	case shadow.SecFilingsURL == nil:
 		return missingMemberError("SecCompanyProfile", "secFilingsUrl")
 	case shadow.TaxIdentificationNumber == nil:
 		return missingMemberError("SecCompanyProfile", "taxIdentificationNumber")
@@ -326,7 +326,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		FiscalYearEnd:           *shadow.FiscalYearEnd,
 		IpoDate:                 *shadow.IpoDate,
 		Employees:               *shadow.Employees,
-		SecFilingsUrl:           *shadow.SecFilingsUrl,
+		SecFilingsURL:           *shadow.SecFilingsURL,
 		TaxIdentificationNumber: *shadow.TaxIdentificationNumber,
 		FiftyTwoWeekRange:       *shadow.FiftyTwoWeekRange,
 		IsActive:                *shadow.IsActive,

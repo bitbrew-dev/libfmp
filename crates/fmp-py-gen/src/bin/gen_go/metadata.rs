@@ -103,7 +103,7 @@ fn literal(metadata: &WireMetadata) -> String {
         GeographicAvailability::Worldwide => {
             fields.push("Geography: GeographyWorldwide".to_string())
         }
-        GeographicAvailability::UsOnly => fields.push("Geography: GeographyUsOnly".to_string()),
+        GeographicAvailability::UsOnly => fields.push("Geography: GeographyUSOnly".to_string()),
         GeographicAvailability::Unspecified => {}
     }
     match &metadata.access {
@@ -212,7 +212,7 @@ mod tests {
         };
         assert_eq!(
             literal(&bare_realtime),
-            "{Geography: GeographyUsOnly, Access: AccessRequirement{Kind: AccessStandard}, \
+            "{Geography: GeographyUSOnly, Access: AccessRequirement{Kind: AccessStandard}, \
              Realtime: &RealtimeAccess{}}"
         );
     }

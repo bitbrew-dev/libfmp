@@ -88,8 +88,8 @@ func TestAllNineProviderNewsFixturesShareTheSameEightFieldRow(t *testing.T) {
 		if row.Publisher != tc.publisher {
 			t.Fatalf("%s: publisher = %q, want %q", tc.fixture, row.Publisher, tc.publisher)
 		}
-		if !strings.HasPrefix(row.Image, "https://") || !strings.HasPrefix(row.Url, "https://") {
-			t.Fatalf("%s: image %q or url %q is not https", tc.fixture, row.Image, row.Url)
+		if !strings.HasPrefix(row.Image, "https://") || !strings.HasPrefix(row.URL, "https://") {
+			t.Fatalf("%s: image %q or url %q is not https", tc.fixture, row.Image, row.URL)
 		}
 		if got := memberSet(t, row); len(got) != 8 {
 			t.Fatalf("%s: re-encoded members = %d, want 8", tc.fixture, len(got))
@@ -113,12 +113,12 @@ func TestNewsUnicodeHtmlAndUrlStringsAreNotNormalizedOrParsed(t *testing.T) {
 		t.Fatalf("search_press_releases text = %q", searchPress[0].Text)
 	}
 	stock := assertFixtureParity[NewsArticle](t, "latest_stock_news.json")
-	if stock[0].Url != "https://www.zacks.com/stock/news/2964897/coca-cola-s-momentum-builds-after-strong-q2-earnings-etfs-to-consider?cid=CS-STOCKNEWSAPI-FT-etf_news_and_commentary-2964897" {
-		t.Fatalf("latest_stock_news url = %q", stock[0].Url)
+	if stock[0].URL != "https://www.zacks.com/stock/news/2964897/coca-cola-s-momentum-builds-after-strong-q2-earnings-etfs-to-consider?cid=CS-STOCKNEWSAPI-FT-etf_news_and_commentary-2964897" {
+		t.Fatalf("latest_stock_news url = %q", stock[0].URL)
 	}
 	searched := assertFixtureParity[NewsArticle](t, "search_stock_news.json")
-	if searched[0].Url != "https://www.youtube.com/watch?v=ZKMD80U8dRM" {
-		t.Fatalf("search_stock_news url = %q", searched[0].Url)
+	if searched[0].URL != "https://www.youtube.com/watch?v=ZKMD80U8dRM" {
+		t.Fatalf("search_stock_news url = %q", searched[0].URL)
 	}
 }
 

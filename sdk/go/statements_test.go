@@ -127,8 +127,8 @@ func TestStatementsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	statementsCheck(t, "AsReported.Full", asFull, err, func(r AsReportedFinancialStatement) bool { return r.Data.Kind() == '{' })
 	dates, err := s.Reports.Dates(ctx, NewFinancialReportsDatesQuery(statementsTicker))
 	statementsCheck(t, "Reports.Dates", dates, err, func(r FinancialReportDate) bool { return r.FiscalYear == 2026 })
-	reports, err := s.Reports.Json(ctx, NewFinancialReportsJsonQuery(statementsTicker, 2022, FiscalPeriodQ3))
-	statementsCheck(t, "Reports.Json", reports, err, func(r FinancialReportJson) bool { return r.Year == "2022" })
+	reports, err := s.Reports.JSON(ctx, NewFinancialReportsJSONQuery(statementsTicker, 2022, FiscalPeriodQ3))
+	statementsCheck(t, "Reports.JSON", reports, err, func(r FinancialReportJSON) bool { return r.Year == "2022" })
 	xlsx, err := s.Reports.Xlsx(ctx, NewFinancialReportsXlsxQuery(statementsTicker, 2022, FiscalPeriodFullYear))
 	if err != nil || string(xlsx.Data) != statementsXlsxBytes || xlsx.ContentType != statementsXlsxType ||
 		xlsx.ContentDisposition != statementsDispositon || xlsx.MediaType() != statementsXlsxType {
@@ -172,7 +172,7 @@ func TestStatementsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	if !errors.Is(err, ErrUnknownWireValue) || typed.Message != "period: "+ErrUnknownWireValue.Error()+", expected one of Q1, Q2, Q3, Q4, FY, annual, quarter" {
 		t.Fatalf("unknown statement period: error = %v", err)
 	}
-	_, err = client.Statements.Reports.Json(ctx, NewFinancialReportsJsonQuery("AAPL", 2022, "annual"))
+	_, err = client.Statements.Reports.JSON(ctx, NewFinancialReportsJSONQuery("AAPL", 2022, "annual"))
 	typed = assertQuoteError(t, err, CategoryValidation, 0, "")
 	if !errors.Is(err, ErrUnknownWireValue) || typed.Message != "period: "+ErrUnknownWireValue.Error()+", expected one of Q1, Q2, Q3, Q4, FY" {
 		t.Fatalf("frequency as fiscal period: error = %v", err)

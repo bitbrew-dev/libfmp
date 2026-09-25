@@ -30,7 +30,7 @@ func TestDocumentedEsgDisclosureDecodesExactValuesAndKeepsAcronymKey(t *testing.
 		disclosure.Symbol != "AAPL" || disclosure.Cik != "0000320193" || disclosure.CompanyName != "Apple Inc." ||
 		disclosure.FormType != "8-K" || disclosure.EnvironmentalScore != 66.29 || disclosure.SocialScore != 45.21 ||
 		disclosure.GovernanceScore != 58.87 || disclosure.EsgScore != 56.79 ||
-		disclosure.Url != "https://www.sec.gov/Archives/edgar/data/320193/000032019326000011/0000320193-26-000011-index.htm" {
+		disclosure.URL != "https://www.sec.gov/Archives/edgar/data/320193/000032019326000011/0000320193-26-000011-index.htm" {
 		t.Fatalf("esg_disclosures = %+v", disclosure)
 	}
 	members := memberSet(t, disclosure)

@@ -27,7 +27,7 @@ type InsiderTrade struct {
 	SecuritiesTransacted     float64 `json:"securitiesTransacted"`
 	Price                    float64 `json:"price"`
 	SecurityName             string  `json:"securityName"`
-	Url                      string  `json:"url"`
+	URL                      string  `json:"url"`
 }
 
 // insiderTradeShadow mirrors InsiderTrade with a pointer or raw value for
@@ -49,7 +49,7 @@ type insiderTradeShadow struct {
 	SecuritiesTransacted     *float64 `json:"securitiesTransacted"`
 	Price                    *float64 `json:"price"`
 	SecurityName             *string  `json:"securityName"`
-	Url                      *string  `json:"url"`
+	URL                      *string  `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -91,7 +91,7 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("InsiderTrade", "price")
 	case shadow.SecurityName == nil:
 		return missingMemberError("InsiderTrade", "securityName")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("InsiderTrade", "url")
 	}
 	*m = InsiderTrade{
@@ -110,7 +110,7 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		SecuritiesTransacted:     *shadow.SecuritiesTransacted,
 		Price:                    *shadow.Price,
 		SecurityName:             *shadow.SecurityName,
-		Url:                      *shadow.Url,
+		URL:                      *shadow.URL,
 	}
 	return nil
 }
@@ -288,7 +288,7 @@ type BeneficialOwnershipAcquisition struct {
 	AmountBeneficiallyOwned          string `json:"amountBeneficiallyOwned"`
 	PercentOfClass                   string `json:"percentOfClass"`
 	TypeOfReportingPerson            string `json:"typeOfReportingPerson"`
-	Url                              string `json:"url"`
+	URL                              string `json:"url"`
 }
 
 // beneficialOwnershipAcquisitionShadow mirrors BeneficialOwnershipAcquisition
@@ -309,7 +309,7 @@ type beneficialOwnershipAcquisitionShadow struct {
 	AmountBeneficiallyOwned          *string `json:"amountBeneficiallyOwned"`
 	PercentOfClass                   *string `json:"percentOfClass"`
 	TypeOfReportingPerson            *string `json:"typeOfReportingPerson"`
-	Url                              *string `json:"url"`
+	URL                              *string `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -349,7 +349,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 		return missingMemberError("BeneficialOwnershipAcquisition", "percentOfClass")
 	case shadow.TypeOfReportingPerson == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "typeOfReportingPerson")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "url")
 	}
 	*m = BeneficialOwnershipAcquisition{
@@ -367,7 +367,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 		AmountBeneficiallyOwned:          *shadow.AmountBeneficiallyOwned,
 		PercentOfClass:                   *shadow.PercentOfClass,
 		TypeOfReportingPerson:            *shadow.TypeOfReportingPerson,
-		Url:                              *shadow.Url,
+		URL:                              *shadow.URL,
 	}
 	return nil
 }

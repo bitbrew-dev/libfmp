@@ -3384,7 +3384,7 @@ type FinancialReportDate struct {
 	Symbol     string `json:"symbol"`
 	FiscalYear uint32 `json:"fiscalYear"`
 	Period     string `json:"period"`
-	LinkJson   string `json:"linkJson"`
+	LinkJSON   string `json:"linkJson"`
 	LinkXlsx   string `json:"linkXlsx"`
 }
 
@@ -3395,7 +3395,7 @@ type financialReportDateShadow struct {
 	Symbol     *string `json:"symbol"`
 	FiscalYear *uint32 `json:"fiscalYear"`
 	Period     *string `json:"period"`
-	LinkJson   *string `json:"linkJson"`
+	LinkJSON   *string `json:"linkJson"`
 	LinkXlsx   *string `json:"linkXlsx"`
 }
 
@@ -3414,7 +3414,7 @@ func (m *FinancialReportDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FinancialReportDate", "fiscalYear")
 	case shadow.Period == nil:
 		return missingMemberError("FinancialReportDate", "period")
-	case shadow.LinkJson == nil:
+	case shadow.LinkJSON == nil:
 		return missingMemberError("FinancialReportDate", "linkJson")
 	case shadow.LinkXlsx == nil:
 		return missingMemberError("FinancialReportDate", "linkXlsx")
@@ -3423,25 +3423,25 @@ func (m *FinancialReportDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Symbol:     *shadow.Symbol,
 		FiscalYear: *shadow.FiscalYear,
 		Period:     *shadow.Period,
-		LinkJson:   *shadow.LinkJson,
+		LinkJSON:   *shadow.LinkJSON,
 		LinkXlsx:   *shadow.LinkXlsx,
 	}
 	return nil
 }
 
-// FinancialReportJson is one dynamic financial report with strict identifying
+// FinancialReportJSON is one dynamic financial report with strict identifying
 // headers.
-type FinancialReportJson struct {
+type FinancialReportJSON struct {
 	Symbol   string         `json:"symbol"`
 	Period   string         `json:"period"`
 	Year     string         `json:"year"`
 	Sections jsontext.Value `json:",embed"`
 }
 
-// financialReportJsonShadow mirrors FinancialReportJson with a pointer or raw
+// financialReportJSONShadow mirrors FinancialReportJSON with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
-type financialReportJsonShadow struct {
+type financialReportJSONShadow struct {
 	Symbol   *string        `json:"symbol"`
 	Period   *string        `json:"period"`
 	Year     *string        `json:"year"`
@@ -3452,23 +3452,23 @@ type financialReportJsonShadow struct {
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Every member no named field claims is kept in
 // Sections.
-func (m *FinancialReportJson) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow financialReportJsonShadow
+func (m *FinancialReportJSON) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow financialReportJSONShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("FinancialReportJson", "symbol")
+		return missingMemberError("FinancialReportJSON", "symbol")
 	case shadow.Period == nil:
-		return missingMemberError("FinancialReportJson", "period")
+		return missingMemberError("FinancialReportJSON", "period")
 	case shadow.Year == nil:
-		return missingMemberError("FinancialReportJson", "year")
+		return missingMemberError("FinancialReportJSON", "year")
 	}
 	if len(shadow.Sections) == 0 {
 		shadow.Sections = jsontext.Value("{}")
 	}
-	*m = FinancialReportJson{
+	*m = FinancialReportJSON{
 		Symbol:   *shadow.Symbol,
 		Period:   *shadow.Period,
 		Year:     *shadow.Year,
