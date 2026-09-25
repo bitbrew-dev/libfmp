@@ -35,8 +35,8 @@ broader fiscal-period vocabulary is not accepted. The documented maximum of
 constructors therefore preserve zero and their full shared scalar domains.
 
 The 15 forecast currency fields use signed `StatementAmount` values, avoiding
-both unsigned rejection of future negative estimates and floating-point loss
-for the documented large integers. EPS values remain raw `f64`, while analyst
+unsigned rejection of future negative estimates. `StatementAmount` became
+`f64` in #341 (ADR 0031), so values above `2^53` round to the nearest `f64`. EPS values remain raw `f64`, while analyst
 counts use `Count` (`u64`). No currency unit or scale is inferred.
 
 Rating snapshot and history rows are distinct because only history contains a
