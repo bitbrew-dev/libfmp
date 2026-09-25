@@ -85,7 +85,7 @@ class Quote:
     @property
     def year_low(self) -> builtins.float: ...
     @property
-    def market_cap(self) -> typing.Optional[builtins.int]: ...
+    def market_cap(self) -> typing.Optional[builtins.float]: ...
     @property
     def price_avg_50(self) -> builtins.float: ...
     @property
@@ -110,7 +110,7 @@ class Quote:
         day_high: builtins.float,
         year_high: builtins.float,
         year_low: builtins.float,
-        market_cap: typing.Optional[builtins.int],
+        market_cap: typing.Optional[builtins.float],
         price_avg_50: builtins.float,
         price_avg_200: builtins.float,
         exchange: builtins.str,

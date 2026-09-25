@@ -717,7 +717,8 @@ pub mod empty_date {
 /// Re-encoding writes a finite integral value back as a JSON integer (so a
 /// documented row round-trips byte-for-byte), any other finite value as a
 /// JSON float, and NaN or an infinity as `null`. Apply [`serialize`] with
-/// `serialize_with`; deserialization is serde's default `f64` path.
+/// `serialize_with` on a bare alias field and [`serialize_option`] on an
+/// `Option` of one; deserialization is serde's default `f64` path.
 pub(crate) mod integral_f64 {
     use super::*;
 
@@ -734,6 +735,16 @@ pub(crate) mod integral_f64 {
             }
         }
         serializer.serialize_f64(*value)
+    }
+
+    pub(crate) fn serialize_option<S>(value: &Option<f64>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match value {
+            Some(value) => serialize(value, serializer),
+            None => serializer.serialize_none(),
+        }
     }
 }
 
@@ -804,5 +815,25 @@ mod tests {
         assert_eq!(beyond_u64["volume"].as_f64(), Some(u64::MAX as f64));
         assert!(serde_json::from_str::<Row>(r#"{"volume":"1"}"#).is_err());
         assert!(serde_json::from_str::<Row>(r#"{"volume":null}"#).is_err());
+    }
+
+    #[test]
+    fn integral_f64_option_writes_null_for_none_and_integers_for_integral_values() {
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Row {
+            #[serde(serialize_with = "super::integral_f64::serialize_option")]
+            market_cap: Option<f64>,
+        }
+        let encoded =
+            |value: Option<f64>| serde_json::to_string(&Row { market_cap: value }).unwrap();
+
+        assert_eq!(encoded(None), r#"{"market_cap":null}"#);
+        assert_eq!(encoded(Some(1e9)), r#"{"market_cap":1000000000}"#);
+        assert_eq!(encoded(Some(1.5)), r#"{"market_cap":1.5}"#);
+        assert_eq!(encoded(Some(f64::NAN)), r#"{"market_cap":null}"#);
+        let exponent: Row = serde_json::from_str(r#"{"market_cap":3.1e12}"#).unwrap();
+        assert_eq!(exponent.market_cap, Some(3.1e12));
+        let null: Row = serde_json::from_str(r#"{"market_cap":null}"#).unwrap();
+        assert_eq!(null.market_cap, None);
     }
 }

@@ -21,6 +21,7 @@ use crate::{
 pub struct CompanyProfile {
     pub symbol: Ticker,
     pub price: Price,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     pub beta: MarketValue,
     pub last_dividend: MarketValue,
@@ -77,6 +78,7 @@ pub struct StockPeer {
     pub company_name: String,
     pub price: Price,
     #[serde(rename = "mktCap")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
 }
 
@@ -107,11 +109,12 @@ pub struct EmployeeCount {
 }
 
 /// One current or historical worldwide market-capitalization observation.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct MarketCapitalizationRecord {
     pub symbol: Ticker,
     pub date: Date,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
 }
 

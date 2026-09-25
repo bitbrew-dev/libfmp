@@ -4,7 +4,7 @@ use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::{DynamicJson, IsoTimestamp, empty_or_null_date},
-    types::{Cik, Count, Date, ExchangeCode, MarketValue, Percentage, Price, Ticker},
+    types::{Cik, Date, ExchangeCode, MarketValue, Percentage, Price, SplitTerm, Ticker},
 };
 
 fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
@@ -97,12 +97,14 @@ pub struct IpoProspectus {
 }
 
 /// One company or market-wide stock-split event.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StockSplitEvent {
     pub symbol: Ticker,
     pub date: Date,
-    pub numerator: Count,
-    pub denominator: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub numerator: SplitTerm,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub denominator: SplitTerm,
     pub split_type: String,
 }

@@ -24,7 +24,7 @@ class EnterpriseValue:
     @property
     def number_of_shares(self) -> builtins.int: ...
     @property
-    def market_capitalization(self) -> builtins.int: ...
+    def market_capitalization(self) -> builtins.float: ...
     @property
     def minus_cash_and_cash_equivalents(self) -> builtins.int: ...
     @property
@@ -37,7 +37,7 @@ class EnterpriseValue:
         date: datetime.date,
         stock_price: builtins.float,
         number_of_shares: builtins.int,
-        market_capitalization: builtins.int,
+        market_capitalization: builtins.float,
         minus_cash_and_cash_equivalents: builtins.int,
         add_total_debt: builtins.int,
         enterprise_value: builtins.int,
@@ -64,7 +64,7 @@ class FinancialScore:
     @property
     def ebit(self) -> builtins.int: ...
     @property
-    def market_cap(self) -> builtins.int: ...
+    def market_cap(self) -> builtins.float: ...
     @property
     def total_liabilities(self) -> builtins.int: ...
     @property
@@ -79,7 +79,7 @@ class FinancialScore:
         total_assets: builtins.int,
         retained_earnings: builtins.int,
         ebit: builtins.int,
-        market_cap: builtins.int,
+        market_cap: builtins.float,
         total_liabilities: builtins.int,
         revenue: builtins.int,
     ) -> FinancialScore: ...

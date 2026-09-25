@@ -167,20 +167,20 @@ func (m *CikSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // CusipSearchResult is a security returned by CUSIP search.
 type CusipSearchResult struct {
-	Symbol      string `json:"symbol"`
-	CompanyName string `json:"companyName"`
-	Cusip       string `json:"cusip"`
-	MarketCap   uint64 `json:"marketCap"`
+	Symbol      string  `json:"symbol"`
+	CompanyName string  `json:"companyName"`
+	Cusip       string  `json:"cusip"`
+	MarketCap   float64 `json:"marketCap"`
 }
 
 // cusipSearchResultShadow mirrors CusipSearchResult with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type cusipSearchResultShadow struct {
-	Symbol      *string `json:"symbol"`
-	CompanyName *string `json:"companyName"`
-	Cusip       *string `json:"cusip"`
-	MarketCap   *uint64 `json:"marketCap"`
+	Symbol      *string  `json:"symbol"`
+	CompanyName *string  `json:"companyName"`
+	Cusip       *string  `json:"cusip"`
+	MarketCap   *float64 `json:"marketCap"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -212,20 +212,20 @@ func (m *CusipSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // IsinSearchResult is a security returned by ISIN search.
 type IsinSearchResult struct {
-	Symbol    string `json:"symbol"`
-	Name      string `json:"name"`
-	Isin      string `json:"isin"`
-	MarketCap uint64 `json:"marketCap"`
+	Symbol    string  `json:"symbol"`
+	Name      string  `json:"name"`
+	Isin      string  `json:"isin"`
+	MarketCap float64 `json:"marketCap"`
 }
 
 // isinSearchResultShadow mirrors IsinSearchResult with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type isinSearchResultShadow struct {
-	Symbol    *string `json:"symbol"`
-	Name      *string `json:"name"`
-	Isin      *string `json:"isin"`
-	MarketCap *uint64 `json:"marketCap"`
+	Symbol    *string  `json:"symbol"`
+	Name      *string  `json:"name"`
+	Isin      *string  `json:"isin"`
+	MarketCap *float64 `json:"marketCap"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -262,7 +262,7 @@ type ExchangeVariant struct {
 	Price             float64 `json:"price"`
 	Beta              float64 `json:"beta"`
 	VolAvg            float64 `json:"volAvg"`
-	MarketCap         uint64  `json:"mktCap"`
+	MarketCap         float64 `json:"mktCap"`
 	LastDiv           float64 `json:"lastDiv"`
 	Range             string  `json:"range"`
 	Changes           float64 `json:"changes"`
@@ -304,7 +304,7 @@ type exchangeVariantShadow struct {
 	Price             *float64 `json:"price"`
 	Beta              *float64 `json:"beta"`
 	VolAvg            *float64 `json:"volAvg"`
-	MarketCap         *uint64  `json:"mktCap"`
+	MarketCap         *float64 `json:"mktCap"`
 	LastDiv           *float64 `json:"lastDiv"`
 	Range             *string  `json:"range"`
 	Changes           *float64 `json:"changes"`

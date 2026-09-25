@@ -407,22 +407,22 @@ func (m *IpoProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // StockSplitEvent is one company or market-wide stock-split event.
 type StockSplitEvent struct {
-	Symbol      string `json:"symbol"`
-	Date        Date   `json:"date"`
-	Numerator   uint64 `json:"numerator"`
-	Denominator uint64 `json:"denominator"`
-	SplitType   string `json:"splitType"`
+	Symbol      string  `json:"symbol"`
+	Date        Date    `json:"date"`
+	Numerator   float64 `json:"numerator"`
+	Denominator float64 `json:"denominator"`
+	SplitType   string  `json:"splitType"`
 }
 
 // stockSplitEventShadow mirrors StockSplitEvent with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type stockSplitEventShadow struct {
-	Symbol      *string `json:"symbol"`
-	Date        *Date   `json:"date"`
-	Numerator   *uint64 `json:"numerator"`
-	Denominator *uint64 `json:"denominator"`
-	SplitType   *string `json:"splitType"`
+	Symbol      *string  `json:"symbol"`
+	Date        *Date    `json:"date"`
+	Numerator   *float64 `json:"numerator"`
+	Denominator *float64 `json:"denominator"`
+	SplitType   *string  `json:"splitType"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode

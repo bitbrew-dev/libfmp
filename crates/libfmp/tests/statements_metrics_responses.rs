@@ -25,7 +25,7 @@ fn documented_key_metrics_decodes_all_47_exact_fields() {
             fiscal_year: FiscalYearString::new("2025").unwrap(),
             period: FiscalPeriod::FullYear,
             reported_currency: CurrencyCode::new("USD").unwrap(),
-            market_cap: 3_818_743_810_000,
+            market_cap: 3_818_743_810_000.0,
             enterprise_value: 3_895_186_810_000,
             ev_to_sales: 9.359807406268247,
             ev_to_operating_cash_flow: 34.94005139843203,
@@ -81,7 +81,7 @@ fn documented_key_metrics_ttm_decodes_all_43_exact_fields() {
         rows,
         [KeyMetricsTtm {
             symbol: Ticker::new("AAPL").unwrap(),
-            market_cap: 4_874_072_686_740,
+            market_cap: 4_874_072_686_740.0,
             enterprise_value_ttm: 4_922_455_686_740,
             ev_to_sales_ttm: 10.903849634593149,
             ev_to_operating_cash_flow_ttm: 35.10473168789491,

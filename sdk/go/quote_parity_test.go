@@ -76,7 +76,7 @@ func TestDocumentedFullQuoteDecodesExactWireValues(t *testing.T) {
 		t.Fatalf("quote = %+v, want %+v", quote, want)
 	}
 	if *quote.MarketCap != 4_874_072_686_740 {
-		t.Fatalf("marketCap = %d", *quote.MarketCap)
+		t.Fatalf("marketCap = %v", *quote.MarketCap)
 	}
 	if got := quote.Timestamp.Time().Unix(); got != 1_785_430_812 {
 		t.Fatalf("timestamp.Time().Unix() = %d", got)

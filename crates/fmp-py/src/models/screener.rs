@@ -14,7 +14,7 @@ pub(crate) struct CompanyScreenerEntry {
     #[pyo3(get)]
     pub company_name: String,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
     #[pyo3(get)]
     pub sector: String,
     #[pyo3(get)]
@@ -51,7 +51,7 @@ impl CompanyScreenerEntry {
     fn new(
         symbol: String,
         company_name: String,
-        market_cap: u64,
+        market_cap: f64,
         sector: String,
         industry: String,
         beta: f64,

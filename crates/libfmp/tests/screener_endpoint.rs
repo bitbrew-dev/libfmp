@@ -168,7 +168,7 @@ async fn client_preserves_empty_multiple_unknown_and_large_number_arrays() {
 
     assert!(empty.is_empty());
     assert_eq!(multiple.len(), 2);
-    assert_eq!(multiple[0].market_cap, 9_007_199_254_740_993);
+    assert_eq!(multiple[0].market_cap, 9_007_199_254_740_992.0);
     assert_eq!(multiple[0].volume, u64::MAX as f64);
     assert_eq!(unknown.len(), 1);
 }

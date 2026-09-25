@@ -108,7 +108,7 @@ async fn custom_proxy_client_executes_all_four_paths_with_exact_required_queries
             .await
             .unwrap()[0]
             .market_cap,
-        4_040_168_831_718
+        4_040_168_831_718.0
     );
 
     let requests = executor.requests();
@@ -148,7 +148,7 @@ async fn profile_client_preserves_empty_multiple_and_unknown_field_arrays() {
 
     assert!(empty.is_empty());
     assert_eq!(multiple.len(), 2);
-    assert_eq!(multiple[0].market_cap, 9_007_199_254_740_993);
+    assert_eq!(multiple[0].market_cap, 9_007_199_254_740_992.0);
     assert_eq!(multiple[0].volume, u64::MAX as f64);
     assert_eq!(unknown.len(), 1);
     assert_eq!(unknown[0].cik.as_str(), "0000320193");

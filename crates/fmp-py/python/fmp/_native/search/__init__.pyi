@@ -50,13 +50,13 @@ class CusipSearchResult:
     @property
     def cusip(self) -> builtins.str: ...
     @property
-    def market_cap(self) -> builtins.int: ...
+    def market_cap(self) -> builtins.float: ...
     def __new__(
         cls,
         symbol: builtins.str,
         company_name: builtins.str,
         cusip: builtins.str,
-        market_cap: builtins.int,
+        market_cap: builtins.float,
     ) -> CusipSearchResult: ...
     def __getnewargs__(self) -> tuple: ...
 
@@ -72,7 +72,7 @@ class ExchangeVariant:
     @property
     def vol_avg(self) -> builtins.float: ...
     @property
-    def market_cap(self) -> builtins.int: ...
+    def market_cap(self) -> builtins.float: ...
     @property
     def last_div(self) -> builtins.float: ...
     @property
@@ -141,7 +141,7 @@ class ExchangeVariant:
         price: builtins.float,
         beta: builtins.float,
         vol_avg: builtins.float,
-        market_cap: builtins.int,
+        market_cap: builtins.float,
         last_div: builtins.float,
         range: builtins.str,
         changes: builtins.float,
@@ -186,13 +186,13 @@ class IsinSearchResult:
     @property
     def isin(self) -> builtins.str: ...
     @property
-    def market_cap(self) -> builtins.int: ...
+    def market_cap(self) -> builtins.float: ...
     def __new__(
         cls,
         symbol: builtins.str,
         name: builtins.str,
         isin: builtins.str,
-        market_cap: builtins.int,
+        market_cap: builtins.float,
     ) -> IsinSearchResult: ...
     def __getnewargs__(self) -> tuple: ...
 

@@ -44,22 +44,24 @@ pub struct CikSearchResult {
 }
 
 /// A security returned by CUSIP search.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct CusipSearchResult {
     pub symbol: Ticker,
     pub company_name: String,
     pub cusip: Cusip,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
 }
 
 /// A security returned by ISIN search.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct IsinSearchResult {
     pub symbol: Ticker,
     pub name: String,
     pub isin: Isin,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
 }
 
@@ -73,6 +75,7 @@ pub struct ExchangeVariant {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub vol_avg: Volume,
     #[serde(rename = "mktCap")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     pub last_div: MarketValue,
     pub range: String,

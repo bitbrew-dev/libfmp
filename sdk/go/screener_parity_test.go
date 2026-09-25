@@ -65,7 +65,8 @@ func TestDocumentedCompanyScreenerEntryDecodesExactValues(t *testing.T) {
 
 // Exact values copied from crates/libfmp/tests/screener_responses.rs
 // (screener_arrays_preserve_empty_multiple_unknown_and_large_integer_values):
-// the u64 members keep every bit above 2^53 and up to u64::MAX.
+// marketCap and volume are float64, so 2^53+1 rounds to 2^53 and u64::MAX
+// rounds to 2^64.
 func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T) {
 	t.Parallel()
 	empty := assertFixtureParity[CompanyScreenerEntry](t, "company_screener_empty.json")
@@ -78,12 +79,12 @@ func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T
 		t.Fatalf("company_screener_multiple = %+v, want two rows", multiple)
 	}
 	first := CompanyScreenerEntry{
-		Symbol: "BIG", CompanyName: "Beyond Float Precision Corp.", MarketCap: 9_007_199_254_740_993,
+		Symbol: "BIG", CompanyName: "Beyond Float Precision Corp.", MarketCap: 9_007_199_254_740_992,
 		Sector: "Future Sector", Industry: "Future Industry", Beta: 0, Price: 0, LastAnnualDividend: 0,
 		Volume: math.MaxUint64, Exchange: "Future Exchange", ExchangeShortName: "NEXT", Country: "ZZ",
 		IsEtf: false, IsFund: false, IsActivelyTrading: false,
 	}
-	if multiple[0] != first || multiple[0].MarketCap <= 1<<53 {
+	if multiple[0] != first || multiple[0].MarketCap < 1<<53 {
 		t.Fatalf("company_screener_multiple[0] = %+v, want %+v", multiple[0], first)
 	}
 	second := CompanyScreenerEntry{

@@ -34,6 +34,7 @@ pub struct FinancialScore {
     pub total_assets: StatementAmount,
     pub retained_earnings: StatementAmount,
     pub ebit: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     pub total_liabilities: StatementAmount,
     pub revenue: StatementAmount,
@@ -64,6 +65,7 @@ pub struct EnterpriseValue {
     pub date: Date,
     pub stock_price: Price,
     pub number_of_shares: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_capitalization: MarketCapitalization,
     pub minus_cash_and_cash_equivalents: StatementAmount,
     pub add_total_debt: StatementAmount,

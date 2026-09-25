@@ -14,7 +14,7 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub price: f64,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
     #[pyo3(get)]
     pub beta: f64,
     #[pyo3(get)]
@@ -93,7 +93,7 @@ impl CompanyProfile {
     fn new(
         symbol: String,
         price: f64,
-        market_cap: u64,
+        market_cap: f64,
         beta: f64,
         last_dividend: f64,
         range: String,
@@ -319,7 +319,7 @@ pub(crate) struct StockPeer {
     #[pyo3(get)]
     pub price: f64,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
 }
 
 #[gen_stub_pymethods]
@@ -329,7 +329,7 @@ impl StockPeer {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (symbol, company_name, price, market_cap))]
-    fn new(symbol: String, company_name: String, price: f64, market_cap: u64) -> Self {
+    fn new(symbol: String, company_name: String, price: f64, market_cap: f64) -> Self {
         Self {
             symbol,
             company_name,
@@ -522,7 +522,7 @@ pub(crate) struct MarketCapitalizationRecord {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
 }
 
 #[gen_stub_pymethods]
@@ -532,7 +532,7 @@ impl MarketCapitalizationRecord {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (symbol, date, market_cap))]
-    fn new(symbol: String, date: ::chrono::NaiveDate, market_cap: u64) -> Self {
+    fn new(symbol: String, date: ::chrono::NaiveDate, market_cap: f64) -> Self {
         Self {
             symbol,
             date,

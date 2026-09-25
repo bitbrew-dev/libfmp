@@ -175,7 +175,7 @@ async fn direct_header_and_query_auth_use_the_same_typed_contracts() {
                 .key_metrics_ttm(Ticker::new("AAPL").unwrap())
                 .await
                 .unwrap();
-            assert_eq!(rows[0].market_cap, 4_874_072_686_740);
+            assert_eq!(rows[0].market_cap, 4_874_072_686_740.0);
         }
 
         let requests = executor.requests();

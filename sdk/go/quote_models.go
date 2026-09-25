@@ -22,7 +22,7 @@ type Quote struct {
 	DayHigh          float64     `json:"dayHigh"`
 	YearHigh         float64     `json:"yearHigh"`
 	YearLow          float64     `json:"yearLow"`
-	MarketCap        *uint64     `json:"marketCap"`
+	MarketCap        *float64    `json:"marketCap"`
 	PriceAvg50       float64     `json:"priceAvg50"`
 	PriceAvg200      float64     `json:"priceAvg200"`
 	Exchange         string      `json:"exchange"`
@@ -44,7 +44,7 @@ type quoteShadow struct {
 	DayHigh          *float64     `json:"dayHigh"`
 	YearHigh         *float64     `json:"yearHigh"`
 	YearLow          *float64     `json:"yearLow"`
-	MarketCap        *uint64      `json:"marketCap"`
+	MarketCap        *float64     `json:"marketCap"`
 	PriceAvg50       *float64     `json:"priceAvg50"`
 	PriceAvg200      *float64     `json:"priceAvg200"`
 	Exchange         *string      `json:"exchange"`

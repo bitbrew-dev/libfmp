@@ -15,7 +15,7 @@ import (
 type CompanyProfile struct {
 	Symbol            string  `json:"symbol"`
 	Price             float64 `json:"price"`
-	MarketCap         uint64  `json:"marketCap"`
+	MarketCap         float64 `json:"marketCap"`
 	Beta              float64 `json:"beta"`
 	LastDividend      float64 `json:"lastDividend"`
 	Range             string  `json:"range"`
@@ -57,7 +57,7 @@ type CompanyProfile struct {
 type companyProfileShadow struct {
 	Symbol            *string  `json:"symbol"`
 	Price             *float64 `json:"price"`
-	MarketCap         *uint64  `json:"marketCap"`
+	MarketCap         *float64 `json:"marketCap"`
 	Beta              *float64 `json:"beta"`
 	LastDividend      *float64 `json:"lastDividend"`
 	Range             *string  `json:"range"`
@@ -265,7 +265,7 @@ type StockPeer struct {
 	Symbol      string  `json:"symbol"`
 	CompanyName string  `json:"companyName"`
 	Price       float64 `json:"price"`
-	MarketCap   uint64  `json:"mktCap"`
+	MarketCap   float64 `json:"mktCap"`
 }
 
 // stockPeerShadow mirrors StockPeer with a pointer or raw value for every
@@ -274,7 +274,7 @@ type stockPeerShadow struct {
 	Symbol      *string  `json:"symbol"`
 	CompanyName *string  `json:"companyName"`
 	Price       *float64 `json:"price"`
-	MarketCap   *uint64  `json:"mktCap"`
+	MarketCap   *float64 `json:"mktCap"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -427,18 +427,18 @@ func (m *EmployeeCount) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // MarketCapitalizationRecord is one current or historical worldwide
 // market-capitalization observation.
 type MarketCapitalizationRecord struct {
-	Symbol    string `json:"symbol"`
-	Date      Date   `json:"date"`
-	MarketCap uint64 `json:"marketCap"`
+	Symbol    string  `json:"symbol"`
+	Date      Date    `json:"date"`
+	MarketCap float64 `json:"marketCap"`
 }
 
 // marketCapitalizationRecordShadow mirrors MarketCapitalizationRecord with a
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type marketCapitalizationRecordShadow struct {
-	Symbol    *string `json:"symbol"`
-	Date      *Date   `json:"date"`
-	MarketCap *uint64 `json:"marketCap"`
+	Symbol    *string  `json:"symbol"`
+	Date      *Date    `json:"date"`
+	MarketCap *float64 `json:"marketCap"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode

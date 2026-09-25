@@ -125,7 +125,7 @@ func TestDocumentedExchangeVariantDecodesExactValues(t *testing.T) {
 		t.Fatalf("search_exchange_variants[0] = %+v, want %+v", row, want)
 	}
 	if !strings.HasPrefix(row.Description, "Apple Inc. is a global") || row.MarketCap <= math.MaxUint32 {
-		t.Fatalf("description = %q, marketCap = %d", row.Description, row.MarketCap)
+		t.Fatalf("description = %q, marketCap = %v", row.Description, row.MarketCap)
 	}
 	encoded, err := json.Marshal(row)
 	if err != nil {

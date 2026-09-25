@@ -214,7 +214,7 @@ pub(crate) struct CusipSearchResult {
     #[pyo3(get)]
     pub cusip: String,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
 }
 
 #[gen_stub_pymethods]
@@ -224,7 +224,7 @@ impl CusipSearchResult {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (symbol, company_name, cusip, market_cap))]
-    fn new(symbol: String, company_name: String, cusip: String, market_cap: u64) -> Self {
+    fn new(symbol: String, company_name: String, cusip: String, market_cap: f64) -> Self {
         Self {
             symbol,
             company_name,
@@ -267,7 +267,7 @@ pub(crate) struct IsinSearchResult {
     #[pyo3(get)]
     pub isin: String,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
 }
 
 #[gen_stub_pymethods]
@@ -277,7 +277,7 @@ impl IsinSearchResult {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (symbol, name, isin, market_cap))]
-    fn new(symbol: String, name: String, isin: String, market_cap: u64) -> Self {
+    fn new(symbol: String, name: String, isin: String, market_cap: f64) -> Self {
         Self {
             symbol,
             name,
@@ -322,7 +322,7 @@ pub(crate) struct ExchangeVariant {
     #[pyo3(get)]
     pub vol_avg: f64,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
     #[pyo3(get)]
     pub last_div: f64,
     #[pyo3(get)]
@@ -399,7 +399,7 @@ impl ExchangeVariant {
         price: f64,
         beta: f64,
         vol_avg: f64,
-        market_cap: u64,
+        market_cap: f64,
         last_div: f64,
         range: String,
         changes: f64,

@@ -148,9 +148,9 @@ async fn custom_proxy_preserves_exact_query_order_auth_headers_and_bare_arrays()
     assert_eq!(dividend_calendar_rows.len(), 1);
     assert_eq!(dividend_calendar_rows[0].symbol.as_str(), "5871.TW");
     assert_eq!(split_rows.len(), 1);
-    assert_eq!(split_rows[0].numerator, 4);
+    assert_eq!(split_rows[0].numerator, 4.0);
     assert_eq!(split_calendar_rows.len(), 1);
-    assert_eq!(split_calendar_rows[0].denominator, 5);
+    assert_eq!(split_calendar_rows[0].denominator, 5.0);
 
     let requests = executor.requests();
     assert!(

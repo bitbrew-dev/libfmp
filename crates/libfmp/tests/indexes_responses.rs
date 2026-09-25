@@ -26,7 +26,7 @@ fn every_documented_index_directory_and_quote_fixture_matches_the_typed_wire_con
 
     let quote: Vec<Quote> = serde_json::from_slice(QUOTE).unwrap();
     assert_eq!(quote[0].symbol.as_str(), "^VIX");
-    assert_eq!(quote[0].market_cap, Some(0));
+    assert_eq!(quote[0].market_cap, Some(0.0));
 
     let compact: Vec<QuoteShort> = serde_json::from_slice(QUOTE_SHORT).unwrap();
     assert_eq!(compact[0].symbol.as_str(), "^VIX");

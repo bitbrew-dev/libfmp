@@ -125,14 +125,15 @@ def test_companies_emits_zero_and_false_but_omits_absent_filters(client: Any, fi
 
 
 def test_companies_preserves_large_integers_and_flags(client: Any, fixture_server: FixtureServer) -> None:
-    """``market_cap`` survives above ``2**53`` exactly; ``volume`` is a float and rounds to ``2**64``."""
+    """``market_cap`` and ``volume`` are floats: ``2**53 + 1`` rounds to ``2**53`` and ``u64::MAX`` to ``2**64``."""
     fixture_server.route("/company-screener", load_fixture("company_screener_multiple.json"))
     rows = client.screener.companies(limit=2)
 
     assert fixture_server.requests[0].target == "/company-screener?limit=2"
     assert len(rows) == 2
     assert rows[0].symbol == "BIG"
-    assert rows[0].market_cap == 9_007_199_254_740_993
+    assert isinstance(rows[0].market_cap, float)
+    assert rows[0].market_cap == float(9_007_199_254_740_993)
     assert isinstance(rows[0].volume, float)
     assert rows[0].volume == float(18_446_744_073_709_551_615)
     assert rows[0].sector == "Future Sector"

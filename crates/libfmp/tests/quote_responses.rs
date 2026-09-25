@@ -19,7 +19,7 @@ fn documented_full_quote_decodes_exact_wire_values() {
     assert_eq!(quote.day_high, 334.48);
     assert_eq!(quote.year_high, 344.57);
     assert_eq!(quote.year_low, 201.5);
-    assert_eq!(quote.market_cap, Some(4_874_072_686_740));
+    assert_eq!(quote.market_cap, Some(4_874_072_686_740.0));
     assert_eq!(quote.price_avg_50, 308.5888);
     assert_eq!(quote.price_avg_200, 277.21344);
     assert_eq!(quote.exchange, ExchangeCode::new("NASDAQ").unwrap());

@@ -56,7 +56,7 @@ def test_profile_encodes_a_spaced_symbol(client: Any, fixture_server: FixtureSer
 
 
 def test_profile_decodes_multiple_rows_with_large_integers(client: Any, fixture_server: FixtureServer) -> None:
-    """``profile`` keeps row order; ``market_cap`` is exact above ``2**53`` while ``volume`` is a float."""
+    """``profile`` keeps row order; ``market_cap`` and ``volume`` are floats and round above ``2**53``."""
     fixture_server.route("/profile", load_fixture("company_profile_multiple.json"))
     rows = client.company.profile("AAPL")
 
@@ -65,7 +65,8 @@ def test_profile_decodes_multiple_rows_with_large_integers(client: Any, fixture_
     assert [row.symbol for row in rows] == ["BIG", "AAPL"]
     assert isinstance(rows[0].volume, float)
     assert rows[0].volume == float(18_446_744_073_709_551_615)
-    assert rows[0].market_cap == 9_007_199_254_740_993
+    assert isinstance(rows[0].market_cap, float)
+    assert rows[0].market_cap == float(9_007_199_254_740_993)
     assert rows[0].ipo_date == datetime.date(2026, 8, 27)
     assert rows[0].is_fund is True
     assert rows[1].ipo_date == datetime.date(1980, 12, 12)

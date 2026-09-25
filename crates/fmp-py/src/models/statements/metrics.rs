@@ -20,7 +20,7 @@ pub(crate) struct KeyMetrics {
     #[pyo3(get)]
     pub reported_currency: String,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
     #[pyo3(get)]
     pub enterprise_value: i64,
     #[pyo3(get)]
@@ -118,7 +118,7 @@ impl KeyMetrics {
         fiscal_year: String,
         period: String,
         reported_currency: String,
-        market_cap: u64,
+        market_cap: f64,
         enterprise_value: i64,
         ev_to_sales: f64,
         ev_to_operating_cash_flow: f64,
@@ -357,7 +357,7 @@ pub(crate) struct KeyMetricsTtm {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub market_cap: u64,
+    pub market_cap: f64,
     #[pyo3(get)]
     pub enterprise_value_ttm: i64,
     #[pyo3(get)]
@@ -451,7 +451,7 @@ impl KeyMetricsTtm {
     #[pyo3(signature = (symbol, market_cap, enterprise_value_ttm, ev_to_sales_ttm, ev_to_operating_cash_flow_ttm, ev_to_free_cash_flow_ttm, ev_to_ebitda_ttm, net_debt_to_ebitda_ttm, current_ratio_ttm, income_quality_ttm, graham_number_ttm, graham_net_net_ttm, tax_burden_ttm, interest_burden_ttm, working_capital_ttm, invested_capital_ttm, return_on_assets_ttm, operating_return_on_assets_ttm, return_on_tangible_assets_ttm, return_on_equity_ttm, return_on_invested_capital_ttm, return_on_capital_employed_ttm, earnings_yield_ttm, free_cash_flow_yield_ttm, capex_to_operating_cash_flow_ttm, capex_to_depreciation_ttm, capex_to_revenue_ttm, sales_general_and_administrative_to_revenue_ttm, research_and_developement_to_revenue_ttm, stock_based_compensation_to_revenue_ttm, intangibles_to_total_assets_ttm, average_receivables_ttm, average_payables_ttm, average_inventory_ttm, days_of_sales_outstanding_ttm, days_of_payables_outstanding_ttm, days_of_inventory_outstanding_ttm, operating_cycle_ttm, cash_conversion_cycle_ttm, free_cash_flow_to_equity_ttm, free_cash_flow_to_firm_ttm, tangible_asset_value_ttm, net_current_asset_value_ttm))]
     fn new(
         symbol: String,
-        market_cap: u64,
+        market_cap: f64,
         enterprise_value_ttm: i64,
         ev_to_sales_ttm: f64,
         ev_to_operating_cash_flow_ttm: f64,

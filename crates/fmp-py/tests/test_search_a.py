@@ -183,7 +183,7 @@ def test_cusip_encodes_the_identifier(client: Any, fixture_server: FixtureServer
     assert row.company_name == "Apple Inc."
     assert row.cusip == "037833100"
     assert row.market_cap == 4_227_021_056_800
-    assert isinstance(row.market_cap, int)
+    assert isinstance(row.market_cap, float)
 
 
 def test_isin_encodes_the_identifier(client: Any, fixture_server: FixtureServer) -> None:
