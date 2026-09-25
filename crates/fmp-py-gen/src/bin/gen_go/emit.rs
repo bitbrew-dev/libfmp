@@ -40,6 +40,7 @@ const WORDS: &[(&str, &str)] = &[
     ("sp500", "SP500"),
     ("tipranks", "TipRanks"),
     ("ttm", "TTM"),
+    ("uid", "UID"),
     ("url", "URL"),
     ("urls", "URLs"),
     ("us", "US"),
@@ -270,7 +271,7 @@ mod tests {
             go_name("Performance1YearRelativeToSp500Percentage"),
             "Performance1YearRelativeToSP500Percentage"
         );
-        assert_eq!(go_name("TipRanksExpertUid"), "TipRanksExpertUid");
+        assert_eq!(go_name("TipRanksExpertUid"), "TipRanksExpertUID");
         assert_eq!(go_name("UsDate"), "USDate");
         assert_eq!(lower_first("CIKListing"), "cikListing");
         assert_eq!(lower_first("ETFsQuery"), "etfsQuery");

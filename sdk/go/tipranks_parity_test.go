@@ -31,7 +31,7 @@ func TestDocumentedTipranksRatingSearchDecodesAllThirteenFields(t *testing.T) {
 	row := rows[0]
 	if row.Symbol != "RR.L" || row.Date != "2026-07-30T16:40:58.403Z" ||
 		row.RecommendationDate != mustParseDate(t, "2026-07-30") ||
-		row.ExpertUid != "9d6962cbd29862b8d70de0a2ddb3eb0bdfedc2b7" || row.AnalystName != "Ross Law" ||
+		row.ExpertUID != "9d6962cbd29862b8d70de0a2ddb3eb0bdfedc2b7" || row.AnalystName != "Ross Law" ||
 		row.FirmName != "Morgan Stanley" || row.Recommendation != "buy" || row.AnalystAction != "maintained" ||
 		row.ArticleSite != "TipRanks Contributor" || string(row.PriceTarget) != "1500" ||
 		row.PriceTargetCurrency != "GBX" || !strings.HasPrefix(row.URL, "https://www.tipranks.com/news/blurbs/") {
@@ -61,7 +61,7 @@ func TestDocumentedTipranksPointInTimeRatingsDecodeValuesAndNulls(t *testing.T) 
 	}
 	row := symbol[0]
 	if row.Symbol != "AAPL" || row.Date != "2026-07-29T09:30:14.797Z" ||
-		row.ExpertUid != "d970a430f313c453df61608e96e87edee44e3dce" || row.AnalystName != "Wamsi Mohan" ||
+		row.ExpertUID != "d970a430f313c453df61608e96e87edee44e3dce" || row.AnalystName != "Wamsi Mohan" ||
 		string(row.StockSuccessRate) != "0.788" || row.FirmName != "Bank of America Securities" ||
 		row.LastRecommendation != "buy" || row.LastRecommendationDate != mustParseDate(t, "2026-07-28") ||
 		row.LastAnalystAction != "reiterated" || row.PriceTarget == nil || string(*row.PriceTarget) != "380" ||
@@ -114,7 +114,7 @@ func TestDocumentedTipranksSummariesDecodeExactValues(t *testing.T) {
 	}
 
 	analyst := assertFixtureParity[TipRanksAnalystSummary](t, "tipranks_analyst_summary.json")[0]
-	if analyst.ExpertUid != "3c6eb8cf1347a4e5757e628fccb684a93abee587" || analyst.TotalRecommendations != 22 ||
+	if analyst.ExpertUID != "3c6eb8cf1347a4e5757e628fccb684a93abee587" || analyst.TotalRecommendations != 22 ||
 		analyst.Recommendations.Sell != 0 || analyst.Beats != 2 || analyst.Misses != 11 ||
 		string(analyst.AverageReturn) != "-0.1206" {
 		t.Fatalf("tipranks_analyst_summary = %+v", analyst)
@@ -144,7 +144,7 @@ func TestDocumentedTipranksAnalystProfilesDecodeAllNineFields(t *testing.T) {
 		t.Fatalf("rows = %d, want 1", len(rows))
 	}
 	row := rows[0]
-	if row.ExpertUid != "0458d251af4db6d595c17e02da3bc6ae4bb093b0" || row.AnalystName != "Sujeeva De Silva" ||
+	if row.ExpertUID != "0458d251af4db6d595c17e02da3bc6ae4bb093b0" || row.AnalystName != "Sujeeva De Silva" ||
 		row.FirmName != "Roth MKM" || string(row.SuccessRate) != "0.617" || string(row.ExcessReturn) != "0.563" ||
 		row.TotalRecommendations != 496 || row.GoodRecommendations != 306 || row.AnalystRank != 24 || row.NumOfStars != 5 {
 		t.Fatalf("tipranks_analysts = %+v", row)

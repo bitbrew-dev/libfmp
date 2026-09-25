@@ -97,7 +97,7 @@ class CasingTest(unittest.TestCase):
             "Latest8kSecFilingsQuery": "Latest8KSECFilingsQuery",
             "Sp500Constituent": "SP500Constituent",
             "PriceAvg50": "PriceAvg50",
-            "TipRanksExpertUid": "TipRanksExpertUid",
+            "TipRanksExpertUid": "TipRanksExpertUID",
         }
         for camel, want in cases.items():
             with self.subTest(camel=camel):

@@ -16,7 +16,7 @@ type TipRanksRatingSearchResult struct {
 	Symbol              string         `json:"symbol"`
 	Date                string         `json:"date"`
 	RecommendationDate  Date           `json:"recommendationDate"`
-	ExpertUid           string         `json:"expertUID"`
+	ExpertUID           string         `json:"expertUID"`
 	AnalystName         string         `json:"analystName"`
 	FirmName            string         `json:"firmName"`
 	Recommendation      string         `json:"recommendation"`
@@ -35,7 +35,7 @@ type tipRanksRatingSearchResultShadow struct {
 	Symbol              *string         `json:"symbol"`
 	Date                *string         `json:"date"`
 	RecommendationDate  *Date           `json:"recommendationDate"`
-	ExpertUid           *string         `json:"expertUID"`
+	ExpertUID           *string         `json:"expertUID"`
 	AnalystName         *string         `json:"analystName"`
 	FirmName            *string         `json:"firmName"`
 	Recommendation      *string         `json:"recommendation"`
@@ -62,7 +62,7 @@ func (m *TipRanksRatingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("TipRanksRatingSearchResult", "date")
 	case shadow.RecommendationDate == nil:
 		return missingMemberError("TipRanksRatingSearchResult", "recommendationDate")
-	case shadow.ExpertUid == nil:
+	case shadow.ExpertUID == nil:
 		return missingMemberError("TipRanksRatingSearchResult", "expertUID")
 	case shadow.AnalystName == nil:
 		return missingMemberError("TipRanksRatingSearchResult", "analystName")
@@ -90,7 +90,7 @@ func (m *TipRanksRatingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		Symbol:              *shadow.Symbol,
 		Date:                *shadow.Date,
 		RecommendationDate:  *shadow.RecommendationDate,
-		ExpertUid:           *shadow.ExpertUid,
+		ExpertUID:           *shadow.ExpertUID,
 		AnalystName:         *shadow.AnalystName,
 		FirmName:            *shadow.FirmName,
 		Recommendation:      *shadow.Recommendation,
@@ -109,7 +109,7 @@ func (m *TipRanksRatingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 type TipRanksPointInTimeRating struct {
 	Symbol                 string          `json:"symbol"`
 	Date                   string          `json:"date"`
-	ExpertUid              string          `json:"expertUID"`
+	ExpertUID              string          `json:"expertUID"`
 	AnalystName            string          `json:"analystName"`
 	StockSuccessRate       jsontext.Value  `json:"stockSuccessRate"`
 	FirmName               string          `json:"firmName"`
@@ -131,7 +131,7 @@ type TipRanksPointInTimeRating struct {
 type tipRanksPointInTimeRatingShadow struct {
 	Symbol                 *string         `json:"symbol"`
 	Date                   *string         `json:"date"`
-	ExpertUid              *string         `json:"expertUID"`
+	ExpertUID              *string         `json:"expertUID"`
 	AnalystName            *string         `json:"analystName"`
 	StockSuccessRate       *jsontext.Value `json:"stockSuccessRate"`
 	FirmName               *string         `json:"firmName"`
@@ -160,7 +160,7 @@ func (m *TipRanksPointInTimeRating) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		return missingMemberError("TipRanksPointInTimeRating", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("TipRanksPointInTimeRating", "date")
-	case shadow.ExpertUid == nil:
+	case shadow.ExpertUID == nil:
 		return missingMemberError("TipRanksPointInTimeRating", "expertUID")
 	case shadow.AnalystName == nil:
 		return missingMemberError("TipRanksPointInTimeRating", "analystName")
@@ -225,7 +225,7 @@ func (m *TipRanksPointInTimeRating) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 	*m = TipRanksPointInTimeRating{
 		Symbol:                 *shadow.Symbol,
 		Date:                   *shadow.Date,
-		ExpertUid:              *shadow.ExpertUid,
+		ExpertUID:              *shadow.ExpertUID,
 		AnalystName:            *shadow.AnalystName,
 		StockSuccessRate:       *shadow.StockSuccessRate,
 		FirmName:               *shadow.FirmName,
@@ -453,7 +453,7 @@ func (m *TipRanksSymbolSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // TipRanksAnalystSummary is aggregated TipRanks ratings for one analyst over a
 // date window.
 type TipRanksAnalystSummary struct {
-	ExpertUid            string                       `json:"expertUID"`
+	ExpertUID            string                       `json:"expertUID"`
 	From                 Date                         `json:"from"`
 	To                   Date                         `json:"to"`
 	TotalRecommendations uint64                       `json:"totalRecommendations"`
@@ -474,7 +474,7 @@ type TipRanksAnalystSummary struct {
 // or raw value for every required member so a missing or null member is
 // observable after decoding.
 type tipRanksAnalystSummaryShadow struct {
-	ExpertUid            *string                       `json:"expertUID"`
+	ExpertUID            *string                       `json:"expertUID"`
 	From                 *Date                         `json:"from"`
 	To                   *Date                         `json:"to"`
 	TotalRecommendations *uint64                       `json:"totalRecommendations"`
@@ -500,7 +500,7 @@ func (m *TipRanksAnalystSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return err
 	}
 	switch {
-	case shadow.ExpertUid == nil:
+	case shadow.ExpertUID == nil:
 		return missingMemberError("TipRanksAnalystSummary", "expertUID")
 	case shadow.From == nil:
 		return missingMemberError("TipRanksAnalystSummary", "from")
@@ -541,7 +541,7 @@ func (m *TipRanksAnalystSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return invalidMemberError("TipRanksAnalystSummary", "worstReturn", "number")
 	}
 	*m = TipRanksAnalystSummary{
-		ExpertUid:            *shadow.ExpertUid,
+		ExpertUID:            *shadow.ExpertUID,
 		From:                 *shadow.From,
 		To:                   *shadow.To,
 		TotalRecommendations: *shadow.TotalRecommendations,
@@ -673,7 +673,7 @@ func (m *TipRanksFirmSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // TipRanksAnalystProfile is one analyst profile returned by the TipRanks
 // directory.
 type TipRanksAnalystProfile struct {
-	ExpertUid            string         `json:"expertUID"`
+	ExpertUID            string         `json:"expertUID"`
 	AnalystName          string         `json:"analystName"`
 	FirmName             string         `json:"firmName"`
 	SuccessRate          jsontext.Value `json:"successRate"`
@@ -688,7 +688,7 @@ type TipRanksAnalystProfile struct {
 // or raw value for every required member so a missing or null member is
 // observable after decoding.
 type tipRanksAnalystProfileShadow struct {
-	ExpertUid            *string         `json:"expertUID"`
+	ExpertUID            *string         `json:"expertUID"`
 	AnalystName          *string         `json:"analystName"`
 	FirmName             *string         `json:"firmName"`
 	SuccessRate          *jsontext.Value `json:"successRate"`
@@ -708,7 +708,7 @@ func (m *TipRanksAnalystProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return err
 	}
 	switch {
-	case shadow.ExpertUid == nil:
+	case shadow.ExpertUID == nil:
 		return missingMemberError("TipRanksAnalystProfile", "expertUID")
 	case shadow.AnalystName == nil:
 		return missingMemberError("TipRanksAnalystProfile", "analystName")
@@ -734,7 +734,7 @@ func (m *TipRanksAnalystProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return invalidMemberError("TipRanksAnalystProfile", "excessReturn", "number")
 	}
 	*m = TipRanksAnalystProfile{
-		ExpertUid:            *shadow.ExpertUid,
+		ExpertUID:            *shadow.ExpertUID,
 		AnalystName:          *shadow.AnalystName,
 		FirmName:             *shadow.FirmName,
 		SuccessRate:          *shadow.SuccessRate,

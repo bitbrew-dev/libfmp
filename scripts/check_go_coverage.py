@@ -76,6 +76,7 @@ WORDS = {
     "sp500": "SP500",
     "tipranks": "TipRanks",
     "ttm": "TTM",
+    "uid": "UID",
     "url": "URL",
     "urls": "URLs",
     "us": "US",

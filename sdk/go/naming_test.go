@@ -18,7 +18,7 @@ var goSpelling = map[string]string{
 	"etf": "ETF", "etfs": "ETFs", "fmp": "FMP", "http": "HTTP", "id": "ID",
 	"ids": "IDs", "ipo": "IPO", "ipos": "IPO", "isin": "ISIN", "json": "JSON",
 	"sec": "SEC", "sp500": "SP500", "tipranks": "TipRanks", "ttm": "TTM",
-	"url": "URL", "urls": "URLs", "us": "US",
+	"uid": "UID", "url": "URL", "urls": "URLs", "us": "US",
 }
 
 // camelWords splits an identifier the way gen_go's camel_words does: a word
