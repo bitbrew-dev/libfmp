@@ -540,9 +540,9 @@ pub(crate) struct StockSplitEvent {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub numerator: u64,
+    pub numerator: f64,
     #[pyo3(get)]
-    pub denominator: u64,
+    pub denominator: f64,
     #[pyo3(get)]
     pub split_type: String,
 }
@@ -557,8 +557,8 @@ impl StockSplitEvent {
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
-        numerator: u64,
-        denominator: u64,
+        numerator: f64,
+        denominator: f64,
         split_type: String,
     ) -> Self {
         Self {

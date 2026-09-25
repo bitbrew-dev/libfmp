@@ -9,7 +9,7 @@ fn documented_company_profile_decodes_every_exact_field_and_wire_type() {
     let row = &rows[0];
     assert_eq!(row.symbol.as_str(), "AAPL");
     assert_eq!(row.price, 331.85501);
-    assert_eq!(row.market_cap, 4_874_072_686_740);
+    assert_eq!(row.market_cap, 4_874_072_686_740.0);
     assert_eq!(row.beta, 1.097);
     assert_eq!(row.last_dividend, 1.05);
     assert_eq!(row.range, "201.5-344.57");
@@ -83,7 +83,7 @@ fn documented_company_note_and_stock_peer_preserve_exact_names() {
     assert_eq!(peers[0].symbol.as_str(), "GOOGL");
     assert_eq!(peers[0].company_name, "Alphabet Inc.");
     assert_eq!(peers[0].price, 333.84);
-    assert_eq!(peers[0].market_cap, 4_040_168_831_718);
+    assert_eq!(peers[0].market_cap, 4_040_168_831_718.0);
 
     let peer_wire = serde_json::to_value(&peers[0]).unwrap();
     assert_eq!(peer_wire["mktCap"], 4_040_168_831_718_u64);
@@ -115,8 +115,8 @@ fn company_arrays_preserve_empty_multiple_unknown_and_large_values() {
             .is_empty()
     );
     assert_eq!(profiles.len(), 2);
-    assert_eq!(profiles[0].market_cap, 9_007_199_254_740_993);
-    assert!(profiles[0].market_cap > 2_u64.pow(53));
+    assert_eq!(profiles[0].market_cap, 9_007_199_254_740_992.0);
+    assert!(profiles[0].market_cap >= 2_f64.powi(53));
     assert_eq!(profiles[0].volume, u64::MAX as f64);
     assert_eq!(profiles[0].average_volume, 4_294_967_296.0);
     assert_eq!(profiles[0].full_time_employees.as_str(), "42");

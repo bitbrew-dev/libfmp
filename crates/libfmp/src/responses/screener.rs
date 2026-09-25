@@ -15,6 +15,7 @@ use crate::types::{
 pub struct CompanyScreenerEntry {
     pub symbol: Ticker,
     pub company_name: String,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     pub sector: Sector,
     pub industry: Industry,

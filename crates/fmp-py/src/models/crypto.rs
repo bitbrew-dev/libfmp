@@ -18,9 +18,9 @@ pub(crate) struct CryptocurrencyListing {
     #[pyo3(get)]
     pub ico_date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub circulating_supply: u64,
+    pub circulating_supply: f64,
     #[pyo3(get)]
-    pub total_supply: u64,
+    pub total_supply: f64,
 }
 
 #[gen_stub_pymethods]
@@ -35,8 +35,8 @@ impl CryptocurrencyListing {
         name: String,
         exchange: String,
         ico_date: ::chrono::NaiveDate,
-        circulating_supply: u64,
-        total_supply: u64,
+        circulating_supply: f64,
+        total_supply: f64,
     ) -> Self {
         Self {
             symbol,

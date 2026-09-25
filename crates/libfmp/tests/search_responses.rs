@@ -50,14 +50,14 @@ fn documented_identifier_results_preserve_wire_names_and_large_caps() {
     assert_eq!(cusip[0].symbol.as_str(), "APC.F");
     assert_eq!(cusip[0].company_name, "Apple Inc.");
     assert_eq!(cusip[0].cusip.as_str(), "037833100");
-    assert_eq!(cusip[0].market_cap, 4_227_021_056_800);
-    assert!(cusip[0].market_cap > u64::from(u32::MAX));
+    assert_eq!(cusip[0].market_cap, 4_227_021_056_800.0);
+    assert!(cusip[0].market_cap > f64::from(u32::MAX));
 
     assert_eq!(isin[0].symbol.as_str(), "AAPL");
     assert_eq!(isin[0].name, "Apple Inc.");
     assert_eq!(isin[0].isin.as_str(), "US0378331005");
-    assert_eq!(isin[0].market_cap, 4_874_072_686_740);
-    assert!(isin[0].market_cap > u64::from(u32::MAX));
+    assert_eq!(isin[0].market_cap, 4_874_072_686_740.0);
+    assert!(isin[0].market_cap > f64::from(u32::MAX));
 
     let cik_wire = serde_json::to_value(&cik[0]).unwrap();
     let cusip_wire = serde_json::to_value(&cusip[0]).unwrap();
@@ -79,8 +79,8 @@ fn documented_exchange_variant_decodes_every_field_and_inverted_exchange_names()
     assert_eq!(row.price, 331.85501);
     assert_eq!(row.beta, 1.097);
     assert_eq!(row.vol_avg, 55_309_000.0);
-    assert_eq!(row.market_cap, 4_874_072_686_740);
-    assert!(row.market_cap > u64::from(u32::MAX));
+    assert_eq!(row.market_cap, 4_874_072_686_740.0);
+    assert!(row.market_cap > f64::from(u32::MAX));
     assert_eq!(row.last_div, 1.05);
     assert_eq!(row.range, "201.5-344.57");
     assert_eq!(row.changes, -6.33498);

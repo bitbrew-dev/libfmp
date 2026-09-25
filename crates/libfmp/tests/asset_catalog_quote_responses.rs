@@ -158,8 +158,8 @@ fn catalog_rows_preserve_exact_identifiers_dates_and_large_unsigned_supplies() {
         cryptocurrencies[0].ico_date,
         "2017-11-09".parse::<Date>().unwrap()
     );
-    assert_eq!(cryptocurrencies[0].circulating_supply, 4_232_705_124);
-    assert_eq!(cryptocurrencies[0].total_supply, 4_788_606_639);
+    assert_eq!(cryptocurrencies[0].circulating_supply, 4_232_705_124.0);
+    assert_eq!(cryptocurrencies[0].total_supply, 4_788_606_639.0);
 }
 
 #[test]
@@ -232,7 +232,7 @@ where
 fn crypto_quotes_preserve_large_volume_market_cap_and_nullable_market_cap() {
     let crypto: Vec<CryptocurrencyQuote> = serde_json::from_slice(CRYPTOCURRENCY_QUOTE).unwrap();
     assert_eq!(crypto[0].volume, 32_030_003_200.0);
-    assert_eq!(crypto[0].market_cap, Some(1_293_361_815_015));
+    assert_eq!(crypto[0].market_cap, Some(1_293_361_815_015.0));
 
     let commodity: Vec<CommodityQuote> = serde_json::from_slice(COMMODITY_QUOTE).unwrap();
     let forex: Vec<ForexQuote> = serde_json::from_slice(FOREX_QUOTE).unwrap();

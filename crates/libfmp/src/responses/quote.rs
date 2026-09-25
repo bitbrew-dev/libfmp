@@ -22,6 +22,7 @@ pub struct Quote {
     pub day_high: Price,
     pub year_high: Price,
     pub year_low: Price,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
     pub market_cap: Option<MarketCapitalization>,
     pub price_avg_50: Price,
     pub price_avg_200: Price,

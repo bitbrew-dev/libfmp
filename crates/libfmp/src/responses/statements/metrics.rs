@@ -17,6 +17,7 @@ pub struct KeyMetrics {
     pub fiscal_year: FiscalYearString,
     pub period: FiscalPeriod,
     pub reported_currency: CurrencyCode,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     pub enterprise_value: StatementAmount,
     pub ev_to_sales: f64,
@@ -73,6 +74,7 @@ pub struct KeyMetrics {
 pub struct KeyMetricsTtm {
     pub symbol: Ticker,
     #[serde(rename = "marketCap")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     #[serde(rename = "enterpriseValueTTM")]
     pub enterprise_value_ttm: StatementAmount,

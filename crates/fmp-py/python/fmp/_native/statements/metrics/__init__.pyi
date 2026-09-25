@@ -24,7 +24,7 @@ class KeyMetrics:
     @property
     def reported_currency(self) -> builtins.str: ...
     @property
-    def market_cap(self) -> builtins.int: ...
+    def market_cap(self) -> builtins.float: ...
     @property
     def enterprise_value(self) -> builtins.int: ...
     @property
@@ -114,7 +114,7 @@ class KeyMetrics:
         fiscal_year: builtins.str,
         period: builtins.str,
         reported_currency: builtins.str,
-        market_cap: builtins.int,
+        market_cap: builtins.float,
         enterprise_value: builtins.int,
         ev_to_sales: builtins.float,
         ev_to_operating_cash_flow: builtins.float,
@@ -165,7 +165,7 @@ class KeyMetricsTtm:
     @property
     def symbol(self) -> builtins.str: ...
     @property
-    def market_cap(self) -> builtins.int: ...
+    def market_cap(self) -> builtins.float: ...
     @property
     def enterprise_value_ttm(self) -> builtins.int: ...
     @property
@@ -251,7 +251,7 @@ class KeyMetricsTtm:
     def __new__(
         cls,
         symbol: builtins.str,
-        market_cap: builtins.int,
+        market_cap: builtins.float,
         enterprise_value_ttm: builtins.int,
         ev_to_sales_ttm: builtins.float,
         ev_to_operating_cash_flow_ttm: builtins.float,

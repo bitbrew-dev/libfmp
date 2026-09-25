@@ -30,7 +30,7 @@ pub(crate) struct Quote {
     #[pyo3(get)]
     pub year_low: f64,
     #[pyo3(get)]
-    pub market_cap: Option<u64>,
+    pub market_cap: Option<f64>,
     #[pyo3(get)]
     pub price_avg_50: f64,
     #[pyo3(get)]
@@ -63,7 +63,7 @@ impl Quote {
         day_high: f64,
         year_high: f64,
         year_low: f64,
-        market_cap: Option<u64>,
+        market_cap: Option<f64>,
         price_avg_50: f64,
         price_avg_200: f64,
         exchange: String,

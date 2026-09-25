@@ -52,7 +52,7 @@ fn documented_financial_score_decodes_all_eleven_exact_fields() {
             total_assets: 371_082_000_000,
             retained_earnings: 12_359_000_000,
             ebit: 147_722_000_000,
-            market_cap: 5_042_169_135_511,
+            market_cap: 5_042_169_135_511.0,
             total_liabilities: 264_591_000_000,
             revenue: 451_442_000_000,
         }]
@@ -99,7 +99,7 @@ fn documented_enterprise_value_decodes_all_eight_exact_fields() {
             date: Date::from_str("2025-09-27").unwrap(),
             stock_price: 255.46,
             number_of_shares: 14_948_500_000,
-            market_capitalization: 3_818_743_810_000,
+            market_capitalization: 3_818_743_810_000.0,
             minus_cash_and_cash_equivalents: 35_934_000_000,
             add_total_debt: 112_377_000_000,
             enterprise_value: 3_895_186_810_000,

@@ -13,24 +13,24 @@ import (
 // CryptocurrencyListing is one cryptocurrency in the provider's documented
 // cryptocurrency catalog.
 type CryptocurrencyListing struct {
-	Symbol            string `json:"symbol"`
-	Name              string `json:"name"`
-	Exchange          string `json:"exchange"`
-	IcoDate           Date   `json:"icoDate"`
-	CirculatingSupply uint64 `json:"circulatingSupply"`
-	TotalSupply       uint64 `json:"totalSupply"`
+	Symbol            string  `json:"symbol"`
+	Name              string  `json:"name"`
+	Exchange          string  `json:"exchange"`
+	IcoDate           Date    `json:"icoDate"`
+	CirculatingSupply float64 `json:"circulatingSupply"`
+	TotalSupply       float64 `json:"totalSupply"`
 }
 
 // cryptocurrencyListingShadow mirrors CryptocurrencyListing with a pointer or
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type cryptocurrencyListingShadow struct {
-	Symbol            *string `json:"symbol"`
-	Name              *string `json:"name"`
-	Exchange          *string `json:"exchange"`
-	IcoDate           *Date   `json:"icoDate"`
-	CirculatingSupply *uint64 `json:"circulatingSupply"`
-	TotalSupply       *uint64 `json:"totalSupply"`
+	Symbol            *string  `json:"symbol"`
+	Name              *string  `json:"name"`
+	Exchange          *string  `json:"exchange"`
+	IcoDate           *Date    `json:"icoDate"`
+	CirculatingSupply *float64 `json:"circulatingSupply"`
+	TotalSupply       *float64 `json:"totalSupply"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode

@@ -171,16 +171,16 @@ fn both_exact_stock_split_fixtures_share_the_five_field_integer_row() {
         [StockSplitEvent {
             symbol: Ticker::new("AAPL").unwrap(),
             date: Date::from_str("2020-08-31").unwrap(),
-            numerator: 4,
-            denominator: 1,
+            numerator: 4.0,
+            denominator: 1.0,
             split_type: "stock-split".to_owned(),
         }]
     );
 
     let calendar: Vec<StockSplitEvent> = serde_json::from_slice(STOCK_SPLITS_CALENDAR).unwrap();
     assert_eq!(calendar[0].symbol.as_str(), "WHLR");
-    assert_eq!(calendar[0].numerator, 1);
-    assert_eq!(calendar[0].denominator, 5);
+    assert_eq!(calendar[0].numerator, 1.0);
+    assert_eq!(calendar[0].denominator, 5.0);
 }
 
 #[test]

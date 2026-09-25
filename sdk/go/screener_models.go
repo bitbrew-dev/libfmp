@@ -15,7 +15,7 @@ import (
 type CompanyScreenerEntry struct {
 	Symbol             string  `json:"symbol"`
 	CompanyName        string  `json:"companyName"`
-	MarketCap          uint64  `json:"marketCap"`
+	MarketCap          float64 `json:"marketCap"`
 	Sector             string  `json:"sector"`
 	Industry           string  `json:"industry"`
 	Beta               float64 `json:"beta"`
@@ -36,7 +36,7 @@ type CompanyScreenerEntry struct {
 type companyScreenerEntryShadow struct {
 	Symbol             *string  `json:"symbol"`
 	CompanyName        *string  `json:"companyName"`
-	MarketCap          *uint64  `json:"marketCap"`
+	MarketCap          *float64 `json:"marketCap"`
 	Sector             *string  `json:"sector"`
 	Industry           *string  `json:"industry"`
 	Beta               *float64 `json:"beta"`

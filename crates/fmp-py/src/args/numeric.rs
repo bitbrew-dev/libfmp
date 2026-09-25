@@ -7,10 +7,7 @@
 use libfmp::{
     codecs::TrueFalseFlag,
     query::{PeriodLength, Quarter, Year},
-    types::{
-        CalendarQuarter, CalendarYear, FiniteDecimal, InvalidCalendarQuarter, Limit,
-        MarketCapitalization, Page,
-    },
+    types::{CalendarQuarter, CalendarYear, FiniteDecimal, InvalidCalendarQuarter, Limit, Page},
 };
 use pyo3::prelude::*;
 
@@ -80,8 +77,10 @@ pub fn period_length(name: &str, value: i64) -> PyResult<PeriodLength> {
         .ok_or_else(|| validation_error(name, PERIOD_LENGTH))
 }
 
-/// Converts a non-negative Python `int` into a [`MarketCapitalization`].
-pub fn market_capitalization(name: &str, value: i64) -> PyResult<MarketCapitalization> {
+/// Converts a non-negative Python `int` into a screener market-cap filter.
+///
+/// The query side stays an integer even though response market caps are floats.
+pub fn market_capitalization(name: &str, value: i64) -> PyResult<u64> {
     unsigned_u64(name, value)
 }
 

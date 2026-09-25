@@ -81,7 +81,7 @@ func run() error {
 	fmt.Printf("  price %.5f, change %.5f (%.4f%%), volume %.0f\n",
 		quote.Price, quote.Change, quote.ChangePercentage, quote.Volume)
 	if quote.MarketCap != nil {
-		fmt.Printf("  market cap %d\n", *quote.MarketCap)
+		fmt.Printf("  market cap %.0f\n", *quote.MarketCap)
 	}
 	fmt.Printf("  as of %s\n", quote.Timestamp.Time().Format(time.RFC3339))
 	return nil

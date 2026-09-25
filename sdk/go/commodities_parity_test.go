@@ -49,7 +49,7 @@ func TestDocumentedCommodityCatalogAndQuoteFixturesDecodeExactValues(t *testing.
 		t.Fatalf("commodities_quote = %+v", quotes)
 	}
 	if quotes[0].MarketCap != nil {
-		t.Fatalf("marketCap = %d, want nil for JSON null", *quotes[0].MarketCap)
+		t.Fatalf("marketCap = %v, want nil for JSON null", *quotes[0].MarketCap)
 	}
 
 	short := assertFixtureParity[QuoteShort](t, "commodities_quote_short.json")

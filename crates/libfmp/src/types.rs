@@ -674,10 +674,28 @@ pub type MarketValue = f64;
 /// re-encode an integral value as a JSON integer through
 /// the crate's `integral_f64` serde codec; the screener volume filters stay `u64`.
 pub type Volume = f64;
+/// A market capitalization represented by the provider as a JSON number.
+///
+/// Documented as an integer, but a fractional or exponent-form value decodes
+/// too, so the type is `f64`; values above `2^53` round to the nearest
+/// `f64`. Response fields re-encode an integral value as a JSON integer
+/// through `crate::codecs::integral_f64`; the screener market-cap filters
+/// stay `u64`.
+pub type MarketCapitalization = f64;
+/// A cryptocurrency supply (coins or tokens) represented as a JSON number.
+///
+/// Supplies can be fractional, so the type is `f64`; response fields
+/// re-encode an integral value as a JSON integer through
+/// `crate::codecs::integral_f64`.
+pub type TokenSupply = f64;
+/// One term (numerator or denominator) of a stock-split ratio.
+///
+/// Split terms can be fractional (for example a `1.5`-for-`1` split), so
+/// the type is `f64`; response fields re-encode an integral value as a JSON
+/// integer through `crate::codecs::integral_f64`.
+pub type SplitTerm = f64;
 /// A non-negative count represented by the provider as a JSON integer.
 pub type Count = u64;
-/// A market capitalization represented by the provider as a JSON integer.
-pub type MarketCapitalization = u64;
 /// A signed currency amount reported in a financial statement.
 ///
 /// Statement values can be negative (for example, expenses and cash outflows),

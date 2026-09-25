@@ -472,7 +472,7 @@ mod tests {
         assert_eq!(screener.setters.len(), 20);
         assert_eq!(
             screener.setters["with_market_cap_more_than"].base_type,
-            "MarketCapitalization"
+            "u64"
         );
         assert_eq!(screener.setters["with_sector"].base_type, "Sector");
         assert_eq!(screener.setters["with_is_etf"].base_type, "bool");

@@ -157,7 +157,7 @@ def check_company_contract(client: FmpClient) -> None:
     history: list[MarketCapitalizationRecord] = client.company.historical_market_capitalization(
         "AAPL", limit=5001, from_=datetime.date(2026, 4, 16), to="2026-07-16"
     )
-    market_cap: int = history[0].market_cap
+    market_cap: float = history[0].market_cap
     batch: list[MarketCapitalizationRecord] = client.company.market_capitalization_batch(["AAPL", "MSFT"])
     benchmarks: list[ExecutiveCompensationBenchmark] = client.company.executive_compensation_benchmark(year="2024")
     average: float = benchmarks[0].average_compensation
@@ -235,7 +235,7 @@ def check_forex_contract(client: FmpClient) -> None:
     pairs: list[ForexPair] = forex.list()
     from_currency: str = pairs[0].from_currency
     quotes: list[Quote] = client.forex.quote("EURUSD")
-    market_cap: int | None = quotes[0].market_cap
+    market_cap: float | None = quotes[0].market_cap
     compact: list[QuoteShort] = client.forex.quote_short("EURUSD")
     price: float = compact[0].price
     bars: list[StockChartFullBar] = forex.chart_full("EURUSD", from_=datetime.date(2026, 1, 27), to="2026-04-27")
@@ -309,7 +309,7 @@ def check_screener_contract(client: FmpClient) -> None:
         is_etf=False,
         limit=100,
     )
-    market_cap: int = filtered[0].market_cap
+    market_cap: float = filtered[0].market_cap
     beta: float = everything[0].beta
     is_fund: bool = filtered[0].is_fund
     _ = (market_cap, beta, is_fund)
@@ -375,7 +375,7 @@ def check_commodities_contract(client: FmpClient) -> None:
     exchange: str | None = listings[0].exchange
     trade_month: str = listings[0].trade_month
     quotes: list[Quote] = client.commodities.quote("GCUSD")
-    market_cap: int | None = quotes[0].market_cap
+    market_cap: float | None = quotes[0].market_cap
     bars: list[StockChartFullBar] = commodities.chart_full("GCUSD", from_=datetime.date(2026, 1, 27), to="2026-04-27")
     bar_date: datetime.date = bars[0].date
     vwap: float = bars[0].vwap
@@ -389,9 +389,9 @@ def check_crypto_contract(client: FmpClient) -> None:
     crypto: CryptoNamespace = client.crypto
     listings: list[CryptocurrencyListing] = crypto.list()
     ico_date: datetime.date = listings[0].ico_date
-    total_supply: int = listings[0].total_supply
+    total_supply: float = listings[0].total_supply
     quotes: list[Quote] = client.crypto.quote("BTCUSD")
-    market_cap: int | None = quotes[0].market_cap
+    market_cap: float | None = quotes[0].market_cap
     bars: list[StockChartFullBar] = client.crypto.chart_full(
         "BTCUSD", from_=datetime.date(2026, 1, 27), to="2026-04-27"
     )
@@ -450,7 +450,7 @@ def check_search_contract(client: FmpClient) -> None:
     cik: str = entities[0].cik
     variants: list[ExchangeVariant] = client.search.exchange_variants("^VIX")
     ipo_date: datetime.date = variants[0].ipo_date
-    market_cap: int = variants[0].market_cap
+    market_cap: float = variants[0].market_cap
     is_etf: bool = variants[0].is_etf
     _ = (exchange_full_name, cik, ipo_date, market_cap, is_etf)
 
@@ -626,7 +626,7 @@ def check_public_contract(client: FmpClient) -> None:
     symbol: str = short_rows[0].symbol
     price: float = full_rows[0].price
     volume: float = fund_rows[0].volume
-    market_cap: int | None = full_rows[0].market_cap
+    market_cap: float | None = full_rows[0].market_cap
     exports: list[str] = fmp.__all__
     version: str = fmp.__version__
     _ = (symbol, price, volume, market_cap, exports, version)

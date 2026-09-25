@@ -11,7 +11,7 @@ fn documented_market_capitalization_decodes_every_exact_field_and_wire_type() {
     let row = &rows[0];
     assert_eq!(row.symbol.as_str(), "AAPL");
     assert_eq!(row.date.to_string(), "2026-07-30");
-    assert_eq!(row.market_cap, 4_874_072_686_740);
+    assert_eq!(row.market_cap, 4_874_072_686_740.0);
 
     let wire = serde_json::to_value(row).unwrap();
     assert_eq!(wire["date"], "2026-07-30");
@@ -26,7 +26,7 @@ fn documented_market_capitalization_decodes_every_exact_field_and_wire_type() {
     assert_eq!(historical.len(), 1);
     assert_eq!(historical[0].symbol.as_str(), "AAPL");
     assert_eq!(historical[0].date.to_string(), "2026-07-30");
-    assert_eq!(historical[0].market_cap, 4_879_177_245_542);
+    assert_eq!(historical[0].market_cap, 4_879_177_245_542.0);
 }
 
 #[test]
@@ -105,8 +105,8 @@ fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_u64_values() {
     )
     .unwrap();
     assert_eq!(market_caps.len(), 2);
-    assert_eq!(market_caps[0].market_cap, u64::MAX);
-    assert_eq!(market_caps[1].market_cap, 9_007_199_254_740_993);
+    assert_eq!(market_caps[0].market_cap, u64::MAX as f64);
+    assert_eq!(market_caps[1].market_cap, 9_007_199_254_740_992.0);
 
     let company_floats: Vec<CompanyShareFloat> = serde_json::from_str(
         r#"[

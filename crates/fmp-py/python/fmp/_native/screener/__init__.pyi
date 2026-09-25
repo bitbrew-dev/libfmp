@@ -16,7 +16,7 @@ class CompanyScreenerEntry:
     @property
     def company_name(self) -> builtins.str: ...
     @property
-    def market_cap(self) -> builtins.int: ...
+    def market_cap(self) -> builtins.float: ...
     @property
     def sector(self) -> builtins.str: ...
     @property
@@ -45,7 +45,7 @@ class CompanyScreenerEntry:
         cls,
         symbol: builtins.str,
         company_name: builtins.str,
-        market_cap: builtins.int,
+        market_cap: builtins.float,
         sector: builtins.str,
         industry: builtins.str,
         beta: builtins.float,

@@ -2195,7 +2195,7 @@ type KeyMetrics struct {
 	FiscalYear                             string  `json:"fiscalYear"`
 	Period                                 string  `json:"period"`
 	ReportedCurrency                       string  `json:"reportedCurrency"`
-	MarketCap                              uint64  `json:"marketCap"`
+	MarketCap                              float64 `json:"marketCap"`
 	EnterpriseValue                        int64   `json:"enterpriseValue"`
 	EvToSales                              float64 `json:"evToSales"`
 	EvToOperatingCashFlow                  float64 `json:"evToOperatingCashFlow"`
@@ -2247,7 +2247,7 @@ type keyMetricsShadow struct {
 	FiscalYear                             *string  `json:"fiscalYear"`
 	Period                                 *string  `json:"period"`
 	ReportedCurrency                       *string  `json:"reportedCurrency"`
-	MarketCap                              *uint64  `json:"marketCap"`
+	MarketCap                              *float64 `json:"marketCap"`
 	EnterpriseValue                        *int64   `json:"enterpriseValue"`
 	EvToSales                              *float64 `json:"evToSales"`
 	EvToOperatingCashFlow                  *float64 `json:"evToOperatingCashFlow"`
@@ -2450,7 +2450,7 @@ func (m *KeyMetrics) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // KeyMetricsTtm is one worldwide trailing-twelve-month key-metrics row.
 type KeyMetricsTtm struct {
 	Symbol                                    string  `json:"symbol"`
-	MarketCap                                 uint64  `json:"marketCap"`
+	MarketCap                                 float64 `json:"marketCap"`
 	EnterpriseValueTtm                        int64   `json:"enterpriseValueTTM"`
 	EvToSalesTtm                              float64 `json:"evToSalesTTM"`
 	EvToOperatingCashFlowTtm                  float64 `json:"evToOperatingCashFlowTTM"`
@@ -2499,7 +2499,7 @@ type KeyMetricsTtm struct {
 // decoding.
 type keyMetricsTtmShadow struct {
 	Symbol                                    *string  `json:"symbol"`
-	MarketCap                                 *uint64  `json:"marketCap"`
+	MarketCap                                 *float64 `json:"marketCap"`
 	EnterpriseValueTtm                        *int64   `json:"enterpriseValueTTM"`
 	EvToSalesTtm                              *float64 `json:"evToSalesTTM"`
 	EvToOperatingCashFlowTtm                  *float64 `json:"evToOperatingCashFlowTTM"`
@@ -3596,7 +3596,7 @@ type FinancialScore struct {
 	TotalAssets      int64   `json:"totalAssets"`
 	RetainedEarnings int64   `json:"retainedEarnings"`
 	Ebit             int64   `json:"ebit"`
-	MarketCap        uint64  `json:"marketCap"`
+	MarketCap        float64 `json:"marketCap"`
 	TotalLiabilities int64   `json:"totalLiabilities"`
 	Revenue          int64   `json:"revenue"`
 }
@@ -3613,7 +3613,7 @@ type financialScoreShadow struct {
 	TotalAssets      *int64   `json:"totalAssets"`
 	RetainedEarnings *int64   `json:"retainedEarnings"`
 	Ebit             *int64   `json:"ebit"`
-	MarketCap        *uint64  `json:"marketCap"`
+	MarketCap        *float64 `json:"marketCap"`
 	TotalLiabilities *int64   `json:"totalLiabilities"`
 	Revenue          *int64   `json:"revenue"`
 }
@@ -3747,7 +3747,7 @@ type EnterpriseValue struct {
 	Date                        Date    `json:"date"`
 	StockPrice                  float64 `json:"stockPrice"`
 	NumberOfShares              uint64  `json:"numberOfShares"`
-	MarketCapitalization        uint64  `json:"marketCapitalization"`
+	MarketCapitalization        float64 `json:"marketCapitalization"`
 	MinusCashAndCashEquivalents int64   `json:"minusCashAndCashEquivalents"`
 	AddTotalDebt                int64   `json:"addTotalDebt"`
 	EnterpriseValue             int64   `json:"enterpriseValue"`
@@ -3761,7 +3761,7 @@ type enterpriseValueShadow struct {
 	Date                        *Date    `json:"date"`
 	StockPrice                  *float64 `json:"stockPrice"`
 	NumberOfShares              *uint64  `json:"numberOfShares"`
-	MarketCapitalization        *uint64  `json:"marketCapitalization"`
+	MarketCapitalization        *float64 `json:"marketCapitalization"`
 	MinusCashAndCashEquivalents *int64   `json:"minusCashAndCashEquivalents"`
 	AddTotalDebt                *int64   `json:"addTotalDebt"`
 	EnterpriseValue             *int64   `json:"enterpriseValue"`

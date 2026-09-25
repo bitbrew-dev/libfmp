@@ -11,17 +11,14 @@ use crate::{
         metadata::{EndpointMetadata, GeographicAvailability},
     },
     responses::screener::CompanyScreenerEntry,
-    types::{
-        CountryCode, ExchangeCode, FiniteDecimal, Industry, Limit, MarketCapitalization, Page,
-        Sector,
-    },
+    types::{CountryCode, ExchangeCode, FiniteDecimal, Industry, Limit, Page, Sector},
 };
 
 /// Optional filters accepted by the company stock screener.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct CompanyScreenerQuery {
-    market_cap_more_than: Option<MarketCapitalization>,
-    market_cap_lower_than: Option<MarketCapitalization>,
+    market_cap_more_than: Option<u64>,
+    market_cap_lower_than: Option<u64>,
     sector: Option<Sector>,
     industry: Option<Industry>,
     beta_more_than: Option<FiniteDecimal>,
@@ -103,15 +100,15 @@ impl CompanyScreenerQuery {
         with_market_cap_more_than,
         market_cap_more_than,
         market_cap_more_than,
-        MarketCapitalization,
-        "Sets or returns the optional lower market-cap filter."
+        u64,
+        "Sets or returns the optional lower market-cap filter (a whole currency amount)."
     );
     value_filter!(
         with_market_cap_lower_than,
         market_cap_lower_than,
         market_cap_lower_than,
-        MarketCapitalization,
-        "Sets or returns the optional upper market-cap filter."
+        u64,
+        "Sets or returns the optional upper market-cap filter (a whole currency amount)."
     );
     string_filter!(
         with_sector,

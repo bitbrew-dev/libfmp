@@ -81,7 +81,7 @@ fn committed_domains_regenerate_to_the_committed_files() {
     );
     let models = file("quote_models.go");
     assert!(models.contains("OneDay float64 `json:\"1D\"`"));
-    assert!(models.contains("MarketCap *uint64 `json:\"marketCap\"`"));
+    assert!(models.contains("MarketCap *float64 `json:\"marketCap\"`"));
     assert!(file("namespaces.go").contains("Quote QuoteNamespace"));
     let table = file("metadata_table.go");
     assert!(
