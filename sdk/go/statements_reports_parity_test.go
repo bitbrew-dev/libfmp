@@ -20,10 +20,10 @@ func TestDocumentedMetricsRatiosAndGrowthFixturesDecodeExactValues(t *testing.T)
 		len(memberSet(t, metrics[0])) != 47 {
 		t.Fatalf("key_metrics = %+v", metrics)
 	}
-	metricsTtm := assertFixtureParity[KeyMetricsTTM](t, "key_metrics_ttm.json")
-	if len(metricsTtm) != 1 || metricsTtm[0].InterestBurdenTTM != 1.0 || metricsTtm[0].CurrentRatioTTM != 1.07035746912159 ||
-		metricsTtm[0].EnterpriseValueTTM != 4_922_455_686_740 || len(memberSet(t, metricsTtm[0])) != 43 {
-		t.Fatalf("key_metrics_ttm = %+v", metricsTtm)
+	metricsTTM := assertFixtureParity[KeyMetricsTTM](t, "key_metrics_ttm.json")
+	if len(metricsTTM) != 1 || metricsTTM[0].InterestBurdenTTM != 1.0 || metricsTTM[0].CurrentRatioTTM != 1.07035746912159 ||
+		metricsTTM[0].EnterpriseValueTTM != 4_922_455_686_740 || len(memberSet(t, metricsTTM[0])) != 43 {
+		t.Fatalf("key_metrics_ttm = %+v", metricsTTM)
 	}
 	ratios := assertFixtureParity[FinancialRatios](t, "financial_ratios.json")
 	if len(ratios) != 1 || ratios[0].Symbol != "AAPL" || ratios[0].FiscalYear != "2025" ||
@@ -31,11 +31,11 @@ func TestDocumentedMetricsRatiosAndGrowthFixturesDecodeExactValues(t *testing.T)
 		ratios[0].DividendYieldPercentage != 0.4038238951672435 || len(memberSet(t, ratios[0])) != 66 {
 		t.Fatalf("financial_ratios = %+v", ratios)
 	}
-	ratiosTtm := assertFixtureParity[FinancialRatiosTTM](t, "financial_ratios_ttm.json")
-	if len(ratiosTtm) != 1 || ratiosTtm[0].EnterpriseValueTTM != 4_922_455_686_740 ||
-		ratiosTtm[0].InterestCoverageRatioTTM != 0.0 || ratiosTtm[0].NetIncomePerEbtTTM != 0.8300602695198754 ||
-		len(memberSet(t, ratiosTtm[0])) != 62 {
-		t.Fatalf("financial_ratios_ttm = %+v", ratiosTtm)
+	ratiosTTM := assertFixtureParity[FinancialRatiosTTM](t, "financial_ratios_ttm.json")
+	if len(ratiosTTM) != 1 || ratiosTTM[0].EnterpriseValueTTM != 4_922_455_686_740 ||
+		ratiosTTM[0].InterestCoverageRatioTTM != 0.0 || ratiosTTM[0].NetIncomePerEbtTTM != 0.8300602695198754 ||
+		len(memberSet(t, ratiosTTM[0])) != 62 {
+		t.Fatalf("financial_ratios_ttm = %+v", ratiosTTM)
 	}
 
 	income := assertFixtureParity[IncomeStatementGrowth](t, "income_statement_growth.json")

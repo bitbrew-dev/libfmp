@@ -78,10 +78,10 @@ func TestSecFilingsMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(bySymbol) != 1 || bySymbol[0].Symbol != "AAPL" {
 		t.Fatalf("BySymbol = %+v, %v", bySymbol, err)
 	}
-	byCik, err := client.SECFilings.ByCIK(ctx, NewSECFilingsByCIKQuery("0000320193", from, to).
+	byCIK, err := client.SECFilings.ByCIK(ctx, NewSECFilingsByCIKQuery("0000320193", from, to).
 		WithLimit(math.MaxUint32).WithPage(math.MaxUint32))
-	if err != nil || len(byCik) != 1 || byCik[0].CIK != "0000320193" || byCik[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
-		t.Fatalf("ByCIK = %+v, %v", byCik, err)
+	if err != nil || len(byCIK) != 1 || byCIK[0].CIK != "0000320193" || byCIK[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
+		t.Fatalf("ByCIK = %+v, %v", byCIK, err)
 	}
 
 	byName, err := client.SECFilings.SearchCompaniesByName(ctx, NewSECCompaniesByNameQuery("Berkshire, Hathaway / Fund"))
@@ -92,9 +92,9 @@ func TestSecFilingsMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(companyBySymbol) != 1 || companyBySymbol[0].Name != "APPLE INC." {
 		t.Fatalf("SearchCompaniesBySymbol = %+v, %v", companyBySymbol, err)
 	}
-	companyByCik, err := client.SECFilings.SearchCompaniesByCIK(ctx, NewSECCompaniesByCIKQuery("0000320193"))
-	if err != nil || len(companyByCik) != 1 || companyByCik[0] != companyBySymbol[0] {
-		t.Fatalf("SearchCompaniesByCIK = %+v, %v", companyByCik, err)
+	companyByCIK, err := client.SECFilings.SearchCompaniesByCIK(ctx, NewSECCompaniesByCIKQuery("0000320193"))
+	if err != nil || len(companyByCIK) != 1 || companyByCIK[0] != companyBySymbol[0] {
+		t.Fatalf("SearchCompaniesByCIK = %+v, %v", companyByCIK, err)
 	}
 	profile, err := client.SECFilings.CompanyProfile(ctx, NewSECCompanyProfileQuery("AAPL").WithCIKA("0000320193"))
 	if err != nil || len(profile) != 1 || profile[0].Symbol != "AAPL" || profile[0].SecurityType != nil {

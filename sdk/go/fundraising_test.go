@@ -57,9 +57,9 @@ func TestFundraisingMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if _, err := fund.LatestCrowdfundingOfferings(ctx, NewLatestCrowdfundingOfferingsQuery().WithLimit(0)); err != nil {
 		t.Fatalf("LatestCrowdfundingOfferings limit only: %v", err)
 	}
-	byCik, err := fund.CrowdfundingOfferingsByCIK(ctx, NewOfferingByCIKQuery("0001916078"))
-	if err != nil || len(byCik) != 1 || string(byCik[0].OfferingPrice) != "2" {
-		t.Fatalf("CrowdfundingOfferingsByCIK = %+v, %v", byCik, err)
+	byCIK, err := fund.CrowdfundingOfferingsByCIK(ctx, NewOfferingByCIKQuery("0001916078"))
+	if err != nil || len(byCIK) != 1 || string(byCIK[0].OfferingPrice) != "2" {
+		t.Fatalf("CrowdfundingOfferingsByCIK = %+v, %v", byCIK, err)
 	}
 	search, err := fund.SearchCrowdfundingOfferings(ctx, NewOfferingSearchQuery("NJOY / Class A"))
 	if err != nil || len(search) != 1 || search[0].CIK != "0001912939" {
