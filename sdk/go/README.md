@@ -149,7 +149,7 @@ entry in the generated `metadata_table.go`, keyed by the Go call path without
 the client (`Quote.Full`, `Statements.Growth.IncomeStatement`):
 
 ```go
-metadata, ok := fmp.EndpointMetadataFor("Tipranks.RatingsSearch")
+metadata, ok := fmp.EndpointMetadataFor("Tipranks.SearchRatings")
 if ok {
 	log.Printf("access %s, plan %s, bounds %s", metadata.Access, metadata.ConditionalPlan, metadata.Bounds)
 	if metadata.Bounds.Limit != nil && limit > *metadata.Bounds.Limit {

@@ -53,14 +53,14 @@ func TestTipranksMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	from := mustParseDate(t, "2025-06-10")
 	to := mustParseDate(t, "2026-06-10")
 
-	search, err := tip.RatingsSearch(ctx, NewTipRanksSearchQuery())
+	search, err := tip.SearchRatings(ctx, NewTipRanksSearchQuery())
 	if err != nil || len(search) != 1 || search[0].Symbol != "RR.L" {
-		t.Fatalf("RatingsSearch = %+v, %v", search, err)
+		t.Fatalf("SearchRatings = %+v, %v", search, err)
 	}
 	full := NewTipRanksSearchQuery().WithExpertUid("expert / one").WithSymbol("RR.L").WithFrom(from).WithTo(to).
 		WithLimit(5_000).WithPage(0).WithNonadjusted(false)
-	if _, err := tip.RatingsSearch(ctx, full); err != nil {
-		t.Fatalf("RatingsSearch with every setter: %v", err)
+	if _, err := tip.SearchRatings(ctx, full); err != nil {
+		t.Fatalf("SearchRatings with every setter: %v", err)
 	}
 	pitSymbol, err := tip.PointInTimeRatingsBySymbol(ctx, NewPointInTimeRatingsBySymbolQuery("AAPL"))
 	if err != nil || len(pitSymbol) != 1 || pitSymbol[0].PriceTarget == nil || string(*pitSymbol[0].PriceTarget) != "380" {
@@ -150,11 +150,11 @@ func TestTipranksQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "expertUID", ErrEmptyValue},
 		{"control character in optional expert uid", func() error {
-			_, err := tip.RatingsSearch(ctx, NewTipRanksSearchQuery().WithExpertUid("expert\nuid"))
+			_, err := tip.SearchRatings(ctx, NewTipRanksSearchQuery().WithExpertUid("expert\nuid"))
 			return err
 		}, "expertUID", ErrControlCharacterValue},
 		{"comma in optional ticker", func() error {
-			_, err := tip.RatingsSearch(ctx, NewTipRanksSearchQuery().WithSymbol("RR.L,AAPL"))
+			_, err := tip.SearchRatings(ctx, NewTipRanksSearchQuery().WithSymbol("RR.L,AAPL"))
 			return err
 		}, "symbol", ErrCommaInTicker},
 		{"blank required ticker", func() error {
@@ -208,7 +208,7 @@ func TestTipranksMethodsReportNumberKindAndMissingMembersAsDecodeErrors(t *testi
 	server, rec := newServer(t, jsonHandler(corrupted))
 	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
 
-	_, err := client.Tipranks.RatingsSearch(context.Background(), NewTipRanksSearchQuery())
+	_, err := client.Tipranks.SearchRatings(context.Background(), NewTipRanksSearchQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "tipranks-search")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"priceTarget"`) ||
 		!strings.Contains(cause.Error(), "JSON number") {

@@ -419,7 +419,7 @@ def check_analyst_contract(client: FmpClient) -> None:
 def check_tipranks_contract(client: FmpClient) -> None:
     """Type-check the flat tipranks namespace, its keyword-only filters and flag, and the nested count rows."""
     tipranks: TipranksNamespace = client.tipranks
-    ratings: list[TipRanksRatingSearchResult] = tipranks.ratings_search(
+    ratings: list[TipRanksRatingSearchResult] = tipranks.search_ratings(
         expert_uid="expert", symbol="RR.L", from_=datetime.date(2025, 6, 10), to="2026-06-10", limit=5000, page=0
     )
     recommended_on: datetime.date = ratings[0].recommendation_date

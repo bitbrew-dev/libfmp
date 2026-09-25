@@ -38,7 +38,7 @@ impl TipranksNamespace {
     /// Retrieves individual analyst ratings from the TipRanks add-on.
     #[pyo3(signature = (*, expert_uid=None, symbol=None, from_=None, to=None, limit=None, page=None, nonadjusted=None))]
     #[allow(clippy::too_many_arguments)]
-    fn ratings_search(
+    fn search_ratings(
         &self,
         py: Python<'_>,
         expert_uid: Option<&str>,
@@ -49,11 +49,11 @@ impl TipranksNamespace {
         page: Option<i64>,
         nonadjusted: Option<bool>,
     ) -> PyResult<Vec<TipRanksRatingSearchResult>> {
-        let query = ratings_search_query(expert_uid, symbol, from_, to, limit, page, nonadjusted)?;
+        let query = search_ratings_query(expert_uid, symbol, from_, to, limit, page, nonadjusted)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
-                client.tipranks_ratings_search(query).await
+                client.search_tipranks_ratings(query).await
             })
         })?;
         rows.map(|items| {
@@ -222,8 +222,8 @@ impl TipranksNamespace {
     }
 }
 
-/// Builds the `TipRanksSearchQuery` for `TipranksNamespace::ratings_search` from validated Python arguments.
-fn ratings_search_query(
+/// Builds the `TipRanksSearchQuery` for `TipranksNamespace::search_ratings` from validated Python arguments.
+fn search_ratings_query(
     expert_uid: Option<&str>,
     symbol: Option<&str>,
     from_: Option<args::DateArg>,

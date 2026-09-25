@@ -11,7 +11,7 @@ use libfmp::{
             AccessRequirement, ConditionalPlanRequirement, EndpointBounds, GeographicAvailability,
             PlanCondition,
         },
-        tipranks::{TipRanksSearchQuery, tipranks_ratings_search},
+        tipranks::{TipRanksSearchQuery, search_tipranks_ratings},
     },
     error::ErrorCategory,
     responses::tipranks::TipRanksRatingSearchResult,
@@ -25,7 +25,7 @@ const SEARCH: &[u8] = include_bytes!("fixtures/tipranks_ratings_search.json");
 
 #[test]
 fn descriptor_has_exact_path_response_type_and_tipranks_access_metadata() {
-    let endpoint = tipranks_ratings_search(TipRanksSearchQuery::new());
+    let endpoint = search_tipranks_ratings(TipRanksSearchQuery::new());
     assert_response_type(&endpoint);
     assert_eq!(endpoint.method(), HttpMethod::Get);
     assert_eq!(endpoint.id(), "tipranks-search");
@@ -110,7 +110,7 @@ async fn custom_proxy_sends_one_exact_full_query_request_with_auth_header_and_fi
         .with_page(Page(0))
         .with_nonadjusted(false);
 
-    let rows = client.tipranks_ratings_search(query).await.unwrap();
+    let rows = client.search_tipranks_ratings(query).await.unwrap();
     assert_eq!(rows.len(), 1);
     assert_eq!(rows[0].symbol.as_str(), "RR.L");
     assert_eq!(
@@ -157,7 +157,7 @@ async fn direct_header_and_query_auth_preserve_omission_and_exact_auth_position(
             .unwrap();
 
         let rows = client
-            .tipranks_ratings_search(TipRanksSearchQuery::new())
+            .search_tipranks_ratings(TipRanksSearchQuery::new())
             .await
             .unwrap();
         assert_eq!(rows[0].date.as_str(), "2026-07-30T16:40:58.403Z");
@@ -186,13 +186,13 @@ async fn bare_empty_array_decodes_and_malformed_root_keeps_endpoint_identity() {
 
     assert!(
         client
-            .tipranks_ratings_search(TipRanksSearchQuery::new())
+            .search_tipranks_ratings(TipRanksSearchQuery::new())
             .await
             .unwrap()
             .is_empty()
     );
     let error = client
-        .tipranks_ratings_search(TipRanksSearchQuery::new())
+        .search_tipranks_ratings(TipRanksSearchQuery::new())
         .await
         .unwrap_err();
     assert_eq!(error.category(), ErrorCategory::Decode);

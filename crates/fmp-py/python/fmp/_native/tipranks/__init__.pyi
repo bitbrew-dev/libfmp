@@ -360,7 +360,7 @@ class TipranksNamespace:
     Tipranks endpoints for a single client, exposed as `client.tipranks`.
     """
 
-    def ratings_search(
+    def search_ratings(
         self,
         *,
         expert_uid: typing.Optional[builtins.str] = None,

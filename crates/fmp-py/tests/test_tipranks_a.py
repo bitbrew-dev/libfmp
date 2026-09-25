@@ -40,9 +40,9 @@ def test_tipranks_namespace_is_the_generated_type(client: Any) -> None:
 
 
 def test_ratings_search_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
-    """``ratings_search`` encodes every optional in wire order and decodes the rating row."""
+    """``search_ratings`` encodes every optional in wire order and decodes the rating row."""
     fixture_server.route("/tipranks-search", load_fixture("tipranks_ratings_search.json"))
-    rows = client.tipranks.ratings_search(
+    rows = client.tipranks.search_ratings(
         expert_uid=EXPERT_UID,
         symbol="RR.L",
         from_=SUMMARY_FROM,
@@ -72,9 +72,9 @@ def test_ratings_search_with_every_option(client: Any, fixture_server: FixtureSe
 
 
 def test_ratings_search_takes_no_required_arguments(client: Any, fixture_server: FixtureServer) -> None:
-    """``ratings_search`` with nothing set hits the bare path with no query string."""
+    """``search_ratings`` with nothing set hits the bare path with no query string."""
     fixture_server.route("/tipranks-search", load_fixture("tipranks_ratings_search.json"))
-    rows = client.tipranks.ratings_search()
+    rows = client.tipranks.search_ratings()
 
     assert fixture_server.requests[0].target == "/tipranks-search"
     assert len(rows) == 1
@@ -83,7 +83,7 @@ def test_ratings_search_takes_no_required_arguments(client: Any, fixture_server:
 def test_ratings_search_encodes_a_true_flag_independently(client: Any, fixture_server: FixtureServer) -> None:
     """``nonadjusted=True`` reaches the wire as ``true`` and the other optionals stay out."""
     fixture_server.route("/tipranks-search", load_fixture("tipranks_ratings_search.json"))
-    client.tipranks.ratings_search(symbol="RR.L", nonadjusted=True)
+    client.tipranks.search_ratings(symbol="RR.L", nonadjusted=True)
 
     assert fixture_server.requests[0].target == "/tipranks-search?symbol=RR.L&nonadjusted=true"
 
