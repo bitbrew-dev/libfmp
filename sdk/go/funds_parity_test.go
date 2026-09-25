@@ -170,7 +170,7 @@ func fundsRewrite(t *testing.T, fixture string, members map[string]string) []byt
 }
 
 // Mirrors integer_widths_signed_change_and_decimal_market_values_are_preserved.
-func TestFundsIntegersPreserveTheFullInt64AndUint64Domains(t *testing.T) {
+func TestFundsExtremeIntegersDecodeIntoQuantityAmountAndCountMembers(t *testing.T) {
 	t.Parallel()
 	const maxUint64 = "18446744073709551615"
 	var holdings []EtfFundHolding
