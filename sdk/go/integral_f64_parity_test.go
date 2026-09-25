@@ -120,3 +120,25 @@ func TestQuantityAndAmountFieldsDecodeExponentForms(t *testing.T) {
 		t.Fatalf("InstitutionalHolding = %+v, %v", holding, err)
 	}
 }
+
+// Issue #341: statement amounts documented as JSON integers decode a
+// fractional, integral-float, or exponent-form number too, mirroring
+// crates/libfmp/tests/integral_f64_responses.rs.
+func TestStatementAmountsDecodeFractionalAndExponentForms(t *testing.T) {
+	t.Parallel()
+
+	income := assertFixtureParity[IncomeStatement](t, "income_statement_fractional_synthetic.json")
+	if len(income) != 1 || income[0].Revenue != 416_161_000_000.5 || income[0].Ebitda != 144_427_000_000 {
+		t.Fatalf("income_statement_fractional_synthetic = %+v", income)
+	}
+
+	var rows []IncomeStatement
+	source := statementsWithMember(t, "income_statement_fractional_synthetic.json", "revenue", "4.161610000005e11")
+	if err := json.Unmarshal(source, &rows); err != nil || rows[0].Revenue != 416_161_000_000.5 {
+		t.Fatalf("IncomeStatement = %+v, %v", rows, err)
+	}
+	source = statementsWithMember(t, "income_statement_fractional_synthetic.json", "ebitda", "-1.44427E11")
+	if err := json.Unmarshal(source, &rows); err != nil || rows[0].Ebitda != -144_427_000_000 {
+		t.Fatalf("IncomeStatement = %+v, %v", rows, err)
+	}
+}
