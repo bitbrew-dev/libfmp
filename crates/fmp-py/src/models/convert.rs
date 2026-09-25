@@ -42,6 +42,29 @@ pub(crate) fn py_to_number(value: &Bound<'_, PyAny>) -> PyResult<serde_json::Num
     )))
 }
 
+/// Rewrites a provider `serde_json::Number` into the text [`py_to_number`]
+/// produces for the same Python value.
+///
+/// Under `arbitrary_precision` a `Number` compares by its literal text, so
+/// `10.00` and `10.0` differ. Storing the canonical form keeps the derived
+/// value equality stable across pickling and `Row(**row.to_dict())`: an
+/// integer literal keeps its digits (`-0` becomes `0`), any other literal is
+/// re-spelled from its `f64`, and a literal no `f64` holds is kept as-is.
+pub(crate) fn canonical_number(number: serde_json::Number) -> serde_json::Number {
+    let text = number.as_str();
+    let digits = text.strip_prefix('-').unwrap_or(text);
+    if !digits.is_empty() && digits.bytes().all(|byte| byte.is_ascii_digit()) {
+        if digits.bytes().all(|byte| byte == b'0') {
+            return serde_json::Number::from(0u8);
+        }
+        return number;
+    }
+    number
+        .as_f64()
+        .and_then(serde_json::Number::from_f64)
+        .unwrap_or(number)
+}
+
 /// A model field as `to_dict()` stores it: native values as-is, nested models
 /// as their own `to_dict()`, recursively through `Option` and `Vec`.
 pub(crate) trait DictValue {
@@ -167,6 +190,31 @@ mod tests {
                     model.eq(&dynamic).expect("comparable"),
                     "value differs for {text}: {model} vs {dynamic}"
                 );
+            }
+        });
+    }
+
+    #[test]
+    fn canonical_numbers_match_the_python_round_trip() {
+        with_py(|py| {
+            for text in [
+                "0",
+                "-0",
+                "42",
+                "-7",
+                "123456789012345678901234567890",
+                "10.00",
+                "1.5",
+                "2.0",
+                "1e3",
+                "1.0E7",
+                "-2.50e-5",
+            ] {
+                let number: serde_json::Number = serde_json::from_str(text).expect("number");
+                let canonical = canonical_number(number.clone());
+                let python = number_to_py(py, &number).expect("to python");
+                let round_trip = py_to_number(&python).expect("from python");
+                assert_eq!(canonical, round_trip, "{text} is not canonical");
             }
         });
     }

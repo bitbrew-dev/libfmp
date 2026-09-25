@@ -10,12 +10,14 @@ the keyword-only optionals, the query-less ``report_list`` rejecting
 arguments, and the structured status and decode failures.
 """
 
+import copy
 import datetime
+import pickle
 from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from conftest import FixtureServer, load_fixture
+from conftest import FIXTURES_DIR, FixtureServer, load_fixture
 from fmp.commitment_of_traders import (
     CommitmentOfTradersNamespace,
     CotAnalysis,
@@ -261,3 +263,25 @@ def test_decode_error_names_the_report_endpoint(
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.commitment_of_traders.report()
     assert raised.value.endpoint == "commitment-of-traders-report"
+
+
+@pytest.mark.parametrize(
+    ("literal", "value"),
+    [("100.00", 100.0), ("1.0E2", 100.0), ("-0", 0), ("250", 250)],
+    ids=["trailing-zeros", "exponent", "negative-zero", "integer"],
+)
+def test_decoded_number_spelling_survives_round_trips(
+    client: Any, fixture_server: FixtureServer, literal: str, value: float
+) -> None:
+    """A provider number spelled non-canonically still compares equal after pickle, copy, and ``to_dict``."""
+    raw = (FIXTURES_DIR / "cot_report.json").read_text(encoding="utf-8")
+    body = raw.replace('"pctOfOpenInterestAll": 100,', f'"pctOfOpenInterestAll": {literal},')
+    assert body != raw
+    fixture_server.route("/commitment-of-traders-report", body.encode("utf-8"))
+    row = client.commitment_of_traders.report()[0]
+
+    assert row.pct_of_open_interest_all == value
+    assert type(row.pct_of_open_interest_all) is type(value)
+    assert pickle.loads(pickle.dumps(row)) == row
+    assert copy.deepcopy(row) == row
+    assert CotReport(**row.to_dict()) == row

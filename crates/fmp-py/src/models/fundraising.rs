@@ -1264,7 +1264,7 @@ impl From<libfmp::responses::fundraising::CrowdfundingOffering> for Crowdfunding
             security_offered_type: value.security_offered_type,
             security_offered_other_description: value.security_offered_other_description,
             number_of_security_offered: value.number_of_security_offered,
-            offering_price: value.offering_price,
+            offering_price: crate::models::convert::canonical_number(value.offering_price),
             offering_amount: value.offering_amount,
             over_subscription_accepted: value.over_subscription_accepted.to_string(),
             over_subscription_allocation_type: value.over_subscription_allocation_type,

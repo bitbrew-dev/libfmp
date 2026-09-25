@@ -336,6 +336,17 @@ impl KeptField {
     pub(crate) fn conversion_assign(&self) -> String {
         let src = format!("value.{}", self.source_name);
         let expr = match &self.kind {
+            KeptKind::Passthrough {
+                pass: Pass::Number,
+                optional,
+            } => {
+                let canonical = "crate::models::convert::canonical_number";
+                if *optional {
+                    format!("{src}.map({canonical})")
+                } else {
+                    format!("{canonical}({src})")
+                }
+            }
             KeptKind::Passthrough { .. } => src,
             KeptKind::Scalar {
                 wraps, transform, ..
