@@ -215,6 +215,63 @@ impl BulkCashFlowStatement {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['symbol'], typing.Literal['reported_currency'], typing.Literal['cik'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['fiscal_year'], typing.Literal['period'], typing.Literal['net_income'], typing.Literal['depreciation_and_amortization'], typing.Literal['deferred_income_tax'], typing.Literal['stock_based_compensation'], typing.Literal['change_in_working_capital'], typing.Literal['accounts_receivables'], typing.Literal['inventory'], typing.Literal['accounts_payables'], typing.Literal['other_working_capital'], typing.Literal['other_non_cash_items'], typing.Literal['net_cash_provided_by_operating_activities'], typing.Literal['investments_in_property_plant_and_equipment'], typing.Literal['acquisitions_net'], typing.Literal['purchases_of_investments'], typing.Literal['sales_maturities_of_investments'], typing.Literal['other_investing_activities'], typing.Literal['net_cash_provided_by_investing_activities'], typing.Literal['net_debt_issuance'], typing.Literal['long_term_net_debt_issuance'], typing.Literal['short_term_net_debt_issuance'], typing.Literal['net_stock_issuance'], typing.Literal['net_common_stock_issuance'], typing.Literal['common_stock_issuance'], typing.Literal['common_stock_repurchased'], typing.Literal['net_preferred_stock_issuance'], typing.Literal['net_dividends_paid'], typing.Literal['common_dividends_paid'], typing.Literal['preferred_dividends_paid'], typing.Literal['other_financing_activities'], typing.Literal['net_cash_provided_by_financing_activities'], typing.Literal['effect_of_forex_changes_on_cash'], typing.Literal['net_change_in_cash'], typing.Literal['cash_at_end_of_period'], typing.Literal['cash_at_beginning_of_period'], typing.Literal['operating_cash_flow'], typing.Literal['capital_expenditure'], typing.Literal['free_cash_flow'], typing.Literal['income_taxes_paid'], typing.Literal['interest_paid']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "symbol",
+                "reported_currency",
+                "cik",
+                "filing_date",
+                "accepted_date",
+                "fiscal_year",
+                "period",
+                "net_income",
+                "depreciation_and_amortization",
+                "deferred_income_tax",
+                "stock_based_compensation",
+                "change_in_working_capital",
+                "accounts_receivables",
+                "inventory",
+                "accounts_payables",
+                "other_working_capital",
+                "other_non_cash_items",
+                "net_cash_provided_by_operating_activities",
+                "investments_in_property_plant_and_equipment",
+                "acquisitions_net",
+                "purchases_of_investments",
+                "sales_maturities_of_investments",
+                "other_investing_activities",
+                "net_cash_provided_by_investing_activities",
+                "net_debt_issuance",
+                "long_term_net_debt_issuance",
+                "short_term_net_debt_issuance",
+                "net_stock_issuance",
+                "net_common_stock_issuance",
+                "common_stock_issuance",
+                "common_stock_repurchased",
+                "net_preferred_stock_issuance",
+                "net_dividends_paid",
+                "common_dividends_paid",
+                "preferred_dividends_paid",
+                "other_financing_activities",
+                "net_cash_provided_by_financing_activities",
+                "effect_of_forex_changes_on_cash",
+                "net_change_in_cash",
+                "cash_at_end_of_period",
+                "cash_at_beginning_of_period",
+                "operating_cash_flow",
+                "capital_expenditure",
+                "free_cash_flow",
+                "income_taxes_paid",
+                "interest_paid",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -431,6 +488,436 @@ impl BulkCashFlowStatement {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BulkCashFlowStatement",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "reported_currency",
+                    self.reported_currency.clone().into_bound_py_any(py)?,
+                ),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                ("net_income", self.net_income.clone().into_bound_py_any(py)?),
+                (
+                    "depreciation_and_amortization",
+                    self.depreciation_and_amortization
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "deferred_income_tax",
+                    self.deferred_income_tax.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "stock_based_compensation",
+                    self.stock_based_compensation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "change_in_working_capital",
+                    self.change_in_working_capital
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "accounts_receivables",
+                    self.accounts_receivables.clone().into_bound_py_any(py)?,
+                ),
+                ("inventory", self.inventory.clone().into_bound_py_any(py)?),
+                (
+                    "accounts_payables",
+                    self.accounts_payables.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "other_working_capital",
+                    self.other_working_capital.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "other_non_cash_items",
+                    self.other_non_cash_items.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "net_cash_provided_by_operating_activities",
+                    self.net_cash_provided_by_operating_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "investments_in_property_plant_and_equipment",
+                    self.investments_in_property_plant_and_equipment
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "acquisitions_net",
+                    self.acquisitions_net.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "purchases_of_investments",
+                    self.purchases_of_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "sales_maturities_of_investments",
+                    self.sales_maturities_of_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "other_investing_activities",
+                    self.other_investing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_cash_provided_by_investing_activities",
+                    self.net_cash_provided_by_investing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_debt_issuance",
+                    self.net_debt_issuance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "long_term_net_debt_issuance",
+                    self.long_term_net_debt_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "short_term_net_debt_issuance",
+                    self.short_term_net_debt_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_stock_issuance",
+                    self.net_stock_issuance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "net_common_stock_issuance",
+                    self.net_common_stock_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "common_stock_issuance",
+                    self.common_stock_issuance.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "common_stock_repurchased",
+                    self.common_stock_repurchased
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_preferred_stock_issuance",
+                    self.net_preferred_stock_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_dividends_paid",
+                    self.net_dividends_paid.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "common_dividends_paid",
+                    self.common_dividends_paid.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "preferred_dividends_paid",
+                    self.preferred_dividends_paid
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "other_financing_activities",
+                    self.other_financing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_cash_provided_by_financing_activities",
+                    self.net_cash_provided_by_financing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "effect_of_forex_changes_on_cash",
+                    self.effect_of_forex_changes_on_cash
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "net_change_in_cash",
+                    self.net_change_in_cash.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_at_end_of_period",
+                    self.cash_at_end_of_period.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "cash_at_beginning_of_period",
+                    self.cash_at_beginning_of_period
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cash_flow",
+                    self.operating_cash_flow.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "capital_expenditure",
+                    self.capital_expenditure.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow",
+                    self.free_cash_flow.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "income_taxes_paid",
+                    self.income_taxes_paid.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "interest_paid",
+                    self.interest_paid.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "reported_currency",
+            crate::models::convert::DictValue::dict_value(&self.reported_currency, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "net_income",
+            crate::models::convert::DictValue::dict_value(&self.net_income, py)?,
+        )?;
+        dict.set_item(
+            "depreciation_and_amortization",
+            crate::models::convert::DictValue::dict_value(&self.depreciation_and_amortization, py)?,
+        )?;
+        dict.set_item(
+            "deferred_income_tax",
+            crate::models::convert::DictValue::dict_value(&self.deferred_income_tax, py)?,
+        )?;
+        dict.set_item(
+            "stock_based_compensation",
+            crate::models::convert::DictValue::dict_value(&self.stock_based_compensation, py)?,
+        )?;
+        dict.set_item(
+            "change_in_working_capital",
+            crate::models::convert::DictValue::dict_value(&self.change_in_working_capital, py)?,
+        )?;
+        dict.set_item(
+            "accounts_receivables",
+            crate::models::convert::DictValue::dict_value(&self.accounts_receivables, py)?,
+        )?;
+        dict.set_item(
+            "inventory",
+            crate::models::convert::DictValue::dict_value(&self.inventory, py)?,
+        )?;
+        dict.set_item(
+            "accounts_payables",
+            crate::models::convert::DictValue::dict_value(&self.accounts_payables, py)?,
+        )?;
+        dict.set_item(
+            "other_working_capital",
+            crate::models::convert::DictValue::dict_value(&self.other_working_capital, py)?,
+        )?;
+        dict.set_item(
+            "other_non_cash_items",
+            crate::models::convert::DictValue::dict_value(&self.other_non_cash_items, py)?,
+        )?;
+        dict.set_item(
+            "net_cash_provided_by_operating_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.net_cash_provided_by_operating_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "investments_in_property_plant_and_equipment",
+            crate::models::convert::DictValue::dict_value(
+                &self.investments_in_property_plant_and_equipment,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "acquisitions_net",
+            crate::models::convert::DictValue::dict_value(&self.acquisitions_net, py)?,
+        )?;
+        dict.set_item(
+            "purchases_of_investments",
+            crate::models::convert::DictValue::dict_value(&self.purchases_of_investments, py)?,
+        )?;
+        dict.set_item(
+            "sales_maturities_of_investments",
+            crate::models::convert::DictValue::dict_value(
+                &self.sales_maturities_of_investments,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "other_investing_activities",
+            crate::models::convert::DictValue::dict_value(&self.other_investing_activities, py)?,
+        )?;
+        dict.set_item(
+            "net_cash_provided_by_investing_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.net_cash_provided_by_investing_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "net_debt_issuance",
+            crate::models::convert::DictValue::dict_value(&self.net_debt_issuance, py)?,
+        )?;
+        dict.set_item(
+            "long_term_net_debt_issuance",
+            crate::models::convert::DictValue::dict_value(&self.long_term_net_debt_issuance, py)?,
+        )?;
+        dict.set_item(
+            "short_term_net_debt_issuance",
+            crate::models::convert::DictValue::dict_value(&self.short_term_net_debt_issuance, py)?,
+        )?;
+        dict.set_item(
+            "net_stock_issuance",
+            crate::models::convert::DictValue::dict_value(&self.net_stock_issuance, py)?,
+        )?;
+        dict.set_item(
+            "net_common_stock_issuance",
+            crate::models::convert::DictValue::dict_value(&self.net_common_stock_issuance, py)?,
+        )?;
+        dict.set_item(
+            "common_stock_issuance",
+            crate::models::convert::DictValue::dict_value(&self.common_stock_issuance, py)?,
+        )?;
+        dict.set_item(
+            "common_stock_repurchased",
+            crate::models::convert::DictValue::dict_value(&self.common_stock_repurchased, py)?,
+        )?;
+        dict.set_item(
+            "net_preferred_stock_issuance",
+            crate::models::convert::DictValue::dict_value(&self.net_preferred_stock_issuance, py)?,
+        )?;
+        dict.set_item(
+            "net_dividends_paid",
+            crate::models::convert::DictValue::dict_value(&self.net_dividends_paid, py)?,
+        )?;
+        dict.set_item(
+            "common_dividends_paid",
+            crate::models::convert::DictValue::dict_value(&self.common_dividends_paid, py)?,
+        )?;
+        dict.set_item(
+            "preferred_dividends_paid",
+            crate::models::convert::DictValue::dict_value(&self.preferred_dividends_paid, py)?,
+        )?;
+        dict.set_item(
+            "other_financing_activities",
+            crate::models::convert::DictValue::dict_value(&self.other_financing_activities, py)?,
+        )?;
+        dict.set_item(
+            "net_cash_provided_by_financing_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.net_cash_provided_by_financing_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "effect_of_forex_changes_on_cash",
+            crate::models::convert::DictValue::dict_value(
+                &self.effect_of_forex_changes_on_cash,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "net_change_in_cash",
+            crate::models::convert::DictValue::dict_value(&self.net_change_in_cash, py)?,
+        )?;
+        dict.set_item(
+            "cash_at_end_of_period",
+            crate::models::convert::DictValue::dict_value(&self.cash_at_end_of_period, py)?,
+        )?;
+        dict.set_item(
+            "cash_at_beginning_of_period",
+            crate::models::convert::DictValue::dict_value(&self.cash_at_beginning_of_period, py)?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow",
+            crate::models::convert::DictValue::dict_value(&self.operating_cash_flow, py)?,
+        )?;
+        dict.set_item(
+            "capital_expenditure",
+            crate::models::convert::DictValue::dict_value(&self.capital_expenditure, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow, py)?,
+        )?;
+        dict.set_item(
+            "income_taxes_paid",
+            crate::models::convert::DictValue::dict_value(&self.income_taxes_paid, py)?,
+        )?;
+        dict.set_item(
+            "interest_paid",
+            crate::models::convert::DictValue::dict_value(&self.interest_paid, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkCashFlowStatement> for BulkCashFlowStatement {
@@ -492,6 +979,12 @@ impl From<libfmp::responses::bulk::BulkCashFlowStatement> for BulkCashFlowStatem
             income_taxes_paid: value.income_taxes_paid.into_inner(),
             interest_paid: value.interest_paid.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for BulkCashFlowStatement {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -684,6 +1177,58 @@ impl BulkCashFlowStatementGrowth {
 
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
+
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['fiscal_year'], typing.Literal['period'], typing.Literal['reported_currency'], typing.Literal['growth_net_income'], typing.Literal['growth_depreciation_and_amortization'], typing.Literal['growth_deferred_income_tax'], typing.Literal['growth_stock_based_compensation'], typing.Literal['growth_change_in_working_capital'], typing.Literal['growth_accounts_receivables'], typing.Literal['growth_inventory'], typing.Literal['growth_accounts_payables'], typing.Literal['growth_other_working_capital'], typing.Literal['growth_other_non_cash_items'], typing.Literal['growth_net_cash_provided_by_operating_activities'], typing.Literal['growth_investments_in_property_plant_and_equipment'], typing.Literal['growth_acquisitions_net'], typing.Literal['growth_purchases_of_investments'], typing.Literal['growth_sales_maturities_of_investments'], typing.Literal['growth_other_investing_activities'], typing.Literal['growth_net_cash_used_for_investing_activities'], typing.Literal['growth_debt_repayment'], typing.Literal['growth_common_stock_issued'], typing.Literal['growth_common_stock_repurchased'], typing.Literal['growth_dividends_paid'], typing.Literal['growth_other_financing_activities'], typing.Literal['growth_net_cash_used_provided_by_financing_activities'], typing.Literal['growth_effect_of_forex_changes_on_cash'], typing.Literal['growth_net_change_in_cash'], typing.Literal['growth_cash_at_end_of_period'], typing.Literal['growth_cash_at_beginning_of_period'], typing.Literal['growth_operating_cash_flow'], typing.Literal['growth_capital_expenditure'], typing.Literal['growth_free_cash_flow'], typing.Literal['growth_net_debt_issuance'], typing.Literal['growth_long_term_net_debt_issuance'], typing.Literal['growth_short_term_net_debt_issuance'], typing.Literal['growth_net_stock_issuance'], typing.Literal['growth_preferred_dividends_paid'], typing.Literal['growth_income_taxes_paid'], typing.Literal['growth_interest_paid']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "fiscal_year",
+                "period",
+                "reported_currency",
+                "growth_net_income",
+                "growth_depreciation_and_amortization",
+                "growth_deferred_income_tax",
+                "growth_stock_based_compensation",
+                "growth_change_in_working_capital",
+                "growth_accounts_receivables",
+                "growth_inventory",
+                "growth_accounts_payables",
+                "growth_other_working_capital",
+                "growth_other_non_cash_items",
+                "growth_net_cash_provided_by_operating_activities",
+                "growth_investments_in_property_plant_and_equipment",
+                "growth_acquisitions_net",
+                "growth_purchases_of_investments",
+                "growth_sales_maturities_of_investments",
+                "growth_other_investing_activities",
+                "growth_net_cash_used_for_investing_activities",
+                "growth_debt_repayment",
+                "growth_common_stock_issued",
+                "growth_common_stock_repurchased",
+                "growth_dividends_paid",
+                "growth_other_financing_activities",
+                "growth_net_cash_used_provided_by_financing_activities",
+                "growth_effect_of_forex_changes_on_cash",
+                "growth_net_change_in_cash",
+                "growth_cash_at_end_of_period",
+                "growth_cash_at_beginning_of_period",
+                "growth_operating_cash_flow",
+                "growth_capital_expenditure",
+                "growth_free_cash_flow",
+                "growth_net_debt_issuance",
+                "growth_long_term_net_debt_issuance",
+                "growth_short_term_net_debt_issuance",
+                "growth_net_stock_issuance",
+                "growth_preferred_dividends_paid",
+                "growth_income_taxes_paid",
+                "growth_interest_paid",
+            ],
+        )
+    }
 
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
@@ -912,6 +1457,460 @@ impl BulkCashFlowStatementGrowth {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "BulkCashFlowStatementGrowth",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                (
+                    "reported_currency",
+                    self.reported_currency.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_income",
+                    self.growth_net_income.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_depreciation_and_amortization",
+                    self.growth_depreciation_and_amortization
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_deferred_income_tax",
+                    self.growth_deferred_income_tax
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_stock_based_compensation",
+                    self.growth_stock_based_compensation
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_change_in_working_capital",
+                    self.growth_change_in_working_capital
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_accounts_receivables",
+                    self.growth_accounts_receivables
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_inventory",
+                    self.growth_inventory.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_accounts_payables",
+                    self.growth_accounts_payables
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_working_capital",
+                    self.growth_other_working_capital
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_non_cash_items",
+                    self.growth_other_non_cash_items
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_cash_provided_by_operating_activities",
+                    self.growth_net_cash_provided_by_operating_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_investments_in_property_plant_and_equipment",
+                    self.growth_investments_in_property_plant_and_equipment
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_acquisitions_net",
+                    self.growth_acquisitions_net.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_purchases_of_investments",
+                    self.growth_purchases_of_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_sales_maturities_of_investments",
+                    self.growth_sales_maturities_of_investments
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_investing_activities",
+                    self.growth_other_investing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_cash_used_for_investing_activities",
+                    self.growth_net_cash_used_for_investing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_debt_repayment",
+                    self.growth_debt_repayment.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_common_stock_issued",
+                    self.growth_common_stock_issued
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_common_stock_repurchased",
+                    self.growth_common_stock_repurchased
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_dividends_paid",
+                    self.growth_dividends_paid.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_financing_activities",
+                    self.growth_other_financing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_cash_used_provided_by_financing_activities",
+                    self.growth_net_cash_used_provided_by_financing_activities
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_effect_of_forex_changes_on_cash",
+                    self.growth_effect_of_forex_changes_on_cash
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_change_in_cash",
+                    self.growth_net_change_in_cash
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_cash_at_end_of_period",
+                    self.growth_cash_at_end_of_period
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_cash_at_beginning_of_period",
+                    self.growth_cash_at_beginning_of_period
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_operating_cash_flow",
+                    self.growth_operating_cash_flow
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_capital_expenditure",
+                    self.growth_capital_expenditure
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_free_cash_flow",
+                    self.growth_free_cash_flow.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_debt_issuance",
+                    self.growth_net_debt_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_long_term_net_debt_issuance",
+                    self.growth_long_term_net_debt_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_short_term_net_debt_issuance",
+                    self.growth_short_term_net_debt_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_stock_issuance",
+                    self.growth_net_stock_issuance
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_preferred_dividends_paid",
+                    self.growth_preferred_dividends_paid
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_income_taxes_paid",
+                    self.growth_income_taxes_paid
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_interest_paid",
+                    self.growth_interest_paid.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "reported_currency",
+            crate::models::convert::DictValue::dict_value(&self.reported_currency, py)?,
+        )?;
+        dict.set_item(
+            "growth_net_income",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_income, py)?,
+        )?;
+        dict.set_item(
+            "growth_depreciation_and_amortization",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_depreciation_and_amortization,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_deferred_income_tax",
+            crate::models::convert::DictValue::dict_value(&self.growth_deferred_income_tax, py)?,
+        )?;
+        dict.set_item(
+            "growth_stock_based_compensation",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_stock_based_compensation,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_change_in_working_capital",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_change_in_working_capital,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_accounts_receivables",
+            crate::models::convert::DictValue::dict_value(&self.growth_accounts_receivables, py)?,
+        )?;
+        dict.set_item(
+            "growth_inventory",
+            crate::models::convert::DictValue::dict_value(&self.growth_inventory, py)?,
+        )?;
+        dict.set_item(
+            "growth_accounts_payables",
+            crate::models::convert::DictValue::dict_value(&self.growth_accounts_payables, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_working_capital",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_working_capital, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_non_cash_items",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_non_cash_items, py)?,
+        )?;
+        dict.set_item(
+            "growth_net_cash_provided_by_operating_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_net_cash_provided_by_operating_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_investments_in_property_plant_and_equipment",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_investments_in_property_plant_and_equipment,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_acquisitions_net",
+            crate::models::convert::DictValue::dict_value(&self.growth_acquisitions_net, py)?,
+        )?;
+        dict.set_item(
+            "growth_purchases_of_investments",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_purchases_of_investments,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_sales_maturities_of_investments",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_sales_maturities_of_investments,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_other_investing_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_other_investing_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_cash_used_for_investing_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_net_cash_used_for_investing_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_debt_repayment",
+            crate::models::convert::DictValue::dict_value(&self.growth_debt_repayment, py)?,
+        )?;
+        dict.set_item(
+            "growth_common_stock_issued",
+            crate::models::convert::DictValue::dict_value(&self.growth_common_stock_issued, py)?,
+        )?;
+        dict.set_item(
+            "growth_common_stock_repurchased",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_common_stock_repurchased,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_dividends_paid",
+            crate::models::convert::DictValue::dict_value(&self.growth_dividends_paid, py)?,
+        )?;
+        dict.set_item(
+            "growth_other_financing_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_other_financing_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_cash_used_provided_by_financing_activities",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_net_cash_used_provided_by_financing_activities,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_effect_of_forex_changes_on_cash",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_effect_of_forex_changes_on_cash,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_change_in_cash",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_change_in_cash, py)?,
+        )?;
+        dict.set_item(
+            "growth_cash_at_end_of_period",
+            crate::models::convert::DictValue::dict_value(&self.growth_cash_at_end_of_period, py)?,
+        )?;
+        dict.set_item(
+            "growth_cash_at_beginning_of_period",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_cash_at_beginning_of_period,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_operating_cash_flow",
+            crate::models::convert::DictValue::dict_value(&self.growth_operating_cash_flow, py)?,
+        )?;
+        dict.set_item(
+            "growth_capital_expenditure",
+            crate::models::convert::DictValue::dict_value(&self.growth_capital_expenditure, py)?,
+        )?;
+        dict.set_item(
+            "growth_free_cash_flow",
+            crate::models::convert::DictValue::dict_value(&self.growth_free_cash_flow, py)?,
+        )?;
+        dict.set_item(
+            "growth_net_debt_issuance",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_debt_issuance, py)?,
+        )?;
+        dict.set_item(
+            "growth_long_term_net_debt_issuance",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_long_term_net_debt_issuance,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_short_term_net_debt_issuance",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_short_term_net_debt_issuance,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_stock_issuance",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_stock_issuance, py)?,
+        )?;
+        dict.set_item(
+            "growth_preferred_dividends_paid",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_preferred_dividends_paid,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_income_taxes_paid",
+            crate::models::convert::DictValue::dict_value(&self.growth_income_taxes_paid, py)?,
+        )?;
+        dict.set_item(
+            "growth_interest_paid",
+            crate::models::convert::DictValue::dict_value(&self.growth_interest_paid, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkCashFlowStatementGrowth> for BulkCashFlowStatementGrowth {
@@ -980,5 +1979,11 @@ impl From<libfmp::responses::bulk::BulkCashFlowStatementGrowth> for BulkCashFlow
             growth_income_taxes_paid: value.growth_income_taxes_paid.into_inner(),
             growth_interest_paid: value.growth_interest_paid.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for BulkCashFlowStatementGrowth {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

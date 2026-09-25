@@ -168,6 +168,50 @@ impl IncomeStatementGrowth {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['fiscal_year'], typing.Literal['period'], typing.Literal['reported_currency'], typing.Literal['growth_revenue'], typing.Literal['growth_cost_of_revenue'], typing.Literal['growth_gross_profit'], typing.Literal['growth_gross_profit_ratio'], typing.Literal['growth_research_and_development_expenses'], typing.Literal['growth_general_and_administrative_expenses'], typing.Literal['growth_selling_and_marketing_expenses'], typing.Literal['growth_other_expenses'], typing.Literal['growth_operating_expenses'], typing.Literal['growth_cost_and_expenses'], typing.Literal['growth_interest_income'], typing.Literal['growth_interest_expense'], typing.Literal['growth_depreciation_and_amortization'], typing.Literal['growth_ebitda'], typing.Literal['growth_operating_income'], typing.Literal['growth_income_before_tax'], typing.Literal['growth_income_tax_expense'], typing.Literal['growth_net_income'], typing.Literal['growth_eps'], typing.Literal['growth_eps_diluted'], typing.Literal['growth_weighted_average_shs_out'], typing.Literal['growth_weighted_average_shs_out_dil'], typing.Literal['growth_ebit'], typing.Literal['growth_non_operating_income_excluding_interest'], typing.Literal['growth_net_interest_income'], typing.Literal['growth_total_other_income_expenses_net'], typing.Literal['growth_net_income_from_continuing_operations'], typing.Literal['growth_other_adjustments_to_net_income'], typing.Literal['growth_net_income_deductions']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "fiscal_year",
+                "period",
+                "reported_currency",
+                "growth_revenue",
+                "growth_cost_of_revenue",
+                "growth_gross_profit",
+                "growth_gross_profit_ratio",
+                "growth_research_and_development_expenses",
+                "growth_general_and_administrative_expenses",
+                "growth_selling_and_marketing_expenses",
+                "growth_other_expenses",
+                "growth_operating_expenses",
+                "growth_cost_and_expenses",
+                "growth_interest_income",
+                "growth_interest_expense",
+                "growth_depreciation_and_amortization",
+                "growth_ebitda",
+                "growth_operating_income",
+                "growth_income_before_tax",
+                "growth_income_tax_expense",
+                "growth_net_income",
+                "growth_eps",
+                "growth_eps_diluted",
+                "growth_weighted_average_shs_out",
+                "growth_weighted_average_shs_out_dil",
+                "growth_ebit",
+                "growth_non_operating_income_excluding_interest",
+                "growth_net_interest_income",
+                "growth_total_other_income_expenses_net",
+                "growth_net_income_from_continuing_operations",
+                "growth_other_adjustments_to_net_income",
+                "growth_net_income_deductions",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -334,6 +378,346 @@ impl IncomeStatementGrowth {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "IncomeStatementGrowth",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                (
+                    "reported_currency",
+                    self.reported_currency.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_revenue",
+                    self.growth_revenue.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_cost_of_revenue",
+                    self.growth_cost_of_revenue.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_gross_profit",
+                    self.growth_gross_profit.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_gross_profit_ratio",
+                    self.growth_gross_profit_ratio
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_research_and_development_expenses",
+                    self.growth_research_and_development_expenses
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_general_and_administrative_expenses",
+                    self.growth_general_and_administrative_expenses
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_selling_and_marketing_expenses",
+                    self.growth_selling_and_marketing_expenses
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_expenses",
+                    self.growth_other_expenses.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_operating_expenses",
+                    self.growth_operating_expenses
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_cost_and_expenses",
+                    self.growth_cost_and_expenses
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_interest_income",
+                    self.growth_interest_income.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_interest_expense",
+                    self.growth_interest_expense.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_depreciation_and_amortization",
+                    self.growth_depreciation_and_amortization
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_ebitda",
+                    self.growth_ebitda.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_operating_income",
+                    self.growth_operating_income.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_income_before_tax",
+                    self.growth_income_before_tax
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_income_tax_expense",
+                    self.growth_income_tax_expense
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_income",
+                    self.growth_net_income.clone().into_bound_py_any(py)?,
+                ),
+                ("growth_eps", self.growth_eps.clone().into_bound_py_any(py)?),
+                (
+                    "growth_eps_diluted",
+                    self.growth_eps_diluted.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_weighted_average_shs_out",
+                    self.growth_weighted_average_shs_out
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_weighted_average_shs_out_dil",
+                    self.growth_weighted_average_shs_out_dil
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_ebit",
+                    self.growth_ebit.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_non_operating_income_excluding_interest",
+                    self.growth_non_operating_income_excluding_interest
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_interest_income",
+                    self.growth_net_interest_income
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_total_other_income_expenses_net",
+                    self.growth_total_other_income_expenses_net
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_income_from_continuing_operations",
+                    self.growth_net_income_from_continuing_operations
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_other_adjustments_to_net_income",
+                    self.growth_other_adjustments_to_net_income
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_net_income_deductions",
+                    self.growth_net_income_deductions
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "reported_currency",
+            crate::models::convert::DictValue::dict_value(&self.reported_currency, py)?,
+        )?;
+        dict.set_item(
+            "growth_revenue",
+            crate::models::convert::DictValue::dict_value(&self.growth_revenue, py)?,
+        )?;
+        dict.set_item(
+            "growth_cost_of_revenue",
+            crate::models::convert::DictValue::dict_value(&self.growth_cost_of_revenue, py)?,
+        )?;
+        dict.set_item(
+            "growth_gross_profit",
+            crate::models::convert::DictValue::dict_value(&self.growth_gross_profit, py)?,
+        )?;
+        dict.set_item(
+            "growth_gross_profit_ratio",
+            crate::models::convert::DictValue::dict_value(&self.growth_gross_profit_ratio, py)?,
+        )?;
+        dict.set_item(
+            "growth_research_and_development_expenses",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_research_and_development_expenses,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_general_and_administrative_expenses",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_general_and_administrative_expenses,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_selling_and_marketing_expenses",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_selling_and_marketing_expenses,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_other_expenses",
+            crate::models::convert::DictValue::dict_value(&self.growth_other_expenses, py)?,
+        )?;
+        dict.set_item(
+            "growth_operating_expenses",
+            crate::models::convert::DictValue::dict_value(&self.growth_operating_expenses, py)?,
+        )?;
+        dict.set_item(
+            "growth_cost_and_expenses",
+            crate::models::convert::DictValue::dict_value(&self.growth_cost_and_expenses, py)?,
+        )?;
+        dict.set_item(
+            "growth_interest_income",
+            crate::models::convert::DictValue::dict_value(&self.growth_interest_income, py)?,
+        )?;
+        dict.set_item(
+            "growth_interest_expense",
+            crate::models::convert::DictValue::dict_value(&self.growth_interest_expense, py)?,
+        )?;
+        dict.set_item(
+            "growth_depreciation_and_amortization",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_depreciation_and_amortization,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_ebitda",
+            crate::models::convert::DictValue::dict_value(&self.growth_ebitda, py)?,
+        )?;
+        dict.set_item(
+            "growth_operating_income",
+            crate::models::convert::DictValue::dict_value(&self.growth_operating_income, py)?,
+        )?;
+        dict.set_item(
+            "growth_income_before_tax",
+            crate::models::convert::DictValue::dict_value(&self.growth_income_before_tax, py)?,
+        )?;
+        dict.set_item(
+            "growth_income_tax_expense",
+            crate::models::convert::DictValue::dict_value(&self.growth_income_tax_expense, py)?,
+        )?;
+        dict.set_item(
+            "growth_net_income",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_income, py)?,
+        )?;
+        dict.set_item(
+            "growth_eps",
+            crate::models::convert::DictValue::dict_value(&self.growth_eps, py)?,
+        )?;
+        dict.set_item(
+            "growth_eps_diluted",
+            crate::models::convert::DictValue::dict_value(&self.growth_eps_diluted, py)?,
+        )?;
+        dict.set_item(
+            "growth_weighted_average_shs_out",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_weighted_average_shs_out,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_weighted_average_shs_out_dil",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_weighted_average_shs_out_dil,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_ebit",
+            crate::models::convert::DictValue::dict_value(&self.growth_ebit, py)?,
+        )?;
+        dict.set_item(
+            "growth_non_operating_income_excluding_interest",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_non_operating_income_excluding_interest,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_interest_income",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_interest_income, py)?,
+        )?;
+        dict.set_item(
+            "growth_total_other_income_expenses_net",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_total_other_income_expenses_net,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_income_from_continuing_operations",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_net_income_from_continuing_operations,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_other_adjustments_to_net_income",
+            crate::models::convert::DictValue::dict_value(
+                &self.growth_other_adjustments_to_net_income,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "growth_net_income_deductions",
+            crate::models::convert::DictValue::dict_value(&self.growth_net_income_deductions, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::statements::growth::income::IncomeStatementGrowth>
@@ -380,5 +764,11 @@ impl From<libfmp::responses::statements::growth::income::IncomeStatementGrowth>
             growth_other_adjustments_to_net_income: value.growth_other_adjustments_to_net_income,
             growth_net_income_deductions: value.growth_net_income_deductions,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for IncomeStatementGrowth {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

@@ -96,6 +96,14 @@ class CryptoNamespace:
 @typing.final
 class CryptocurrencyListing:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["exchange"],
+        typing.Literal["ico_date"],
+        typing.Literal["circulating_supply"],
+        typing.Literal["total_supply"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -121,3 +129,9 @@ class CryptocurrencyListing:
         total_supply: builtins.float,
     ) -> CryptocurrencyListing: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

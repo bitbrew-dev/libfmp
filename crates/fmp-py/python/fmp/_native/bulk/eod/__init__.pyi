@@ -12,6 +12,16 @@ __all__ = [
 @typing.final
 class BulkEodBar:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["open"],
+        typing.Literal["low"],
+        typing.Literal["high"],
+        typing.Literal["close"],
+        typing.Literal["adj_close"],
+        typing.Literal["volume"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -43,3 +53,9 @@ class BulkEodBar:
         volume: builtins.str,
     ) -> BulkEodBar: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

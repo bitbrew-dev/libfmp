@@ -47,6 +47,21 @@ impl ForexPair {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['from_currency'], typing.Literal['to_currency'], typing.Literal['from_name'], typing.Literal['to_name']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "from_currency",
+                "to_currency",
+                "from_name",
+                "to_name",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -66,6 +81,53 @@ impl ForexPair {
         kwargs.set_item("to_name", self.to_name.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "ForexPair",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "from_currency",
+                    self.from_currency.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "to_currency",
+                    self.to_currency.clone().into_bound_py_any(py)?,
+                ),
+                ("from_name", self.from_name.clone().into_bound_py_any(py)?),
+                ("to_name", self.to_name.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "from_currency",
+            crate::models::convert::DictValue::dict_value(&self.from_currency, py)?,
+        )?;
+        dict.set_item(
+            "to_currency",
+            crate::models::convert::DictValue::dict_value(&self.to_currency, py)?,
+        )?;
+        dict.set_item(
+            "from_name",
+            crate::models::convert::DictValue::dict_value(&self.from_name, py)?,
+        )?;
+        dict.set_item(
+            "to_name",
+            crate::models::convert::DictValue::dict_value(&self.to_name, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::forex::ForexPair> for ForexPair {
@@ -77,5 +139,11 @@ impl From<libfmp::responses::forex::ForexPair> for ForexPair {
             from_name: value.from_name,
             to_name: value.to_name,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for ForexPair {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

@@ -16,6 +16,15 @@ __all__ = [
 @typing.final
 class AftermarketQuote:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["bid_size"],
+        typing.Literal["bid_price"],
+        typing.Literal["ask_size"],
+        typing.Literal["ask_price"],
+        typing.Literal["volume"],
+        typing.Literal["timestamp"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -44,11 +53,23 @@ class AftermarketQuote:
         timestamp: builtins.int,
     ) -> AftermarketQuote: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class AftermarketTrade:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["price"],
+        typing.Literal["trade_size"],
+        typing.Literal["timestamp"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -68,11 +89,36 @@ class AftermarketTrade:
         timestamp: builtins.int,
     ) -> AftermarketTrade: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class Quote:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["price"],
+        typing.Literal["change_percentage"],
+        typing.Literal["change"],
+        typing.Literal["volume"],
+        typing.Literal["day_low"],
+        typing.Literal["day_high"],
+        typing.Literal["year_high"],
+        typing.Literal["year_low"],
+        typing.Literal["market_cap"],
+        typing.Literal["price_avg_50"],
+        typing.Literal["price_avg_200"],
+        typing.Literal["exchange"],
+        typing.Literal["open"],
+        typing.Literal["previous_close"],
+        typing.Literal["timestamp"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -131,6 +177,12 @@ class Quote:
         timestamp: builtins.int,
     ) -> Quote: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -237,6 +289,12 @@ class QuoteNamespace:
 @typing.final
 class QuoteShort:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["price"],
+        typing.Literal["change"],
+        typing.Literal["volume"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -256,11 +314,31 @@ class QuoteShort:
         volume: builtins.float,
     ) -> QuoteShort: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockPriceChange:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["one_day"],
+        typing.Literal["five_days"],
+        typing.Literal["one_month"],
+        typing.Literal["three_months"],
+        typing.Literal["six_months"],
+        typing.Literal["year_to_date"],
+        typing.Literal["one_year"],
+        typing.Literal["three_years"],
+        typing.Literal["five_years"],
+        typing.Literal["ten_years"],
+        typing.Literal["max"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -304,3 +382,9 @@ class StockPriceChange:
         max: builtins.float,
     ) -> StockPriceChange: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

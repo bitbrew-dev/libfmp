@@ -15,6 +15,13 @@ __all__ = [
 @typing.final
 class EarningsTranscript:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["period"],
+        typing.Literal["year"],
+        typing.Literal["date"],
+        typing.Literal["content"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -37,11 +44,20 @@ class EarningsTranscript:
         content: builtins.str,
     ) -> EarningsTranscript: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EarningsTranscriptDate:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["quarter"], typing.Literal["fiscal_year"], typing.Literal["date"]
+    ]
 
     @property
     def quarter(self) -> builtins.int: ...
@@ -54,11 +70,23 @@ class EarningsTranscriptDate:
         cls, *, quarter: builtins.int, fiscal_year: builtins.int, date: datetime.date
     ) -> EarningsTranscriptDate: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class LatestEarningsTranscript:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["period"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["date"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -78,6 +106,12 @@ class LatestEarningsTranscript:
         date: datetime.date,
     ) -> LatestEarningsTranscript: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

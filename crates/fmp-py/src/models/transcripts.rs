@@ -38,6 +38,12 @@ impl LatestEarningsTranscript {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['period'], typing.Literal['fiscal_year'], typing.Literal['date']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "period", "fiscal_year", "date"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -53,6 +59,45 @@ impl LatestEarningsTranscript {
         kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "LatestEarningsTranscript",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::transcripts::LatestEarningsTranscript> for LatestEarningsTranscript {
@@ -63,6 +108,12 @@ impl From<libfmp::responses::transcripts::LatestEarningsTranscript> for LatestEa
             fiscal_year: value.fiscal_year.get(),
             date: value.date.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for LatestEarningsTranscript {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -108,6 +159,12 @@ impl EarningsTranscript {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['period'], typing.Literal['year'], typing.Literal['date'], typing.Literal['content']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "period", "year", "date", "content"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -121,6 +178,47 @@ impl EarningsTranscript {
         kwargs.set_item("content", self.content.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EarningsTranscript",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("content", self.content.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "content",
+            crate::models::convert::DictValue::dict_value(&self.content, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::transcripts::EarningsTranscript> for EarningsTranscript {
@@ -132,6 +230,12 @@ impl From<libfmp::responses::transcripts::EarningsTranscript> for EarningsTransc
             date: value.date.into_inner(),
             content: value.content,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EarningsTranscript {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -165,6 +269,12 @@ impl EarningsTranscriptDate {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['quarter'], typing.Literal['fiscal_year'], typing.Literal['date']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["quarter", "fiscal_year", "date"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -179,6 +289,40 @@ impl EarningsTranscriptDate {
         kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EarningsTranscriptDate",
+            &[
+                ("quarter", self.quarter.clone().into_bound_py_any(py)?),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "quarter",
+            crate::models::convert::DictValue::dict_value(&self.quarter, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::transcripts::EarningsTranscriptDate> for EarningsTranscriptDate {
@@ -188,5 +332,11 @@ impl From<libfmp::responses::transcripts::EarningsTranscriptDate> for EarningsTr
             fiscal_year: value.fiscal_year.get(),
             date: value.date.into_inner(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EarningsTranscriptDate {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

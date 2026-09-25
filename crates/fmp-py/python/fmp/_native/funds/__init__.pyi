@@ -23,6 +23,13 @@ __all__ = [
 @typing.final
 class EtfAssetExposure:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["asset"],
+        typing.Literal["shares_number"],
+        typing.Literal["weight_percentage"],
+        typing.Literal["market_value"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -45,11 +52,20 @@ class EtfAssetExposure:
         market_value: builtins.float,
     ) -> EtfAssetExposure: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EtfCountryWeighting:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["country"], typing.Literal["weight_percentage"]
+    ]
 
     @property
     def country(self) -> builtins.str: ...
@@ -60,11 +76,28 @@ class EtfCountryWeighting:
         cls, *, country: builtins.str, weight_percentage: builtins.str
     ) -> EtfCountryWeighting: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EtfFundHolding:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["asset"],
+        typing.Literal["name"],
+        typing.Literal["isin"],
+        typing.Literal["security_cusip"],
+        typing.Literal["shares_number"],
+        typing.Literal["weight_percentage"],
+        typing.Literal["market_value"],
+        typing.Literal["updated_at"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -99,11 +132,38 @@ class EtfFundHolding:
         updated_at: datetime.datetime,
     ) -> EtfFundHolding: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EtfFundInfo:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["description"],
+        typing.Literal["isin"],
+        typing.Literal["asset_class"],
+        typing.Literal["security_cusip"],
+        typing.Literal["domicile"],
+        typing.Literal["website"],
+        typing.Literal["etf_company"],
+        typing.Literal["expense_ratio"],
+        typing.Literal["assets_under_management"],
+        typing.Literal["avg_volume"],
+        typing.Literal["inception_date"],
+        typing.Literal["nav"],
+        typing.Literal["nav_currency"],
+        typing.Literal["holdings_count"],
+        typing.Literal["is_actively_trading"],
+        typing.Literal["updated_at"],
+        typing.Literal["sectors_list"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -168,11 +228,18 @@ class EtfFundInfo:
         sectors_list: typing.Sequence[EtfSectorExposure],
     ) -> EtfFundInfo: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EtfSectorExposure:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["industry"], typing.Literal["exposure"]]
 
     @property
     def industry(self) -> builtins.str: ...
@@ -183,11 +250,22 @@ class EtfSectorExposure:
         cls, *, industry: builtins.str, exposure: builtins.float
     ) -> EtfSectorExposure: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EtfSectorWeighting:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["sector"],
+        typing.Literal["weight_percentage"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -204,11 +282,42 @@ class EtfSectorWeighting:
         weight_percentage: builtins.float,
     ) -> EtfSectorWeighting: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class FundDisclosure:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["lei"],
+        typing.Literal["title"],
+        typing.Literal["cusip"],
+        typing.Literal["isin"],
+        typing.Literal["balance"],
+        typing.Literal["units"],
+        typing.Literal["currency_code"],
+        typing.Literal["val_usd"],
+        typing.Literal["pct_val"],
+        typing.Literal["payoff_profile"],
+        typing.Literal["asset_cat"],
+        typing.Literal["issuer_cat"],
+        typing.Literal["inv_country"],
+        typing.Literal["is_restricted_sec"],
+        typing.Literal["fair_val_level"],
+        typing.Literal["is_cash_collateral"],
+        typing.Literal["is_non_cash_collateral"],
+        typing.Literal["is_loan_by_fund"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -285,11 +394,26 @@ class FundDisclosure:
         is_loan_by_fund: builtins.str,
     ) -> FundDisclosure: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class FundDisclosureHolder:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["holder"],
+        typing.Literal["security_cusip"],
+        typing.Literal["shares"],
+        typing.Literal["date_reported"],
+        typing.Literal["change"],
+        typing.Literal["weight_percent"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -318,11 +442,32 @@ class FundDisclosureHolder:
         weight_percent: builtins.float,
     ) -> FundDisclosureHolder: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class FundDisclosureSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["class_id"],
+        typing.Literal["series_id"],
+        typing.Literal["entity_name"],
+        typing.Literal["entity_org_type"],
+        typing.Literal["series_name"],
+        typing.Literal["class_name"],
+        typing.Literal["reporting_file_number"],
+        typing.Literal["address"],
+        typing.Literal["city"],
+        typing.Literal["zip_code"],
+        typing.Literal["state"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -369,6 +514,12 @@ class FundDisclosureSearchResult:
         state: builtins.str,
     ) -> FundDisclosureSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

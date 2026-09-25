@@ -16,6 +16,56 @@ __all__ = [
 @typing.final
 class CrowdfundingOffering:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["company_name"],
+        typing.Literal["date"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["form_type"],
+        typing.Literal["form_signification"],
+        typing.Literal["name_of_issuer"],
+        typing.Literal["legal_status_form"],
+        typing.Literal["jurisdiction_organization"],
+        typing.Literal["issuer_street"],
+        typing.Literal["issuer_city"],
+        typing.Literal["issuer_state_or_country"],
+        typing.Literal["issuer_zip_code"],
+        typing.Literal["issuer_website"],
+        typing.Literal["intermediary_company_name"],
+        typing.Literal["intermediary_commission_cik"],
+        typing.Literal["intermediary_commission_file_number"],
+        typing.Literal["compensation_amount"],
+        typing.Literal["financial_interest"],
+        typing.Literal["security_offered_type"],
+        typing.Literal["security_offered_other_description"],
+        typing.Literal["number_of_security_offered"],
+        typing.Literal["offering_price"],
+        typing.Literal["offering_amount"],
+        typing.Literal["over_subscription_accepted"],
+        typing.Literal["over_subscription_allocation_type"],
+        typing.Literal["maximum_offering_amount"],
+        typing.Literal["offering_deadline_date"],
+        typing.Literal["current_number_of_employees"],
+        typing.Literal["total_asset_most_recent_fiscal_year"],
+        typing.Literal["total_asset_prior_fiscal_year"],
+        typing.Literal["cash_and_cash_equivalent_most_recent_fiscal_year"],
+        typing.Literal["cash_and_cash_equivalent_prior_fiscal_year"],
+        typing.Literal["accounts_receivable_most_recent_fiscal_year"],
+        typing.Literal["accounts_receivable_prior_fiscal_year"],
+        typing.Literal["short_term_debt_most_recent_fiscal_year"],
+        typing.Literal["short_term_debt_prior_fiscal_year"],
+        typing.Literal["long_term_debt_most_recent_fiscal_year"],
+        typing.Literal["long_term_debt_prior_fiscal_year"],
+        typing.Literal["revenue_most_recent_fiscal_year"],
+        typing.Literal["revenue_prior_fiscal_year"],
+        typing.Literal["cost_goods_sold_most_recent_fiscal_year"],
+        typing.Literal["cost_goods_sold_prior_fiscal_year"],
+        typing.Literal["taxes_paid_most_recent_fiscal_year"],
+        typing.Literal["taxes_paid_prior_fiscal_year"],
+        typing.Literal["net_income_most_recent_fiscal_year"],
+        typing.Literal["net_income_prior_fiscal_year"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -167,11 +217,20 @@ class CrowdfundingOffering:
         net_income_prior_fiscal_year: builtins.float,
     ) -> CrowdfundingOffering: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CrowdfundingOfferingSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"], typing.Literal["name"], typing.Literal["date"]
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -188,6 +247,12 @@ class CrowdfundingOfferingSearchResult:
         date: typing.Optional[builtins.str],
     ) -> CrowdfundingOfferingSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -249,6 +314,51 @@ class FundraisingNamespace:
 @typing.final
 class RegulationDOffering:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["company_name"],
+        typing.Literal["date"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["form_type"],
+        typing.Literal["form_signification"],
+        typing.Literal["entity_name"],
+        typing.Literal["issuer_street"],
+        typing.Literal["issuer_city"],
+        typing.Literal["issuer_state_or_country"],
+        typing.Literal["issuer_state_or_country_description"],
+        typing.Literal["issuer_zip_code"],
+        typing.Literal["issuer_phone_number"],
+        typing.Literal["jurisdiction_of_incorporation"],
+        typing.Literal["entity_type"],
+        typing.Literal["incorporated_within_five_years"],
+        typing.Literal["year_of_incorporation"],
+        typing.Literal["related_person_first_name"],
+        typing.Literal["related_person_last_name"],
+        typing.Literal["related_person_street"],
+        typing.Literal["related_person_city"],
+        typing.Literal["related_person_state_or_country"],
+        typing.Literal["related_person_state_or_country_description"],
+        typing.Literal["related_person_zip_code"],
+        typing.Literal["related_person_relationship"],
+        typing.Literal["industry_group_type"],
+        typing.Literal["revenue_range"],
+        typing.Literal["federal_exemptions_exclusions"],
+        typing.Literal["is_amendment"],
+        typing.Literal["date_of_first_sale"],
+        typing.Literal["duration_of_offering_is_more_than_year"],
+        typing.Literal["securities_offered_are_of_equity_type"],
+        typing.Literal["is_business_combination_transaction"],
+        typing.Literal["minimum_investment_accepted"],
+        typing.Literal["total_offering_amount"],
+        typing.Literal["total_amount_sold"],
+        typing.Literal["total_amount_remaining"],
+        typing.Literal["has_non_accredited_investors"],
+        typing.Literal["total_number_already_invested"],
+        typing.Literal["sales_commissions"],
+        typing.Literal["finders_fees"],
+        typing.Literal["gross_proceeds_used"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -385,11 +495,20 @@ class RegulationDOffering:
         gross_proceeds_used: builtins.float,
     ) -> RegulationDOffering: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class RegulationDOfferingSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"], typing.Literal["name"], typing.Literal["date"]
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -402,3 +521,9 @@ class RegulationDOfferingSearchResult:
         cls, *, cik: builtins.str, name: builtins.str, date: datetime.datetime
     ) -> RegulationDOfferingSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

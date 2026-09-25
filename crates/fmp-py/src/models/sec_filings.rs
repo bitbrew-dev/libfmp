@@ -59,6 +59,24 @@ impl SecFiling {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['cik'], typing.Literal['filing_date'], typing.Literal['accepted_date'], typing.Literal['form_type'], typing.Literal['has_financials'], typing.Literal['link'], typing.Literal['final_link']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "cik",
+                "filing_date",
+                "accepted_date",
+                "form_type",
+                "has_financials",
+                "link",
+                "final_link",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -84,6 +102,71 @@ impl SecFiling {
         kwargs.set_item("final_link", self.final_link.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "SecFiling",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "filing_date",
+                    self.filing_date.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                ("form_type", self.form_type.clone().into_bound_py_any(py)?),
+                (
+                    "has_financials",
+                    self.has_financials.clone().into_bound_py_any(py)?,
+                ),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+                ("final_link", self.final_link.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "filing_date",
+            crate::models::convert::DictValue::dict_value(&self.filing_date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "form_type",
+            crate::models::convert::DictValue::dict_value(&self.form_type, py)?,
+        )?;
+        dict.set_item(
+            "has_financials",
+            crate::models::convert::DictValue::dict_value(&self.has_financials, py)?,
+        )?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        dict.set_item(
+            "final_link",
+            crate::models::convert::DictValue::dict_value(&self.final_link, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::sec_filings::SecFiling> for SecFiling {
@@ -98,6 +181,12 @@ impl From<libfmp::responses::sec_filings::SecFiling> for SecFiling {
             link: value.link,
             final_link: value.final_link,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for SecFiling {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -151,6 +240,23 @@ impl SecCompanySearchResult {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name'], typing.Literal['cik'], typing.Literal['sic_code'], typing.Literal['industry_title'], typing.Literal['business_address'], typing.Literal['phone_number']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "name",
+                "cik",
+                "sic_code",
+                "industry_title",
+                "business_address",
+                "phone_number",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -175,6 +281,66 @@ impl SecCompanySearchResult {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "SecCompanySearchResult",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                ("sic_code", self.sic_code.clone().into_bound_py_any(py)?),
+                (
+                    "industry_title",
+                    self.industry_title.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "business_address",
+                    self.business_address.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "phone_number",
+                    self.phone_number.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "sic_code",
+            crate::models::convert::DictValue::dict_value(&self.sic_code, py)?,
+        )?;
+        dict.set_item(
+            "industry_title",
+            crate::models::convert::DictValue::dict_value(&self.industry_title, py)?,
+        )?;
+        dict.set_item(
+            "business_address",
+            crate::models::convert::DictValue::dict_value(&self.business_address, py)?,
+        )?;
+        dict.set_item(
+            "phone_number",
+            crate::models::convert::DictValue::dict_value(&self.phone_number, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::sec_filings::SecCompanySearchResult> for SecCompanySearchResult {
@@ -188,6 +354,12 @@ impl From<libfmp::responses::sec_filings::SecCompanySearchResult> for SecCompany
             business_address: value.business_address,
             phone_number: value.phone_number,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for SecCompanySearchResult {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -362,6 +534,51 @@ impl SecCompanyProfile {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['cik'], typing.Literal['registrant_name'], typing.Literal['sic_code'], typing.Literal['sic_description'], typing.Literal['sic_group'], typing.Literal['isin'], typing.Literal['business_address'], typing.Literal['mailing_address'], typing.Literal['phone_number'], typing.Literal['postal_code'], typing.Literal['city'], typing.Literal['state'], typing.Literal['country'], typing.Literal['description'], typing.Literal['ceo'], typing.Literal['website'], typing.Literal['exchange'], typing.Literal['state_location'], typing.Literal['state_of_incorporation'], typing.Literal['fiscal_year_end'], typing.Literal['ipo_date'], typing.Literal['employees'], typing.Literal['sec_filings_url'], typing.Literal['tax_identification_number'], typing.Literal['fifty_two_week_range'], typing.Literal['is_active'], typing.Literal['asset_type'], typing.Literal['open_figi_composite'], typing.Literal['price_currency'], typing.Literal['market_sector'], typing.Literal['security_type'], typing.Literal['is_etf'], typing.Literal['is_adr'], typing.Literal['is_fund']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "cik",
+                "registrant_name",
+                "sic_code",
+                "sic_description",
+                "sic_group",
+                "isin",
+                "business_address",
+                "mailing_address",
+                "phone_number",
+                "postal_code",
+                "city",
+                "state",
+                "country",
+                "description",
+                "ceo",
+                "website",
+                "exchange",
+                "state_location",
+                "state_of_incorporation",
+                "fiscal_year_end",
+                "ipo_date",
+                "employees",
+                "sec_filings_url",
+                "tax_identification_number",
+                "fifty_two_week_range",
+                "is_active",
+                "asset_type",
+                "open_figi_composite",
+                "price_currency",
+                "market_sector",
+                "security_type",
+                "is_etf",
+                "is_adr",
+                "is_fund",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -467,6 +684,244 @@ impl SecCompanyProfile {
         kwargs.set_item("is_fund", self.is_fund.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "SecCompanyProfile",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "registrant_name",
+                    self.registrant_name.clone().into_bound_py_any(py)?,
+                ),
+                ("sic_code", self.sic_code.clone().into_bound_py_any(py)?),
+                (
+                    "sic_description",
+                    self.sic_description.clone().into_bound_py_any(py)?,
+                ),
+                ("sic_group", self.sic_group.clone().into_bound_py_any(py)?),
+                ("isin", self.isin.clone().into_bound_py_any(py)?),
+                (
+                    "business_address",
+                    self.business_address.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "mailing_address",
+                    self.mailing_address.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "phone_number",
+                    self.phone_number.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "postal_code",
+                    self.postal_code.clone().into_bound_py_any(py)?,
+                ),
+                ("city", self.city.clone().into_bound_py_any(py)?),
+                ("state", self.state.clone().into_bound_py_any(py)?),
+                ("country", self.country.clone().into_bound_py_any(py)?),
+                (
+                    "description",
+                    self.description.clone().into_bound_py_any(py)?,
+                ),
+                ("ceo", self.ceo.clone().into_bound_py_any(py)?),
+                ("website", self.website.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                (
+                    "state_location",
+                    self.state_location.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "state_of_incorporation",
+                    self.state_of_incorporation.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "fiscal_year_end",
+                    self.fiscal_year_end.clone().into_bound_py_any(py)?,
+                ),
+                ("ipo_date", self.ipo_date.clone().into_bound_py_any(py)?),
+                ("employees", self.employees.clone().into_bound_py_any(py)?),
+                (
+                    "sec_filings_url",
+                    self.sec_filings_url.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "tax_identification_number",
+                    self.tax_identification_number
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "fifty_two_week_range",
+                    self.fifty_two_week_range.clone().into_bound_py_any(py)?,
+                ),
+                ("is_active", self.is_active.clone().into_bound_py_any(py)?),
+                ("asset_type", self.asset_type.clone().into_bound_py_any(py)?),
+                (
+                    "open_figi_composite",
+                    self.open_figi_composite.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "price_currency",
+                    self.price_currency.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "market_sector",
+                    self.market_sector.clone().into_bound_py_any(py)?,
+                ),
+                ("security_type", self.security_type(py)?),
+                ("is_etf", self.is_etf.clone().into_bound_py_any(py)?),
+                ("is_adr", self.is_adr.clone().into_bound_py_any(py)?),
+                ("is_fund", self.is_fund.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "registrant_name",
+            crate::models::convert::DictValue::dict_value(&self.registrant_name, py)?,
+        )?;
+        dict.set_item(
+            "sic_code",
+            crate::models::convert::DictValue::dict_value(&self.sic_code, py)?,
+        )?;
+        dict.set_item(
+            "sic_description",
+            crate::models::convert::DictValue::dict_value(&self.sic_description, py)?,
+        )?;
+        dict.set_item(
+            "sic_group",
+            crate::models::convert::DictValue::dict_value(&self.sic_group, py)?,
+        )?;
+        dict.set_item(
+            "isin",
+            crate::models::convert::DictValue::dict_value(&self.isin, py)?,
+        )?;
+        dict.set_item(
+            "business_address",
+            crate::models::convert::DictValue::dict_value(&self.business_address, py)?,
+        )?;
+        dict.set_item(
+            "mailing_address",
+            crate::models::convert::DictValue::dict_value(&self.mailing_address, py)?,
+        )?;
+        dict.set_item(
+            "phone_number",
+            crate::models::convert::DictValue::dict_value(&self.phone_number, py)?,
+        )?;
+        dict.set_item(
+            "postal_code",
+            crate::models::convert::DictValue::dict_value(&self.postal_code, py)?,
+        )?;
+        dict.set_item(
+            "city",
+            crate::models::convert::DictValue::dict_value(&self.city, py)?,
+        )?;
+        dict.set_item(
+            "state",
+            crate::models::convert::DictValue::dict_value(&self.state, py)?,
+        )?;
+        dict.set_item(
+            "country",
+            crate::models::convert::DictValue::dict_value(&self.country, py)?,
+        )?;
+        dict.set_item(
+            "description",
+            crate::models::convert::DictValue::dict_value(&self.description, py)?,
+        )?;
+        dict.set_item(
+            "ceo",
+            crate::models::convert::DictValue::dict_value(&self.ceo, py)?,
+        )?;
+        dict.set_item(
+            "website",
+            crate::models::convert::DictValue::dict_value(&self.website, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "state_location",
+            crate::models::convert::DictValue::dict_value(&self.state_location, py)?,
+        )?;
+        dict.set_item(
+            "state_of_incorporation",
+            crate::models::convert::DictValue::dict_value(&self.state_of_incorporation, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year_end",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year_end, py)?,
+        )?;
+        dict.set_item(
+            "ipo_date",
+            crate::models::convert::DictValue::dict_value(&self.ipo_date, py)?,
+        )?;
+        dict.set_item(
+            "employees",
+            crate::models::convert::DictValue::dict_value(&self.employees, py)?,
+        )?;
+        dict.set_item(
+            "sec_filings_url",
+            crate::models::convert::DictValue::dict_value(&self.sec_filings_url, py)?,
+        )?;
+        dict.set_item(
+            "tax_identification_number",
+            crate::models::convert::DictValue::dict_value(&self.tax_identification_number, py)?,
+        )?;
+        dict.set_item(
+            "fifty_two_week_range",
+            crate::models::convert::DictValue::dict_value(&self.fifty_two_week_range, py)?,
+        )?;
+        dict.set_item(
+            "is_active",
+            crate::models::convert::DictValue::dict_value(&self.is_active, py)?,
+        )?;
+        dict.set_item(
+            "asset_type",
+            crate::models::convert::DictValue::dict_value(&self.asset_type, py)?,
+        )?;
+        dict.set_item(
+            "open_figi_composite",
+            crate::models::convert::DictValue::dict_value(&self.open_figi_composite, py)?,
+        )?;
+        dict.set_item(
+            "price_currency",
+            crate::models::convert::DictValue::dict_value(&self.price_currency, py)?,
+        )?;
+        dict.set_item(
+            "market_sector",
+            crate::models::convert::DictValue::dict_value(&self.market_sector, py)?,
+        )?;
+        dict.set_item("security_type", self.security_type(py)?)?;
+        dict.set_item(
+            "is_etf",
+            crate::models::convert::DictValue::dict_value(&self.is_etf, py)?,
+        )?;
+        dict.set_item(
+            "is_adr",
+            crate::models::convert::DictValue::dict_value(&self.is_adr, py)?,
+        )?;
+        dict.set_item(
+            "is_fund",
+            crate::models::convert::DictValue::dict_value(&self.is_fund, py)?,
+        )?;
+        Ok(dict)
+    }
 
     #[getter]
     fn security_type<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -519,6 +974,12 @@ impl From<libfmp::responses::sec_filings::SecCompanyProfile> for SecCompanyProfi
     }
 }
 
+impl crate::models::convert::DictValue for SecCompanyProfile {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
+    }
+}
+
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.sec_filings", frozen, eq, from_py_object)]
 #[derive(Clone, PartialEq)]
@@ -549,6 +1010,12 @@ impl SicClassification {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['office'], typing.Literal['sic_code'], typing.Literal['industry_title']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["office", "sic_code", "industry_title"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -563,6 +1030,40 @@ impl SicClassification {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "SicClassification",
+            &[
+                ("office", self.office.clone().into_bound_py_any(py)?),
+                ("sic_code", self.sic_code.clone().into_bound_py_any(py)?),
+                (
+                    "industry_title",
+                    self.industry_title.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "office",
+            crate::models::convert::DictValue::dict_value(&self.office, py)?,
+        )?;
+        dict.set_item(
+            "sic_code",
+            crate::models::convert::DictValue::dict_value(&self.sic_code, py)?,
+        )?;
+        dict.set_item(
+            "industry_title",
+            crate::models::convert::DictValue::dict_value(&self.industry_title, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::sec_filings::SicClassification> for SicClassification {
@@ -572,5 +1073,11 @@ impl From<libfmp::responses::sec_filings::SicClassification> for SicClassificati
             sic_code: value.sic_code,
             industry_title: value.industry_title,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for SicClassification {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

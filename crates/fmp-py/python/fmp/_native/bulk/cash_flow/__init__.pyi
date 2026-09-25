@@ -13,6 +13,55 @@ __all__ = [
 @typing.final
 class BulkCashFlowStatement:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["symbol"],
+        typing.Literal["reported_currency"],
+        typing.Literal["cik"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["net_income"],
+        typing.Literal["depreciation_and_amortization"],
+        typing.Literal["deferred_income_tax"],
+        typing.Literal["stock_based_compensation"],
+        typing.Literal["change_in_working_capital"],
+        typing.Literal["accounts_receivables"],
+        typing.Literal["inventory"],
+        typing.Literal["accounts_payables"],
+        typing.Literal["other_working_capital"],
+        typing.Literal["other_non_cash_items"],
+        typing.Literal["net_cash_provided_by_operating_activities"],
+        typing.Literal["investments_in_property_plant_and_equipment"],
+        typing.Literal["acquisitions_net"],
+        typing.Literal["purchases_of_investments"],
+        typing.Literal["sales_maturities_of_investments"],
+        typing.Literal["other_investing_activities"],
+        typing.Literal["net_cash_provided_by_investing_activities"],
+        typing.Literal["net_debt_issuance"],
+        typing.Literal["long_term_net_debt_issuance"],
+        typing.Literal["short_term_net_debt_issuance"],
+        typing.Literal["net_stock_issuance"],
+        typing.Literal["net_common_stock_issuance"],
+        typing.Literal["common_stock_issuance"],
+        typing.Literal["common_stock_repurchased"],
+        typing.Literal["net_preferred_stock_issuance"],
+        typing.Literal["net_dividends_paid"],
+        typing.Literal["common_dividends_paid"],
+        typing.Literal["preferred_dividends_paid"],
+        typing.Literal["other_financing_activities"],
+        typing.Literal["net_cash_provided_by_financing_activities"],
+        typing.Literal["effect_of_forex_changes_on_cash"],
+        typing.Literal["net_change_in_cash"],
+        typing.Literal["cash_at_end_of_period"],
+        typing.Literal["cash_at_beginning_of_period"],
+        typing.Literal["operating_cash_flow"],
+        typing.Literal["capital_expenditure"],
+        typing.Literal["free_cash_flow"],
+        typing.Literal["income_taxes_paid"],
+        typing.Literal["interest_paid"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -161,11 +210,61 @@ class BulkCashFlowStatement:
         interest_paid: builtins.str,
     ) -> BulkCashFlowStatement: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkCashFlowStatementGrowth:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["reported_currency"],
+        typing.Literal["growth_net_income"],
+        typing.Literal["growth_depreciation_and_amortization"],
+        typing.Literal["growth_deferred_income_tax"],
+        typing.Literal["growth_stock_based_compensation"],
+        typing.Literal["growth_change_in_working_capital"],
+        typing.Literal["growth_accounts_receivables"],
+        typing.Literal["growth_inventory"],
+        typing.Literal["growth_accounts_payables"],
+        typing.Literal["growth_other_working_capital"],
+        typing.Literal["growth_other_non_cash_items"],
+        typing.Literal["growth_net_cash_provided_by_operating_activities"],
+        typing.Literal["growth_investments_in_property_plant_and_equipment"],
+        typing.Literal["growth_acquisitions_net"],
+        typing.Literal["growth_purchases_of_investments"],
+        typing.Literal["growth_sales_maturities_of_investments"],
+        typing.Literal["growth_other_investing_activities"],
+        typing.Literal["growth_net_cash_used_for_investing_activities"],
+        typing.Literal["growth_debt_repayment"],
+        typing.Literal["growth_common_stock_issued"],
+        typing.Literal["growth_common_stock_repurchased"],
+        typing.Literal["growth_dividends_paid"],
+        typing.Literal["growth_other_financing_activities"],
+        typing.Literal["growth_net_cash_used_provided_by_financing_activities"],
+        typing.Literal["growth_effect_of_forex_changes_on_cash"],
+        typing.Literal["growth_net_change_in_cash"],
+        typing.Literal["growth_cash_at_end_of_period"],
+        typing.Literal["growth_cash_at_beginning_of_period"],
+        typing.Literal["growth_operating_cash_flow"],
+        typing.Literal["growth_capital_expenditure"],
+        typing.Literal["growth_free_cash_flow"],
+        typing.Literal["growth_net_debt_issuance"],
+        typing.Literal["growth_long_term_net_debt_issuance"],
+        typing.Literal["growth_short_term_net_debt_issuance"],
+        typing.Literal["growth_net_stock_issuance"],
+        typing.Literal["growth_preferred_dividends_paid"],
+        typing.Literal["growth_income_taxes_paid"],
+        typing.Literal["growth_interest_paid"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -299,3 +398,9 @@ class BulkCashFlowStatementGrowth:
         growth_interest_paid: builtins.str,
     ) -> BulkCashFlowStatementGrowth: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

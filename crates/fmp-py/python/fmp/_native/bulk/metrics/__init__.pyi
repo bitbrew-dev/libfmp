@@ -15,6 +15,13 @@ __all__ = [
 @typing.final
 class BulkEarningsSurprise:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["eps_actual"],
+        typing.Literal["eps_estimated"],
+        typing.Literal["last_updated"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -37,11 +44,79 @@ class BulkEarningsSurprise:
         last_updated: datetime.date,
     ) -> BulkEarningsSurprise: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkFinancialRatiosTtm:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["gross_profit_margin_ttm"],
+        typing.Literal["ebit_margin_ttm"],
+        typing.Literal["ebitda_margin_ttm"],
+        typing.Literal["operating_profit_margin_ttm"],
+        typing.Literal["pretax_profit_margin_ttm"],
+        typing.Literal["continuous_operations_profit_margin_ttm"],
+        typing.Literal["net_profit_margin_ttm"],
+        typing.Literal["bottom_line_profit_margin_ttm"],
+        typing.Literal["receivables_turnover_ttm"],
+        typing.Literal["payables_turnover_ttm"],
+        typing.Literal["inventory_turnover_ttm"],
+        typing.Literal["fixed_asset_turnover_ttm"],
+        typing.Literal["asset_turnover_ttm"],
+        typing.Literal["current_ratio_ttm"],
+        typing.Literal["quick_ratio_ttm"],
+        typing.Literal["solvency_ratio_ttm"],
+        typing.Literal["cash_ratio_ttm"],
+        typing.Literal["price_to_earnings_ratio_ttm"],
+        typing.Literal["price_to_earnings_growth_ratio_ttm"],
+        typing.Literal["forward_price_to_earnings_growth_ratio_ttm"],
+        typing.Literal["price_to_book_ratio_ttm"],
+        typing.Literal["price_to_sales_ratio_ttm"],
+        typing.Literal["price_to_free_cash_flow_ratio_ttm"],
+        typing.Literal["price_to_operating_cash_flow_ratio_ttm"],
+        typing.Literal["debt_to_assets_ratio_ttm"],
+        typing.Literal["debt_to_equity_ratio_ttm"],
+        typing.Literal["debt_to_capital_ratio_ttm"],
+        typing.Literal["long_term_debt_to_capital_ratio_ttm"],
+        typing.Literal["financial_leverage_ratio_ttm"],
+        typing.Literal["working_capital_turnover_ratio_ttm"],
+        typing.Literal["operating_cash_flow_ratio_ttm"],
+        typing.Literal["operating_cash_flow_sales_ratio_ttm"],
+        typing.Literal["free_cash_flow_operating_cash_flow_ratio_ttm"],
+        typing.Literal["debt_service_coverage_ratio_ttm"],
+        typing.Literal["interest_coverage_ratio_ttm"],
+        typing.Literal["short_term_operating_cash_flow_coverage_ratio_ttm"],
+        typing.Literal["operating_cash_flow_coverage_ratio_ttm"],
+        typing.Literal["capital_expenditure_coverage_ratio_ttm"],
+        typing.Literal["dividend_paid_and_capex_coverage_ratio_ttm"],
+        typing.Literal["dividend_payout_ratio_ttm"],
+        typing.Literal["dividend_yield_ttm"],
+        typing.Literal["enterprise_value_ttm"],
+        typing.Literal["revenue_per_share_ttm"],
+        typing.Literal["net_income_per_share_ttm"],
+        typing.Literal["interest_debt_per_share_ttm"],
+        typing.Literal["cash_per_share_ttm"],
+        typing.Literal["book_value_per_share_ttm"],
+        typing.Literal["tangible_book_value_per_share_ttm"],
+        typing.Literal["shareholders_equity_per_share_ttm"],
+        typing.Literal["operating_cash_flow_per_share_ttm"],
+        typing.Literal["capex_per_share_ttm"],
+        typing.Literal["free_cash_flow_per_share_ttm"],
+        typing.Literal["net_income_per_ebt_ttm"],
+        typing.Literal["ebt_per_ebit_ttm"],
+        typing.Literal["price_to_fair_value_ttm"],
+        typing.Literal["debt_to_market_cap_ttm"],
+        typing.Literal["effective_tax_rate_ttm"],
+        typing.Literal["enterprise_value_multiple_ttm"],
+        typing.Literal["dividend_per_share_ttm"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -229,11 +304,62 @@ class BulkFinancialRatiosTtm:
         dividend_per_share_ttm: builtins.str,
     ) -> BulkFinancialRatiosTtm: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkKeyMetricsTtm:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["market_cap"],
+        typing.Literal["enterprise_value_ttm"],
+        typing.Literal["ev_to_sales_ttm"],
+        typing.Literal["ev_to_operating_cash_flow_ttm"],
+        typing.Literal["ev_to_free_cash_flow_ttm"],
+        typing.Literal["ev_to_ebitda_ttm"],
+        typing.Literal["net_debt_to_ebitda_ttm"],
+        typing.Literal["current_ratio_ttm"],
+        typing.Literal["income_quality_ttm"],
+        typing.Literal["graham_number_ttm"],
+        typing.Literal["graham_net_net_ttm"],
+        typing.Literal["tax_burden_ttm"],
+        typing.Literal["interest_burden_ttm"],
+        typing.Literal["working_capital_ttm"],
+        typing.Literal["invested_capital_ttm"],
+        typing.Literal["return_on_assets_ttm"],
+        typing.Literal["operating_return_on_assets_ttm"],
+        typing.Literal["return_on_tangible_assets_ttm"],
+        typing.Literal["return_on_equity_ttm"],
+        typing.Literal["return_on_invested_capital_ttm"],
+        typing.Literal["return_on_capital_employed_ttm"],
+        typing.Literal["earnings_yield_ttm"],
+        typing.Literal["free_cash_flow_yield_ttm"],
+        typing.Literal["capex_to_operating_cash_flow_ttm"],
+        typing.Literal["capex_to_depreciation_ttm"],
+        typing.Literal["capex_to_revenue_ttm"],
+        typing.Literal["sales_general_and_administrative_to_revenue_ttm"],
+        typing.Literal["research_and_development_to_revenue_ttm"],
+        typing.Literal["stock_based_compensation_to_revenue_ttm"],
+        typing.Literal["intangibles_to_total_assets_ttm"],
+        typing.Literal["average_receivables_ttm"],
+        typing.Literal["average_payables_ttm"],
+        typing.Literal["average_inventory_ttm"],
+        typing.Literal["days_of_sales_outstanding_ttm"],
+        typing.Literal["days_of_payables_outstanding_ttm"],
+        typing.Literal["days_of_inventory_outstanding_ttm"],
+        typing.Literal["operating_cycle_ttm"],
+        typing.Literal["cash_conversion_cycle_ttm"],
+        typing.Literal["free_cash_flow_to_equity_ttm"],
+        typing.Literal["free_cash_flow_to_firm_ttm"],
+        typing.Literal["tangible_asset_value_ttm"],
+        typing.Literal["net_current_asset_value_ttm"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -370,11 +496,18 @@ class BulkKeyMetricsTtm:
         net_current_asset_value_ttm: builtins.str,
     ) -> BulkKeyMetricsTtm: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkStockPeer:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["symbol"], typing.Literal["peers"]]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -383,3 +516,9 @@ class BulkStockPeer:
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(cls, *, symbol: builtins.str, peers: builtins.str) -> BulkStockPeer: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

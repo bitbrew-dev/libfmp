@@ -59,6 +59,17 @@ impl Article {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['title'], typing.Literal['date'], typing.Literal['content'], typing.Literal['tickers'], typing.Literal['image'], typing.Literal['link'], typing.Literal['author'], typing.Literal['site']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "title", "date", "content", "tickers", "image", "link", "author", "site",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -75,6 +86,62 @@ impl Article {
         kwargs.set_item("site", self.site.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "Article",
+            &[
+                ("title", self.title.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("content", self.content.clone().into_bound_py_any(py)?),
+                ("tickers", self.tickers.clone().into_bound_py_any(py)?),
+                ("image", self.image.clone().into_bound_py_any(py)?),
+                ("link", self.link.clone().into_bound_py_any(py)?),
+                ("author", self.author.clone().into_bound_py_any(py)?),
+                ("site", self.site.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "title",
+            crate::models::convert::DictValue::dict_value(&self.title, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "content",
+            crate::models::convert::DictValue::dict_value(&self.content, py)?,
+        )?;
+        dict.set_item(
+            "tickers",
+            crate::models::convert::DictValue::dict_value(&self.tickers, py)?,
+        )?;
+        dict.set_item(
+            "image",
+            crate::models::convert::DictValue::dict_value(&self.image, py)?,
+        )?;
+        dict.set_item(
+            "link",
+            crate::models::convert::DictValue::dict_value(&self.link, py)?,
+        )?;
+        dict.set_item(
+            "author",
+            crate::models::convert::DictValue::dict_value(&self.author, py)?,
+        )?;
+        dict.set_item(
+            "site",
+            crate::models::convert::DictValue::dict_value(&self.site, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::news::Article> for Article {
@@ -89,6 +156,12 @@ impl From<libfmp::responses::news::Article> for Article {
             author: value.author,
             site: value.site,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for Article {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -146,6 +219,24 @@ impl NewsArticle {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['published_date'], typing.Literal['publisher'], typing.Literal['title'], typing.Literal['image'], typing.Literal['site'], typing.Literal['text'], typing.Literal['url']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "published_date",
+                "publisher",
+                "title",
+                "image",
+                "site",
+                "text",
+                "url",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -165,6 +256,65 @@ impl NewsArticle {
         kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "NewsArticle",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "published_date",
+                    self.published_date.clone().into_bound_py_any(py)?,
+                ),
+                ("publisher", self.publisher.clone().into_bound_py_any(py)?),
+                ("title", self.title.clone().into_bound_py_any(py)?),
+                ("image", self.image.clone().into_bound_py_any(py)?),
+                ("site", self.site.clone().into_bound_py_any(py)?),
+                ("text", self.text.clone().into_bound_py_any(py)?),
+                ("url", self.url.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "published_date",
+            crate::models::convert::DictValue::dict_value(&self.published_date, py)?,
+        )?;
+        dict.set_item(
+            "publisher",
+            crate::models::convert::DictValue::dict_value(&self.publisher, py)?,
+        )?;
+        dict.set_item(
+            "title",
+            crate::models::convert::DictValue::dict_value(&self.title, py)?,
+        )?;
+        dict.set_item(
+            "image",
+            crate::models::convert::DictValue::dict_value(&self.image, py)?,
+        )?;
+        dict.set_item(
+            "site",
+            crate::models::convert::DictValue::dict_value(&self.site, py)?,
+        )?;
+        dict.set_item(
+            "text",
+            crate::models::convert::DictValue::dict_value(&self.text, py)?,
+        )?;
+        dict.set_item(
+            "url",
+            crate::models::convert::DictValue::dict_value(&self.url, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::news::NewsArticle> for NewsArticle {
@@ -179,5 +329,11 @@ impl From<libfmp::responses::news::NewsArticle> for NewsArticle {
             text: value.text,
             url: value.url,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for NewsArticle {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

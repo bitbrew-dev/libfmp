@@ -17,6 +17,12 @@ __all__ = [
 @typing.final
 class IndustryPe:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["industry"],
+        typing.Literal["exchange"],
+        typing.Literal["pe"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -36,11 +42,23 @@ class IndustryPe:
         pe: builtins.float,
     ) -> IndustryPe: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class IndustryPerformance:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["industry"],
+        typing.Literal["exchange"],
+        typing.Literal["average_change"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -60,11 +78,25 @@ class IndustryPerformance:
         average_change: builtins.float,
     ) -> IndustryPerformance: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class MarketMover:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["price"],
+        typing.Literal["name"],
+        typing.Literal["change"],
+        typing.Literal["changes_percentage"],
+        typing.Literal["exchange"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -90,6 +122,12 @@ class MarketMover:
         exchange: builtins.str,
     ) -> MarketMover: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -209,6 +247,12 @@ class MarketNamespace:
 @typing.final
 class SectorPe:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["sector"],
+        typing.Literal["exchange"],
+        typing.Literal["pe"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -228,11 +272,23 @@ class SectorPe:
         pe: builtins.float,
     ) -> SectorPe: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class SectorPerformance:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["sector"],
+        typing.Literal["exchange"],
+        typing.Literal["average_change"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -252,3 +308,9 @@ class SectorPerformance:
         average_change: builtins.float,
     ) -> SectorPerformance: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

@@ -5,8 +5,10 @@ built from sample values derived from its stub ``__new__`` annotations, so a
 model added by ``gen_models`` is checked without a hand-kept list.
 
 Models are keyword-only, compare by value, are unhashable (``__hash__`` is
-``None``, the same as a Python class that defines ``__eq__`` alone), and
-pickle through ``__getnewargs_ex__``.
+``None``, the same as a Python class that defines ``__eq__`` alone), pickle
+through ``__getnewargs_ex__``, list their attributes in ``__match_args__`` and
+``repr()``, and convert to plain dicts with ``to_dict()``. Secret fields (no
+attribute) stay out of all three.
 """
 
 import ast
@@ -33,6 +35,7 @@ class ModelStub:
     name: str
     params: tuple[tuple[str, str], ...]
     json_params: frozenset[str]
+    attributes: tuple[str, ...]
 
     @property
     def cls(self) -> type:
@@ -59,7 +62,8 @@ def _model_stubs() -> dict[str, ModelStub]:
                 for name, method in methods.items()
                 if method.returns is not None and ast.unparse(method.returns) == "typing.Any"
             )
-            found[f"{module}.{node.name}"] = ModelStub(module, node.name, params, json_params)
+            attributes = tuple(name for name, _ in params if name in methods)
+            found[f"{module}.{node.name}"] = ModelStub(module, node.name, params, json_params, attributes)
     return found
 
 
@@ -68,10 +72,10 @@ MODELS = _model_stubs()
 
 def _sample(annotation: str, module: str) -> Any:
     """A valid value for one stub annotation."""
-    if annotation.startswith("typing.Optional["):
-        return None
-    if annotation.startswith(("builtins.list[", "typing.Sequence[")):
-        return []
+    for wrapper in ("typing.Optional[", "builtins.list[", "typing.Sequence["):
+        if annotation.startswith(wrapper):
+            inner = _sample(annotation[len(wrapper) : -1], module)
+            return inner if wrapper == "typing.Optional[" else [inner]
     simple: dict[str, Any] = {
         "builtins.str": "x",
         "builtins.int": 7,
@@ -154,3 +158,49 @@ def test_copy_and_deepcopy_are_equal(model: ModelStub) -> None:
     row = build(model)
     assert copy.copy(row) == row
     assert copy.deepcopy(row) == row
+
+
+def test_match_args_list_the_attributes(model: ModelStub) -> None:
+    """``__match_args__`` is every attribute, in constructor order."""
+    assert model.cls.__match_args__ == model.attributes
+
+
+def test_positional_match_pattern_binds_attributes(model: ModelStub) -> None:
+    """A positional ``case`` pattern binds the first attribute."""
+    row = build(model)
+    if not model.attributes:
+        pytest.skip("model has no attributes")
+    first = model.attributes[0]
+    match row:
+        case model.cls(value):  # type: ignore[misc]
+            assert value == getattr(row, first)
+        case _:
+            pytest.fail("positional pattern did not match")
+
+
+def test_repr_lists_every_attribute(model: ModelStub) -> None:
+    """``repr()`` is ``Name(field=repr(value), ...)`` over the attributes."""
+    if len(model.attributes) != len(model.params):
+        pytest.skip("secret-bearing models keep their redacting repr (test_secrets.py)")
+    row = build(model)
+    fields = ", ".join(f"{name}={getattr(row, name)!r}" for name in model.attributes)
+    assert repr(row) == f"{model.name}({fields})"
+
+
+def _plain(value: Any) -> Any:
+    """``value`` with every model replaced by its ``to_dict()``."""
+    if isinstance(value, list):
+        return [_plain(item) for item in value]
+    if hasattr(value, "to_dict"):
+        return value.to_dict()
+    return value
+
+
+def test_to_dict_maps_attributes_to_plain_values(model: ModelStub) -> None:
+    """``to_dict()`` keys are the attributes; nested models become dicts."""
+    row = build(model)
+    as_dict = row.to_dict()
+    assert type(as_dict) is dict
+    assert list(as_dict) == list(model.attributes)
+    for name in model.attributes:
+        assert as_dict[name] == _plain(getattr(row, name))

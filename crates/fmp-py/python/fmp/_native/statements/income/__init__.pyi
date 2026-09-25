@@ -13,6 +13,47 @@ __all__ = [
 @typing.final
 class IncomeStatement:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["symbol"],
+        typing.Literal["reported_currency"],
+        typing.Literal["cik"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["revenue"],
+        typing.Literal["cost_of_revenue"],
+        typing.Literal["gross_profit"],
+        typing.Literal["research_and_development_expenses"],
+        typing.Literal["general_and_administrative_expenses"],
+        typing.Literal["selling_and_marketing_expenses"],
+        typing.Literal["selling_general_and_administrative_expenses"],
+        typing.Literal["other_expenses"],
+        typing.Literal["operating_expenses"],
+        typing.Literal["cost_and_expenses"],
+        typing.Literal["net_interest_income"],
+        typing.Literal["interest_income"],
+        typing.Literal["interest_expense"],
+        typing.Literal["depreciation_and_amortization"],
+        typing.Literal["ebitda"],
+        typing.Literal["ebit"],
+        typing.Literal["non_operating_income_excluding_interest"],
+        typing.Literal["operating_income"],
+        typing.Literal["total_other_income_expenses_net"],
+        typing.Literal["income_before_tax"],
+        typing.Literal["income_tax_expense"],
+        typing.Literal["net_income_from_continuing_operations"],
+        typing.Literal["net_income_from_discontinued_operations"],
+        typing.Literal["other_adjustments_to_net_income"],
+        typing.Literal["net_income"],
+        typing.Literal["net_income_deductions"],
+        typing.Literal["bottom_line_net_income"],
+        typing.Literal["eps"],
+        typing.Literal["eps_diluted"],
+        typing.Literal["weighted_average_shs_out"],
+        typing.Literal["weighted_average_shs_out_dil"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -137,6 +178,12 @@ class IncomeStatement:
         weighted_average_shs_out_dil: builtins.float,
     ) -> IncomeStatement: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

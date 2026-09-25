@@ -208,6 +208,60 @@ impl FinancialStatementGrowth {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['date'], typing.Literal['fiscal_year'], typing.Literal['period'], typing.Literal['reported_currency'], typing.Literal['revenue_growth'], typing.Literal['gross_profit_growth'], typing.Literal['ebit_growth'], typing.Literal['operating_income_growth'], typing.Literal['net_income_growth'], typing.Literal['eps_growth'], typing.Literal['eps_diluted_growth'], typing.Literal['weighted_average_shares_growth'], typing.Literal['weighted_average_shares_diluted_growth'], typing.Literal['dividends_per_share_growth'], typing.Literal['operating_cash_flow_growth'], typing.Literal['receivables_growth'], typing.Literal['inventory_growth'], typing.Literal['asset_growth'], typing.Literal['book_value_per_share_growth'], typing.Literal['debt_growth'], typing.Literal['rd_expense_growth'], typing.Literal['sga_expenses_growth'], typing.Literal['free_cash_flow_growth'], typing.Literal['ten_y_revenue_growth_per_share'], typing.Literal['five_y_revenue_growth_per_share'], typing.Literal['three_y_revenue_growth_per_share'], typing.Literal['ten_y_operating_cf_growth_per_share'], typing.Literal['five_y_operating_cf_growth_per_share'], typing.Literal['three_y_operating_cf_growth_per_share'], typing.Literal['ten_y_net_income_growth_per_share'], typing.Literal['five_y_net_income_growth_per_share'], typing.Literal['three_y_net_income_growth_per_share'], typing.Literal['ten_y_shareholders_equity_growth_per_share'], typing.Literal['five_y_shareholders_equity_growth_per_share'], typing.Literal['three_y_shareholders_equity_growth_per_share'], typing.Literal['ten_y_dividend_per_share_growth_per_share'], typing.Literal['five_y_dividend_per_share_growth_per_share'], typing.Literal['three_y_dividend_per_share_growth_per_share'], typing.Literal['ebitda_growth'], typing.Literal['growth_capital_expenditure'], typing.Literal['ten_y_bottom_line_net_income_growth_per_share'], typing.Literal['five_y_bottom_line_net_income_growth_per_share'], typing.Literal['three_y_bottom_line_net_income_growth_per_share']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "date",
+                "fiscal_year",
+                "period",
+                "reported_currency",
+                "revenue_growth",
+                "gross_profit_growth",
+                "ebit_growth",
+                "operating_income_growth",
+                "net_income_growth",
+                "eps_growth",
+                "eps_diluted_growth",
+                "weighted_average_shares_growth",
+                "weighted_average_shares_diluted_growth",
+                "dividends_per_share_growth",
+                "operating_cash_flow_growth",
+                "receivables_growth",
+                "inventory_growth",
+                "asset_growth",
+                "book_value_per_share_growth",
+                "debt_growth",
+                "rd_expense_growth",
+                "sga_expenses_growth",
+                "free_cash_flow_growth",
+                "ten_y_revenue_growth_per_share",
+                "five_y_revenue_growth_per_share",
+                "three_y_revenue_growth_per_share",
+                "ten_y_operating_cf_growth_per_share",
+                "five_y_operating_cf_growth_per_share",
+                "three_y_operating_cf_growth_per_share",
+                "ten_y_net_income_growth_per_share",
+                "five_y_net_income_growth_per_share",
+                "three_y_net_income_growth_per_share",
+                "ten_y_shareholders_equity_growth_per_share",
+                "five_y_shareholders_equity_growth_per_share",
+                "three_y_shareholders_equity_growth_per_share",
+                "ten_y_dividend_per_share_growth_per_share",
+                "five_y_dividend_per_share_growth_per_share",
+                "three_y_dividend_per_share_growth_per_share",
+                "ebitda_growth",
+                "growth_capital_expenditure",
+                "ten_y_bottom_line_net_income_growth_per_share",
+                "five_y_bottom_line_net_income_growth_per_share",
+                "three_y_bottom_line_net_income_growth_per_share",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -428,6 +482,470 @@ impl FinancialStatementGrowth {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "FinancialStatementGrowth",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                (
+                    "reported_currency",
+                    self.reported_currency.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "revenue_growth",
+                    self.revenue_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "gross_profit_growth",
+                    self.gross_profit_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ebit_growth",
+                    self.ebit_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_income_growth",
+                    self.operating_income_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "net_income_growth",
+                    self.net_income_growth.clone().into_bound_py_any(py)?,
+                ),
+                ("eps_growth", self.eps_growth.clone().into_bound_py_any(py)?),
+                (
+                    "eps_diluted_growth",
+                    self.eps_diluted_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "weighted_average_shares_growth",
+                    self.weighted_average_shares_growth
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "weighted_average_shares_diluted_growth",
+                    self.weighted_average_shares_diluted_growth
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "dividends_per_share_growth",
+                    self.dividends_per_share_growth
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "operating_cash_flow_growth",
+                    self.operating_cash_flow_growth
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "receivables_growth",
+                    self.receivables_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "inventory_growth",
+                    self.inventory_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "asset_growth",
+                    self.asset_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "book_value_per_share_growth",
+                    self.book_value_per_share_growth
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "debt_growth",
+                    self.debt_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "rd_expense_growth",
+                    self.rd_expense_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "sga_expenses_growth",
+                    self.sga_expenses_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "free_cash_flow_growth",
+                    self.free_cash_flow_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "ten_y_revenue_growth_per_share",
+                    self.ten_y_revenue_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "five_y_revenue_growth_per_share",
+                    self.five_y_revenue_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "three_y_revenue_growth_per_share",
+                    self.three_y_revenue_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ten_y_operating_cf_growth_per_share",
+                    self.ten_y_operating_cf_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "five_y_operating_cf_growth_per_share",
+                    self.five_y_operating_cf_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "three_y_operating_cf_growth_per_share",
+                    self.three_y_operating_cf_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ten_y_net_income_growth_per_share",
+                    self.ten_y_net_income_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "five_y_net_income_growth_per_share",
+                    self.five_y_net_income_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "three_y_net_income_growth_per_share",
+                    self.three_y_net_income_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ten_y_shareholders_equity_growth_per_share",
+                    self.ten_y_shareholders_equity_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "five_y_shareholders_equity_growth_per_share",
+                    self.five_y_shareholders_equity_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "three_y_shareholders_equity_growth_per_share",
+                    self.three_y_shareholders_equity_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ten_y_dividend_per_share_growth_per_share",
+                    self.ten_y_dividend_per_share_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "five_y_dividend_per_share_growth_per_share",
+                    self.five_y_dividend_per_share_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "three_y_dividend_per_share_growth_per_share",
+                    self.three_y_dividend_per_share_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ebitda_growth",
+                    self.ebitda_growth.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "growth_capital_expenditure",
+                    self.growth_capital_expenditure
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "ten_y_bottom_line_net_income_growth_per_share",
+                    self.ten_y_bottom_line_net_income_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "five_y_bottom_line_net_income_growth_per_share",
+                    self.five_y_bottom_line_net_income_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "three_y_bottom_line_net_income_growth_per_share",
+                    self.three_y_bottom_line_net_income_growth_per_share
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "reported_currency",
+            crate::models::convert::DictValue::dict_value(&self.reported_currency, py)?,
+        )?;
+        dict.set_item(
+            "revenue_growth",
+            crate::models::convert::DictValue::dict_value(&self.revenue_growth, py)?,
+        )?;
+        dict.set_item(
+            "gross_profit_growth",
+            crate::models::convert::DictValue::dict_value(&self.gross_profit_growth, py)?,
+        )?;
+        dict.set_item(
+            "ebit_growth",
+            crate::models::convert::DictValue::dict_value(&self.ebit_growth, py)?,
+        )?;
+        dict.set_item(
+            "operating_income_growth",
+            crate::models::convert::DictValue::dict_value(&self.operating_income_growth, py)?,
+        )?;
+        dict.set_item(
+            "net_income_growth",
+            crate::models::convert::DictValue::dict_value(&self.net_income_growth, py)?,
+        )?;
+        dict.set_item(
+            "eps_growth",
+            crate::models::convert::DictValue::dict_value(&self.eps_growth, py)?,
+        )?;
+        dict.set_item(
+            "eps_diluted_growth",
+            crate::models::convert::DictValue::dict_value(&self.eps_diluted_growth, py)?,
+        )?;
+        dict.set_item(
+            "weighted_average_shares_growth",
+            crate::models::convert::DictValue::dict_value(
+                &self.weighted_average_shares_growth,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "weighted_average_shares_diluted_growth",
+            crate::models::convert::DictValue::dict_value(
+                &self.weighted_average_shares_diluted_growth,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "dividends_per_share_growth",
+            crate::models::convert::DictValue::dict_value(&self.dividends_per_share_growth, py)?,
+        )?;
+        dict.set_item(
+            "operating_cash_flow_growth",
+            crate::models::convert::DictValue::dict_value(&self.operating_cash_flow_growth, py)?,
+        )?;
+        dict.set_item(
+            "receivables_growth",
+            crate::models::convert::DictValue::dict_value(&self.receivables_growth, py)?,
+        )?;
+        dict.set_item(
+            "inventory_growth",
+            crate::models::convert::DictValue::dict_value(&self.inventory_growth, py)?,
+        )?;
+        dict.set_item(
+            "asset_growth",
+            crate::models::convert::DictValue::dict_value(&self.asset_growth, py)?,
+        )?;
+        dict.set_item(
+            "book_value_per_share_growth",
+            crate::models::convert::DictValue::dict_value(&self.book_value_per_share_growth, py)?,
+        )?;
+        dict.set_item(
+            "debt_growth",
+            crate::models::convert::DictValue::dict_value(&self.debt_growth, py)?,
+        )?;
+        dict.set_item(
+            "rd_expense_growth",
+            crate::models::convert::DictValue::dict_value(&self.rd_expense_growth, py)?,
+        )?;
+        dict.set_item(
+            "sga_expenses_growth",
+            crate::models::convert::DictValue::dict_value(&self.sga_expenses_growth, py)?,
+        )?;
+        dict.set_item(
+            "free_cash_flow_growth",
+            crate::models::convert::DictValue::dict_value(&self.free_cash_flow_growth, py)?,
+        )?;
+        dict.set_item(
+            "ten_y_revenue_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.ten_y_revenue_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "five_y_revenue_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.five_y_revenue_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "three_y_revenue_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.three_y_revenue_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "ten_y_operating_cf_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.ten_y_operating_cf_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "five_y_operating_cf_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.five_y_operating_cf_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "three_y_operating_cf_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.three_y_operating_cf_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "ten_y_net_income_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.ten_y_net_income_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "five_y_net_income_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.five_y_net_income_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "three_y_net_income_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.three_y_net_income_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "ten_y_shareholders_equity_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.ten_y_shareholders_equity_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "five_y_shareholders_equity_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.five_y_shareholders_equity_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "three_y_shareholders_equity_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.three_y_shareholders_equity_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "ten_y_dividend_per_share_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.ten_y_dividend_per_share_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "five_y_dividend_per_share_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.five_y_dividend_per_share_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "three_y_dividend_per_share_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.three_y_dividend_per_share_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "ebitda_growth",
+            crate::models::convert::DictValue::dict_value(&self.ebitda_growth, py)?,
+        )?;
+        dict.set_item(
+            "growth_capital_expenditure",
+            crate::models::convert::DictValue::dict_value(&self.growth_capital_expenditure, py)?,
+        )?;
+        dict.set_item(
+            "ten_y_bottom_line_net_income_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.ten_y_bottom_line_net_income_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "five_y_bottom_line_net_income_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.five_y_bottom_line_net_income_growth_per_share,
+                py,
+            )?,
+        )?;
+        dict.set_item(
+            "three_y_bottom_line_net_income_growth_per_share",
+            crate::models::convert::DictValue::dict_value(
+                &self.three_y_bottom_line_net_income_growth_per_share,
+                py,
+            )?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::statements::growth::combined::FinancialStatementGrowth>
@@ -491,5 +1009,11 @@ impl From<libfmp::responses::statements::growth::combined::FinancialStatementGro
             three_y_bottom_line_net_income_growth_per_share: value
                 .three_y_bottom_line_net_income_growth_per_share,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for FinancialStatementGrowth {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

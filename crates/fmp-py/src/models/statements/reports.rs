@@ -47,6 +47,12 @@ impl FinancialReportDate {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['fiscal_year'], typing.Literal['period']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "fiscal_year", "period"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -63,6 +69,25 @@ impl FinancialReportDate {
         kwargs.set_item("link_xlsx", self.link_xlsx.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::statements::reports::FinancialReportDate> for FinancialReportDate {
@@ -74,6 +99,12 @@ impl From<libfmp::responses::statements::reports::FinancialReportDate> for Finan
             link_json: value.link_json.expose_secret().to_owned(),
             link_xlsx: value.link_xlsx.expose_secret().to_owned(),
         }
+    }
+}
+
+impl crate::models::convert::DictValue for FinancialReportDate {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -116,6 +147,12 @@ impl FinancialReportJson {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['period'], typing.Literal['year'], typing.Literal['sections']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["symbol", "period", "year", "sections"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -137,6 +174,39 @@ impl FinancialReportJson {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "FinancialReportJson",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("period", self.period.clone().into_bound_py_any(py)?),
+                ("year", self.year.clone().into_bound_py_any(py)?),
+                ("sections", self.sections(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "period",
+            crate::models::convert::DictValue::dict_value(&self.period, py)?,
+        )?;
+        dict.set_item(
+            "year",
+            crate::models::convert::DictValue::dict_value(&self.year, py)?,
+        )?;
+        dict.set_item("sections", self.sections(py)?)?;
+        Ok(dict)
+    }
 
     #[getter]
     fn sections<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -152,5 +222,11 @@ impl From<libfmp::responses::statements::reports::FinancialReportJson> for Finan
             year: value.year.as_str().to_owned(),
             sections: value.sections,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for FinancialReportJson {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

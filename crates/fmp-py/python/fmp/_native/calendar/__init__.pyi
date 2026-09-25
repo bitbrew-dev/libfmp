@@ -114,6 +114,17 @@ class CalendarNamespace:
 @typing.final
 class DividendEvent:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["record_date"],
+        typing.Literal["payment_date"],
+        typing.Literal["declaration_date"],
+        typing.Literal["adj_dividend"],
+        typing.Literal["dividend"],
+        typing.Literal["yield_"],
+        typing.Literal["frequency"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -148,11 +159,26 @@ class DividendEvent:
         frequency: builtins.str,
     ) -> DividendEvent: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EarningsEvent:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["eps_actual"],
+        typing.Literal["eps_estimated"],
+        typing.Literal["revenue_actual"],
+        typing.Literal["revenue_estimated"],
+        typing.Literal["last_updated"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -181,11 +207,28 @@ class EarningsEvent:
         last_updated: datetime.date,
     ) -> EarningsEvent: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class IpoCalendarEvent:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["daa"],
+        typing.Literal["company"],
+        typing.Literal["exchange"],
+        typing.Literal["actions"],
+        typing.Literal["shares"],
+        typing.Literal["price_range"],
+        typing.Literal["market_cap"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -220,11 +263,26 @@ class IpoCalendarEvent:
         market_cap: typing.Optional[builtins.str],
     ) -> IpoCalendarEvent: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class IpoDisclosure:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["effectiveness_date"],
+        typing.Literal["cik"],
+        typing.Literal["form"],
+        typing.Literal["url"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -253,11 +311,32 @@ class IpoDisclosure:
         url: builtins.str,
     ) -> IpoDisclosure: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class IpoProspectus:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["accepted_date"],
+        typing.Literal["filing_date"],
+        typing.Literal["ipo_date"],
+        typing.Literal["cik"],
+        typing.Literal["price_public_per_share"],
+        typing.Literal["price_public_total"],
+        typing.Literal["discounts_and_commissions_per_share"],
+        typing.Literal["discounts_and_commissions_total"],
+        typing.Literal["proceeds_before_expenses_per_share"],
+        typing.Literal["proceeds_before_expenses_total"],
+        typing.Literal["form"],
+        typing.Literal["url"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -304,11 +383,24 @@ class IpoProspectus:
         url: builtins.str,
     ) -> IpoProspectus: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockSplitEvent:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["numerator"],
+        typing.Literal["denominator"],
+        typing.Literal["split_type"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -331,3 +423,9 @@ class StockSplitEvent:
         split_type: builtins.str,
     ) -> StockSplitEvent: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

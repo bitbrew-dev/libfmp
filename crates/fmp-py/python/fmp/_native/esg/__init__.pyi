@@ -15,6 +15,14 @@ __all__ = [
 @typing.final
 class EsgBenchmark:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["fiscal_year"],
+        typing.Literal["sector"],
+        typing.Literal["environmental_score"],
+        typing.Literal["social_score"],
+        typing.Literal["governance_score"],
+        typing.Literal["esg_score"],
+    ]
 
     @property
     def fiscal_year(self) -> builtins.int: ...
@@ -40,11 +48,30 @@ class EsgBenchmark:
         esg_score: builtins.float,
     ) -> EsgBenchmark: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class EsgDisclosure:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["company_name"],
+        typing.Literal["form_type"],
+        typing.Literal["environmental_score"],
+        typing.Literal["social_score"],
+        typing.Literal["governance_score"],
+        typing.Literal["esg_score"],
+        typing.Literal["url"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -85,6 +112,12 @@ class EsgDisclosure:
         url: builtins.str,
     ) -> EsgDisclosure: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -114,6 +147,15 @@ class EsgNamespace:
 @typing.final
 class EsgRating:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["company_name"],
+        typing.Literal["industry"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["esg_risk_rating"],
+        typing.Literal["industry_rank"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -142,3 +184,9 @@ class EsgRating:
         industry_rank: builtins.str,
     ) -> EsgRating: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

@@ -84,6 +84,30 @@ class AnalystNamespace:
 @typing.final
 class FinancialEstimate:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["revenue_low"],
+        typing.Literal["revenue_high"],
+        typing.Literal["revenue_avg"],
+        typing.Literal["ebitda_low"],
+        typing.Literal["ebitda_high"],
+        typing.Literal["ebitda_avg"],
+        typing.Literal["ebit_low"],
+        typing.Literal["ebit_high"],
+        typing.Literal["ebit_avg"],
+        typing.Literal["net_income_low"],
+        typing.Literal["net_income_high"],
+        typing.Literal["net_income_avg"],
+        typing.Literal["sga_expense_low"],
+        typing.Literal["sga_expense_high"],
+        typing.Literal["sga_expense_avg"],
+        typing.Literal["eps_avg"],
+        typing.Literal["eps_high"],
+        typing.Literal["eps_low"],
+        typing.Literal["num_analysts_revenue"],
+        typing.Literal["num_analysts_eps"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -157,11 +181,29 @@ class FinancialEstimate:
         num_analysts_eps: builtins.int,
     ) -> FinancialEstimate: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class HistoricalRating:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["rating"],
+        typing.Literal["overall_score"],
+        typing.Literal["discounted_cash_flow_score"],
+        typing.Literal["return_on_equity_score"],
+        typing.Literal["return_on_assets_score"],
+        typing.Literal["debt_to_equity_score"],
+        typing.Literal["price_to_earnings_score"],
+        typing.Literal["price_to_book_score"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -199,11 +241,26 @@ class HistoricalRating:
         price_to_book_score: builtins.int,
     ) -> HistoricalRating: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class HistoricalStockGrade:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["analyst_ratings_strong_buy"],
+        typing.Literal["analyst_ratings_buy"],
+        typing.Literal["analyst_ratings_hold"],
+        typing.Literal["analyst_ratings_sell"],
+        typing.Literal["analyst_ratings_strong_sell"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -232,11 +289,24 @@ class HistoricalStockGrade:
         analyst_ratings_strong_sell: builtins.int,
     ) -> HistoricalStockGrade: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class PriceTargetConsensus:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["target_high"],
+        typing.Literal["target_low"],
+        typing.Literal["target_consensus"],
+        typing.Literal["target_median"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -259,11 +329,29 @@ class PriceTargetConsensus:
         target_median: builtins.float,
     ) -> PriceTargetConsensus: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class PriceTargetSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["last_month_count"],
+        typing.Literal["last_month_avg_price_target"],
+        typing.Literal["last_quarter_count"],
+        typing.Literal["last_quarter_avg_price_target"],
+        typing.Literal["last_year_count"],
+        typing.Literal["last_year_avg_price_target"],
+        typing.Literal["all_time_count"],
+        typing.Literal["all_time_avg_price_target"],
+        typing.Literal["publishers"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -301,11 +389,28 @@ class PriceTargetSummary:
         publishers: builtins.str,
     ) -> PriceTargetSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class RatingSnapshot:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["rating"],
+        typing.Literal["overall_score"],
+        typing.Literal["discounted_cash_flow_score"],
+        typing.Literal["return_on_equity_score"],
+        typing.Literal["return_on_assets_score"],
+        typing.Literal["debt_to_equity_score"],
+        typing.Literal["price_to_earnings_score"],
+        typing.Literal["price_to_book_score"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -340,11 +445,25 @@ class RatingSnapshot:
         price_to_book_score: builtins.int,
     ) -> RatingSnapshot: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockGrade:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["grading_company"],
+        typing.Literal["previous_grade"],
+        typing.Literal["new_grade"],
+        typing.Literal["action"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -370,11 +489,26 @@ class StockGrade:
         action: builtins.str,
     ) -> StockGrade: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class StockGradesSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["strong_buy"],
+        typing.Literal["buy"],
+        typing.Literal["hold"],
+        typing.Literal["sell"],
+        typing.Literal["strong_sell"],
+        typing.Literal["consensus"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -403,3 +537,9 @@ class StockGradesSummary:
         consensus: builtins.str,
     ) -> StockGradesSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

@@ -71,6 +71,27 @@ impl EsgDisclosure {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['accepted_date'], typing.Literal['symbol'], typing.Literal['cik'], typing.Literal['company_name'], typing.Literal['form_type'], typing.Literal['environmental_score'], typing.Literal['social_score'], typing.Literal['governance_score'], typing.Literal['esg_score'], typing.Literal['url']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "accepted_date",
+                "symbol",
+                "cik",
+                "company_name",
+                "form_type",
+                "environmental_score",
+                "social_score",
+                "governance_score",
+                "esg_score",
+                "url",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -105,6 +126,92 @@ impl EsgDisclosure {
         kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EsgDisclosure",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                (
+                    "accepted_date",
+                    self.accepted_date.clone().into_bound_py_any(py)?,
+                ),
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("form_type", self.form_type.clone().into_bound_py_any(py)?),
+                (
+                    "environmental_score",
+                    self.environmental_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "social_score",
+                    self.social_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "governance_score",
+                    self.governance_score.clone().into_bound_py_any(py)?,
+                ),
+                ("esg_score", self.esg_score.clone().into_bound_py_any(py)?),
+                ("url", self.url.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "accepted_date",
+            crate::models::convert::DictValue::dict_value(&self.accepted_date, py)?,
+        )?;
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "form_type",
+            crate::models::convert::DictValue::dict_value(&self.form_type, py)?,
+        )?;
+        dict.set_item(
+            "environmental_score",
+            crate::models::convert::DictValue::dict_value(&self.environmental_score, py)?,
+        )?;
+        dict.set_item(
+            "social_score",
+            crate::models::convert::DictValue::dict_value(&self.social_score, py)?,
+        )?;
+        dict.set_item(
+            "governance_score",
+            crate::models::convert::DictValue::dict_value(&self.governance_score, py)?,
+        )?;
+        dict.set_item(
+            "esg_score",
+            crate::models::convert::DictValue::dict_value(&self.esg_score, py)?,
+        )?;
+        dict.set_item(
+            "url",
+            crate::models::convert::DictValue::dict_value(&self.url, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::esg::EsgDisclosure> for EsgDisclosure {
@@ -122,6 +229,12 @@ impl From<libfmp::responses::esg::EsgDisclosure> for EsgDisclosure {
             esg_score: value.esg_score,
             url: value.url,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EsgDisclosure {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -175,6 +288,23 @@ impl EsgRating {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['cik'], typing.Literal['company_name'], typing.Literal['industry'], typing.Literal['fiscal_year'], typing.Literal['esg_risk_rating'], typing.Literal['industry_rank']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "cik",
+                "company_name",
+                "industry",
+                "fiscal_year",
+                "esg_risk_rating",
+                "industry_rank",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -202,6 +332,69 @@ impl EsgRating {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EsgRating",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("cik", self.cik.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("industry", self.industry.clone().into_bound_py_any(py)?),
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "esg_risk_rating",
+                    self.esg_risk_rating.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "industry_rank",
+                    self.industry_rank.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "cik",
+            crate::models::convert::DictValue::dict_value(&self.cik, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "industry",
+            crate::models::convert::DictValue::dict_value(&self.industry, py)?,
+        )?;
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "esg_risk_rating",
+            crate::models::convert::DictValue::dict_value(&self.esg_risk_rating, py)?,
+        )?;
+        dict.set_item(
+            "industry_rank",
+            crate::models::convert::DictValue::dict_value(&self.industry_rank, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::esg::EsgRating> for EsgRating {
@@ -215,6 +408,12 @@ impl From<libfmp::responses::esg::EsgRating> for EsgRating {
             esg_risk_rating: value.esg_risk_rating,
             industry_rank: value.industry_rank,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EsgRating {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -264,6 +463,22 @@ impl EsgBenchmark {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['fiscal_year'], typing.Literal['sector'], typing.Literal['environmental_score'], typing.Literal['social_score'], typing.Literal['governance_score'], typing.Literal['esg_score']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "fiscal_year",
+                "sector",
+                "environmental_score",
+                "social_score",
+                "governance_score",
+                "esg_score",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -290,6 +505,64 @@ impl EsgBenchmark {
         kwargs.set_item("esg_score", self.esg_score.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EsgBenchmark",
+            &[
+                (
+                    "fiscal_year",
+                    self.fiscal_year.clone().into_bound_py_any(py)?,
+                ),
+                ("sector", self.sector.clone().into_bound_py_any(py)?),
+                (
+                    "environmental_score",
+                    self.environmental_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "social_score",
+                    self.social_score.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "governance_score",
+                    self.governance_score.clone().into_bound_py_any(py)?,
+                ),
+                ("esg_score", self.esg_score.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "fiscal_year",
+            crate::models::convert::DictValue::dict_value(&self.fiscal_year, py)?,
+        )?;
+        dict.set_item(
+            "sector",
+            crate::models::convert::DictValue::dict_value(&self.sector, py)?,
+        )?;
+        dict.set_item(
+            "environmental_score",
+            crate::models::convert::DictValue::dict_value(&self.environmental_score, py)?,
+        )?;
+        dict.set_item(
+            "social_score",
+            crate::models::convert::DictValue::dict_value(&self.social_score, py)?,
+        )?;
+        dict.set_item(
+            "governance_score",
+            crate::models::convert::DictValue::dict_value(&self.governance_score, py)?,
+        )?;
+        dict.set_item(
+            "esg_score",
+            crate::models::convert::DictValue::dict_value(&self.esg_score, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::esg::EsgBenchmark> for EsgBenchmark {
@@ -302,5 +575,11 @@ impl From<libfmp::responses::esg::EsgBenchmark> for EsgBenchmark {
             governance_score: value.governance_score,
             esg_score: value.esg_score,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EsgBenchmark {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

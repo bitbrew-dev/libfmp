@@ -51,6 +51,22 @@ impl ExchangeMarketHours {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['exchange'], typing.Literal['name'], typing.Literal['opening_hour'], typing.Literal['closing_hour'], typing.Literal['timezone'], typing.Literal['is_market_open']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "exchange",
+                "name",
+                "opening_hour",
+                "closing_hour",
+                "timezone",
+                "is_market_open",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -74,6 +90,61 @@ impl ExchangeMarketHours {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "ExchangeMarketHours",
+            &[
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                (
+                    "opening_hour",
+                    self.opening_hour.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "closing_hour",
+                    self.closing_hour.clone().into_bound_py_any(py)?,
+                ),
+                ("timezone", self.timezone.clone().into_bound_py_any(py)?),
+                (
+                    "is_market_open",
+                    self.is_market_open.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "opening_hour",
+            crate::models::convert::DictValue::dict_value(&self.opening_hour, py)?,
+        )?;
+        dict.set_item(
+            "closing_hour",
+            crate::models::convert::DictValue::dict_value(&self.closing_hour, py)?,
+        )?;
+        dict.set_item(
+            "timezone",
+            crate::models::convert::DictValue::dict_value(&self.timezone, py)?,
+        )?;
+        dict.set_item(
+            "is_market_open",
+            crate::models::convert::DictValue::dict_value(&self.is_market_open, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::market_hours::ExchangeMarketHours> for ExchangeMarketHours {
@@ -86,6 +157,12 @@ impl From<libfmp::responses::market_hours::ExchangeMarketHours> for ExchangeMark
             timezone: value.timezone,
             is_market_open: value.is_market_open,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for ExchangeMarketHours {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -153,6 +230,22 @@ impl ExchangeHoliday {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['exchange'], typing.Literal['date'], typing.Literal['name'], typing.Literal['is_closed'], typing.Literal['adj_open_time'], typing.Literal['adj_close_time']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "exchange",
+                "date",
+                "name",
+                "is_closed",
+                "adj_open_time",
+                "adj_close_time",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -191,6 +284,46 @@ impl ExchangeHoliday {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "ExchangeHoliday",
+            &[
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("is_closed", self.is_closed.clone().into_bound_py_any(py)?),
+                ("adj_open_time", self.adj_open_time(py)?),
+                ("adj_close_time", self.adj_close_time(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "is_closed",
+            crate::models::convert::DictValue::dict_value(&self.is_closed, py)?,
+        )?;
+        dict.set_item("adj_open_time", self.adj_open_time(py)?)?;
+        dict.set_item("adj_close_time", self.adj_close_time(py)?)?;
+        Ok(dict)
+    }
 
     #[getter]
     fn adj_open_time<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
@@ -219,5 +352,11 @@ impl From<libfmp::responses::market_hours::ExchangeHoliday> for ExchangeHoliday 
             adj_open_time: value.adj_open_time,
             adj_close_time: value.adj_close_time,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for ExchangeHoliday {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

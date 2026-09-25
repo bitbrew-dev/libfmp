@@ -87,6 +87,31 @@ impl CompanyScreenerResult {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['company_name'], typing.Literal['market_cap'], typing.Literal['sector'], typing.Literal['industry'], typing.Literal['beta'], typing.Literal['price'], typing.Literal['last_annual_dividend'], typing.Literal['volume'], typing.Literal['exchange'], typing.Literal['exchange_short_name'], typing.Literal['country'], typing.Literal['is_etf'], typing.Literal['is_fund'], typing.Literal['is_actively_trading']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "company_name",
+                "market_cap",
+                "sector",
+                "industry",
+                "beta",
+                "price",
+                "last_annual_dividend",
+                "volume",
+                "exchange",
+                "exchange_short_name",
+                "country",
+                "is_etf",
+                "is_fund",
+                "is_actively_trading",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -122,6 +147,109 @@ impl CompanyScreenerResult {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CompanyScreenerResult",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                (
+                    "company_name",
+                    self.company_name.clone().into_bound_py_any(py)?,
+                ),
+                ("market_cap", self.market_cap.clone().into_bound_py_any(py)?),
+                ("sector", self.sector.clone().into_bound_py_any(py)?),
+                ("industry", self.industry.clone().into_bound_py_any(py)?),
+                ("beta", self.beta.clone().into_bound_py_any(py)?),
+                ("price", self.price.clone().into_bound_py_any(py)?),
+                (
+                    "last_annual_dividend",
+                    self.last_annual_dividend.clone().into_bound_py_any(py)?,
+                ),
+                ("volume", self.volume.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                (
+                    "exchange_short_name",
+                    self.exchange_short_name.clone().into_bound_py_any(py)?,
+                ),
+                ("country", self.country.clone().into_bound_py_any(py)?),
+                ("is_etf", self.is_etf.clone().into_bound_py_any(py)?),
+                ("is_fund", self.is_fund.clone().into_bound_py_any(py)?),
+                (
+                    "is_actively_trading",
+                    self.is_actively_trading.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "company_name",
+            crate::models::convert::DictValue::dict_value(&self.company_name, py)?,
+        )?;
+        dict.set_item(
+            "market_cap",
+            crate::models::convert::DictValue::dict_value(&self.market_cap, py)?,
+        )?;
+        dict.set_item(
+            "sector",
+            crate::models::convert::DictValue::dict_value(&self.sector, py)?,
+        )?;
+        dict.set_item(
+            "industry",
+            crate::models::convert::DictValue::dict_value(&self.industry, py)?,
+        )?;
+        dict.set_item(
+            "beta",
+            crate::models::convert::DictValue::dict_value(&self.beta, py)?,
+        )?;
+        dict.set_item(
+            "price",
+            crate::models::convert::DictValue::dict_value(&self.price, py)?,
+        )?;
+        dict.set_item(
+            "last_annual_dividend",
+            crate::models::convert::DictValue::dict_value(&self.last_annual_dividend, py)?,
+        )?;
+        dict.set_item(
+            "volume",
+            crate::models::convert::DictValue::dict_value(&self.volume, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "exchange_short_name",
+            crate::models::convert::DictValue::dict_value(&self.exchange_short_name, py)?,
+        )?;
+        dict.set_item(
+            "country",
+            crate::models::convert::DictValue::dict_value(&self.country, py)?,
+        )?;
+        dict.set_item(
+            "is_etf",
+            crate::models::convert::DictValue::dict_value(&self.is_etf, py)?,
+        )?;
+        dict.set_item(
+            "is_fund",
+            crate::models::convert::DictValue::dict_value(&self.is_fund, py)?,
+        )?;
+        dict.set_item(
+            "is_actively_trading",
+            crate::models::convert::DictValue::dict_value(&self.is_actively_trading, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::screener::CompanyScreenerResult> for CompanyScreenerResult {
@@ -143,5 +271,11 @@ impl From<libfmp::responses::screener::CompanyScreenerResult> for CompanyScreene
             is_fund: value.is_fund,
             is_actively_trading: value.is_actively_trading,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CompanyScreenerResult {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

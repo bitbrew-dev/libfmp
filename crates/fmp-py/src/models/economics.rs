@@ -79,6 +79,18 @@ impl TreasuryRate {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['month_1'], typing.Literal['month_2'], typing.Literal['month_3'], typing.Literal['month_6'], typing.Literal['year_1'], typing.Literal['year_2'], typing.Literal['year_3'], typing.Literal['year_5'], typing.Literal['year_7'], typing.Literal['year_10'], typing.Literal['year_20'], typing.Literal['year_30']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date", "month_1", "month_2", "month_3", "month_6", "year_1", "year_2", "year_3",
+                "year_5", "year_7", "year_10", "year_20", "year_30",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -100,6 +112,87 @@ impl TreasuryRate {
         kwargs.set_item("year_30", self.year_30.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "TreasuryRate",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("month_1", self.month_1.clone().into_bound_py_any(py)?),
+                ("month_2", self.month_2.clone().into_bound_py_any(py)?),
+                ("month_3", self.month_3.clone().into_bound_py_any(py)?),
+                ("month_6", self.month_6.clone().into_bound_py_any(py)?),
+                ("year_1", self.year_1.clone().into_bound_py_any(py)?),
+                ("year_2", self.year_2.clone().into_bound_py_any(py)?),
+                ("year_3", self.year_3.clone().into_bound_py_any(py)?),
+                ("year_5", self.year_5.clone().into_bound_py_any(py)?),
+                ("year_7", self.year_7.clone().into_bound_py_any(py)?),
+                ("year_10", self.year_10.clone().into_bound_py_any(py)?),
+                ("year_20", self.year_20.clone().into_bound_py_any(py)?),
+                ("year_30", self.year_30.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "month_1",
+            crate::models::convert::DictValue::dict_value(&self.month_1, py)?,
+        )?;
+        dict.set_item(
+            "month_2",
+            crate::models::convert::DictValue::dict_value(&self.month_2, py)?,
+        )?;
+        dict.set_item(
+            "month_3",
+            crate::models::convert::DictValue::dict_value(&self.month_3, py)?,
+        )?;
+        dict.set_item(
+            "month_6",
+            crate::models::convert::DictValue::dict_value(&self.month_6, py)?,
+        )?;
+        dict.set_item(
+            "year_1",
+            crate::models::convert::DictValue::dict_value(&self.year_1, py)?,
+        )?;
+        dict.set_item(
+            "year_2",
+            crate::models::convert::DictValue::dict_value(&self.year_2, py)?,
+        )?;
+        dict.set_item(
+            "year_3",
+            crate::models::convert::DictValue::dict_value(&self.year_3, py)?,
+        )?;
+        dict.set_item(
+            "year_5",
+            crate::models::convert::DictValue::dict_value(&self.year_5, py)?,
+        )?;
+        dict.set_item(
+            "year_7",
+            crate::models::convert::DictValue::dict_value(&self.year_7, py)?,
+        )?;
+        dict.set_item(
+            "year_10",
+            crate::models::convert::DictValue::dict_value(&self.year_10, py)?,
+        )?;
+        dict.set_item(
+            "year_20",
+            crate::models::convert::DictValue::dict_value(&self.year_20, py)?,
+        )?;
+        dict.set_item(
+            "year_30",
+            crate::models::convert::DictValue::dict_value(&self.year_30, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::economics::TreasuryRate> for TreasuryRate {
@@ -119,6 +212,12 @@ impl From<libfmp::responses::economics::TreasuryRate> for TreasuryRate {
             year_20: value.year_20,
             year_30: value.year_30,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for TreasuryRate {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -148,6 +247,12 @@ impl EconomicIndicatorObservation {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['name'], typing.Literal['date'], typing.Literal['value']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(py, ["name", "date", "value"])
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -158,6 +263,37 @@ impl EconomicIndicatorObservation {
         kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("value", self.value.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
+    }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EconomicIndicatorObservation",
+            &[
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("value", self.value.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "value",
+            crate::models::convert::DictValue::dict_value(&self.value, py)?,
+        )?;
+        Ok(dict)
     }
 }
 
@@ -170,6 +306,12 @@ impl From<libfmp::responses::economics::EconomicIndicatorObservation>
             date: value.date.into_inner(),
             value: value.value,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EconomicIndicatorObservation {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -239,6 +381,27 @@ impl EconomicCalendarEvent {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['date'], typing.Literal['country'], typing.Literal['event'], typing.Literal['currency'], typing.Literal['previous'], typing.Literal['estimate'], typing.Literal['actual'], typing.Literal['change'], typing.Literal['impact'], typing.Literal['change_percentage'], typing.Literal['unit']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "date",
+                "country",
+                "event",
+                "currency",
+                "previous",
+                "estimate",
+                "actual",
+                "change",
+                "impact",
+                "change_percentage",
+                "unit",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -261,6 +424,80 @@ impl EconomicCalendarEvent {
         kwargs.set_item("unit", self.unit.clone().into_bound_py_any(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "EconomicCalendarEvent",
+            &[
+                ("date", self.date.clone().into_bound_py_any(py)?),
+                ("country", self.country.clone().into_bound_py_any(py)?),
+                ("event", self.event.clone().into_bound_py_any(py)?),
+                ("currency", self.currency.clone().into_bound_py_any(py)?),
+                ("previous", self.previous.clone().into_bound_py_any(py)?),
+                ("estimate", self.estimate.clone().into_bound_py_any(py)?),
+                ("actual", self.actual.clone().into_bound_py_any(py)?),
+                ("change", self.change.clone().into_bound_py_any(py)?),
+                ("impact", self.impact.clone().into_bound_py_any(py)?),
+                (
+                    "change_percentage",
+                    self.change_percentage.clone().into_bound_py_any(py)?,
+                ),
+                ("unit", self.unit.clone().into_bound_py_any(py)?),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "date",
+            crate::models::convert::DictValue::dict_value(&self.date, py)?,
+        )?;
+        dict.set_item(
+            "country",
+            crate::models::convert::DictValue::dict_value(&self.country, py)?,
+        )?;
+        dict.set_item(
+            "event",
+            crate::models::convert::DictValue::dict_value(&self.event, py)?,
+        )?;
+        dict.set_item(
+            "currency",
+            crate::models::convert::DictValue::dict_value(&self.currency, py)?,
+        )?;
+        dict.set_item(
+            "previous",
+            crate::models::convert::DictValue::dict_value(&self.previous, py)?,
+        )?;
+        dict.set_item(
+            "estimate",
+            crate::models::convert::DictValue::dict_value(&self.estimate, py)?,
+        )?;
+        dict.set_item(
+            "actual",
+            crate::models::convert::DictValue::dict_value(&self.actual, py)?,
+        )?;
+        dict.set_item(
+            "change",
+            crate::models::convert::DictValue::dict_value(&self.change, py)?,
+        )?;
+        dict.set_item(
+            "impact",
+            crate::models::convert::DictValue::dict_value(&self.impact, py)?,
+        )?;
+        dict.set_item(
+            "change_percentage",
+            crate::models::convert::DictValue::dict_value(&self.change_percentage, py)?,
+        )?;
+        dict.set_item(
+            "unit",
+            crate::models::convert::DictValue::dict_value(&self.unit, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::economics::EconomicCalendarEvent> for EconomicCalendarEvent {
@@ -278,6 +515,12 @@ impl From<libfmp::responses::economics::EconomicCalendarEvent> for EconomicCalen
             change_percentage: value.change_percentage,
             unit: value.unit,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for EconomicCalendarEvent {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
 
@@ -319,6 +562,20 @@ impl MarketRiskPremium {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['country'], typing.Literal['continent'], typing.Literal['country_risk_premium'], typing.Literal['total_equity_risk_premium']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "country",
+                "continent",
+                "country_risk_premium",
+                "total_equity_risk_premium",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -339,6 +596,50 @@ impl MarketRiskPremium {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "MarketRiskPremium",
+            &[
+                ("country", self.country.clone().into_bound_py_any(py)?),
+                ("continent", self.continent.clone().into_bound_py_any(py)?),
+                (
+                    "country_risk_premium",
+                    self.country_risk_premium.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_equity_risk_premium",
+                    self.total_equity_risk_premium
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "country",
+            crate::models::convert::DictValue::dict_value(&self.country, py)?,
+        )?;
+        dict.set_item(
+            "continent",
+            crate::models::convert::DictValue::dict_value(&self.continent, py)?,
+        )?;
+        dict.set_item(
+            "country_risk_premium",
+            crate::models::convert::DictValue::dict_value(&self.country_risk_premium, py)?,
+        )?;
+        dict.set_item(
+            "total_equity_risk_premium",
+            crate::models::convert::DictValue::dict_value(&self.total_equity_risk_premium, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::economics::MarketRiskPremium> for MarketRiskPremium {
@@ -349,5 +650,11 @@ impl From<libfmp::responses::economics::MarketRiskPremium> for MarketRiskPremium
             country_risk_premium: value.country_risk_premium,
             total_equity_risk_premium: value.total_equity_risk_premium,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for MarketRiskPremium {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }

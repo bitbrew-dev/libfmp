@@ -15,6 +15,55 @@ __all__ = [
 @typing.final
 class CustomDcfValuation:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["year"],
+        typing.Literal["symbol"],
+        typing.Literal["revenue"],
+        typing.Literal["revenue_percentage"],
+        typing.Literal["ebitda"],
+        typing.Literal["ebitda_percentage"],
+        typing.Literal["ebit"],
+        typing.Literal["ebit_percentage"],
+        typing.Literal["depreciation"],
+        typing.Literal["depreciation_percentage"],
+        typing.Literal["total_cash"],
+        typing.Literal["total_cash_percentage"],
+        typing.Literal["receivables"],
+        typing.Literal["receivables_percentage"],
+        typing.Literal["inventories"],
+        typing.Literal["inventories_percentage"],
+        typing.Literal["payable"],
+        typing.Literal["payable_percentage"],
+        typing.Literal["capital_expenditure"],
+        typing.Literal["capital_expenditure_percentage"],
+        typing.Literal["price"],
+        typing.Literal["beta"],
+        typing.Literal["diluted_shares_outstanding"],
+        typing.Literal["cost_of_debt"],
+        typing.Literal["tax_rate"],
+        typing.Literal["after_tax_cost_of_debt"],
+        typing.Literal["risk_free_rate"],
+        typing.Literal["market_risk_premium"],
+        typing.Literal["cost_of_equity"],
+        typing.Literal["total_debt"],
+        typing.Literal["total_equity"],
+        typing.Literal["total_capital"],
+        typing.Literal["debt_weighting"],
+        typing.Literal["equity_weighting"],
+        typing.Literal["wacc"],
+        typing.Literal["tax_rate_cash"],
+        typing.Literal["ebiat"],
+        typing.Literal["ufcf"],
+        typing.Literal["sum_pv_ufcf"],
+        typing.Literal["long_term_growth_rate"],
+        typing.Literal["terminal_value"],
+        typing.Literal["present_terminal_value"],
+        typing.Literal["enterprise_value"],
+        typing.Literal["net_debt"],
+        typing.Literal["equity_value"],
+        typing.Literal["equity_value_per_share"],
+        typing.Literal["free_cash_flow_t1"],
+    ]
 
     @property
     def year(self) -> builtins.str: ...
@@ -163,11 +212,53 @@ class CustomDcfValuation:
         free_cash_flow_t1: builtins.float,
     ) -> CustomDcfValuation: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CustomLeveredDcfValuation:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["year"],
+        typing.Literal["symbol"],
+        typing.Literal["revenue"],
+        typing.Literal["revenue_percentage"],
+        typing.Literal["capital_expenditure"],
+        typing.Literal["capital_expenditure_percentage"],
+        typing.Literal["price"],
+        typing.Literal["beta"],
+        typing.Literal["diluted_shares_outstanding"],
+        typing.Literal["cost_of_debt"],
+        typing.Literal["tax_rate"],
+        typing.Literal["after_tax_cost_of_debt"],
+        typing.Literal["risk_free_rate"],
+        typing.Literal["market_risk_premium"],
+        typing.Literal["cost_of_equity"],
+        typing.Literal["total_debt"],
+        typing.Literal["total_equity"],
+        typing.Literal["total_capital"],
+        typing.Literal["debt_weighting"],
+        typing.Literal["equity_weighting"],
+        typing.Literal["wacc"],
+        typing.Literal["operating_cash_flow"],
+        typing.Literal["pv_lfcf"],
+        typing.Literal["sum_pv_lfcf"],
+        typing.Literal["long_term_growth_rate"],
+        typing.Literal["free_cash_flow"],
+        typing.Literal["terminal_value"],
+        typing.Literal["present_terminal_value"],
+        typing.Literal["enterprise_value"],
+        typing.Literal["net_debt"],
+        typing.Literal["equity_value"],
+        typing.Literal["equity_value_per_share"],
+        typing.Literal["free_cash_flow_t1"],
+        typing.Literal["operating_cash_flow_percentage"],
+    ]
 
     @property
     def year(self) -> builtins.str: ...
@@ -277,6 +368,12 @@ class CustomLeveredDcfValuation:
         operating_cash_flow_percentage: builtins.float,
     ) -> CustomLeveredDcfValuation: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -357,6 +454,12 @@ class DcfNamespace:
 @typing.final
 class DcfValuation:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["dcf"],
+        typing.Literal["stock_price"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -376,3 +479,9 @@ class DcfValuation:
         stock_price: builtins.float,
     ) -> DcfValuation: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

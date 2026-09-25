@@ -19,17 +19,43 @@ __all__ = [
 @typing.final
 class CongressionalDebtDetails:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["date_incurred"]]
 
     @property
     def date_incurred(self) -> builtins.str: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(cls, *, date_incurred: builtins.str) -> CongressionalDebtDetails: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CongressionalMemberNetWorth:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["member_id"],
+        typing.Literal["form_type"],
+        typing.Literal["year"],
+        typing.Literal["filing_date"],
+        typing.Literal["section"],
+        typing.Literal["category"],
+        typing.Literal["name"],
+        typing.Literal["asset_type"],
+        typing.Literal["income_type"],
+        typing.Literal["owner"],
+        typing.Literal["comment"],
+        typing.Literal["debt_details"],
+        typing.Literal["value_range"],
+        typing.Literal["value"],
+        typing.Literal["income_range"],
+        typing.Literal["income"],
+        typing.Literal["link"],
+    ]
 
     @property
     def member_id(self) -> builtins.str: ...
@@ -88,11 +114,33 @@ class CongressionalMemberNetWorth:
         link: builtins.str,
     ) -> CongressionalMemberNetWorth: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CongressionalMemberNetWorthAggregate:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["member_id"],
+        typing.Literal["year"],
+        typing.Literal["total"],
+        typing.Literal["real_estate_liabilities"],
+        typing.Literal["cash_and_cash_equivalents"],
+        typing.Literal["business_and_self_employment"],
+        typing.Literal["real_estate"],
+        typing.Literal["ownership_interest"],
+        typing.Literal["stock"],
+        typing.Literal["options"],
+        typing.Literal["revolving_and_credit_lines"],
+        typing.Literal["asset_backed_securities"],
+        typing.Literal["business_liabilities"],
+        typing.Literal["mutual_funds_and_etfs"],
+    ]
 
     @property
     def member_id(self) -> builtins.str: ...
@@ -142,11 +190,27 @@ class CongressionalMemberNetWorthAggregate:
         mutual_funds_and_etfs: builtins.int,
     ) -> CongressionalMemberNetWorthAggregate: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CongressionalMemberPosition:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["member_id"],
+        typing.Literal["congress_number"],
+        typing.Literal["start_date"],
+        typing.Literal["end_date"],
+        typing.Literal["party"],
+        typing.Literal["position"],
+        typing.Literal["state"],
+        typing.Literal["years_in_term"],
+    ]
 
     @property
     def member_id(self) -> builtins.str: ...
@@ -178,11 +242,29 @@ class CongressionalMemberPosition:
         years_in_term: builtins.float,
     ) -> CongressionalMemberPosition: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CongressionalMemberProfile:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["member_id"],
+        typing.Literal["first_name"],
+        typing.Literal["last_name"],
+        typing.Literal["birth_date"],
+        typing.Literal["latest_party"],
+        typing.Literal["latest_state"],
+        typing.Literal["latest_position"],
+        typing.Literal["image"],
+        typing.Literal["active"],
+        typing.Literal["years_active"],
+    ]
 
     @property
     def member_id(self) -> builtins.str: ...
@@ -220,6 +302,12 @@ class CongressionalMemberProfile:
         years_active: builtins.float,
     ) -> CongressionalMemberProfile: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -358,6 +446,7 @@ class CongressionalNamespace:
 @typing.final
 class CongressionalNetWorthRange:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[typing.Literal["min"], typing.Literal["max"]]
 
     @property
     def min(self) -> builtins.int: ...
@@ -368,11 +457,35 @@ class CongressionalNetWorthRange:
         cls, *, min: builtins.int, max: builtins.int
     ) -> CongressionalNetWorthRange: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class CongressionalTrade:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["member_id"],
+        typing.Literal["disclosure_date"],
+        typing.Literal["transaction_date"],
+        typing.Literal["first_name"],
+        typing.Literal["last_name"],
+        typing.Literal["office"],
+        typing.Literal["district"],
+        typing.Literal["owner"],
+        typing.Literal["asset_description"],
+        typing.Literal["asset_type"],
+        typing.Literal["transaction_type"],
+        typing.Literal["amount"],
+        typing.Literal["capital_gains_over_200_usd"],
+        typing.Literal["comment"],
+        typing.Literal["link"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -428,3 +541,9 @@ class CongressionalTrade:
         link: builtins.str,
     ) -> CongressionalTrade: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

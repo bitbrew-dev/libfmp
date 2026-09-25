@@ -17,6 +17,12 @@ __all__ = [
 @typing.final
 class BulkDcfValuation:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["dcf"],
+        typing.Literal["stock_price"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -36,11 +42,28 @@ class BulkDcfValuation:
         stock_price: builtins.str,
     ) -> BulkDcfValuation: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkEtfHolding:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["shares_number"],
+        typing.Literal["asset"],
+        typing.Literal["weight_percentage"],
+        typing.Literal["cusip"],
+        typing.Literal["isin"],
+        typing.Literal["market_value"],
+        typing.Literal["last_updated_raw"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -75,11 +98,30 @@ class BulkEtfHolding:
         last_updated_raw: builtins.str,
     ) -> BulkEtfHolding: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkFinancialScore:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["reported_currency"],
+        typing.Literal["altman_z_score"],
+        typing.Literal["piotroski_score"],
+        typing.Literal["working_capital"],
+        typing.Literal["total_assets"],
+        typing.Literal["retained_earnings"],
+        typing.Literal["ebit"],
+        typing.Literal["market_cap"],
+        typing.Literal["total_liabilities"],
+        typing.Literal["revenue"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -120,11 +162,29 @@ class BulkFinancialScore:
         revenue: builtins.str,
     ) -> BulkFinancialScore: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkPriceTargetSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["last_month_count"],
+        typing.Literal["last_month_avg_price_target"],
+        typing.Literal["last_quarter_count"],
+        typing.Literal["last_quarter_avg_price_target"],
+        typing.Literal["last_year_count"],
+        typing.Literal["last_year_avg_price_target"],
+        typing.Literal["all_time_count"],
+        typing.Literal["all_time_avg_price_target"],
+        typing.Literal["publishers"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -162,11 +222,28 @@ class BulkPriceTargetSummary:
         publishers: builtins.str,
     ) -> BulkPriceTargetSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkStockRating:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["rating"],
+        typing.Literal["discounted_cash_flow_score"],
+        typing.Literal["return_on_equity_score"],
+        typing.Literal["return_on_assets_score"],
+        typing.Literal["debt_to_equity_score"],
+        typing.Literal["price_to_earnings_score"],
+        typing.Literal["price_to_book_score"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -201,11 +278,26 @@ class BulkStockRating:
         price_to_book_score: builtins.str,
     ) -> BulkStockRating: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkUpgradesDowngradesConsensus:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["strong_buy"],
+        typing.Literal["buy"],
+        typing.Literal["hold"],
+        typing.Literal["sell"],
+        typing.Literal["strong_sell"],
+        typing.Literal["consensus"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -234,3 +326,9 @@ class BulkUpgradesDowngradesConsensus:
         consensus: builtins.str,
     ) -> BulkUpgradesDowngradesConsensus: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

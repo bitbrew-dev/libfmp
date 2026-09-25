@@ -12,6 +12,42 @@ __all__ = [
 @typing.final
 class IncomeStatementGrowth:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["reported_currency"],
+        typing.Literal["growth_revenue"],
+        typing.Literal["growth_cost_of_revenue"],
+        typing.Literal["growth_gross_profit"],
+        typing.Literal["growth_gross_profit_ratio"],
+        typing.Literal["growth_research_and_development_expenses"],
+        typing.Literal["growth_general_and_administrative_expenses"],
+        typing.Literal["growth_selling_and_marketing_expenses"],
+        typing.Literal["growth_other_expenses"],
+        typing.Literal["growth_operating_expenses"],
+        typing.Literal["growth_cost_and_expenses"],
+        typing.Literal["growth_interest_income"],
+        typing.Literal["growth_interest_expense"],
+        typing.Literal["growth_depreciation_and_amortization"],
+        typing.Literal["growth_ebitda"],
+        typing.Literal["growth_operating_income"],
+        typing.Literal["growth_income_before_tax"],
+        typing.Literal["growth_income_tax_expense"],
+        typing.Literal["growth_net_income"],
+        typing.Literal["growth_eps"],
+        typing.Literal["growth_eps_diluted"],
+        typing.Literal["growth_weighted_average_shs_out"],
+        typing.Literal["growth_weighted_average_shs_out_dil"],
+        typing.Literal["growth_ebit"],
+        typing.Literal["growth_non_operating_income_excluding_interest"],
+        typing.Literal["growth_net_interest_income"],
+        typing.Literal["growth_total_other_income_expenses_net"],
+        typing.Literal["growth_net_income_from_continuing_operations"],
+        typing.Literal["growth_other_adjustments_to_net_income"],
+        typing.Literal["growth_net_income_deductions"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -121,3 +157,9 @@ class IncomeStatementGrowth:
         growth_net_income_deductions: builtins.float,
     ) -> IncomeStatementGrowth: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

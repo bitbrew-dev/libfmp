@@ -12,6 +12,23 @@ __all__ = [
 @typing.final
 class CompanyScreenerResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["company_name"],
+        typing.Literal["market_cap"],
+        typing.Literal["sector"],
+        typing.Literal["industry"],
+        typing.Literal["beta"],
+        typing.Literal["price"],
+        typing.Literal["last_annual_dividend"],
+        typing.Literal["volume"],
+        typing.Literal["exchange"],
+        typing.Literal["exchange_short_name"],
+        typing.Literal["country"],
+        typing.Literal["is_etf"],
+        typing.Literal["is_fund"],
+        typing.Literal["is_actively_trading"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -64,6 +81,12 @@ class CompanyScreenerResult:
         is_actively_trading: builtins.bool,
     ) -> CompanyScreenerResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

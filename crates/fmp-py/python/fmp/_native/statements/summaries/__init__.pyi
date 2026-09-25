@@ -16,6 +16,16 @@ __all__ = [
 @typing.final
 class EnterpriseValue:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["stock_price"],
+        typing.Literal["number_of_shares"],
+        typing.Literal["market_capitalization"],
+        typing.Literal["minus_cash_and_cash_equivalents"],
+        typing.Literal["add_total_debt"],
+        typing.Literal["enterprise_value"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -47,11 +57,30 @@ class EnterpriseValue:
         enterprise_value: builtins.float,
     ) -> EnterpriseValue: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class FinancialScore:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["reported_currency"],
+        typing.Literal["altman_z_score"],
+        typing.Literal["piotroski_score"],
+        typing.Literal["working_capital"],
+        typing.Literal["total_assets"],
+        typing.Literal["retained_earnings"],
+        typing.Literal["ebit"],
+        typing.Literal["market_cap"],
+        typing.Literal["total_liabilities"],
+        typing.Literal["revenue"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -92,11 +121,24 @@ class FinancialScore:
         revenue: builtins.float,
     ) -> FinancialScore: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class LatestFinancialStatement:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["calendar_year"],
+        typing.Literal["period"],
+        typing.Literal["date"],
+        typing.Literal["date_added"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -119,11 +161,29 @@ class LatestFinancialStatement:
         date_added: datetime.datetime,
     ) -> LatestFinancialStatement: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class OwnerEarnings:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["reported_currency"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["date"],
+        typing.Literal["average_ppe"],
+        typing.Literal["maintenance_capex"],
+        typing.Literal["owners_earnings"],
+        typing.Literal["growth_capex"],
+        typing.Literal["owners_earnings_per_share"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -161,6 +221,12 @@ class OwnerEarnings:
         owners_earnings_per_share: builtins.float,
     ) -> OwnerEarnings: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

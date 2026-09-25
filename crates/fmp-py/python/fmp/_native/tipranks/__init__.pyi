@@ -20,6 +20,14 @@ __all__ = [
 @typing.final
 class TipRanksAnalystActionCounts:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["initiated"],
+        typing.Literal["maintained"],
+        typing.Literal["upgraded"],
+        typing.Literal["downgraded"],
+        typing.Literal["reiterated"],
+        typing.Literal["resumed"],
+    ]
 
     @property
     def initiated(self) -> builtins.int: ...
@@ -45,11 +53,28 @@ class TipRanksAnalystActionCounts:
         resumed: builtins.int,
     ) -> TipRanksAnalystActionCounts: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TipRanksAnalystProfile:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["expert_uid"],
+        typing.Literal["analyst_name"],
+        typing.Literal["firm_name"],
+        typing.Literal["success_rate"],
+        typing.Literal["excess_return"],
+        typing.Literal["total_recommendations"],
+        typing.Literal["good_recommendations"],
+        typing.Literal["analyst_rank"],
+        typing.Literal["num_of_stars"],
+    ]
 
     @property
     def expert_uid(self) -> builtins.str: ...
@@ -84,11 +109,34 @@ class TipRanksAnalystProfile:
         num_of_stars: builtins.int,
     ) -> TipRanksAnalystProfile: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TipRanksAnalystSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["expert_uid"],
+        typing.Literal["from_"],
+        typing.Literal["to"],
+        typing.Literal["total_recommendations"],
+        typing.Literal["distinct_symbols"],
+        typing.Literal["distinct_analysts"],
+        typing.Literal["valid_price_targets"],
+        typing.Literal["recommendations"],
+        typing.Literal["analyst_action"],
+        typing.Literal["compared_price_targets"],
+        typing.Literal["beats"],
+        typing.Literal["misses"],
+        typing.Literal["average_return"],
+        typing.Literal["top_return"],
+        typing.Literal["worst_return"],
+    ]
 
     @property
     def expert_uid(self) -> builtins.str: ...
@@ -141,11 +189,34 @@ class TipRanksAnalystSummary:
         worst_return: builtins.str,
     ) -> TipRanksAnalystSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TipRanksFirmSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["firm_name"],
+        typing.Literal["from_"],
+        typing.Literal["to"],
+        typing.Literal["total_recommendations"],
+        typing.Literal["distinct_symbols"],
+        typing.Literal["distinct_analysts"],
+        typing.Literal["valid_price_targets"],
+        typing.Literal["recommendations"],
+        typing.Literal["analyst_action"],
+        typing.Literal["compared_price_targets"],
+        typing.Literal["beats"],
+        typing.Literal["misses"],
+        typing.Literal["average_return"],
+        typing.Literal["top_return"],
+        typing.Literal["worst_return"],
+    ]
 
     @property
     def firm_name(self) -> builtins.str: ...
@@ -198,11 +269,35 @@ class TipRanksFirmSummary:
         worst_return: builtins.str,
     ) -> TipRanksFirmSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TipRanksPointInTimeRating:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["expert_uid"],
+        typing.Literal["analyst_name"],
+        typing.Literal["stock_success_rate"],
+        typing.Literal["firm_name"],
+        typing.Literal["last_recommendation"],
+        typing.Literal["last_recommendation_date"],
+        typing.Literal["article_title"],
+        typing.Literal["article_site"],
+        typing.Literal["price_target"],
+        typing.Literal["price_target_currency"],
+        typing.Literal["url"],
+        typing.Literal["last_analyst_action"],
+        typing.Literal["stock_return"],
+        typing.Literal["beat_target"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -258,11 +353,32 @@ class TipRanksPointInTimeRating:
         beat_target: typing.Optional[builtins.bool],
     ) -> TipRanksPointInTimeRating: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TipRanksRatingSearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["recommendation_date"],
+        typing.Literal["expert_uid"],
+        typing.Literal["analyst_name"],
+        typing.Literal["firm_name"],
+        typing.Literal["recommendation"],
+        typing.Literal["analyst_action"],
+        typing.Literal["article_title"],
+        typing.Literal["article_site"],
+        typing.Literal["price_target"],
+        typing.Literal["price_target_currency"],
+        typing.Literal["url"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -309,11 +425,20 @@ class TipRanksRatingSearchResult:
         url: builtins.str,
     ) -> TipRanksRatingSearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TipRanksRecommendationCounts:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["buy"], typing.Literal["hold"], typing.Literal["sell"]
+    ]
 
     @property
     def buy(self) -> builtins.int: ...
@@ -326,11 +451,34 @@ class TipRanksRecommendationCounts:
         cls, *, buy: builtins.int, hold: builtins.int, sell: builtins.int
     ) -> TipRanksRecommendationCounts: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class TipRanksSymbolSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["from_"],
+        typing.Literal["to"],
+        typing.Literal["total_recommendations"],
+        typing.Literal["distinct_symbols"],
+        typing.Literal["distinct_analysts"],
+        typing.Literal["valid_price_targets"],
+        typing.Literal["recommendations"],
+        typing.Literal["analyst_action"],
+        typing.Literal["compared_price_targets"],
+        typing.Literal["beats"],
+        typing.Literal["misses"],
+        typing.Literal["average_return"],
+        typing.Literal["top_return"],
+        typing.Literal["worst_return"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -383,6 +531,12 @@ class TipRanksSymbolSummary:
         worst_return: builtins.str,
     ) -> TipRanksSymbolSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final

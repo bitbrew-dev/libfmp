@@ -13,6 +13,69 @@ __all__ = [
 @typing.final
 class BulkBalanceSheetStatement:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["symbol"],
+        typing.Literal["reported_currency"],
+        typing.Literal["cik"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["cash_and_cash_equivalents"],
+        typing.Literal["short_term_investments"],
+        typing.Literal["cash_and_short_term_investments"],
+        typing.Literal["net_receivables"],
+        typing.Literal["accounts_receivables"],
+        typing.Literal["other_receivables"],
+        typing.Literal["inventory"],
+        typing.Literal["prepaids"],
+        typing.Literal["other_current_assets"],
+        typing.Literal["total_current_assets"],
+        typing.Literal["property_plant_equipment_net"],
+        typing.Literal["goodwill"],
+        typing.Literal["intangible_assets"],
+        typing.Literal["goodwill_and_intangible_assets"],
+        typing.Literal["long_term_investments"],
+        typing.Literal["tax_assets"],
+        typing.Literal["other_non_current_assets"],
+        typing.Literal["total_non_current_assets"],
+        typing.Literal["other_assets"],
+        typing.Literal["total_assets"],
+        typing.Literal["total_payables"],
+        typing.Literal["account_payables"],
+        typing.Literal["other_payables"],
+        typing.Literal["accrued_expenses"],
+        typing.Literal["short_term_debt"],
+        typing.Literal["capital_lease_obligations_current"],
+        typing.Literal["tax_payables"],
+        typing.Literal["deferred_revenue"],
+        typing.Literal["other_current_liabilities"],
+        typing.Literal["total_current_liabilities"],
+        typing.Literal["long_term_debt"],
+        typing.Literal["capital_lease_obligations_non_current"],
+        typing.Literal["deferred_revenue_non_current"],
+        typing.Literal["deferred_tax_liabilities_non_current"],
+        typing.Literal["other_non_current_liabilities"],
+        typing.Literal["total_non_current_liabilities"],
+        typing.Literal["other_liabilities"],
+        typing.Literal["capital_lease_obligations"],
+        typing.Literal["total_liabilities"],
+        typing.Literal["treasury_stock"],
+        typing.Literal["preferred_stock"],
+        typing.Literal["common_stock"],
+        typing.Literal["retained_earnings"],
+        typing.Literal["additional_paid_in_capital"],
+        typing.Literal["accumulated_other_comprehensive_income_loss"],
+        typing.Literal["other_total_stockholders_equity"],
+        typing.Literal["total_stockholders_equity"],
+        typing.Literal["total_equity"],
+        typing.Literal["minority_interest"],
+        typing.Literal["total_liabilities_and_total_equity"],
+        typing.Literal["total_investments"],
+        typing.Literal["total_debt"],
+        typing.Literal["net_debt"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -203,11 +266,75 @@ class BulkBalanceSheetStatement:
         net_debt: builtins.str,
     ) -> BulkBalanceSheetStatement: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class BulkBalanceSheetStatementGrowth:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["date"],
+        typing.Literal["fiscal_year"],
+        typing.Literal["period"],
+        typing.Literal["reported_currency"],
+        typing.Literal["growth_cash_and_cash_equivalents"],
+        typing.Literal["growth_short_term_investments"],
+        typing.Literal["growth_cash_and_short_term_investments"],
+        typing.Literal["growth_net_receivables"],
+        typing.Literal["growth_inventory"],
+        typing.Literal["growth_other_current_assets"],
+        typing.Literal["growth_total_current_assets"],
+        typing.Literal["growth_property_plant_equipment_net"],
+        typing.Literal["growth_goodwill"],
+        typing.Literal["growth_intangible_assets"],
+        typing.Literal["growth_goodwill_and_intangible_assets"],
+        typing.Literal["growth_long_term_investments"],
+        typing.Literal["growth_tax_assets"],
+        typing.Literal["growth_other_non_current_assets"],
+        typing.Literal["growth_total_non_current_assets"],
+        typing.Literal["growth_other_assets"],
+        typing.Literal["growth_total_assets"],
+        typing.Literal["growth_account_payables"],
+        typing.Literal["growth_short_term_debt"],
+        typing.Literal["growth_tax_payables"],
+        typing.Literal["growth_deferred_revenue"],
+        typing.Literal["growth_other_current_liabilities"],
+        typing.Literal["growth_total_current_liabilities"],
+        typing.Literal["growth_long_term_debt"],
+        typing.Literal["growth_deferred_revenue_non_current"],
+        typing.Literal["growth_deferred_tax_liabilities_non_current"],
+        typing.Literal["growth_other_non_current_liabilities"],
+        typing.Literal["growth_total_non_current_liabilities"],
+        typing.Literal["growth_other_liabilities"],
+        typing.Literal["growth_total_liabilities"],
+        typing.Literal["growth_preferred_stock"],
+        typing.Literal["growth_common_stock"],
+        typing.Literal["growth_retained_earnings"],
+        typing.Literal["growth_accumulated_other_comprehensive_income_loss"],
+        typing.Literal["growth_other_total_stockholders_equity"],
+        typing.Literal["growth_total_stockholders_equity"],
+        typing.Literal["growth_minority_interest"],
+        typing.Literal["growth_total_equity"],
+        typing.Literal["growth_total_liabilities_and_stockholders_equity"],
+        typing.Literal["growth_total_investments"],
+        typing.Literal["growth_total_debt"],
+        typing.Literal["growth_net_debt"],
+        typing.Literal["growth_accounts_receivables"],
+        typing.Literal["growth_other_receivables"],
+        typing.Literal["growth_prepaids"],
+        typing.Literal["growth_total_payables"],
+        typing.Literal["growth_other_payables"],
+        typing.Literal["growth_accrued_expenses"],
+        typing.Literal["growth_capital_lease_obligations_current"],
+        typing.Literal["growth_additional_paid_in_capital"],
+        typing.Literal["growth_treasury_stock"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -383,3 +510,9 @@ class BulkBalanceSheetStatementGrowth:
         growth_treasury_stock: builtins.str,
     ) -> BulkBalanceSheetStatementGrowth: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

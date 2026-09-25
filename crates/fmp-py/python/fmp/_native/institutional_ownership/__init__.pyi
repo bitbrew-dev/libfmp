@@ -20,6 +20,9 @@ __all__ = [
 @typing.final
 class Form13fFilingDate:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"], typing.Literal["year"], typing.Literal["quarter"]
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -32,11 +35,31 @@ class Form13fFilingDate:
         cls, *, date: datetime.date, year: builtins.int, quarter: builtins.int
     ) -> Form13fFilingDate: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class HolderIndustryBreakdown:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["cik"],
+        typing.Literal["investor_name"],
+        typing.Literal["industry_title"],
+        typing.Literal["weight"],
+        typing.Literal["last_weight"],
+        typing.Literal["change_in_weight"],
+        typing.Literal["change_in_weight_percentage"],
+        typing.Literal["performance"],
+        typing.Literal["performance_percentage"],
+        typing.Literal["last_performance"],
+        typing.Literal["change_in_performance"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -80,11 +103,52 @@ class HolderIndustryBreakdown:
         change_in_performance: builtins.float,
     ) -> HolderIndustryBreakdown: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class HolderPerformanceSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["cik"],
+        typing.Literal["investor_name"],
+        typing.Literal["portfolio_size"],
+        typing.Literal["securities_added"],
+        typing.Literal["securities_removed"],
+        typing.Literal["market_value"],
+        typing.Literal["previous_market_value"],
+        typing.Literal["change_in_market_value"],
+        typing.Literal["change_in_market_value_percentage"],
+        typing.Literal["average_holding_period"],
+        typing.Literal["average_holding_period_top10"],
+        typing.Literal["average_holding_period_top20"],
+        typing.Literal["turnover"],
+        typing.Literal["turnover_alternate_sell"],
+        typing.Literal["turnover_alternate_buy"],
+        typing.Literal["performance"],
+        typing.Literal["performance_percentage"],
+        typing.Literal["last_performance"],
+        typing.Literal["change_in_performance"],
+        typing.Literal["performance_1_year"],
+        typing.Literal["performance_percentage_1_year"],
+        typing.Literal["performance_3_year"],
+        typing.Literal["performance_percentage_3_year"],
+        typing.Literal["performance_5_year"],
+        typing.Literal["performance_percentage_5_year"],
+        typing.Literal["performance_since_inception"],
+        typing.Literal["performance_since_inception_percentage"],
+        typing.Literal["performance_relative_to_sp500_percentage"],
+        typing.Literal["performance_1_year_relative_to_sp500_percentage"],
+        typing.Literal["performance_3_year_relative_to_sp500_percentage"],
+        typing.Literal["performance_5_year_relative_to_sp500_percentage"],
+        typing.Literal["performance_since_inception_relative_to_sp500_percentage"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -193,11 +257,58 @@ class HolderPerformanceSummary:
         performance_since_inception_relative_to_sp500_percentage: builtins.float,
     ) -> HolderPerformanceSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class InstitutionalHolderAnalytics:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["cik"],
+        typing.Literal["filing_date"],
+        typing.Literal["investor_name"],
+        typing.Literal["symbol"],
+        typing.Literal["security_name"],
+        typing.Literal["type_of_security"],
+        typing.Literal["security_cusip"],
+        typing.Literal["shares_type"],
+        typing.Literal["put_call_share"],
+        typing.Literal["investment_discretion"],
+        typing.Literal["industry_title"],
+        typing.Literal["weight"],
+        typing.Literal["last_weight"],
+        typing.Literal["change_in_weight"],
+        typing.Literal["change_in_weight_percentage"],
+        typing.Literal["market_value"],
+        typing.Literal["last_market_value"],
+        typing.Literal["change_in_market_value"],
+        typing.Literal["change_in_market_value_percentage"],
+        typing.Literal["shares_number"],
+        typing.Literal["last_shares_number"],
+        typing.Literal["change_in_shares_number"],
+        typing.Literal["change_in_shares_number_percentage"],
+        typing.Literal["quarter_end_price"],
+        typing.Literal["avg_price_paid"],
+        typing.Literal["is_new"],
+        typing.Literal["is_sold_out"],
+        typing.Literal["ownership"],
+        typing.Literal["last_ownership"],
+        typing.Literal["change_in_ownership"],
+        typing.Literal["change_in_ownership_percentage"],
+        typing.Literal["holding_period"],
+        typing.Literal["first_added"],
+        typing.Literal["performance"],
+        typing.Literal["performance_percentage"],
+        typing.Literal["last_performance"],
+        typing.Literal["change_in_performance"],
+        typing.Literal["is_counted_for_performance"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -322,11 +433,33 @@ class InstitutionalHolderAnalytics:
         is_counted_for_performance: builtins.bool,
     ) -> InstitutionalHolderAnalytics: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class InstitutionalHolding:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["date"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["cik"],
+        typing.Literal["security_cusip"],
+        typing.Literal["symbol"],
+        typing.Literal["name_of_issuer"],
+        typing.Literal["shares"],
+        typing.Literal["title_of_class"],
+        typing.Literal["shares_type"],
+        typing.Literal["put_call_share"],
+        typing.Literal["value"],
+        typing.Literal["link"],
+        typing.Literal["final_link"],
+    ]
 
     @property
     def date(self) -> datetime.date: ...
@@ -376,11 +509,22 @@ class InstitutionalHolding:
         final_link: builtins.str,
     ) -> InstitutionalHolding: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class InstitutionalIndustrySummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["industry_title"],
+        typing.Literal["industry_value"],
+        typing.Literal["date"],
+    ]
 
     @property
     def industry_title(self) -> builtins.str: ...
@@ -397,11 +541,27 @@ class InstitutionalIndustrySummary:
         date: datetime.date,
     ) -> InstitutionalIndustrySummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class InstitutionalOwnershipFiling:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["cik"],
+        typing.Literal["name"],
+        typing.Literal["date"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["form_type"],
+        typing.Literal["link"],
+        typing.Literal["final_link"],
+    ]
 
     @property
     def cik(self) -> builtins.str: ...
@@ -433,6 +593,12 @@ class InstitutionalOwnershipFiling:
         final_link: builtins.str,
     ) -> InstitutionalOwnershipFiling: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -510,6 +676,44 @@ class InstitutionalOwnershipNamespace:
 @typing.final
 class InstitutionalPositionSummary:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["date"],
+        typing.Literal["investors_holding"],
+        typing.Literal["last_investors_holding"],
+        typing.Literal["investors_holding_change"],
+        typing.Literal["number_of_13f_shares"],
+        typing.Literal["last_number_of_13f_shares"],
+        typing.Literal["number_of_13f_shares_change"],
+        typing.Literal["total_invested"],
+        typing.Literal["last_total_invested"],
+        typing.Literal["total_invested_change"],
+        typing.Literal["ownership_percent"],
+        typing.Literal["last_ownership_percent"],
+        typing.Literal["ownership_percent_change"],
+        typing.Literal["new_positions"],
+        typing.Literal["last_new_positions"],
+        typing.Literal["new_positions_change"],
+        typing.Literal["increased_positions"],
+        typing.Literal["last_increased_positions"],
+        typing.Literal["increased_positions_change"],
+        typing.Literal["closed_positions"],
+        typing.Literal["last_closed_positions"],
+        typing.Literal["closed_positions_change"],
+        typing.Literal["reduced_positions"],
+        typing.Literal["last_reduced_positions"],
+        typing.Literal["reduced_positions_change"],
+        typing.Literal["total_calls"],
+        typing.Literal["last_total_calls"],
+        typing.Literal["total_calls_change"],
+        typing.Literal["total_puts"],
+        typing.Literal["last_total_puts"],
+        typing.Literal["total_puts_change"],
+        typing.Literal["put_call_ratio"],
+        typing.Literal["last_put_call_ratio"],
+        typing.Literal["put_call_ratio_change"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -625,3 +829,9 @@ class InstitutionalPositionSummary:
         put_call_ratio_change: builtins.float,
     ) -> InstitutionalPositionSummary: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

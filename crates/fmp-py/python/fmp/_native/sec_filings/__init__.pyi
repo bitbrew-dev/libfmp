@@ -16,6 +16,43 @@ __all__ = [
 @typing.final
 class SecCompanyProfile:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["registrant_name"],
+        typing.Literal["sic_code"],
+        typing.Literal["sic_description"],
+        typing.Literal["sic_group"],
+        typing.Literal["isin"],
+        typing.Literal["business_address"],
+        typing.Literal["mailing_address"],
+        typing.Literal["phone_number"],
+        typing.Literal["postal_code"],
+        typing.Literal["city"],
+        typing.Literal["state"],
+        typing.Literal["country"],
+        typing.Literal["description"],
+        typing.Literal["ceo"],
+        typing.Literal["website"],
+        typing.Literal["exchange"],
+        typing.Literal["state_location"],
+        typing.Literal["state_of_incorporation"],
+        typing.Literal["fiscal_year_end"],
+        typing.Literal["ipo_date"],
+        typing.Literal["employees"],
+        typing.Literal["sec_filings_url"],
+        typing.Literal["tax_identification_number"],
+        typing.Literal["fifty_two_week_range"],
+        typing.Literal["is_active"],
+        typing.Literal["asset_type"],
+        typing.Literal["open_figi_composite"],
+        typing.Literal["price_currency"],
+        typing.Literal["market_sector"],
+        typing.Literal["security_type"],
+        typing.Literal["is_etf"],
+        typing.Literal["is_adr"],
+        typing.Literal["is_fund"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -128,11 +165,26 @@ class SecCompanyProfile:
         is_fund: builtins.bool,
     ) -> SecCompanyProfile: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class SecCompanySearchResult:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["name"],
+        typing.Literal["cik"],
+        typing.Literal["sic_code"],
+        typing.Literal["industry_title"],
+        typing.Literal["business_address"],
+        typing.Literal["phone_number"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -161,11 +213,27 @@ class SecCompanySearchResult:
         phone_number: builtins.str,
     ) -> SecCompanySearchResult: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
 class SecFiling:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["symbol"],
+        typing.Literal["cik"],
+        typing.Literal["filing_date"],
+        typing.Literal["accepted_date"],
+        typing.Literal["form_type"],
+        typing.Literal["has_financials"],
+        typing.Literal["link"],
+        typing.Literal["final_link"],
+    ]
 
     @property
     def symbol(self) -> builtins.str: ...
@@ -197,6 +265,12 @@ class SecFiling:
         final_link: builtins.str,
     ) -> SecFiling: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """
 
 
 @typing.final
@@ -331,6 +405,11 @@ class SecFilingsNamespace:
 @typing.final
 class SicClassification:
     __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+    __match_args__: tuple[
+        typing.Literal["office"],
+        typing.Literal["sic_code"],
+        typing.Literal["industry_title"],
+    ]
 
     @property
     def office(self) -> builtins.str: ...
@@ -347,3 +426,9 @@ class SicClassification:
         industry_title: builtins.str,
     ) -> SicClassification: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
+    def __repr__(self) -> builtins.str: ...
+    def to_dict(self) -> builtins.dict[builtins.str, typing.Any]:
+        r"""
+        Returns the row as a `dict` keyed by attribute name; nested models become
+        dicts and lists of models become lists of dicts.
+        """

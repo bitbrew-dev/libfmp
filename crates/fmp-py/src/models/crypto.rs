@@ -51,6 +51,22 @@ impl CryptocurrencyListing {
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
+    #[classattr]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name'], typing.Literal['exchange'], typing.Literal['ico_date'], typing.Literal['circulating_supply'], typing.Literal['total_supply']]", imports = ("typing",)))]
+    fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
+        PyTuple::new(
+            py,
+            [
+                "symbol",
+                "name",
+                "exchange",
+                "ico_date",
+                "circulating_supply",
+                "total_supply",
+            ],
+        )
+    }
+
     #[allow(clippy::clone_on_copy)]
     fn __getnewargs_ex__<'py>(
         &self,
@@ -71,6 +87,58 @@ impl CryptocurrencyListing {
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
+    #[allow(clippy::clone_on_copy)]
+    fn __repr__(&self, py: Python<'_>) -> PyResult<String> {
+        crate::models::convert::render_repr(
+            "CryptocurrencyListing",
+            &[
+                ("symbol", self.symbol.clone().into_bound_py_any(py)?),
+                ("name", self.name.clone().into_bound_py_any(py)?),
+                ("exchange", self.exchange.clone().into_bound_py_any(py)?),
+                ("ico_date", self.ico_date.clone().into_bound_py_any(py)?),
+                (
+                    "circulating_supply",
+                    self.circulating_supply.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "total_supply",
+                    self.total_supply.clone().into_bound_py_any(py)?,
+                ),
+            ],
+        )
+    }
+
+    /// Returns the row as a `dict` keyed by attribute name; nested models become
+    /// dicts and lists of models become lists of dicts.
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
+    fn to_dict<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyDict>> {
+        let dict = PyDict::new(py);
+        dict.set_item(
+            "symbol",
+            crate::models::convert::DictValue::dict_value(&self.symbol, py)?,
+        )?;
+        dict.set_item(
+            "name",
+            crate::models::convert::DictValue::dict_value(&self.name, py)?,
+        )?;
+        dict.set_item(
+            "exchange",
+            crate::models::convert::DictValue::dict_value(&self.exchange, py)?,
+        )?;
+        dict.set_item(
+            "ico_date",
+            crate::models::convert::DictValue::dict_value(&self.ico_date, py)?,
+        )?;
+        dict.set_item(
+            "circulating_supply",
+            crate::models::convert::DictValue::dict_value(&self.circulating_supply, py)?,
+        )?;
+        dict.set_item(
+            "total_supply",
+            crate::models::convert::DictValue::dict_value(&self.total_supply, py)?,
+        )?;
+        Ok(dict)
+    }
 }
 
 impl From<libfmp::responses::crypto::CryptocurrencyListing> for CryptocurrencyListing {
@@ -83,5 +151,11 @@ impl From<libfmp::responses::crypto::CryptocurrencyListing> for CryptocurrencyLi
             circulating_supply: value.circulating_supply,
             total_supply: value.total_supply,
         }
+    }
+}
+
+impl crate::models::convert::DictValue for CryptocurrencyListing {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        Ok(self.to_dict(py)?.into_any())
     }
 }
