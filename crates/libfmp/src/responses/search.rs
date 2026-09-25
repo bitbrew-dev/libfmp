@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::types::{
     Change, Cik, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode, Isin, MarketCapitalization,
-    MarketValue, Price, Ticker, Volume,
+    PerShareAmount, Price, Ratio, Ticker, Volume,
 };
 
 /// A company or instrument returned by symbol search.
@@ -78,14 +78,14 @@ pub struct ExchangeVariant {
     pub symbol: Ticker,
     pub price: Price,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub beta: MarketValue,
+    pub beta: Ratio,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub vol_avg: Volume,
     #[serde(rename = "mktCap")]
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub last_div: MarketValue,
+    pub last_div: PerShareAmount,
     pub range: String,
     pub changes: Change,
     pub company_name: String,
@@ -110,9 +110,9 @@ pub struct ExchangeVariant {
     pub state: String,
     pub zip: String,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub dcf_diff: MarketValue,
+    pub dcf_diff: PerShareAmount,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub dcf: MarketValue,
+    pub dcf: PerShareAmount,
     pub image: String,
     pub ipo_date: Date,
     pub default_image: bool,

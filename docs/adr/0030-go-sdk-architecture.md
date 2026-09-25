@@ -122,7 +122,7 @@ that no wire information is invented or lost:
 | --- | --- | --- |
 | `String` newtypes (`Ticker`, `ExchangeCode`, ...) | `string` | validated on the query side only |
 | `Price`, `Change`, `Percentage` (`f64`) | `float64` | |
-| `MarketValue`, `Quantity` (`f64`) | `float64` | money amounts and share quantities, documented as integers on many fields but decoded from any JSON number, fractional or negative (#340); Rust re-encodes an integral value as a JSON integer through `codecs::integral_f64` |
+| `MarketValue`, `Quantity`, `Ratio`, `PerShareAmount` (`f64`) | `float64` | money amounts, share quantities, ratios such as beta and per-share amounts such as the last dividend and DCF value (#343), documented as integers on many fields but decoded from any JSON number, fractional or negative (#340); Rust re-encodes an integral value as a JSON integer through `codecs::integral_f64` |
 | `Volume` (`f64`) | `float64` | the provider intermittently sends a fractional volume (#337); Rust re-encodes an integral value as a JSON integer through `codecs::integral_f64`, json/v2 already formats an integral `float64` without a fraction; the screener volume filters stay `uint64` |
 | `MarketCapitalization`, `TokenSupply`, `SplitTerm` (`f64`) | `float64` | documented as integers but decoded from any JSON number (#339); Rust re-encodes an integral value as a JSON integer through `codecs::integral_f64`; the screener market-cap filters stay `uint64` |
 | `Count` (`u64`) | `uint64` | true counts only (transactions, analysts, holders, positions, employees, scores) |

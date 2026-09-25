@@ -10,8 +10,8 @@ use crate::{
     codecs::{DynamicJson, NumericString},
     types::{
         ApiDateTime, Change, Cik, Count, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode,
-        Industry, Isin, MarketCapitalization, MarketValue, Percentage, Price, Quantity, Sector,
-        Ticker, Volume,
+        Industry, Isin, MarketCapitalization, MarketValue, PerShareAmount, Percentage, Price,
+        Quantity, Ratio, Sector, Ticker, Volume,
     },
 };
 
@@ -25,9 +25,9 @@ pub struct CompanyProfile {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub beta: MarketValue,
+    pub beta: Ratio,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub last_dividend: MarketValue,
+    pub last_dividend: PerShareAmount,
     pub range: String,
     pub change: Change,
     pub change_percentage: Percentage,

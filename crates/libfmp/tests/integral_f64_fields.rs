@@ -20,6 +20,8 @@ const INTEGRAL_F64_ALIASES: &[&str] = &[
     "TokenSupply",
     "SplitTerm",
     "MarketValue",
+    "Ratio",
+    "PerShareAmount",
     "Quantity",
     "StatementAmount",
 ];
