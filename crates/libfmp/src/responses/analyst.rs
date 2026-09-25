@@ -10,20 +10,35 @@ use crate::types::{Count, Date, Price, StatementAmount, Ticker};
 pub struct FinancialEstimate {
     pub symbol: Ticker,
     pub date: Date,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub revenue_low: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub revenue_high: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub revenue_avg: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub ebitda_low: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub ebitda_high: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub ebitda_avg: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub ebit_low: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub ebit_high: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub ebit_avg: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_income_low: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_income_high: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_income_avg: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub sga_expense_low: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub sga_expense_high: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub sga_expense_avg: StatementAmount,
     pub eps_avg: f64,
     pub eps_high: f64,

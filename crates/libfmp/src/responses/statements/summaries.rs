@@ -30,13 +30,19 @@ pub struct FinancialScore {
     pub reported_currency: CurrencyCode,
     pub altman_z_score: f64,
     pub piotroski_score: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub working_capital: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub total_assets: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub retained_earnings: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub ebit: StatementAmount,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub total_liabilities: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub revenue: StatementAmount,
 }
 
@@ -51,8 +57,11 @@ pub struct OwnerEarnings {
     pub date: Date,
     #[serde(rename = "averagePPE")]
     pub average_ppe: f64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub maintenance_capex: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub owners_earnings: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub growth_capex: StatementAmount,
     pub owners_earnings_per_share: Price,
 }
@@ -68,7 +77,10 @@ pub struct EnterpriseValue {
     pub number_of_shares: Quantity,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_capitalization: MarketCapitalization,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub minus_cash_and_cash_equivalents: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub add_total_debt: StatementAmount,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub enterprise_value: StatementAmount,
 }
