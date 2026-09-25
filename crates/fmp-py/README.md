@@ -193,9 +193,9 @@ Closed string vocabularies are `typing.Literal` types: `period` arguments
 (`"Q1"`..`"FY"`, `"annual"`, `"quarter"`), technical-indicator `timeframe`,
 revenue-segmentation `structure`, `FmpClient(auth_mode=...)`, and model fields
 such as `IncomeStatement.period` or the `"Y"`/`"N"` flags. The stubs list the
-canonical spellings; at runtime the arguments stay case-insensitive and accept
-the documented aliases (for example `"quarterly"`), which a type checker
-rejects. Open vocabularies (form types, economic indicator names) stay `str`.
+canonical spellings; at runtime `period`, `timeframe`, and `structure` stay
+case-insensitive and accept the documented aliases (for example `"quarterly"`),
+which a type checker rejects, while `auth_mode` must match exactly. Open vocabularies (form types, economic indicator names) stay `str`.
 `FmpClient(headers=...)` takes any `Mapping[str, str]`.
 
 The test suite runs `python -m mypy.stubtest fmp` and `mypy` on
