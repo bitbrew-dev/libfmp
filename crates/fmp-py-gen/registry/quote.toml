@@ -48,7 +48,7 @@ doc = "Retrieves worldwide percentage price changes for one stock."
 args = [{ name = "symbol", kind = "ticker" }]
 
 [[endpoint]]
-name = "batch_quote"
+name = "batch"
 method = "batch_quote"
 query = "BatchQuoteQuery"
 response = "quote::Quote"
@@ -56,7 +56,7 @@ doc = "Retrieves detailed worldwide stock quotes for multiple tickers."
 args = [{ name = "symbols", kind = "ticker_list" }]
 
 [[endpoint]]
-name = "batch_quote_short"
+name = "batch_short"
 method = "batch_quote_short"
 query = "BatchQuoteShortQuery"
 response = "quote::QuoteShort"

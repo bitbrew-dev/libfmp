@@ -617,7 +617,7 @@ def check_public_contract(client: FmpClient) -> None:
     short_rows: list[QuoteShort] = client.quote.short("AAPL")
     full_rows: list[Quote] = client.quote.full("AAPL")
     fund_rows: list[QuoteShort] = client.quote.mutual_funds()
-    batch_rows: list[Quote] = client.quote.batch_quote(["AAPL", "MSFT"])
+    batch_rows: list[Quote] = client.quote.batch(["AAPL", "MSFT"])
     trades: list[AftermarketTrade] = client.quote.batch_aftermarket_trade("AAPL")
     changes: list[StockPriceChange] = client.quote.stock_price_change("AAPL")
     exchange_rows: list[QuoteShort] = client.quote.exchange("NASDAQ")

@@ -318,10 +318,10 @@ func (n *QuoteNamespace) StockPriceChange(ctx context.Context, q StockPriceChang
 	return out, nil
 }
 
-// BatchQuote retrieves detailed worldwide stock quotes for multiple tickers.
+// Batch retrieves detailed worldwide stock quotes for multiple tickers.
 //
 // GET batch-quote?symbols=
-func (n *QuoteNamespace) BatchQuote(ctx context.Context, q BatchQuoteQuery) ([]Quote, error) {
+func (n *QuoteNamespace) Batch(ctx context.Context, q BatchQuoteQuery) ([]Quote, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -333,11 +333,10 @@ func (n *QuoteNamespace) BatchQuote(ctx context.Context, q BatchQuoteQuery) ([]Q
 	return out, nil
 }
 
-// BatchQuoteShort retrieves compact worldwide stock quotes for multiple
-// tickers.
+// BatchShort retrieves compact worldwide stock quotes for multiple tickers.
 //
 // GET batch-quote-short?symbols=
-func (n *QuoteNamespace) BatchQuoteShort(ctx context.Context, q BatchQuoteShortQuery) ([]QuoteShort, error) {
+func (n *QuoteNamespace) BatchShort(ctx context.Context, q BatchQuoteShortQuery) ([]QuoteShort, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

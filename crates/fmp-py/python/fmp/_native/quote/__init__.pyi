@@ -163,14 +163,14 @@ class QuoteNamespace:
         Retrieves worldwide percentage price changes for one stock.
         """
 
-    def batch_quote(
+    def batch(
         self, symbols: builtins.str | typing.Sequence[builtins.str]
     ) -> builtins.list[Quote]:
         r"""
         Retrieves detailed worldwide stock quotes for multiple tickers.
         """
 
-    def batch_quote_short(
+    def batch_short(
         self, symbols: builtins.str | typing.Sequence[builtins.str]
     ) -> builtins.list[QuoteShort]:
         r"""
