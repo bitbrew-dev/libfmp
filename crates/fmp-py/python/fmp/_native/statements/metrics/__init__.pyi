@@ -13,6 +13,8 @@ __all__ = [
 
 @typing.final
 class KeyMetrics:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -107,8 +109,10 @@ class KeyMetrics:
     def tangible_asset_value(self) -> builtins.float: ...
     @property
     def net_current_asset_value(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
@@ -157,11 +161,13 @@ class KeyMetrics:
         tangible_asset_value: builtins.float,
         net_current_asset_value: builtins.float,
     ) -> KeyMetrics: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class KeyMetricsTtm:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -248,8 +254,10 @@ class KeyMetricsTtm:
     def tangible_asset_value_ttm(self) -> builtins.float: ...
     @property
     def net_current_asset_value_ttm(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         market_cap: builtins.float,
         enterprise_value_ttm: builtins.float,
@@ -294,7 +302,7 @@ class KeyMetricsTtm:
         tangible_asset_value_ttm: builtins.float,
         net_current_asset_value_ttm: builtins.float,
     ) -> KeyMetricsTtm: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

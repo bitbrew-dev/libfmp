@@ -11,6 +11,8 @@ __all__ = [
 
 @typing.final
 class IncomeStatementGrowth:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -79,8 +81,10 @@ class IncomeStatementGrowth:
     def growth_other_adjustments_to_net_income(self) -> builtins.float: ...
     @property
     def growth_net_income_deductions(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
@@ -116,4 +120,4 @@ class IncomeStatementGrowth:
         growth_other_adjustments_to_net_income: builtins.float,
         growth_net_income_deductions: builtins.float,
     ) -> IncomeStatementGrowth: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

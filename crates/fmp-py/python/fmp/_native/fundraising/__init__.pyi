@@ -15,6 +15,8 @@ __all__ = [
 
 @typing.final
 class CrowdfundingOffering:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -111,8 +113,10 @@ class CrowdfundingOffering:
     def net_income_prior_fiscal_year(self) -> builtins.float: ...
     @property
     def offering_price(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         company_name: builtins.str,
         date: datetime.date,
@@ -162,21 +166,28 @@ class CrowdfundingOffering:
         net_income_most_recent_fiscal_year: builtins.float,
         net_income_prior_fiscal_year: builtins.float,
     ) -> CrowdfundingOffering: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CrowdfundingOfferingSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
     def name(self) -> builtins.str: ...
     @property
     def date(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, cik: builtins.str, name: builtins.str, date: typing.Optional[builtins.str]
+        cls,
+        *,
+        cik: builtins.str,
+        name: builtins.str,
+        date: typing.Optional[builtins.str],
     ) -> CrowdfundingOfferingSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -237,6 +248,8 @@ class FundraisingNamespace:
 
 @typing.final
 class RegulationDOffering:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -323,8 +336,10 @@ class RegulationDOffering:
     def finders_fees(self) -> builtins.float: ...
     @property
     def gross_proceeds_used(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         company_name: builtins.str,
         date: datetime.date,
@@ -369,18 +384,21 @@ class RegulationDOffering:
         finders_fees: builtins.float,
         gross_proceeds_used: builtins.float,
     ) -> RegulationDOffering: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class RegulationDOfferingSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
     def name(self) -> builtins.str: ...
     @property
     def date(self) -> datetime.datetime: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, cik: builtins.str, name: builtins.str, date: datetime.datetime
+        cls, *, cik: builtins.str, name: builtins.str, date: datetime.datetime
     ) -> RegulationDOfferingSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

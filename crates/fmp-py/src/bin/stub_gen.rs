@@ -25,6 +25,8 @@ use pyo3_stub_gen::Result;
 const RUFF_VERSION: &str = "0.15.12";
 const LINE_LENGTH: &str = "88";
 const NOQA_PREFIX: &str = "# ruff: noqa";
+const UNHASHABLE_STUB: &str = "__hash__: typing.Optional[typing.Any] = None";
+const UNHASHABLE_TYPESHED: &str = "__hash__: typing.ClassVar[None]  # type: ignore[assignment]";
 
 fn main() -> Result<()> {
     let formatter = Formatter::locate()?;
@@ -125,8 +127,8 @@ fn postprocess_stubs(root: &Path, dir: &Path, formatter: &Formatter) -> Result<(
         } else if path.file_name().and_then(|name| name.to_str()) == Some("__init__.pyi") {
             let content = std::fs::read_to_string(&path)?;
             let package = package_path(root, &path);
-            let rewritten = formatter.format(&strip_noqa(&qualify_module_references(
-                &absolutize_imports(&content, &package),
+            let rewritten = formatter.format(&strip_noqa(&mark_unhashable(
+                &qualify_module_references(&absolutize_imports(&content, &package)),
             )))?;
             if rewritten != content {
                 std::fs::write(&path, rewritten)?;
@@ -218,6 +220,13 @@ fn qualify(line: &str, name: &str, qualified: &str) -> String {
     out
 }
 
+/// Rewrites the `__hash__ = None` class attribute of the value-equality models
+/// to the typeshed spelling, so type checkers reject a model used as a `set`
+/// member or `dict` key instead of flagging the stub itself.
+fn mark_unhashable(content: &str) -> String {
+    content.replace(UNHASHABLE_STUB, UNHASHABLE_TYPESHED)
+}
+
 /// Drops the `# ruff: noqa ...` header lines stub-gen writes.
 fn strip_noqa(content: &str) -> String {
     let mut out = String::with_capacity(content.len());
@@ -244,7 +253,15 @@ fn package_path(root: &Path, init_file: &Path) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::qualify_module_references;
+    use super::{mark_unhashable, qualify_module_references};
+
+    #[test]
+    fn unhashable_models_use_the_typeshed_spelling() {
+        let stub = "class Row:\n    __hash__: typing.Optional[typing.Any] = None\n";
+        let expected =
+            "class Row:\n    __hash__: typing.ClassVar[None]  # type: ignore[assignment]\n";
+        assert_eq!(mark_unhashable(stub), expected);
+    }
 
     #[test]
     fn method_named_like_a_module_cannot_shadow_it() {

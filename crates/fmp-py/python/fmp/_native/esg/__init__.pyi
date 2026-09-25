@@ -14,6 +14,8 @@ __all__ = [
 
 @typing.final
 class EsgBenchmark:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def fiscal_year(self) -> builtins.int: ...
     @property
@@ -26,8 +28,10 @@ class EsgBenchmark:
     def governance_score(self) -> builtins.float: ...
     @property
     def esg_score(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         fiscal_year: builtins.int,
         sector: builtins.str,
         environmental_score: builtins.float,
@@ -35,11 +39,13 @@ class EsgBenchmark:
         governance_score: builtins.float,
         esg_score: builtins.float,
     ) -> EsgBenchmark: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EsgDisclosure:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -62,8 +68,10 @@ class EsgDisclosure:
     def esg_score(self) -> builtins.float: ...
     @property
     def url(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         accepted_date: datetime.date,
         symbol: builtins.str,
@@ -76,7 +84,7 @@ class EsgDisclosure:
         esg_score: builtins.float,
         url: builtins.str,
     ) -> EsgDisclosure: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -105,6 +113,8 @@ class EsgNamespace:
 
 @typing.final
 class EsgRating:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -119,8 +129,10 @@ class EsgRating:
     def esg_risk_rating(self) -> builtins.str: ...
     @property
     def industry_rank(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         cik: builtins.str,
         company_name: builtins.str,
@@ -129,4 +141,4 @@ class EsgRating:
         esg_risk_rating: builtins.str,
         industry_rank: builtins.str,
     ) -> EsgRating: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

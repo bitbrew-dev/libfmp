@@ -17,6 +17,8 @@ __all__ = [
 
 @typing.final
 class CikSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -29,8 +31,10 @@ class CikSearchResult:
     def exchange(self) -> builtins.str: ...
     @property
     def currency(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         company_name: builtins.str,
         cik: builtins.str,
@@ -38,11 +42,13 @@ class CikSearchResult:
         exchange: builtins.str,
         currency: builtins.str,
     ) -> CikSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CusipSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -51,18 +57,22 @@ class CusipSearchResult:
     def cusip(self) -> builtins.str: ...
     @property
     def market_cap(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         company_name: builtins.str,
         cusip: builtins.str,
         market_cap: builtins.float,
     ) -> CusipSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class ExchangeVariant:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -135,8 +145,10 @@ class ExchangeVariant:
     def is_adr(self) -> builtins.bool: ...
     @property
     def is_fund(self) -> builtins.bool: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         price: builtins.float,
         beta: builtins.float,
@@ -174,11 +186,13 @@ class ExchangeVariant:
         is_adr: builtins.bool,
         is_fund: builtins.bool,
     ) -> ExchangeVariant: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class IsinSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -187,18 +201,22 @@ class IsinSearchResult:
     def isin(self) -> builtins.str: ...
     @property
     def market_cap(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         isin: builtins.str,
         market_cap: builtins.float,
     ) -> IsinSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class NameSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -209,15 +227,17 @@ class NameSearchResult:
     def exchange_full_name(self) -> builtins.str: ...
     @property
     def exchange(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         currency: builtins.str,
         exchange_full_name: builtins.str,
         exchange: builtins.str,
     ) -> NameSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -273,6 +293,8 @@ class SearchNamespace:
 
 @typing.final
 class SymbolSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -283,12 +305,14 @@ class SymbolSearchResult:
     def exchange_full_name(self) -> builtins.str: ...
     @property
     def exchange(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         currency: builtins.str,
         exchange_full_name: builtins.str,
         exchange: builtins.str,
     ) -> SymbolSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

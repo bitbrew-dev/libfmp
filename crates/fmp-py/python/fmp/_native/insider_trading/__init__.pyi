@@ -16,6 +16,8 @@ __all__ = [
 
 @typing.final
 class BeneficialOwnershipAcquisition:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -46,8 +48,10 @@ class BeneficialOwnershipAcquisition:
     def type_of_reporting_person(self) -> builtins.str: ...
     @property
     def url(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         symbol: builtins.str,
         filing_date: datetime.date,
@@ -64,23 +68,28 @@ class BeneficialOwnershipAcquisition:
         type_of_reporting_person: builtins.str,
         url: builtins.str,
     ) -> BeneficialOwnershipAcquisition: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class InsiderReportingName:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def reporting_cik(self) -> builtins.str: ...
     @property
     def reporting_name(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, reporting_cik: builtins.str, reporting_name: builtins.str
+        cls, *, reporting_cik: builtins.str, reporting_name: builtins.str
     ) -> InsiderReportingName: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class InsiderTrade:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -113,8 +122,10 @@ class InsiderTrade:
     def security_name(self) -> builtins.str: ...
     @property
     def url(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         filing_date: datetime.date,
         transaction_date: datetime.date,
@@ -132,11 +143,13 @@ class InsiderTrade:
         security_name: builtins.str,
         url: builtins.str,
     ) -> InsiderTrade: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class InsiderTradeStatistics:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -163,8 +176,10 @@ class InsiderTradeStatistics:
     def total_purchases(self) -> builtins.int: ...
     @property
     def total_sales(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         cik: builtins.str,
         year: builtins.int,
@@ -179,7 +194,7 @@ class InsiderTradeStatistics:
         total_purchases: builtins.int,
         total_sales: builtins.int,
     ) -> InsiderTradeStatistics: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -242,7 +257,10 @@ class InsiderTradingNamespace:
 
 @typing.final
 class InsiderTransactionType:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def transaction_type(self) -> builtins.str: ...
-    def __new__(cls, transaction_type: builtins.str) -> InsiderTransactionType: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
+    def __new__(cls, *, transaction_type: builtins.str) -> InsiderTransactionType: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.insider_trading", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.insider_trading", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InsiderTrade {
     #[pyo3(get)]
     pub symbol: String,
@@ -49,7 +49,7 @@ impl InsiderTrade {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, filing_date, transaction_date, reporting_cik, company_cik, transaction_type, securities_owned, reporting_name, type_of_owner, acquisition_or_disposition, direct_or_indirect, form_type, securities_transacted, price, security_name, url))]
+    #[pyo3(signature = (*, symbol, filing_date, transaction_date, reporting_cik, company_cik, transaction_type, securities_owned, reporting_name, type_of_owner, acquisition_or_disposition, direct_or_indirect, form_type, securities_transacted, price, security_name, url))]
     fn new(
         symbol: String,
         filing_date: ::chrono::NaiveDate,
@@ -88,29 +88,70 @@ impl InsiderTrade {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "transaction_date",
             self.transaction_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "reporting_cik",
             self.reporting_cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "company_cik",
             self.company_cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "transaction_type",
             self.transaction_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "securities_owned",
             self.securities_owned.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "reporting_name",
             self.reporting_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "type_of_owner",
             self.type_of_owner.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "acquisition_or_disposition",
             self.acquisition_or_disposition
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "direct_or_indirect",
             self.direct_or_indirect.clone().into_bound_py_any(py)?,
-            self.form_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("form_type", self.form_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "securities_transacted",
             self.securities_transacted.clone().into_bound_py_any(py)?,
-            self.price.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("price", self.price.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "security_name",
             self.security_name.clone().into_bound_py_any(py)?,
-            self.url.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -138,8 +179,8 @@ impl From<libfmp::responses::insider_trading::InsiderTrade> for InsiderTrade {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.insider_trading", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.insider_trading", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InsiderReportingName {
     #[pyo3(get)]
     pub reporting_cik: String,
@@ -153,7 +194,7 @@ impl InsiderReportingName {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (reporting_cik, reporting_name))]
+    #[pyo3(signature = (*, reporting_cik, reporting_name))]
     fn new(reporting_cik: String, reporting_name: String) -> Self {
         Self {
             reporting_cik,
@@ -161,13 +202,24 @@ impl InsiderReportingName {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item(
+            "reporting_cik",
             self.reporting_cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "reporting_name",
             self.reporting_name.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -181,8 +233,8 @@ impl From<libfmp::responses::insider_trading::InsiderReportingName> for InsiderR
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.insider_trading", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.insider_trading", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InsiderTransactionType {
     #[pyo3(get)]
     pub transaction_type: String,
@@ -194,16 +246,25 @@ impl InsiderTransactionType {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (transaction_type))]
+    #[pyo3(signature = (*, transaction_type))]
     fn new(transaction_type: String) -> Self {
         Self { transaction_type }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> =
-            vec![self.transaction_type.clone().into_bound_py_any(py)?];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item(
+            "transaction_type",
+            self.transaction_type.clone().into_bound_py_any(py)?,
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -216,8 +277,8 @@ impl From<libfmp::responses::insider_trading::InsiderTransactionType> for Inside
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.insider_trading", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.insider_trading", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InsiderTradeStatistics {
     #[pyo3(get)]
     pub symbol: String,
@@ -253,7 +314,7 @@ impl InsiderTradeStatistics {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, cik, year, quarter, acquired_transactions, disposed_transactions, acquired_disposed_ratio, total_acquired, total_disposed, average_acquired, average_disposed, total_purchases, total_sales))]
+    #[pyo3(signature = (*, symbol, cik, year, quarter, acquired_transactions, disposed_transactions, acquired_disposed_ratio, total_acquired, total_disposed, average_acquired, average_disposed, total_purchases, total_sales))]
     fn new(
         symbol: String,
         cik: String,
@@ -286,24 +347,56 @@ impl InsiderTradeStatistics {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
-            self.year.clone().into_bound_py_any(py)?,
-            self.quarter.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("quarter", self.quarter.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "acquired_transactions",
             self.acquired_transactions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "disposed_transactions",
             self.disposed_transactions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "acquired_disposed_ratio",
             self.acquired_disposed_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_acquired",
             self.total_acquired.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_disposed",
             self.total_disposed.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_acquired",
             self.average_acquired.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_disposed",
             self.average_disposed.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_purchases",
             self.total_purchases.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_sales",
             self.total_sales.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -328,8 +421,8 @@ impl From<libfmp::responses::insider_trading::InsiderTradeStatistics> for Inside
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.insider_trading", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.insider_trading", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct BeneficialOwnershipAcquisition {
     #[pyo3(get)]
     pub cik: String,
@@ -369,7 +462,7 @@ impl BeneficialOwnershipAcquisition {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (cik, symbol, filing_date, accepted_date, cusip, name_of_reporting_person, citizenship_or_place_of_organization, sole_voting_power, shared_voting_power, sole_dispositive_power, shared_dispositive_power, amount_beneficially_owned, percent_of_class, type_of_reporting_person, url))]
+    #[pyo3(signature = (*, cik, symbol, filing_date, accepted_date, cusip, name_of_reporting_person, citizenship_or_place_of_organization, sole_voting_power, shared_voting_power, sole_dispositive_power, shared_dispositive_power, amount_beneficially_owned, percent_of_class, type_of_reporting_person, url))]
     fn new(
         cik: String,
         symbol: String,
@@ -406,36 +499,74 @@ impl BeneficialOwnershipAcquisition {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.cik.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
-            self.cusip.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cusip", self.cusip.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "name_of_reporting_person",
             self.name_of_reporting_person
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "citizenship_or_place_of_organization",
             self.citizenship_or_place_of_organization
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "sole_voting_power",
             self.sole_voting_power.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "shared_voting_power",
             self.shared_voting_power.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "sole_dispositive_power",
             self.sole_dispositive_power.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "shared_dispositive_power",
             self.shared_dispositive_power
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "amount_beneficially_owned",
             self.amount_beneficially_owned
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "percent_of_class",
             self.percent_of_class.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "type_of_reporting_person",
             self.type_of_reporting_person
                 .clone()
                 .into_bound_py_any(py)?,
-            self.url.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

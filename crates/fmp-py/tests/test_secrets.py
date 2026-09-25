@@ -44,7 +44,9 @@ def report_date(reveal_off: None) -> Any:
     """A ``FinancialReportDate`` whose links carry the fake key."""
     from fmp.statements.reports import FinancialReportDate
 
-    return FinancialReportDate("AAPL", 2024, "FY", LINK_JSON, LINK_XLSX)
+    return FinancialReportDate(
+        symbol="AAPL", fiscal_year=2024, period="FY", link_json=LINK_JSON, link_xlsx=LINK_XLSX
+    )
 
 
 def test_toggle_functions_are_exported_from_the_top_level_package() -> None:
@@ -102,7 +104,9 @@ def test_repr_quotes_fields_like_python(reveal_off: None) -> None:
     """String fields are rendered with Python ``repr`` quoting rules."""
     from fmp.statements.reports import FinancialReportDate
 
-    quoted = FinancialReportDate("A'B", 1999, "Q1", LINK_JSON, LINK_XLSX)
+    quoted = FinancialReportDate(
+        symbol="A'B", fiscal_year=1999, period="Q1", link_json=LINK_JSON, link_xlsx=LINK_XLSX
+    )
     assert repr(quoted).startswith("FinancialReportDate(symbol=\"A'B\", fiscal_year=1999, period='Q1', ")
 
 
@@ -127,7 +131,7 @@ def _reveal_flag_in_subprocess(value: str | None) -> bool:
     code = (
         "import fmp\n"
         "from fmp.statements.reports import FinancialReportDate\n"
-        f"row = FinancialReportDate('AAPL', 2024, 'FY', {LINK_JSON!r}, {LINK_XLSX!r})\n"
+        f"row = FinancialReportDate(symbol='AAPL', fiscal_year=2024, period='FY', link_json={LINK_JSON!r}, link_xlsx={LINK_XLSX!r})\n"
         f"print(fmp.reveal_secret_urls(), {SECRET!r} in repr(row))\n"
     )
     completed = subprocess.run(

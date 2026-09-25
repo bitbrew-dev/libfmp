@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.metrics", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.metrics", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct KeyMetrics {
     #[pyo3(get)]
     pub symbol: String,
@@ -111,7 +111,7 @@ impl KeyMetrics {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, fiscal_year, period, reported_currency, market_cap, enterprise_value, ev_to_sales, ev_to_operating_cash_flow, ev_to_free_cash_flow, ev_to_ebitda, net_debt_to_ebitda, current_ratio, income_quality, graham_number, graham_net_net, tax_burden, interest_burden, working_capital, invested_capital, return_on_assets, operating_return_on_assets, return_on_tangible_assets, return_on_equity, return_on_invested_capital, return_on_capital_employed, earnings_yield, free_cash_flow_yield, capex_to_operating_cash_flow, capex_to_depreciation, capex_to_revenue, sales_general_and_administrative_to_revenue, research_and_developement_to_revenue, stock_based_compensation_to_revenue, intangibles_to_total_assets, average_receivables, average_payables, average_inventory, days_of_sales_outstanding, days_of_payables_outstanding, days_of_inventory_outstanding, operating_cycle, cash_conversion_cycle, free_cash_flow_to_equity, free_cash_flow_to_firm, tangible_asset_value, net_current_asset_value))]
+    #[pyo3(signature = (*, symbol, date, fiscal_year, period, reported_currency, market_cap, enterprise_value, ev_to_sales, ev_to_operating_cash_flow, ev_to_free_cash_flow, ev_to_ebitda, net_debt_to_ebitda, current_ratio, income_quality, graham_number, graham_net_net, tax_burden, interest_burden, working_capital, invested_capital, return_on_assets, operating_return_on_assets, return_on_tangible_assets, return_on_equity, return_on_invested_capital, return_on_capital_employed, earnings_yield, free_cash_flow_yield, capex_to_operating_cash_flow, capex_to_depreciation, capex_to_revenue, sales_general_and_administrative_to_revenue, research_and_developement_to_revenue, stock_based_compensation_to_revenue, intangibles_to_total_assets, average_receivables, average_payables, average_inventory, days_of_sales_outstanding, days_of_payables_outstanding, days_of_inventory_outstanding, operating_cycle, cash_conversion_cycle, free_cash_flow_to_equity, free_cash_flow_to_firm, tangible_asset_value, net_current_asset_value))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -212,86 +212,217 @@ impl KeyMetrics {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
-            self.market_cap.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "enterprise_value",
             self.enterprise_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_sales",
             self.ev_to_sales.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_operating_cash_flow",
             self.ev_to_operating_cash_flow
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_free_cash_flow",
             self.ev_to_free_cash_flow.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_ebitda",
             self.ev_to_ebitda.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_debt_to_ebitda",
             self.net_debt_to_ebitda.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "current_ratio",
             self.current_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "income_quality",
             self.income_quality.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "graham_number",
             self.graham_number.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "graham_net_net",
             self.graham_net_net.clone().into_bound_py_any(py)?,
-            self.tax_burden.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("tax_burden", self.tax_burden.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "interest_burden",
             self.interest_burden.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "working_capital",
             self.working_capital.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "invested_capital",
             self.invested_capital.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_assets",
             self.return_on_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_return_on_assets",
             self.operating_return_on_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_tangible_assets",
             self.return_on_tangible_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_equity",
             self.return_on_equity.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_invested_capital",
             self.return_on_invested_capital
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_capital_employed",
             self.return_on_capital_employed
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "earnings_yield",
             self.earnings_yield.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_yield",
             self.free_cash_flow_yield.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_to_operating_cash_flow",
             self.capex_to_operating_cash_flow
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_to_depreciation",
             self.capex_to_depreciation.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_to_revenue",
             self.capex_to_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "sales_general_and_administrative_to_revenue",
             self.sales_general_and_administrative_to_revenue
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "research_and_developement_to_revenue",
             self.research_and_developement_to_revenue
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "stock_based_compensation_to_revenue",
             self.stock_based_compensation_to_revenue
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "intangibles_to_total_assets",
             self.intangibles_to_total_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_receivables",
             self.average_receivables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_payables",
             self.average_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_inventory",
             self.average_inventory.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "days_of_sales_outstanding",
             self.days_of_sales_outstanding
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "days_of_payables_outstanding",
             self.days_of_payables_outstanding
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "days_of_inventory_outstanding",
             self.days_of_inventory_outstanding
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cycle",
             self.operating_cycle.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_conversion_cycle",
             self.cash_conversion_cycle.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_to_equity",
             self.free_cash_flow_to_equity
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_to_firm",
             self.free_cash_flow_to_firm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tangible_asset_value",
             self.tangible_asset_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_current_asset_value",
             self.net_current_asset_value.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -351,8 +482,8 @@ impl From<libfmp::responses::statements::metrics::KeyMetrics> for KeyMetrics {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.metrics", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.metrics", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct KeyMetricsTtm {
     #[pyo3(get)]
     pub symbol: String,
@@ -448,7 +579,7 @@ impl KeyMetricsTtm {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, market_cap, enterprise_value_ttm, ev_to_sales_ttm, ev_to_operating_cash_flow_ttm, ev_to_free_cash_flow_ttm, ev_to_ebitda_ttm, net_debt_to_ebitda_ttm, current_ratio_ttm, income_quality_ttm, graham_number_ttm, graham_net_net_ttm, tax_burden_ttm, interest_burden_ttm, working_capital_ttm, invested_capital_ttm, return_on_assets_ttm, operating_return_on_assets_ttm, return_on_tangible_assets_ttm, return_on_equity_ttm, return_on_invested_capital_ttm, return_on_capital_employed_ttm, earnings_yield_ttm, free_cash_flow_yield_ttm, capex_to_operating_cash_flow_ttm, capex_to_depreciation_ttm, capex_to_revenue_ttm, sales_general_and_administrative_to_revenue_ttm, research_and_developement_to_revenue_ttm, stock_based_compensation_to_revenue_ttm, intangibles_to_total_assets_ttm, average_receivables_ttm, average_payables_ttm, average_inventory_ttm, days_of_sales_outstanding_ttm, days_of_payables_outstanding_ttm, days_of_inventory_outstanding_ttm, operating_cycle_ttm, cash_conversion_cycle_ttm, free_cash_flow_to_equity_ttm, free_cash_flow_to_firm_ttm, tangible_asset_value_ttm, net_current_asset_value_ttm))]
+    #[pyo3(signature = (*, symbol, market_cap, enterprise_value_ttm, ev_to_sales_ttm, ev_to_operating_cash_flow_ttm, ev_to_free_cash_flow_ttm, ev_to_ebitda_ttm, net_debt_to_ebitda_ttm, current_ratio_ttm, income_quality_ttm, graham_number_ttm, graham_net_net_ttm, tax_burden_ttm, interest_burden_ttm, working_capital_ttm, invested_capital_ttm, return_on_assets_ttm, operating_return_on_assets_ttm, return_on_tangible_assets_ttm, return_on_equity_ttm, return_on_invested_capital_ttm, return_on_capital_employed_ttm, earnings_yield_ttm, free_cash_flow_yield_ttm, capex_to_operating_cash_flow_ttm, capex_to_depreciation_ttm, capex_to_revenue_ttm, sales_general_and_administrative_to_revenue_ttm, research_and_developement_to_revenue_ttm, stock_based_compensation_to_revenue_ttm, intangibles_to_total_assets_ttm, average_receivables_ttm, average_payables_ttm, average_inventory_ttm, days_of_sales_outstanding_ttm, days_of_payables_outstanding_ttm, days_of_inventory_outstanding_ttm, operating_cycle_ttm, cash_conversion_cycle_ttm, free_cash_flow_to_equity_ttm, free_cash_flow_to_firm_ttm, tangible_asset_value_ttm, net_current_asset_value_ttm))]
     fn new(
         symbol: String,
         market_cap: f64,
@@ -541,96 +672,224 @@ impl KeyMetricsTtm {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.market_cap.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "enterprise_value_ttm",
             self.enterprise_value_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_sales_ttm",
             self.ev_to_sales_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_operating_cash_flow_ttm",
             self.ev_to_operating_cash_flow_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_free_cash_flow_ttm",
             self.ev_to_free_cash_flow_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ev_to_ebitda_ttm",
             self.ev_to_ebitda_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_debt_to_ebitda_ttm",
             self.net_debt_to_ebitda_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "current_ratio_ttm",
             self.current_ratio_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "income_quality_ttm",
             self.income_quality_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "graham_number_ttm",
             self.graham_number_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "graham_net_net_ttm",
             self.graham_net_net_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tax_burden_ttm",
             self.tax_burden_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_burden_ttm",
             self.interest_burden_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "working_capital_ttm",
             self.working_capital_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "invested_capital_ttm",
             self.invested_capital_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_assets_ttm",
             self.return_on_assets_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_return_on_assets_ttm",
             self.operating_return_on_assets_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_tangible_assets_ttm",
             self.return_on_tangible_assets_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_equity_ttm",
             self.return_on_equity_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_invested_capital_ttm",
             self.return_on_invested_capital_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "return_on_capital_employed_ttm",
             self.return_on_capital_employed_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "earnings_yield_ttm",
             self.earnings_yield_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_yield_ttm",
             self.free_cash_flow_yield_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_to_operating_cash_flow_ttm",
             self.capex_to_operating_cash_flow_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_to_depreciation_ttm",
             self.capex_to_depreciation_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_to_revenue_ttm",
             self.capex_to_revenue_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "sales_general_and_administrative_to_revenue_ttm",
             self.sales_general_and_administrative_to_revenue_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "research_and_developement_to_revenue_ttm",
             self.research_and_developement_to_revenue_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "stock_based_compensation_to_revenue_ttm",
             self.stock_based_compensation_to_revenue_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "intangibles_to_total_assets_ttm",
             self.intangibles_to_total_assets_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_receivables_ttm",
             self.average_receivables_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_payables_ttm",
             self.average_payables_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_inventory_ttm",
             self.average_inventory_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "days_of_sales_outstanding_ttm",
             self.days_of_sales_outstanding_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "days_of_payables_outstanding_ttm",
             self.days_of_payables_outstanding_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "days_of_inventory_outstanding_ttm",
             self.days_of_inventory_outstanding_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cycle_ttm",
             self.operating_cycle_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_conversion_cycle_ttm",
             self.cash_conversion_cycle_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_to_equity_ttm",
             self.free_cash_flow_to_equity_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_to_firm_ttm",
             self.free_cash_flow_to_firm_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tangible_asset_value_ttm",
             self.tangible_asset_value_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_current_asset_value_ttm",
             self.net_current_asset_value_ttm
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

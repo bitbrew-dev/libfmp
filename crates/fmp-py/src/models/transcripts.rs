@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.transcripts", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.transcripts", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct LatestEarningsTranscript {
     #[pyo3(get)]
     pub symbol: String,
@@ -25,7 +25,7 @@ impl LatestEarningsTranscript {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, period, fiscal_year, date))]
+    #[pyo3(signature = (*, symbol, period, fiscal_year, date))]
     fn new(symbol: String, period: String, fiscal_year: u32, date: ::chrono::NaiveDate) -> Self {
         Self {
             symbol,
@@ -35,15 +35,23 @@ impl LatestEarningsTranscript {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -59,8 +67,8 @@ impl From<libfmp::responses::transcripts::LatestEarningsTranscript> for LatestEa
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.transcripts", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.transcripts", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EarningsTranscript {
     #[pyo3(get)]
     pub symbol: String,
@@ -80,7 +88,7 @@ impl EarningsTranscript {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, period, year, date, content))]
+    #[pyo3(signature = (*, symbol, period, year, date, content))]
     fn new(
         symbol: String,
         period: String,
@@ -97,16 +105,21 @@ impl EarningsTranscript {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
-            self.year.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.content.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("content", self.content.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -123,8 +136,8 @@ impl From<libfmp::responses::transcripts::EarningsTranscript> for EarningsTransc
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.transcripts", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.transcripts", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EarningsTranscriptDate {
     #[pyo3(get)]
     pub quarter: u8,
@@ -140,7 +153,7 @@ impl EarningsTranscriptDate {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (quarter, fiscal_year, date))]
+    #[pyo3(signature = (*, quarter, fiscal_year, date))]
     fn new(quarter: u8, fiscal_year: u32, date: ::chrono::NaiveDate) -> Self {
         Self {
             quarter,
@@ -149,14 +162,22 @@ impl EarningsTranscriptDate {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.quarter.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("quarter", self.quarter.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

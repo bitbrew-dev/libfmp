@@ -16,6 +16,8 @@ __all__ = [
 
 @typing.final
 class BulkDcfValuation:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -24,18 +26,22 @@ class BulkDcfValuation:
     def dcf(self) -> builtins.str: ...
     @property
     def stock_price(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         dcf: builtins.str,
         stock_price: builtins.str,
     ) -> BulkDcfValuation: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkEtfHolding:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -54,8 +60,10 @@ class BulkEtfHolding:
     def market_value(self) -> builtins.str: ...
     @property
     def last_updated_raw(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         shares_number: builtins.str,
@@ -66,11 +74,13 @@ class BulkEtfHolding:
         market_value: builtins.str,
         last_updated_raw: builtins.str,
     ) -> BulkEtfHolding: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkFinancialScore:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -93,8 +103,10 @@ class BulkFinancialScore:
     def total_liabilities(self) -> builtins.str: ...
     @property
     def revenue(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         reported_currency: builtins.str,
         altman_z_score: builtins.str,
@@ -107,11 +119,13 @@ class BulkFinancialScore:
         total_liabilities: builtins.str,
         revenue: builtins.str,
     ) -> BulkFinancialScore: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkPriceTargetSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -132,8 +146,10 @@ class BulkPriceTargetSummary:
     def all_time_avg_price_target(self) -> builtins.str: ...
     @property
     def publishers(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         last_month_count: builtins.str,
         last_month_avg_price_target: builtins.str,
@@ -145,11 +161,13 @@ class BulkPriceTargetSummary:
         all_time_avg_price_target: builtins.str,
         publishers: builtins.str,
     ) -> BulkPriceTargetSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkStockRating:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -168,8 +186,10 @@ class BulkStockRating:
     def price_to_earnings_score(self) -> builtins.str: ...
     @property
     def price_to_book_score(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         rating: builtins.str,
@@ -180,11 +200,13 @@ class BulkStockRating:
         price_to_earnings_score: builtins.str,
         price_to_book_score: builtins.str,
     ) -> BulkStockRating: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkUpgradesDowngradesConsensus:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -199,8 +221,10 @@ class BulkUpgradesDowngradesConsensus:
     def strong_sell(self) -> builtins.str: ...
     @property
     def consensus(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         strong_buy: builtins.str,
         buy: builtins.str,
@@ -209,4 +233,4 @@ class BulkUpgradesDowngradesConsensus:
         strong_sell: builtins.str,
         consensus: builtins.str,
     ) -> BulkUpgradesDowngradesConsensus: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.screener", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.screener", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CompanyScreenerResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -47,7 +47,7 @@ impl CompanyScreenerResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, company_name, market_cap, sector, industry, beta, price, last_annual_dividend, volume, exchange, exchange_short_name, country, is_etf, is_fund, is_actively_trading))]
+    #[pyo3(signature = (*, symbol, company_name, market_cap, sector, industry, beta, price, last_annual_dividend, volume, exchange, exchange_short_name, country, is_etf, is_fund, is_actively_trading))]
     fn new(
         symbol: String,
         company_name: String,
@@ -84,26 +84,43 @@ impl CompanyScreenerResult {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.market_cap.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
-            self.industry.clone().into_bound_py_any(py)?,
-            self.beta.clone().into_bound_py_any(py)?,
-            self.price.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("industry", self.industry.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("beta", self.beta.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("price", self.price.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "last_annual_dividend",
             self.last_annual_dividend.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "exchange_short_name",
             self.exchange_short_name.clone().into_bound_py_any(py)?,
-            self.country.clone().into_bound_py_any(py)?,
-            self.is_etf.clone().into_bound_py_any(py)?,
-            self.is_fund.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("country", self.country.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("is_etf", self.is_etf.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("is_fund", self.is_fund.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "is_actively_trading",
             self.is_actively_trading.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

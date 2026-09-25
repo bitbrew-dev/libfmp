@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.crypto", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.crypto", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CryptocurrencyListing {
     #[pyo3(get)]
     pub symbol: String,
@@ -29,7 +29,7 @@ impl CryptocurrencyListing {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, exchange, ico_date, circulating_supply, total_supply))]
+    #[pyo3(signature = (*, symbol, name, exchange, ico_date, circulating_supply, total_supply))]
     fn new(
         symbol: String,
         name: String,
@@ -48,17 +48,28 @@ impl CryptocurrencyListing {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.ico_date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("ico_date", self.ico_date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "circulating_supply",
             self.circulating_supply.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_supply",
             self.total_supply.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

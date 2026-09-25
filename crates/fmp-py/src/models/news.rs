@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.news", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.news", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct Article {
     #[pyo3(get)]
     pub title: String,
@@ -33,7 +33,7 @@ impl Article {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (title, date, content, tickers, image, link, author, site))]
+    #[pyo3(signature = (*, title, date, content, tickers, image, link, author, site))]
     fn new(
         title: String,
         date: ::chrono::NaiveDateTime,
@@ -56,19 +56,24 @@ impl Article {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.title.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.content.clone().into_bound_py_any(py)?,
-            self.tickers.clone().into_bound_py_any(py)?,
-            self.image.clone().into_bound_py_any(py)?,
-            self.link.clone().into_bound_py_any(py)?,
-            self.author.clone().into_bound_py_any(py)?,
-            self.site.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("title", self.title.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("content", self.content.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("tickers", self.tickers.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("image", self.image.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("author", self.author.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("site", self.site.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -88,8 +93,8 @@ impl From<libfmp::responses::news::Article> for Article {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.news", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.news", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct NewsArticle {
     #[pyo3(get)]
     pub symbol: Option<String>,
@@ -115,7 +120,7 @@ impl NewsArticle {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, published_date, publisher, title, image, site, text, url))]
+    #[pyo3(signature = (*, symbol, published_date, publisher, title, image, site, text, url))]
     fn new(
         symbol: Option<String>,
         published_date: ::chrono::NaiveDateTime,
@@ -138,19 +143,27 @@ impl NewsArticle {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "published_date",
             self.published_date.clone().into_bound_py_any(py)?,
-            self.publisher.clone().into_bound_py_any(py)?,
-            self.title.clone().into_bound_py_any(py)?,
-            self.image.clone().into_bound_py_any(py)?,
-            self.site.clone().into_bound_py_any(py)?,
-            self.text.clone().into_bound_py_any(py)?,
-            self.url.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("publisher", self.publisher.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("title", self.title.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("image", self.image.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("site", self.site.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("text", self.text.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

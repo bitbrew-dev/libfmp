@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.balance", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.balance", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct BalanceSheetStatement {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -139,7 +139,7 @@ impl BalanceSheetStatement {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, cash_and_cash_equivalents, short_term_investments, cash_and_short_term_investments, net_receivables, accounts_receivables, other_receivables, inventory, prepaids, other_current_assets, total_current_assets, property_plant_equipment_net, goodwill, intangible_assets, goodwill_and_intangible_assets, long_term_investments, tax_assets, other_non_current_assets, total_non_current_assets, other_assets, total_assets, total_payables, account_payables, other_payables, accrued_expenses, short_term_debt, capital_lease_obligations_current, tax_payables, deferred_revenue, other_current_liabilities, total_current_liabilities, long_term_debt, capital_lease_obligations_non_current, deferred_revenue_non_current, deferred_tax_liabilities_non_current, other_non_current_liabilities, total_non_current_liabilities, other_liabilities, capital_lease_obligations, total_liabilities, treasury_stock, preferred_stock, common_stock, retained_earnings, additional_paid_in_capital, accumulated_other_comprehensive_income_loss, other_total_stockholders_equity, total_stockholders_equity, total_equity, minority_interest, total_liabilities_and_total_equity, total_investments, total_debt, net_debt))]
+    #[pyo3(signature = (*, date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, cash_and_cash_equivalents, short_term_investments, cash_and_short_term_investments, net_receivables, accounts_receivables, other_receivables, inventory, prepaids, other_current_assets, total_current_assets, property_plant_equipment_net, goodwill, intangible_assets, goodwill_and_intangible_assets, long_term_investments, tax_assets, other_non_current_assets, total_non_current_assets, other_assets, total_assets, total_payables, account_payables, other_payables, accrued_expenses, short_term_debt, capital_lease_obligations_current, tax_payables, deferred_revenue, other_current_liabilities, total_current_liabilities, long_term_debt, capital_lease_obligations_non_current, deferred_revenue_non_current, deferred_tax_liabilities_non_current, other_non_current_liabilities, total_non_current_liabilities, other_liabilities, capital_lease_obligations, total_liabilities, treasury_stock, preferred_stock, common_stock, retained_earnings, additional_paid_in_capital, accumulated_other_comprehensive_income_loss, other_total_stockholders_equity, total_stockholders_equity, total_equity, minority_interest, total_liabilities_and_total_equity, total_investments, total_debt, net_debt))]
     fn new(
         date: ::chrono::NaiveDate,
         symbol: String,
@@ -268,112 +268,270 @@ impl BalanceSheetStatement {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "cash_and_cash_equivalents",
             self.cash_and_cash_equivalents
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_investments",
             self.short_term_investments.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_and_short_term_investments",
             self.cash_and_short_term_investments
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_receivables",
             self.net_receivables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accounts_receivables",
             self.accounts_receivables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_receivables",
             self.other_receivables.clone().into_bound_py_any(py)?,
-            self.inventory.clone().into_bound_py_any(py)?,
-            self.prepaids.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("inventory", self.inventory.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("prepaids", self.prepaids.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "other_current_assets",
             self.other_current_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_current_assets",
             self.total_current_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "property_plant_equipment_net",
             self.property_plant_equipment_net
                 .clone()
                 .into_bound_py_any(py)?,
-            self.goodwill.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("goodwill", self.goodwill.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "intangible_assets",
             self.intangible_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "goodwill_and_intangible_assets",
             self.goodwill_and_intangible_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_investments",
             self.long_term_investments.clone().into_bound_py_any(py)?,
-            self.tax_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("tax_assets", self.tax_assets.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "other_non_current_assets",
             self.other_non_current_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_non_current_assets",
             self.total_non_current_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_assets",
             self.other_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_assets",
             self.total_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_payables",
             self.total_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "account_payables",
             self.account_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_payables",
             self.other_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accrued_expenses",
             self.accrued_expenses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_debt",
             self.short_term_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_lease_obligations_current",
             self.capital_lease_obligations_current
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tax_payables",
             self.tax_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "deferred_revenue",
             self.deferred_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_current_liabilities",
             self.other_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_current_liabilities",
             self.total_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_debt",
             self.long_term_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_lease_obligations_non_current",
             self.capital_lease_obligations_non_current
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "deferred_revenue_non_current",
             self.deferred_revenue_non_current
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "deferred_tax_liabilities_non_current",
             self.deferred_tax_liabilities_non_current
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_non_current_liabilities",
             self.other_non_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_non_current_liabilities",
             self.total_non_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_liabilities",
             self.other_liabilities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_lease_obligations",
             self.capital_lease_obligations
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_liabilities",
             self.total_liabilities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "treasury_stock",
             self.treasury_stock.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "preferred_stock",
             self.preferred_stock.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "common_stock",
             self.common_stock.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "retained_earnings",
             self.retained_earnings.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "additional_paid_in_capital",
             self.additional_paid_in_capital
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accumulated_other_comprehensive_income_loss",
             self.accumulated_other_comprehensive_income_loss
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_total_stockholders_equity",
             self.other_total_stockholders_equity
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_stockholders_equity",
             self.total_stockholders_equity
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_equity",
             self.total_equity.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "minority_interest",
             self.minority_interest.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_liabilities_and_total_equity",
             self.total_liabilities_and_total_equity
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_investments",
             self.total_investments.clone().into_bound_py_any(py)?,
-            self.total_debt.clone().into_bound_py_any(py)?,
-            self.net_debt.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("total_debt", self.total_debt.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("net_debt", self.net_debt.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -447,8 +605,8 @@ impl From<libfmp::responses::statements::balance::BalanceSheetStatement> for Bal
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.balance", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.balance", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct BalanceSheetStatementTtm {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -578,7 +736,7 @@ impl BalanceSheetStatementTtm {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, cash_and_cash_equivalents, short_term_investments, cash_and_short_term_investments, net_receivables, accounts_receivables, other_receivables, inventory, prepaids, other_current_assets, total_current_assets, property_plant_equipment_net, goodwill, intangible_assets, goodwill_and_intangible_assets, long_term_investments, tax_assets, other_non_current_assets, total_non_current_assets, other_assets, total_assets, total_payables, account_payables, other_payables, accrued_expenses, short_term_debt, capital_lease_obligations_current, tax_payables, deferred_revenue, other_current_liabilities, total_current_liabilities, long_term_debt, deferred_revenue_non_current, deferred_tax_liabilities_non_current, other_non_current_liabilities, total_non_current_liabilities, other_liabilities, capital_lease_obligations, total_liabilities, treasury_stock, preferred_stock, common_stock, retained_earnings, additional_paid_in_capital, accumulated_other_comprehensive_income_loss, other_total_stockholders_equity, total_stockholders_equity, total_equity, minority_interest, total_liabilities_and_total_equity, total_investments, total_debt, net_debt))]
+    #[pyo3(signature = (*, date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, cash_and_cash_equivalents, short_term_investments, cash_and_short_term_investments, net_receivables, accounts_receivables, other_receivables, inventory, prepaids, other_current_assets, total_current_assets, property_plant_equipment_net, goodwill, intangible_assets, goodwill_and_intangible_assets, long_term_investments, tax_assets, other_non_current_assets, total_non_current_assets, other_assets, total_assets, total_payables, account_payables, other_payables, accrued_expenses, short_term_debt, capital_lease_obligations_current, tax_payables, deferred_revenue, other_current_liabilities, total_current_liabilities, long_term_debt, deferred_revenue_non_current, deferred_tax_liabilities_non_current, other_non_current_liabilities, total_non_current_liabilities, other_liabilities, capital_lease_obligations, total_liabilities, treasury_stock, preferred_stock, common_stock, retained_earnings, additional_paid_in_capital, accumulated_other_comprehensive_income_loss, other_total_stockholders_equity, total_stockholders_equity, total_equity, minority_interest, total_liabilities_and_total_equity, total_investments, total_debt, net_debt))]
     fn new(
         date: ::chrono::NaiveDate,
         symbol: String,
@@ -705,109 +863,264 @@ impl BalanceSheetStatementTtm {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "cash_and_cash_equivalents",
             self.cash_and_cash_equivalents
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_investments",
             self.short_term_investments.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_and_short_term_investments",
             self.cash_and_short_term_investments
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_receivables",
             self.net_receivables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accounts_receivables",
             self.accounts_receivables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_receivables",
             self.other_receivables.clone().into_bound_py_any(py)?,
-            self.inventory.clone().into_bound_py_any(py)?,
-            self.prepaids.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("inventory", self.inventory.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("prepaids", self.prepaids.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "other_current_assets",
             self.other_current_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_current_assets",
             self.total_current_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "property_plant_equipment_net",
             self.property_plant_equipment_net
                 .clone()
                 .into_bound_py_any(py)?,
-            self.goodwill.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("goodwill", self.goodwill.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "intangible_assets",
             self.intangible_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "goodwill_and_intangible_assets",
             self.goodwill_and_intangible_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_investments",
             self.long_term_investments.clone().into_bound_py_any(py)?,
-            self.tax_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("tax_assets", self.tax_assets.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "other_non_current_assets",
             self.other_non_current_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_non_current_assets",
             self.total_non_current_assets
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_assets",
             self.other_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_assets",
             self.total_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_payables",
             self.total_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "account_payables",
             self.account_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_payables",
             self.other_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accrued_expenses",
             self.accrued_expenses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_debt",
             self.short_term_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_lease_obligations_current",
             self.capital_lease_obligations_current
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tax_payables",
             self.tax_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "deferred_revenue",
             self.deferred_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_current_liabilities",
             self.other_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_current_liabilities",
             self.total_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_debt",
             self.long_term_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "deferred_revenue_non_current",
             self.deferred_revenue_non_current
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "deferred_tax_liabilities_non_current",
             self.deferred_tax_liabilities_non_current
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_non_current_liabilities",
             self.other_non_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_non_current_liabilities",
             self.total_non_current_liabilities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_liabilities",
             self.other_liabilities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_lease_obligations",
             self.capital_lease_obligations
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_liabilities",
             self.total_liabilities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "treasury_stock",
             self.treasury_stock.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "preferred_stock",
             self.preferred_stock.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "common_stock",
             self.common_stock.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "retained_earnings",
             self.retained_earnings.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "additional_paid_in_capital",
             self.additional_paid_in_capital
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accumulated_other_comprehensive_income_loss",
             self.accumulated_other_comprehensive_income_loss
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_total_stockholders_equity",
             self.other_total_stockholders_equity
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_stockholders_equity",
             self.total_stockholders_equity
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_equity",
             self.total_equity.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "minority_interest",
             self.minority_interest.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_liabilities_and_total_equity",
             self.total_liabilities_and_total_equity
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_investments",
             self.total_investments.clone().into_bound_py_any(py)?,
-            self.total_debt.clone().into_bound_py_any(py)?,
-            self.net_debt.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("total_debt", self.total_debt.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("net_debt", self.net_debt.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

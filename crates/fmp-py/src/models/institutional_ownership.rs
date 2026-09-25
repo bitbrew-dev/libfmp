@@ -2,12 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InstitutionalOwnershipFiling {
     #[pyo3(get)]
     pub cik: String,
@@ -33,7 +38,7 @@ impl InstitutionalOwnershipFiling {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (cik, name, date, filing_date, accepted_date, form_type, link, final_link))]
+    #[pyo3(signature = (*, cik, name, date, filing_date, accepted_date, form_type, link, final_link))]
     fn new(
         cik: String,
         name: String,
@@ -56,19 +61,30 @@ impl InstitutionalOwnershipFiling {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.cik.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
-            self.form_type.clone().into_bound_py_any(py)?,
-            self.link.clone().into_bound_py_any(py)?,
-            self.final_link.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("form_type", self.form_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("final_link", self.final_link.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -92,8 +108,13 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalOwnershipFili
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InstitutionalHolding {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -131,7 +152,7 @@ impl InstitutionalHolding {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, filing_date, accepted_date, cik, security_cusip, symbol, name_of_issuer, shares, title_of_class, shares_type, put_call_share, value, link, final_link))]
+    #[pyo3(signature = (*, date, filing_date, accepted_date, cik, security_cusip, symbol, name_of_issuer, shares, title_of_class, shares_type, put_call_share, value, link, final_link))]
     fn new(
         date: ::chrono::NaiveDate,
         filing_date: ::chrono::NaiveDate,
@@ -166,25 +187,51 @@ impl InstitutionalHolding {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "security_cusip",
             self.security_cusip.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "name_of_issuer",
             self.name_of_issuer.clone().into_bound_py_any(py)?,
-            self.shares.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("shares", self.shares.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "title_of_class",
             self.title_of_class.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "shares_type",
             self.shares_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "put_call_share",
             self.put_call_share.clone().into_bound_py_any(py)?,
-            self.value.clone().into_bound_py_any(py)?,
-            self.link.clone().into_bound_py_any(py)?,
-            self.final_link.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("value", self.value.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("final_link", self.final_link.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -212,8 +259,13 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalHolding>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct Form13fFilingDate {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -229,7 +281,7 @@ impl Form13fFilingDate {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, year, quarter))]
+    #[pyo3(signature = (*, date, year, quarter))]
     fn new(date: ::chrono::NaiveDate, year: u32, quarter: u8) -> Self {
         Self {
             date,
@@ -238,14 +290,19 @@ impl Form13fFilingDate {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.year.clone().into_bound_py_any(py)?,
-            self.quarter.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("quarter", self.quarter.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -260,8 +317,13 @@ impl From<libfmp::responses::institutional_ownership::Form13fFilingDate> for For
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InstitutionalHolderAnalytics {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -349,7 +411,7 @@ impl InstitutionalHolderAnalytics {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, cik, filing_date, investor_name, symbol, security_name, type_of_security, security_cusip, shares_type, put_call_share, investment_discretion, industry_title, weight, last_weight, change_in_weight, change_in_weight_percentage, market_value, last_market_value, change_in_market_value, change_in_market_value_percentage, shares_number, last_shares_number, change_in_shares_number, change_in_shares_number_percentage, quarter_end_price, avg_price_paid, is_new, is_sold_out, ownership, last_ownership, change_in_ownership, change_in_ownership_percentage, holding_period, first_added, performance, performance_percentage, last_performance, change_in_performance, is_counted_for_performance))]
+    #[pyo3(signature = (*, date, cik, filing_date, investor_name, symbol, security_name, type_of_security, security_cusip, shares_type, put_call_share, investment_discretion, industry_title, weight, last_weight, change_in_weight, change_in_weight_percentage, market_value, last_market_value, change_in_market_value, change_in_market_value_percentage, shares_number, last_shares_number, change_in_shares_number, change_in_shares_number_percentage, quarter_end_price, avg_price_paid, is_new, is_sold_out, ownership, last_ownership, change_in_ownership, change_in_ownership_percentage, holding_period, first_added, performance, performance_percentage, last_performance, change_in_performance, is_counted_for_performance))]
     fn new(
         date: ::chrono::NaiveDate,
         cik: String,
@@ -434,60 +496,164 @@ impl InstitutionalHolderAnalytics {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "investor_name",
             self.investor_name.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "security_name",
             self.security_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "type_of_security",
             self.type_of_security.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "security_cusip",
             self.security_cusip.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "shares_type",
             self.shares_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "put_call_share",
             self.put_call_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "investment_discretion",
             self.investment_discretion.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "industry_title",
             self.industry_title.clone().into_bound_py_any(py)?,
-            self.weight.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("weight", self.weight.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "last_weight",
             self.last_weight.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_weight",
             self.change_in_weight.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_weight_percentage",
             self.change_in_weight_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_value",
             self.market_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_market_value",
             self.last_market_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_market_value",
             self.change_in_market_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_market_value_percentage",
             self.change_in_market_value_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "shares_number",
             self.shares_number.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_shares_number",
             self.last_shares_number.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_shares_number",
             self.change_in_shares_number.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_shares_number_percentage",
             self.change_in_shares_number_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "quarter_end_price",
             self.quarter_end_price.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "avg_price_paid",
             self.avg_price_paid.clone().into_bound_py_any(py)?,
-            self.is_new.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("is_new", self.is_new.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "is_sold_out",
             self.is_sold_out.clone().into_bound_py_any(py)?,
-            self.ownership.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ownership", self.ownership.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "last_ownership",
             self.last_ownership.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_ownership",
             self.change_in_ownership.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_ownership_percentage",
             self.change_in_ownership_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "holding_period",
             self.holding_period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "first_added",
             self.first_added.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance",
             self.performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_percentage",
             self.performance_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_performance",
             self.last_performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_performance",
             self.change_in_performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "is_counted_for_performance",
             self.is_counted_for_performance
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -542,8 +708,13 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalHolderAnalyti
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct HolderPerformanceSummary {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -619,7 +790,7 @@ impl HolderPerformanceSummary {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, cik, investor_name, portfolio_size, securities_added, securities_removed, market_value, previous_market_value, change_in_market_value, change_in_market_value_percentage, average_holding_period, average_holding_period_top10, average_holding_period_top20, turnover, turnover_alternate_sell, turnover_alternate_buy, performance, performance_percentage, last_performance, change_in_performance, performance_1_year, performance_percentage_1_year, performance_3_year, performance_percentage_3_year, performance_5_year, performance_percentage_5_year, performance_since_inception, performance_since_inception_percentage, performance_relative_to_sp500_percentage, performance_1_year_relative_to_sp500_percentage, performance_3_year_relative_to_sp500_percentage, performance_5_year_relative_to_sp500_percentage, performance_since_inception_relative_to_sp500_percentage))]
+    #[pyo3(signature = (*, date, cik, investor_name, portfolio_size, securities_added, securities_removed, market_value, previous_market_value, change_in_market_value, change_in_market_value_percentage, average_holding_period, average_holding_period_top10, average_holding_period_top20, turnover, turnover_alternate_sell, turnover_alternate_buy, performance, performance_percentage, last_performance, change_in_performance, performance_1_year, performance_percentage_1_year, performance_3_year, performance_percentage_3_year, performance_5_year, performance_percentage_5_year, performance_since_inception, performance_since_inception_percentage, performance_relative_to_sp500_percentage, performance_1_year_relative_to_sp500_percentage, performance_3_year_relative_to_sp500_percentage, performance_5_year_relative_to_sp500_percentage, performance_since_inception_relative_to_sp500_percentage))]
     fn new(
         date: ::chrono::NaiveDate,
         cik: String,
@@ -692,70 +863,165 @@ impl HolderPerformanceSummary {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "investor_name",
             self.investor_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "portfolio_size",
             self.portfolio_size.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "securities_added",
             self.securities_added.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "securities_removed",
             self.securities_removed.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_value",
             self.market_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "previous_market_value",
             self.previous_market_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_market_value",
             self.change_in_market_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_market_value_percentage",
             self.change_in_market_value_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_holding_period",
             self.average_holding_period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_holding_period_top10",
             self.average_holding_period_top10
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "average_holding_period_top20",
             self.average_holding_period_top20
                 .clone()
                 .into_bound_py_any(py)?,
-            self.turnover.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("turnover", self.turnover.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "turnover_alternate_sell",
             self.turnover_alternate_sell.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "turnover_alternate_buy",
             self.turnover_alternate_buy.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance",
             self.performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_percentage",
             self.performance_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_performance",
             self.last_performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_performance",
             self.change_in_performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_1_year",
             self.performance_1_year.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_percentage_1_year",
             self.performance_percentage_1_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_3_year",
             self.performance_3_year.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_percentage_3_year",
             self.performance_percentage_3_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_5_year",
             self.performance_5_year.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_percentage_5_year",
             self.performance_percentage_5_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_since_inception",
             self.performance_since_inception
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_since_inception_percentage",
             self.performance_since_inception_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_relative_to_sp500_percentage",
             self.performance_relative_to_sp500_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_1_year_relative_to_sp500_percentage",
             self.performance_1_year_relative_to_sp500_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_3_year_relative_to_sp500_percentage",
             self.performance_3_year_relative_to_sp500_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_5_year_relative_to_sp500_percentage",
             self.performance_5_year_relative_to_sp500_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_since_inception_relative_to_sp500_percentage",
             self.performance_since_inception_relative_to_sp500_percentage
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -807,8 +1073,13 @@ impl From<libfmp::responses::institutional_ownership::HolderPerformanceSummary>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct HolderIndustryBreakdown {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -842,7 +1113,7 @@ impl HolderIndustryBreakdown {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, cik, investor_name, industry_title, weight, last_weight, change_in_weight, change_in_weight_percentage, performance, performance_percentage, last_performance, change_in_performance))]
+    #[pyo3(signature = (*, date, cik, investor_name, industry_title, weight, last_weight, change_in_weight, change_in_weight_percentage, performance, performance_percentage, last_performance, change_in_performance))]
     fn new(
         date: ::chrono::NaiveDate,
         cik: String,
@@ -873,25 +1144,57 @@ impl HolderIndustryBreakdown {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "investor_name",
             self.investor_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "industry_title",
             self.industry_title.clone().into_bound_py_any(py)?,
-            self.weight.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("weight", self.weight.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "last_weight",
             self.last_weight.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_weight",
             self.change_in_weight.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_weight_percentage",
             self.change_in_weight_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance",
             self.performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "performance_percentage",
             self.performance_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_performance",
             self.last_performance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_performance",
             self.change_in_performance.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -917,8 +1220,13 @@ impl From<libfmp::responses::institutional_ownership::HolderIndustryBreakdown>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InstitutionalPositionSummary {
     #[pyo3(get)]
     pub symbol: String,
@@ -1000,7 +1308,7 @@ impl InstitutionalPositionSummary {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, cik, date, investors_holding, last_investors_holding, investors_holding_change, number_of_13f_shares, last_number_of_13f_shares, number_of_13f_shares_change, total_invested, last_total_invested, total_invested_change, ownership_percent, last_ownership_percent, ownership_percent_change, new_positions, last_new_positions, new_positions_change, increased_positions, last_increased_positions, increased_positions_change, closed_positions, last_closed_positions, closed_positions_change, reduced_positions, last_reduced_positions, reduced_positions_change, total_calls, last_total_calls, total_calls_change, total_puts, last_total_puts, total_puts_change, put_call_ratio, last_put_call_ratio, put_call_ratio_change))]
+    #[pyo3(signature = (*, symbol, cik, date, investors_holding, last_investors_holding, investors_holding_change, number_of_13f_shares, last_number_of_13f_shares, number_of_13f_shares_change, total_invested, last_total_invested, total_invested_change, ownership_percent, last_ownership_percent, ownership_percent_change, new_positions, last_new_positions, new_positions_change, increased_positions, last_increased_positions, increased_positions_change, closed_positions, last_closed_positions, closed_positions_change, reduced_positions, last_reduced_positions, reduced_positions_change, total_calls, last_total_calls, total_calls_change, total_puts, last_total_puts, total_puts_change, put_call_ratio, last_put_call_ratio, put_call_ratio_change))]
     fn new(
         symbol: String,
         cik: String,
@@ -1079,61 +1387,162 @@ impl InstitutionalPositionSummary {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "investors_holding",
             self.investors_holding.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_investors_holding",
             self.last_investors_holding.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "investors_holding_change",
             self.investors_holding_change
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "number_of_13f_shares",
             self.number_of_13f_shares.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_number_of_13f_shares",
             self.last_number_of_13f_shares
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "number_of_13f_shares_change",
             self.number_of_13f_shares_change
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_invested",
             self.total_invested.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_total_invested",
             self.last_total_invested.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_invested_change",
             self.total_invested_change.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ownership_percent",
             self.ownership_percent.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_ownership_percent",
             self.last_ownership_percent.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ownership_percent_change",
             self.ownership_percent_change
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "new_positions",
             self.new_positions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_new_positions",
             self.last_new_positions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "new_positions_change",
             self.new_positions_change.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "increased_positions",
             self.increased_positions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_increased_positions",
             self.last_increased_positions
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "increased_positions_change",
             self.increased_positions_change
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "closed_positions",
             self.closed_positions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_closed_positions",
             self.last_closed_positions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "closed_positions_change",
             self.closed_positions_change.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "reduced_positions",
             self.reduced_positions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_reduced_positions",
             self.last_reduced_positions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "reduced_positions_change",
             self.reduced_positions_change
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_calls",
             self.total_calls.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_total_calls",
             self.last_total_calls.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_calls_change",
             self.total_calls_change.clone().into_bound_py_any(py)?,
-            self.total_puts.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("total_puts", self.total_puts.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "last_total_puts",
             self.last_total_puts.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_puts_change",
             self.total_puts_change.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "put_call_ratio",
             self.put_call_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_put_call_ratio",
             self.last_put_call_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "put_call_ratio_change",
             self.put_call_ratio_change.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -1185,8 +1594,13 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalPositionSumma
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.institutional_ownership", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.institutional_ownership",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct InstitutionalIndustrySummary {
     #[pyo3(get)]
     pub industry_title: String,
@@ -1202,7 +1616,7 @@ impl InstitutionalIndustrySummary {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (industry_title, industry_value, date))]
+    #[pyo3(signature = (*, industry_title, industry_value, date))]
     fn new(industry_title: String, industry_value: f64, date: ::chrono::NaiveDate) -> Self {
         Self {
             industry_title,
@@ -1211,14 +1625,25 @@ impl InstitutionalIndustrySummary {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item(
+            "industry_title",
             self.industry_title.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "industry_value",
             self.industry_value.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

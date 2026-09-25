@@ -113,6 +113,8 @@ class CalendarNamespace:
 
 @typing.final
 class DividendEvent:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -131,8 +133,10 @@ class DividendEvent:
     def yield_(self) -> builtins.float: ...
     @property
     def frequency(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         record_date: datetime.date,
@@ -143,11 +147,13 @@ class DividendEvent:
         yield_: builtins.float,
         frequency: builtins.str,
     ) -> DividendEvent: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EarningsEvent:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -162,8 +168,10 @@ class EarningsEvent:
     def revenue_estimated(self) -> builtins.float: ...
     @property
     def last_updated(self) -> datetime.date: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         eps_actual: typing.Optional[builtins.float],
@@ -172,11 +180,13 @@ class EarningsEvent:
         revenue_estimated: builtins.float,
         last_updated: datetime.date,
     ) -> EarningsEvent: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class IpoCalendarEvent:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -195,8 +205,10 @@ class IpoCalendarEvent:
     def price_range(self) -> typing.Any: ...
     @property
     def market_cap(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         daa: builtins.str,
@@ -207,11 +219,13 @@ class IpoCalendarEvent:
         price_range: typing.Optional[builtins.str],
         market_cap: typing.Optional[builtins.str],
     ) -> IpoCalendarEvent: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class IpoDisclosure:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -226,8 +240,10 @@ class IpoDisclosure:
     def form(self) -> builtins.str: ...
     @property
     def url(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         filing_date: datetime.date,
         accepted_date: datetime.date,
@@ -236,11 +252,13 @@ class IpoDisclosure:
         form: builtins.str,
         url: builtins.str,
     ) -> IpoDisclosure: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class IpoProspectus:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -267,8 +285,10 @@ class IpoProspectus:
     def form(self) -> builtins.str: ...
     @property
     def url(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         accepted_date: datetime.date,
         filing_date: datetime.date,
@@ -283,11 +303,13 @@ class IpoProspectus:
         form: builtins.str,
         url: builtins.str,
     ) -> IpoProspectus: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockSplitEvent:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -298,12 +320,14 @@ class StockSplitEvent:
     def denominator(self) -> builtins.float: ...
     @property
     def split_type(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         numerator: builtins.float,
         denominator: builtins.float,
         split_type: builtins.str,
     ) -> StockSplitEvent: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

@@ -144,6 +144,8 @@ class ChartNamespace:
 
 @typing.final
 class StockChartAdjustedBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -158,8 +160,10 @@ class StockChartAdjustedBar:
     def adj_close(self) -> builtins.float: ...
     @property
     def volume(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         adj_open: builtins.float,
@@ -168,11 +172,13 @@ class StockChartAdjustedBar:
         adj_close: builtins.float,
         volume: builtins.float,
     ) -> StockChartAdjustedBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockChartFullBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -193,8 +199,10 @@ class StockChartFullBar:
     def change_percent(self) -> builtins.float: ...
     @property
     def vwap(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         open: builtins.float,
@@ -206,11 +214,13 @@ class StockChartFullBar:
         change_percent: builtins.float,
         vwap: builtins.float,
     ) -> StockChartFullBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockChartIntradayBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -223,8 +233,10 @@ class StockChartIntradayBar:
     def close(self) -> builtins.float: ...
     @property
     def volume(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         low: builtins.float,
@@ -232,11 +244,13 @@ class StockChartIntradayBar:
         close: builtins.float,
         volume: builtins.float,
     ) -> StockChartIntradayBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockChartLightBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -245,11 +259,13 @@ class StockChartLightBar:
     def price(self) -> builtins.float: ...
     @property
     def volume(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         price: builtins.float,
         volume: builtins.float,
     ) -> StockChartLightBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

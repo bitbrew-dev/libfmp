@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.ratios", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.ratios", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct FinancialRatios {
     #[pyo3(get)]
     pub symbol: String,
@@ -149,7 +149,7 @@ impl FinancialRatios {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, fiscal_year, period, reported_currency, gross_profit_margin, ebit_margin, ebitda_margin, operating_profit_margin, pretax_profit_margin, continuous_operations_profit_margin, net_profit_margin, bottom_line_profit_margin, receivables_turnover, payables_turnover, inventory_turnover, fixed_asset_turnover, asset_turnover, current_ratio, quick_ratio, solvency_ratio, cash_ratio, price_to_earnings_ratio, price_to_earnings_growth_ratio, forward_price_to_earnings_growth_ratio, price_to_earnings_diluted_ratio, price_to_earnings_diluted_growth_ratio, price_to_book_ratio, price_to_sales_ratio, price_to_free_cash_flow_ratio, price_to_operating_cash_flow_ratio, debt_to_assets_ratio, debt_to_equity_ratio, debt_to_capital_ratio, long_term_debt_to_capital_ratio, financial_leverage_ratio, working_capital_turnover_ratio, operating_cash_flow_ratio, operating_cash_flow_sales_ratio, free_cash_flow_operating_cash_flow_ratio, debt_service_coverage_ratio, interest_coverage_ratio, short_term_operating_cash_flow_coverage_ratio, operating_cash_flow_coverage_ratio, capital_expenditure_coverage_ratio, dividend_paid_and_capex_coverage_ratio, dividend_payout_ratio, dividend_yield, dividend_yield_percentage, revenue_per_share, net_income_per_share, interest_debt_per_share, cash_per_share, book_value_per_share, tangible_book_value_per_share, shareholders_equity_per_share, operating_cash_flow_per_share, capex_per_share, free_cash_flow_per_share, net_income_per_ebt, ebt_per_ebit, price_to_fair_value, debt_to_market_cap, effective_tax_rate, enterprise_value_multiple, dividend_per_share))]
+    #[pyo3(signature = (*, symbol, date, fiscal_year, period, reported_currency, gross_profit_margin, ebit_margin, ebitda_margin, operating_profit_margin, pretax_profit_margin, continuous_operations_profit_margin, net_profit_margin, bottom_line_profit_margin, receivables_turnover, payables_turnover, inventory_turnover, fixed_asset_turnover, asset_turnover, current_ratio, quick_ratio, solvency_ratio, cash_ratio, price_to_earnings_ratio, price_to_earnings_growth_ratio, forward_price_to_earnings_growth_ratio, price_to_earnings_diluted_ratio, price_to_earnings_diluted_growth_ratio, price_to_book_ratio, price_to_sales_ratio, price_to_free_cash_flow_ratio, price_to_operating_cash_flow_ratio, debt_to_assets_ratio, debt_to_equity_ratio, debt_to_capital_ratio, long_term_debt_to_capital_ratio, financial_leverage_ratio, working_capital_turnover_ratio, operating_cash_flow_ratio, operating_cash_flow_sales_ratio, free_cash_flow_operating_cash_flow_ratio, debt_service_coverage_ratio, interest_coverage_ratio, short_term_operating_cash_flow_coverage_ratio, operating_cash_flow_coverage_ratio, capital_expenditure_coverage_ratio, dividend_paid_and_capex_coverage_ratio, dividend_payout_ratio, dividend_yield, dividend_yield_percentage, revenue_per_share, net_income_per_share, interest_debt_per_share, cash_per_share, book_value_per_share, tangible_book_value_per_share, shareholders_equity_per_share, operating_cash_flow_per_share, capex_per_share, free_cash_flow_per_share, net_income_per_ebt, ebt_per_ebit, price_to_fair_value, debt_to_market_cap, effective_tax_rate, enterprise_value_multiple, dividend_per_share))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -288,127 +288,318 @@ impl FinancialRatios {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "gross_profit_margin",
             self.gross_profit_margin.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebit_margin",
             self.ebit_margin.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebitda_margin",
             self.ebitda_margin.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_profit_margin",
             self.operating_profit_margin.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pretax_profit_margin",
             self.pretax_profit_margin.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "continuous_operations_profit_margin",
             self.continuous_operations_profit_margin
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_profit_margin",
             self.net_profit_margin.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "bottom_line_profit_margin",
             self.bottom_line_profit_margin
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "receivables_turnover",
             self.receivables_turnover.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "payables_turnover",
             self.payables_turnover.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "inventory_turnover",
             self.inventory_turnover.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fixed_asset_turnover",
             self.fixed_asset_turnover.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "asset_turnover",
             self.asset_turnover.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "current_ratio",
             self.current_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "quick_ratio",
             self.quick_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "solvency_ratio",
             self.solvency_ratio.clone().into_bound_py_any(py)?,
-            self.cash_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cash_ratio", self.cash_ratio.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "price_to_earnings_ratio",
             self.price_to_earnings_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_earnings_growth_ratio",
             self.price_to_earnings_growth_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "forward_price_to_earnings_growth_ratio",
             self.forward_price_to_earnings_growth_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_earnings_diluted_ratio",
             self.price_to_earnings_diluted_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_earnings_diluted_growth_ratio",
             self.price_to_earnings_diluted_growth_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_book_ratio",
             self.price_to_book_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_sales_ratio",
             self.price_to_sales_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_free_cash_flow_ratio",
             self.price_to_free_cash_flow_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_operating_cash_flow_ratio",
             self.price_to_operating_cash_flow_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_assets_ratio",
             self.debt_to_assets_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_equity_ratio",
             self.debt_to_equity_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_capital_ratio",
             self.debt_to_capital_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_debt_to_capital_ratio",
             self.long_term_debt_to_capital_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "financial_leverage_ratio",
             self.financial_leverage_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "working_capital_turnover_ratio",
             self.working_capital_turnover_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_ratio",
             self.operating_cash_flow_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_sales_ratio",
             self.operating_cash_flow_sales_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_operating_cash_flow_ratio",
             self.free_cash_flow_operating_cash_flow_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_service_coverage_ratio",
             self.debt_service_coverage_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_coverage_ratio",
             self.interest_coverage_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_operating_cash_flow_coverage_ratio",
             self.short_term_operating_cash_flow_coverage_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_coverage_ratio",
             self.operating_cash_flow_coverage_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_expenditure_coverage_ratio",
             self.capital_expenditure_coverage_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_paid_and_capex_coverage_ratio",
             self.dividend_paid_and_capex_coverage_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_payout_ratio",
             self.dividend_payout_ratio.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_yield",
             self.dividend_yield.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_yield_percentage",
             self.dividend_yield_percentage
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "revenue_per_share",
             self.revenue_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_per_share",
             self.net_income_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_debt_per_share",
             self.interest_debt_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_per_share",
             self.cash_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "book_value_per_share",
             self.book_value_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tangible_book_value_per_share",
             self.tangible_book_value_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "shareholders_equity_per_share",
             self.shareholders_equity_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_per_share",
             self.operating_cash_flow_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_per_share",
             self.capex_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_per_share",
             self.free_cash_flow_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_per_ebt",
             self.net_income_per_ebt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebt_per_ebit",
             self.ebt_per_ebit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_fair_value",
             self.price_to_fair_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_market_cap",
             self.debt_to_market_cap.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "effective_tax_rate",
             self.effective_tax_rate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "enterprise_value_multiple",
             self.enterprise_value_multiple
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_per_share",
             self.dividend_per_share.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -488,8 +679,8 @@ impl From<libfmp::responses::statements::ratios::FinancialRatios> for FinancialR
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.ratios", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.ratios", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct FinancialRatiosTtm {
     #[pyo3(get)]
     pub symbol: String,
@@ -623,7 +814,7 @@ impl FinancialRatiosTtm {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, gross_profit_margin_ttm, ebit_margin_ttm, ebitda_margin_ttm, operating_profit_margin_ttm, pretax_profit_margin_ttm, continuous_operations_profit_margin_ttm, net_profit_margin_ttm, bottom_line_profit_margin_ttm, receivables_turnover_ttm, payables_turnover_ttm, inventory_turnover_ttm, fixed_asset_turnover_ttm, asset_turnover_ttm, current_ratio_ttm, quick_ratio_ttm, solvency_ratio_ttm, cash_ratio_ttm, price_to_earnings_ratio_ttm, price_to_earnings_growth_ratio_ttm, forward_price_to_earnings_growth_ratio_ttm, price_to_earnings_diluted_ratio_ttm, price_to_earnings_diluted_growth_ratio_ttm, price_to_book_ratio_ttm, price_to_sales_ratio_ttm, price_to_free_cash_flow_ratio_ttm, price_to_operating_cash_flow_ratio_ttm, debt_to_assets_ratio_ttm, debt_to_equity_ratio_ttm, debt_to_capital_ratio_ttm, long_term_debt_to_capital_ratio_ttm, financial_leverage_ratio_ttm, working_capital_turnover_ratio_ttm, operating_cash_flow_ratio_ttm, operating_cash_flow_sales_ratio_ttm, free_cash_flow_operating_cash_flow_ratio_ttm, debt_service_coverage_ratio_ttm, interest_coverage_ratio_ttm, short_term_operating_cash_flow_coverage_ratio_ttm, operating_cash_flow_coverage_ratio_ttm, capital_expenditure_coverage_ratio_ttm, dividend_paid_and_capex_coverage_ratio_ttm, dividend_payout_ratio_ttm, dividend_yield_ttm, enterprise_value_ttm, revenue_per_share_ttm, net_income_per_share_ttm, interest_debt_per_share_ttm, cash_per_share_ttm, book_value_per_share_ttm, tangible_book_value_per_share_ttm, shareholders_equity_per_share_ttm, operating_cash_flow_per_share_ttm, capex_per_share_ttm, free_cash_flow_per_share_ttm, net_income_per_ebt_ttm, ebt_per_ebit_ttm, price_to_fair_value_ttm, debt_to_market_cap_ttm, effective_tax_rate_ttm, enterprise_value_multiple_ttm, dividend_per_share_ttm))]
+    #[pyo3(signature = (*, symbol, gross_profit_margin_ttm, ebit_margin_ttm, ebitda_margin_ttm, operating_profit_margin_ttm, pretax_profit_margin_ttm, continuous_operations_profit_margin_ttm, net_profit_margin_ttm, bottom_line_profit_margin_ttm, receivables_turnover_ttm, payables_turnover_ttm, inventory_turnover_ttm, fixed_asset_turnover_ttm, asset_turnover_ttm, current_ratio_ttm, quick_ratio_ttm, solvency_ratio_ttm, cash_ratio_ttm, price_to_earnings_ratio_ttm, price_to_earnings_growth_ratio_ttm, forward_price_to_earnings_growth_ratio_ttm, price_to_earnings_diluted_ratio_ttm, price_to_earnings_diluted_growth_ratio_ttm, price_to_book_ratio_ttm, price_to_sales_ratio_ttm, price_to_free_cash_flow_ratio_ttm, price_to_operating_cash_flow_ratio_ttm, debt_to_assets_ratio_ttm, debt_to_equity_ratio_ttm, debt_to_capital_ratio_ttm, long_term_debt_to_capital_ratio_ttm, financial_leverage_ratio_ttm, working_capital_turnover_ratio_ttm, operating_cash_flow_ratio_ttm, operating_cash_flow_sales_ratio_ttm, free_cash_flow_operating_cash_flow_ratio_ttm, debt_service_coverage_ratio_ttm, interest_coverage_ratio_ttm, short_term_operating_cash_flow_coverage_ratio_ttm, operating_cash_flow_coverage_ratio_ttm, capital_expenditure_coverage_ratio_ttm, dividend_paid_and_capex_coverage_ratio_ttm, dividend_payout_ratio_ttm, dividend_yield_ttm, enterprise_value_ttm, revenue_per_share_ttm, net_income_per_share_ttm, interest_debt_per_share_ttm, cash_per_share_ttm, book_value_per_share_ttm, tangible_book_value_per_share_ttm, shareholders_equity_per_share_ttm, operating_cash_flow_per_share_ttm, capex_per_share_ttm, free_cash_flow_per_share_ttm, net_income_per_ebt_ttm, ebt_per_ebit_ttm, price_to_fair_value_ttm, debt_to_market_cap_ttm, effective_tax_rate_ttm, enterprise_value_multiple_ttm, dividend_per_share_ttm))]
     fn new(
         symbol: String,
         gross_profit_margin_ttm: f64,
@@ -754,149 +945,337 @@ impl FinancialRatiosTtm {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "gross_profit_margin_ttm",
             self.gross_profit_margin_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebit_margin_ttm",
             self.ebit_margin_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebitda_margin_ttm",
             self.ebitda_margin_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_profit_margin_ttm",
             self.operating_profit_margin_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pretax_profit_margin_ttm",
             self.pretax_profit_margin_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "continuous_operations_profit_margin_ttm",
             self.continuous_operations_profit_margin_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_profit_margin_ttm",
             self.net_profit_margin_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "bottom_line_profit_margin_ttm",
             self.bottom_line_profit_margin_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "receivables_turnover_ttm",
             self.receivables_turnover_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "payables_turnover_ttm",
             self.payables_turnover_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "inventory_turnover_ttm",
             self.inventory_turnover_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fixed_asset_turnover_ttm",
             self.fixed_asset_turnover_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "asset_turnover_ttm",
             self.asset_turnover_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "current_ratio_ttm",
             self.current_ratio_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "quick_ratio_ttm",
             self.quick_ratio_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "solvency_ratio_ttm",
             self.solvency_ratio_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_ratio_ttm",
             self.cash_ratio_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_earnings_ratio_ttm",
             self.price_to_earnings_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_earnings_growth_ratio_ttm",
             self.price_to_earnings_growth_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "forward_price_to_earnings_growth_ratio_ttm",
             self.forward_price_to_earnings_growth_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_earnings_diluted_ratio_ttm",
             self.price_to_earnings_diluted_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_earnings_diluted_growth_ratio_ttm",
             self.price_to_earnings_diluted_growth_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_book_ratio_ttm",
             self.price_to_book_ratio_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_sales_ratio_ttm",
             self.price_to_sales_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_free_cash_flow_ratio_ttm",
             self.price_to_free_cash_flow_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_operating_cash_flow_ratio_ttm",
             self.price_to_operating_cash_flow_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_assets_ratio_ttm",
             self.debt_to_assets_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_equity_ratio_ttm",
             self.debt_to_equity_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_capital_ratio_ttm",
             self.debt_to_capital_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_debt_to_capital_ratio_ttm",
             self.long_term_debt_to_capital_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "financial_leverage_ratio_ttm",
             self.financial_leverage_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "working_capital_turnover_ratio_ttm",
             self.working_capital_turnover_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_ratio_ttm",
             self.operating_cash_flow_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_sales_ratio_ttm",
             self.operating_cash_flow_sales_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_operating_cash_flow_ratio_ttm",
             self.free_cash_flow_operating_cash_flow_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_service_coverage_ratio_ttm",
             self.debt_service_coverage_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_coverage_ratio_ttm",
             self.interest_coverage_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_operating_cash_flow_coverage_ratio_ttm",
             self.short_term_operating_cash_flow_coverage_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_coverage_ratio_ttm",
             self.operating_cash_flow_coverage_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_expenditure_coverage_ratio_ttm",
             self.capital_expenditure_coverage_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_paid_and_capex_coverage_ratio_ttm",
             self.dividend_paid_and_capex_coverage_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_payout_ratio_ttm",
             self.dividend_payout_ratio_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_yield_ttm",
             self.dividend_yield_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "enterprise_value_ttm",
             self.enterprise_value_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "revenue_per_share_ttm",
             self.revenue_per_share_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_per_share_ttm",
             self.net_income_per_share_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_debt_per_share_ttm",
             self.interest_debt_per_share_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_per_share_ttm",
             self.cash_per_share_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "book_value_per_share_ttm",
             self.book_value_per_share_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tangible_book_value_per_share_ttm",
             self.tangible_book_value_per_share_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "shareholders_equity_per_share_ttm",
             self.shareholders_equity_per_share_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_per_share_ttm",
             self.operating_cash_flow_per_share_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capex_per_share_ttm",
             self.capex_per_share_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_per_share_ttm",
             self.free_cash_flow_per_share_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_per_ebt_ttm",
             self.net_income_per_ebt_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebt_per_ebit_ttm",
             self.ebt_per_ebit_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_to_fair_value_ttm",
             self.price_to_fair_value_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_to_market_cap_ttm",
             self.debt_to_market_cap_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "effective_tax_rate_ttm",
             self.effective_tax_rate_ttm.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "enterprise_value_multiple_ttm",
             self.enterprise_value_multiple_ttm
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividend_per_share_ttm",
             self.dividend_per_share_ttm.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

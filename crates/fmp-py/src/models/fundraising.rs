@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.fundraising", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.fundraising", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CrowdfundingOfferingSearchResult {
     #[pyo3(get)]
     pub cik: String,
@@ -22,7 +22,7 @@ impl CrowdfundingOfferingSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (cik, name, date))]
+    #[pyo3(signature = (*, cik, name, date))]
     fn new(cik: String, name: String, date: Option<String>) -> PyResult<Self> {
         let date = match date {
             Some(text) => Some(
@@ -37,11 +37,19 @@ impl CrowdfundingOfferingSearchResult {
         Ok(Self { cik, name, date })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.cik.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "date",
             self.date
                 .as_ref()
                 .map(::serde_json::to_string)
@@ -52,8 +60,8 @@ impl CrowdfundingOfferingSearchResult {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -78,8 +86,8 @@ impl From<libfmp::responses::fundraising::CrowdfundingOfferingSearchResult>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.fundraising", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.fundraising", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct RegulationDOfferingSearchResult {
     #[pyo3(get)]
     pub cik: String,
@@ -95,19 +103,24 @@ impl RegulationDOfferingSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (cik, name, date))]
+    #[pyo3(signature = (*, cik, name, date))]
     fn new(cik: String, name: String, date: ::chrono::NaiveDateTime) -> Self {
         Self { cik, name, date }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.cik.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -124,8 +137,8 @@ impl From<libfmp::responses::fundraising::RegulationDOfferingSearchResult>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.fundraising", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.fundraising", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CrowdfundingOffering {
     #[pyo3(get)]
     pub cik: String,
@@ -230,7 +243,7 @@ impl CrowdfundingOffering {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (cik, company_name, date, filing_date, accepted_date, form_type, form_signification, name_of_issuer, legal_status_form, jurisdiction_organization, issuer_street, issuer_city, issuer_state_or_country, issuer_zip_code, issuer_website, intermediary_company_name, intermediary_commission_cik, intermediary_commission_file_number, compensation_amount, financial_interest, security_offered_type, security_offered_other_description, number_of_security_offered, offering_price, offering_amount, over_subscription_accepted, over_subscription_allocation_type, maximum_offering_amount, offering_deadline_date, current_number_of_employees, total_asset_most_recent_fiscal_year, total_asset_prior_fiscal_year, cash_and_cash_equivalent_most_recent_fiscal_year, cash_and_cash_equivalent_prior_fiscal_year, accounts_receivable_most_recent_fiscal_year, accounts_receivable_prior_fiscal_year, short_term_debt_most_recent_fiscal_year, short_term_debt_prior_fiscal_year, long_term_debt_most_recent_fiscal_year, long_term_debt_prior_fiscal_year, revenue_most_recent_fiscal_year, revenue_prior_fiscal_year, cost_goods_sold_most_recent_fiscal_year, cost_goods_sold_prior_fiscal_year, taxes_paid_most_recent_fiscal_year, taxes_paid_prior_fiscal_year, net_income_most_recent_fiscal_year, net_income_prior_fiscal_year))]
+    #[pyo3(signature = (*, cik, company_name, date, filing_date, accepted_date, form_type, form_signification, name_of_issuer, legal_status_form, jurisdiction_organization, issuer_street, issuer_city, issuer_state_or_country, issuer_zip_code, issuer_website, intermediary_company_name, intermediary_commission_cik, intermediary_commission_file_number, compensation_amount, financial_interest, security_offered_type, security_offered_other_description, number_of_security_offered, offering_price, offering_amount, over_subscription_accepted, over_subscription_allocation_type, maximum_offering_amount, offering_deadline_date, current_number_of_employees, total_asset_most_recent_fiscal_year, total_asset_prior_fiscal_year, cash_and_cash_equivalent_most_recent_fiscal_year, cash_and_cash_equivalent_prior_fiscal_year, accounts_receivable_most_recent_fiscal_year, accounts_receivable_prior_fiscal_year, short_term_debt_most_recent_fiscal_year, short_term_debt_prior_fiscal_year, long_term_debt_most_recent_fiscal_year, long_term_debt_prior_fiscal_year, revenue_most_recent_fiscal_year, revenue_prior_fiscal_year, cost_goods_sold_most_recent_fiscal_year, cost_goods_sold_prior_fiscal_year, taxes_paid_most_recent_fiscal_year, taxes_paid_prior_fiscal_year, net_income_most_recent_fiscal_year, net_income_prior_fiscal_year))]
     fn new(
         cik: String,
         company_name: String,
@@ -339,44 +352,112 @@ impl CrowdfundingOffering {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
-            self.form_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("form_type", self.form_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "form_signification",
             self.form_signification.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "name_of_issuer",
             self.name_of_issuer.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "legal_status_form",
             self.legal_status_form.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "jurisdiction_organization",
             self.jurisdiction_organization
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_street",
             self.issuer_street.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_city",
             self.issuer_city.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_state_or_country",
             self.issuer_state_or_country.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_zip_code",
             self.issuer_zip_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_website",
             self.issuer_website.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "intermediary_company_name",
             self.intermediary_company_name
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "intermediary_commission_cik",
             self.intermediary_commission_cik
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "intermediary_commission_file_number",
             self.intermediary_commission_file_number
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "compensation_amount",
             self.compensation_amount.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "financial_interest",
             self.financial_interest.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "security_offered_type",
             self.security_offered_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "security_offered_other_description",
             self.security_offered_other_description
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "number_of_security_offered",
             self.number_of_security_offered
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "offering_price",
             ::serde_json::to_string(&self.offering_price)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -384,74 +465,146 @@ impl CrowdfundingOffering {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "offering_amount",
             self.offering_amount.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "over_subscription_accepted",
             self.over_subscription_accepted
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "over_subscription_allocation_type",
             self.over_subscription_allocation_type
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "maximum_offering_amount",
             self.maximum_offering_amount.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "offering_deadline_date",
             self.offering_deadline_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "current_number_of_employees",
             self.current_number_of_employees
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_asset_most_recent_fiscal_year",
             self.total_asset_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_asset_prior_fiscal_year",
             self.total_asset_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_and_cash_equivalent_most_recent_fiscal_year",
             self.cash_and_cash_equivalent_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_and_cash_equivalent_prior_fiscal_year",
             self.cash_and_cash_equivalent_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accounts_receivable_most_recent_fiscal_year",
             self.accounts_receivable_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accounts_receivable_prior_fiscal_year",
             self.accounts_receivable_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_debt_most_recent_fiscal_year",
             self.short_term_debt_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_debt_prior_fiscal_year",
             self.short_term_debt_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_debt_most_recent_fiscal_year",
             self.long_term_debt_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_debt_prior_fiscal_year",
             self.long_term_debt_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "revenue_most_recent_fiscal_year",
             self.revenue_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "revenue_prior_fiscal_year",
             self.revenue_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cost_goods_sold_most_recent_fiscal_year",
             self.cost_goods_sold_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cost_goods_sold_prior_fiscal_year",
             self.cost_goods_sold_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "taxes_paid_most_recent_fiscal_year",
             self.taxes_paid_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "taxes_paid_prior_fiscal_year",
             self.taxes_paid_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_most_recent_fiscal_year",
             self.net_income_most_recent_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_prior_fiscal_year",
             self.net_income_prior_fiscal_year
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -519,8 +672,8 @@ impl From<libfmp::responses::fundraising::CrowdfundingOffering> for Crowdfunding
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.fundraising", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.fundraising", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct RegulationDOffering {
     #[pyo3(get)]
     pub cik: String,
@@ -616,7 +769,7 @@ impl RegulationDOffering {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (cik, company_name, date, filing_date, accepted_date, form_type, form_signification, entity_name, issuer_street, issuer_city, issuer_state_or_country, issuer_state_or_country_description, issuer_zip_code, issuer_phone_number, jurisdiction_of_incorporation, entity_type, incorporated_within_five_years, year_of_incorporation, related_person_first_name, related_person_last_name, related_person_street, related_person_city, related_person_state_or_country, related_person_state_or_country_description, related_person_zip_code, related_person_relationship, industry_group_type, revenue_range, federal_exemptions_exclusions, is_amendment, date_of_first_sale, duration_of_offering_is_more_than_year, securities_offered_are_of_equity_type, is_business_combination_transaction, minimum_investment_accepted, total_offering_amount, total_amount_sold, total_amount_remaining, has_non_accredited_investors, total_number_already_invested, sales_commissions, finders_fees, gross_proceeds_used))]
+    #[pyo3(signature = (*, cik, company_name, date, filing_date, accepted_date, form_type, form_signification, entity_name, issuer_street, issuer_city, issuer_state_or_country, issuer_state_or_country_description, issuer_zip_code, issuer_phone_number, jurisdiction_of_incorporation, entity_type, incorporated_within_five_years, year_of_incorporation, related_person_first_name, related_person_last_name, related_person_street, related_person_city, related_person_state_or_country, related_person_state_or_country_description, related_person_zip_code, related_person_relationship, industry_group_type, revenue_range, federal_exemptions_exclusions, is_amendment, date_of_first_sale, duration_of_offering_is_more_than_year, securities_offered_are_of_equity_type, is_business_combination_transaction, minimum_investment_accepted, total_offering_amount, total_amount_sold, total_amount_remaining, has_non_accredited_investors, total_number_already_invested, sales_commissions, finders_fees, gross_proceeds_used))]
     fn new(
         cik: String,
         company_name: String,
@@ -709,84 +862,209 @@ impl RegulationDOffering {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
-            self.form_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("form_type", self.form_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "form_signification",
             self.form_signification.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "entity_name",
             self.entity_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_street",
             self.issuer_street.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_city",
             self.issuer_city.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_state_or_country",
             self.issuer_state_or_country.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_state_or_country_description",
             self.issuer_state_or_country_description
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_zip_code",
             self.issuer_zip_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "issuer_phone_number",
             self.issuer_phone_number.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "jurisdiction_of_incorporation",
             self.jurisdiction_of_incorporation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "entity_type",
             self.entity_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "incorporated_within_five_years",
             self.incorporated_within_five_years
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "year_of_incorporation",
             self.year_of_incorporation.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_first_name",
             self.related_person_first_name
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_last_name",
             self.related_person_last_name
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_street",
             self.related_person_street.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_city",
             self.related_person_city.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_state_or_country",
             self.related_person_state_or_country
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_state_or_country_description",
             self.related_person_state_or_country_description
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_zip_code",
             self.related_person_zip_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "related_person_relationship",
             self.related_person_relationship
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "industry_group_type",
             self.industry_group_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "revenue_range",
             self.revenue_range.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "federal_exemptions_exclusions",
             self.federal_exemptions_exclusions
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "is_amendment",
             self.is_amendment.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "date_of_first_sale",
             self.date_of_first_sale.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "duration_of_offering_is_more_than_year",
             self.duration_of_offering_is_more_than_year
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "securities_offered_are_of_equity_type",
             self.securities_offered_are_of_equity_type
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "is_business_combination_transaction",
             self.is_business_combination_transaction
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "minimum_investment_accepted",
             self.minimum_investment_accepted
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_offering_amount",
             self.total_offering_amount.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_amount_sold",
             self.total_amount_sold.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_amount_remaining",
             self.total_amount_remaining.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "has_non_accredited_investors",
             self.has_non_accredited_investors
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_number_already_invested",
             self.total_number_already_invested
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "sales_commissions",
             self.sales_commissions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "finders_fees",
             self.finders_fees.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "gross_proceeds_used",
             self.gross_proceeds_used.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

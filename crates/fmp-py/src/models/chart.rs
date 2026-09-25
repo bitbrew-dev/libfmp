@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.chart", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.chart", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct StockChartLightBar {
     #[pyo3(get)]
     pub symbol: String,
@@ -25,7 +25,7 @@ impl StockChartLightBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, price, volume))]
+    #[pyo3(signature = (*, symbol, date, price, volume))]
     fn new(symbol: String, date: ::chrono::NaiveDate, price: f64, volume: f64) -> Self {
         Self {
             symbol,
@@ -35,15 +35,20 @@ impl StockChartLightBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.price.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("price", self.price.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -59,8 +64,8 @@ impl From<libfmp::responses::chart::StockChartLightBar> for StockChartLightBar {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.chart", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.chart", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct StockChartFullBar {
     #[pyo3(get)]
     pub symbol: String,
@@ -90,7 +95,7 @@ impl StockChartFullBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, open, high, low, close, volume, change, change_percent, vwap))]
+    #[pyo3(signature = (*, symbol, date, open, high, low, close, volume, change, change_percent, vwap))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -117,21 +122,29 @@ impl StockChartFullBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.change.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("change", self.change.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "change_percent",
             self.change_percent.clone().into_bound_py_any(py)?,
-            self.vwap.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("vwap", self.vwap.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -153,8 +166,8 @@ impl From<libfmp::responses::chart::StockChartFullBar> for StockChartFullBar {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.chart", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.chart", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct StockChartAdjustedBar {
     #[pyo3(get)]
     pub symbol: String,
@@ -178,7 +191,7 @@ impl StockChartAdjustedBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, adj_open, adj_high, adj_low, adj_close, volume))]
+    #[pyo3(signature = (*, symbol, date, adj_open, adj_high, adj_low, adj_close, volume))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -199,18 +212,23 @@ impl StockChartAdjustedBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.adj_open.clone().into_bound_py_any(py)?,
-            self.adj_high.clone().into_bound_py_any(py)?,
-            self.adj_low.clone().into_bound_py_any(py)?,
-            self.adj_close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("adj_open", self.adj_open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("adj_high", self.adj_high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("adj_low", self.adj_low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("adj_close", self.adj_close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -229,8 +247,8 @@ impl From<libfmp::responses::chart::StockChartAdjustedBar> for StockChartAdjuste
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.chart", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.chart", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct StockChartIntradayBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -252,7 +270,7 @@ impl StockChartIntradayBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, low, high, close, volume))]
+    #[pyo3(signature = (*, date, open, low, high, close, volume))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -271,17 +289,22 @@ impl StockChartIntradayBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

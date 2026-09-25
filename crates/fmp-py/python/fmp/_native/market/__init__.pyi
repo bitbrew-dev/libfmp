@@ -16,6 +16,8 @@ __all__ = [
 
 @typing.final
 class IndustryPe:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -24,18 +26,22 @@ class IndustryPe:
     def exchange(self) -> builtins.str: ...
     @property
     def pe(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         industry: builtins.str,
         exchange: builtins.str,
         pe: builtins.float,
     ) -> IndustryPe: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class IndustryPerformance:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -44,18 +50,22 @@ class IndustryPerformance:
     def exchange(self) -> builtins.str: ...
     @property
     def average_change(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         industry: builtins.str,
         exchange: builtins.str,
         average_change: builtins.float,
     ) -> IndustryPerformance: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class MarketMover:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -68,8 +78,10 @@ class MarketMover:
     def changes_percentage(self) -> builtins.float: ...
     @property
     def exchange(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         price: builtins.float,
         name: builtins.str,
@@ -77,7 +89,7 @@ class MarketMover:
         changes_percentage: builtins.float,
         exchange: builtins.str,
     ) -> MarketMover: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -196,6 +208,8 @@ class MarketNamespace:
 
 @typing.final
 class SectorPe:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -204,18 +218,22 @@ class SectorPe:
     def exchange(self) -> builtins.str: ...
     @property
     def pe(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         sector: builtins.str,
         exchange: builtins.str,
         pe: builtins.float,
     ) -> SectorPe: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class SectorPerformance:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -224,11 +242,13 @@ class SectorPerformance:
     def exchange(self) -> builtins.str: ...
     @property
     def average_change(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         sector: builtins.str,
         exchange: builtins.str,
         average_change: builtins.float,
     ) -> SectorPerformance: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

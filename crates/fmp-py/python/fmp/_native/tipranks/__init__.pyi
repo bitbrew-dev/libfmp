@@ -19,6 +19,8 @@ __all__ = [
 
 @typing.final
 class TipRanksAnalystActionCounts:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def initiated(self) -> builtins.int: ...
     @property
@@ -31,8 +33,10 @@ class TipRanksAnalystActionCounts:
     def reiterated(self) -> builtins.int: ...
     @property
     def resumed(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         initiated: builtins.int,
         maintained: builtins.int,
         upgraded: builtins.int,
@@ -40,11 +44,13 @@ class TipRanksAnalystActionCounts:
         reiterated: builtins.int,
         resumed: builtins.int,
     ) -> TipRanksAnalystActionCounts: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TipRanksAnalystProfile:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def expert_uid(self) -> builtins.str: ...
     @property
@@ -63,8 +69,10 @@ class TipRanksAnalystProfile:
     def success_rate(self) -> typing.Any: ...
     @property
     def excess_return(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         expert_uid: builtins.str,
         analyst_name: builtins.str,
         firm_name: builtins.str,
@@ -75,11 +83,13 @@ class TipRanksAnalystProfile:
         analyst_rank: builtins.int,
         num_of_stars: builtins.int,
     ) -> TipRanksAnalystProfile: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TipRanksAnalystSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def expert_uid(self) -> builtins.str: ...
     @property
@@ -110,8 +120,10 @@ class TipRanksAnalystSummary:
     def top_return(self) -> typing.Any: ...
     @property
     def worst_return(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         expert_uid: builtins.str,
         from_: datetime.date,
         to: datetime.date,
@@ -128,11 +140,13 @@ class TipRanksAnalystSummary:
         top_return: builtins.str,
         worst_return: builtins.str,
     ) -> TipRanksAnalystSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TipRanksFirmSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def firm_name(self) -> builtins.str: ...
     @property
@@ -163,8 +177,10 @@ class TipRanksFirmSummary:
     def top_return(self) -> typing.Any: ...
     @property
     def worst_return(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         firm_name: builtins.str,
         from_: datetime.date,
         to: datetime.date,
@@ -181,11 +197,13 @@ class TipRanksFirmSummary:
         top_return: builtins.str,
         worst_return: builtins.str,
     ) -> TipRanksFirmSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TipRanksPointInTimeRating:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -218,8 +236,10 @@ class TipRanksPointInTimeRating:
     def price_target(self) -> typing.Any: ...
     @property
     def stock_return(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: builtins.str,
         expert_uid: builtins.str,
@@ -237,11 +257,13 @@ class TipRanksPointInTimeRating:
         stock_return: typing.Optional[builtins.str],
         beat_target: typing.Optional[builtins.bool],
     ) -> TipRanksPointInTimeRating: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TipRanksRatingSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -268,8 +290,10 @@ class TipRanksRatingSearchResult:
     def url(self) -> builtins.str: ...
     @property
     def price_target(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: builtins.str,
         recommendation_date: datetime.date,
@@ -284,25 +308,30 @@ class TipRanksRatingSearchResult:
         price_target_currency: builtins.str,
         url: builtins.str,
     ) -> TipRanksRatingSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TipRanksRecommendationCounts:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def buy(self) -> builtins.int: ...
     @property
     def hold(self) -> builtins.int: ...
     @property
     def sell(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, buy: builtins.int, hold: builtins.int, sell: builtins.int
+        cls, *, buy: builtins.int, hold: builtins.int, sell: builtins.int
     ) -> TipRanksRecommendationCounts: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TipRanksSymbolSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -333,8 +362,10 @@ class TipRanksSymbolSummary:
     def top_return(self) -> typing.Any: ...
     @property
     def worst_return(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         from_: datetime.date,
         to: datetime.date,
@@ -351,7 +382,7 @@ class TipRanksSymbolSummary:
         top_return: builtins.str,
         worst_return: builtins.str,
     ) -> TipRanksSymbolSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

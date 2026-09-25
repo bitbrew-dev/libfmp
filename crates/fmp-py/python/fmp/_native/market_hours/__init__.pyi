@@ -13,6 +13,8 @@ __all__ = [
 
 @typing.final
 class ExchangeHoliday:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def exchange(self) -> builtins.str: ...
     @property
@@ -25,8 +27,10 @@ class ExchangeHoliday:
     def adj_open_time(self) -> typing.Any: ...
     @property
     def adj_close_time(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         exchange: builtins.str,
         date: datetime.date,
         name: builtins.str,
@@ -34,11 +38,13 @@ class ExchangeHoliday:
         adj_open_time: typing.Optional[builtins.str],
         adj_close_time: typing.Optional[builtins.str],
     ) -> ExchangeHoliday: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class ExchangeMarketHours:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def exchange(self) -> builtins.str: ...
     @property
@@ -51,8 +57,10 @@ class ExchangeMarketHours:
     def timezone(self) -> builtins.str: ...
     @property
     def is_market_open(self) -> builtins.bool: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         exchange: builtins.str,
         name: builtins.str,
         opening_hour: builtins.str,
@@ -60,7 +68,7 @@ class ExchangeMarketHours:
         timezone: builtins.str,
         is_market_open: builtins.bool,
     ) -> ExchangeMarketHours: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

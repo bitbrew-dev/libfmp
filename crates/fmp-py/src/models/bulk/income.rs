@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.bulk.income", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.bulk.income", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct BulkIncomeStatement {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -95,7 +95,7 @@ impl BulkIncomeStatement {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, revenue, cost_of_revenue, gross_profit, research_and_development_expenses, general_and_administrative_expenses, selling_and_marketing_expenses, selling_general_and_administrative_expenses, other_expenses, operating_expenses, cost_and_expenses, net_interest_income, interest_income, interest_expense, depreciation_and_amortization, ebitda, ebit, non_operating_income_excluding_interest, operating_income, total_other_income_expenses_net, income_before_tax, income_tax_expense, net_income_from_continuing_operations, net_income_from_discontinued_operations, other_adjustments_to_net_income, net_income, net_income_deductions, bottom_line_net_income, eps, eps_diluted, weighted_average_shs_out, weighted_average_shs_out_dil))]
+    #[pyo3(signature = (*, date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, revenue, cost_of_revenue, gross_profit, research_and_development_expenses, general_and_administrative_expenses, selling_and_marketing_expenses, selling_general_and_administrative_expenses, other_expenses, operating_expenses, cost_and_expenses, net_interest_income, interest_income, interest_expense, depreciation_and_amortization, ebitda, ebit, non_operating_income_excluding_interest, operating_income, total_other_income_expenses_net, income_before_tax, income_tax_expense, net_income_from_continuing_operations, net_income_from_discontinued_operations, other_adjustments_to_net_income, net_income, net_income_deductions, bottom_line_net_income, eps, eps_diluted, weighted_average_shs_out, weighted_average_shs_out_dil))]
     fn new(
         date: ::chrono::NaiveDate,
         symbol: String,
@@ -180,74 +180,169 @@ impl BulkIncomeStatement {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
-            self.revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("revenue", self.revenue.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "cost_of_revenue",
             self.cost_of_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "gross_profit",
             self.gross_profit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "research_and_development_expenses",
             self.research_and_development_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "general_and_administrative_expenses",
             self.general_and_administrative_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "selling_and_marketing_expenses",
             self.selling_and_marketing_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "selling_general_and_administrative_expenses",
             self.selling_general_and_administrative_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_expenses",
             self.other_expenses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_expenses",
             self.operating_expenses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cost_and_expenses",
             self.cost_and_expenses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_interest_income",
             self.net_interest_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_income",
             self.interest_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_expense",
             self.interest_expense.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "depreciation_and_amortization",
             self.depreciation_and_amortization
                 .clone()
                 .into_bound_py_any(py)?,
-            self.ebitda.clone().into_bound_py_any(py)?,
-            self.ebit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ebitda", self.ebitda.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("ebit", self.ebit.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "non_operating_income_excluding_interest",
             self.non_operating_income_excluding_interest
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_income",
             self.operating_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_other_income_expenses_net",
             self.total_other_income_expenses_net
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "income_before_tax",
             self.income_before_tax.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "income_tax_expense",
             self.income_tax_expense.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_from_continuing_operations",
             self.net_income_from_continuing_operations
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_from_discontinued_operations",
             self.net_income_from_discontinued_operations
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_adjustments_to_net_income",
             self.other_adjustments_to_net_income
                 .clone()
                 .into_bound_py_any(py)?,
-            self.net_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("net_income", self.net_income.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "net_income_deductions",
             self.net_income_deductions.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "bottom_line_net_income",
             self.bottom_line_net_income.clone().into_bound_py_any(py)?,
-            self.eps.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("eps", self.eps.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "eps_diluted",
             self.eps_diluted.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "weighted_average_shs_out",
             self.weighted_average_shs_out
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "weighted_average_shs_out_dil",
             self.weighted_average_shs_out_dil
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -308,8 +403,8 @@ impl From<libfmp::responses::bulk::BulkIncomeStatement> for BulkIncomeStatement 
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.bulk.income", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.bulk.income", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct BulkIncomeStatementGrowth {
     #[pyo3(get)]
     pub symbol: String,
@@ -387,7 +482,7 @@ impl BulkIncomeStatementGrowth {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, fiscal_year, period, reported_currency, growth_revenue, growth_cost_of_revenue, growth_gross_profit, growth_gross_profit_ratio, growth_research_and_development_expenses, growth_general_and_administrative_expenses, growth_selling_and_marketing_expenses, growth_other_expenses, growth_operating_expenses, growth_cost_and_expenses, growth_interest_income, growth_interest_expense, growth_depreciation_and_amortization, growth_ebitda, growth_operating_income, growth_income_before_tax, growth_income_tax_expense, growth_net_income, growth_eps, growth_eps_diluted, growth_weighted_average_shs_out, growth_weighted_average_shs_out_dil, growth_ebit, growth_non_operating_income_excluding_interest, growth_net_interest_income, growth_total_other_income_expenses_net, growth_net_income_from_continuing_operations, growth_other_adjustments_to_net_income, growth_net_income_deductions))]
+    #[pyo3(signature = (*, symbol, date, fiscal_year, period, reported_currency, growth_revenue, growth_cost_of_revenue, growth_gross_profit, growth_gross_profit_ratio, growth_research_and_development_expenses, growth_general_and_administrative_expenses, growth_selling_and_marketing_expenses, growth_other_expenses, growth_operating_expenses, growth_cost_and_expenses, growth_interest_income, growth_interest_expense, growth_depreciation_and_amortization, growth_ebitda, growth_operating_income, growth_income_before_tax, growth_income_tax_expense, growth_net_income, growth_eps, growth_eps_diluted, growth_weighted_average_shs_out, growth_weighted_average_shs_out_dil, growth_ebit, growth_non_operating_income_excluding_interest, growth_net_interest_income, growth_total_other_income_expenses_net, growth_net_income_from_continuing_operations, growth_other_adjustments_to_net_income, growth_net_income_deductions))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -462,79 +557,174 @@ impl BulkIncomeStatementGrowth {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_revenue",
             self.growth_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_cost_of_revenue",
             self.growth_cost_of_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_gross_profit",
             self.growth_gross_profit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_gross_profit_ratio",
             self.growth_gross_profit_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_research_and_development_expenses",
             self.growth_research_and_development_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_general_and_administrative_expenses",
             self.growth_general_and_administrative_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_selling_and_marketing_expenses",
             self.growth_selling_and_marketing_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_expenses",
             self.growth_other_expenses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_operating_expenses",
             self.growth_operating_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_cost_and_expenses",
             self.growth_cost_and_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_interest_income",
             self.growth_interest_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_interest_expense",
             self.growth_interest_expense.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_depreciation_and_amortization",
             self.growth_depreciation_and_amortization
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_ebitda",
             self.growth_ebitda.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_operating_income",
             self.growth_operating_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_income_before_tax",
             self.growth_income_before_tax
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_income_tax_expense",
             self.growth_income_tax_expense
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_income",
             self.growth_net_income.clone().into_bound_py_any(py)?,
-            self.growth_eps.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("growth_eps", self.growth_eps.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "growth_eps_diluted",
             self.growth_eps_diluted.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_weighted_average_shs_out",
             self.growth_weighted_average_shs_out
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_weighted_average_shs_out_dil",
             self.growth_weighted_average_shs_out_dil
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_ebit",
             self.growth_ebit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_non_operating_income_excluding_interest",
             self.growth_non_operating_income_excluding_interest
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_interest_income",
             self.growth_net_interest_income
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_total_other_income_expenses_net",
             self.growth_total_other_income_expenses_net
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_income_from_continuing_operations",
             self.growth_net_income_from_continuing_operations
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_adjustments_to_net_income",
             self.growth_other_adjustments_to_net_income
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_income_deductions",
             self.growth_net_income_deductions
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

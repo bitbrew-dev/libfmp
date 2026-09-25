@@ -15,6 +15,8 @@ __all__ = [
 
 @typing.final
 class AftermarketQuote:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -29,8 +31,10 @@ class AftermarketQuote:
     def volume(self) -> builtins.float: ...
     @property
     def timestamp(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         bid_size: builtins.float,
         bid_price: builtins.float,
@@ -39,11 +43,13 @@ class AftermarketQuote:
         volume: builtins.float,
         timestamp: builtins.int,
     ) -> AftermarketQuote: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class AftermarketTrade:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -52,18 +58,22 @@ class AftermarketTrade:
     def trade_size(self) -> builtins.float: ...
     @property
     def timestamp(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         price: builtins.float,
         trade_size: builtins.float,
         timestamp: builtins.int,
     ) -> AftermarketTrade: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class Quote:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -98,8 +108,10 @@ class Quote:
     def previous_close(self) -> builtins.float: ...
     @property
     def timestamp(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         price: builtins.float,
@@ -118,7 +130,7 @@ class Quote:
         previous_close: builtins.float,
         timestamp: builtins.int,
     ) -> Quote: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -224,6 +236,8 @@ class QuoteNamespace:
 
 @typing.final
 class QuoteShort:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -232,18 +246,22 @@ class QuoteShort:
     def change(self) -> builtins.float: ...
     @property
     def volume(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         price: builtins.float,
         change: builtins.float,
         volume: builtins.float,
     ) -> QuoteShort: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockPriceChange:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -268,8 +286,10 @@ class StockPriceChange:
     def ten_years(self) -> builtins.float: ...
     @property
     def max(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         one_day: builtins.float,
         five_days: builtins.float,
@@ -283,4 +303,4 @@ class StockPriceChange:
         ten_years: builtins.float,
         max: builtins.float,
     ) -> StockPriceChange: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

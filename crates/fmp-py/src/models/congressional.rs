@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.congressional", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalTrade {
     #[pyo3(get)]
     pub symbol: String,
@@ -49,7 +49,7 @@ impl CongressionalTrade {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, member_id, disclosure_date, transaction_date, first_name, last_name, office, district, owner, asset_description, asset_type, transaction_type, amount, capital_gains_over_200_usd, comment, link))]
+    #[pyo3(signature = (*, symbol, member_id, disclosure_date, transaction_date, first_name, last_name, office, district, owner, asset_description, asset_type, transaction_type, amount, capital_gains_over_200_usd, comment, link))]
     fn new(
         symbol: String,
         member_id: String,
@@ -88,29 +88,49 @@ impl CongressionalTrade {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.member_id.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("member_id", self.member_id.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "disclosure_date",
             self.disclosure_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "transaction_date",
             self.transaction_date.clone().into_bound_py_any(py)?,
-            self.first_name.clone().into_bound_py_any(py)?,
-            self.last_name.clone().into_bound_py_any(py)?,
-            self.office.clone().into_bound_py_any(py)?,
-            self.district.clone().into_bound_py_any(py)?,
-            self.owner.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("first_name", self.first_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("last_name", self.last_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("office", self.office.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("district", self.district.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("owner", self.owner.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "asset_description",
             self.asset_description.clone().into_bound_py_any(py)?,
-            self.asset_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("asset_type", self.asset_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "transaction_type",
             self.transaction_type.clone().into_bound_py_any(py)?,
-            self.amount.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("amount", self.amount.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "capital_gains_over_200_usd",
             self.capital_gains_over_200_usd
                 .clone()
                 .into_bound_py_any(py)?,
-            self.comment.clone().into_bound_py_any(py)?,
-            self.link.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("comment", self.comment.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -140,8 +160,8 @@ impl From<libfmp::responses::congressional::CongressionalTrade> for Congressiona
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.congressional", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalMemberProfile {
     #[pyo3(get)]
     pub member_id: String,
@@ -171,7 +191,7 @@ impl CongressionalMemberProfile {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (member_id, first_name, last_name, birth_date, latest_party, latest_state, latest_position, image, active, years_active))]
+    #[pyo3(signature = (*, member_id, first_name, last_name, birth_date, latest_party, latest_state, latest_position, image, active, years_active))]
     fn new(
         member_id: String,
         first_name: String,
@@ -198,21 +218,38 @@ impl CongressionalMemberProfile {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.member_id.clone().into_bound_py_any(py)?,
-            self.first_name.clone().into_bound_py_any(py)?,
-            self.last_name.clone().into_bound_py_any(py)?,
-            self.birth_date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("member_id", self.member_id.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("first_name", self.first_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("last_name", self.last_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("birth_date", self.birth_date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "latest_party",
             self.latest_party.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "latest_state",
             self.latest_state.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "latest_position",
             self.latest_position.clone().into_bound_py_any(py)?,
-            self.image.clone().into_bound_py_any(py)?,
-            self.active.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("image", self.image.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("active", self.active.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "years_active",
             self.years_active.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -236,8 +273,8 @@ impl From<libfmp::responses::congressional::CongressionalMemberProfile>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.congressional", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalMemberPosition {
     #[pyo3(get)]
     pub member_id: String,
@@ -263,7 +300,7 @@ impl CongressionalMemberPosition {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (member_id, congress_number, start_date, end_date, party, position, state, years_in_term))]
+    #[pyo3(signature = (*, member_id, congress_number, start_date, end_date, party, position, state, years_in_term))]
     fn new(
         member_id: String,
         congress_number: u32,
@@ -286,19 +323,30 @@ impl CongressionalMemberPosition {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.member_id.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("member_id", self.member_id.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "congress_number",
             self.congress_number.clone().into_bound_py_any(py)?,
-            self.start_date.clone().into_bound_py_any(py)?,
-            self.end_date.clone().into_bound_py_any(py)?,
-            self.party.clone().into_bound_py_any(py)?,
-            self.position.clone().into_bound_py_any(py)?,
-            self.state.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("start_date", self.start_date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("end_date", self.end_date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("party", self.party.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("position", self.position.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("state", self.state.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "years_in_term",
             self.years_in_term.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -320,8 +368,8 @@ impl From<libfmp::responses::congressional::CongressionalMemberPosition>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.congressional", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalNetWorthRange {
     #[pyo3(get)]
     pub min: i64,
@@ -335,18 +383,23 @@ impl CongressionalNetWorthRange {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (min, max))]
+    #[pyo3(signature = (*, min, max))]
     fn new(min: i64, max: i64) -> Self {
         Self { min, max }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.min.clone().into_bound_py_any(py)?,
-            self.max.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("min", self.min.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("max", self.max.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -362,8 +415,8 @@ impl From<libfmp::responses::congressional::CongressionalNetWorthRange>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.congressional", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalDebtDetails {
     #[pyo3(get)]
     pub date_incurred: String,
@@ -375,16 +428,25 @@ impl CongressionalDebtDetails {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date_incurred))]
+    #[pyo3(signature = (*, date_incurred))]
     fn new(date_incurred: String) -> Self {
         Self { date_incurred }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> =
-            vec![self.date_incurred.clone().into_bound_py_any(py)?];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item(
+            "date_incurred",
+            self.date_incurred.clone().into_bound_py_any(py)?,
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -397,8 +459,8 @@ impl From<libfmp::responses::congressional::CongressionalDebtDetails> for Congre
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.congressional", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalMemberNetWorth {
     #[pyo3(get)]
     pub member_id: String,
@@ -441,7 +503,7 @@ impl CongressionalMemberNetWorth {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (member_id, form_type, year, filing_date, section, category, name, asset_type, income_type, owner, comment, debt_details, value_range, value, income_range, income, link))]
+    #[pyo3(signature = (*, member_id, form_type, year, filing_date, section, category, name, asset_type, income_type, owner, comment, debt_details, value_range, value, income_range, income, link))]
     fn new(
         member_id: String,
         form_type: String,
@@ -492,24 +554,47 @@ impl CongressionalMemberNetWorth {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.member_id.clone().into_bound_py_any(py)?,
-            self.form_type.clone().into_bound_py_any(py)?,
-            self.year.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("member_id", self.member_id.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("form_type", self.form_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
-            self.section.clone().into_bound_py_any(py)?,
-            self.category.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.asset_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("section", self.section.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("category", self.category.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("asset_type", self.asset_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "income_type",
             self.income_type.clone().into_bound_py_any(py)?,
-            self.owner.clone().into_bound_py_any(py)?,
-            self.comment.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("owner", self.owner.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("comment", self.comment.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "debt_details",
             self.debt_details.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "value_range",
             self.value_range.clone().into_bound_py_any(py)?,
-            self.value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("value", self.value.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "income_range",
             self.income_range.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "income",
             self.income
                 .as_ref()
                 .map(::serde_json::to_string)
@@ -520,9 +605,9 @@ impl CongressionalMemberNetWorth {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-            self.link.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -567,8 +652,8 @@ impl From<libfmp::responses::congressional::CongressionalMemberNetWorth>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.congressional", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalMemberNetWorthAggregate {
     #[pyo3(get)]
     pub member_id: String,
@@ -606,7 +691,7 @@ impl CongressionalMemberNetWorthAggregate {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (member_id, year, total, real_estate_liabilities, cash_and_cash_equivalents, business_and_self_employment, real_estate, ownership_interest, stock, options, revolving_and_credit_lines, asset_backed_securities, business_liabilities, mutual_funds_and_etfs))]
+    #[pyo3(signature = (*, member_id, year, total, real_estate_liabilities, cash_and_cash_equivalents, business_and_self_employment, real_estate, ownership_interest, stock, options, revolving_and_credit_lines, asset_backed_securities, business_liabilities, mutual_funds_and_etfs))]
     fn new(
         member_id: String,
         year: u32,
@@ -641,31 +726,63 @@ impl CongressionalMemberNetWorthAggregate {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.member_id.clone().into_bound_py_any(py)?,
-            self.year.clone().into_bound_py_any(py)?,
-            self.total.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("member_id", self.member_id.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("total", self.total.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "real_estate_liabilities",
             self.real_estate_liabilities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_and_cash_equivalents",
             self.cash_and_cash_equivalents
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "business_and_self_employment",
             self.business_and_self_employment
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "real_estate",
             self.real_estate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ownership_interest",
             self.ownership_interest.clone().into_bound_py_any(py)?,
-            self.stock.clone().into_bound_py_any(py)?,
-            self.options.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("stock", self.stock.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("options", self.options.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "revolving_and_credit_lines",
             self.revolving_and_credit_lines
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "asset_backed_securities",
             self.asset_backed_securities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "business_liabilities",
             self.business_liabilities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "mutual_funds_and_etfs",
             self.mutual_funds_and_etfs.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

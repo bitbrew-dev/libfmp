@@ -2,12 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.commitment_of_traders", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.commitment_of_traders",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CotReportListing {
     #[pyo3(get)]
     pub symbol: String,
@@ -21,18 +26,23 @@ impl CotReportListing {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name))]
+    #[pyo3(signature = (*, symbol, name))]
     fn new(symbol: String, name: String) -> Self {
         Self { symbol, name }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -46,8 +56,13 @@ impl From<libfmp::responses::commitment_of_traders::CotReportListing> for CotRep
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.commitment_of_traders", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.commitment_of_traders",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CotAnalysis {
     #[pyo3(get)]
     pub symbol: String,
@@ -89,7 +104,7 @@ impl CotAnalysis {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, name, sector, exchange, current_long_market_situation, current_short_market_situation, market_situation, previous_long_market_situation, previous_short_market_situation, previous_market_situation, net_position, previous_net_position, change_in_net_position, market_sentiment, reversal_trend))]
+    #[pyo3(signature = (*, symbol, date, name, sector, exchange, current_long_market_situation, current_short_market_situation, market_situation, previous_long_market_situation, previous_short_market_situation, previous_market_situation, net_position, previous_net_position, change_in_net_position, market_sentiment, reversal_trend))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDateTime,
@@ -128,37 +143,75 @@ impl CotAnalysis {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "current_long_market_situation",
             self.current_long_market_situation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "current_short_market_situation",
             self.current_short_market_situation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_situation",
             self.market_situation.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "previous_long_market_situation",
             self.previous_long_market_situation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "previous_short_market_situation",
             self.previous_short_market_situation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "previous_market_situation",
             self.previous_market_situation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_position",
             self.net_position.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "previous_net_position",
             self.previous_net_position.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_net_position",
             self.change_in_net_position.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_sentiment",
             self.market_sentiment.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "reversal_trend",
             self.reversal_trend.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -186,8 +239,13 @@ impl From<libfmp::responses::commitment_of_traders::CotAnalysis> for CotAnalysis
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.commitment_of_traders", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.commitment_of_traders",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CotReport {
     #[pyo3(get)]
     pub symbol: String,
@@ -399,7 +457,7 @@ impl CotReport {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, name, sector, market_and_exchange_names, cftc_contract_market_code, cftc_market_code, cftc_region_code, cftc_commodity_code, open_interest_all, noncomm_positions_long_all, noncomm_positions_short_all, noncomm_positions_spread_all, comm_positions_long_all, comm_positions_short_all, tot_rept_positions_long_all, tot_rept_positions_short_all, nonrept_positions_long_all, nonrept_positions_short_all, open_interest_old, noncomm_positions_long_old, noncomm_positions_short_old, noncomm_positions_spread_old, comm_positions_long_old, comm_positions_short_old, tot_rept_positions_long_old, tot_rept_positions_short_old, nonrept_positions_long_old, nonrept_positions_short_old, open_interest_other, noncomm_positions_long_other, noncomm_positions_short_other, noncomm_positions_spread_other, comm_positions_long_other, comm_positions_short_other, tot_rept_positions_long_other, tot_rept_positions_short_other, nonrept_positions_long_other, nonrept_positions_short_other, change_in_open_interest_all, change_in_noncomm_long_all, change_in_noncomm_short_all, change_in_noncomm_spread_all, change_in_comm_long_all, change_in_comm_short_all, change_in_tot_rept_long_all, change_in_tot_rept_short_all, change_in_nonrept_long_all, change_in_nonrept_short_all, pct_of_open_interest_all, pct_of_oi_noncomm_long_all, pct_of_oi_noncomm_short_all, pct_of_oi_noncomm_spread_all, pct_of_oi_comm_long_all, pct_of_oi_comm_short_all, pct_of_oi_tot_rept_long_all, pct_of_oi_tot_rept_short_all, pct_of_oi_nonrept_long_all, pct_of_oi_nonrept_short_all, pct_of_open_interest_old, pct_of_oi_noncomm_long_old, pct_of_oi_noncomm_short_old, pct_of_oi_noncomm_spread_old, pct_of_oi_comm_long_old, pct_of_oi_comm_short_old, pct_of_oi_tot_rept_long_old, pct_of_oi_tot_rept_short_old, pct_of_oi_nonrept_long_old, pct_of_oi_nonrept_short_old, pct_of_open_interest_other, pct_of_oi_noncomm_long_other, pct_of_oi_noncomm_short_other, pct_of_oi_noncomm_spread_other, pct_of_oi_comm_long_other, pct_of_oi_comm_short_other, pct_of_oi_tot_rept_long_other, pct_of_oi_tot_rept_short_other, pct_of_oi_nonrept_long_other, pct_of_oi_nonrept_short_other, traders_tot_all, traders_noncomm_long_all, traders_noncomm_short_all, traders_noncomm_spread_all, traders_comm_long_all, traders_comm_short_all, traders_tot_rept_long_all, traders_tot_rept_short_all, traders_tot_old, traders_noncomm_long_old, traders_noncomm_short_old, traders_noncomm_spread_old, traders_comm_long_old, traders_comm_short_old, traders_tot_rept_long_old, traders_tot_rept_short_old, traders_tot_other, traders_noncomm_long_other, traders_noncomm_short_other, traders_noncomm_spread_other, traders_comm_long_other, traders_comm_short_other, traders_tot_rept_long_other, traders_tot_rept_short_other, conc_gross_le4_tdr_long_all, conc_gross_le4_tdr_short_all, conc_gross_le8_tdr_long_all, conc_gross_le8_tdr_short_all, conc_net_le4_tdr_long_all, conc_net_le4_tdr_short_all, conc_net_le8_tdr_long_all, conc_net_le8_tdr_short_all, conc_gross_le4_tdr_long_old, conc_gross_le4_tdr_short_old, conc_gross_le8_tdr_long_old, conc_gross_le8_tdr_short_old, conc_net_le4_tdr_long_old, conc_net_le4_tdr_short_old, conc_net_le8_tdr_long_old, conc_net_le8_tdr_short_old, conc_gross_le4_tdr_long_other, conc_gross_le4_tdr_short_other, conc_gross_le8_tdr_long_other, conc_gross_le8_tdr_short_other, conc_net_le4_tdr_long_other, conc_net_le4_tdr_short_other, conc_net_le8_tdr_long_other, conc_net_le8_tdr_short_other, contract_units))]
+    #[pyo3(signature = (*, symbol, date, name, sector, market_and_exchange_names, cftc_contract_market_code, cftc_market_code, cftc_region_code, cftc_commodity_code, open_interest_all, noncomm_positions_long_all, noncomm_positions_short_all, noncomm_positions_spread_all, comm_positions_long_all, comm_positions_short_all, tot_rept_positions_long_all, tot_rept_positions_short_all, nonrept_positions_long_all, nonrept_positions_short_all, open_interest_old, noncomm_positions_long_old, noncomm_positions_short_old, noncomm_positions_spread_old, comm_positions_long_old, comm_positions_short_old, tot_rept_positions_long_old, tot_rept_positions_short_old, nonrept_positions_long_old, nonrept_positions_short_old, open_interest_other, noncomm_positions_long_other, noncomm_positions_short_other, noncomm_positions_spread_other, comm_positions_long_other, comm_positions_short_other, tot_rept_positions_long_other, tot_rept_positions_short_other, nonrept_positions_long_other, nonrept_positions_short_other, change_in_open_interest_all, change_in_noncomm_long_all, change_in_noncomm_short_all, change_in_noncomm_spread_all, change_in_comm_long_all, change_in_comm_short_all, change_in_tot_rept_long_all, change_in_tot_rept_short_all, change_in_nonrept_long_all, change_in_nonrept_short_all, pct_of_open_interest_all, pct_of_oi_noncomm_long_all, pct_of_oi_noncomm_short_all, pct_of_oi_noncomm_spread_all, pct_of_oi_comm_long_all, pct_of_oi_comm_short_all, pct_of_oi_tot_rept_long_all, pct_of_oi_tot_rept_short_all, pct_of_oi_nonrept_long_all, pct_of_oi_nonrept_short_all, pct_of_open_interest_old, pct_of_oi_noncomm_long_old, pct_of_oi_noncomm_short_old, pct_of_oi_noncomm_spread_old, pct_of_oi_comm_long_old, pct_of_oi_comm_short_old, pct_of_oi_tot_rept_long_old, pct_of_oi_tot_rept_short_old, pct_of_oi_nonrept_long_old, pct_of_oi_nonrept_short_old, pct_of_open_interest_other, pct_of_oi_noncomm_long_other, pct_of_oi_noncomm_short_other, pct_of_oi_noncomm_spread_other, pct_of_oi_comm_long_other, pct_of_oi_comm_short_other, pct_of_oi_tot_rept_long_other, pct_of_oi_tot_rept_short_other, pct_of_oi_nonrept_long_other, pct_of_oi_nonrept_short_other, traders_tot_all, traders_noncomm_long_all, traders_noncomm_short_all, traders_noncomm_spread_all, traders_comm_long_all, traders_comm_short_all, traders_tot_rept_long_all, traders_tot_rept_short_all, traders_tot_old, traders_noncomm_long_old, traders_noncomm_short_old, traders_noncomm_spread_old, traders_comm_long_old, traders_comm_short_old, traders_tot_rept_long_old, traders_tot_rept_short_old, traders_tot_other, traders_noncomm_long_other, traders_noncomm_short_other, traders_noncomm_spread_other, traders_comm_long_other, traders_comm_short_other, traders_tot_rept_long_other, traders_tot_rept_short_other, conc_gross_le4_tdr_long_all, conc_gross_le4_tdr_short_all, conc_gross_le8_tdr_long_all, conc_gross_le8_tdr_short_all, conc_net_le4_tdr_long_all, conc_net_le4_tdr_short_all, conc_net_le8_tdr_long_all, conc_net_le8_tdr_short_all, conc_gross_le4_tdr_long_old, conc_gross_le4_tdr_short_old, conc_gross_le8_tdr_long_old, conc_gross_le8_tdr_short_old, conc_net_le4_tdr_long_old, conc_net_le4_tdr_short_old, conc_net_le8_tdr_long_old, conc_net_le8_tdr_short_old, conc_gross_le4_tdr_long_other, conc_gross_le4_tdr_short_other, conc_gross_le8_tdr_long_other, conc_gross_le8_tdr_short_other, conc_net_le4_tdr_long_other, conc_net_le4_tdr_short_other, conc_net_le8_tdr_long_other, conc_net_le8_tdr_short_other, contract_units))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDateTime,
@@ -1085,130 +1143,273 @@ impl CotReport {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "market_and_exchange_names",
             self.market_and_exchange_names
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cftc_contract_market_code",
             self.cftc_contract_market_code
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cftc_market_code",
             self.cftc_market_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cftc_region_code",
             self.cftc_region_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cftc_commodity_code",
             self.cftc_commodity_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "open_interest_all",
             self.open_interest_all.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_long_all",
             self.noncomm_positions_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_short_all",
             self.noncomm_positions_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_spread_all",
             self.noncomm_positions_spread_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "comm_positions_long_all",
             self.comm_positions_long_all.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "comm_positions_short_all",
             self.comm_positions_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tot_rept_positions_long_all",
             self.tot_rept_positions_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tot_rept_positions_short_all",
             self.tot_rept_positions_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "nonrept_positions_long_all",
             self.nonrept_positions_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "nonrept_positions_short_all",
             self.nonrept_positions_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "open_interest_old",
             self.open_interest_old.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_long_old",
             self.noncomm_positions_long_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_short_old",
             self.noncomm_positions_short_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_spread_old",
             self.noncomm_positions_spread_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "comm_positions_long_old",
             self.comm_positions_long_old.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "comm_positions_short_old",
             self.comm_positions_short_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tot_rept_positions_long_old",
             self.tot_rept_positions_long_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tot_rept_positions_short_old",
             self.tot_rept_positions_short_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "nonrept_positions_long_old",
             self.nonrept_positions_long_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "nonrept_positions_short_old",
             self.nonrept_positions_short_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "open_interest_other",
             self.open_interest_other.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_long_other",
             self.noncomm_positions_long_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_short_other",
             self.noncomm_positions_short_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "noncomm_positions_spread_other",
             self.noncomm_positions_spread_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "comm_positions_long_other",
             self.comm_positions_long_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "comm_positions_short_other",
             self.comm_positions_short_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tot_rept_positions_long_other",
             self.tot_rept_positions_long_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tot_rept_positions_short_other",
             self.tot_rept_positions_short_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "nonrept_positions_long_other",
             self.nonrept_positions_long_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "nonrept_positions_short_other",
             self.nonrept_positions_short_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_open_interest_all",
             self.change_in_open_interest_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_noncomm_long_all",
             self.change_in_noncomm_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_noncomm_short_all",
             self.change_in_noncomm_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_noncomm_spread_all",
             self.change_in_noncomm_spread_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_comm_long_all",
             self.change_in_comm_long_all.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_comm_short_all",
             self.change_in_comm_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_tot_rept_long_all",
             self.change_in_tot_rept_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_tot_rept_short_all",
             self.change_in_tot_rept_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_nonrept_long_all",
             self.change_in_nonrept_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_nonrept_short_all",
             self.change_in_nonrept_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_open_interest_all",
             ::serde_json::to_string(&self.pct_of_open_interest_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1216,6 +1417,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_long_all",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1223,6 +1427,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_short_all",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1230,6 +1437,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_spread_all",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_spread_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1237,6 +1447,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_comm_long_all",
             ::serde_json::to_string(&self.pct_of_oi_comm_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1244,6 +1457,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_comm_short_all",
             ::serde_json::to_string(&self.pct_of_oi_comm_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1251,6 +1467,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_tot_rept_long_all",
             ::serde_json::to_string(&self.pct_of_oi_tot_rept_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1258,6 +1477,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_tot_rept_short_all",
             ::serde_json::to_string(&self.pct_of_oi_tot_rept_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1265,6 +1487,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_nonrept_long_all",
             ::serde_json::to_string(&self.pct_of_oi_nonrept_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1272,6 +1497,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_nonrept_short_all",
             ::serde_json::to_string(&self.pct_of_oi_nonrept_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1279,6 +1507,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_open_interest_old",
             ::serde_json::to_string(&self.pct_of_open_interest_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1286,6 +1517,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_long_old",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1293,6 +1527,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_short_old",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1300,6 +1537,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_spread_old",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_spread_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1307,6 +1547,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_comm_long_old",
             ::serde_json::to_string(&self.pct_of_oi_comm_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1314,6 +1557,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_comm_short_old",
             ::serde_json::to_string(&self.pct_of_oi_comm_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1321,6 +1567,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_tot_rept_long_old",
             ::serde_json::to_string(&self.pct_of_oi_tot_rept_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1328,6 +1577,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_tot_rept_short_old",
             ::serde_json::to_string(&self.pct_of_oi_tot_rept_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1335,6 +1587,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_nonrept_long_old",
             ::serde_json::to_string(&self.pct_of_oi_nonrept_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1342,6 +1597,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_nonrept_short_old",
             ::serde_json::to_string(&self.pct_of_oi_nonrept_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1349,6 +1607,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_open_interest_other",
             ::serde_json::to_string(&self.pct_of_open_interest_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1356,6 +1617,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_long_other",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1363,6 +1627,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_short_other",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1370,6 +1637,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_noncomm_spread_other",
             ::serde_json::to_string(&self.pct_of_oi_noncomm_spread_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1377,6 +1647,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_comm_long_other",
             ::serde_json::to_string(&self.pct_of_oi_comm_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1384,6 +1657,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_comm_short_other",
             ::serde_json::to_string(&self.pct_of_oi_comm_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1391,6 +1667,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_tot_rept_long_other",
             ::serde_json::to_string(&self.pct_of_oi_tot_rept_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1398,6 +1677,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_tot_rept_short_other",
             ::serde_json::to_string(&self.pct_of_oi_tot_rept_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1405,6 +1687,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_nonrept_long_other",
             ::serde_json::to_string(&self.pct_of_oi_nonrept_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1412,6 +1697,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "pct_of_oi_nonrept_short_other",
             ::serde_json::to_string(&self.pct_of_oi_nonrept_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1419,62 +1707,137 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_all",
             self.traders_tot_all.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_long_all",
             self.traders_noncomm_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_short_all",
             self.traders_noncomm_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_spread_all",
             self.traders_noncomm_spread_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_comm_long_all",
             self.traders_comm_long_all.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_comm_short_all",
             self.traders_comm_short_all.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_rept_long_all",
             self.traders_tot_rept_long_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_rept_short_all",
             self.traders_tot_rept_short_all
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_old",
             self.traders_tot_old.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_long_old",
             self.traders_noncomm_long_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_short_old",
             self.traders_noncomm_short_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_spread_old",
             self.traders_noncomm_spread_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_comm_long_old",
             self.traders_comm_long_old.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_comm_short_old",
             self.traders_comm_short_old.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_rept_long_old",
             self.traders_tot_rept_long_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_rept_short_old",
             self.traders_tot_rept_short_old
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_other",
             self.traders_tot_other.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_long_other",
             self.traders_noncomm_long_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_short_other",
             self.traders_noncomm_short_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_noncomm_spread_other",
             self.traders_noncomm_spread_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_comm_long_other",
             self.traders_comm_long_other.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_comm_short_other",
             self.traders_comm_short_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_rept_long_other",
             self.traders_tot_rept_long_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "traders_tot_rept_short_other",
             self.traders_tot_rept_short_other
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le4_tdr_long_all",
             ::serde_json::to_string(&self.conc_gross_le4_tdr_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1482,6 +1845,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le4_tdr_short_all",
             ::serde_json::to_string(&self.conc_gross_le4_tdr_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1489,6 +1855,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le8_tdr_long_all",
             ::serde_json::to_string(&self.conc_gross_le8_tdr_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1496,6 +1865,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le8_tdr_short_all",
             ::serde_json::to_string(&self.conc_gross_le8_tdr_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1503,6 +1875,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le4_tdr_long_all",
             ::serde_json::to_string(&self.conc_net_le4_tdr_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1510,6 +1885,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le4_tdr_short_all",
             ::serde_json::to_string(&self.conc_net_le4_tdr_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1517,6 +1895,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le8_tdr_long_all",
             ::serde_json::to_string(&self.conc_net_le8_tdr_long_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1524,6 +1905,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le8_tdr_short_all",
             ::serde_json::to_string(&self.conc_net_le8_tdr_short_all)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1531,6 +1915,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le4_tdr_long_old",
             ::serde_json::to_string(&self.conc_gross_le4_tdr_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1538,6 +1925,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le4_tdr_short_old",
             ::serde_json::to_string(&self.conc_gross_le4_tdr_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1545,6 +1935,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le8_tdr_long_old",
             ::serde_json::to_string(&self.conc_gross_le8_tdr_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1552,6 +1945,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le8_tdr_short_old",
             ::serde_json::to_string(&self.conc_gross_le8_tdr_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1559,6 +1955,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le4_tdr_long_old",
             ::serde_json::to_string(&self.conc_net_le4_tdr_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1566,6 +1965,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le4_tdr_short_old",
             ::serde_json::to_string(&self.conc_net_le4_tdr_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1573,6 +1975,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le8_tdr_long_old",
             ::serde_json::to_string(&self.conc_net_le8_tdr_long_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1580,6 +1985,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le8_tdr_short_old",
             ::serde_json::to_string(&self.conc_net_le8_tdr_short_old)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1587,6 +1995,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le4_tdr_long_other",
             ::serde_json::to_string(&self.conc_gross_le4_tdr_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1594,6 +2005,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le4_tdr_short_other",
             ::serde_json::to_string(&self.conc_gross_le4_tdr_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1601,6 +2015,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le8_tdr_long_other",
             ::serde_json::to_string(&self.conc_gross_le8_tdr_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1608,6 +2025,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_gross_le8_tdr_short_other",
             ::serde_json::to_string(&self.conc_gross_le8_tdr_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1615,6 +2035,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le4_tdr_long_other",
             ::serde_json::to_string(&self.conc_net_le4_tdr_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1622,6 +2045,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le4_tdr_short_other",
             ::serde_json::to_string(&self.conc_net_le4_tdr_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1629,6 +2055,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le8_tdr_long_other",
             ::serde_json::to_string(&self.conc_net_le8_tdr_long_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1636,6 +2065,9 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "conc_net_le8_tdr_short_other",
             ::serde_json::to_string(&self.conc_net_le8_tdr_short_other)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1643,9 +2075,12 @@ impl CotReport {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "contract_units",
             self.contract_units.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]

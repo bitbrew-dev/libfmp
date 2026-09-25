@@ -19,20 +19,25 @@ __all__ = [
 
 @typing.final
 class Form13fFilingDate:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
     def year(self) -> builtins.int: ...
     @property
     def quarter(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, date: datetime.date, year: builtins.int, quarter: builtins.int
+        cls, *, date: datetime.date, year: builtins.int, quarter: builtins.int
     ) -> Form13fFilingDate: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class HolderIndustryBreakdown:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -57,8 +62,10 @@ class HolderIndustryBreakdown:
     def last_performance(self) -> builtins.float: ...
     @property
     def change_in_performance(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         cik: builtins.str,
         investor_name: builtins.str,
@@ -72,11 +79,13 @@ class HolderIndustryBreakdown:
         last_performance: builtins.float,
         change_in_performance: builtins.float,
     ) -> HolderIndustryBreakdown: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class HolderPerformanceSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -145,8 +154,10 @@ class HolderPerformanceSummary:
     def performance_since_inception_relative_to_sp500_percentage(
         self,
     ) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         cik: builtins.str,
         investor_name: builtins.str,
@@ -181,11 +192,13 @@ class HolderPerformanceSummary:
         performance_5_year_relative_to_sp500_percentage: builtins.float,
         performance_since_inception_relative_to_sp500_percentage: builtins.float,
     ) -> HolderPerformanceSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class InstitutionalHolderAnalytics:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -264,8 +277,10 @@ class InstitutionalHolderAnalytics:
     def change_in_performance(self) -> builtins.float: ...
     @property
     def is_counted_for_performance(self) -> builtins.bool: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         cik: builtins.str,
         filing_date: datetime.date,
@@ -306,11 +321,13 @@ class InstitutionalHolderAnalytics:
         change_in_performance: builtins.float,
         is_counted_for_performance: builtins.bool,
     ) -> InstitutionalHolderAnalytics: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class InstitutionalHolding:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -339,8 +356,10 @@ class InstitutionalHolding:
     def link(self) -> builtins.str: ...
     @property
     def final_link(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         filing_date: datetime.date,
         accepted_date: datetime.date,
@@ -356,28 +375,34 @@ class InstitutionalHolding:
         link: builtins.str,
         final_link: builtins.str,
     ) -> InstitutionalHolding: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class InstitutionalIndustrySummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def industry_title(self) -> builtins.str: ...
     @property
     def industry_value(self) -> builtins.float: ...
     @property
     def date(self) -> datetime.date: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         industry_title: builtins.str,
         industry_value: builtins.float,
         date: datetime.date,
     ) -> InstitutionalIndustrySummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class InstitutionalOwnershipFiling:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -394,8 +419,10 @@ class InstitutionalOwnershipFiling:
     def link(self) -> builtins.str: ...
     @property
     def final_link(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         name: builtins.str,
         date: datetime.date,
@@ -405,7 +432,7 @@ class InstitutionalOwnershipFiling:
         link: builtins.str,
         final_link: builtins.str,
     ) -> InstitutionalOwnershipFiling: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -482,6 +509,8 @@ class InstitutionalOwnershipNamespace:
 
 @typing.final
 class InstitutionalPositionSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -554,8 +583,10 @@ class InstitutionalPositionSummary:
     def last_put_call_ratio(self) -> builtins.float: ...
     @property
     def put_call_ratio_change(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         cik: builtins.str,
         date: datetime.date,
@@ -593,4 +624,4 @@ class InstitutionalPositionSummary:
         last_put_call_ratio: builtins.float,
         put_call_ratio_change: builtins.float,
     ) -> InstitutionalPositionSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

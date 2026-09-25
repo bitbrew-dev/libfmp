@@ -12,6 +12,8 @@ __all__ = [
 
 @typing.final
 class RevenueSegmentation:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -24,8 +26,10 @@ class RevenueSegmentation:
     def date(self) -> datetime.date: ...
     @property
     def data(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         fiscal_year: builtins.int,
         period: builtins.str,
@@ -33,7 +37,7 @@ class RevenueSegmentation:
         date: datetime.date,
         data: builtins.str,
     ) -> RevenueSegmentation: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

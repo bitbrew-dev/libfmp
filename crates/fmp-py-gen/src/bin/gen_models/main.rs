@@ -7,6 +7,7 @@
 //! crate so it builds even when `fmp-py` does not compile.
 
 mod classify;
+mod dunder;
 mod emit;
 mod model;
 
@@ -67,7 +68,7 @@ fn main() -> Result<(), BoxError> {
         file_content.push_str("\n\n");
         file_content.push_str("use pyo3::IntoPyObjectExt;\n");
         file_content.push_str("use pyo3::prelude::*;\n");
-        file_content.push_str("use pyo3::types::PyTuple;\n");
+        file_content.push_str("use pyo3::types::{PyDict, PyTuple};\n");
         file_content
             .push_str("use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};\n\n");
         file_content.push_str(&body);

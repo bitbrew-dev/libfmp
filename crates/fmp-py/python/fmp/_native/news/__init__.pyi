@@ -13,6 +13,8 @@ __all__ = [
 
 @typing.final
 class Article:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def title(self) -> builtins.str: ...
     @property
@@ -29,8 +31,10 @@ class Article:
     def author(self) -> builtins.str: ...
     @property
     def site(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         title: builtins.str,
         date: datetime.datetime,
         content: builtins.str,
@@ -40,11 +44,13 @@ class Article:
         author: builtins.str,
         site: builtins.str,
     ) -> Article: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class NewsArticle:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> typing.Optional[builtins.str]: ...
     @property
@@ -61,8 +67,10 @@ class NewsArticle:
     def text(self) -> builtins.str: ...
     @property
     def url(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: typing.Optional[builtins.str],
         published_date: datetime.datetime,
         publisher: builtins.str,
@@ -72,7 +80,7 @@ class NewsArticle:
         text: builtins.str,
         url: builtins.str,
     ) -> NewsArticle: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

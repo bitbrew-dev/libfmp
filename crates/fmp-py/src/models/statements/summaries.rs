@@ -2,12 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.summaries", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.statements.summaries",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct LatestFinancialStatement {
     #[pyo3(get)]
     pub symbol: String,
@@ -27,7 +32,7 @@ impl LatestFinancialStatement {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, calendar_year, period, date, date_added))]
+    #[pyo3(signature = (*, symbol, calendar_year, period, date, date_added))]
     fn new(
         symbol: String,
         calendar_year: u32,
@@ -44,16 +49,24 @@ impl LatestFinancialStatement {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "calendar_year",
             self.calendar_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.date_added.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date_added", self.date_added.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -72,8 +85,13 @@ impl From<libfmp::responses::statements::summaries::LatestFinancialStatement>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.summaries", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.statements.summaries",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct FinancialScore {
     #[pyo3(get)]
     pub symbol: String,
@@ -105,7 +123,7 @@ impl FinancialScore {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, reported_currency, altman_z_score, piotroski_score, working_capital, total_assets, retained_earnings, ebit, market_cap, total_liabilities, revenue))]
+    #[pyo3(signature = (*, symbol, reported_currency, altman_z_score, piotroski_score, working_capital, total_assets, retained_earnings, ebit, market_cap, total_liabilities, revenue))]
     fn new(
         symbol: String,
         reported_currency: String,
@@ -134,22 +152,48 @@ impl FinancialScore {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "altman_z_score",
             self.altman_z_score.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "piotroski_score",
             self.piotroski_score.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "working_capital",
             self.working_capital.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_assets",
             self.total_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "retained_earnings",
             self.retained_earnings.clone().into_bound_py_any(py)?,
-            self.ebit.clone().into_bound_py_any(py)?,
-            self.market_cap.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ebit", self.ebit.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "total_liabilities",
             self.total_liabilities.clone().into_bound_py_any(py)?,
-            self.revenue.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("revenue", self.revenue.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -172,8 +216,13 @@ impl From<libfmp::responses::statements::summaries::FinancialScore> for Financia
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.summaries", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.statements.summaries",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct OwnerEarnings {
     #[pyo3(get)]
     pub symbol: String,
@@ -203,7 +252,7 @@ impl OwnerEarnings {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, reported_currency, fiscal_year, period, date, average_ppe, maintenance_capex, owners_earnings, growth_capex, owners_earnings_per_share))]
+    #[pyo3(signature = (*, symbol, reported_currency, fiscal_year, period, date, average_ppe, maintenance_capex, owners_earnings, growth_capex, owners_earnings_per_share))]
     fn new(
         symbol: String,
         reported_currency: String,
@@ -230,23 +279,49 @@ impl OwnerEarnings {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "average_ppe",
             self.average_ppe.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "maintenance_capex",
             self.maintenance_capex.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "owners_earnings",
             self.owners_earnings.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_capex",
             self.growth_capex.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "owners_earnings_per_share",
             self.owners_earnings_per_share
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -268,8 +343,13 @@ impl From<libfmp::responses::statements::summaries::OwnerEarnings> for OwnerEarn
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.summaries", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.statements.summaries",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EnterpriseValue {
     #[pyo3(get)]
     pub symbol: String,
@@ -295,7 +375,7 @@ impl EnterpriseValue {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, stock_price, number_of_shares, market_capitalization, minus_cash_and_cash_equivalents, add_total_debt, enterprise_value))]
+    #[pyo3(signature = (*, symbol, date, stock_price, number_of_shares, market_capitalization, minus_cash_and_cash_equivalents, add_total_debt, enterprise_value))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -318,21 +398,44 @@ impl EnterpriseValue {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "stock_price",
             self.stock_price.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "number_of_shares",
             self.number_of_shares.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_capitalization",
             self.market_capitalization.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "minus_cash_and_cash_equivalents",
             self.minus_cash_and_cash_equivalents
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "add_total_debt",
             self.add_total_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "enterprise_value",
             self.enterprise_value.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

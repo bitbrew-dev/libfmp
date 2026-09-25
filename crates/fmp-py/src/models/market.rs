@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.market", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.market", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SectorPerformance {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -25,7 +25,7 @@ impl SectorPerformance {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, sector, exchange, average_change))]
+    #[pyo3(signature = (*, date, sector, exchange, average_change))]
     fn new(
         date: ::chrono::NaiveDate,
         sector: String,
@@ -40,15 +40,23 @@ impl SectorPerformance {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "average_change",
             self.average_change.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -64,8 +72,8 @@ impl From<libfmp::responses::market::SectorPerformance> for SectorPerformance {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.market", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.market", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct IndustryPerformance {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -83,7 +91,7 @@ impl IndustryPerformance {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, industry, exchange, average_change))]
+    #[pyo3(signature = (*, date, industry, exchange, average_change))]
     fn new(
         date: ::chrono::NaiveDate,
         industry: String,
@@ -98,15 +106,23 @@ impl IndustryPerformance {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.industry.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("industry", self.industry.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "average_change",
             self.average_change.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -122,8 +138,8 @@ impl From<libfmp::responses::market::IndustryPerformance> for IndustryPerformanc
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.market", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.market", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SectorPe {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -141,7 +157,7 @@ impl SectorPe {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, sector, exchange, pe))]
+    #[pyo3(signature = (*, date, sector, exchange, pe))]
     fn new(date: ::chrono::NaiveDate, sector: String, exchange: String, pe: f64) -> Self {
         Self {
             date,
@@ -151,15 +167,20 @@ impl SectorPe {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.pe.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("pe", self.pe.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -175,8 +196,8 @@ impl From<libfmp::responses::market::SectorPe> for SectorPe {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.market", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.market", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct IndustryPe {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -194,7 +215,7 @@ impl IndustryPe {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, industry, exchange, pe))]
+    #[pyo3(signature = (*, date, industry, exchange, pe))]
     fn new(date: ::chrono::NaiveDate, industry: String, exchange: String, pe: f64) -> Self {
         Self {
             date,
@@ -204,15 +225,20 @@ impl IndustryPe {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.industry.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.pe.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("industry", self.industry.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("pe", self.pe.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -228,8 +254,8 @@ impl From<libfmp::responses::market::IndustryPe> for IndustryPe {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.market", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.market", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct MarketMover {
     #[pyo3(get)]
     pub symbol: String,
@@ -251,7 +277,7 @@ impl MarketMover {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, price, name, change, changes_percentage, exchange))]
+    #[pyo3(signature = (*, symbol, price, name, change, changes_percentage, exchange))]
     fn new(
         symbol: String,
         price: f64,
@@ -270,17 +296,25 @@ impl MarketMover {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.price.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.change.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("price", self.price.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("change", self.change.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "changes_percentage",
             self.changes_percentage.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

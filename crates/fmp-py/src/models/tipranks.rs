@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksRatingSearchResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -42,7 +42,7 @@ impl TipRanksRatingSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, recommendation_date, expert_uid, analyst_name, firm_name, recommendation, analyst_action, article_title, article_site, price_target, price_target_currency, url))]
+    #[pyo3(signature = (*, symbol, date, recommendation_date, expert_uid, analyst_name, firm_name, recommendation, analyst_action, article_title, article_site, price_target, price_target_currency, url))]
     fn new(
         symbol: String,
         date: String,
@@ -81,19 +81,45 @@ impl TipRanksRatingSearchResult {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "recommendation_date",
             self.recommendation_date.clone().into_bound_py_any(py)?,
-            self.expert_uid.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("expert_uid", self.expert_uid.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "analyst_name",
             self.analyst_name.clone().into_bound_py_any(py)?,
-            self.firm_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("firm_name", self.firm_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "recommendation",
             self.recommendation.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "analyst_action",
             self.analyst_action.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "article_title",
             self.article_title.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "article_site",
             self.article_site.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_target",
             ::serde_json::to_string(&self.price_target)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -101,10 +127,13 @@ impl TipRanksRatingSearchResult {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_target_currency",
             self.price_target_currency.clone().into_bound_py_any(py)?,
-            self.url.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -134,8 +163,8 @@ impl From<libfmp::responses::tipranks::TipRanksRatingSearchResult> for TipRanksR
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksPointInTimeRating {
     #[pyo3(get)]
     pub symbol: String,
@@ -174,7 +203,7 @@ impl TipRanksPointInTimeRating {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, expert_uid, analyst_name, stock_success_rate, firm_name, last_recommendation, last_recommendation_date, article_title, article_site, price_target, price_target_currency, url, last_analyst_action, stock_return, beat_target))]
+    #[pyo3(signature = (*, symbol, date, expert_uid, analyst_name, stock_success_rate, firm_name, last_recommendation, last_recommendation_date, article_title, article_site, price_target, price_target_currency, url, last_analyst_action, stock_return, beat_target))]
     fn new(
         symbol: String,
         date: String,
@@ -241,13 +270,24 @@ impl TipRanksPointInTimeRating {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.expert_uid.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("expert_uid", self.expert_uid.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "analyst_name",
             self.analyst_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "stock_success_rate",
             ::serde_json::to_string(&self.stock_success_rate)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -255,13 +295,28 @@ impl TipRanksPointInTimeRating {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-            self.firm_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("firm_name", self.firm_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "last_recommendation",
             self.last_recommendation.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "last_recommendation_date",
             self.last_recommendation_date
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "article_title",
             self.article_title.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "article_site",
             self.article_site.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_target",
             self.price_target
                 .as_ref()
                 .map(::serde_json::to_string)
@@ -272,9 +327,18 @@ impl TipRanksPointInTimeRating {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_target_currency",
             self.price_target_currency.clone().into_bound_py_any(py)?,
-            self.url.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "last_analyst_action",
             self.last_analyst_action.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "stock_return",
             self.stock_return
                 .as_ref()
                 .map(::serde_json::to_string)
@@ -285,9 +349,12 @@ impl TipRanksPointInTimeRating {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "beat_target",
             self.beat_target.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -336,8 +403,8 @@ impl From<libfmp::responses::tipranks::TipRanksPointInTimeRating> for TipRanksPo
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksRecommendationCounts {
     #[pyo3(get)]
     pub buy: u64,
@@ -353,19 +420,24 @@ impl TipRanksRecommendationCounts {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (buy, hold, sell))]
+    #[pyo3(signature = (*, buy, hold, sell))]
     fn new(buy: u64, hold: u64, sell: u64) -> Self {
         Self { buy, hold, sell }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.buy.clone().into_bound_py_any(py)?,
-            self.hold.clone().into_bound_py_any(py)?,
-            self.sell.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("buy", self.buy.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("hold", self.hold.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sell", self.sell.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -382,8 +454,8 @@ impl From<libfmp::responses::tipranks::TipRanksRecommendationCounts>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksAnalystActionCounts {
     #[pyo3(get)]
     pub initiated: u64,
@@ -405,7 +477,7 @@ impl TipRanksAnalystActionCounts {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (initiated, maintained, upgraded, downgraded, reiterated, resumed))]
+    #[pyo3(signature = (*, initiated, maintained, upgraded, downgraded, reiterated, resumed))]
     fn new(
         initiated: u64,
         maintained: u64,
@@ -424,17 +496,22 @@ impl TipRanksAnalystActionCounts {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.initiated.clone().into_bound_py_any(py)?,
-            self.maintained.clone().into_bound_py_any(py)?,
-            self.upgraded.clone().into_bound_py_any(py)?,
-            self.downgraded.clone().into_bound_py_any(py)?,
-            self.reiterated.clone().into_bound_py_any(py)?,
-            self.resumed.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("initiated", self.initiated.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("maintained", self.maintained.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("upgraded", self.upgraded.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("downgraded", self.downgraded.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("reiterated", self.reiterated.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("resumed", self.resumed.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -454,8 +531,8 @@ impl From<libfmp::responses::tipranks::TipRanksAnalystActionCounts>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksSymbolSummary {
     #[pyo3(get)]
     pub symbol: String,
@@ -492,7 +569,7 @@ impl TipRanksSymbolSummary {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, from_, to, total_recommendations, distinct_symbols, distinct_analysts, valid_price_targets, recommendations, analyst_action, compared_price_targets, beats, misses, average_return, top_return, worst_return))]
+    #[pyo3(signature = (*, symbol, from_, to, total_recommendations, distinct_symbols, distinct_analysts, valid_price_targets, recommendations, analyst_action, compared_price_targets, beats, misses, average_return, top_return, worst_return))]
     fn new(
         symbol: String,
         from_: ::chrono::NaiveDate,
@@ -547,21 +624,50 @@ impl TipRanksSymbolSummary {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.from_.clone().into_bound_py_any(py)?,
-            self.to.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("from_", self.from_.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("to", self.to.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "total_recommendations",
             self.total_recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "distinct_symbols",
             self.distinct_symbols.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "distinct_analysts",
             self.distinct_analysts.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "valid_price_targets",
             self.valid_price_targets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "recommendations",
             self.recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "analyst_action",
             self.analyst_action.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "compared_price_targets",
             self.compared_price_targets.clone().into_bound_py_any(py)?,
-            self.beats.clone().into_bound_py_any(py)?,
-            self.misses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("beats", self.beats.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("misses", self.misses.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "average_return",
             ::serde_json::to_string(&self.average_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -569,6 +675,9 @@ impl TipRanksSymbolSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "top_return",
             ::serde_json::to_string(&self.top_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -576,6 +685,9 @@ impl TipRanksSymbolSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "worst_return",
             ::serde_json::to_string(&self.worst_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -583,8 +695,8 @@ impl TipRanksSymbolSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -630,8 +742,8 @@ impl From<libfmp::responses::tipranks::TipRanksSymbolSummary> for TipRanksSymbol
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksAnalystSummary {
     #[pyo3(get)]
     pub expert_uid: String,
@@ -668,7 +780,7 @@ impl TipRanksAnalystSummary {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (expert_uid, from_, to, total_recommendations, distinct_symbols, distinct_analysts, valid_price_targets, recommendations, analyst_action, compared_price_targets, beats, misses, average_return, top_return, worst_return))]
+    #[pyo3(signature = (*, expert_uid, from_, to, total_recommendations, distinct_symbols, distinct_analysts, valid_price_targets, recommendations, analyst_action, compared_price_targets, beats, misses, average_return, top_return, worst_return))]
     fn new(
         expert_uid: String,
         from_: ::chrono::NaiveDate,
@@ -723,21 +835,50 @@ impl TipRanksAnalystSummary {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.expert_uid.clone().into_bound_py_any(py)?,
-            self.from_.clone().into_bound_py_any(py)?,
-            self.to.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("expert_uid", self.expert_uid.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("from_", self.from_.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("to", self.to.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "total_recommendations",
             self.total_recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "distinct_symbols",
             self.distinct_symbols.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "distinct_analysts",
             self.distinct_analysts.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "valid_price_targets",
             self.valid_price_targets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "recommendations",
             self.recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "analyst_action",
             self.analyst_action.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "compared_price_targets",
             self.compared_price_targets.clone().into_bound_py_any(py)?,
-            self.beats.clone().into_bound_py_any(py)?,
-            self.misses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("beats", self.beats.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("misses", self.misses.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "average_return",
             ::serde_json::to_string(&self.average_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -745,6 +886,9 @@ impl TipRanksAnalystSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "top_return",
             ::serde_json::to_string(&self.top_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -752,6 +896,9 @@ impl TipRanksAnalystSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "worst_return",
             ::serde_json::to_string(&self.worst_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -759,8 +906,8 @@ impl TipRanksAnalystSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -806,8 +953,8 @@ impl From<libfmp::responses::tipranks::TipRanksAnalystSummary> for TipRanksAnaly
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksFirmSummary {
     #[pyo3(get)]
     pub firm_name: String,
@@ -844,7 +991,7 @@ impl TipRanksFirmSummary {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (firm_name, from_, to, total_recommendations, distinct_symbols, distinct_analysts, valid_price_targets, recommendations, analyst_action, compared_price_targets, beats, misses, average_return, top_return, worst_return))]
+    #[pyo3(signature = (*, firm_name, from_, to, total_recommendations, distinct_symbols, distinct_analysts, valid_price_targets, recommendations, analyst_action, compared_price_targets, beats, misses, average_return, top_return, worst_return))]
     fn new(
         firm_name: String,
         from_: ::chrono::NaiveDate,
@@ -899,21 +1046,50 @@ impl TipRanksFirmSummary {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.firm_name.clone().into_bound_py_any(py)?,
-            self.from_.clone().into_bound_py_any(py)?,
-            self.to.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("firm_name", self.firm_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("from_", self.from_.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("to", self.to.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "total_recommendations",
             self.total_recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "distinct_symbols",
             self.distinct_symbols.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "distinct_analysts",
             self.distinct_analysts.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "valid_price_targets",
             self.valid_price_targets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "recommendations",
             self.recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "analyst_action",
             self.analyst_action.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "compared_price_targets",
             self.compared_price_targets.clone().into_bound_py_any(py)?,
-            self.beats.clone().into_bound_py_any(py)?,
-            self.misses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("beats", self.beats.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("misses", self.misses.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "average_return",
             ::serde_json::to_string(&self.average_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -921,6 +1097,9 @@ impl TipRanksFirmSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "top_return",
             ::serde_json::to_string(&self.top_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -928,6 +1107,9 @@ impl TipRanksFirmSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "worst_return",
             ::serde_json::to_string(&self.worst_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -935,8 +1117,8 @@ impl TipRanksFirmSummary {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -982,8 +1164,8 @@ impl From<libfmp::responses::tipranks::TipRanksFirmSummary> for TipRanksFirmSumm
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.tipranks", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.tipranks", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TipRanksAnalystProfile {
     #[pyo3(get)]
     pub expert_uid: String,
@@ -1009,7 +1191,7 @@ impl TipRanksAnalystProfile {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (expert_uid, analyst_name, firm_name, success_rate, excess_return, total_recommendations, good_recommendations, analyst_rank, num_of_stars))]
+    #[pyo3(signature = (*, expert_uid, analyst_name, firm_name, success_rate, excess_return, total_recommendations, good_recommendations, analyst_rank, num_of_stars))]
     fn new(
         expert_uid: String,
         analyst_name: String,
@@ -1046,12 +1228,23 @@ impl TipRanksAnalystProfile {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.expert_uid.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("expert_uid", self.expert_uid.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "analyst_name",
             self.analyst_name.clone().into_bound_py_any(py)?,
-            self.firm_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("firm_name", self.firm_name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "success_rate",
             ::serde_json::to_string(&self.success_rate)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1059,6 +1252,9 @@ impl TipRanksAnalystProfile {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "excess_return",
             ::serde_json::to_string(&self.excess_return)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -1066,12 +1262,24 @@ impl TipRanksAnalystProfile {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_recommendations",
             self.total_recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "good_recommendations",
             self.good_recommendations.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "analyst_rank",
             self.analyst_rank.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "num_of_stars",
             self.num_of_stars.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]

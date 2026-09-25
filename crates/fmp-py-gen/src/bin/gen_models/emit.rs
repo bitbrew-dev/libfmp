@@ -9,6 +9,7 @@ use std::process::Command;
 use fmp_py_gen::responses::{StructDef, Wrap, peel};
 
 use crate::classify::classify;
+use crate::dunder::emit_dunders;
 use crate::model::{Class, KeptField, Registry, Transform};
 use crate::{BoxError, GENERATED_HEADER, RUST_EDITION};
 
@@ -97,9 +98,9 @@ pub(crate) fn emit_struct(
     }
     out.push_str("#[gen_stub_pyclass]\n");
     out.push_str(&format!(
-        "#[pyclass(module = \"fmp._native.{module_dotted}\", frozen, from_py_object)]\n"
+        "#[pyclass(module = \"fmp._native.{module_dotted}\", frozen, eq, from_py_object)]\n"
     ));
-    out.push_str("#[derive(Clone)]\n");
+    out.push_str("#[derive(Clone, PartialEq)]\n");
     out.push_str(&format!("pub(crate) struct {} {{\n", def.name));
     for field in &kept {
         out.push_str(&field.struct_field());
@@ -116,7 +117,7 @@ pub(crate) fn emit_struct(
     out.push_str("    #[allow(clippy::too_many_arguments)]\n");
     out.push_str("    #[allow(clippy::fn_params_excessive_bools)]\n");
     out.push_str(&format!(
-        "    #[pyo3(signature = ({}))]\n",
+        "    #[pyo3(signature = (*, {}))]\n",
         signature.join(", ")
     ));
     let return_ty = if needs_result {
@@ -142,18 +143,7 @@ pub(crate) fn emit_struct(
     }
     out.push_str("    }\n\n");
 
-    out.push_str("    #[allow(clippy::clone_on_copy)]\n");
-    out.push_str(
-        "    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {\n",
-    );
-    out.push_str("        let members: Vec<Bound<'py, PyAny>> = vec![\n");
-    for field in &kept {
-        out.push_str(&format!("            {},\n", field.getnewargs_elem()));
-    }
-    out.push_str("        ];\n");
-    out.push_str("        PyTuple::new(py, members)\n");
-    out.push_str("    }\n");
-
+    emit_dunders(out, &kept);
     for field in &kept {
         if let Some(getter) = field.getter_method() {
             out.push('\n');

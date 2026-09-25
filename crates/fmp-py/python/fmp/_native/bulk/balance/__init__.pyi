@@ -12,6 +12,8 @@ __all__ = [
 
 @typing.final
 class BulkBalanceSheetStatement:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -134,8 +136,10 @@ class BulkBalanceSheetStatement:
     def total_debt(self) -> builtins.str: ...
     @property
     def net_debt(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         symbol: builtins.str,
         reported_currency: builtins.str,
@@ -198,11 +202,13 @@ class BulkBalanceSheetStatement:
         total_debt: builtins.str,
         net_debt: builtins.str,
     ) -> BulkBalanceSheetStatement: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkBalanceSheetStatementGrowth:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -315,8 +321,10 @@ class BulkBalanceSheetStatementGrowth:
     def growth_additional_paid_in_capital(self) -> builtins.str: ...
     @property
     def growth_treasury_stock(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
@@ -374,4 +382,4 @@ class BulkBalanceSheetStatementGrowth:
         growth_additional_paid_in_capital: builtins.str,
         growth_treasury_stock: builtins.str,
     ) -> BulkBalanceSheetStatementGrowth: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

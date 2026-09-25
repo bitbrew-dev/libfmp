@@ -95,6 +95,8 @@ class CommoditiesNamespace:
 
 @typing.final
 class CommodityListing:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -105,12 +107,14 @@ class CommodityListing:
     def trade_month(self) -> builtins.str: ...
     @property
     def currency(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         exchange: typing.Optional[builtins.str],
         trade_month: builtins.str,
         currency: builtins.str,
     ) -> CommodityListing: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

@@ -23,6 +23,8 @@ __all__ = [
 
 @typing.final
 class CompanyExecutive:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def title(self) -> builtins.str: ...
     @property
@@ -39,8 +41,10 @@ class CompanyExecutive:
     def year_born(self) -> typing.Any: ...
     @property
     def title_since(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         title: builtins.str,
         name: builtins.str,
         pay: typing.Optional[builtins.str],
@@ -50,21 +54,24 @@ class CompanyExecutive:
         title_since: typing.Optional[builtins.str],
         active: builtins.bool,
     ) -> CompanyExecutive: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CompanyMarketCapitalization:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
     def date(self) -> datetime.date: ...
     @property
     def market_cap(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, symbol: builtins.str, date: datetime.date, market_cap: builtins.float
+        cls, *, symbol: builtins.str, date: datetime.date, market_cap: builtins.float
     ) -> CompanyMarketCapitalization: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -197,6 +204,8 @@ class CompanyNamespace:
 
 @typing.final
 class CompanyNote:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -205,18 +214,22 @@ class CompanyNote:
     def title(self) -> builtins.str: ...
     @property
     def exchange(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         symbol: builtins.str,
         title: builtins.str,
         exchange: builtins.str,
     ) -> CompanyNote: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CompanyProfile:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -289,8 +302,10 @@ class CompanyProfile:
     def is_adr(self) -> builtins.bool: ...
     @property
     def is_fund(self) -> builtins.bool: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         price: builtins.float,
         market_cap: builtins.float,
@@ -328,11 +343,13 @@ class CompanyProfile:
         is_adr: builtins.bool,
         is_fund: builtins.bool,
     ) -> CompanyProfile: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CompanyShareFloat:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -345,8 +362,10 @@ class CompanyShareFloat:
     def outstanding_shares(self) -> builtins.float: ...
     @property
     def source(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.datetime,
         free_float: builtins.float,
@@ -354,11 +373,13 @@ class CompanyShareFloat:
         outstanding_shares: builtins.float,
         source: builtins.str,
     ) -> CompanyShareFloat: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class DelistedCompany:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -369,19 +390,23 @@ class DelistedCompany:
     def ipo_date(self) -> datetime.date: ...
     @property
     def delisted_date(self) -> datetime.date: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         company_name: builtins.str,
         exchange: builtins.str,
         ipo_date: datetime.date,
         delisted_date: datetime.date,
     ) -> DelistedCompany: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EmployeeCount:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -400,8 +425,10 @@ class EmployeeCount:
     def employee_count(self) -> builtins.int: ...
     @property
     def source(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         cik: builtins.str,
         acceptance_time: datetime.datetime,
@@ -412,11 +439,13 @@ class EmployeeCount:
         employee_count: builtins.int,
         source: builtins.str,
     ) -> EmployeeCount: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class ExecutiveCompensation:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -447,8 +476,10 @@ class ExecutiveCompensation:
     def total(self) -> builtins.float: ...
     @property
     def link(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         symbol: builtins.str,
         company_name: builtins.str,
@@ -465,28 +496,34 @@ class ExecutiveCompensation:
         total: builtins.float,
         link: builtins.str,
     ) -> ExecutiveCompensation: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class ExecutiveCompensationBenchmark:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def industry_title(self) -> builtins.str: ...
     @property
     def year(self) -> builtins.int: ...
     @property
     def average_compensation(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         industry_title: builtins.str,
         year: builtins.int,
         average_compensation: builtins.float,
     ) -> ExecutiveCompensationBenchmark: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class MergerAcquisition:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -505,8 +542,10 @@ class MergerAcquisition:
     def accepted_date(self) -> datetime.datetime: ...
     @property
     def link(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         company_name: builtins.str,
         cik: builtins.str,
@@ -517,11 +556,13 @@ class MergerAcquisition:
         accepted_date: datetime.datetime,
         link: builtins.str,
     ) -> MergerAcquisition: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class ShareFloat:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -532,19 +573,23 @@ class ShareFloat:
     def float_shares(self) -> builtins.float: ...
     @property
     def outstanding_shares(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.datetime,
         free_float: builtins.float,
         float_shares: builtins.float,
         outstanding_shares: builtins.float,
     ) -> ShareFloat: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockPeer:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -553,11 +598,13 @@ class StockPeer:
     def price(self) -> builtins.float: ...
     @property
     def market_cap(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         company_name: builtins.str,
         price: builtins.float,
         market_cap: builtins.float,
     ) -> StockPeer: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.indexes", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.indexes", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct IndexListing {
     #[pyo3(get)]
     pub symbol: String,
@@ -25,7 +25,7 @@ impl IndexListing {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, exchange, currency))]
+    #[pyo3(signature = (*, symbol, name, exchange, currency))]
     fn new(symbol: String, name: String, exchange: String, currency: String) -> Self {
         Self {
             symbol,
@@ -35,15 +35,20 @@ impl IndexListing {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.currency.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -59,8 +64,8 @@ impl From<libfmp::responses::indexes::IndexListing> for IndexListing {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.indexes", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.indexes", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct IndexConstituent {
     #[pyo3(get)]
     pub symbol: String,
@@ -86,7 +91,7 @@ impl IndexConstituent {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, sector, sub_sector, head_quarter, date_first_added, cik, founded))]
+    #[pyo3(signature = (*, symbol, name, sector, sub_sector, head_quarter, date_first_added, cik, founded))]
     fn new(
         symbol: String,
         name: String,
@@ -109,19 +114,30 @@ impl IndexConstituent {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
-            self.sub_sector.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sub_sector", self.sub_sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "head_quarter",
             self.head_quarter.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "date_first_added",
             self.date_first_added.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
-            self.founded.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("founded", self.founded.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -141,8 +157,8 @@ impl From<libfmp::responses::indexes::IndexConstituent> for IndexConstituent {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.indexes", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.indexes", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct HistoricalIndexConstituent {
     #[pyo3(get)]
     pub date_added: String,
@@ -166,7 +182,7 @@ impl HistoricalIndexConstituent {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date_added, added_security, removed_ticker, removed_security, date, symbol, reason))]
+    #[pyo3(signature = (*, date_added, added_security, removed_ticker, removed_security, date, symbol, reason))]
     fn new(
         date_added: String,
         added_security: String,
@@ -187,18 +203,32 @@ impl HistoricalIndexConstituent {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date_added.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date_added", self.date_added.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "added_security",
             self.added_security.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "removed_ticker",
             self.removed_ticker.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "removed_security",
             self.removed_security.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.reason.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("reason", self.reason.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

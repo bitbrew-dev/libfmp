@@ -14,6 +14,8 @@ __all__ = [
 
 @typing.final
 class CustomDcfValuation:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def year(self) -> builtins.str: ...
     @property
@@ -108,8 +110,10 @@ class CustomDcfValuation:
     def equity_value_per_share(self) -> builtins.float: ...
     @property
     def free_cash_flow_t1(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         year: builtins.str,
         symbol: builtins.str,
         revenue: builtins.float,
@@ -158,11 +162,13 @@ class CustomDcfValuation:
         equity_value_per_share: builtins.float,
         free_cash_flow_t1: builtins.float,
     ) -> CustomDcfValuation: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CustomLeveredDcfValuation:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def year(self) -> builtins.str: ...
     @property
@@ -231,8 +237,10 @@ class CustomLeveredDcfValuation:
     def free_cash_flow_t1(self) -> builtins.float: ...
     @property
     def operating_cash_flow_percentage(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         year: builtins.str,
         symbol: builtins.str,
         revenue: builtins.float,
@@ -268,7 +276,7 @@ class CustomLeveredDcfValuation:
         free_cash_flow_t1: builtins.float,
         operating_cash_flow_percentage: builtins.float,
     ) -> CustomLeveredDcfValuation: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -348,6 +356,8 @@ class DcfNamespace:
 
 @typing.final
 class DcfValuation:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -356,11 +366,13 @@ class DcfValuation:
     def dcf(self) -> builtins.float: ...
     @property
     def stock_price(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         dcf: builtins.float,
         stock_price: builtins.float,
     ) -> DcfValuation: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

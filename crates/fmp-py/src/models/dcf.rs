@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.dcf", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.dcf", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct DcfValuation {
     #[pyo3(get)]
     pub symbol: String,
@@ -25,7 +25,7 @@ impl DcfValuation {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, dcf, stock_price))]
+    #[pyo3(signature = (*, symbol, date, dcf, stock_price))]
     fn new(symbol: String, date: ::chrono::NaiveDate, dcf: f64, stock_price: f64) -> Self {
         Self {
             symbol,
@@ -35,15 +35,23 @@ impl DcfValuation {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.dcf.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("dcf", self.dcf.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "stock_price",
             self.stock_price.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -59,8 +67,8 @@ impl From<libfmp::responses::dcf::DcfValuation> for DcfValuation {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.dcf", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.dcf", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CustomDcfValuation {
     #[pyo3(get)]
     pub year: String,
@@ -164,7 +172,7 @@ impl CustomDcfValuation {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (year, symbol, revenue, revenue_percentage, ebitda, ebitda_percentage, ebit, ebit_percentage, depreciation, depreciation_percentage, total_cash, total_cash_percentage, receivables, receivables_percentage, inventories, inventories_percentage, payable, payable_percentage, capital_expenditure, capital_expenditure_percentage, price, beta, diluted_shares_outstanding, cost_of_debt, tax_rate, after_tax_cost_of_debt, risk_free_rate, market_risk_premium, cost_of_equity, total_debt, total_equity, total_capital, debt_weighting, equity_weighting, wacc, tax_rate_cash, ebiat, ufcf, sum_pv_ufcf, long_term_growth_rate, terminal_value, present_terminal_value, enterprise_value, net_debt, equity_value, equity_value_per_share, free_cash_flow_t1))]
+    #[pyo3(signature = (*, year, symbol, revenue, revenue_percentage, ebitda, ebitda_percentage, ebit, ebit_percentage, depreciation, depreciation_percentage, total_cash, total_cash_percentage, receivables, receivables_percentage, inventories, inventories_percentage, payable, payable_percentage, capital_expenditure, capital_expenditure_percentage, price, beta, diluted_shares_outstanding, cost_of_debt, tax_rate, after_tax_cost_of_debt, risk_free_rate, market_risk_premium, cost_of_equity, total_debt, total_equity, total_capital, debt_weighting, equity_weighting, wacc, tax_rate_cash, ebiat, ufcf, sum_pv_ufcf, long_term_growth_rate, terminal_value, present_terminal_value, enterprise_value, net_debt, equity_value, equity_value_per_share, free_cash_flow_t1))]
     fn new(
         year: String,
         symbol: String,
@@ -265,62 +273,163 @@ impl CustomDcfValuation {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.year.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.revenue.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("revenue", self.revenue.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "revenue_percentage",
             self.revenue_percentage.clone().into_bound_py_any(py)?,
-            self.ebitda.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ebitda", self.ebitda.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "ebitda_percentage",
             self.ebitda_percentage.clone().into_bound_py_any(py)?,
-            self.ebit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ebit", self.ebit.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "ebit_percentage",
             self.ebit_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "depreciation",
             self.depreciation.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "depreciation_percentage",
             self.depreciation_percentage.clone().into_bound_py_any(py)?,
-            self.total_cash.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("total_cash", self.total_cash.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "total_cash_percentage",
             self.total_cash_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "receivables",
             self.receivables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "receivables_percentage",
             self.receivables_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "inventories",
             self.inventories.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "inventories_percentage",
             self.inventories_percentage.clone().into_bound_py_any(py)?,
-            self.payable.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("payable", self.payable.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "payable_percentage",
             self.payable_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_expenditure",
             self.capital_expenditure.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_expenditure_percentage",
             self.capital_expenditure_percentage
                 .clone()
                 .into_bound_py_any(py)?,
-            self.price.clone().into_bound_py_any(py)?,
-            self.beta.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("price", self.price.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("beta", self.beta.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "diluted_shares_outstanding",
             self.diluted_shares_outstanding
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cost_of_debt",
             self.cost_of_debt.clone().into_bound_py_any(py)?,
-            self.tax_rate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("tax_rate", self.tax_rate.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "after_tax_cost_of_debt",
             self.after_tax_cost_of_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "risk_free_rate",
             self.risk_free_rate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_risk_premium",
             self.market_risk_premium.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cost_of_equity",
             self.cost_of_equity.clone().into_bound_py_any(py)?,
-            self.total_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("total_debt", self.total_debt.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "total_equity",
             self.total_equity.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_capital",
             self.total_capital.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_weighting",
             self.debt_weighting.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "equity_weighting",
             self.equity_weighting.clone().into_bound_py_any(py)?,
-            self.wacc.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("wacc", self.wacc.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "tax_rate_cash",
             self.tax_rate_cash.clone().into_bound_py_any(py)?,
-            self.ebiat.clone().into_bound_py_any(py)?,
-            self.ufcf.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ebiat", self.ebiat.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("ufcf", self.ufcf.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "sum_pv_ufcf",
             self.sum_pv_ufcf.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_growth_rate",
             self.long_term_growth_rate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "terminal_value",
             self.terminal_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "present_terminal_value",
             self.present_terminal_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "enterprise_value",
             self.enterprise_value.clone().into_bound_py_any(py)?,
-            self.net_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("net_debt", self.net_debt.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "equity_value",
             self.equity_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "equity_value_per_share",
             self.equity_value_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_t1",
             self.free_cash_flow_t1.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -379,8 +488,8 @@ impl From<libfmp::responses::dcf::CustomDcfValuation> for CustomDcfValuation {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.dcf", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.dcf", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CustomLeveredDcfValuation {
     #[pyo3(get)]
     pub year: String,
@@ -458,7 +567,7 @@ impl CustomLeveredDcfValuation {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (year, symbol, revenue, revenue_percentage, capital_expenditure, capital_expenditure_percentage, price, beta, diluted_shares_outstanding, cost_of_debt, tax_rate, after_tax_cost_of_debt, risk_free_rate, market_risk_premium, cost_of_equity, total_debt, total_equity, total_capital, debt_weighting, equity_weighting, wacc, operating_cash_flow, pv_lfcf, sum_pv_lfcf, long_term_growth_rate, free_cash_flow, terminal_value, present_terminal_value, enterprise_value, net_debt, equity_value, equity_value_per_share, free_cash_flow_t1, operating_cash_flow_percentage))]
+    #[pyo3(signature = (*, year, symbol, revenue, revenue_percentage, capital_expenditure, capital_expenditure_percentage, price, beta, diluted_shares_outstanding, cost_of_debt, tax_rate, after_tax_cost_of_debt, risk_free_rate, market_risk_premium, cost_of_equity, total_debt, total_equity, total_capital, debt_weighting, equity_weighting, wacc, operating_cash_flow, pv_lfcf, sum_pv_lfcf, long_term_growth_rate, free_cash_flow, terminal_value, present_terminal_value, enterprise_value, net_debt, equity_value, equity_value_per_share, free_cash_flow_t1, operating_cash_flow_percentage))]
     fn new(
         year: String,
         symbol: String,
@@ -533,51 +642,128 @@ impl CustomLeveredDcfValuation {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.year.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.revenue.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("revenue", self.revenue.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "revenue_percentage",
             self.revenue_percentage.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_expenditure",
             self.capital_expenditure.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_expenditure_percentage",
             self.capital_expenditure_percentage
                 .clone()
                 .into_bound_py_any(py)?,
-            self.price.clone().into_bound_py_any(py)?,
-            self.beta.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("price", self.price.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("beta", self.beta.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "diluted_shares_outstanding",
             self.diluted_shares_outstanding
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cost_of_debt",
             self.cost_of_debt.clone().into_bound_py_any(py)?,
-            self.tax_rate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("tax_rate", self.tax_rate.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "after_tax_cost_of_debt",
             self.after_tax_cost_of_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "risk_free_rate",
             self.risk_free_rate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_risk_premium",
             self.market_risk_premium.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cost_of_equity",
             self.cost_of_equity.clone().into_bound_py_any(py)?,
-            self.total_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("total_debt", self.total_debt.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "total_equity",
             self.total_equity.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_capital",
             self.total_capital.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_weighting",
             self.debt_weighting.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "equity_weighting",
             self.equity_weighting.clone().into_bound_py_any(py)?,
-            self.wacc.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("wacc", self.wacc.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "operating_cash_flow",
             self.operating_cash_flow.clone().into_bound_py_any(py)?,
-            self.pv_lfcf.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("pv_lfcf", self.pv_lfcf.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "sum_pv_lfcf",
             self.sum_pv_lfcf.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_growth_rate",
             self.long_term_growth_rate.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow",
             self.free_cash_flow.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "terminal_value",
             self.terminal_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "present_terminal_value",
             self.present_terminal_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "enterprise_value",
             self.enterprise_value.clone().into_bound_py_any(py)?,
-            self.net_debt.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("net_debt", self.net_debt.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "equity_value",
             self.equity_value.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "equity_value_per_share",
             self.equity_value_per_share.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_t1",
             self.free_cash_flow_t1.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_percentage",
             self.operating_cash_flow_percentage
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

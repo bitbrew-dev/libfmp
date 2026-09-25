@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.esg", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.esg", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EsgDisclosure {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -39,7 +39,7 @@ impl EsgDisclosure {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, accepted_date, symbol, cik, company_name, form_type, environmental_score, social_score, governance_score, esg_score, url))]
+    #[pyo3(signature = (*, date, accepted_date, symbol, cik, company_name, form_type, environmental_score, social_score, governance_score, esg_score, url))]
     fn new(
         date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDate,
@@ -68,22 +68,42 @@ impl EsgDisclosure {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.form_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("form_type", self.form_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "environmental_score",
             self.environmental_score.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "social_score",
             self.social_score.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "governance_score",
             self.governance_score.clone().into_bound_py_any(py)?,
-            self.esg_score.clone().into_bound_py_any(py)?,
-            self.url.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("esg_score", self.esg_score.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("url", self.url.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -106,8 +126,8 @@ impl From<libfmp::responses::esg::EsgDisclosure> for EsgDisclosure {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.esg", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.esg", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EsgRating {
     #[pyo3(get)]
     pub symbol: String,
@@ -131,7 +151,7 @@ impl EsgRating {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, cik, company_name, industry, fiscal_year, esg_risk_rating, industry_rank))]
+    #[pyo3(signature = (*, symbol, cik, company_name, industry, fiscal_year, esg_risk_rating, industry_rank))]
     fn new(
         symbol: String,
         cik: String,
@@ -152,18 +172,35 @@ impl EsgRating {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.industry.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("industry", self.industry.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "esg_risk_rating",
             self.esg_risk_rating.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "industry_rank",
             self.industry_rank.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -182,8 +219,8 @@ impl From<libfmp::responses::esg::EsgRating> for EsgRating {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.esg", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.esg", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EsgBenchmark {
     #[pyo3(get)]
     pub fiscal_year: u32,
@@ -205,7 +242,7 @@ impl EsgBenchmark {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (fiscal_year, sector, environmental_score, social_score, governance_score, esg_score))]
+    #[pyo3(signature = (*, fiscal_year, sector, environmental_score, social_score, governance_score, esg_score))]
     fn new(
         fiscal_year: u32,
         sector: String,
@@ -224,17 +261,34 @@ impl EsgBenchmark {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "environmental_score",
             self.environmental_score.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "social_score",
             self.social_score.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "governance_score",
             self.governance_score.clone().into_bound_py_any(py)?,
-            self.esg_score.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("esg_score", self.esg_score.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

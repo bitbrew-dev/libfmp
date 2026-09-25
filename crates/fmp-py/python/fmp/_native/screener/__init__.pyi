@@ -11,6 +11,8 @@ __all__ = [
 
 @typing.final
 class CompanyScreenerResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -41,8 +43,10 @@ class CompanyScreenerResult:
     def is_fund(self) -> builtins.bool: ...
     @property
     def is_actively_trading(self) -> builtins.bool: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         company_name: builtins.str,
         market_cap: builtins.float,
@@ -59,7 +63,7 @@ class CompanyScreenerResult:
         is_fund: builtins.bool,
         is_actively_trading: builtins.bool,
     ) -> CompanyScreenerResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
