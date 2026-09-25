@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -17,7 +21,7 @@ fn documented_key_metrics_decodes_all_47_exact_fields() {
     assert_eq!(value[0].as_object().unwrap().len(), 47);
 
     let rows: Vec<KeyMetrics> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [KeyMetrics {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -77,7 +81,7 @@ fn documented_key_metrics_ttm_decodes_all_43_exact_fields() {
     assert_eq!(value[0].as_object().unwrap().len(), 43);
 
     let rows: Vec<KeyMetricsTtm> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [KeyMetricsTtm {
             symbol: Ticker::new("AAPL").unwrap(),

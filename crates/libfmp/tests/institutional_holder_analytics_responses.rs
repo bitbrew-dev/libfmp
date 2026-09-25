@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -13,7 +17,7 @@ fn exact_fixture_decodes_all_39_required_fields_and_wire_casing() {
     assert_eq!(source[0].as_object().unwrap().len(), 39);
 
     let rows: Vec<InstitutionalHolderAnalytics> = serde_json::from_value(source.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [InstitutionalHolderAnalytics {
             date: Date::from_str("2023-09-30").unwrap(),

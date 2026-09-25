@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -16,7 +20,7 @@ const INTRADAY: &[u8] = include_bytes!("fixtures/stock_chart_intraday.json");
 #[test]
 fn exact_source_rows_decode_all_required_fields() {
     let light: Vec<StockChartLightBar> = serde_json::from_slice(LIGHT).unwrap();
-    assert_eq!(
+    assert_rows!(
         light,
         [StockChartLightBar {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -27,7 +31,7 @@ fn exact_source_rows_decode_all_required_fields() {
     );
 
     let full: Vec<StockChartFullBar> = serde_json::from_slice(FULL).unwrap();
-    assert_eq!(
+    assert_rows!(
         full,
         [StockChartFullBar {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -44,7 +48,7 @@ fn exact_source_rows_decode_all_required_fields() {
     );
 
     let adjusted: Vec<StockChartAdjustedBar> = serde_json::from_slice(ADJUSTED).unwrap();
-    assert_eq!(
+    assert_rows!(
         adjusted,
         [StockChartAdjustedBar {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -58,7 +62,7 @@ fn exact_source_rows_decode_all_required_fields() {
     );
 
     let intraday: Vec<StockChartIntradayBar> = serde_json::from_slice(INTRADAY).unwrap();
-    assert_eq!(
+    assert_rows!(
         intraday,
         [StockChartIntradayBar {
             date: ApiDateTime::from_str("2026-07-30 13:16:00").unwrap(),

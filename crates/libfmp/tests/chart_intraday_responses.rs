@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::{collections::BTreeSet, str::FromStr};
 
 use libfmp::{responses::chart::StockChartIntradayBar, types::ApiDateTime};
@@ -75,7 +79,7 @@ fn every_intraday_route_decodes_its_exact_documented_row() {
         FIXTURES.into_iter().zip(expected)
     {
         let rows: Vec<StockChartIntradayBar> = serde_json::from_slice(fixture).unwrap();
-        assert_eq!(
+        assert_rows!(
             rows,
             [StockChartIntradayBar {
                 date: ApiDateTime::from_str(date).unwrap(),

@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -22,7 +26,7 @@ const EXACT_CONTENT: &str = "Operator: Good day, everyone. Welcome to the Apple 
 fn exact_latest_fixture_decodes_four_required_metadata_fields() {
     assert_field_count(LATEST, 4);
     let rows: Vec<LatestEarningsTranscript> = serde_json::from_slice(LATEST).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [LatestEarningsTranscript {
             symbol: Ticker::new("VLO").unwrap(),
@@ -37,7 +41,7 @@ fn exact_latest_fixture_decodes_four_required_metadata_fields() {
 fn exact_transcript_fixture_retains_the_complete_documented_content() {
     assert_field_count(TRANSCRIPT, 5);
     let rows: Vec<EarningsTranscript> = serde_json::from_slice(TRANSCRIPT).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [EarningsTranscript {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -55,7 +59,7 @@ fn exact_transcript_fixture_retains_the_complete_documented_content() {
 fn exact_dates_fixture_uses_numeric_response_quarter_and_year() {
     assert_field_count(DATES, 3);
     let rows: Vec<EarningsTranscriptDate> = serde_json::from_slice(DATES).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [EarningsTranscriptDate {
             quarter: CalendarQuarter::new(2).unwrap(),

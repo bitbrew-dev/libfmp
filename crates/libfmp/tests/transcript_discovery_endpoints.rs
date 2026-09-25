@@ -1,4 +1,7 @@
 mod support;
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
 
 use std::{str::FromStr, sync::Arc};
 
@@ -97,7 +100,7 @@ async fn custom_proxy_preserves_exact_query_order_auth_headers_and_bare_arrays()
         .await
         .unwrap();
 
-    assert_eq!(
+    assert_rows!(
         latest,
         [LatestEarningsTranscript {
             symbol: Ticker::new("VLO").unwrap(),
@@ -106,7 +109,7 @@ async fn custom_proxy_preserves_exact_query_order_auth_headers_and_bare_arrays()
             date: Date::from_str("2026-07-30").unwrap(),
         }]
     );
-    assert_eq!(
+    assert_rows!(
         dates,
         [EarningsTranscriptDate {
             quarter: CalendarQuarter::new(2).unwrap(),

@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -16,7 +20,7 @@ fn exact_positions_fixture_decodes_all_36_fields_and_provider_casing() {
     let source: serde_json::Value = serde_json::from_slice(POSITIONS).unwrap();
     assert_eq!(source[0].as_object().unwrap().len(), 36);
     let rows: Vec<InstitutionalPositionSummary> = serde_json::from_value(source.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [InstitutionalPositionSummary {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -65,7 +69,7 @@ fn exact_industry_fixture_decodes_all_three_fields() {
     let source: serde_json::Value = serde_json::from_slice(INDUSTRY).unwrap();
     assert_eq!(source[0].as_object().unwrap().len(), 3);
     let rows: Vec<InstitutionalIndustrySummary> = serde_json::from_value(source.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [InstitutionalIndustrySummary {
             industry_title: "ABRASIVE, ASBESTOS & MISC NONMETALLIC MINERAL PRODS".to_owned(),

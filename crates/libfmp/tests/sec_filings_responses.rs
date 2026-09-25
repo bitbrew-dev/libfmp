@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use libfmp::{
     codecs::{DynamicObject, NumericString},
     responses::sec_filings::{
@@ -127,7 +131,7 @@ fn null_only_profile_security_type_preserves_future_json_without_inventing_a_typ
 fn sic_list_is_typed_but_documented_empty_search_stays_raw() {
     assert_field_count(CLASSIFICATIONS, 3);
     let rows: Vec<SicClassification> = serde_json::from_slice(CLASSIFICATIONS).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [SicClassification {
             office: "Office of Life Sciences".to_owned(),

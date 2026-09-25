@@ -2,7 +2,7 @@ use libfmp::{
     responses::market::{
         IndustryPe, IndustryPerformance, MarketMover, SectorPe, SectorPerformance,
     },
-    types::{Date, ExchangeCode, Industry, Sector, Ticker},
+    types::{Date, ExchangeCode, Industry, Sector},
 };
 use serde::{Serialize, de::DeserializeOwned};
 
@@ -100,14 +100,15 @@ fn open_fundamentals_preserve_provider_values_without_closed_vocabularies() {
     assert_eq!(rows[0].industry.as_str(), "Future & Quantum / Services");
     assert_eq!(rows[0].exchange.as_str(), "NEW-EXCHANGE / DARK");
 
-    let mover = MarketMover {
-        symbol: Ticker::new("BRK.B / Class A").unwrap(),
-        price: 1.0,
-        name: "Provider Name".to_owned(),
-        change: 0.0,
-        changes_percentage: 0.0,
-        exchange: ExchangeCode::new("FUTURE").unwrap(),
-    };
+    let mover: MarketMover = serde_json::from_value(serde_json::json!({
+        "symbol": "BRK.B / Class A",
+        "price": 1.0,
+        "name": "Provider Name",
+        "change": 0.0,
+        "changesPercentage": 0.0,
+        "exchange": "FUTURE"
+    }))
+    .unwrap();
     assert_eq!(mover.symbol.as_str(), "BRK.B / Class A");
 }
 

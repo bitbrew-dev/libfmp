@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -16,7 +20,7 @@ fn both_endpoint_source_fixtures_decode_the_exact_shared_seven_field_row() {
         assert_eq!(source[0].as_object().unwrap().len(), 7);
 
         let rows: Vec<StockChartAdjustedBar> = serde_json::from_value(source.clone()).unwrap();
-        assert_eq!(
+        assert_rows!(
             rows,
             [StockChartAdjustedBar {
                 symbol: Ticker::new("AAPL").unwrap(),

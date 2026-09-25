@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -25,7 +29,7 @@ fn exact_financial_estimate_decodes_all_22_fields() {
     assert_field_count(ESTIMATES, 22);
     let source: serde_json::Value = serde_json::from_slice(ESTIMATES).unwrap();
     let rows: Vec<FinancialEstimate> = serde_json::from_value(source.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [FinancialEstimate {
             symbol: Ticker::new("AAPL").unwrap(),

@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -29,7 +33,7 @@ const DATES: &[u8] = include_bytes!("fixtures/fund_disclosure_dates.json");
 fn exact_holding_fixture_decodes_all_nine_fields_and_space_timestamp() {
     assert_field_count(HOLDINGS, 9);
     let rows: Vec<EtfFundHolding> = serde_json::from_slice(HOLDINGS).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [EtfFundHolding {
             symbol: Ticker::new("SPY").unwrap(),
@@ -71,7 +75,7 @@ fn exact_info_fixture_decodes_nineteen_fields_and_nested_sectors() {
         row.updated_at,
         IsoTimestamp::from_str("2026-07-30T16:00:20.049Z").unwrap()
     );
-    assert_eq!(
+    assert_rows!(
         row.sectors_list,
         [
             EtfSectorExposure {
@@ -139,7 +143,7 @@ fn exact_allocation_fixtures_preserve_string_and_numeric_percent_kinds() {
 fn exact_latest_holder_fixture_preserves_leading_zeroes_and_signed_change() {
     assert_field_count(LATEST_HOLDERS, 7);
     let rows: Vec<FundDisclosureHolder> = serde_json::from_slice(LATEST_HOLDERS).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [FundDisclosureHolder {
             cik: Cik::new("0000866256").unwrap(),
@@ -161,7 +165,7 @@ fn exact_latest_holder_fixture_preserves_leading_zeroes_and_signed_change() {
 fn exact_disclosure_fixture_decodes_all_twenty_three_wire_fields() {
     assert_field_count(DISCLOSURES, 23);
     let rows: Vec<FundDisclosure> = serde_json::from_slice(DISCLOSURES).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [FundDisclosure {
             cik: Cik::new("0000857489").unwrap(),
@@ -229,7 +233,7 @@ fn exact_search_fixture_preserves_all_thirteen_string_fields() {
 fn exact_dates_fixture_uses_numeric_calendar_period_units() {
     assert_field_count(DATES, 3);
     let rows: Vec<FundDisclosureDate> = serde_json::from_slice(DATES).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [FundDisclosureDate {
             date: Date::from_str("2026-04-30").unwrap(),

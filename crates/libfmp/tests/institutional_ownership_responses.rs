@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -16,7 +20,7 @@ const DATES: &[u8] = include_bytes!("fixtures/form_13f_filing_dates.json");
 fn exact_latest_fixture_decodes_eight_fields_and_distinct_temporal_kinds() {
     assert_field_count(LATEST, 8);
     let rows: Vec<InstitutionalOwnershipFiling> = serde_json::from_slice(LATEST).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [InstitutionalOwnershipFiling {
             cik: Cik::new("0001803005").unwrap(),
@@ -36,7 +40,7 @@ fn exact_latest_fixture_decodes_eight_fields_and_distinct_temporal_kinds() {
 fn exact_extract_fixture_decodes_fourteen_fields_and_required_empty_put_call() {
     assert_field_count(EXTRACT, 14);
     let rows: Vec<InstitutionalHolding> = serde_json::from_slice(EXTRACT).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [InstitutionalHolding {
             date: Date::from_str("2023-09-30").unwrap(),
@@ -69,7 +73,7 @@ fn exact_extract_fixture_decodes_fourteen_fields_and_required_empty_put_call() {
 fn exact_dates_fixture_uses_numeric_calendar_year_and_quarter() {
     assert_field_count(DATES, 3);
     let rows: Vec<Form13fFilingDate> = serde_json::from_slice(DATES).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [Form13fFilingDate {
             date: Date::from_str("2026-03-31").unwrap(),

@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -26,7 +30,7 @@ fn both_exact_dividend_fixtures_share_the_nine_field_row() {
     assert_field_count(DIVIDENDS_CALENDAR, 9);
 
     let company: Vec<DividendEvent> = serde_json::from_slice(DIVIDENDS).unwrap();
-    assert_eq!(
+    assert_rows!(
         company,
         [DividendEvent {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -60,7 +64,7 @@ fn both_exact_earnings_fixtures_preserve_only_nullable_actual_values() {
     assert_field_count(EARNINGS_CALENDAR, 7);
 
     let company: Vec<EarningsEvent> = serde_json::from_slice(EARNINGS).unwrap();
-    assert_eq!(
+    assert_rows!(
         company,
         [EarningsEvent {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -85,7 +89,7 @@ fn both_exact_earnings_fixtures_preserve_only_nullable_actual_values() {
 fn exact_ipo_calendar_fixture_preserves_literal_daa_and_source_only_nulls() {
     assert_field_count(IPOS_CALENDAR, 9);
     let rows: Vec<IpoCalendarEvent> = serde_json::from_slice(IPOS_CALENDAR).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [IpoCalendarEvent {
             symbol: Ticker::new("IMC").unwrap(),
@@ -121,7 +125,7 @@ fn exact_ipo_calendar_fixture_preserves_literal_daa_and_source_only_nulls() {
 fn exact_ipo_disclosure_fixture_preserves_dates_leading_zero_cik_and_url() {
     assert_field_count(IPOS_DISCLOSURE, 7);
     let rows: Vec<IpoDisclosure> = serde_json::from_slice(IPOS_DISCLOSURE).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [IpoDisclosure {
             symbol: Ticker::new("QTJA").unwrap(),
@@ -140,7 +144,7 @@ fn exact_ipo_disclosure_fixture_preserves_dates_leading_zero_cik_and_url() {
 fn exact_ipo_prospectus_fixture_decodes_all_thirteen_fields() {
     assert_field_count(IPOS_PROSPECTUS, 13);
     let rows: Vec<IpoProspectus> = serde_json::from_slice(IPOS_PROSPECTUS).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [IpoProspectus {
             symbol: Ticker::new("FTW-WT").unwrap(),
@@ -166,7 +170,7 @@ fn both_exact_stock_split_fixtures_share_the_five_field_integer_row() {
     assert_field_count(STOCK_SPLITS_CALENDAR, 5);
 
     let company: Vec<StockSplitEvent> = serde_json::from_slice(STOCK_SPLITS).unwrap();
-    assert_eq!(
+    assert_rows!(
         company,
         [StockSplitEvent {
             symbol: Ticker::new("AAPL").unwrap(),

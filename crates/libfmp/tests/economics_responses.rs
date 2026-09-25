@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -20,7 +24,7 @@ fn treasury_fixture_decodes_all_13_exact_fields_without_scaling() {
     assert_eq!(value[0].as_object().unwrap().len(), 13);
 
     let rows: Vec<TreasuryRate> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [TreasuryRate {
             date: Date::from_str("2026-07-29").unwrap(),
@@ -46,7 +50,7 @@ fn indicator_fixture_decodes_exact_three_field_contract() {
     assert_eq!(value[0].as_object().unwrap().len(), 3);
 
     let rows: Vec<EconomicIndicatorObservation> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [EconomicIndicatorObservation {
             name: EconomicIndicator::Gdp,
@@ -67,7 +71,7 @@ fn calendar_fixture_decodes_all_11_fields_with_required_numeric_values() {
     assert_eq!(value[0].as_object().unwrap().len(), 11);
 
     let rows: Vec<EconomicCalendarEvent> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [EconomicCalendarEvent {
             date: ApiDateTime::from_str("2026-07-29 03:30:00").unwrap(),
@@ -91,7 +95,7 @@ fn market_risk_fixture_uses_full_country_name_and_raw_percentage_values() {
     assert_eq!(value[0].as_object().unwrap().len(), 4);
 
     let rows: Vec<MarketRiskPremium> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [MarketRiskPremium {
             country: "Zimbabwe".to_owned(),

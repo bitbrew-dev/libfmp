@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -16,7 +20,7 @@ fn endpoint_source_fixtures_decode_every_exact_required_field() {
     assert_eq!(full_value[0].as_object().unwrap().len(), 10);
 
     let light: Vec<StockChartLightBar> = serde_json::from_value(light_value.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         light,
         [StockChartLightBar {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -28,7 +32,7 @@ fn endpoint_source_fixtures_decode_every_exact_required_field() {
     assert_eq!(serde_json::to_value(light).unwrap(), light_value);
 
     let full: Vec<StockChartFullBar> = serde_json::from_value(full_value.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         full,
         [StockChartFullBar {
             symbol: Ticker::new("AAPL").unwrap(),
