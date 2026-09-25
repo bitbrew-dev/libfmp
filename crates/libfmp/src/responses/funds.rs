@@ -6,7 +6,7 @@ use crate::{
     codecs::{IsoTimestamp, NumericString, PercentString, YnFlag},
     types::{
         ApiDateTime, Cik, Count, CountryCode, CurrencyCode, Cusip, Date, Industry, Isin, Lei,
-        MarketValue, Percentage, Sector, Ticker, Volume,
+        MarketValue, Percentage, Quantity, Sector, Ticker, Volume,
     },
 };
 
@@ -19,8 +19,10 @@ pub struct EtfFundHolding {
     pub name: String,
     pub isin: Isin,
     pub security_cusip: Cusip,
-    pub shares_number: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub shares_number: Quantity,
     pub weight_percentage: Percentage,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_value: MarketValue,
     pub updated_at: ApiDateTime,
 }
@@ -47,7 +49,8 @@ pub struct EtfFundInfo {
     pub website: String,
     pub etf_company: String,
     pub expense_ratio: Percentage,
-    pub assets_under_management: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub assets_under_management: MarketValue,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub avg_volume: Volume,
     pub inception_date: Date,
@@ -73,8 +76,10 @@ pub struct EtfCountryWeighting {
 pub struct EtfAssetExposure {
     pub symbol: Ticker,
     pub asset: Ticker,
-    pub shares_number: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub shares_number: Quantity,
     pub weight_percentage: Percentage,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_value: MarketValue,
 }
 
@@ -94,9 +99,11 @@ pub struct FundDisclosureHolder {
     pub cik: Cik,
     pub holder: String,
     pub security_cusip: Cusip,
-    pub shares: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub shares: Quantity,
     pub date_reported: Date,
-    pub change: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub change: Quantity,
     pub weight_percent: Percentage,
 }
 
@@ -113,10 +120,12 @@ pub struct FundDisclosure {
     pub title: String,
     pub cusip: Cusip,
     pub isin: Isin,
-    pub balance: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub balance: Quantity,
     pub units: String,
     #[serde(rename = "cur_cd")]
     pub currency_code: CurrencyCode,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub val_usd: MarketValue,
     pub pct_val: Percentage,
     pub payoff_profile: String,

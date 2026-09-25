@@ -26,7 +26,7 @@ class EtfAssetExposure:
     @property
     def asset(self) -> builtins.str: ...
     @property
-    def shares_number(self) -> builtins.int: ...
+    def shares_number(self) -> builtins.float: ...
     @property
     def weight_percentage(self) -> builtins.float: ...
     @property
@@ -35,7 +35,7 @@ class EtfAssetExposure:
         cls,
         symbol: builtins.str,
         asset: builtins.str,
-        shares_number: builtins.int,
+        shares_number: builtins.float,
         weight_percentage: builtins.float,
         market_value: builtins.float,
     ) -> EtfAssetExposure: ...
@@ -67,7 +67,7 @@ class EtfFundHolding:
     @property
     def security_cusip(self) -> builtins.str: ...
     @property
-    def shares_number(self) -> builtins.int: ...
+    def shares_number(self) -> builtins.float: ...
     @property
     def weight_percentage(self) -> builtins.float: ...
     @property
@@ -81,7 +81,7 @@ class EtfFundHolding:
         name: builtins.str,
         isin: builtins.str,
         security_cusip: builtins.str,
-        shares_number: builtins.int,
+        shares_number: builtins.float,
         weight_percentage: builtins.float,
         market_value: builtins.float,
         updated_at: datetime.datetime,
@@ -112,7 +112,7 @@ class EtfFundInfo:
     @property
     def expense_ratio(self) -> builtins.float: ...
     @property
-    def assets_under_management(self) -> builtins.int: ...
+    def assets_under_management(self) -> builtins.float: ...
     @property
     def avg_volume(self) -> builtins.float: ...
     @property
@@ -141,7 +141,7 @@ class EtfFundInfo:
         website: builtins.str,
         etf_company: builtins.str,
         expense_ratio: builtins.float,
-        assets_under_management: builtins.int,
+        assets_under_management: builtins.float,
         avg_volume: builtins.float,
         inception_date: datetime.date,
         nav: builtins.float,
@@ -204,7 +204,7 @@ class FundDisclosure:
     @property
     def isin(self) -> builtins.str: ...
     @property
-    def balance(self) -> builtins.int: ...
+    def balance(self) -> builtins.float: ...
     @property
     def units(self) -> builtins.str: ...
     @property
@@ -242,7 +242,7 @@ class FundDisclosure:
         title: builtins.str,
         cusip: builtins.str,
         isin: builtins.str,
-        balance: builtins.int,
+        balance: builtins.float,
         units: builtins.str,
         currency_code: builtins.str,
         val_usd: builtins.float,
@@ -269,11 +269,11 @@ class FundDisclosureHolder:
     @property
     def security_cusip(self) -> builtins.str: ...
     @property
-    def shares(self) -> builtins.int: ...
+    def shares(self) -> builtins.float: ...
     @property
     def date_reported(self) -> datetime.date: ...
     @property
-    def change(self) -> builtins.int: ...
+    def change(self) -> builtins.float: ...
     @property
     def weight_percent(self) -> builtins.float: ...
     def __new__(
@@ -281,9 +281,9 @@ class FundDisclosureHolder:
         cik: builtins.str,
         holder: builtins.str,
         security_cusip: builtins.str,
-        shares: builtins.int,
+        shares: builtins.float,
         date_reported: datetime.date,
-        change: builtins.int,
+        change: builtins.float,
         weight_percent: builtins.float,
     ) -> FundDisclosureHolder: ...
     def __getnewargs__(self) -> tuple: ...

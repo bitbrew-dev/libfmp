@@ -18,13 +18,13 @@ type InsiderTrade struct {
 	ReportingCik             string  `json:"reportingCik"`
 	CompanyCik               string  `json:"companyCik"`
 	TransactionType          string  `json:"transactionType"`
-	SecuritiesOwned          uint64  `json:"securitiesOwned"`
+	SecuritiesOwned          float64 `json:"securitiesOwned"`
 	ReportingName            string  `json:"reportingName"`
 	TypeOfOwner              string  `json:"typeOfOwner"`
 	AcquisitionOrDisposition string  `json:"acquisitionOrDisposition"`
 	DirectOrIndirect         string  `json:"directOrIndirect"`
 	FormType                 string  `json:"formType"`
-	SecuritiesTransacted     uint64  `json:"securitiesTransacted"`
+	SecuritiesTransacted     float64 `json:"securitiesTransacted"`
 	Price                    float64 `json:"price"`
 	SecurityName             string  `json:"securityName"`
 	Url                      string  `json:"url"`
@@ -40,13 +40,13 @@ type insiderTradeShadow struct {
 	ReportingCik             *string  `json:"reportingCik"`
 	CompanyCik               *string  `json:"companyCik"`
 	TransactionType          *string  `json:"transactionType"`
-	SecuritiesOwned          *uint64  `json:"securitiesOwned"`
+	SecuritiesOwned          *float64 `json:"securitiesOwned"`
 	ReportingName            *string  `json:"reportingName"`
 	TypeOfOwner              *string  `json:"typeOfOwner"`
 	AcquisitionOrDisposition *string  `json:"acquisitionOrDisposition"`
 	DirectOrIndirect         *string  `json:"directOrIndirect"`
 	FormType                 *string  `json:"formType"`
-	SecuritiesTransacted     *uint64  `json:"securitiesTransacted"`
+	SecuritiesTransacted     *float64 `json:"securitiesTransacted"`
 	Price                    *float64 `json:"price"`
 	SecurityName             *string  `json:"securityName"`
 	Url                      *string  `json:"url"`
@@ -190,8 +190,8 @@ type InsiderTradeStatistics struct {
 	AcquiredTransactions  uint64  `json:"acquiredTransactions"`
 	DisposedTransactions  uint64  `json:"disposedTransactions"`
 	AcquiredDisposedRatio float64 `json:"acquiredDisposedRatio"`
-	TotalAcquired         uint64  `json:"totalAcquired"`
-	TotalDisposed         uint64  `json:"totalDisposed"`
+	TotalAcquired         float64 `json:"totalAcquired"`
+	TotalDisposed         float64 `json:"totalDisposed"`
 	AverageAcquired       float64 `json:"averageAcquired"`
 	AverageDisposed       float64 `json:"averageDisposed"`
 	TotalPurchases        uint64  `json:"totalPurchases"`
@@ -209,8 +209,8 @@ type insiderTradeStatisticsShadow struct {
 	AcquiredTransactions  *uint64  `json:"acquiredTransactions"`
 	DisposedTransactions  *uint64  `json:"disposedTransactions"`
 	AcquiredDisposedRatio *float64 `json:"acquiredDisposedRatio"`
-	TotalAcquired         *uint64  `json:"totalAcquired"`
-	TotalDisposed         *uint64  `json:"totalDisposed"`
+	TotalAcquired         *float64 `json:"totalAcquired"`
+	TotalDisposed         *float64 `json:"totalDisposed"`
 	AverageAcquired       *float64 `json:"averageAcquired"`
 	AverageDisposed       *float64 `json:"averageDisposed"`
 	TotalPurchases        *uint64  `json:"totalPurchases"`

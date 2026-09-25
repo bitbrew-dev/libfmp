@@ -19,8 +19,10 @@ pub struct CompanyScreenerEntry {
     pub market_cap: MarketCapitalization,
     pub sector: Sector,
     pub industry: Industry,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub beta: MarketValue,
     pub price: Price,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub last_annual_dividend: MarketValue,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub volume: Volume,

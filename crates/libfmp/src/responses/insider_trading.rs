@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     codecs::NumericString,
     types::{
-        CalendarQuarter, CalendarYear, Cik, Count, Cusip, Date, FormType, Price, Ticker,
+        CalendarQuarter, CalendarYear, Cik, Count, Cusip, Date, FormType, Price, Quantity, Ticker,
         TransactionTypeCode,
     },
 };
@@ -24,13 +24,15 @@ pub struct InsiderTrade {
     pub reporting_cik: Cik,
     pub company_cik: Cik,
     pub transaction_type: TransactionTypeCode,
-    pub securities_owned: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub securities_owned: Quantity,
     pub reporting_name: String,
     pub type_of_owner: String,
     pub acquisition_or_disposition: String,
     pub direct_or_indirect: String,
     pub form_type: FormType,
-    pub securities_transacted: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub securities_transacted: Quantity,
     pub price: Price,
     pub security_name: String,
     pub url: String,
@@ -62,8 +64,10 @@ pub struct InsiderTradeStatistics {
     pub acquired_transactions: Count,
     pub disposed_transactions: Count,
     pub acquired_disposed_ratio: f64,
-    pub total_acquired: Count,
-    pub total_disposed: Count,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_acquired: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_disposed: Quantity,
     pub average_acquired: f64,
     pub average_disposed: f64,
     pub total_purchases: Count,

@@ -663,8 +663,22 @@ pub type Price = f64;
 pub type Change = f64;
 /// A percentage represented by the provider as a JSON number.
 pub type Percentage = f64;
-/// A market value represented by the provider as a JSON number.
+/// A currency amount represented by the provider as a JSON number.
+///
+/// Covers market values and money totals such as assets under management,
+/// compensation, offering amounts and revenue. Amounts can be fractional or
+/// negative, so the type is `f64`; values above `2^53` round to the nearest
+/// `f64`. Response fields re-encode an integral value as a JSON integer
+/// through `crate::codecs::integral_f64`.
 pub type MarketValue = f64;
+/// A share or unit quantity represented by the provider as a JSON number.
+///
+/// Holdings, float, outstanding and transacted share amounts can be
+/// fractional, and position changes or short balances negative, so the type
+/// is `f64`; values above `2^53` round to the nearest `f64`. Response fields
+/// re-encode an integral value as a JSON integer through
+/// `crate::codecs::integral_f64`. Use [`Count`] for counts of things.
+pub type Quantity = f64;
 /// A traded volume represented by the provider as a JSON number.
 ///
 /// The provider documents volume as a non-negative integer, but it sends a

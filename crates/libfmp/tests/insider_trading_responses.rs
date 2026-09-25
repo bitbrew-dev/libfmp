@@ -34,8 +34,8 @@ fn exact_latest_and_search_fixtures_share_the_16_field_trade_row() {
     assert_eq!(latest[0].reporting_cik.as_str(), "0001661867");
     assert_eq!(latest[0].company_cik.as_str(), "0000036146");
     assert_eq!(latest[0].transaction_type.as_str(), "A-Award");
-    assert_eq!(latest[0].securities_owned, 62_959);
-    assert_eq!(latest[0].securities_transacted, 1_608);
+    assert_eq!(latest[0].securities_owned, 62_959.0);
+    assert_eq!(latest[0].securities_transacted, 1_608.0);
     assert_eq!(latest[0].price, 0.0);
     assert_eq!(latest[0].form_type.as_str(), "4");
 }
@@ -88,21 +88,19 @@ fn exact_ownership_fixture_preserves_dates_identifiers_and_quoted_numbers() {
 }
 
 #[test]
-fn counts_preserve_u64_and_integer_prices_decode_as_prices() {
+fn counts_preserve_u64_quantities_decode_as_f64_and_integer_prices_decode_as_prices() {
     let mut trade: serde_json::Value = serde_json::from_slice(LATEST).unwrap();
     trade[0]["securitiesOwned"] = serde_json::json!(u64::MAX);
     trade[0]["securitiesTransacted"] = serde_json::json!(u64::MAX);
     trade[0]["price"] = serde_json::json!(225);
     let rows: Vec<InsiderTrade> = serde_json::from_value(trade).unwrap();
-    assert_eq!(rows[0].securities_owned, u64::MAX);
-    assert_eq!(rows[0].securities_transacted, u64::MAX);
+    assert_eq!(rows[0].securities_owned, u64::MAX as f64);
+    assert_eq!(rows[0].securities_transacted, u64::MAX as f64);
     assert_eq!(rows[0].price, 225.0);
 
     let count_fields = [
         "acquiredTransactions",
         "disposedTransactions",
-        "totalAcquired",
-        "totalDisposed",
         "totalPurchases",
         "totalSales",
     ];
@@ -111,6 +109,12 @@ fn counts_preserve_u64_and_integer_prices_decode_as_prices() {
         source[0][field] = serde_json::json!(u64::MAX);
         let rows: Vec<InsiderTradeStatistics> = serde_json::from_value(source.clone()).unwrap();
         assert_eq!(serde_json::to_value(rows).unwrap()[0][field], u64::MAX);
+    }
+    for field in ["totalAcquired", "totalDisposed"] {
+        let mut source: serde_json::Value = serde_json::from_slice(STATISTICS).unwrap();
+        source[0][field] = serde_json::json!(1_500.5);
+        let rows: Vec<InsiderTradeStatistics> = serde_json::from_value(source).unwrap();
+        assert_eq!(serde_json::to_value(rows).unwrap()[0][field], 1_500.5);
     }
 }
 

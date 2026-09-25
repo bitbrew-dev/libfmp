@@ -22,7 +22,7 @@ pub(crate) struct InsiderTrade {
     #[pyo3(get)]
     pub transaction_type: String,
     #[pyo3(get)]
-    pub securities_owned: u64,
+    pub securities_owned: f64,
     #[pyo3(get)]
     pub reporting_name: String,
     #[pyo3(get)]
@@ -34,7 +34,7 @@ pub(crate) struct InsiderTrade {
     #[pyo3(get)]
     pub form_type: String,
     #[pyo3(get)]
-    pub securities_transacted: u64,
+    pub securities_transacted: f64,
     #[pyo3(get)]
     pub price: f64,
     #[pyo3(get)]
@@ -57,13 +57,13 @@ impl InsiderTrade {
         reporting_cik: String,
         company_cik: String,
         transaction_type: String,
-        securities_owned: u64,
+        securities_owned: f64,
         reporting_name: String,
         type_of_owner: String,
         acquisition_or_disposition: String,
         direct_or_indirect: String,
         form_type: String,
-        securities_transacted: u64,
+        securities_transacted: f64,
         price: f64,
         security_name: String,
         url: String,
@@ -234,9 +234,9 @@ pub(crate) struct InsiderTradeStatistics {
     #[pyo3(get)]
     pub acquired_disposed_ratio: f64,
     #[pyo3(get)]
-    pub total_acquired: u64,
+    pub total_acquired: f64,
     #[pyo3(get)]
-    pub total_disposed: u64,
+    pub total_disposed: f64,
     #[pyo3(get)]
     pub average_acquired: f64,
     #[pyo3(get)]
@@ -262,8 +262,8 @@ impl InsiderTradeStatistics {
         acquired_transactions: u64,
         disposed_transactions: u64,
         acquired_disposed_ratio: f64,
-        total_acquired: u64,
-        total_disposed: u64,
+        total_acquired: f64,
+        total_disposed: f64,
         average_acquired: f64,
         average_disposed: f64,
         total_purchases: u64,

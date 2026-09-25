@@ -37,7 +37,7 @@ fn exact_holding_fixture_decodes_all_nine_fields_and_space_timestamp() {
             name: "APPLE INC".to_owned(),
             isin: Isin::new("US0378331005").unwrap(),
             security_cusip: Cusip::new("037833100").unwrap(),
-            shares_number: 181_418_073,
+            shares_number: 181_418_073.0,
             weight_percentage: 7.79997012,
             market_value: 61_679_458_958.0,
             updated_at: ApiDateTime::parse("2026-07-30 08:07:21").unwrap(),
@@ -60,7 +60,7 @@ fn exact_info_fixture_decodes_nineteen_fields_and_nested_sectors() {
     assert_eq!(row.domicile, CountryCode::new("US").unwrap());
     assert_eq!(row.etf_company, "SPDR");
     assert_eq!(row.expense_ratio, 0.09);
-    assert_eq!(row.assets_under_management, 777_349_860_000);
+    assert_eq!(row.assets_under_management, 777_349_860_000.0);
     assert_eq!(row.avg_volume, 52_093_933.0);
     assert_eq!(row.inception_date, Date::from_str("1993-01-22").unwrap());
     assert_eq!(row.nav, 729.27);
@@ -105,7 +105,7 @@ fn exact_allocation_fixtures_preserve_string_and_numeric_percent_kinds() {
     let assets: Vec<EtfAssetExposure> = serde_json::from_slice(ASSET).unwrap();
     assert_eq!(assets[0].symbol, Ticker::new("ZWT-T.TO").unwrap());
     assert_eq!(assets[0].asset, Ticker::new("AAPL").unwrap());
-    assert_eq!(assets[0].shares_number, 42_372);
+    assert_eq!(assets[0].shares_number, 42_372.0);
     assert_eq!(assets[0].weight_percentage, 10.1);
     assert_eq!(assets[0].market_value, 20_141_231.66);
     let encoded_assets = serde_json::to_value(assets).unwrap();
@@ -145,9 +145,9 @@ fn exact_latest_holder_fixture_preserves_leading_zeroes_and_signed_change() {
             cik: Cik::new("0000866256").unwrap(),
             holder: "PARNASSUS INCOME FUNDS".to_owned(),
             security_cusip: Cusip::new("037833100").unwrap(),
-            shares: 3_638_451,
+            shares: 3_638_451.0,
             date_reported: Date::from_str("2026-06-30").unwrap(),
-            change: -316_881,
+            change: -316_881.0,
             weight_percent: 4.06607721,
         }]
     );
@@ -173,7 +173,7 @@ fn exact_disclosure_fixture_decodes_all_twenty_three_wire_fields() {
             title: "SHENZ AIRPORT-A".to_owned(),
             cusip: Cusip::new("N/A").unwrap(),
             isin: Isin::new("CNE000000VK1").unwrap(),
-            balance: 2_438_784,
+            balance: 2_438_784.0,
             units: "NS".to_owned(),
             currency_code: CurrencyCode::new("CNY").unwrap(),
             val_usd: 2_255_873.6,
@@ -257,7 +257,7 @@ fn integer_widths_signed_change_and_decimal_market_values_are_preserved() {
             INFO
         };
         let mut value: serde_json::Value = serde_json::from_slice(fixture).unwrap();
-        let width = if field == "avgVolume" {
+        let width = if field == "avgVolume" || field == "assetsUnderManagement" {
             u64::from(u32::MAX) + 1
         } else {
             u64::MAX
@@ -265,7 +265,7 @@ fn integer_widths_signed_change_and_decimal_market_values_are_preserved() {
         value[0][field] = serde_json::json!(width);
         if field == "sharesNumber" {
             let rows: Vec<EtfFundHolding> = serde_json::from_value(value).unwrap();
-            assert_eq!(rows[0].shares_number, u64::MAX);
+            assert_eq!(rows[0].shares_number, u64::MAX as f64);
         } else {
             let rows: Vec<EtfFundInfo> = serde_json::from_value(value).unwrap();
             assert_eq!(serde_json::to_value(rows).unwrap()[0][field], width);
@@ -276,14 +276,14 @@ fn integer_widths_signed_change_and_decimal_market_values_are_preserved() {
     holder[0]["shares"] = serde_json::json!(u64::MAX);
     holder[0]["change"] = serde_json::json!(i64::MIN);
     let rows: Vec<FundDisclosureHolder> = serde_json::from_value(holder).unwrap();
-    assert_eq!(rows[0].shares, u64::MAX);
-    assert_eq!(rows[0].change, i64::MIN);
+    assert_eq!(rows[0].shares, u64::MAX as f64);
+    assert_eq!(rows[0].change, i64::MIN as f64);
 
     let mut disclosure: serde_json::Value = serde_json::from_slice(DISCLOSURES).unwrap();
     disclosure[0]["balance"] = serde_json::json!(u64::MAX);
     disclosure[0]["valUsd"] = serde_json::json!(0.125);
     let rows: Vec<FundDisclosure> = serde_json::from_value(disclosure).unwrap();
-    assert_eq!(rows[0].balance, u64::MAX);
+    assert_eq!(rows[0].balance, u64::MAX as f64);
     assert_eq!(rows[0].val_usd, 0.125);
 }
 
