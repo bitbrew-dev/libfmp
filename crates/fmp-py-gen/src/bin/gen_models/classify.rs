@@ -137,6 +137,17 @@ fn numeric(ident: &str) -> Option<(&'static str, Transform)> {
     }
 }
 
+/// The `typing.Literal` stub type of a closed enum field, listing every
+/// spelling its `Display` produces; `None` for open or unlisted enums.
+pub(crate) fn enum_literal(ident: &str) -> Option<&'static str> {
+    match ident {
+        "FiscalPeriod" => Some(r#"typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]"#),
+        "YnFlag" => Some(r#"typing.Literal["Y", "N"]"#),
+        "TitleCaseBoolFlag" => Some(r#"typing.Literal["True", "False"]"#),
+        _ => None,
+    }
+}
+
 fn is_enum(ident: &str) -> bool {
     const NAMES: &[&str] = &[
         "FiscalPeriod",

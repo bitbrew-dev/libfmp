@@ -65,6 +65,7 @@ pub(crate) struct KeptField {
     field_ident: String,
     model_ty: String,
     kind: KeptKind,
+    stub_type: Option<String>,
 }
 
 enum KeptKind {
@@ -94,11 +95,14 @@ impl KeptField {
             enums.insert(base_ident.to_string());
         }
         let model_ty = wrap_type(&wraps, &base_model_ty);
+        let stub_type = crate::classify::enum_literal(base_ident)
+            .map(|literal| wrap_stub_type(&wraps, literal));
         Self {
             field_ident: python_safe_ident(&name),
             source_name: name,
             model_ty,
             kind: KeptKind::Scalar { wraps, transform },
+            stub_type,
         }
     }
 
@@ -114,6 +118,7 @@ impl KeptField {
             source_name: name,
             model_ty,
             kind: KeptKind::Passthrough { pass, optional },
+            stub_type: None,
         }
     }
 
@@ -126,6 +131,7 @@ impl KeptField {
             source_name: name,
             model_ty,
             kind: KeptKind::Secret { wraps },
+            stub_type: None,
         }
     }
 
@@ -170,6 +176,9 @@ impl KeptField {
             KeptKind::Secret { .. } => {
                 format!("    pub(crate) {}: {},\n", self.field_ident, self.model_ty)
             }
+            KeptKind::Scalar { .. } if self.stub_type.is_some() => {
+                format!("    pub {}: {},\n", self.field_ident, self.model_ty)
+            }
             KeptKind::Scalar { .. } => {
                 format!(
                     "    #[pyo3(get)]\n    pub {}: {},\n",
@@ -204,7 +213,10 @@ impl KeptField {
                 format!("{}: {ty}", self.field_ident)
             }
             KeptKind::Scalar { .. } | KeptKind::Secret { .. } => {
-                format!("{}: {}", self.field_ident, self.model_ty)
+                let stub = self.stub_type.as_ref().map_or_else(String::new, |stub| {
+                    format!("#[gen_stub(override_type({}))] ", stub_attr(stub))
+                });
+                format!("{stub}{}: {}", self.field_ident, self.model_ty)
             }
         }
     }
@@ -279,6 +291,14 @@ impl KeptField {
     }
 
     pub(crate) fn getter_method(&self) -> Option<String> {
+        if let Some(stub) = &self.stub_type {
+            return Some(format!(
+                "    #[getter]\n    #[gen_stub(override_return_type({}))]\n    fn {ident}(&self) -> {ty} {{\n        self.{ident}.clone()\n    }}\n",
+                stub_attr(stub),
+                ident = self.field_ident,
+                ty = self.model_ty
+            ));
+        }
         let KeptKind::Passthrough { pass, optional } = &self.kind else {
             return None;
         };
@@ -348,6 +368,20 @@ impl Report {
         println!("  SecretUrl fields (private): {:?}", self.secret_fields);
         println!("  unclassified (skipped): {:?}", self.unclassified);
     }
+}
+
+/// Wraps a base stub type in the field's `Option`/`Vec` layers.
+fn wrap_stub_type(wraps: &[Wrap], base: &str) -> String {
+    match wraps.first() {
+        None => base.to_string(),
+        Some(Wrap::Option) => format!("typing.Optional[{}]", wrap_stub_type(&wraps[1..], base)),
+        Some(Wrap::Vec) => format!("builtins.list[{}]", wrap_stub_type(&wraps[1..], base)),
+    }
+}
+
+/// The `type_repr = ..., imports = ...` arguments of a stub type override.
+fn stub_attr(stub: &str) -> String {
+    format!("type_repr = {stub:?}, imports = (\"builtins\", \"typing\")")
 }
 
 /// Maps a libfmp field name to a valid, non-reserved Python identifier.

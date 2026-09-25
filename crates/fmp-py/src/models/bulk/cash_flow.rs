@@ -23,7 +23,6 @@ pub(crate) struct BulkCashFlowStatement {
     pub accepted_date: ::chrono::NaiveDateTime,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub net_income: String,
@@ -120,6 +119,7 @@ impl BulkCashFlowStatement {
         filing_date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         net_income: String,
         depreciation_and_amortization: String,
@@ -918,6 +918,12 @@ impl BulkCashFlowStatement {
         )?;
         Ok(dict)
     }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
+    }
 }
 
 impl From<libfmp::responses::bulk::BulkCashFlowStatement> for BulkCashFlowStatement {
@@ -998,7 +1004,6 @@ pub(crate) struct BulkCashFlowStatementGrowth {
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub reported_currency: String,
@@ -1089,6 +1094,7 @@ impl BulkCashFlowStatementGrowth {
         symbol: String,
         date: ::chrono::NaiveDate,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         reported_currency: String,
         growth_net_income: String,
@@ -1910,6 +1916,12 @@ impl BulkCashFlowStatementGrowth {
             crate::models::convert::DictValue::dict_value(&self.growth_interest_paid, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 

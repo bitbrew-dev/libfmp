@@ -18,7 +18,6 @@ pub(crate) struct LatestFinancialStatement {
     pub symbol: String,
     #[pyo3(get)]
     pub calendar_year: u32,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -36,6 +35,7 @@ impl LatestFinancialStatement {
     fn new(
         symbol: String,
         calendar_year: u32,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         date: ::chrono::NaiveDate,
         date_added: ::chrono::NaiveDateTime,
@@ -120,6 +120,12 @@ impl LatestFinancialStatement {
             crate::models::convert::DictValue::dict_value(&self.date_added, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 
@@ -408,7 +414,6 @@ pub(crate) struct OwnerEarnings {
     pub reported_currency: String,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -435,6 +440,7 @@ impl OwnerEarnings {
         symbol: String,
         reported_currency: String,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         date: ::chrono::NaiveDate,
         average_ppe: f64,
@@ -609,6 +615,12 @@ impl OwnerEarnings {
             crate::models::convert::DictValue::dict_value(&self.owners_earnings_per_share, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 

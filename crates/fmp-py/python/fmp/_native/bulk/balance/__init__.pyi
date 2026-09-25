@@ -92,8 +92,6 @@ class BulkBalanceSheetStatement:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def cash_and_cash_equivalents(self) -> builtins.str: ...
     @property
     def short_term_investments(self) -> builtins.str: ...
@@ -199,6 +197,8 @@ class BulkBalanceSheetStatement:
     def total_debt(self) -> builtins.str: ...
     @property
     def net_debt(self) -> builtins.str: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -210,7 +210,7 @@ class BulkBalanceSheetStatement:
         filing_date: datetime.date,
         accepted_date: datetime.datetime,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         cash_and_cash_equivalents: builtins.str,
         short_term_investments: builtins.str,
         cash_and_short_term_investments: builtins.str,
@@ -343,8 +343,6 @@ class BulkBalanceSheetStatementGrowth:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def reported_currency(self) -> builtins.str: ...
     @property
     def growth_cash_and_cash_equivalents(self) -> builtins.str: ...
@@ -448,6 +446,8 @@ class BulkBalanceSheetStatementGrowth:
     def growth_additional_paid_in_capital(self) -> builtins.str: ...
     @property
     def growth_treasury_stock(self) -> builtins.str: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -455,7 +455,7 @@ class BulkBalanceSheetStatementGrowth:
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         reported_currency: builtins.str,
         growth_cash_and_cash_equivalents: builtins.str,
         growth_short_term_investments: builtins.str,

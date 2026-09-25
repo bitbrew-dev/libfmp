@@ -28,7 +28,6 @@ pub(crate) struct CashFlowStatement {
     pub accepted_date: ::chrono::NaiveDateTime,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub net_income: f64,
@@ -125,6 +124,7 @@ impl CashFlowStatement {
         filing_date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         net_income: f64,
         depreciation_and_amortization: f64,
@@ -922,6 +922,12 @@ impl CashFlowStatement {
             crate::models::convert::DictValue::dict_value(&self.interest_paid, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 

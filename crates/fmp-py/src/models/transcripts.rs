@@ -11,7 +11,6 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 pub(crate) struct LatestEarningsTranscript {
     #[pyo3(get)]
     pub symbol: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub fiscal_year: u32,
@@ -26,7 +25,13 @@ impl LatestEarningsTranscript {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, symbol, period, fiscal_year, date))]
-    fn new(symbol: String, period: String, fiscal_year: u32, date: ::chrono::NaiveDate) -> Self {
+    fn new(
+        symbol: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+        period: String,
+        fiscal_year: u32,
+        date: ::chrono::NaiveDate,
+    ) -> Self {
         Self {
             symbol,
             period,
@@ -98,6 +103,12 @@ impl LatestEarningsTranscript {
         )?;
         Ok(dict)
     }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
+    }
 }
 
 impl From<libfmp::responses::transcripts::LatestEarningsTranscript> for LatestEarningsTranscript {
@@ -123,7 +134,6 @@ impl crate::models::convert::DictValue for LatestEarningsTranscript {
 pub(crate) struct EarningsTranscript {
     #[pyo3(get)]
     pub symbol: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub year: u32,
@@ -142,6 +152,7 @@ impl EarningsTranscript {
     #[pyo3(signature = (*, symbol, period, year, date, content))]
     fn new(
         symbol: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         year: u32,
         date: ::chrono::NaiveDate,
@@ -218,6 +229,12 @@ impl EarningsTranscript {
             crate::models::convert::DictValue::dict_value(&self.content, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 

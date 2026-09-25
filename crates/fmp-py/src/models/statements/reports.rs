@@ -15,7 +15,6 @@ pub(crate) struct FinancialReportDate {
     pub symbol: String,
     #[pyo3(get)]
     pub fiscal_year: u32,
-    #[pyo3(get)]
     pub period: String,
     pub(crate) link_json: String,
     pub(crate) link_xlsx: String,
@@ -31,6 +30,7 @@ impl FinancialReportDate {
     fn new(
         symbol: String,
         fiscal_year: u32,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         link_json: String,
         link_xlsx: String,
@@ -88,6 +88,12 @@ impl FinancialReportDate {
         )?;
         Ok(dict)
     }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
+    }
 }
 
 impl From<libfmp::responses::statements::reports::FinancialReportDate> for FinancialReportDate {
@@ -114,7 +120,6 @@ impl crate::models::convert::DictValue for FinancialReportDate {
 pub(crate) struct FinancialReportJson {
     #[pyo3(get)]
     pub symbol: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub year: String,
@@ -128,7 +133,13 @@ impl FinancialReportJson {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, symbol, period, year, sections))]
-    fn new(symbol: String, period: String, year: String, sections: String) -> PyResult<Self> {
+    fn new(
+        symbol: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+        period: String,
+        year: String,
+        sections: String,
+    ) -> PyResult<Self> {
         let sections =
             ::serde_json::from_str::<::serde_json::Map<String, ::serde_json::Value>>(&sections)
                 .map_err(|error| {
@@ -206,6 +217,12 @@ impl FinancialReportJson {
         )?;
         dict.set_item("sections", self.sections(py)?)?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 
     #[getter]

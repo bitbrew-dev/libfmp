@@ -70,8 +70,6 @@ class BulkIncomeStatement:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def revenue(self) -> builtins.str: ...
     @property
     def cost_of_revenue(self) -> builtins.str: ...
@@ -133,6 +131,8 @@ class BulkIncomeStatement:
     def weighted_average_shs_out(self) -> builtins.str: ...
     @property
     def weighted_average_shs_out_dil(self) -> builtins.str: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -144,7 +144,7 @@ class BulkIncomeStatement:
         filing_date: datetime.date,
         accepted_date: datetime.datetime,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         revenue: builtins.str,
         cost_of_revenue: builtins.str,
         gross_profit: builtins.str,
@@ -233,8 +233,6 @@ class BulkIncomeStatementGrowth:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def reported_currency(self) -> builtins.str: ...
     @property
     def growth_revenue(self) -> builtins.str: ...
@@ -294,6 +292,8 @@ class BulkIncomeStatementGrowth:
     def growth_other_adjustments_to_net_income(self) -> builtins.str: ...
     @property
     def growth_net_income_deductions(self) -> builtins.str: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -301,7 +301,7 @@ class BulkIncomeStatementGrowth:
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         reported_currency: builtins.str,
         growth_revenue: builtins.str,
         growth_cost_of_revenue: builtins.str,
