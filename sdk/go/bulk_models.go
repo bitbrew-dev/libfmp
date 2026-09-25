@@ -1243,8 +1243,8 @@ type BulkIncomeStatement struct {
 	NetIncome                               string   `json:"netIncome"`
 	NetIncomeDeductions                     string   `json:"netIncomeDeductions"`
 	BottomLineNetIncome                     string   `json:"bottomLineNetIncome"`
-	Eps                                     string   `json:"eps"`
-	EpsDiluted                              string   `json:"epsDiluted"`
+	EPS                                     string   `json:"eps"`
+	EPSDiluted                              string   `json:"epsDiluted"`
 	WeightedAverageShsOut                   string   `json:"weightedAverageShsOut"`
 	WeightedAverageShsOutDil                string   `json:"weightedAverageShsOutDil"`
 }
@@ -1288,8 +1288,8 @@ type bulkIncomeStatementShadow struct {
 	NetIncome                               *string   `json:"netIncome"`
 	NetIncomeDeductions                     *string   `json:"netIncomeDeductions"`
 	BottomLineNetIncome                     *string   `json:"bottomLineNetIncome"`
-	Eps                                     *string   `json:"eps"`
-	EpsDiluted                              *string   `json:"epsDiluted"`
+	EPS                                     *string   `json:"eps"`
+	EPSDiluted                              *string   `json:"epsDiluted"`
 	WeightedAverageShsOut                   *string   `json:"weightedAverageShsOut"`
 	WeightedAverageShsOutDil                *string   `json:"weightedAverageShsOutDil"`
 }
@@ -1373,9 +1373,9 @@ func (m *BulkIncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkIncomeStatement", "netIncomeDeductions")
 	case shadow.BottomLineNetIncome == nil:
 		return missingMemberError("BulkIncomeStatement", "bottomLineNetIncome")
-	case shadow.Eps == nil:
+	case shadow.EPS == nil:
 		return missingMemberError("BulkIncomeStatement", "eps")
-	case shadow.EpsDiluted == nil:
+	case shadow.EPSDiluted == nil:
 		return missingMemberError("BulkIncomeStatement", "epsDiluted")
 	case shadow.WeightedAverageShsOut == nil:
 		return missingMemberError("BulkIncomeStatement", "weightedAverageShsOut")
@@ -1418,8 +1418,8 @@ func (m *BulkIncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		NetIncome:                               *shadow.NetIncome,
 		NetIncomeDeductions:                     *shadow.NetIncomeDeductions,
 		BottomLineNetIncome:                     *shadow.BottomLineNetIncome,
-		Eps:                                     *shadow.Eps,
-		EpsDiluted:                              *shadow.EpsDiluted,
+		EPS:                                     *shadow.EPS,
+		EPSDiluted:                              *shadow.EPSDiluted,
 		WeightedAverageShsOut:                   *shadow.WeightedAverageShsOut,
 		WeightedAverageShsOutDil:                *shadow.WeightedAverageShsOutDil,
 	}
@@ -1451,8 +1451,8 @@ type BulkIncomeStatementGrowth struct {
 	GrowthIncomeBeforeTax                     string `json:"growthIncomeBeforeTax"`
 	GrowthIncomeTaxExpense                    string `json:"growthIncomeTaxExpense"`
 	GrowthNetIncome                           string `json:"growthNetIncome"`
-	GrowthEps                                 string `json:"growthEPS"`
-	GrowthEpsDiluted                          string `json:"growthEPSDiluted"`
+	GrowthEPS                                 string `json:"growthEPS"`
+	GrowthEPSDiluted                          string `json:"growthEPSDiluted"`
 	GrowthWeightedAverageShsOut               string `json:"growthWeightedAverageShsOut"`
 	GrowthWeightedAverageShsOutDil            string `json:"growthWeightedAverageShsOutDil"`
 	GrowthEbit                                string `json:"growthEBIT"`
@@ -1491,8 +1491,8 @@ type bulkIncomeStatementGrowthShadow struct {
 	GrowthIncomeBeforeTax                     *string `json:"growthIncomeBeforeTax"`
 	GrowthIncomeTaxExpense                    *string `json:"growthIncomeTaxExpense"`
 	GrowthNetIncome                           *string `json:"growthNetIncome"`
-	GrowthEps                                 *string `json:"growthEPS"`
-	GrowthEpsDiluted                          *string `json:"growthEPSDiluted"`
+	GrowthEPS                                 *string `json:"growthEPS"`
+	GrowthEPSDiluted                          *string `json:"growthEPSDiluted"`
 	GrowthWeightedAverageShsOut               *string `json:"growthWeightedAverageShsOut"`
 	GrowthWeightedAverageShsOutDil            *string `json:"growthWeightedAverageShsOutDil"`
 	GrowthEbit                                *string `json:"growthEBIT"`
@@ -1559,9 +1559,9 @@ func (m *BulkIncomeStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		return missingMemberError("BulkIncomeStatementGrowth", "growthIncomeTaxExpense")
 	case shadow.GrowthNetIncome == nil:
 		return missingMemberError("BulkIncomeStatementGrowth", "growthNetIncome")
-	case shadow.GrowthEps == nil:
+	case shadow.GrowthEPS == nil:
 		return missingMemberError("BulkIncomeStatementGrowth", "growthEPS")
-	case shadow.GrowthEpsDiluted == nil:
+	case shadow.GrowthEPSDiluted == nil:
 		return missingMemberError("BulkIncomeStatementGrowth", "growthEPSDiluted")
 	case shadow.GrowthWeightedAverageShsOut == nil:
 		return missingMemberError("BulkIncomeStatementGrowth", "growthWeightedAverageShsOut")
@@ -1606,8 +1606,8 @@ func (m *BulkIncomeStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		GrowthIncomeBeforeTax:                  *shadow.GrowthIncomeBeforeTax,
 		GrowthIncomeTaxExpense:                 *shadow.GrowthIncomeTaxExpense,
 		GrowthNetIncome:                        *shadow.GrowthNetIncome,
-		GrowthEps:                              *shadow.GrowthEps,
-		GrowthEpsDiluted:                       *shadow.GrowthEpsDiluted,
+		GrowthEPS:                              *shadow.GrowthEPS,
+		GrowthEPSDiluted:                       *shadow.GrowthEPSDiluted,
 		GrowthWeightedAverageShsOut:            *shadow.GrowthWeightedAverageShsOut,
 		GrowthWeightedAverageShsOutDil:         *shadow.GrowthWeightedAverageShsOutDil,
 		GrowthEbit:                             *shadow.GrowthEbit,
@@ -1621,569 +1621,569 @@ func (m *BulkIncomeStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 	return nil
 }
 
-// BulkKeyMetricsTtm is one worldwide key-metrics trailing-twelve-month bulk
+// BulkKeyMetricsTTM is one worldwide key-metrics trailing-twelve-month bulk
 // row.
-type BulkKeyMetricsTtm struct {
+type BulkKeyMetricsTTM struct {
 	Symbol                                    string `json:"symbol"`
 	MarketCap                                 string `json:"marketCap"`
-	EnterpriseValueTtm                        string `json:"enterpriseValueTTM"`
-	EvToSalesTtm                              string `json:"evToSalesTTM"`
-	EvToOperatingCashFlowTtm                  string `json:"evToOperatingCashFlowTTM"`
-	EvToFreeCashFlowTtm                       string `json:"evToFreeCashFlowTTM"`
-	EvToEbitdaTtm                             string `json:"evToEBITDATTM"`
-	NetDebtToEbitdaTtm                        string `json:"netDebtToEBITDATTM"`
-	CurrentRatioTtm                           string `json:"currentRatioTTM"`
-	IncomeQualityTtm                          string `json:"incomeQualityTTM"`
-	GrahamNumberTtm                           string `json:"grahamNumberTTM"`
-	GrahamNetNetTtm                           string `json:"grahamNetNetTTM"`
-	TaxBurdenTtm                              string `json:"taxBurdenTTM"`
-	InterestBurdenTtm                         string `json:"interestBurdenTTM"`
-	WorkingCapitalTtm                         string `json:"workingCapitalTTM"`
-	InvestedCapitalTtm                        string `json:"investedCapitalTTM"`
-	ReturnOnAssetsTtm                         string `json:"returnOnAssetsTTM"`
-	OperatingReturnOnAssetsTtm                string `json:"operatingReturnOnAssetsTTM"`
-	ReturnOnTangibleAssetsTtm                 string `json:"returnOnTangibleAssetsTTM"`
-	ReturnOnEquityTtm                         string `json:"returnOnEquityTTM"`
-	ReturnOnInvestedCapitalTtm                string `json:"returnOnInvestedCapitalTTM"`
-	ReturnOnCapitalEmployedTtm                string `json:"returnOnCapitalEmployedTTM"`
-	EarningsYieldTtm                          string `json:"earningsYieldTTM"`
-	FreeCashFlowYieldTtm                      string `json:"freeCashFlowYieldTTM"`
-	CapexToOperatingCashFlowTtm               string `json:"capexToOperatingCashFlowTTM"`
-	CapexToDepreciationTtm                    string `json:"capexToDepreciationTTM"`
-	CapexToRevenueTtm                         string `json:"capexToRevenueTTM"`
-	SalesGeneralAndAdministrativeToRevenueTtm string `json:"salesGeneralAndAdministrativeToRevenueTTM"`
-	ResearchAndDevelopmentToRevenueTtm        string `json:"researchAndDevelopementToRevenueTTM"`
-	StockBasedCompensationToRevenueTtm        string `json:"stockBasedCompensationToRevenueTTM"`
-	IntangiblesToTotalAssetsTtm               string `json:"intangiblesToTotalAssetsTTM"`
-	AverageReceivablesTtm                     string `json:"averageReceivablesTTM"`
-	AveragePayablesTtm                        string `json:"averagePayablesTTM"`
-	AverageInventoryTtm                       string `json:"averageInventoryTTM"`
-	DaysOfSalesOutstandingTtm                 string `json:"daysOfSalesOutstandingTTM"`
-	DaysOfPayablesOutstandingTtm              string `json:"daysOfPayablesOutstandingTTM"`
-	DaysOfInventoryOutstandingTtm             string `json:"daysOfInventoryOutstandingTTM"`
-	OperatingCycleTtm                         string `json:"operatingCycleTTM"`
-	CashConversionCycleTtm                    string `json:"cashConversionCycleTTM"`
-	FreeCashFlowToEquityTtm                   string `json:"freeCashFlowToEquityTTM"`
-	FreeCashFlowToFirmTtm                     string `json:"freeCashFlowToFirmTTM"`
-	TangibleAssetValueTtm                     string `json:"tangibleAssetValueTTM"`
-	NetCurrentAssetValueTtm                   string `json:"netCurrentAssetValueTTM"`
+	EnterpriseValueTTM                        string `json:"enterpriseValueTTM"`
+	EvToSalesTTM                              string `json:"evToSalesTTM"`
+	EvToOperatingCashFlowTTM                  string `json:"evToOperatingCashFlowTTM"`
+	EvToFreeCashFlowTTM                       string `json:"evToFreeCashFlowTTM"`
+	EvToEbitdaTTM                             string `json:"evToEBITDATTM"`
+	NetDebtToEbitdaTTM                        string `json:"netDebtToEBITDATTM"`
+	CurrentRatioTTM                           string `json:"currentRatioTTM"`
+	IncomeQualityTTM                          string `json:"incomeQualityTTM"`
+	GrahamNumberTTM                           string `json:"grahamNumberTTM"`
+	GrahamNetNetTTM                           string `json:"grahamNetNetTTM"`
+	TaxBurdenTTM                              string `json:"taxBurdenTTM"`
+	InterestBurdenTTM                         string `json:"interestBurdenTTM"`
+	WorkingCapitalTTM                         string `json:"workingCapitalTTM"`
+	InvestedCapitalTTM                        string `json:"investedCapitalTTM"`
+	ReturnOnAssetsTTM                         string `json:"returnOnAssetsTTM"`
+	OperatingReturnOnAssetsTTM                string `json:"operatingReturnOnAssetsTTM"`
+	ReturnOnTangibleAssetsTTM                 string `json:"returnOnTangibleAssetsTTM"`
+	ReturnOnEquityTTM                         string `json:"returnOnEquityTTM"`
+	ReturnOnInvestedCapitalTTM                string `json:"returnOnInvestedCapitalTTM"`
+	ReturnOnCapitalEmployedTTM                string `json:"returnOnCapitalEmployedTTM"`
+	EarningsYieldTTM                          string `json:"earningsYieldTTM"`
+	FreeCashFlowYieldTTM                      string `json:"freeCashFlowYieldTTM"`
+	CapexToOperatingCashFlowTTM               string `json:"capexToOperatingCashFlowTTM"`
+	CapexToDepreciationTTM                    string `json:"capexToDepreciationTTM"`
+	CapexToRevenueTTM                         string `json:"capexToRevenueTTM"`
+	SalesGeneralAndAdministrativeToRevenueTTM string `json:"salesGeneralAndAdministrativeToRevenueTTM"`
+	ResearchAndDevelopmentToRevenueTTM        string `json:"researchAndDevelopementToRevenueTTM"`
+	StockBasedCompensationToRevenueTTM        string `json:"stockBasedCompensationToRevenueTTM"`
+	IntangiblesToTotalAssetsTTM               string `json:"intangiblesToTotalAssetsTTM"`
+	AverageReceivablesTTM                     string `json:"averageReceivablesTTM"`
+	AveragePayablesTTM                        string `json:"averagePayablesTTM"`
+	AverageInventoryTTM                       string `json:"averageInventoryTTM"`
+	DaysOfSalesOutstandingTTM                 string `json:"daysOfSalesOutstandingTTM"`
+	DaysOfPayablesOutstandingTTM              string `json:"daysOfPayablesOutstandingTTM"`
+	DaysOfInventoryOutstandingTTM             string `json:"daysOfInventoryOutstandingTTM"`
+	OperatingCycleTTM                         string `json:"operatingCycleTTM"`
+	CashConversionCycleTTM                    string `json:"cashConversionCycleTTM"`
+	FreeCashFlowToEquityTTM                   string `json:"freeCashFlowToEquityTTM"`
+	FreeCashFlowToFirmTTM                     string `json:"freeCashFlowToFirmTTM"`
+	TangibleAssetValueTTM                     string `json:"tangibleAssetValueTTM"`
+	NetCurrentAssetValueTTM                   string `json:"netCurrentAssetValueTTM"`
 }
 
-// bulkKeyMetricsTtmShadow mirrors BulkKeyMetricsTtm with a pointer or raw
+// bulkKeyMetricsTTMShadow mirrors BulkKeyMetricsTTM with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
-type bulkKeyMetricsTtmShadow struct {
+type bulkKeyMetricsTTMShadow struct {
 	Symbol                                    *string `json:"symbol"`
 	MarketCap                                 *string `json:"marketCap"`
-	EnterpriseValueTtm                        *string `json:"enterpriseValueTTM"`
-	EvToSalesTtm                              *string `json:"evToSalesTTM"`
-	EvToOperatingCashFlowTtm                  *string `json:"evToOperatingCashFlowTTM"`
-	EvToFreeCashFlowTtm                       *string `json:"evToFreeCashFlowTTM"`
-	EvToEbitdaTtm                             *string `json:"evToEBITDATTM"`
-	NetDebtToEbitdaTtm                        *string `json:"netDebtToEBITDATTM"`
-	CurrentRatioTtm                           *string `json:"currentRatioTTM"`
-	IncomeQualityTtm                          *string `json:"incomeQualityTTM"`
-	GrahamNumberTtm                           *string `json:"grahamNumberTTM"`
-	GrahamNetNetTtm                           *string `json:"grahamNetNetTTM"`
-	TaxBurdenTtm                              *string `json:"taxBurdenTTM"`
-	InterestBurdenTtm                         *string `json:"interestBurdenTTM"`
-	WorkingCapitalTtm                         *string `json:"workingCapitalTTM"`
-	InvestedCapitalTtm                        *string `json:"investedCapitalTTM"`
-	ReturnOnAssetsTtm                         *string `json:"returnOnAssetsTTM"`
-	OperatingReturnOnAssetsTtm                *string `json:"operatingReturnOnAssetsTTM"`
-	ReturnOnTangibleAssetsTtm                 *string `json:"returnOnTangibleAssetsTTM"`
-	ReturnOnEquityTtm                         *string `json:"returnOnEquityTTM"`
-	ReturnOnInvestedCapitalTtm                *string `json:"returnOnInvestedCapitalTTM"`
-	ReturnOnCapitalEmployedTtm                *string `json:"returnOnCapitalEmployedTTM"`
-	EarningsYieldTtm                          *string `json:"earningsYieldTTM"`
-	FreeCashFlowYieldTtm                      *string `json:"freeCashFlowYieldTTM"`
-	CapexToOperatingCashFlowTtm               *string `json:"capexToOperatingCashFlowTTM"`
-	CapexToDepreciationTtm                    *string `json:"capexToDepreciationTTM"`
-	CapexToRevenueTtm                         *string `json:"capexToRevenueTTM"`
-	SalesGeneralAndAdministrativeToRevenueTtm *string `json:"salesGeneralAndAdministrativeToRevenueTTM"`
-	ResearchAndDevelopmentToRevenueTtm        *string `json:"researchAndDevelopementToRevenueTTM"`
-	StockBasedCompensationToRevenueTtm        *string `json:"stockBasedCompensationToRevenueTTM"`
-	IntangiblesToTotalAssetsTtm               *string `json:"intangiblesToTotalAssetsTTM"`
-	AverageReceivablesTtm                     *string `json:"averageReceivablesTTM"`
-	AveragePayablesTtm                        *string `json:"averagePayablesTTM"`
-	AverageInventoryTtm                       *string `json:"averageInventoryTTM"`
-	DaysOfSalesOutstandingTtm                 *string `json:"daysOfSalesOutstandingTTM"`
-	DaysOfPayablesOutstandingTtm              *string `json:"daysOfPayablesOutstandingTTM"`
-	DaysOfInventoryOutstandingTtm             *string `json:"daysOfInventoryOutstandingTTM"`
-	OperatingCycleTtm                         *string `json:"operatingCycleTTM"`
-	CashConversionCycleTtm                    *string `json:"cashConversionCycleTTM"`
-	FreeCashFlowToEquityTtm                   *string `json:"freeCashFlowToEquityTTM"`
-	FreeCashFlowToFirmTtm                     *string `json:"freeCashFlowToFirmTTM"`
-	TangibleAssetValueTtm                     *string `json:"tangibleAssetValueTTM"`
-	NetCurrentAssetValueTtm                   *string `json:"netCurrentAssetValueTTM"`
+	EnterpriseValueTTM                        *string `json:"enterpriseValueTTM"`
+	EvToSalesTTM                              *string `json:"evToSalesTTM"`
+	EvToOperatingCashFlowTTM                  *string `json:"evToOperatingCashFlowTTM"`
+	EvToFreeCashFlowTTM                       *string `json:"evToFreeCashFlowTTM"`
+	EvToEbitdaTTM                             *string `json:"evToEBITDATTM"`
+	NetDebtToEbitdaTTM                        *string `json:"netDebtToEBITDATTM"`
+	CurrentRatioTTM                           *string `json:"currentRatioTTM"`
+	IncomeQualityTTM                          *string `json:"incomeQualityTTM"`
+	GrahamNumberTTM                           *string `json:"grahamNumberTTM"`
+	GrahamNetNetTTM                           *string `json:"grahamNetNetTTM"`
+	TaxBurdenTTM                              *string `json:"taxBurdenTTM"`
+	InterestBurdenTTM                         *string `json:"interestBurdenTTM"`
+	WorkingCapitalTTM                         *string `json:"workingCapitalTTM"`
+	InvestedCapitalTTM                        *string `json:"investedCapitalTTM"`
+	ReturnOnAssetsTTM                         *string `json:"returnOnAssetsTTM"`
+	OperatingReturnOnAssetsTTM                *string `json:"operatingReturnOnAssetsTTM"`
+	ReturnOnTangibleAssetsTTM                 *string `json:"returnOnTangibleAssetsTTM"`
+	ReturnOnEquityTTM                         *string `json:"returnOnEquityTTM"`
+	ReturnOnInvestedCapitalTTM                *string `json:"returnOnInvestedCapitalTTM"`
+	ReturnOnCapitalEmployedTTM                *string `json:"returnOnCapitalEmployedTTM"`
+	EarningsYieldTTM                          *string `json:"earningsYieldTTM"`
+	FreeCashFlowYieldTTM                      *string `json:"freeCashFlowYieldTTM"`
+	CapexToOperatingCashFlowTTM               *string `json:"capexToOperatingCashFlowTTM"`
+	CapexToDepreciationTTM                    *string `json:"capexToDepreciationTTM"`
+	CapexToRevenueTTM                         *string `json:"capexToRevenueTTM"`
+	SalesGeneralAndAdministrativeToRevenueTTM *string `json:"salesGeneralAndAdministrativeToRevenueTTM"`
+	ResearchAndDevelopmentToRevenueTTM        *string `json:"researchAndDevelopementToRevenueTTM"`
+	StockBasedCompensationToRevenueTTM        *string `json:"stockBasedCompensationToRevenueTTM"`
+	IntangiblesToTotalAssetsTTM               *string `json:"intangiblesToTotalAssetsTTM"`
+	AverageReceivablesTTM                     *string `json:"averageReceivablesTTM"`
+	AveragePayablesTTM                        *string `json:"averagePayablesTTM"`
+	AverageInventoryTTM                       *string `json:"averageInventoryTTM"`
+	DaysOfSalesOutstandingTTM                 *string `json:"daysOfSalesOutstandingTTM"`
+	DaysOfPayablesOutstandingTTM              *string `json:"daysOfPayablesOutstandingTTM"`
+	DaysOfInventoryOutstandingTTM             *string `json:"daysOfInventoryOutstandingTTM"`
+	OperatingCycleTTM                         *string `json:"operatingCycleTTM"`
+	CashConversionCycleTTM                    *string `json:"cashConversionCycleTTM"`
+	FreeCashFlowToEquityTTM                   *string `json:"freeCashFlowToEquityTTM"`
+	FreeCashFlowToFirmTTM                     *string `json:"freeCashFlowToFirmTTM"`
+	TangibleAssetValueTTM                     *string `json:"tangibleAssetValueTTM"`
+	NetCurrentAssetValueTTM                   *string `json:"netCurrentAssetValueTTM"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *BulkKeyMetricsTtm) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow bulkKeyMetricsTtmShadow
+func (m *BulkKeyMetricsTTM) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow bulkKeyMetricsTTMShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "symbol")
+		return missingMemberError("BulkKeyMetricsTTM", "symbol")
 	case shadow.MarketCap == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "marketCap")
-	case shadow.EnterpriseValueTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "enterpriseValueTTM")
-	case shadow.EvToSalesTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "evToSalesTTM")
-	case shadow.EvToOperatingCashFlowTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "evToOperatingCashFlowTTM")
-	case shadow.EvToFreeCashFlowTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "evToFreeCashFlowTTM")
-	case shadow.EvToEbitdaTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "evToEBITDATTM")
-	case shadow.NetDebtToEbitdaTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "netDebtToEBITDATTM")
-	case shadow.CurrentRatioTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "currentRatioTTM")
-	case shadow.IncomeQualityTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "incomeQualityTTM")
-	case shadow.GrahamNumberTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "grahamNumberTTM")
-	case shadow.GrahamNetNetTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "grahamNetNetTTM")
-	case shadow.TaxBurdenTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "taxBurdenTTM")
-	case shadow.InterestBurdenTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "interestBurdenTTM")
-	case shadow.WorkingCapitalTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "workingCapitalTTM")
-	case shadow.InvestedCapitalTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "investedCapitalTTM")
-	case shadow.ReturnOnAssetsTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "returnOnAssetsTTM")
-	case shadow.OperatingReturnOnAssetsTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "operatingReturnOnAssetsTTM")
-	case shadow.ReturnOnTangibleAssetsTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "returnOnTangibleAssetsTTM")
-	case shadow.ReturnOnEquityTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "returnOnEquityTTM")
-	case shadow.ReturnOnInvestedCapitalTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "returnOnInvestedCapitalTTM")
-	case shadow.ReturnOnCapitalEmployedTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "returnOnCapitalEmployedTTM")
-	case shadow.EarningsYieldTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "earningsYieldTTM")
-	case shadow.FreeCashFlowYieldTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "freeCashFlowYieldTTM")
-	case shadow.CapexToOperatingCashFlowTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "capexToOperatingCashFlowTTM")
-	case shadow.CapexToDepreciationTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "capexToDepreciationTTM")
-	case shadow.CapexToRevenueTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "capexToRevenueTTM")
-	case shadow.SalesGeneralAndAdministrativeToRevenueTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "salesGeneralAndAdministrativeToRevenueTTM")
-	case shadow.ResearchAndDevelopmentToRevenueTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "researchAndDevelopementToRevenueTTM")
-	case shadow.StockBasedCompensationToRevenueTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "stockBasedCompensationToRevenueTTM")
-	case shadow.IntangiblesToTotalAssetsTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "intangiblesToTotalAssetsTTM")
-	case shadow.AverageReceivablesTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "averageReceivablesTTM")
-	case shadow.AveragePayablesTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "averagePayablesTTM")
-	case shadow.AverageInventoryTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "averageInventoryTTM")
-	case shadow.DaysOfSalesOutstandingTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "daysOfSalesOutstandingTTM")
-	case shadow.DaysOfPayablesOutstandingTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "daysOfPayablesOutstandingTTM")
-	case shadow.DaysOfInventoryOutstandingTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "daysOfInventoryOutstandingTTM")
-	case shadow.OperatingCycleTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "operatingCycleTTM")
-	case shadow.CashConversionCycleTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "cashConversionCycleTTM")
-	case shadow.FreeCashFlowToEquityTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "freeCashFlowToEquityTTM")
-	case shadow.FreeCashFlowToFirmTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "freeCashFlowToFirmTTM")
-	case shadow.TangibleAssetValueTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "tangibleAssetValueTTM")
-	case shadow.NetCurrentAssetValueTtm == nil:
-		return missingMemberError("BulkKeyMetricsTtm", "netCurrentAssetValueTTM")
+		return missingMemberError("BulkKeyMetricsTTM", "marketCap")
+	case shadow.EnterpriseValueTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "enterpriseValueTTM")
+	case shadow.EvToSalesTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "evToSalesTTM")
+	case shadow.EvToOperatingCashFlowTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "evToOperatingCashFlowTTM")
+	case shadow.EvToFreeCashFlowTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "evToFreeCashFlowTTM")
+	case shadow.EvToEbitdaTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "evToEBITDATTM")
+	case shadow.NetDebtToEbitdaTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "netDebtToEBITDATTM")
+	case shadow.CurrentRatioTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "currentRatioTTM")
+	case shadow.IncomeQualityTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "incomeQualityTTM")
+	case shadow.GrahamNumberTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "grahamNumberTTM")
+	case shadow.GrahamNetNetTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "grahamNetNetTTM")
+	case shadow.TaxBurdenTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "taxBurdenTTM")
+	case shadow.InterestBurdenTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "interestBurdenTTM")
+	case shadow.WorkingCapitalTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "workingCapitalTTM")
+	case shadow.InvestedCapitalTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "investedCapitalTTM")
+	case shadow.ReturnOnAssetsTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "returnOnAssetsTTM")
+	case shadow.OperatingReturnOnAssetsTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "operatingReturnOnAssetsTTM")
+	case shadow.ReturnOnTangibleAssetsTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "returnOnTangibleAssetsTTM")
+	case shadow.ReturnOnEquityTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "returnOnEquityTTM")
+	case shadow.ReturnOnInvestedCapitalTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "returnOnInvestedCapitalTTM")
+	case shadow.ReturnOnCapitalEmployedTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "returnOnCapitalEmployedTTM")
+	case shadow.EarningsYieldTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "earningsYieldTTM")
+	case shadow.FreeCashFlowYieldTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "freeCashFlowYieldTTM")
+	case shadow.CapexToOperatingCashFlowTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "capexToOperatingCashFlowTTM")
+	case shadow.CapexToDepreciationTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "capexToDepreciationTTM")
+	case shadow.CapexToRevenueTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "capexToRevenueTTM")
+	case shadow.SalesGeneralAndAdministrativeToRevenueTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "salesGeneralAndAdministrativeToRevenueTTM")
+	case shadow.ResearchAndDevelopmentToRevenueTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "researchAndDevelopementToRevenueTTM")
+	case shadow.StockBasedCompensationToRevenueTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "stockBasedCompensationToRevenueTTM")
+	case shadow.IntangiblesToTotalAssetsTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "intangiblesToTotalAssetsTTM")
+	case shadow.AverageReceivablesTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "averageReceivablesTTM")
+	case shadow.AveragePayablesTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "averagePayablesTTM")
+	case shadow.AverageInventoryTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "averageInventoryTTM")
+	case shadow.DaysOfSalesOutstandingTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "daysOfSalesOutstandingTTM")
+	case shadow.DaysOfPayablesOutstandingTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "daysOfPayablesOutstandingTTM")
+	case shadow.DaysOfInventoryOutstandingTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "daysOfInventoryOutstandingTTM")
+	case shadow.OperatingCycleTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "operatingCycleTTM")
+	case shadow.CashConversionCycleTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "cashConversionCycleTTM")
+	case shadow.FreeCashFlowToEquityTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "freeCashFlowToEquityTTM")
+	case shadow.FreeCashFlowToFirmTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "freeCashFlowToFirmTTM")
+	case shadow.TangibleAssetValueTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "tangibleAssetValueTTM")
+	case shadow.NetCurrentAssetValueTTM == nil:
+		return missingMemberError("BulkKeyMetricsTTM", "netCurrentAssetValueTTM")
 	}
-	*m = BulkKeyMetricsTtm{
+	*m = BulkKeyMetricsTTM{
 		Symbol:                                    *shadow.Symbol,
 		MarketCap:                                 *shadow.MarketCap,
-		EnterpriseValueTtm:                        *shadow.EnterpriseValueTtm,
-		EvToSalesTtm:                              *shadow.EvToSalesTtm,
-		EvToOperatingCashFlowTtm:                  *shadow.EvToOperatingCashFlowTtm,
-		EvToFreeCashFlowTtm:                       *shadow.EvToFreeCashFlowTtm,
-		EvToEbitdaTtm:                             *shadow.EvToEbitdaTtm,
-		NetDebtToEbitdaTtm:                        *shadow.NetDebtToEbitdaTtm,
-		CurrentRatioTtm:                           *shadow.CurrentRatioTtm,
-		IncomeQualityTtm:                          *shadow.IncomeQualityTtm,
-		GrahamNumberTtm:                           *shadow.GrahamNumberTtm,
-		GrahamNetNetTtm:                           *shadow.GrahamNetNetTtm,
-		TaxBurdenTtm:                              *shadow.TaxBurdenTtm,
-		InterestBurdenTtm:                         *shadow.InterestBurdenTtm,
-		WorkingCapitalTtm:                         *shadow.WorkingCapitalTtm,
-		InvestedCapitalTtm:                        *shadow.InvestedCapitalTtm,
-		ReturnOnAssetsTtm:                         *shadow.ReturnOnAssetsTtm,
-		OperatingReturnOnAssetsTtm:                *shadow.OperatingReturnOnAssetsTtm,
-		ReturnOnTangibleAssetsTtm:                 *shadow.ReturnOnTangibleAssetsTtm,
-		ReturnOnEquityTtm:                         *shadow.ReturnOnEquityTtm,
-		ReturnOnInvestedCapitalTtm:                *shadow.ReturnOnInvestedCapitalTtm,
-		ReturnOnCapitalEmployedTtm:                *shadow.ReturnOnCapitalEmployedTtm,
-		EarningsYieldTtm:                          *shadow.EarningsYieldTtm,
-		FreeCashFlowYieldTtm:                      *shadow.FreeCashFlowYieldTtm,
-		CapexToOperatingCashFlowTtm:               *shadow.CapexToOperatingCashFlowTtm,
-		CapexToDepreciationTtm:                    *shadow.CapexToDepreciationTtm,
-		CapexToRevenueTtm:                         *shadow.CapexToRevenueTtm,
-		SalesGeneralAndAdministrativeToRevenueTtm: *shadow.SalesGeneralAndAdministrativeToRevenueTtm,
-		ResearchAndDevelopmentToRevenueTtm:        *shadow.ResearchAndDevelopmentToRevenueTtm,
-		StockBasedCompensationToRevenueTtm:        *shadow.StockBasedCompensationToRevenueTtm,
-		IntangiblesToTotalAssetsTtm:               *shadow.IntangiblesToTotalAssetsTtm,
-		AverageReceivablesTtm:                     *shadow.AverageReceivablesTtm,
-		AveragePayablesTtm:                        *shadow.AveragePayablesTtm,
-		AverageInventoryTtm:                       *shadow.AverageInventoryTtm,
-		DaysOfSalesOutstandingTtm:                 *shadow.DaysOfSalesOutstandingTtm,
-		DaysOfPayablesOutstandingTtm:              *shadow.DaysOfPayablesOutstandingTtm,
-		DaysOfInventoryOutstandingTtm:             *shadow.DaysOfInventoryOutstandingTtm,
-		OperatingCycleTtm:                         *shadow.OperatingCycleTtm,
-		CashConversionCycleTtm:                    *shadow.CashConversionCycleTtm,
-		FreeCashFlowToEquityTtm:                   *shadow.FreeCashFlowToEquityTtm,
-		FreeCashFlowToFirmTtm:                     *shadow.FreeCashFlowToFirmTtm,
-		TangibleAssetValueTtm:                     *shadow.TangibleAssetValueTtm,
-		NetCurrentAssetValueTtm:                   *shadow.NetCurrentAssetValueTtm,
+		EnterpriseValueTTM:                        *shadow.EnterpriseValueTTM,
+		EvToSalesTTM:                              *shadow.EvToSalesTTM,
+		EvToOperatingCashFlowTTM:                  *shadow.EvToOperatingCashFlowTTM,
+		EvToFreeCashFlowTTM:                       *shadow.EvToFreeCashFlowTTM,
+		EvToEbitdaTTM:                             *shadow.EvToEbitdaTTM,
+		NetDebtToEbitdaTTM:                        *shadow.NetDebtToEbitdaTTM,
+		CurrentRatioTTM:                           *shadow.CurrentRatioTTM,
+		IncomeQualityTTM:                          *shadow.IncomeQualityTTM,
+		GrahamNumberTTM:                           *shadow.GrahamNumberTTM,
+		GrahamNetNetTTM:                           *shadow.GrahamNetNetTTM,
+		TaxBurdenTTM:                              *shadow.TaxBurdenTTM,
+		InterestBurdenTTM:                         *shadow.InterestBurdenTTM,
+		WorkingCapitalTTM:                         *shadow.WorkingCapitalTTM,
+		InvestedCapitalTTM:                        *shadow.InvestedCapitalTTM,
+		ReturnOnAssetsTTM:                         *shadow.ReturnOnAssetsTTM,
+		OperatingReturnOnAssetsTTM:                *shadow.OperatingReturnOnAssetsTTM,
+		ReturnOnTangibleAssetsTTM:                 *shadow.ReturnOnTangibleAssetsTTM,
+		ReturnOnEquityTTM:                         *shadow.ReturnOnEquityTTM,
+		ReturnOnInvestedCapitalTTM:                *shadow.ReturnOnInvestedCapitalTTM,
+		ReturnOnCapitalEmployedTTM:                *shadow.ReturnOnCapitalEmployedTTM,
+		EarningsYieldTTM:                          *shadow.EarningsYieldTTM,
+		FreeCashFlowYieldTTM:                      *shadow.FreeCashFlowYieldTTM,
+		CapexToOperatingCashFlowTTM:               *shadow.CapexToOperatingCashFlowTTM,
+		CapexToDepreciationTTM:                    *shadow.CapexToDepreciationTTM,
+		CapexToRevenueTTM:                         *shadow.CapexToRevenueTTM,
+		SalesGeneralAndAdministrativeToRevenueTTM: *shadow.SalesGeneralAndAdministrativeToRevenueTTM,
+		ResearchAndDevelopmentToRevenueTTM:        *shadow.ResearchAndDevelopmentToRevenueTTM,
+		StockBasedCompensationToRevenueTTM:        *shadow.StockBasedCompensationToRevenueTTM,
+		IntangiblesToTotalAssetsTTM:               *shadow.IntangiblesToTotalAssetsTTM,
+		AverageReceivablesTTM:                     *shadow.AverageReceivablesTTM,
+		AveragePayablesTTM:                        *shadow.AveragePayablesTTM,
+		AverageInventoryTTM:                       *shadow.AverageInventoryTTM,
+		DaysOfSalesOutstandingTTM:                 *shadow.DaysOfSalesOutstandingTTM,
+		DaysOfPayablesOutstandingTTM:              *shadow.DaysOfPayablesOutstandingTTM,
+		DaysOfInventoryOutstandingTTM:             *shadow.DaysOfInventoryOutstandingTTM,
+		OperatingCycleTTM:                         *shadow.OperatingCycleTTM,
+		CashConversionCycleTTM:                    *shadow.CashConversionCycleTTM,
+		FreeCashFlowToEquityTTM:                   *shadow.FreeCashFlowToEquityTTM,
+		FreeCashFlowToFirmTTM:                     *shadow.FreeCashFlowToFirmTTM,
+		TangibleAssetValueTTM:                     *shadow.TangibleAssetValueTTM,
+		NetCurrentAssetValueTTM:                   *shadow.NetCurrentAssetValueTTM,
 	}
 	return nil
 }
 
-// BulkFinancialRatiosTtm is one worldwide financial-ratios
+// BulkFinancialRatiosTTM is one worldwide financial-ratios
 // trailing-twelve-month bulk row.
-type BulkFinancialRatiosTtm struct {
+type BulkFinancialRatiosTTM struct {
 	Symbol                                     string `json:"symbol"`
-	GrossProfitMarginTtm                       string `json:"grossProfitMarginTTM"`
-	EbitMarginTtm                              string `json:"ebitMarginTTM"`
-	EbitdaMarginTtm                            string `json:"ebitdaMarginTTM"`
-	OperatingProfitMarginTtm                   string `json:"operatingProfitMarginTTM"`
-	PretaxProfitMarginTtm                      string `json:"pretaxProfitMarginTTM"`
-	ContinuousOperationsProfitMarginTtm        string `json:"continuousOperationsProfitMarginTTM"`
-	NetProfitMarginTtm                         string `json:"netProfitMarginTTM"`
-	BottomLineProfitMarginTtm                  string `json:"bottomLineProfitMarginTTM"`
-	ReceivablesTurnoverTtm                     string `json:"receivablesTurnoverTTM"`
-	PayablesTurnoverTtm                        string `json:"payablesTurnoverTTM"`
-	InventoryTurnoverTtm                       string `json:"inventoryTurnoverTTM"`
-	FixedAssetTurnoverTtm                      string `json:"fixedAssetTurnoverTTM"`
-	AssetTurnoverTtm                           string `json:"assetTurnoverTTM"`
-	CurrentRatioTtm                            string `json:"currentRatioTTM"`
-	QuickRatioTtm                              string `json:"quickRatioTTM"`
-	SolvencyRatioTtm                           string `json:"solvencyRatioTTM"`
-	CashRatioTtm                               string `json:"cashRatioTTM"`
-	PriceToEarningsRatioTtm                    string `json:"priceToEarningsRatioTTM"`
-	PriceToEarningsGrowthRatioTtm              string `json:"priceToEarningsGrowthRatioTTM"`
-	ForwardPriceToEarningsGrowthRatioTtm       string `json:"forwardPriceToEarningsGrowthRatioTTM"`
-	PriceToBookRatioTtm                        string `json:"priceToBookRatioTTM"`
-	PriceToSalesRatioTtm                       string `json:"priceToSalesRatioTTM"`
-	PriceToFreeCashFlowRatioTtm                string `json:"priceToFreeCashFlowRatioTTM"`
-	PriceToOperatingCashFlowRatioTtm           string `json:"priceToOperatingCashFlowRatioTTM"`
-	DebtToAssetsRatioTtm                       string `json:"debtToAssetsRatioTTM"`
-	DebtToEquityRatioTtm                       string `json:"debtToEquityRatioTTM"`
-	DebtToCapitalRatioTtm                      string `json:"debtToCapitalRatioTTM"`
-	LongTermDebtToCapitalRatioTtm              string `json:"longTermDebtToCapitalRatioTTM"`
-	FinancialLeverageRatioTtm                  string `json:"financialLeverageRatioTTM"`
-	WorkingCapitalTurnoverRatioTtm             string `json:"workingCapitalTurnoverRatioTTM"`
-	OperatingCashFlowRatioTtm                  string `json:"operatingCashFlowRatioTTM"`
-	OperatingCashFlowSalesRatioTtm             string `json:"operatingCashFlowSalesRatioTTM"`
-	FreeCashFlowOperatingCashFlowRatioTtm      string `json:"freeCashFlowOperatingCashFlowRatioTTM"`
-	DebtServiceCoverageRatioTtm                string `json:"debtServiceCoverageRatioTTM"`
-	InterestCoverageRatioTtm                   string `json:"interestCoverageRatioTTM"`
-	ShortTermOperatingCashFlowCoverageRatioTtm string `json:"shortTermOperatingCashFlowCoverageRatioTTM"`
-	OperatingCashFlowCoverageRatioTtm          string `json:"operatingCashFlowCoverageRatioTTM"`
-	CapitalExpenditureCoverageRatioTtm         string `json:"capitalExpenditureCoverageRatioTTM"`
-	DividendPaidAndCapexCoverageRatioTtm       string `json:"dividendPaidAndCapexCoverageRatioTTM"`
-	DividendPayoutRatioTtm                     string `json:"dividendPayoutRatioTTM"`
-	DividendYieldTtm                           string `json:"dividendYieldTTM"`
-	EnterpriseValueTtm                         string `json:"enterpriseValueTTM"`
-	RevenuePerShareTtm                         string `json:"revenuePerShareTTM"`
-	NetIncomePerShareTtm                       string `json:"netIncomePerShareTTM"`
-	InterestDebtPerShareTtm                    string `json:"interestDebtPerShareTTM"`
-	CashPerShareTtm                            string `json:"cashPerShareTTM"`
-	BookValuePerShareTtm                       string `json:"bookValuePerShareTTM"`
-	TangibleBookValuePerShareTtm               string `json:"tangibleBookValuePerShareTTM"`
-	ShareholdersEquityPerShareTtm              string `json:"shareholdersEquityPerShareTTM"`
-	OperatingCashFlowPerShareTtm               string `json:"operatingCashFlowPerShareTTM"`
-	CapexPerShareTtm                           string `json:"capexPerShareTTM"`
-	FreeCashFlowPerShareTtm                    string `json:"freeCashFlowPerShareTTM"`
-	NetIncomePerEbtTtm                         string `json:"netIncomePerEBTTTM"`
-	EbtPerEbitTtm                              string `json:"ebtPerEbitTTM"`
-	PriceToFairValueTtm                        string `json:"priceToFairValueTTM"`
-	DebtToMarketCapTtm                         string `json:"debtToMarketCapTTM"`
-	EffectiveTaxRateTtm                        string `json:"effectiveTaxRateTTM"`
-	EnterpriseValueMultipleTtm                 string `json:"enterpriseValueMultipleTTM"`
-	DividendPerShareTtm                        string `json:"dividendPerShareTTM"`
+	GrossProfitMarginTTM                       string `json:"grossProfitMarginTTM"`
+	EbitMarginTTM                              string `json:"ebitMarginTTM"`
+	EbitdaMarginTTM                            string `json:"ebitdaMarginTTM"`
+	OperatingProfitMarginTTM                   string `json:"operatingProfitMarginTTM"`
+	PretaxProfitMarginTTM                      string `json:"pretaxProfitMarginTTM"`
+	ContinuousOperationsProfitMarginTTM        string `json:"continuousOperationsProfitMarginTTM"`
+	NetProfitMarginTTM                         string `json:"netProfitMarginTTM"`
+	BottomLineProfitMarginTTM                  string `json:"bottomLineProfitMarginTTM"`
+	ReceivablesTurnoverTTM                     string `json:"receivablesTurnoverTTM"`
+	PayablesTurnoverTTM                        string `json:"payablesTurnoverTTM"`
+	InventoryTurnoverTTM                       string `json:"inventoryTurnoverTTM"`
+	FixedAssetTurnoverTTM                      string `json:"fixedAssetTurnoverTTM"`
+	AssetTurnoverTTM                           string `json:"assetTurnoverTTM"`
+	CurrentRatioTTM                            string `json:"currentRatioTTM"`
+	QuickRatioTTM                              string `json:"quickRatioTTM"`
+	SolvencyRatioTTM                           string `json:"solvencyRatioTTM"`
+	CashRatioTTM                               string `json:"cashRatioTTM"`
+	PriceToEarningsRatioTTM                    string `json:"priceToEarningsRatioTTM"`
+	PriceToEarningsGrowthRatioTTM              string `json:"priceToEarningsGrowthRatioTTM"`
+	ForwardPriceToEarningsGrowthRatioTTM       string `json:"forwardPriceToEarningsGrowthRatioTTM"`
+	PriceToBookRatioTTM                        string `json:"priceToBookRatioTTM"`
+	PriceToSalesRatioTTM                       string `json:"priceToSalesRatioTTM"`
+	PriceToFreeCashFlowRatioTTM                string `json:"priceToFreeCashFlowRatioTTM"`
+	PriceToOperatingCashFlowRatioTTM           string `json:"priceToOperatingCashFlowRatioTTM"`
+	DebtToAssetsRatioTTM                       string `json:"debtToAssetsRatioTTM"`
+	DebtToEquityRatioTTM                       string `json:"debtToEquityRatioTTM"`
+	DebtToCapitalRatioTTM                      string `json:"debtToCapitalRatioTTM"`
+	LongTermDebtToCapitalRatioTTM              string `json:"longTermDebtToCapitalRatioTTM"`
+	FinancialLeverageRatioTTM                  string `json:"financialLeverageRatioTTM"`
+	WorkingCapitalTurnoverRatioTTM             string `json:"workingCapitalTurnoverRatioTTM"`
+	OperatingCashFlowRatioTTM                  string `json:"operatingCashFlowRatioTTM"`
+	OperatingCashFlowSalesRatioTTM             string `json:"operatingCashFlowSalesRatioTTM"`
+	FreeCashFlowOperatingCashFlowRatioTTM      string `json:"freeCashFlowOperatingCashFlowRatioTTM"`
+	DebtServiceCoverageRatioTTM                string `json:"debtServiceCoverageRatioTTM"`
+	InterestCoverageRatioTTM                   string `json:"interestCoverageRatioTTM"`
+	ShortTermOperatingCashFlowCoverageRatioTTM string `json:"shortTermOperatingCashFlowCoverageRatioTTM"`
+	OperatingCashFlowCoverageRatioTTM          string `json:"operatingCashFlowCoverageRatioTTM"`
+	CapitalExpenditureCoverageRatioTTM         string `json:"capitalExpenditureCoverageRatioTTM"`
+	DividendPaidAndCapexCoverageRatioTTM       string `json:"dividendPaidAndCapexCoverageRatioTTM"`
+	DividendPayoutRatioTTM                     string `json:"dividendPayoutRatioTTM"`
+	DividendYieldTTM                           string `json:"dividendYieldTTM"`
+	EnterpriseValueTTM                         string `json:"enterpriseValueTTM"`
+	RevenuePerShareTTM                         string `json:"revenuePerShareTTM"`
+	NetIncomePerShareTTM                       string `json:"netIncomePerShareTTM"`
+	InterestDebtPerShareTTM                    string `json:"interestDebtPerShareTTM"`
+	CashPerShareTTM                            string `json:"cashPerShareTTM"`
+	BookValuePerShareTTM                       string `json:"bookValuePerShareTTM"`
+	TangibleBookValuePerShareTTM               string `json:"tangibleBookValuePerShareTTM"`
+	ShareholdersEquityPerShareTTM              string `json:"shareholdersEquityPerShareTTM"`
+	OperatingCashFlowPerShareTTM               string `json:"operatingCashFlowPerShareTTM"`
+	CapexPerShareTTM                           string `json:"capexPerShareTTM"`
+	FreeCashFlowPerShareTTM                    string `json:"freeCashFlowPerShareTTM"`
+	NetIncomePerEbtTTM                         string `json:"netIncomePerEBTTTM"`
+	EbtPerEbitTTM                              string `json:"ebtPerEbitTTM"`
+	PriceToFairValueTTM                        string `json:"priceToFairValueTTM"`
+	DebtToMarketCapTTM                         string `json:"debtToMarketCapTTM"`
+	EffectiveTaxRateTTM                        string `json:"effectiveTaxRateTTM"`
+	EnterpriseValueMultipleTTM                 string `json:"enterpriseValueMultipleTTM"`
+	DividendPerShareTTM                        string `json:"dividendPerShareTTM"`
 }
 
-// bulkFinancialRatiosTtmShadow mirrors BulkFinancialRatiosTtm with a pointer
+// bulkFinancialRatiosTTMShadow mirrors BulkFinancialRatiosTTM with a pointer
 // or raw value for every required member so a missing or null member is
 // observable after decoding.
-type bulkFinancialRatiosTtmShadow struct {
+type bulkFinancialRatiosTTMShadow struct {
 	Symbol                                     *string `json:"symbol"`
-	GrossProfitMarginTtm                       *string `json:"grossProfitMarginTTM"`
-	EbitMarginTtm                              *string `json:"ebitMarginTTM"`
-	EbitdaMarginTtm                            *string `json:"ebitdaMarginTTM"`
-	OperatingProfitMarginTtm                   *string `json:"operatingProfitMarginTTM"`
-	PretaxProfitMarginTtm                      *string `json:"pretaxProfitMarginTTM"`
-	ContinuousOperationsProfitMarginTtm        *string `json:"continuousOperationsProfitMarginTTM"`
-	NetProfitMarginTtm                         *string `json:"netProfitMarginTTM"`
-	BottomLineProfitMarginTtm                  *string `json:"bottomLineProfitMarginTTM"`
-	ReceivablesTurnoverTtm                     *string `json:"receivablesTurnoverTTM"`
-	PayablesTurnoverTtm                        *string `json:"payablesTurnoverTTM"`
-	InventoryTurnoverTtm                       *string `json:"inventoryTurnoverTTM"`
-	FixedAssetTurnoverTtm                      *string `json:"fixedAssetTurnoverTTM"`
-	AssetTurnoverTtm                           *string `json:"assetTurnoverTTM"`
-	CurrentRatioTtm                            *string `json:"currentRatioTTM"`
-	QuickRatioTtm                              *string `json:"quickRatioTTM"`
-	SolvencyRatioTtm                           *string `json:"solvencyRatioTTM"`
-	CashRatioTtm                               *string `json:"cashRatioTTM"`
-	PriceToEarningsRatioTtm                    *string `json:"priceToEarningsRatioTTM"`
-	PriceToEarningsGrowthRatioTtm              *string `json:"priceToEarningsGrowthRatioTTM"`
-	ForwardPriceToEarningsGrowthRatioTtm       *string `json:"forwardPriceToEarningsGrowthRatioTTM"`
-	PriceToBookRatioTtm                        *string `json:"priceToBookRatioTTM"`
-	PriceToSalesRatioTtm                       *string `json:"priceToSalesRatioTTM"`
-	PriceToFreeCashFlowRatioTtm                *string `json:"priceToFreeCashFlowRatioTTM"`
-	PriceToOperatingCashFlowRatioTtm           *string `json:"priceToOperatingCashFlowRatioTTM"`
-	DebtToAssetsRatioTtm                       *string `json:"debtToAssetsRatioTTM"`
-	DebtToEquityRatioTtm                       *string `json:"debtToEquityRatioTTM"`
-	DebtToCapitalRatioTtm                      *string `json:"debtToCapitalRatioTTM"`
-	LongTermDebtToCapitalRatioTtm              *string `json:"longTermDebtToCapitalRatioTTM"`
-	FinancialLeverageRatioTtm                  *string `json:"financialLeverageRatioTTM"`
-	WorkingCapitalTurnoverRatioTtm             *string `json:"workingCapitalTurnoverRatioTTM"`
-	OperatingCashFlowRatioTtm                  *string `json:"operatingCashFlowRatioTTM"`
-	OperatingCashFlowSalesRatioTtm             *string `json:"operatingCashFlowSalesRatioTTM"`
-	FreeCashFlowOperatingCashFlowRatioTtm      *string `json:"freeCashFlowOperatingCashFlowRatioTTM"`
-	DebtServiceCoverageRatioTtm                *string `json:"debtServiceCoverageRatioTTM"`
-	InterestCoverageRatioTtm                   *string `json:"interestCoverageRatioTTM"`
-	ShortTermOperatingCashFlowCoverageRatioTtm *string `json:"shortTermOperatingCashFlowCoverageRatioTTM"`
-	OperatingCashFlowCoverageRatioTtm          *string `json:"operatingCashFlowCoverageRatioTTM"`
-	CapitalExpenditureCoverageRatioTtm         *string `json:"capitalExpenditureCoverageRatioTTM"`
-	DividendPaidAndCapexCoverageRatioTtm       *string `json:"dividendPaidAndCapexCoverageRatioTTM"`
-	DividendPayoutRatioTtm                     *string `json:"dividendPayoutRatioTTM"`
-	DividendYieldTtm                           *string `json:"dividendYieldTTM"`
-	EnterpriseValueTtm                         *string `json:"enterpriseValueTTM"`
-	RevenuePerShareTtm                         *string `json:"revenuePerShareTTM"`
-	NetIncomePerShareTtm                       *string `json:"netIncomePerShareTTM"`
-	InterestDebtPerShareTtm                    *string `json:"interestDebtPerShareTTM"`
-	CashPerShareTtm                            *string `json:"cashPerShareTTM"`
-	BookValuePerShareTtm                       *string `json:"bookValuePerShareTTM"`
-	TangibleBookValuePerShareTtm               *string `json:"tangibleBookValuePerShareTTM"`
-	ShareholdersEquityPerShareTtm              *string `json:"shareholdersEquityPerShareTTM"`
-	OperatingCashFlowPerShareTtm               *string `json:"operatingCashFlowPerShareTTM"`
-	CapexPerShareTtm                           *string `json:"capexPerShareTTM"`
-	FreeCashFlowPerShareTtm                    *string `json:"freeCashFlowPerShareTTM"`
-	NetIncomePerEbtTtm                         *string `json:"netIncomePerEBTTTM"`
-	EbtPerEbitTtm                              *string `json:"ebtPerEbitTTM"`
-	PriceToFairValueTtm                        *string `json:"priceToFairValueTTM"`
-	DebtToMarketCapTtm                         *string `json:"debtToMarketCapTTM"`
-	EffectiveTaxRateTtm                        *string `json:"effectiveTaxRateTTM"`
-	EnterpriseValueMultipleTtm                 *string `json:"enterpriseValueMultipleTTM"`
-	DividendPerShareTtm                        *string `json:"dividendPerShareTTM"`
+	GrossProfitMarginTTM                       *string `json:"grossProfitMarginTTM"`
+	EbitMarginTTM                              *string `json:"ebitMarginTTM"`
+	EbitdaMarginTTM                            *string `json:"ebitdaMarginTTM"`
+	OperatingProfitMarginTTM                   *string `json:"operatingProfitMarginTTM"`
+	PretaxProfitMarginTTM                      *string `json:"pretaxProfitMarginTTM"`
+	ContinuousOperationsProfitMarginTTM        *string `json:"continuousOperationsProfitMarginTTM"`
+	NetProfitMarginTTM                         *string `json:"netProfitMarginTTM"`
+	BottomLineProfitMarginTTM                  *string `json:"bottomLineProfitMarginTTM"`
+	ReceivablesTurnoverTTM                     *string `json:"receivablesTurnoverTTM"`
+	PayablesTurnoverTTM                        *string `json:"payablesTurnoverTTM"`
+	InventoryTurnoverTTM                       *string `json:"inventoryTurnoverTTM"`
+	FixedAssetTurnoverTTM                      *string `json:"fixedAssetTurnoverTTM"`
+	AssetTurnoverTTM                           *string `json:"assetTurnoverTTM"`
+	CurrentRatioTTM                            *string `json:"currentRatioTTM"`
+	QuickRatioTTM                              *string `json:"quickRatioTTM"`
+	SolvencyRatioTTM                           *string `json:"solvencyRatioTTM"`
+	CashRatioTTM                               *string `json:"cashRatioTTM"`
+	PriceToEarningsRatioTTM                    *string `json:"priceToEarningsRatioTTM"`
+	PriceToEarningsGrowthRatioTTM              *string `json:"priceToEarningsGrowthRatioTTM"`
+	ForwardPriceToEarningsGrowthRatioTTM       *string `json:"forwardPriceToEarningsGrowthRatioTTM"`
+	PriceToBookRatioTTM                        *string `json:"priceToBookRatioTTM"`
+	PriceToSalesRatioTTM                       *string `json:"priceToSalesRatioTTM"`
+	PriceToFreeCashFlowRatioTTM                *string `json:"priceToFreeCashFlowRatioTTM"`
+	PriceToOperatingCashFlowRatioTTM           *string `json:"priceToOperatingCashFlowRatioTTM"`
+	DebtToAssetsRatioTTM                       *string `json:"debtToAssetsRatioTTM"`
+	DebtToEquityRatioTTM                       *string `json:"debtToEquityRatioTTM"`
+	DebtToCapitalRatioTTM                      *string `json:"debtToCapitalRatioTTM"`
+	LongTermDebtToCapitalRatioTTM              *string `json:"longTermDebtToCapitalRatioTTM"`
+	FinancialLeverageRatioTTM                  *string `json:"financialLeverageRatioTTM"`
+	WorkingCapitalTurnoverRatioTTM             *string `json:"workingCapitalTurnoverRatioTTM"`
+	OperatingCashFlowRatioTTM                  *string `json:"operatingCashFlowRatioTTM"`
+	OperatingCashFlowSalesRatioTTM             *string `json:"operatingCashFlowSalesRatioTTM"`
+	FreeCashFlowOperatingCashFlowRatioTTM      *string `json:"freeCashFlowOperatingCashFlowRatioTTM"`
+	DebtServiceCoverageRatioTTM                *string `json:"debtServiceCoverageRatioTTM"`
+	InterestCoverageRatioTTM                   *string `json:"interestCoverageRatioTTM"`
+	ShortTermOperatingCashFlowCoverageRatioTTM *string `json:"shortTermOperatingCashFlowCoverageRatioTTM"`
+	OperatingCashFlowCoverageRatioTTM          *string `json:"operatingCashFlowCoverageRatioTTM"`
+	CapitalExpenditureCoverageRatioTTM         *string `json:"capitalExpenditureCoverageRatioTTM"`
+	DividendPaidAndCapexCoverageRatioTTM       *string `json:"dividendPaidAndCapexCoverageRatioTTM"`
+	DividendPayoutRatioTTM                     *string `json:"dividendPayoutRatioTTM"`
+	DividendYieldTTM                           *string `json:"dividendYieldTTM"`
+	EnterpriseValueTTM                         *string `json:"enterpriseValueTTM"`
+	RevenuePerShareTTM                         *string `json:"revenuePerShareTTM"`
+	NetIncomePerShareTTM                       *string `json:"netIncomePerShareTTM"`
+	InterestDebtPerShareTTM                    *string `json:"interestDebtPerShareTTM"`
+	CashPerShareTTM                            *string `json:"cashPerShareTTM"`
+	BookValuePerShareTTM                       *string `json:"bookValuePerShareTTM"`
+	TangibleBookValuePerShareTTM               *string `json:"tangibleBookValuePerShareTTM"`
+	ShareholdersEquityPerShareTTM              *string `json:"shareholdersEquityPerShareTTM"`
+	OperatingCashFlowPerShareTTM               *string `json:"operatingCashFlowPerShareTTM"`
+	CapexPerShareTTM                           *string `json:"capexPerShareTTM"`
+	FreeCashFlowPerShareTTM                    *string `json:"freeCashFlowPerShareTTM"`
+	NetIncomePerEbtTTM                         *string `json:"netIncomePerEBTTTM"`
+	EbtPerEbitTTM                              *string `json:"ebtPerEbitTTM"`
+	PriceToFairValueTTM                        *string `json:"priceToFairValueTTM"`
+	DebtToMarketCapTTM                         *string `json:"debtToMarketCapTTM"`
+	EffectiveTaxRateTTM                        *string `json:"effectiveTaxRateTTM"`
+	EnterpriseValueMultipleTTM                 *string `json:"enterpriseValueMultipleTTM"`
+	DividendPerShareTTM                        *string `json:"dividendPerShareTTM"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *BulkFinancialRatiosTtm) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow bulkFinancialRatiosTtmShadow
+func (m *BulkFinancialRatiosTTM) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow bulkFinancialRatiosTTMShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "symbol")
-	case shadow.GrossProfitMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "grossProfitMarginTTM")
-	case shadow.EbitMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "ebitMarginTTM")
-	case shadow.EbitdaMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "ebitdaMarginTTM")
-	case shadow.OperatingProfitMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "operatingProfitMarginTTM")
-	case shadow.PretaxProfitMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "pretaxProfitMarginTTM")
-	case shadow.ContinuousOperationsProfitMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "continuousOperationsProfitMarginTTM")
-	case shadow.NetProfitMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "netProfitMarginTTM")
-	case shadow.BottomLineProfitMarginTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "bottomLineProfitMarginTTM")
-	case shadow.ReceivablesTurnoverTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "receivablesTurnoverTTM")
-	case shadow.PayablesTurnoverTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "payablesTurnoverTTM")
-	case shadow.InventoryTurnoverTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "inventoryTurnoverTTM")
-	case shadow.FixedAssetTurnoverTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "fixedAssetTurnoverTTM")
-	case shadow.AssetTurnoverTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "assetTurnoverTTM")
-	case shadow.CurrentRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "currentRatioTTM")
-	case shadow.QuickRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "quickRatioTTM")
-	case shadow.SolvencyRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "solvencyRatioTTM")
-	case shadow.CashRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "cashRatioTTM")
-	case shadow.PriceToEarningsRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "priceToEarningsRatioTTM")
-	case shadow.PriceToEarningsGrowthRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "priceToEarningsGrowthRatioTTM")
-	case shadow.ForwardPriceToEarningsGrowthRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "forwardPriceToEarningsGrowthRatioTTM")
-	case shadow.PriceToBookRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "priceToBookRatioTTM")
-	case shadow.PriceToSalesRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "priceToSalesRatioTTM")
-	case shadow.PriceToFreeCashFlowRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "priceToFreeCashFlowRatioTTM")
-	case shadow.PriceToOperatingCashFlowRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "priceToOperatingCashFlowRatioTTM")
-	case shadow.DebtToAssetsRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "debtToAssetsRatioTTM")
-	case shadow.DebtToEquityRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "debtToEquityRatioTTM")
-	case shadow.DebtToCapitalRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "debtToCapitalRatioTTM")
-	case shadow.LongTermDebtToCapitalRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "longTermDebtToCapitalRatioTTM")
-	case shadow.FinancialLeverageRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "financialLeverageRatioTTM")
-	case shadow.WorkingCapitalTurnoverRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "workingCapitalTurnoverRatioTTM")
-	case shadow.OperatingCashFlowRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "operatingCashFlowRatioTTM")
-	case shadow.OperatingCashFlowSalesRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "operatingCashFlowSalesRatioTTM")
-	case shadow.FreeCashFlowOperatingCashFlowRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "freeCashFlowOperatingCashFlowRatioTTM")
-	case shadow.DebtServiceCoverageRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "debtServiceCoverageRatioTTM")
-	case shadow.InterestCoverageRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "interestCoverageRatioTTM")
-	case shadow.ShortTermOperatingCashFlowCoverageRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "shortTermOperatingCashFlowCoverageRatioTTM")
-	case shadow.OperatingCashFlowCoverageRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "operatingCashFlowCoverageRatioTTM")
-	case shadow.CapitalExpenditureCoverageRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "capitalExpenditureCoverageRatioTTM")
-	case shadow.DividendPaidAndCapexCoverageRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "dividendPaidAndCapexCoverageRatioTTM")
-	case shadow.DividendPayoutRatioTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "dividendPayoutRatioTTM")
-	case shadow.DividendYieldTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "dividendYieldTTM")
-	case shadow.EnterpriseValueTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "enterpriseValueTTM")
-	case shadow.RevenuePerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "revenuePerShareTTM")
-	case shadow.NetIncomePerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "netIncomePerShareTTM")
-	case shadow.InterestDebtPerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "interestDebtPerShareTTM")
-	case shadow.CashPerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "cashPerShareTTM")
-	case shadow.BookValuePerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "bookValuePerShareTTM")
-	case shadow.TangibleBookValuePerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "tangibleBookValuePerShareTTM")
-	case shadow.ShareholdersEquityPerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "shareholdersEquityPerShareTTM")
-	case shadow.OperatingCashFlowPerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "operatingCashFlowPerShareTTM")
-	case shadow.CapexPerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "capexPerShareTTM")
-	case shadow.FreeCashFlowPerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "freeCashFlowPerShareTTM")
-	case shadow.NetIncomePerEbtTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "netIncomePerEBTTTM")
-	case shadow.EbtPerEbitTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "ebtPerEbitTTM")
-	case shadow.PriceToFairValueTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "priceToFairValueTTM")
-	case shadow.DebtToMarketCapTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "debtToMarketCapTTM")
-	case shadow.EffectiveTaxRateTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "effectiveTaxRateTTM")
-	case shadow.EnterpriseValueMultipleTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "enterpriseValueMultipleTTM")
-	case shadow.DividendPerShareTtm == nil:
-		return missingMemberError("BulkFinancialRatiosTtm", "dividendPerShareTTM")
+		return missingMemberError("BulkFinancialRatiosTTM", "symbol")
+	case shadow.GrossProfitMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "grossProfitMarginTTM")
+	case shadow.EbitMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "ebitMarginTTM")
+	case shadow.EbitdaMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "ebitdaMarginTTM")
+	case shadow.OperatingProfitMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "operatingProfitMarginTTM")
+	case shadow.PretaxProfitMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "pretaxProfitMarginTTM")
+	case shadow.ContinuousOperationsProfitMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "continuousOperationsProfitMarginTTM")
+	case shadow.NetProfitMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "netProfitMarginTTM")
+	case shadow.BottomLineProfitMarginTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "bottomLineProfitMarginTTM")
+	case shadow.ReceivablesTurnoverTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "receivablesTurnoverTTM")
+	case shadow.PayablesTurnoverTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "payablesTurnoverTTM")
+	case shadow.InventoryTurnoverTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "inventoryTurnoverTTM")
+	case shadow.FixedAssetTurnoverTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "fixedAssetTurnoverTTM")
+	case shadow.AssetTurnoverTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "assetTurnoverTTM")
+	case shadow.CurrentRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "currentRatioTTM")
+	case shadow.QuickRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "quickRatioTTM")
+	case shadow.SolvencyRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "solvencyRatioTTM")
+	case shadow.CashRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "cashRatioTTM")
+	case shadow.PriceToEarningsRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "priceToEarningsRatioTTM")
+	case shadow.PriceToEarningsGrowthRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "priceToEarningsGrowthRatioTTM")
+	case shadow.ForwardPriceToEarningsGrowthRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "forwardPriceToEarningsGrowthRatioTTM")
+	case shadow.PriceToBookRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "priceToBookRatioTTM")
+	case shadow.PriceToSalesRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "priceToSalesRatioTTM")
+	case shadow.PriceToFreeCashFlowRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "priceToFreeCashFlowRatioTTM")
+	case shadow.PriceToOperatingCashFlowRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "priceToOperatingCashFlowRatioTTM")
+	case shadow.DebtToAssetsRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "debtToAssetsRatioTTM")
+	case shadow.DebtToEquityRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "debtToEquityRatioTTM")
+	case shadow.DebtToCapitalRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "debtToCapitalRatioTTM")
+	case shadow.LongTermDebtToCapitalRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "longTermDebtToCapitalRatioTTM")
+	case shadow.FinancialLeverageRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "financialLeverageRatioTTM")
+	case shadow.WorkingCapitalTurnoverRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "workingCapitalTurnoverRatioTTM")
+	case shadow.OperatingCashFlowRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "operatingCashFlowRatioTTM")
+	case shadow.OperatingCashFlowSalesRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "operatingCashFlowSalesRatioTTM")
+	case shadow.FreeCashFlowOperatingCashFlowRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "freeCashFlowOperatingCashFlowRatioTTM")
+	case shadow.DebtServiceCoverageRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "debtServiceCoverageRatioTTM")
+	case shadow.InterestCoverageRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "interestCoverageRatioTTM")
+	case shadow.ShortTermOperatingCashFlowCoverageRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "shortTermOperatingCashFlowCoverageRatioTTM")
+	case shadow.OperatingCashFlowCoverageRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "operatingCashFlowCoverageRatioTTM")
+	case shadow.CapitalExpenditureCoverageRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "capitalExpenditureCoverageRatioTTM")
+	case shadow.DividendPaidAndCapexCoverageRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "dividendPaidAndCapexCoverageRatioTTM")
+	case shadow.DividendPayoutRatioTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "dividendPayoutRatioTTM")
+	case shadow.DividendYieldTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "dividendYieldTTM")
+	case shadow.EnterpriseValueTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "enterpriseValueTTM")
+	case shadow.RevenuePerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "revenuePerShareTTM")
+	case shadow.NetIncomePerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "netIncomePerShareTTM")
+	case shadow.InterestDebtPerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "interestDebtPerShareTTM")
+	case shadow.CashPerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "cashPerShareTTM")
+	case shadow.BookValuePerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "bookValuePerShareTTM")
+	case shadow.TangibleBookValuePerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "tangibleBookValuePerShareTTM")
+	case shadow.ShareholdersEquityPerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "shareholdersEquityPerShareTTM")
+	case shadow.OperatingCashFlowPerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "operatingCashFlowPerShareTTM")
+	case shadow.CapexPerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "capexPerShareTTM")
+	case shadow.FreeCashFlowPerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "freeCashFlowPerShareTTM")
+	case shadow.NetIncomePerEbtTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "netIncomePerEBTTTM")
+	case shadow.EbtPerEbitTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "ebtPerEbitTTM")
+	case shadow.PriceToFairValueTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "priceToFairValueTTM")
+	case shadow.DebtToMarketCapTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "debtToMarketCapTTM")
+	case shadow.EffectiveTaxRateTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "effectiveTaxRateTTM")
+	case shadow.EnterpriseValueMultipleTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "enterpriseValueMultipleTTM")
+	case shadow.DividendPerShareTTM == nil:
+		return missingMemberError("BulkFinancialRatiosTTM", "dividendPerShareTTM")
 	}
-	*m = BulkFinancialRatiosTtm{
+	*m = BulkFinancialRatiosTTM{
 		Symbol:                                     *shadow.Symbol,
-		GrossProfitMarginTtm:                       *shadow.GrossProfitMarginTtm,
-		EbitMarginTtm:                              *shadow.EbitMarginTtm,
-		EbitdaMarginTtm:                            *shadow.EbitdaMarginTtm,
-		OperatingProfitMarginTtm:                   *shadow.OperatingProfitMarginTtm,
-		PretaxProfitMarginTtm:                      *shadow.PretaxProfitMarginTtm,
-		ContinuousOperationsProfitMarginTtm:        *shadow.ContinuousOperationsProfitMarginTtm,
-		NetProfitMarginTtm:                         *shadow.NetProfitMarginTtm,
-		BottomLineProfitMarginTtm:                  *shadow.BottomLineProfitMarginTtm,
-		ReceivablesTurnoverTtm:                     *shadow.ReceivablesTurnoverTtm,
-		PayablesTurnoverTtm:                        *shadow.PayablesTurnoverTtm,
-		InventoryTurnoverTtm:                       *shadow.InventoryTurnoverTtm,
-		FixedAssetTurnoverTtm:                      *shadow.FixedAssetTurnoverTtm,
-		AssetTurnoverTtm:                           *shadow.AssetTurnoverTtm,
-		CurrentRatioTtm:                            *shadow.CurrentRatioTtm,
-		QuickRatioTtm:                              *shadow.QuickRatioTtm,
-		SolvencyRatioTtm:                           *shadow.SolvencyRatioTtm,
-		CashRatioTtm:                               *shadow.CashRatioTtm,
-		PriceToEarningsRatioTtm:                    *shadow.PriceToEarningsRatioTtm,
-		PriceToEarningsGrowthRatioTtm:              *shadow.PriceToEarningsGrowthRatioTtm,
-		ForwardPriceToEarningsGrowthRatioTtm:       *shadow.ForwardPriceToEarningsGrowthRatioTtm,
-		PriceToBookRatioTtm:                        *shadow.PriceToBookRatioTtm,
-		PriceToSalesRatioTtm:                       *shadow.PriceToSalesRatioTtm,
-		PriceToFreeCashFlowRatioTtm:                *shadow.PriceToFreeCashFlowRatioTtm,
-		PriceToOperatingCashFlowRatioTtm:           *shadow.PriceToOperatingCashFlowRatioTtm,
-		DebtToAssetsRatioTtm:                       *shadow.DebtToAssetsRatioTtm,
-		DebtToEquityRatioTtm:                       *shadow.DebtToEquityRatioTtm,
-		DebtToCapitalRatioTtm:                      *shadow.DebtToCapitalRatioTtm,
-		LongTermDebtToCapitalRatioTtm:              *shadow.LongTermDebtToCapitalRatioTtm,
-		FinancialLeverageRatioTtm:                  *shadow.FinancialLeverageRatioTtm,
-		WorkingCapitalTurnoverRatioTtm:             *shadow.WorkingCapitalTurnoverRatioTtm,
-		OperatingCashFlowRatioTtm:                  *shadow.OperatingCashFlowRatioTtm,
-		OperatingCashFlowSalesRatioTtm:             *shadow.OperatingCashFlowSalesRatioTtm,
-		FreeCashFlowOperatingCashFlowRatioTtm:      *shadow.FreeCashFlowOperatingCashFlowRatioTtm,
-		DebtServiceCoverageRatioTtm:                *shadow.DebtServiceCoverageRatioTtm,
-		InterestCoverageRatioTtm:                   *shadow.InterestCoverageRatioTtm,
-		ShortTermOperatingCashFlowCoverageRatioTtm: *shadow.ShortTermOperatingCashFlowCoverageRatioTtm,
-		OperatingCashFlowCoverageRatioTtm:          *shadow.OperatingCashFlowCoverageRatioTtm,
-		CapitalExpenditureCoverageRatioTtm:         *shadow.CapitalExpenditureCoverageRatioTtm,
-		DividendPaidAndCapexCoverageRatioTtm:       *shadow.DividendPaidAndCapexCoverageRatioTtm,
-		DividendPayoutRatioTtm:                     *shadow.DividendPayoutRatioTtm,
-		DividendYieldTtm:                           *shadow.DividendYieldTtm,
-		EnterpriseValueTtm:                         *shadow.EnterpriseValueTtm,
-		RevenuePerShareTtm:                         *shadow.RevenuePerShareTtm,
-		NetIncomePerShareTtm:                       *shadow.NetIncomePerShareTtm,
-		InterestDebtPerShareTtm:                    *shadow.InterestDebtPerShareTtm,
-		CashPerShareTtm:                            *shadow.CashPerShareTtm,
-		BookValuePerShareTtm:                       *shadow.BookValuePerShareTtm,
-		TangibleBookValuePerShareTtm:               *shadow.TangibleBookValuePerShareTtm,
-		ShareholdersEquityPerShareTtm:              *shadow.ShareholdersEquityPerShareTtm,
-		OperatingCashFlowPerShareTtm:               *shadow.OperatingCashFlowPerShareTtm,
-		CapexPerShareTtm:                           *shadow.CapexPerShareTtm,
-		FreeCashFlowPerShareTtm:                    *shadow.FreeCashFlowPerShareTtm,
-		NetIncomePerEbtTtm:                         *shadow.NetIncomePerEbtTtm,
-		EbtPerEbitTtm:                              *shadow.EbtPerEbitTtm,
-		PriceToFairValueTtm:                        *shadow.PriceToFairValueTtm,
-		DebtToMarketCapTtm:                         *shadow.DebtToMarketCapTtm,
-		EffectiveTaxRateTtm:                        *shadow.EffectiveTaxRateTtm,
-		EnterpriseValueMultipleTtm:                 *shadow.EnterpriseValueMultipleTtm,
-		DividendPerShareTtm:                        *shadow.DividendPerShareTtm,
+		GrossProfitMarginTTM:                       *shadow.GrossProfitMarginTTM,
+		EbitMarginTTM:                              *shadow.EbitMarginTTM,
+		EbitdaMarginTTM:                            *shadow.EbitdaMarginTTM,
+		OperatingProfitMarginTTM:                   *shadow.OperatingProfitMarginTTM,
+		PretaxProfitMarginTTM:                      *shadow.PretaxProfitMarginTTM,
+		ContinuousOperationsProfitMarginTTM:        *shadow.ContinuousOperationsProfitMarginTTM,
+		NetProfitMarginTTM:                         *shadow.NetProfitMarginTTM,
+		BottomLineProfitMarginTTM:                  *shadow.BottomLineProfitMarginTTM,
+		ReceivablesTurnoverTTM:                     *shadow.ReceivablesTurnoverTTM,
+		PayablesTurnoverTTM:                        *shadow.PayablesTurnoverTTM,
+		InventoryTurnoverTTM:                       *shadow.InventoryTurnoverTTM,
+		FixedAssetTurnoverTTM:                      *shadow.FixedAssetTurnoverTTM,
+		AssetTurnoverTTM:                           *shadow.AssetTurnoverTTM,
+		CurrentRatioTTM:                            *shadow.CurrentRatioTTM,
+		QuickRatioTTM:                              *shadow.QuickRatioTTM,
+		SolvencyRatioTTM:                           *shadow.SolvencyRatioTTM,
+		CashRatioTTM:                               *shadow.CashRatioTTM,
+		PriceToEarningsRatioTTM:                    *shadow.PriceToEarningsRatioTTM,
+		PriceToEarningsGrowthRatioTTM:              *shadow.PriceToEarningsGrowthRatioTTM,
+		ForwardPriceToEarningsGrowthRatioTTM:       *shadow.ForwardPriceToEarningsGrowthRatioTTM,
+		PriceToBookRatioTTM:                        *shadow.PriceToBookRatioTTM,
+		PriceToSalesRatioTTM:                       *shadow.PriceToSalesRatioTTM,
+		PriceToFreeCashFlowRatioTTM:                *shadow.PriceToFreeCashFlowRatioTTM,
+		PriceToOperatingCashFlowRatioTTM:           *shadow.PriceToOperatingCashFlowRatioTTM,
+		DebtToAssetsRatioTTM:                       *shadow.DebtToAssetsRatioTTM,
+		DebtToEquityRatioTTM:                       *shadow.DebtToEquityRatioTTM,
+		DebtToCapitalRatioTTM:                      *shadow.DebtToCapitalRatioTTM,
+		LongTermDebtToCapitalRatioTTM:              *shadow.LongTermDebtToCapitalRatioTTM,
+		FinancialLeverageRatioTTM:                  *shadow.FinancialLeverageRatioTTM,
+		WorkingCapitalTurnoverRatioTTM:             *shadow.WorkingCapitalTurnoverRatioTTM,
+		OperatingCashFlowRatioTTM:                  *shadow.OperatingCashFlowRatioTTM,
+		OperatingCashFlowSalesRatioTTM:             *shadow.OperatingCashFlowSalesRatioTTM,
+		FreeCashFlowOperatingCashFlowRatioTTM:      *shadow.FreeCashFlowOperatingCashFlowRatioTTM,
+		DebtServiceCoverageRatioTTM:                *shadow.DebtServiceCoverageRatioTTM,
+		InterestCoverageRatioTTM:                   *shadow.InterestCoverageRatioTTM,
+		ShortTermOperatingCashFlowCoverageRatioTTM: *shadow.ShortTermOperatingCashFlowCoverageRatioTTM,
+		OperatingCashFlowCoverageRatioTTM:          *shadow.OperatingCashFlowCoverageRatioTTM,
+		CapitalExpenditureCoverageRatioTTM:         *shadow.CapitalExpenditureCoverageRatioTTM,
+		DividendPaidAndCapexCoverageRatioTTM:       *shadow.DividendPaidAndCapexCoverageRatioTTM,
+		DividendPayoutRatioTTM:                     *shadow.DividendPayoutRatioTTM,
+		DividendYieldTTM:                           *shadow.DividendYieldTTM,
+		EnterpriseValueTTM:                         *shadow.EnterpriseValueTTM,
+		RevenuePerShareTTM:                         *shadow.RevenuePerShareTTM,
+		NetIncomePerShareTTM:                       *shadow.NetIncomePerShareTTM,
+		InterestDebtPerShareTTM:                    *shadow.InterestDebtPerShareTTM,
+		CashPerShareTTM:                            *shadow.CashPerShareTTM,
+		BookValuePerShareTTM:                       *shadow.BookValuePerShareTTM,
+		TangibleBookValuePerShareTTM:               *shadow.TangibleBookValuePerShareTTM,
+		ShareholdersEquityPerShareTTM:              *shadow.ShareholdersEquityPerShareTTM,
+		OperatingCashFlowPerShareTTM:               *shadow.OperatingCashFlowPerShareTTM,
+		CapexPerShareTTM:                           *shadow.CapexPerShareTTM,
+		FreeCashFlowPerShareTTM:                    *shadow.FreeCashFlowPerShareTTM,
+		NetIncomePerEbtTTM:                         *shadow.NetIncomePerEbtTTM,
+		EbtPerEbitTTM:                              *shadow.EbtPerEbitTTM,
+		PriceToFairValueTTM:                        *shadow.PriceToFairValueTTM,
+		DebtToMarketCapTTM:                         *shadow.DebtToMarketCapTTM,
+		EffectiveTaxRateTTM:                        *shadow.EffectiveTaxRateTTM,
+		EnterpriseValueMultipleTTM:                 *shadow.EnterpriseValueMultipleTTM,
+		DividendPerShareTTM:                        *shadow.DividendPerShareTTM,
 	}
 	return nil
 }
@@ -2227,8 +2227,8 @@ func (m *BulkStockPeer) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type BulkEarningsSurprise struct {
 	Symbol       string `json:"symbol"`
 	Date         Date   `json:"date"`
-	EpsActual    string `json:"epsActual"`
-	EpsEstimated string `json:"epsEstimated"`
+	EPSActual    string `json:"epsActual"`
+	EPSEstimated string `json:"epsEstimated"`
 	LastUpdated  Date   `json:"lastUpdated"`
 }
 
@@ -2238,8 +2238,8 @@ type BulkEarningsSurprise struct {
 type bulkEarningsSurpriseShadow struct {
 	Symbol       *string `json:"symbol"`
 	Date         *Date   `json:"date"`
-	EpsActual    *string `json:"epsActual"`
-	EpsEstimated *string `json:"epsEstimated"`
+	EPSActual    *string `json:"epsActual"`
+	EPSEstimated *string `json:"epsEstimated"`
 	LastUpdated  *Date   `json:"lastUpdated"`
 }
 
@@ -2256,9 +2256,9 @@ func (m *BulkEarningsSurprise) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkEarningsSurprise", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("BulkEarningsSurprise", "date")
-	case shadow.EpsActual == nil:
+	case shadow.EPSActual == nil:
 		return missingMemberError("BulkEarningsSurprise", "epsActual")
-	case shadow.EpsEstimated == nil:
+	case shadow.EPSEstimated == nil:
 		return missingMemberError("BulkEarningsSurprise", "epsEstimated")
 	case shadow.LastUpdated == nil:
 		return missingMemberError("BulkEarningsSurprise", "lastUpdated")
@@ -2266,8 +2266,8 @@ func (m *BulkEarningsSurprise) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	*m = BulkEarningsSurprise{
 		Symbol:       *shadow.Symbol,
 		Date:         *shadow.Date,
-		EpsActual:    *shadow.EpsActual,
-		EpsEstimated: *shadow.EpsEstimated,
+		EPSActual:    *shadow.EPSActual,
+		EPSEstimated: *shadow.EPSEstimated,
 		LastUpdated:  *shadow.LastUpdated,
 	}
 	return nil
@@ -2543,8 +2543,8 @@ func (m *BulkPriceTargetSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	return nil
 }
 
-// BulkEtfHolding is one worldwide ETF holding bulk row.
-type BulkEtfHolding struct {
+// BulkETFHolding is one worldwide ETF holding bulk row.
+type BulkETFHolding struct {
 	Symbol           string `json:"symbol"`
 	Name             string `json:"name"`
 	SharesNumber     string `json:"sharesNumber"`
@@ -2556,11 +2556,11 @@ type BulkEtfHolding struct {
 	LastUpdatedRaw   string `json:"-"`
 }
 
-// bulkEtfHoldingShadow mirrors BulkEtfHolding with a pointer or raw value for
+// bulkETFHoldingShadow mirrors BulkETFHolding with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding. The embedded fallback collects the members json/v2 cannot spell in
 // a struct tag.
-type bulkEtfHoldingShadow struct {
+type bulkETFHoldingShadow struct {
 	Symbol           *string                   `json:"symbol"`
 	Name             *string                   `json:"name"`
 	SharesNumber     *string                   `json:"sharesNumber"`
@@ -2575,37 +2575,37 @@ type bulkEtfHoldingShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *BulkEtfHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow bulkEtfHoldingShadow
+func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow bulkETFHoldingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	lastUpdatedRawWire := rawMember(shadow.RawMembers, "lastUpdated\"")
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("BulkEtfHolding", "symbol")
+		return missingMemberError("BulkETFHolding", "symbol")
 	case shadow.Name == nil:
-		return missingMemberError("BulkEtfHolding", "name")
+		return missingMemberError("BulkETFHolding", "name")
 	case shadow.SharesNumber == nil:
-		return missingMemberError("BulkEtfHolding", "sharesNumber")
+		return missingMemberError("BulkETFHolding", "sharesNumber")
 	case shadow.Asset == nil:
-		return missingMemberError("BulkEtfHolding", "asset")
+		return missingMemberError("BulkETFHolding", "asset")
 	case shadow.WeightPercentage == nil:
-		return missingMemberError("BulkEtfHolding", "weightPercentage")
+		return missingMemberError("BulkETFHolding", "weightPercentage")
 	case shadow.Cusip == nil:
-		return missingMemberError("BulkEtfHolding", "cusip")
+		return missingMemberError("BulkETFHolding", "cusip")
 	case shadow.Isin == nil:
-		return missingMemberError("BulkEtfHolding", "isin")
+		return missingMemberError("BulkETFHolding", "isin")
 	case shadow.MarketValue == nil:
-		return missingMemberError("BulkEtfHolding", "marketValue")
+		return missingMemberError("BulkETFHolding", "marketValue")
 	case lastUpdatedRawWire == nil:
-		return missingMemberError("BulkEtfHolding", "lastUpdated\"")
+		return missingMemberError("BulkETFHolding", "lastUpdated\"")
 	}
 	var lastUpdatedRaw string
 	if err := json.Unmarshal(lastUpdatedRawWire, &lastUpdatedRaw); err != nil {
 		return err
 	}
-	*m = BulkEtfHolding{
+	*m = BulkETFHolding{
 		Symbol:           *shadow.Symbol,
 		Name:             *shadow.Name,
 		SharesNumber:     *shadow.SharesNumber,
@@ -2619,30 +2619,30 @@ func (m *BulkEtfHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// bulkEtfHoldingPlain is BulkEtfHolding without its JSON methods, so its
+// bulkETFHoldingPlain is BulkETFHolding without its JSON methods, so its
 // tagged members marshal through the ordinary struct rules.
-type bulkEtfHoldingPlain BulkEtfHolding
+type bulkETFHoldingPlain BulkETFHolding
 
-// bulkEtfHoldingEmit carries the members json/v2 cannot spell in a struct tag
+// bulkETFHoldingEmit carries the members json/v2 cannot spell in a struct tag
 // through an embedded fallback, next to the promoted tagged members of
-// bulkEtfHoldingPlain.
-type bulkEtfHoldingEmit struct {
-	bulkEtfHoldingPlain
+// bulkETFHoldingPlain.
+type bulkETFHoldingEmit struct {
+	bulkETFHoldingPlain
 	RawMembers map[string]jsontext.Value `json:",embed"`
 }
 
 // MarshalJSONTo encodes the object with every member under its exact wire
 // name, including the names json/v2 cannot spell in a struct tag. The value
 // receiver keeps non-addressable values, such as slice elements, on this path.
-func (m BulkEtfHolding) MarshalJSONTo(enc *jsontext.Encoder) error {
+func (m BulkETFHolding) MarshalJSONTo(enc *jsontext.Encoder) error {
 	rawMembers := make(map[string]jsontext.Value, 1)
 	lastUpdatedRawWire, err := json.Marshal(m.LastUpdatedRaw)
 	if err != nil {
 		return err
 	}
 	rawMembers["lastUpdated\""] = lastUpdatedRawWire
-	return json.MarshalEncode(enc, bulkEtfHoldingEmit{
-		bulkEtfHoldingPlain: bulkEtfHoldingPlain(m),
+	return json.MarshalEncode(enc, bulkETFHoldingEmit{
+		bulkETFHoldingPlain: bulkETFHoldingPlain(m),
 		RawMembers:          rawMembers,
 	})
 }

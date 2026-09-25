@@ -16,7 +16,7 @@ func TestDirectoryFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[FinancialStatementSymbol](t, "directory_financial_statement_symbols.json")
 	assertFixtureParity[CIKListing](t, "directory_cik_list.json")
 	assertFixtureParity[SymbolChange](t, "directory_symbol_changes.json")
-	assertFixtureParity[EtfSymbol](t, "directory_etf_symbols.json")
+	assertFixtureParity[ETFSymbol](t, "directory_etf_symbols.json")
 	assertFixtureParity[ActivelyTradingSymbol](t, "directory_actively_trading.json")
 	assertFixtureParity[EarningsTranscriptAvailability](t, "directory_earnings_transcript_list.json")
 	assertFixtureParity[AvailableExchange](t, "directory_available_exchanges.json")
@@ -41,7 +41,7 @@ func TestDirectoryEmptyFixtureDecodesIntoEveryModelWithoutRows(t *testing.T) {
 	directoryAssertEmptyFixture[FinancialStatementSymbol](t)
 	directoryAssertEmptyFixture[CIKListing](t)
 	directoryAssertEmptyFixture[SymbolChange](t)
-	directoryAssertEmptyFixture[EtfSymbol](t)
+	directoryAssertEmptyFixture[ETFSymbol](t)
 	directoryAssertEmptyFixture[ActivelyTradingSymbol](t)
 	directoryAssertEmptyFixture[EarningsTranscriptAvailability](t)
 	directoryAssertEmptyFixture[AvailableExchange](t)
@@ -73,8 +73,8 @@ func TestDocumentedDirectoryRowsDecodeExactFieldNamesAndWireTypes(t *testing.T) 
 		OldSymbol: "VYNE", NewSymbol: "YARW"}); len(changes) != 1 || changes[0] != want {
 		t.Fatalf("directory_symbol_changes = %+v, want %+v", changes, want)
 	}
-	etfs := assertFixtureParity[EtfSymbol](t, "directory_etf_symbols.json")
-	if want := (EtfSymbol{Symbol: "P60.SI",
+	etfs := assertFixtureParity[ETFSymbol](t, "directory_etf_symbols.json")
+	if want := (ETFSymbol{Symbol: "P60.SI",
 		Name: "MULTI-UNITS LUXEMBOURG - Lyxor MSCI AC Asia Pacific Ex Japan UCITS ETF"}); len(etfs) != 1 ||
 		etfs[0] != want {
 		t.Fatalf("directory_etf_symbols = %+v, want %+v", etfs, want)
@@ -96,7 +96,7 @@ func TestDocumentedDirectoryRowsDecodeExactFieldNamesAndWireTypes(t *testing.T) 
 		t.Fatalf("CompanySymbol members = %v, want companyName and symbol", members)
 	}
 	if members := memberSet(t, etfs[0]); strings.Join(members, ",") != "name,symbol" {
-		t.Fatalf("EtfSymbol members = %v, want name and symbol", members)
+		t.Fatalf("ETFSymbol members = %v, want name and symbol", members)
 	}
 	encoded, err := json.Marshal(transcripts[0])
 	if err != nil || !strings.Contains(string(encoded), `"noOfTranscripts":"6"`) {

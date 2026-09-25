@@ -20,9 +20,9 @@ func TestDocumentedMetricsRatiosAndGrowthFixturesDecodeExactValues(t *testing.T)
 		len(memberSet(t, metrics[0])) != 47 {
 		t.Fatalf("key_metrics = %+v", metrics)
 	}
-	metricsTtm := assertFixtureParity[KeyMetricsTtm](t, "key_metrics_ttm.json")
-	if len(metricsTtm) != 1 || metricsTtm[0].InterestBurdenTtm != 1.0 || metricsTtm[0].CurrentRatioTtm != 1.07035746912159 ||
-		metricsTtm[0].EnterpriseValueTtm != 4_922_455_686_740 || len(memberSet(t, metricsTtm[0])) != 43 {
+	metricsTtm := assertFixtureParity[KeyMetricsTTM](t, "key_metrics_ttm.json")
+	if len(metricsTtm) != 1 || metricsTtm[0].InterestBurdenTTM != 1.0 || metricsTtm[0].CurrentRatioTTM != 1.07035746912159 ||
+		metricsTtm[0].EnterpriseValueTTM != 4_922_455_686_740 || len(memberSet(t, metricsTtm[0])) != 43 {
 		t.Fatalf("key_metrics_ttm = %+v", metricsTtm)
 	}
 	ratios := assertFixtureParity[FinancialRatios](t, "financial_ratios.json")
@@ -31,9 +31,9 @@ func TestDocumentedMetricsRatiosAndGrowthFixturesDecodeExactValues(t *testing.T)
 		ratios[0].DividendYieldPercentage != 0.4038238951672435 || len(memberSet(t, ratios[0])) != 66 {
 		t.Fatalf("financial_ratios = %+v", ratios)
 	}
-	ratiosTtm := assertFixtureParity[FinancialRatiosTtm](t, "financial_ratios_ttm.json")
-	if len(ratiosTtm) != 1 || ratiosTtm[0].EnterpriseValueTtm != 4_922_455_686_740 ||
-		ratiosTtm[0].InterestCoverageRatioTtm != 0.0 || ratiosTtm[0].NetIncomePerEbtTtm != 0.8300602695198754 ||
+	ratiosTtm := assertFixtureParity[FinancialRatiosTTM](t, "financial_ratios_ttm.json")
+	if len(ratiosTtm) != 1 || ratiosTtm[0].EnterpriseValueTTM != 4_922_455_686_740 ||
+		ratiosTtm[0].InterestCoverageRatioTTM != 0.0 || ratiosTtm[0].NetIncomePerEbtTTM != 0.8300602695198754 ||
 		len(memberSet(t, ratiosTtm[0])) != 62 {
 		t.Fatalf("financial_ratios_ttm = %+v", ratiosTtm)
 	}
@@ -55,7 +55,7 @@ func TestDocumentedMetricsRatiosAndGrowthFixturesDecodeExactValues(t *testing.T)
 		t.Fatalf("cash_flow_statement_growth = %+v", cash)
 	}
 	combined := assertFixtureParity[FinancialStatementGrowth](t, "financial_statement_growth.json")
-	if len(combined) != 1 || combined[0].EbitGrowth != 0.0748592946511722 || combined[0].EpsGrowth != 0.22585924713584285 ||
+	if len(combined) != 1 || combined[0].EbitGrowth != 0.0748592946511722 || combined[0].EPSGrowth != 0.22585924713584285 ||
 		combined[0].BookValuePerShareGrowth != 0.3289327621427069 ||
 		combined[0].TenYRevenueGrowthPerShare != 1.7413426413189617 || len(memberSet(t, combined[0])) != 44 {
 		t.Fatalf("financial_statement_growth = %+v", combined)

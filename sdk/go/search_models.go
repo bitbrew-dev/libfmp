@@ -290,7 +290,7 @@ type ExchangeVariant struct {
 	Image             string  `json:"image"`
 	IpoDate           Date    `json:"ipoDate"`
 	DefaultImage      bool    `json:"defaultImage"`
-	IsEtf             bool    `json:"isEtf"`
+	IsETF             bool    `json:"isEtf"`
 	IsActivelyTrading bool    `json:"isActivelyTrading"`
 	IsAdr             bool    `json:"isAdr"`
 	IsFund            bool    `json:"isFund"`
@@ -332,7 +332,7 @@ type exchangeVariantShadow struct {
 	Image             *string  `json:"image"`
 	IpoDate           *Date    `json:"ipoDate"`
 	DefaultImage      *bool    `json:"defaultImage"`
-	IsEtf             *bool    `json:"isEtf"`
+	IsETF             *bool    `json:"isEtf"`
 	IsActivelyTrading *bool    `json:"isActivelyTrading"`
 	IsAdr             *bool    `json:"isAdr"`
 	IsFund            *bool    `json:"isFund"`
@@ -411,7 +411,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeVariant", "ipoDate")
 	case shadow.DefaultImage == nil:
 		return missingMemberError("ExchangeVariant", "defaultImage")
-	case shadow.IsEtf == nil:
+	case shadow.IsETF == nil:
 		return missingMemberError("ExchangeVariant", "isEtf")
 	case shadow.IsActivelyTrading == nil:
 		return missingMemberError("ExchangeVariant", "isActivelyTrading")
@@ -453,7 +453,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Image:             *shadow.Image,
 		IpoDate:           *shadow.IpoDate,
 		DefaultImage:      *shadow.DefaultImage,
-		IsEtf:             *shadow.IsEtf,
+		IsETF:             *shadow.IsETF,
 		IsActivelyTrading: *shadow.IsActivelyTrading,
 		IsAdr:             *shadow.IsAdr,
 		IsFund:            *shadow.IsFund,

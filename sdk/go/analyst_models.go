@@ -29,11 +29,11 @@ type FinancialEstimate struct {
 	SgaExpenseLow      float64 `json:"sgaExpenseLow"`
 	SgaExpenseHigh     float64 `json:"sgaExpenseHigh"`
 	SgaExpenseAvg      float64 `json:"sgaExpenseAvg"`
-	EpsAvg             float64 `json:"epsAvg"`
-	EpsHigh            float64 `json:"epsHigh"`
-	EpsLow             float64 `json:"epsLow"`
+	EPSAvg             float64 `json:"epsAvg"`
+	EPSHigh            float64 `json:"epsHigh"`
+	EPSLow             float64 `json:"epsLow"`
 	NumAnalystsRevenue uint64  `json:"numAnalystsRevenue"`
-	NumAnalystsEps     uint64  `json:"numAnalystsEps"`
+	NumAnalystsEPS     uint64  `json:"numAnalystsEps"`
 }
 
 // financialEstimateShadow mirrors FinancialEstimate with a pointer or raw
@@ -57,11 +57,11 @@ type financialEstimateShadow struct {
 	SgaExpenseLow      *float64 `json:"sgaExpenseLow"`
 	SgaExpenseHigh     *float64 `json:"sgaExpenseHigh"`
 	SgaExpenseAvg      *float64 `json:"sgaExpenseAvg"`
-	EpsAvg             *float64 `json:"epsAvg"`
-	EpsHigh            *float64 `json:"epsHigh"`
-	EpsLow             *float64 `json:"epsLow"`
+	EPSAvg             *float64 `json:"epsAvg"`
+	EPSHigh            *float64 `json:"epsHigh"`
+	EPSLow             *float64 `json:"epsLow"`
 	NumAnalystsRevenue *uint64  `json:"numAnalystsRevenue"`
-	NumAnalystsEps     *uint64  `json:"numAnalystsEps"`
+	NumAnalystsEPS     *uint64  `json:"numAnalystsEps"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -107,15 +107,15 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FinancialEstimate", "sgaExpenseHigh")
 	case shadow.SgaExpenseAvg == nil:
 		return missingMemberError("FinancialEstimate", "sgaExpenseAvg")
-	case shadow.EpsAvg == nil:
+	case shadow.EPSAvg == nil:
 		return missingMemberError("FinancialEstimate", "epsAvg")
-	case shadow.EpsHigh == nil:
+	case shadow.EPSHigh == nil:
 		return missingMemberError("FinancialEstimate", "epsHigh")
-	case shadow.EpsLow == nil:
+	case shadow.EPSLow == nil:
 		return missingMemberError("FinancialEstimate", "epsLow")
 	case shadow.NumAnalystsRevenue == nil:
 		return missingMemberError("FinancialEstimate", "numAnalystsRevenue")
-	case shadow.NumAnalystsEps == nil:
+	case shadow.NumAnalystsEPS == nil:
 		return missingMemberError("FinancialEstimate", "numAnalystsEps")
 	}
 	*m = FinancialEstimate{
@@ -136,11 +136,11 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		SgaExpenseLow:      *shadow.SgaExpenseLow,
 		SgaExpenseHigh:     *shadow.SgaExpenseHigh,
 		SgaExpenseAvg:      *shadow.SgaExpenseAvg,
-		EpsAvg:             *shadow.EpsAvg,
-		EpsHigh:            *shadow.EpsHigh,
-		EpsLow:             *shadow.EpsLow,
+		EPSAvg:             *shadow.EPSAvg,
+		EPSHigh:            *shadow.EPSHigh,
+		EPSLow:             *shadow.EPSLow,
 		NumAnalystsRevenue: *shadow.NumAnalystsRevenue,
-		NumAnalystsEps:     *shadow.NumAnalystsEps,
+		NumAnalystsEPS:     *shadow.NumAnalystsEPS,
 	}
 	return nil
 }

@@ -48,8 +48,8 @@ func TestDocumentedFinancialEstimateDecodesAll22Fields(t *testing.T) {
 		EbitLow: 217_109_092_822, EbitHigh: 246_178_886_382, EbitAvg: 227_415_289_483,
 		NetIncomeLow: 191_547_261_069, NetIncomeHigh: 225_370_398_908, NetIncomeAvg: 203_538_714_818,
 		SgaExpenseLow: 41_721_580_524, SgaExpenseHigh: 47_307_886_087, SgaExpenseAvg: 43_702_109_337,
-		EpsAvg: 13.565, EpsHigh: 15.01999, EpsLow: 12.76582,
-		NumAnalystsRevenue: 16, NumAnalystsEps: 7,
+		EPSAvg: 13.565, EPSHigh: 15.01999, EPSLow: 12.76582,
+		NumAnalystsRevenue: 16, NumAnalystsEPS: 7,
 	}
 	if len(rows) != 1 || rows[0] != want {
 		t.Fatalf("financial_estimates = %+v, want %+v", rows, want)
@@ -131,7 +131,7 @@ func TestAnalystAmountsAreSignedAndCountsPreserveTheFullUint64Domain(t *testing.
 		t.Fatalf("revenueLow = %+v, %v", estimates, err)
 	}
 	if err := json.Unmarshal(rewrite("financial_estimates.json", "numAnalystsEps", "18446744073709551615"),
-		&estimates); err != nil || estimates[0].NumAnalystsEps != math.MaxUint64 {
+		&estimates); err != nil || estimates[0].NumAnalystsEPS != math.MaxUint64 {
 		t.Fatalf("numAnalystsEps = %+v, %v", estimates, err)
 	}
 	var summary []StockGradesSummary

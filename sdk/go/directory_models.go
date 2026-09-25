@@ -171,13 +171,13 @@ func (m *SymbolChange) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// EtfSymbol is one worldwide exchange-traded fund in the ETF symbol directory.
-type EtfSymbol struct {
+// ETFSymbol is one worldwide exchange-traded fund in the ETF symbol directory.
+type ETFSymbol struct {
 	Symbol string `json:"symbol"`
 	Name   string `json:"name"`
 }
 
-// etfSymbolShadow mirrors EtfSymbol with a pointer or raw value for every
+// etfSymbolShadow mirrors ETFSymbol with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type etfSymbolShadow struct {
 	Symbol *string `json:"symbol"`
@@ -187,18 +187,18 @@ type etfSymbolShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EtfSymbol) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ETFSymbol) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow etfSymbolShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("EtfSymbol", "symbol")
+		return missingMemberError("ETFSymbol", "symbol")
 	case shadow.Name == nil:
-		return missingMemberError("EtfSymbol", "name")
+		return missingMemberError("ETFSymbol", "name")
 	}
-	*m = EtfSymbol{
+	*m = ETFSymbol{
 		Symbol: *shadow.Symbol,
 		Name:   *shadow.Name,
 	}

@@ -39,7 +39,7 @@ type CompanyScreenerQuery struct {
 	volumeLowerThan        *uint64
 	exchange               *string
 	country                *string
-	isEtf                  *bool
+	isETF                  *bool
 	isFund                 *bool
 	isActivelyTrading      *bool
 	page                   *uint32
@@ -229,15 +229,15 @@ func (q CompanyScreenerQuery) Country() *string {
 	return q.country
 }
 
-// WithIsEtf sets the optional is_etf parameter and returns the updated query.
-func (q CompanyScreenerQuery) WithIsEtf(isEtf bool) CompanyScreenerQuery {
-	q.isEtf = &isEtf
+// WithIsETF sets the optional is_etf parameter and returns the updated query.
+func (q CompanyScreenerQuery) WithIsETF(isETF bool) CompanyScreenerQuery {
+	q.isETF = &isETF
 	return q
 }
 
-// IsEtf returns the optional is_etf parameter, or nil when it is unset.
-func (q CompanyScreenerQuery) IsEtf() *bool {
-	return q.isEtf
+// IsETF returns the optional is_etf parameter, or nil when it is unset.
+func (q CompanyScreenerQuery) IsETF() *bool {
+	return q.isETF
 }
 
 // WithIsFund sets the optional is_fund parameter and returns the updated
@@ -400,12 +400,12 @@ func (q CompanyScreenerQuery) params() ([]queryParam, error) {
 		}
 		params = append(params, country)
 	}
-	if q.isEtf != nil {
-		isEtf, err := boolParam("isEtf", *q.isEtf)
+	if q.isETF != nil {
+		isETF, err := boolParam("isEtf", *q.isETF)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, isEtf)
+		params = append(params, isETF)
 	}
 	if q.isFund != nil {
 		isFund, err := boolParam("isFund", *q.isFund)

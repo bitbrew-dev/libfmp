@@ -45,7 +45,7 @@ type CompanyProfile struct {
 	Image             string  `json:"image"`
 	IpoDate           Date    `json:"ipoDate"`
 	DefaultImage      bool    `json:"defaultImage"`
-	IsEtf             bool    `json:"isEtf"`
+	IsETF             bool    `json:"isEtf"`
 	IsActivelyTrading bool    `json:"isActivelyTrading"`
 	IsAdr             bool    `json:"isAdr"`
 	IsFund            bool    `json:"isFund"`
@@ -87,7 +87,7 @@ type companyProfileShadow struct {
 	Image             *string  `json:"image"`
 	IpoDate           *Date    `json:"ipoDate"`
 	DefaultImage      *bool    `json:"defaultImage"`
-	IsEtf             *bool    `json:"isEtf"`
+	IsETF             *bool    `json:"isEtf"`
 	IsActivelyTrading *bool    `json:"isActivelyTrading"`
 	IsAdr             *bool    `json:"isAdr"`
 	IsFund            *bool    `json:"isFund"`
@@ -166,7 +166,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "ipoDate")
 	case shadow.DefaultImage == nil:
 		return missingMemberError("CompanyProfile", "defaultImage")
-	case shadow.IsEtf == nil:
+	case shadow.IsETF == nil:
 		return missingMemberError("CompanyProfile", "isEtf")
 	case shadow.IsActivelyTrading == nil:
 		return missingMemberError("CompanyProfile", "isActivelyTrading")
@@ -208,7 +208,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Image:             *shadow.Image,
 		IpoDate:           *shadow.IpoDate,
 		DefaultImage:      *shadow.DefaultImage,
-		IsEtf:             *shadow.IsEtf,
+		IsETF:             *shadow.IsETF,
 		IsActivelyTrading: *shadow.IsActivelyTrading,
 		IsAdr:             *shadow.IsAdr,
 		IsFund:            *shadow.IsFund,

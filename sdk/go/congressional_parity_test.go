@@ -142,7 +142,7 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 		RealEstateLiabilities: 27_000_005, CashAndCashEquivalents: 291_009, BusinessAndSelfEmployment: 0,
 		RealEstate: 45_032_504, OwnershipInterest: 70_140_014, Stock: 136_748_525, Options: 0,
 		RevolvingAndCreditLines: 1_500_002, AssetBackedSecurities: 4_475_006, BusinessLiabilities: 3_000_001,
-		MutualFundsAndEtfs: 32_501}); len(totals) != 1 || totals[0] != want {
+		MutualFundsAndETFs: 32_501}); len(totals) != 1 || totals[0] != want {
 		t.Fatalf("congress_senate_net_worth_aggregated = %+v", totals)
 	}
 	if encoded, err := json.Marshal(totals[0]); err != nil || !strings.Contains(string(encoded), `"mutualFundsAndETFs":32501`) {

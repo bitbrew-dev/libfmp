@@ -88,8 +88,8 @@ func (m *DividendEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type EarningsEvent struct {
 	Symbol           string   `json:"symbol"`
 	Date             Date     `json:"date"`
-	EpsActual        *float64 `json:"epsActual"`
-	EpsEstimated     float64  `json:"epsEstimated"`
+	EPSActual        *float64 `json:"epsActual"`
+	EPSEstimated     float64  `json:"epsEstimated"`
 	RevenueActual    *float64 `json:"revenueActual"`
 	RevenueEstimated float64  `json:"revenueEstimated"`
 	LastUpdated      Date     `json:"lastUpdated"`
@@ -101,8 +101,8 @@ type EarningsEvent struct {
 type earningsEventShadow struct {
 	Symbol           *string        `json:"symbol"`
 	Date             *Date          `json:"date"`
-	EpsActual        jsontext.Value `json:"epsActual"`
-	EpsEstimated     *float64       `json:"epsEstimated"`
+	EPSActual        jsontext.Value `json:"epsActual"`
+	EPSEstimated     *float64       `json:"epsEstimated"`
 	RevenueActual    jsontext.Value `json:"revenueActual"`
 	RevenueEstimated *float64       `json:"revenueEstimated"`
 	LastUpdated      *Date          `json:"lastUpdated"`
@@ -121,9 +121,9 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("EarningsEvent", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("EarningsEvent", "date")
-	case len(shadow.EpsActual) == 0:
+	case len(shadow.EPSActual) == 0:
 		return missingMemberError("EarningsEvent", "epsActual")
-	case shadow.EpsEstimated == nil:
+	case shadow.EPSEstimated == nil:
 		return missingMemberError("EarningsEvent", "epsEstimated")
 	case len(shadow.RevenueActual) == 0:
 		return missingMemberError("EarningsEvent", "revenueActual")
@@ -133,9 +133,9 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("EarningsEvent", "lastUpdated")
 	}
 	var epsActual *float64
-	if shadow.EpsActual.Kind() != 'n' {
+	if shadow.EPSActual.Kind() != 'n' {
 		var value float64
-		if err := json.Unmarshal(shadow.EpsActual, &value); err != nil {
+		if err := json.Unmarshal(shadow.EPSActual, &value); err != nil {
 			return err
 		}
 		epsActual = &value
@@ -151,8 +151,8 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	*m = EarningsEvent{
 		Symbol:           *shadow.Symbol,
 		Date:             *shadow.Date,
-		EpsActual:        epsActual,
-		EpsEstimated:     *shadow.EpsEstimated,
+		EPSActual:        epsActual,
+		EPSEstimated:     *shadow.EPSEstimated,
 		RevenueActual:    revenueActual,
 		RevenueEstimated: *shadow.RevenueEstimated,
 		LastUpdated:      *shadow.LastUpdated,

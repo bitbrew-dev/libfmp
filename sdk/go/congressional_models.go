@@ -503,7 +503,7 @@ type CongressionalMemberNetWorthAggregate struct {
 	RevolvingAndCreditLines   int64  `json:"revolvingAndCreditLines"`
 	AssetBackedSecurities     int64  `json:"assetBackedSecurities"`
 	BusinessLiabilities       int64  `json:"businessLiabilities"`
-	MutualFundsAndEtfs        int64  `json:"mutualFundsAndETFs"`
+	MutualFundsAndETFs        int64  `json:"mutualFundsAndETFs"`
 }
 
 // congressionalMemberNetWorthAggregateShadow mirrors
@@ -523,7 +523,7 @@ type congressionalMemberNetWorthAggregateShadow struct {
 	RevolvingAndCreditLines   *int64  `json:"revolvingAndCreditLines"`
 	AssetBackedSecurities     *int64  `json:"assetBackedSecurities"`
 	BusinessLiabilities       *int64  `json:"businessLiabilities"`
-	MutualFundsAndEtfs        *int64  `json:"mutualFundsAndETFs"`
+	MutualFundsAndETFs        *int64  `json:"mutualFundsAndETFs"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -561,7 +561,7 @@ func (m *CongressionalMemberNetWorthAggregate) UnmarshalJSONFrom(dec *jsontext.D
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "assetBackedSecurities")
 	case shadow.BusinessLiabilities == nil:
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "businessLiabilities")
-	case shadow.MutualFundsAndEtfs == nil:
+	case shadow.MutualFundsAndETFs == nil:
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "mutualFundsAndETFs")
 	}
 	*m = CongressionalMemberNetWorthAggregate{
@@ -578,7 +578,7 @@ func (m *CongressionalMemberNetWorthAggregate) UnmarshalJSONFrom(dec *jsontext.D
 		RevolvingAndCreditLines:   *shadow.RevolvingAndCreditLines,
 		AssetBackedSecurities:     *shadow.AssetBackedSecurities,
 		BusinessLiabilities:       *shadow.BusinessLiabilities,
-		MutualFundsAndEtfs:        *shadow.MutualFundsAndEtfs,
+		MutualFundsAndETFs:        *shadow.MutualFundsAndETFs,
 	}
 	return nil
 }

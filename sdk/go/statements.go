@@ -381,38 +381,38 @@ func (q BalanceSheetStatementQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// BalanceSheetStatementTtmQuery holds the query parameters of the endpoints
-// that take it: NewBalanceSheetStatementTtmQuery takes the required arguments
+// BalanceSheetStatementTTMQuery holds the query parameters of the endpoints
+// that take it: NewBalanceSheetStatementTTMQuery takes the required arguments
 // and each With method sets an optional one. Values are validated when the
 // request is built.
-type BalanceSheetStatementTtmQuery struct {
+type BalanceSheetStatementTTMQuery struct {
 	symbol string
 	limit  *uint32
 }
 
-// NewBalanceSheetStatementTtmQuery creates the query from its required
+// NewBalanceSheetStatementTTMQuery creates the query from its required
 // arguments.
-func NewBalanceSheetStatementTtmQuery(symbol string) BalanceSheetStatementTtmQuery {
-	return BalanceSheetStatementTtmQuery{symbol: symbol}
+func NewBalanceSheetStatementTTMQuery(symbol string) BalanceSheetStatementTTMQuery {
+	return BalanceSheetStatementTTMQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q BalanceSheetStatementTtmQuery) Symbol() string {
+func (q BalanceSheetStatementTTMQuery) Symbol() string {
 	return q.symbol
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q BalanceSheetStatementTtmQuery) WithLimit(limit uint32) BalanceSheetStatementTtmQuery {
+func (q BalanceSheetStatementTTMQuery) WithLimit(limit uint32) BalanceSheetStatementTTMQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q BalanceSheetStatementTtmQuery) Limit() *uint32 {
+func (q BalanceSheetStatementTTMQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q BalanceSheetStatementTtmQuery) params() ([]queryParam, error) {
+func (q BalanceSheetStatementTTMQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
@@ -628,37 +628,37 @@ func (q CashFlowStatementQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// CashFlowStatementTtmQuery holds the query parameters of the endpoints that
-// take it: NewCashFlowStatementTtmQuery takes the required arguments and each
+// CashFlowStatementTTMQuery holds the query parameters of the endpoints that
+// take it: NewCashFlowStatementTTMQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type CashFlowStatementTtmQuery struct {
+type CashFlowStatementTTMQuery struct {
 	symbol string
 	limit  *uint32
 }
 
-// NewCashFlowStatementTtmQuery creates the query from its required arguments.
-func NewCashFlowStatementTtmQuery(symbol string) CashFlowStatementTtmQuery {
-	return CashFlowStatementTtmQuery{symbol: symbol}
+// NewCashFlowStatementTTMQuery creates the query from its required arguments.
+func NewCashFlowStatementTTMQuery(symbol string) CashFlowStatementTTMQuery {
+	return CashFlowStatementTTMQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q CashFlowStatementTtmQuery) Symbol() string {
+func (q CashFlowStatementTTMQuery) Symbol() string {
 	return q.symbol
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q CashFlowStatementTtmQuery) WithLimit(limit uint32) CashFlowStatementTtmQuery {
+func (q CashFlowStatementTTMQuery) WithLimit(limit uint32) CashFlowStatementTTMQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q CashFlowStatementTtmQuery) Limit() *uint32 {
+func (q CashFlowStatementTTMQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q CashFlowStatementTtmQuery) params() ([]queryParam, error) {
+func (q CashFlowStatementTTMQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
@@ -805,25 +805,25 @@ func (q FinancialRatiosQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// FinancialRatiosTtmQuery holds the query parameters of the endpoints that
-// take it: NewFinancialRatiosTtmQuery takes the required arguments and each
+// FinancialRatiosTTMQuery holds the query parameters of the endpoints that
+// take it: NewFinancialRatiosTTMQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type FinancialRatiosTtmQuery struct {
+type FinancialRatiosTTMQuery struct {
 	symbol string
 }
 
-// NewFinancialRatiosTtmQuery creates the query from its required arguments.
-func NewFinancialRatiosTtmQuery(symbol string) FinancialRatiosTtmQuery {
-	return FinancialRatiosTtmQuery{symbol: symbol}
+// NewFinancialRatiosTTMQuery creates the query from its required arguments.
+func NewFinancialRatiosTTMQuery(symbol string) FinancialRatiosTTMQuery {
+	return FinancialRatiosTTMQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q FinancialRatiosTtmQuery) Symbol() string {
+func (q FinancialRatiosTTMQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q FinancialRatiosTtmQuery) params() ([]queryParam, error) {
+func (q FinancialRatiosTTMQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -1306,37 +1306,37 @@ func (q IncomeStatementQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// IncomeStatementTtmQuery holds the query parameters of the endpoints that
-// take it: NewIncomeStatementTtmQuery takes the required arguments and each
+// IncomeStatementTTMQuery holds the query parameters of the endpoints that
+// take it: NewIncomeStatementTTMQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type IncomeStatementTtmQuery struct {
+type IncomeStatementTTMQuery struct {
 	symbol string
 	limit  *uint32
 }
 
-// NewIncomeStatementTtmQuery creates the query from its required arguments.
-func NewIncomeStatementTtmQuery(symbol string) IncomeStatementTtmQuery {
-	return IncomeStatementTtmQuery{symbol: symbol}
+// NewIncomeStatementTTMQuery creates the query from its required arguments.
+func NewIncomeStatementTTMQuery(symbol string) IncomeStatementTTMQuery {
+	return IncomeStatementTTMQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q IncomeStatementTtmQuery) Symbol() string {
+func (q IncomeStatementTTMQuery) Symbol() string {
 	return q.symbol
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q IncomeStatementTtmQuery) WithLimit(limit uint32) IncomeStatementTtmQuery {
+func (q IncomeStatementTTMQuery) WithLimit(limit uint32) IncomeStatementTTMQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q IncomeStatementTtmQuery) Limit() *uint32 {
+func (q IncomeStatementTTMQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q IncomeStatementTtmQuery) params() ([]queryParam, error) {
+func (q IncomeStatementTTMQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
@@ -1418,24 +1418,24 @@ func (q KeyMetricsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// KeyMetricsTtmQuery holds the query parameters of the endpoints that take it:
-// NewKeyMetricsTtmQuery takes the required arguments and each With method sets
+// KeyMetricsTTMQuery holds the query parameters of the endpoints that take it:
+// NewKeyMetricsTTMQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
-type KeyMetricsTtmQuery struct {
+type KeyMetricsTTMQuery struct {
 	symbol string
 }
 
-// NewKeyMetricsTtmQuery creates the query from its required arguments.
-func NewKeyMetricsTtmQuery(symbol string) KeyMetricsTtmQuery {
-	return KeyMetricsTtmQuery{symbol: symbol}
+// NewKeyMetricsTTMQuery creates the query from its required arguments.
+func NewKeyMetricsTTMQuery(symbol string) KeyMetricsTTMQuery {
+	return KeyMetricsTTMQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q KeyMetricsTtmQuery) Symbol() string {
+func (q KeyMetricsTTMQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q KeyMetricsTtmQuery) params() ([]queryParam, error) {
+func (q KeyMetricsTTMQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -1756,16 +1756,16 @@ func (n *StatementsBalanceNamespace) Statement(ctx context.Context, q BalanceShe
 	return out, nil
 }
 
-// StatementTtm retrieves trailing-twelve-month worldwide balance sheets for
+// StatementTTM retrieves trailing-twelve-month worldwide balance sheets for
 // one company.
 //
 // GET balance-sheet-statement-ttm?symbol=&limit=
-func (n *StatementsBalanceNamespace) StatementTtm(ctx context.Context, q BalanceSheetStatementTtmQuery) ([]BalanceSheetStatementTtm, error) {
+func (n *StatementsBalanceNamespace) StatementTTM(ctx context.Context, q BalanceSheetStatementTTMQuery) ([]BalanceSheetStatementTTM, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []BalanceSheetStatementTtm
+	var out []BalanceSheetStatementTTM
 	if err := n.client.getJSON(ctx, "balance-sheet-statement-ttm", "balance-sheet-statement-ttm", params, &out); err != nil {
 		return nil, err
 	}
@@ -1788,11 +1788,11 @@ func (n *StatementsCashFlowNamespace) Statement(ctx context.Context, q CashFlowS
 	return out, nil
 }
 
-// StatementTtm retrieves trailing-twelve-month worldwide cash-flow statements
+// StatementTTM retrieves trailing-twelve-month worldwide cash-flow statements
 // for one company.
 //
 // GET cash-flow-statement-ttm?symbol=&limit=
-func (n *StatementsCashFlowNamespace) StatementTtm(ctx context.Context, q CashFlowStatementTtmQuery) ([]CashFlowStatement, error) {
+func (n *StatementsCashFlowNamespace) StatementTTM(ctx context.Context, q CashFlowStatementTTMQuery) ([]CashFlowStatement, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -1881,11 +1881,11 @@ func (n *StatementsIncomeNamespace) Statement(ctx context.Context, q IncomeState
 	return out, nil
 }
 
-// StatementTtm retrieves trailing-twelve-month worldwide income statements for
+// StatementTTM retrieves trailing-twelve-month worldwide income statements for
 // one company.
 //
 // GET income-statement-ttm?symbol=&limit=
-func (n *StatementsIncomeNamespace) StatementTtm(ctx context.Context, q IncomeStatementTtmQuery) ([]IncomeStatement, error) {
+func (n *StatementsIncomeNamespace) StatementTTM(ctx context.Context, q IncomeStatementTTMQuery) ([]IncomeStatement, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -1912,16 +1912,16 @@ func (n *StatementsMetricsNamespace) KeyMetrics(ctx context.Context, q KeyMetric
 	return out, nil
 }
 
-// KeyMetricsTtm retrieves worldwide trailing-twelve-month key metrics for one
+// KeyMetricsTTM retrieves worldwide trailing-twelve-month key metrics for one
 // company.
 //
 // GET key-metrics-ttm?symbol=
-func (n *StatementsMetricsNamespace) KeyMetricsTtm(ctx context.Context, q KeyMetricsTtmQuery) ([]KeyMetricsTtm, error) {
+func (n *StatementsMetricsNamespace) KeyMetricsTTM(ctx context.Context, q KeyMetricsTTMQuery) ([]KeyMetricsTTM, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []KeyMetricsTtm
+	var out []KeyMetricsTTM
 	if err := n.client.getJSON(ctx, "key-metrics-ttm", "key-metrics-ttm", params, &out); err != nil {
 		return nil, err
 	}
@@ -1944,16 +1944,16 @@ func (n *StatementsRatiosNamespace) FinancialRatios(ctx context.Context, q Finan
 	return out, nil
 }
 
-// FinancialRatiosTtm retrieves trailing-twelve-month worldwide financial
+// FinancialRatiosTTM retrieves trailing-twelve-month worldwide financial
 // ratios for one company.
 //
 // GET ratios-ttm?symbol=
-func (n *StatementsRatiosNamespace) FinancialRatiosTtm(ctx context.Context, q FinancialRatiosTtmQuery) ([]FinancialRatiosTtm, error) {
+func (n *StatementsRatiosNamespace) FinancialRatiosTTM(ctx context.Context, q FinancialRatiosTTMQuery) ([]FinancialRatiosTTM, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []FinancialRatiosTtm
+	var out []FinancialRatiosTTM
 	if err := n.client.getJSON(ctx, "ratios-ttm", "ratios-ttm", params, &out); err != nil {
 		return nil, err
 	}

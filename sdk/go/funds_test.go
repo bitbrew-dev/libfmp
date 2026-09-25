@@ -51,25 +51,25 @@ func TestFundsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	ctx := context.Background()
 	ns := client.Funds
 
-	holdings, err := ns.EtfHoldings(ctx, NewEtfHoldingsQuery("BRK.B / Class A"))
+	holdings, err := ns.ETFHoldings(ctx, NewETFHoldingsQuery("BRK.B / Class A"))
 	if err != nil || len(holdings) != 1 || holdings[0].MarketValue != 61_679_458_958.0 {
-		t.Fatalf("EtfHoldings = %+v, %v", holdings, err)
+		t.Fatalf("ETFHoldings = %+v, %v", holdings, err)
 	}
-	info, err := ns.EtfInfo(ctx, NewEtfInfoQuery("SPY"))
+	info, err := ns.ETFInfo(ctx, NewETFInfoQuery("SPY"))
 	if err != nil || len(info) != 1 || info[0].AssetsUnderManagement != 777_349_860_000 || len(info[0].SectorsList) != 3 {
-		t.Fatalf("EtfInfo = %+v, %v", info, err)
+		t.Fatalf("ETFInfo = %+v, %v", info, err)
 	}
-	countries, err := ns.EtfCountryWeightings(ctx, NewEtfCountryWeightingsQuery("000089.SZ"))
+	countries, err := ns.ETFCountryWeightings(ctx, NewETFCountryWeightingsQuery("000089.SZ"))
 	if err != nil || len(countries) != 1 || countries[0].WeightPercentage != "97.26%" {
-		t.Fatalf("EtfCountryWeightings = %+v, %v", countries, err)
+		t.Fatalf("ETFCountryWeightings = %+v, %v", countries, err)
 	}
-	assets, err := ns.EtfAssetExposure(ctx, NewEtfAssetExposureQuery("AAPL"))
+	assets, err := ns.ETFAssetExposure(ctx, NewETFAssetExposureQuery("AAPL"))
 	if err != nil || len(assets) != 1 || assets[0].SharesNumber != 42_372 {
-		t.Fatalf("EtfAssetExposure = %+v, %v", assets, err)
+		t.Fatalf("ETFAssetExposure = %+v, %v", assets, err)
 	}
-	sectors, err := ns.EtfSectorWeightings(ctx, NewEtfSectorWeightingsQuery("ZWT-T.TO"))
+	sectors, err := ns.ETFSectorWeightings(ctx, NewETFSectorWeightingsQuery("ZWT-T.TO"))
 	if err != nil || len(sectors) != 1 || sectors[0].Sector != "Basic Materials" {
-		t.Fatalf("EtfSectorWeightings = %+v, %v", sectors, err)
+		t.Fatalf("ETFSectorWeightings = %+v, %v", sectors, err)
 	}
 	holders, err := ns.LatestDisclosureHolders(ctx, NewLatestFundDisclosureHoldersQuery("AAPL"))
 	if err != nil || len(holders) != 1 || holders[0].Change != -316_881 {
@@ -143,12 +143,12 @@ func TestFundsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	ctx := context.Background()
 	ns := client.Funds
 
-	_, err := ns.EtfHoldings(ctx, NewEtfHoldingsQuery(" "))
+	_, err := ns.ETFHoldings(ctx, NewETFHoldingsQuery(" "))
 	if typed := assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrEmptyValue) ||
 		typed.Message != "symbol: "+ErrEmptyValue.Error() {
 		t.Fatalf("blank symbol: error = %v", err)
 	}
-	_, err = ns.EtfAssetExposure(ctx, NewEtfAssetExposureQuery("AAPL,MSFT"))
+	_, err = ns.ETFAssetExposure(ctx, NewETFAssetExposureQuery("AAPL,MSFT"))
 	if typed := assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrCommaInTicker) ||
 		typed.Message != "symbol: "+ErrCommaInTicker.Error() {
 		t.Fatalf("comma ticker: error = %v", err)
@@ -192,7 +192,7 @@ func TestFundsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	server, rec := newServer(t, jsonHandler(`[{"country":"United States"}]`))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
-	_, err := client.Funds.EtfCountryWeightings(context.Background(), NewEtfCountryWeightingsQuery("SPY"))
+	_, err := client.Funds.ETFCountryWeightings(context.Background(), NewETFCountryWeightingsQuery("SPY"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "etf/country-weightings")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"weightPercentage"`) {
 		t.Fatalf("cause = %v, want it to name the missing member weightPercentage", cause)

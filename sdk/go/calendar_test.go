@@ -65,7 +65,7 @@ func TestCalendarMethodsUseExactPathsAndWireQueryOrder(t *testing.T) {
 		t.Fatalf("DividendsCalendar = %+v, %v", dividendCalendar, err)
 	}
 	earnings, err := client.Calendar.Earnings(ctx, NewEarningsQuery("AAPL").WithIncludeReportTimes(true))
-	if err != nil || len(earnings) != 1 || earnings[0].EpsActual != nil {
+	if err != nil || len(earnings) != 1 || earnings[0].EPSActual != nil {
 		t.Fatalf("Earnings = %+v, %v", earnings, err)
 	}
 	earningsCalendar, err := client.Calendar.EarningsCalendar(ctx,

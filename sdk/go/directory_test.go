@@ -75,9 +75,9 @@ func TestDirectoryMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(flagged) != 1 {
 		t.Fatalf("SymbolChanges flagged = %+v, %v", flagged, err)
 	}
-	etfs, err := client.Directory.EtfSymbols(ctx)
+	etfs, err := client.Directory.ETFSymbols(ctx)
 	if err != nil || len(etfs) != 1 || etfs[0].Symbol != "P60.SI" {
-		t.Fatalf("EtfSymbols = %+v, %v", etfs, err)
+		t.Fatalf("ETFSymbols = %+v, %v", etfs, err)
 	}
 	active, err := client.Directory.ActivelyTrading(ctx)
 	if err != nil || len(active) != 1 || active[0].Name != "Urban Company Limited" {

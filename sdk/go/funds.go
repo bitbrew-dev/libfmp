@@ -20,24 +20,24 @@ func newFundsNamespace(client *Client) FundsNamespace {
 	}
 }
 
-// EtfAssetExposureQuery holds the query parameters of the endpoints that take
-// it: NewEtfAssetExposureQuery takes the required arguments and each With
+// ETFAssetExposureQuery holds the query parameters of the endpoints that take
+// it: NewETFAssetExposureQuery takes the required arguments and each With
 // method sets an optional one. Values are validated when the request is built.
-type EtfAssetExposureQuery struct {
+type ETFAssetExposureQuery struct {
 	symbol string
 }
 
-// NewEtfAssetExposureQuery creates the query from its required arguments.
-func NewEtfAssetExposureQuery(symbol string) EtfAssetExposureQuery {
-	return EtfAssetExposureQuery{symbol: symbol}
+// NewETFAssetExposureQuery creates the query from its required arguments.
+func NewETFAssetExposureQuery(symbol string) ETFAssetExposureQuery {
+	return ETFAssetExposureQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q EtfAssetExposureQuery) Symbol() string {
+func (q ETFAssetExposureQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q EtfAssetExposureQuery) params() ([]queryParam, error) {
+func (q ETFAssetExposureQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -45,25 +45,25 @@ func (q EtfAssetExposureQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// EtfCountryWeightingsQuery holds the query parameters of the endpoints that
-// take it: NewEtfCountryWeightingsQuery takes the required arguments and each
+// ETFCountryWeightingsQuery holds the query parameters of the endpoints that
+// take it: NewETFCountryWeightingsQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type EtfCountryWeightingsQuery struct {
+type ETFCountryWeightingsQuery struct {
 	symbol string
 }
 
-// NewEtfCountryWeightingsQuery creates the query from its required arguments.
-func NewEtfCountryWeightingsQuery(symbol string) EtfCountryWeightingsQuery {
-	return EtfCountryWeightingsQuery{symbol: symbol}
+// NewETFCountryWeightingsQuery creates the query from its required arguments.
+func NewETFCountryWeightingsQuery(symbol string) ETFCountryWeightingsQuery {
+	return ETFCountryWeightingsQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q EtfCountryWeightingsQuery) Symbol() string {
+func (q ETFCountryWeightingsQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q EtfCountryWeightingsQuery) params() ([]queryParam, error) {
+func (q ETFCountryWeightingsQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -71,24 +71,24 @@ func (q EtfCountryWeightingsQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// EtfHoldingsQuery holds the query parameters of the endpoints that take it:
-// NewEtfHoldingsQuery takes the required arguments and each With method sets
+// ETFHoldingsQuery holds the query parameters of the endpoints that take it:
+// NewETFHoldingsQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
-type EtfHoldingsQuery struct {
+type ETFHoldingsQuery struct {
 	symbol string
 }
 
-// NewEtfHoldingsQuery creates the query from its required arguments.
-func NewEtfHoldingsQuery(symbol string) EtfHoldingsQuery {
-	return EtfHoldingsQuery{symbol: symbol}
+// NewETFHoldingsQuery creates the query from its required arguments.
+func NewETFHoldingsQuery(symbol string) ETFHoldingsQuery {
+	return ETFHoldingsQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q EtfHoldingsQuery) Symbol() string {
+func (q ETFHoldingsQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q EtfHoldingsQuery) params() ([]queryParam, error) {
+func (q ETFHoldingsQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -96,24 +96,24 @@ func (q EtfHoldingsQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// EtfInfoQuery holds the query parameters of the endpoints that take it:
-// NewEtfInfoQuery takes the required arguments and each With method sets an
+// ETFInfoQuery holds the query parameters of the endpoints that take it:
+// NewETFInfoQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type EtfInfoQuery struct {
+type ETFInfoQuery struct {
 	symbol string
 }
 
-// NewEtfInfoQuery creates the query from its required arguments.
-func NewEtfInfoQuery(symbol string) EtfInfoQuery {
-	return EtfInfoQuery{symbol: symbol}
+// NewETFInfoQuery creates the query from its required arguments.
+func NewETFInfoQuery(symbol string) ETFInfoQuery {
+	return ETFInfoQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q EtfInfoQuery) Symbol() string {
+func (q ETFInfoQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q EtfInfoQuery) params() ([]queryParam, error) {
+func (q ETFInfoQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -121,25 +121,25 @@ func (q EtfInfoQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// EtfSectorWeightingsQuery holds the query parameters of the endpoints that
-// take it: NewEtfSectorWeightingsQuery takes the required arguments and each
+// ETFSectorWeightingsQuery holds the query parameters of the endpoints that
+// take it: NewETFSectorWeightingsQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type EtfSectorWeightingsQuery struct {
+type ETFSectorWeightingsQuery struct {
 	symbol string
 }
 
-// NewEtfSectorWeightingsQuery creates the query from its required arguments.
-func NewEtfSectorWeightingsQuery(symbol string) EtfSectorWeightingsQuery {
-	return EtfSectorWeightingsQuery{symbol: symbol}
+// NewETFSectorWeightingsQuery creates the query from its required arguments.
+func NewETFSectorWeightingsQuery(symbol string) ETFSectorWeightingsQuery {
+	return ETFSectorWeightingsQuery{symbol: symbol}
 }
 
 // Symbol returns the symbol argument as given.
-func (q EtfSectorWeightingsQuery) Symbol() string {
+func (q ETFSectorWeightingsQuery) Symbol() string {
 	return q.symbol
 }
 
-func (q EtfSectorWeightingsQuery) params() ([]queryParam, error) {
+func (q ETFSectorWeightingsQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -316,79 +316,79 @@ func (q LatestFundDisclosureHoldersQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// EtfHoldings retrieves the worldwide holdings of one ETF or mutual fund.
+// ETFHoldings retrieves the worldwide holdings of one ETF or mutual fund.
 //
 // GET etf/holdings?symbol=
-func (n *FundsNamespace) EtfHoldings(ctx context.Context, q EtfHoldingsQuery) ([]EtfFundHolding, error) {
+func (n *FundsNamespace) ETFHoldings(ctx context.Context, q ETFHoldingsQuery) ([]ETFFundHolding, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EtfFundHolding
+	var out []ETFFundHolding
 	if err := n.client.getJSON(ctx, "etf/holdings", "etf/holdings", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// EtfInfo retrieves worldwide descriptive and trading information for one
+// ETFInfo retrieves worldwide descriptive and trading information for one
 // fund.
 //
 // GET etf/info?symbol=
-func (n *FundsNamespace) EtfInfo(ctx context.Context, q EtfInfoQuery) ([]EtfFundInfo, error) {
+func (n *FundsNamespace) ETFInfo(ctx context.Context, q ETFInfoQuery) ([]ETFFundInfo, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EtfFundInfo
+	var out []ETFFundInfo
 	if err := n.client.getJSON(ctx, "etf/info", "etf/info", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// EtfCountryWeightings retrieves the worldwide country allocation for one ETF
+// ETFCountryWeightings retrieves the worldwide country allocation for one ETF
 // or mutual fund.
 //
 // GET etf/country-weightings?symbol=
-func (n *FundsNamespace) EtfCountryWeightings(ctx context.Context, q EtfCountryWeightingsQuery) ([]EtfCountryWeighting, error) {
+func (n *FundsNamespace) ETFCountryWeightings(ctx context.Context, q ETFCountryWeightingsQuery) ([]ETFCountryWeighting, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EtfCountryWeighting
+	var out []ETFCountryWeighting
 	if err := n.client.getJSON(ctx, "etf/country-weightings", "etf/country-weightings", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// EtfAssetExposure retrieves the worldwide ETF exposure to one requested
+// ETFAssetExposure retrieves the worldwide ETF exposure to one requested
 // asset.
 //
 // GET etf/asset-exposure?symbol=
-func (n *FundsNamespace) EtfAssetExposure(ctx context.Context, q EtfAssetExposureQuery) ([]EtfAssetExposure, error) {
+func (n *FundsNamespace) ETFAssetExposure(ctx context.Context, q ETFAssetExposureQuery) ([]ETFAssetExposure, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EtfAssetExposure
+	var out []ETFAssetExposure
 	if err := n.client.getJSON(ctx, "etf/asset-exposure", "etf/asset-exposure", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// EtfSectorWeightings retrieves the worldwide sector allocation for one ETF or
+// ETFSectorWeightings retrieves the worldwide sector allocation for one ETF or
 // mutual fund.
 //
 // GET etf/sector-weightings?symbol=
-func (n *FundsNamespace) EtfSectorWeightings(ctx context.Context, q EtfSectorWeightingsQuery) ([]EtfSectorWeighting, error) {
+func (n *FundsNamespace) ETFSectorWeightings(ctx context.Context, q ETFSectorWeightingsQuery) ([]ETFSectorWeighting, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []EtfSectorWeighting
+	var out []ETFSectorWeighting
 	if err := n.client.getJSON(ctx, "etf/sector-weightings", "etf/sector-weightings", params, &out); err != nil {
 		return nil, err
 	}

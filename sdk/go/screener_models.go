@@ -25,7 +25,7 @@ type CompanyScreenerResult struct {
 	Exchange           string  `json:"exchange"`
 	ExchangeShortName  string  `json:"exchangeShortName"`
 	Country            string  `json:"country"`
-	IsEtf              bool    `json:"isEtf"`
+	IsETF              bool    `json:"isEtf"`
 	IsFund             bool    `json:"isFund"`
 	IsActivelyTrading  bool    `json:"isActivelyTrading"`
 }
@@ -46,7 +46,7 @@ type companyScreenerResultShadow struct {
 	Exchange           *string  `json:"exchange"`
 	ExchangeShortName  *string  `json:"exchangeShortName"`
 	Country            *string  `json:"country"`
-	IsEtf              *bool    `json:"isEtf"`
+	IsETF              *bool    `json:"isEtf"`
 	IsFund             *bool    `json:"isFund"`
 	IsActivelyTrading  *bool    `json:"isActivelyTrading"`
 }
@@ -84,7 +84,7 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyScreenerResult", "exchangeShortName")
 	case shadow.Country == nil:
 		return missingMemberError("CompanyScreenerResult", "country")
-	case shadow.IsEtf == nil:
+	case shadow.IsETF == nil:
 		return missingMemberError("CompanyScreenerResult", "isEtf")
 	case shadow.IsFund == nil:
 		return missingMemberError("CompanyScreenerResult", "isFund")
@@ -104,7 +104,7 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Exchange:           *shadow.Exchange,
 		ExchangeShortName:  *shadow.ExchangeShortName,
 		Country:            *shadow.Country,
-		IsEtf:              *shadow.IsEtf,
+		IsETF:              *shadow.IsETF,
 		IsFund:             *shadow.IsFund,
 		IsActivelyTrading:  *shadow.IsActivelyTrading,
 	}

@@ -58,7 +58,7 @@ func TestDocumentedCompanyProfileNoteAndPeerDecodeExactValues(t *testing.T) {
 		Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US", FullTimeEmployees: "166000",
 		Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino", State: "CA", Zip: "95014",
 		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IpoDate: mustParseDate(t, "1980-12-12"),
-		DefaultImage: false, IsEtf: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
+		DefaultImage: false, IsETF: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
 	}
 	if profile != want {
 		t.Fatalf("profile = %+v, want %+v", profile, want)
