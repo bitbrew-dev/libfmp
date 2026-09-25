@@ -265,7 +265,7 @@ impl From<libfmp::responses::tipranks::TipRanksRatingSearchResult> for TipRanksR
             analyst_action: value.analyst_action,
             article_title: value.article_title,
             article_site: value.article_site,
-            price_target: value.price_target,
+            price_target: crate::models::convert::canonical_number(value.price_target),
             price_target_currency: value.price_target_currency.into_inner(),
             url: value.url,
         }
@@ -595,17 +595,21 @@ impl From<libfmp::responses::tipranks::TipRanksPointInTimeRating> for TipRanksPo
             date: value.date.as_str().to_owned(),
             expert_uid: value.expert_uid.into_inner(),
             analyst_name: value.analyst_name,
-            stock_success_rate: value.stock_success_rate,
+            stock_success_rate: crate::models::convert::canonical_number(value.stock_success_rate),
             firm_name: value.firm_name,
             last_recommendation: value.last_recommendation,
             last_recommendation_date: value.last_recommendation_date.into_inner(),
             article_title: value.article_title,
             article_site: value.article_site,
-            price_target: value.price_target,
+            price_target: value
+                .price_target
+                .map(crate::models::convert::canonical_number),
             price_target_currency: value.price_target_currency.map(|value| value.into_inner()),
             url: value.url,
             last_analyst_action: value.last_analyst_action,
-            stock_return: value.stock_return,
+            stock_return: value
+                .stock_return
+                .map(crate::models::convert::canonical_number),
             beat_target: value.beat_target,
         }
     }
@@ -1152,9 +1156,9 @@ impl From<libfmp::responses::tipranks::TipRanksSymbolSummary> for TipRanksSymbol
             compared_price_targets: value.compared_price_targets,
             beats: value.beats,
             misses: value.misses,
-            average_return: value.average_return,
-            top_return: value.top_return,
-            worst_return: value.worst_return,
+            average_return: crate::models::convert::canonical_number(value.average_return),
+            top_return: crate::models::convert::canonical_number(value.top_return),
+            worst_return: crate::models::convert::canonical_number(value.worst_return),
         }
     }
 }
@@ -1461,9 +1465,9 @@ impl From<libfmp::responses::tipranks::TipRanksAnalystSummary> for TipRanksAnaly
             compared_price_targets: value.compared_price_targets,
             beats: value.beats,
             misses: value.misses,
-            average_return: value.average_return,
-            top_return: value.top_return,
-            worst_return: value.worst_return,
+            average_return: crate::models::convert::canonical_number(value.average_return),
+            top_return: crate::models::convert::canonical_number(value.top_return),
+            worst_return: crate::models::convert::canonical_number(value.worst_return),
         }
     }
 }
@@ -1770,9 +1774,9 @@ impl From<libfmp::responses::tipranks::TipRanksFirmSummary> for TipRanksFirmSumm
             compared_price_targets: value.compared_price_targets,
             beats: value.beats,
             misses: value.misses,
-            average_return: value.average_return,
-            top_return: value.top_return,
-            worst_return: value.worst_return,
+            average_return: crate::models::convert::canonical_number(value.average_return),
+            top_return: crate::models::convert::canonical_number(value.top_return),
+            worst_return: crate::models::convert::canonical_number(value.worst_return),
         }
     }
 }
@@ -1984,8 +1988,8 @@ impl From<libfmp::responses::tipranks::TipRanksAnalystProfile> for TipRanksAnaly
             expert_uid: value.expert_uid.into_inner(),
             analyst_name: value.analyst_name,
             firm_name: value.firm_name,
-            success_rate: value.success_rate,
-            excess_return: value.excess_return,
+            success_rate: crate::models::convert::canonical_number(value.success_rate),
+            excess_return: crate::models::convert::canonical_number(value.excess_return),
             total_recommendations: value.total_recommendations,
             good_recommendations: value.good_recommendations,
             analyst_rank: value.analyst_rank,

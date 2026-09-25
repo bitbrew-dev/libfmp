@@ -3351,36 +3351,96 @@ impl From<libfmp::responses::commitment_of_traders::CotReport> for CotReport {
             change_in_tot_rept_short_all: value.change_in_tot_rept_short_all,
             change_in_nonrept_long_all: value.change_in_nonrept_long_all,
             change_in_nonrept_short_all: value.change_in_nonrept_short_all,
-            pct_of_open_interest_all: value.pct_of_open_interest_all,
-            pct_of_oi_noncomm_long_all: value.pct_of_oi_noncomm_long_all,
-            pct_of_oi_noncomm_short_all: value.pct_of_oi_noncomm_short_all,
-            pct_of_oi_noncomm_spread_all: value.pct_of_oi_noncomm_spread_all,
-            pct_of_oi_comm_long_all: value.pct_of_oi_comm_long_all,
-            pct_of_oi_comm_short_all: value.pct_of_oi_comm_short_all,
-            pct_of_oi_tot_rept_long_all: value.pct_of_oi_tot_rept_long_all,
-            pct_of_oi_tot_rept_short_all: value.pct_of_oi_tot_rept_short_all,
-            pct_of_oi_nonrept_long_all: value.pct_of_oi_nonrept_long_all,
-            pct_of_oi_nonrept_short_all: value.pct_of_oi_nonrept_short_all,
-            pct_of_open_interest_old: value.pct_of_open_interest_old,
-            pct_of_oi_noncomm_long_old: value.pct_of_oi_noncomm_long_old,
-            pct_of_oi_noncomm_short_old: value.pct_of_oi_noncomm_short_old,
-            pct_of_oi_noncomm_spread_old: value.pct_of_oi_noncomm_spread_old,
-            pct_of_oi_comm_long_old: value.pct_of_oi_comm_long_old,
-            pct_of_oi_comm_short_old: value.pct_of_oi_comm_short_old,
-            pct_of_oi_tot_rept_long_old: value.pct_of_oi_tot_rept_long_old,
-            pct_of_oi_tot_rept_short_old: value.pct_of_oi_tot_rept_short_old,
-            pct_of_oi_nonrept_long_old: value.pct_of_oi_nonrept_long_old,
-            pct_of_oi_nonrept_short_old: value.pct_of_oi_nonrept_short_old,
-            pct_of_open_interest_other: value.pct_of_open_interest_other,
-            pct_of_oi_noncomm_long_other: value.pct_of_oi_noncomm_long_other,
-            pct_of_oi_noncomm_short_other: value.pct_of_oi_noncomm_short_other,
-            pct_of_oi_noncomm_spread_other: value.pct_of_oi_noncomm_spread_other,
-            pct_of_oi_comm_long_other: value.pct_of_oi_comm_long_other,
-            pct_of_oi_comm_short_other: value.pct_of_oi_comm_short_other,
-            pct_of_oi_tot_rept_long_other: value.pct_of_oi_tot_rept_long_other,
-            pct_of_oi_tot_rept_short_other: value.pct_of_oi_tot_rept_short_other,
-            pct_of_oi_nonrept_long_other: value.pct_of_oi_nonrept_long_other,
-            pct_of_oi_nonrept_short_other: value.pct_of_oi_nonrept_short_other,
+            pct_of_open_interest_all: crate::models::convert::canonical_number(
+                value.pct_of_open_interest_all,
+            ),
+            pct_of_oi_noncomm_long_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_long_all,
+            ),
+            pct_of_oi_noncomm_short_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_short_all,
+            ),
+            pct_of_oi_noncomm_spread_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_spread_all,
+            ),
+            pct_of_oi_comm_long_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_comm_long_all,
+            ),
+            pct_of_oi_comm_short_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_comm_short_all,
+            ),
+            pct_of_oi_tot_rept_long_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_tot_rept_long_all,
+            ),
+            pct_of_oi_tot_rept_short_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_tot_rept_short_all,
+            ),
+            pct_of_oi_nonrept_long_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_nonrept_long_all,
+            ),
+            pct_of_oi_nonrept_short_all: crate::models::convert::canonical_number(
+                value.pct_of_oi_nonrept_short_all,
+            ),
+            pct_of_open_interest_old: crate::models::convert::canonical_number(
+                value.pct_of_open_interest_old,
+            ),
+            pct_of_oi_noncomm_long_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_long_old,
+            ),
+            pct_of_oi_noncomm_short_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_short_old,
+            ),
+            pct_of_oi_noncomm_spread_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_spread_old,
+            ),
+            pct_of_oi_comm_long_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_comm_long_old,
+            ),
+            pct_of_oi_comm_short_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_comm_short_old,
+            ),
+            pct_of_oi_tot_rept_long_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_tot_rept_long_old,
+            ),
+            pct_of_oi_tot_rept_short_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_tot_rept_short_old,
+            ),
+            pct_of_oi_nonrept_long_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_nonrept_long_old,
+            ),
+            pct_of_oi_nonrept_short_old: crate::models::convert::canonical_number(
+                value.pct_of_oi_nonrept_short_old,
+            ),
+            pct_of_open_interest_other: crate::models::convert::canonical_number(
+                value.pct_of_open_interest_other,
+            ),
+            pct_of_oi_noncomm_long_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_long_other,
+            ),
+            pct_of_oi_noncomm_short_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_short_other,
+            ),
+            pct_of_oi_noncomm_spread_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_noncomm_spread_other,
+            ),
+            pct_of_oi_comm_long_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_comm_long_other,
+            ),
+            pct_of_oi_comm_short_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_comm_short_other,
+            ),
+            pct_of_oi_tot_rept_long_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_tot_rept_long_other,
+            ),
+            pct_of_oi_tot_rept_short_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_tot_rept_short_other,
+            ),
+            pct_of_oi_nonrept_long_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_nonrept_long_other,
+            ),
+            pct_of_oi_nonrept_short_other: crate::models::convert::canonical_number(
+                value.pct_of_oi_nonrept_short_other,
+            ),
             traders_tot_all: value.traders_tot_all,
             traders_noncomm_long_all: value.traders_noncomm_long_all,
             traders_noncomm_short_all: value.traders_noncomm_short_all,
@@ -3405,30 +3465,78 @@ impl From<libfmp::responses::commitment_of_traders::CotReport> for CotReport {
             traders_comm_short_other: value.traders_comm_short_other,
             traders_tot_rept_long_other: value.traders_tot_rept_long_other,
             traders_tot_rept_short_other: value.traders_tot_rept_short_other,
-            conc_gross_le4_tdr_long_all: value.conc_gross_le4_tdr_long_all,
-            conc_gross_le4_tdr_short_all: value.conc_gross_le4_tdr_short_all,
-            conc_gross_le8_tdr_long_all: value.conc_gross_le8_tdr_long_all,
-            conc_gross_le8_tdr_short_all: value.conc_gross_le8_tdr_short_all,
-            conc_net_le4_tdr_long_all: value.conc_net_le4_tdr_long_all,
-            conc_net_le4_tdr_short_all: value.conc_net_le4_tdr_short_all,
-            conc_net_le8_tdr_long_all: value.conc_net_le8_tdr_long_all,
-            conc_net_le8_tdr_short_all: value.conc_net_le8_tdr_short_all,
-            conc_gross_le4_tdr_long_old: value.conc_gross_le4_tdr_long_old,
-            conc_gross_le4_tdr_short_old: value.conc_gross_le4_tdr_short_old,
-            conc_gross_le8_tdr_long_old: value.conc_gross_le8_tdr_long_old,
-            conc_gross_le8_tdr_short_old: value.conc_gross_le8_tdr_short_old,
-            conc_net_le4_tdr_long_old: value.conc_net_le4_tdr_long_old,
-            conc_net_le4_tdr_short_old: value.conc_net_le4_tdr_short_old,
-            conc_net_le8_tdr_long_old: value.conc_net_le8_tdr_long_old,
-            conc_net_le8_tdr_short_old: value.conc_net_le8_tdr_short_old,
-            conc_gross_le4_tdr_long_other: value.conc_gross_le4_tdr_long_other,
-            conc_gross_le4_tdr_short_other: value.conc_gross_le4_tdr_short_other,
-            conc_gross_le8_tdr_long_other: value.conc_gross_le8_tdr_long_other,
-            conc_gross_le8_tdr_short_other: value.conc_gross_le8_tdr_short_other,
-            conc_net_le4_tdr_long_other: value.conc_net_le4_tdr_long_other,
-            conc_net_le4_tdr_short_other: value.conc_net_le4_tdr_short_other,
-            conc_net_le8_tdr_long_other: value.conc_net_le8_tdr_long_other,
-            conc_net_le8_tdr_short_other: value.conc_net_le8_tdr_short_other,
+            conc_gross_le4_tdr_long_all: crate::models::convert::canonical_number(
+                value.conc_gross_le4_tdr_long_all,
+            ),
+            conc_gross_le4_tdr_short_all: crate::models::convert::canonical_number(
+                value.conc_gross_le4_tdr_short_all,
+            ),
+            conc_gross_le8_tdr_long_all: crate::models::convert::canonical_number(
+                value.conc_gross_le8_tdr_long_all,
+            ),
+            conc_gross_le8_tdr_short_all: crate::models::convert::canonical_number(
+                value.conc_gross_le8_tdr_short_all,
+            ),
+            conc_net_le4_tdr_long_all: crate::models::convert::canonical_number(
+                value.conc_net_le4_tdr_long_all,
+            ),
+            conc_net_le4_tdr_short_all: crate::models::convert::canonical_number(
+                value.conc_net_le4_tdr_short_all,
+            ),
+            conc_net_le8_tdr_long_all: crate::models::convert::canonical_number(
+                value.conc_net_le8_tdr_long_all,
+            ),
+            conc_net_le8_tdr_short_all: crate::models::convert::canonical_number(
+                value.conc_net_le8_tdr_short_all,
+            ),
+            conc_gross_le4_tdr_long_old: crate::models::convert::canonical_number(
+                value.conc_gross_le4_tdr_long_old,
+            ),
+            conc_gross_le4_tdr_short_old: crate::models::convert::canonical_number(
+                value.conc_gross_le4_tdr_short_old,
+            ),
+            conc_gross_le8_tdr_long_old: crate::models::convert::canonical_number(
+                value.conc_gross_le8_tdr_long_old,
+            ),
+            conc_gross_le8_tdr_short_old: crate::models::convert::canonical_number(
+                value.conc_gross_le8_tdr_short_old,
+            ),
+            conc_net_le4_tdr_long_old: crate::models::convert::canonical_number(
+                value.conc_net_le4_tdr_long_old,
+            ),
+            conc_net_le4_tdr_short_old: crate::models::convert::canonical_number(
+                value.conc_net_le4_tdr_short_old,
+            ),
+            conc_net_le8_tdr_long_old: crate::models::convert::canonical_number(
+                value.conc_net_le8_tdr_long_old,
+            ),
+            conc_net_le8_tdr_short_old: crate::models::convert::canonical_number(
+                value.conc_net_le8_tdr_short_old,
+            ),
+            conc_gross_le4_tdr_long_other: crate::models::convert::canonical_number(
+                value.conc_gross_le4_tdr_long_other,
+            ),
+            conc_gross_le4_tdr_short_other: crate::models::convert::canonical_number(
+                value.conc_gross_le4_tdr_short_other,
+            ),
+            conc_gross_le8_tdr_long_other: crate::models::convert::canonical_number(
+                value.conc_gross_le8_tdr_long_other,
+            ),
+            conc_gross_le8_tdr_short_other: crate::models::convert::canonical_number(
+                value.conc_gross_le8_tdr_short_other,
+            ),
+            conc_net_le4_tdr_long_other: crate::models::convert::canonical_number(
+                value.conc_net_le4_tdr_long_other,
+            ),
+            conc_net_le4_tdr_short_other: crate::models::convert::canonical_number(
+                value.conc_net_le4_tdr_short_other,
+            ),
+            conc_net_le8_tdr_long_other: crate::models::convert::canonical_number(
+                value.conc_net_le8_tdr_long_other,
+            ),
+            conc_net_le8_tdr_short_other: crate::models::convert::canonical_number(
+                value.conc_net_le8_tdr_short_other,
+            ),
             contract_units: value.contract_units,
         }
     }
