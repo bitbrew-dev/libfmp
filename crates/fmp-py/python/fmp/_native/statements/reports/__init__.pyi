@@ -19,21 +19,25 @@ class FinancialReportDate:
     NOTE: field `link_xlsx` is a secret URL: it is stored privately and is only readable through its explicit `expose_secret_*` accessor.
     """
 
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
     def fiscal_year(self) -> builtins.int: ...
     @property
     def period(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         fiscal_year: builtins.int,
         period: builtins.str,
         link_json: builtins.str,
         link_xlsx: builtins.str,
     ) -> FinancialReportDate: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
     def expose_secret_url_json(self) -> builtins.str:
         r"""
         Returns the JSON report download URL. The URL embeds the API key:
@@ -55,6 +59,8 @@ class FinancialReportDate:
 
 @typing.final
 class FinancialReportJson:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -63,14 +69,16 @@ class FinancialReportJson:
     def year(self) -> builtins.str: ...
     @property
     def sections(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         period: builtins.str,
         year: builtins.str,
         sections: builtins.str,
     ) -> FinancialReportJson: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

@@ -12,6 +12,8 @@ __all__ = [
 
 @typing.final
 class IncomeStatement:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -90,8 +92,10 @@ class IncomeStatement:
     def weighted_average_shs_out(self) -> builtins.float: ...
     @property
     def weighted_average_shs_out_dil(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         symbol: builtins.str,
         reported_currency: builtins.str,
@@ -132,7 +136,7 @@ class IncomeStatement:
         weighted_average_shs_out: builtins.float,
         weighted_average_shs_out_dil: builtins.float,
     ) -> IncomeStatement: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

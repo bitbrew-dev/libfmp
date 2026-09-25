@@ -2,16 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
 #[pyclass(
     module = "fmp._native.statements.growth.income",
     frozen,
+    eq,
     from_py_object
 )]
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct IncomeStatementGrowth {
     #[pyo3(get)]
     pub symbol: String,
@@ -89,7 +90,7 @@ impl IncomeStatementGrowth {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, fiscal_year, period, reported_currency, growth_revenue, growth_cost_of_revenue, growth_gross_profit, growth_gross_profit_ratio, growth_research_and_development_expenses, growth_general_and_administrative_expenses, growth_selling_and_marketing_expenses, growth_other_expenses, growth_operating_expenses, growth_cost_and_expenses, growth_interest_income, growth_interest_expense, growth_depreciation_and_amortization, growth_ebitda, growth_operating_income, growth_income_before_tax, growth_income_tax_expense, growth_net_income, growth_eps, growth_eps_diluted, growth_weighted_average_shs_out, growth_weighted_average_shs_out_dil, growth_ebit, growth_non_operating_income_excluding_interest, growth_net_interest_income, growth_total_other_income_expenses_net, growth_net_income_from_continuing_operations, growth_other_adjustments_to_net_income, growth_net_income_deductions))]
+    #[pyo3(signature = (*, symbol, date, fiscal_year, period, reported_currency, growth_revenue, growth_cost_of_revenue, growth_gross_profit, growth_gross_profit_ratio, growth_research_and_development_expenses, growth_general_and_administrative_expenses, growth_selling_and_marketing_expenses, growth_other_expenses, growth_operating_expenses, growth_cost_and_expenses, growth_interest_income, growth_interest_expense, growth_depreciation_and_amortization, growth_ebitda, growth_operating_income, growth_income_before_tax, growth_income_tax_expense, growth_net_income, growth_eps, growth_eps_diluted, growth_weighted_average_shs_out, growth_weighted_average_shs_out_dil, growth_ebit, growth_non_operating_income_excluding_interest, growth_net_interest_income, growth_total_other_income_expenses_net, growth_net_income_from_continuing_operations, growth_other_adjustments_to_net_income, growth_net_income_deductions))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -164,79 +165,174 @@ impl IncomeStatementGrowth {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_revenue",
             self.growth_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_cost_of_revenue",
             self.growth_cost_of_revenue.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_gross_profit",
             self.growth_gross_profit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_gross_profit_ratio",
             self.growth_gross_profit_ratio
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_research_and_development_expenses",
             self.growth_research_and_development_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_general_and_administrative_expenses",
             self.growth_general_and_administrative_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_selling_and_marketing_expenses",
             self.growth_selling_and_marketing_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_expenses",
             self.growth_other_expenses.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_operating_expenses",
             self.growth_operating_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_cost_and_expenses",
             self.growth_cost_and_expenses
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_interest_income",
             self.growth_interest_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_interest_expense",
             self.growth_interest_expense.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_depreciation_and_amortization",
             self.growth_depreciation_and_amortization
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_ebitda",
             self.growth_ebitda.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_operating_income",
             self.growth_operating_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_income_before_tax",
             self.growth_income_before_tax
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_income_tax_expense",
             self.growth_income_tax_expense
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_income",
             self.growth_net_income.clone().into_bound_py_any(py)?,
-            self.growth_eps.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("growth_eps", self.growth_eps.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "growth_eps_diluted",
             self.growth_eps_diluted.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_weighted_average_shs_out",
             self.growth_weighted_average_shs_out
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_weighted_average_shs_out_dil",
             self.growth_weighted_average_shs_out_dil
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_ebit",
             self.growth_ebit.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_non_operating_income_excluding_interest",
             self.growth_non_operating_income_excluding_interest
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_interest_income",
             self.growth_net_interest_income
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_total_other_income_expenses_net",
             self.growth_total_other_income_expenses_net
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_income_from_continuing_operations",
             self.growth_net_income_from_continuing_operations
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_adjustments_to_net_income",
             self.growth_other_adjustments_to_net_income
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_income_deductions",
             self.growth_net_income_deductions
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

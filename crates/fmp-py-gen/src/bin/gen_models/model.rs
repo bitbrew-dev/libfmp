@@ -193,7 +193,8 @@ impl KeptField {
         self.field_ident.clone()
     }
 
-    pub(crate) fn getnewargs_elem(&self) -> String {
+    /// The value `__getnewargs_ex__` passes back to `__new__` for this field.
+    pub(crate) fn pickle_value(&self) -> String {
         match &self.kind {
             KeptKind::Passthrough { optional, .. } => {
                 let err = format!(

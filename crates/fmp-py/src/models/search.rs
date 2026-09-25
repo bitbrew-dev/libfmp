@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.search", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.search", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SymbolSearchResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -27,7 +27,7 @@ impl SymbolSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, currency, exchange_full_name, exchange))]
+    #[pyo3(signature = (*, symbol, name, currency, exchange_full_name, exchange))]
     fn new(
         symbol: String,
         name: String,
@@ -44,16 +44,24 @@ impl SymbolSearchResult {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.currency.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "exchange_full_name",
             self.exchange_full_name.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -70,8 +78,8 @@ impl From<libfmp::responses::search::SymbolSearchResult> for SymbolSearchResult 
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.search", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.search", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct NameSearchResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -91,7 +99,7 @@ impl NameSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, currency, exchange_full_name, exchange))]
+    #[pyo3(signature = (*, symbol, name, currency, exchange_full_name, exchange))]
     fn new(
         symbol: String,
         name: String,
@@ -108,16 +116,24 @@ impl NameSearchResult {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.currency.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "exchange_full_name",
             self.exchange_full_name.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -134,8 +150,8 @@ impl From<libfmp::responses::search::NameSearchResult> for NameSearchResult {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.search", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.search", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CikSearchResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -157,7 +173,7 @@ impl CikSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, company_name, cik, exchange_full_name, exchange, currency))]
+    #[pyo3(signature = (*, symbol, company_name, cik, exchange_full_name, exchange, currency))]
     fn new(
         symbol: String,
         company_name: String,
@@ -176,17 +192,28 @@ impl CikSearchResult {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "exchange_full_name",
             self.exchange_full_name.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.currency.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -204,8 +231,8 @@ impl From<libfmp::responses::search::CikSearchResult> for CikSearchResult {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.search", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.search", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CusipSearchResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -223,7 +250,7 @@ impl CusipSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, company_name, cusip, market_cap))]
+    #[pyo3(signature = (*, symbol, company_name, cusip, market_cap))]
     fn new(symbol: String, company_name: String, cusip: String, market_cap: f64) -> Self {
         Self {
             symbol,
@@ -233,15 +260,23 @@ impl CusipSearchResult {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.cusip.clone().into_bound_py_any(py)?,
-            self.market_cap.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("cusip", self.cusip.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -257,8 +292,8 @@ impl From<libfmp::responses::search::CusipSearchResult> for CusipSearchResult {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.search", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.search", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct IsinSearchResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -276,7 +311,7 @@ impl IsinSearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, isin, market_cap))]
+    #[pyo3(signature = (*, symbol, name, isin, market_cap))]
     fn new(symbol: String, name: String, isin: String, market_cap: f64) -> Self {
         Self {
             symbol,
@@ -286,15 +321,20 @@ impl IsinSearchResult {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.isin.clone().into_bound_py_any(py)?,
-            self.market_cap.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("isin", self.isin.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -310,8 +350,8 @@ impl From<libfmp::responses::search::IsinSearchResult> for IsinSearchResult {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.search", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.search", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct ExchangeVariant {
     #[pyo3(get)]
     pub symbol: String,
@@ -393,7 +433,7 @@ impl ExchangeVariant {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, price, beta, vol_avg, market_cap, last_div, range, changes, company_name, currency, cik, isin, cusip, exchange, exchange_short_name, industry, website, description, ceo, sector, country, full_time_employees, phone, address, city, state, zip, dcf_diff, dcf, image, ipo_date, default_image, is_etf, is_actively_trading, is_adr, is_fund))]
+    #[pyo3(signature = (*, symbol, price, beta, vol_avg, market_cap, last_div, range, changes, company_name, currency, cik, isin, cusip, exchange, exchange_short_name, industry, website, description, ceo, sector, country, full_time_employees, phone, address, city, state, zip, dcf_diff, dcf, image, ipo_date, default_image, is_etf, is_actively_trading, is_adr, is_fund))]
     fn new(
         symbol: String,
         price: f64,
@@ -472,47 +512,70 @@ impl ExchangeVariant {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.price.clone().into_bound_py_any(py)?,
-            self.beta.clone().into_bound_py_any(py)?,
-            self.vol_avg.clone().into_bound_py_any(py)?,
-            self.market_cap.clone().into_bound_py_any(py)?,
-            self.last_div.clone().into_bound_py_any(py)?,
-            self.range.clone().into_bound_py_any(py)?,
-            self.changes.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("price", self.price.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("beta", self.beta.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("vol_avg", self.vol_avg.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("market_cap", self.market_cap.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("last_div", self.last_div.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("range", self.range.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("changes", self.changes.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.currency.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
-            self.isin.clone().into_bound_py_any(py)?,
-            self.cusip.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("isin", self.isin.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cusip", self.cusip.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "exchange_short_name",
             self.exchange_short_name.clone().into_bound_py_any(py)?,
-            self.industry.clone().into_bound_py_any(py)?,
-            self.website.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("industry", self.industry.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("website", self.website.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "description",
             self.description.clone().into_bound_py_any(py)?,
-            self.ceo.clone().into_bound_py_any(py)?,
-            self.sector.clone().into_bound_py_any(py)?,
-            self.country.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ceo", self.ceo.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("country", self.country.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "full_time_employees",
             self.full_time_employees.clone().into_bound_py_any(py)?,
-            self.phone.clone().into_bound_py_any(py)?,
-            self.address.clone().into_bound_py_any(py)?,
-            self.city.clone().into_bound_py_any(py)?,
-            self.state.clone().into_bound_py_any(py)?,
-            self.zip.clone().into_bound_py_any(py)?,
-            self.dcf_diff.clone().into_bound_py_any(py)?,
-            self.dcf.clone().into_bound_py_any(py)?,
-            self.image.clone().into_bound_py_any(py)?,
-            self.ipo_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("phone", self.phone.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("address", self.address.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("city", self.city.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("state", self.state.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("zip", self.zip.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("dcf_diff", self.dcf_diff.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("dcf", self.dcf.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("image", self.image.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("ipo_date", self.ipo_date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "default_image",
             self.default_image.clone().into_bound_py_any(py)?,
-            self.is_etf.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("is_etf", self.is_etf.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "is_actively_trading",
             self.is_actively_trading.clone().into_bound_py_any(py)?,
-            self.is_adr.clone().into_bound_py_any(py)?,
-            self.is_fund.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("is_adr", self.is_adr.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("is_fund", self.is_fund.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

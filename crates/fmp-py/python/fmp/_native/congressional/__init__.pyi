@@ -18,14 +18,19 @@ __all__ = [
 
 @typing.final
 class CongressionalDebtDetails:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date_incurred(self) -> builtins.str: ...
-    def __new__(cls, date_incurred: builtins.str) -> CongressionalDebtDetails: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
+    def __new__(cls, *, date_incurred: builtins.str) -> CongressionalDebtDetails: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CongressionalMemberNetWorth:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def member_id(self) -> builtins.str: ...
     @property
@@ -60,8 +65,10 @@ class CongressionalMemberNetWorth:
     def link(self) -> builtins.str: ...
     @property
     def income(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         member_id: builtins.str,
         form_type: builtins.str,
         year: builtins.int,
@@ -80,11 +87,13 @@ class CongressionalMemberNetWorth:
         income: typing.Optional[builtins.str],
         link: builtins.str,
     ) -> CongressionalMemberNetWorth: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CongressionalMemberNetWorthAggregate:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def member_id(self) -> builtins.str: ...
     @property
@@ -113,8 +122,10 @@ class CongressionalMemberNetWorthAggregate:
     def business_liabilities(self) -> builtins.int: ...
     @property
     def mutual_funds_and_etfs(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         member_id: builtins.str,
         year: builtins.int,
         total: builtins.int,
@@ -130,11 +141,13 @@ class CongressionalMemberNetWorthAggregate:
         business_liabilities: builtins.int,
         mutual_funds_and_etfs: builtins.int,
     ) -> CongressionalMemberNetWorthAggregate: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CongressionalMemberPosition:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def member_id(self) -> builtins.str: ...
     @property
@@ -151,8 +164,10 @@ class CongressionalMemberPosition:
     def state(self) -> builtins.str: ...
     @property
     def years_in_term(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         member_id: builtins.str,
         congress_number: builtins.int,
         start_date: datetime.date,
@@ -162,11 +177,13 @@ class CongressionalMemberPosition:
         state: builtins.str,
         years_in_term: builtins.float,
     ) -> CongressionalMemberPosition: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CongressionalMemberProfile:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def member_id(self) -> builtins.str: ...
     @property
@@ -187,8 +204,10 @@ class CongressionalMemberProfile:
     def active(self) -> builtins.bool: ...
     @property
     def years_active(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         member_id: builtins.str,
         first_name: builtins.str,
         last_name: builtins.str,
@@ -200,7 +219,7 @@ class CongressionalMemberProfile:
         active: builtins.bool,
         years_active: builtins.float,
     ) -> CongressionalMemberProfile: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -338,18 +357,23 @@ class CongressionalNamespace:
 
 @typing.final
 class CongressionalNetWorthRange:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def min(self) -> builtins.int: ...
     @property
     def max(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, min: builtins.int, max: builtins.int
+        cls, *, min: builtins.int, max: builtins.int
     ) -> CongressionalNetWorthRange: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class CongressionalTrade:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -382,8 +406,10 @@ class CongressionalTrade:
     def comment(self) -> builtins.str: ...
     @property
     def link(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         member_id: builtins.str,
         disclosure_date: datetime.date,
@@ -401,4 +427,4 @@ class CongressionalTrade:
         comment: builtins.str,
         link: builtins.str,
     ) -> CongressionalTrade: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

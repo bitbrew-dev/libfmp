@@ -12,6 +12,8 @@ __all__ = [
 
 @typing.final
 class BulkCashFlowStatement:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -106,8 +108,10 @@ class BulkCashFlowStatement:
     def income_taxes_paid(self) -> builtins.str: ...
     @property
     def interest_paid(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         symbol: builtins.str,
         reported_currency: builtins.str,
@@ -156,11 +160,13 @@ class BulkCashFlowStatement:
         income_taxes_paid: builtins.str,
         interest_paid: builtins.str,
     ) -> BulkCashFlowStatement: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkCashFlowStatementGrowth:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -245,8 +251,10 @@ class BulkCashFlowStatementGrowth:
     def growth_income_taxes_paid(self) -> builtins.str: ...
     @property
     def growth_interest_paid(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
@@ -290,4 +298,4 @@ class BulkCashFlowStatementGrowth:
         growth_income_taxes_paid: builtins.str,
         growth_interest_paid: builtins.str,
     ) -> BulkCashFlowStatementGrowth: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

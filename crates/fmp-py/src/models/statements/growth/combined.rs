@@ -2,16 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
 #[pyclass(
     module = "fmp._native.statements.growth.combined",
     frozen,
+    eq,
     from_py_object
 )]
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct FinancialStatementGrowth {
     #[pyo3(get)]
     pub symbol: String,
@@ -109,7 +110,7 @@ impl FinancialStatementGrowth {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, fiscal_year, period, reported_currency, revenue_growth, gross_profit_growth, ebit_growth, operating_income_growth, net_income_growth, eps_growth, eps_diluted_growth, weighted_average_shares_growth, weighted_average_shares_diluted_growth, dividends_per_share_growth, operating_cash_flow_growth, receivables_growth, inventory_growth, asset_growth, book_value_per_share_growth, debt_growth, rd_expense_growth, sga_expenses_growth, free_cash_flow_growth, ten_y_revenue_growth_per_share, five_y_revenue_growth_per_share, three_y_revenue_growth_per_share, ten_y_operating_cf_growth_per_share, five_y_operating_cf_growth_per_share, three_y_operating_cf_growth_per_share, ten_y_net_income_growth_per_share, five_y_net_income_growth_per_share, three_y_net_income_growth_per_share, ten_y_shareholders_equity_growth_per_share, five_y_shareholders_equity_growth_per_share, three_y_shareholders_equity_growth_per_share, ten_y_dividend_per_share_growth_per_share, five_y_dividend_per_share_growth_per_share, three_y_dividend_per_share_growth_per_share, ebitda_growth, growth_capital_expenditure, ten_y_bottom_line_net_income_growth_per_share, five_y_bottom_line_net_income_growth_per_share, three_y_bottom_line_net_income_growth_per_share))]
+    #[pyo3(signature = (*, symbol, date, fiscal_year, period, reported_currency, revenue_growth, gross_profit_growth, ebit_growth, operating_income_growth, net_income_growth, eps_growth, eps_diluted_growth, weighted_average_shares_growth, weighted_average_shares_diluted_growth, dividends_per_share_growth, operating_cash_flow_growth, receivables_growth, inventory_growth, asset_growth, book_value_per_share_growth, debt_growth, rd_expense_growth, sga_expenses_growth, free_cash_flow_growth, ten_y_revenue_growth_per_share, five_y_revenue_growth_per_share, three_y_revenue_growth_per_share, ten_y_operating_cf_growth_per_share, five_y_operating_cf_growth_per_share, three_y_operating_cf_growth_per_share, ten_y_net_income_growth_per_share, five_y_net_income_growth_per_share, three_y_net_income_growth_per_share, ten_y_shareholders_equity_growth_per_share, five_y_shareholders_equity_growth_per_share, three_y_shareholders_equity_growth_per_share, ten_y_dividend_per_share_growth_per_share, five_y_dividend_per_share_growth_per_share, three_y_dividend_per_share_growth_per_share, ebitda_growth, growth_capital_expenditure, ten_y_bottom_line_net_income_growth_per_share, five_y_bottom_line_net_income_growth_per_share, three_y_bottom_line_net_income_growth_per_share))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -204,103 +205,228 @@ impl FinancialStatementGrowth {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "revenue_growth",
             self.revenue_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "gross_profit_growth",
             self.gross_profit_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebit_growth",
             self.ebit_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_income_growth",
             self.operating_income_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_income_growth",
             self.net_income_growth.clone().into_bound_py_any(py)?,
-            self.eps_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("eps_growth", self.eps_growth.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "eps_diluted_growth",
             self.eps_diluted_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "weighted_average_shares_growth",
             self.weighted_average_shares_growth
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "weighted_average_shares_diluted_growth",
             self.weighted_average_shares_diluted_growth
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "dividends_per_share_growth",
             self.dividends_per_share_growth
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow_growth",
             self.operating_cash_flow_growth
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "receivables_growth",
             self.receivables_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "inventory_growth",
             self.inventory_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "asset_growth",
             self.asset_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "book_value_per_share_growth",
             self.book_value_per_share_growth
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "debt_growth",
             self.debt_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "rd_expense_growth",
             self.rd_expense_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "sga_expenses_growth",
             self.sga_expenses_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow_growth",
             self.free_cash_flow_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ten_y_revenue_growth_per_share",
             self.ten_y_revenue_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "five_y_revenue_growth_per_share",
             self.five_y_revenue_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "three_y_revenue_growth_per_share",
             self.three_y_revenue_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ten_y_operating_cf_growth_per_share",
             self.ten_y_operating_cf_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "five_y_operating_cf_growth_per_share",
             self.five_y_operating_cf_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "three_y_operating_cf_growth_per_share",
             self.three_y_operating_cf_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ten_y_net_income_growth_per_share",
             self.ten_y_net_income_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "five_y_net_income_growth_per_share",
             self.five_y_net_income_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "three_y_net_income_growth_per_share",
             self.three_y_net_income_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ten_y_shareholders_equity_growth_per_share",
             self.ten_y_shareholders_equity_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "five_y_shareholders_equity_growth_per_share",
             self.five_y_shareholders_equity_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "three_y_shareholders_equity_growth_per_share",
             self.three_y_shareholders_equity_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ten_y_dividend_per_share_growth_per_share",
             self.ten_y_dividend_per_share_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "five_y_dividend_per_share_growth_per_share",
             self.five_y_dividend_per_share_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "three_y_dividend_per_share_growth_per_share",
             self.three_y_dividend_per_share_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ebitda_growth",
             self.ebitda_growth.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_capital_expenditure",
             self.growth_capital_expenditure
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "ten_y_bottom_line_net_income_growth_per_share",
             self.ten_y_bottom_line_net_income_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "five_y_bottom_line_net_income_growth_per_share",
             self.five_y_bottom_line_net_income_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "three_y_bottom_line_net_income_growth_per_share",
             self.three_y_bottom_line_net_income_growth_per_share
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

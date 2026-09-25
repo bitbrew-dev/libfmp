@@ -18,6 +18,8 @@ __all__ = [
 
 @typing.final
 class HistoricalIndexConstituent:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date_added(self) -> builtins.str: ...
     @property
@@ -32,8 +34,10 @@ class HistoricalIndexConstituent:
     def symbol(self) -> builtins.str: ...
     @property
     def reason(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date_added: builtins.str,
         added_security: builtins.str,
         removed_ticker: typing.Optional[builtins.str],
@@ -42,11 +46,13 @@ class HistoricalIndexConstituent:
         symbol: builtins.str,
         reason: builtins.str,
     ) -> HistoricalIndexConstituent: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class IndexConstituent:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -63,8 +69,10 @@ class IndexConstituent:
     def cik(self) -> builtins.str: ...
     @property
     def founded(self) -> datetime.date: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         sector: builtins.str,
@@ -74,11 +82,13 @@ class IndexConstituent:
         cik: builtins.str,
         founded: datetime.date,
     ) -> IndexConstituent: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class IndexListing:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -87,14 +97,16 @@ class IndexListing:
     def exchange(self) -> builtins.str: ...
     @property
     def currency(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         exchange: builtins.str,
         currency: builtins.str,
     ) -> IndexListing: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

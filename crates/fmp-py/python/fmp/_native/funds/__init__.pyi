@@ -22,6 +22,8 @@ __all__ = [
 
 @typing.final
 class EtfAssetExposure:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -32,31 +34,38 @@ class EtfAssetExposure:
     def weight_percentage(self) -> builtins.float: ...
     @property
     def market_value(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         asset: builtins.str,
         shares_number: builtins.float,
         weight_percentage: builtins.float,
         market_value: builtins.float,
     ) -> EtfAssetExposure: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EtfCountryWeighting:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def country(self) -> builtins.str: ...
     @property
     def weight_percentage(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, country: builtins.str, weight_percentage: builtins.str
+        cls, *, country: builtins.str, weight_percentage: builtins.str
     ) -> EtfCountryWeighting: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EtfFundHolding:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -75,8 +84,10 @@ class EtfFundHolding:
     def market_value(self) -> builtins.float: ...
     @property
     def updated_at(self) -> datetime.datetime: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         asset: builtins.str,
         name: builtins.str,
@@ -87,11 +98,13 @@ class EtfFundHolding:
         market_value: builtins.float,
         updated_at: datetime.datetime,
     ) -> EtfFundHolding: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EtfFundInfo:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -130,8 +143,10 @@ class EtfFundInfo:
     def updated_at(self) -> builtins.str: ...
     @property
     def sectors_list(self) -> builtins.list[EtfSectorExposure]: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         description: builtins.str,
@@ -152,40 +167,49 @@ class EtfFundInfo:
         updated_at: builtins.str,
         sectors_list: typing.Sequence[EtfSectorExposure],
     ) -> EtfFundInfo: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EtfSectorExposure:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def industry(self) -> builtins.str: ...
     @property
     def exposure(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, industry: builtins.str, exposure: builtins.float
+        cls, *, industry: builtins.str, exposure: builtins.float
     ) -> EtfSectorExposure: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EtfSectorWeighting:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
     def sector(self) -> builtins.str: ...
     @property
     def weight_percentage(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         sector: builtins.str,
         weight_percentage: builtins.float,
     ) -> EtfSectorWeighting: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class FundDisclosure:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -232,8 +256,10 @@ class FundDisclosure:
     def is_non_cash_collateral(self) -> builtins.str: ...
     @property
     def is_loan_by_fund(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         date: datetime.date,
         accepted_date: datetime.datetime,
@@ -258,11 +284,13 @@ class FundDisclosure:
         is_non_cash_collateral: builtins.str,
         is_loan_by_fund: builtins.str,
     ) -> FundDisclosure: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class FundDisclosureHolder:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -277,8 +305,10 @@ class FundDisclosureHolder:
     def change(self) -> builtins.float: ...
     @property
     def weight_percent(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         cik: builtins.str,
         holder: builtins.str,
         security_cusip: builtins.str,
@@ -287,11 +317,13 @@ class FundDisclosureHolder:
         change: builtins.float,
         weight_percent: builtins.float,
     ) -> FundDisclosureHolder: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class FundDisclosureSearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -318,8 +350,10 @@ class FundDisclosureSearchResult:
     def zip_code(self) -> builtins.str: ...
     @property
     def state(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         cik: builtins.str,
         class_id: builtins.str,
@@ -334,7 +368,7 @@ class FundDisclosureSearchResult:
         zip_code: builtins.str,
         state: builtins.str,
     ) -> FundDisclosureSearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

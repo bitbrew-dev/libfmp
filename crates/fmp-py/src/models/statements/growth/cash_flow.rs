@@ -2,16 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
 #[pyclass(
     module = "fmp._native.statements.growth.cash_flow",
     frozen,
+    eq,
     from_py_object
 )]
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CashFlowStatementGrowth {
     #[pyo3(get)]
     pub symbol: String,
@@ -105,7 +106,7 @@ impl CashFlowStatementGrowth {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, fiscal_year, period, reported_currency, growth_net_income, growth_depreciation_and_amortization, growth_deferred_income_tax, growth_stock_based_compensation, growth_change_in_working_capital, growth_accounts_receivables, growth_inventory, growth_accounts_payables, growth_other_working_capital, growth_other_non_cash_items, growth_net_cash_provided_by_operating_activities, growth_investments_in_property_plant_and_equipment, growth_acquisitions_net, growth_purchases_of_investments, growth_sales_maturities_of_investments, growth_other_investing_activities, growth_net_cash_used_for_investing_activities, growth_debt_repayment, growth_common_stock_issued, growth_common_stock_repurchased, growth_dividends_paid, growth_other_financing_activities, growth_net_cash_used_provided_by_financing_activities, growth_effect_of_forex_changes_on_cash, growth_net_change_in_cash, growth_cash_at_end_of_period, growth_cash_at_beginning_of_period, growth_operating_cash_flow, growth_capital_expenditure, growth_free_cash_flow, growth_net_debt_issuance, growth_long_term_net_debt_issuance, growth_short_term_net_debt_issuance, growth_net_stock_issuance, growth_preferred_dividends_paid, growth_income_taxes_paid, growth_interest_paid))]
+    #[pyo3(signature = (*, symbol, date, fiscal_year, period, reported_currency, growth_net_income, growth_depreciation_and_amortization, growth_deferred_income_tax, growth_stock_based_compensation, growth_change_in_working_capital, growth_accounts_receivables, growth_inventory, growth_accounts_payables, growth_other_working_capital, growth_other_non_cash_items, growth_net_cash_provided_by_operating_activities, growth_investments_in_property_plant_and_equipment, growth_acquisitions_net, growth_purchases_of_investments, growth_sales_maturities_of_investments, growth_other_investing_activities, growth_net_cash_used_for_investing_activities, growth_debt_repayment, growth_common_stock_issued, growth_common_stock_repurchased, growth_dividends_paid, growth_other_financing_activities, growth_net_cash_used_provided_by_financing_activities, growth_effect_of_forex_changes_on_cash, growth_net_change_in_cash, growth_cash_at_end_of_period, growth_cash_at_beginning_of_period, growth_operating_cash_flow, growth_capital_expenditure, growth_free_cash_flow, growth_net_debt_issuance, growth_long_term_net_debt_issuance, growth_short_term_net_debt_issuance, growth_net_stock_issuance, growth_preferred_dividends_paid, growth_income_taxes_paid, growth_interest_paid))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -196,113 +197,235 @@ impl CashFlowStatementGrowth {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_income",
             self.growth_net_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_depreciation_and_amortization",
             self.growth_depreciation_and_amortization
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_deferred_income_tax",
             self.growth_deferred_income_tax
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_stock_based_compensation",
             self.growth_stock_based_compensation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_change_in_working_capital",
             self.growth_change_in_working_capital
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_accounts_receivables",
             self.growth_accounts_receivables
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_inventory",
             self.growth_inventory.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_accounts_payables",
             self.growth_accounts_payables
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_working_capital",
             self.growth_other_working_capital
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_non_cash_items",
             self.growth_other_non_cash_items
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_cash_provided_by_operating_activities",
             self.growth_net_cash_provided_by_operating_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_investments_in_property_plant_and_equipment",
             self.growth_investments_in_property_plant_and_equipment
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_acquisitions_net",
             self.growth_acquisitions_net.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_purchases_of_investments",
             self.growth_purchases_of_investments
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_sales_maturities_of_investments",
             self.growth_sales_maturities_of_investments
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_investing_activities",
             self.growth_other_investing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_cash_used_for_investing_activities",
             self.growth_net_cash_used_for_investing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_debt_repayment",
             self.growth_debt_repayment.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_common_stock_issued",
             self.growth_common_stock_issued
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_common_stock_repurchased",
             self.growth_common_stock_repurchased
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_dividends_paid",
             self.growth_dividends_paid.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_other_financing_activities",
             self.growth_other_financing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_cash_used_provided_by_financing_activities",
             self.growth_net_cash_used_provided_by_financing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_effect_of_forex_changes_on_cash",
             self.growth_effect_of_forex_changes_on_cash
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_change_in_cash",
             self.growth_net_change_in_cash
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_cash_at_end_of_period",
             self.growth_cash_at_end_of_period
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_cash_at_beginning_of_period",
             self.growth_cash_at_beginning_of_period
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_operating_cash_flow",
             self.growth_operating_cash_flow
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_capital_expenditure",
             self.growth_capital_expenditure
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_free_cash_flow",
             self.growth_free_cash_flow.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_debt_issuance",
             self.growth_net_debt_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_long_term_net_debt_issuance",
             self.growth_long_term_net_debt_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_short_term_net_debt_issuance",
             self.growth_short_term_net_debt_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_net_stock_issuance",
             self.growth_net_stock_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_preferred_dividends_paid",
             self.growth_preferred_dividends_paid
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_income_taxes_paid",
             self.growth_income_taxes_paid
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "growth_interest_paid",
             self.growth_interest_paid.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

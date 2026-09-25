@@ -12,6 +12,8 @@ __all__ = [
 
 @typing.final
 class BulkIncomeStatement:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -90,8 +92,10 @@ class BulkIncomeStatement:
     def weighted_average_shs_out(self) -> builtins.str: ...
     @property
     def weighted_average_shs_out_dil(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         symbol: builtins.str,
         reported_currency: builtins.str,
@@ -132,11 +136,13 @@ class BulkIncomeStatement:
         weighted_average_shs_out: builtins.str,
         weighted_average_shs_out_dil: builtins.str,
     ) -> BulkIncomeStatement: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BulkIncomeStatementGrowth:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -205,8 +211,10 @@ class BulkIncomeStatementGrowth:
     def growth_other_adjustments_to_net_income(self) -> builtins.str: ...
     @property
     def growth_net_income_deductions(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
@@ -242,4 +250,4 @@ class BulkIncomeStatementGrowth:
         growth_other_adjustments_to_net_income: builtins.str,
         growth_net_income_deductions: builtins.str,
     ) -> BulkIncomeStatementGrowth: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

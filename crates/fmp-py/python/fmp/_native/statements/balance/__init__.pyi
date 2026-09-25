@@ -13,6 +13,8 @@ __all__ = [
 
 @typing.final
 class BalanceSheetStatement:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -135,8 +137,10 @@ class BalanceSheetStatement:
     def total_debt(self) -> builtins.float: ...
     @property
     def net_debt(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         symbol: builtins.str,
         reported_currency: builtins.str,
@@ -199,11 +203,13 @@ class BalanceSheetStatement:
         total_debt: builtins.float,
         net_debt: builtins.float,
     ) -> BalanceSheetStatement: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class BalanceSheetStatementTtm:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -324,8 +330,10 @@ class BalanceSheetStatementTtm:
     def total_debt(self) -> builtins.float: ...
     @property
     def net_debt(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         symbol: builtins.str,
         reported_currency: builtins.str,
@@ -387,7 +395,7 @@ class BalanceSheetStatementTtm:
         total_debt: builtins.float,
         net_debt: builtins.float,
     ) -> BalanceSheetStatementTtm: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

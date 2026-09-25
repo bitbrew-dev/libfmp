@@ -95,6 +95,8 @@ class ForexNamespace:
 
 @typing.final
 class ForexPair:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -105,12 +107,14 @@ class ForexPair:
     def from_name(self) -> builtins.str: ...
     @property
     def to_name(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         from_currency: builtins.str,
         to_currency: builtins.str,
         from_name: builtins.str,
         to_name: builtins.str,
     ) -> ForexPair: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

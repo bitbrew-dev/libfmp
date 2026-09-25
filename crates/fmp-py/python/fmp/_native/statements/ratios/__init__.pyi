@@ -13,6 +13,8 @@ __all__ = [
 
 @typing.final
 class FinancialRatios:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -145,8 +147,10 @@ class FinancialRatios:
     def enterprise_value_multiple(self) -> builtins.float: ...
     @property
     def dividend_per_share(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
@@ -214,11 +218,13 @@ class FinancialRatios:
         enterprise_value_multiple: builtins.float,
         dividend_per_share: builtins.float,
     ) -> FinancialRatios: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class FinancialRatiosTtm:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -343,8 +349,10 @@ class FinancialRatiosTtm:
     def enterprise_value_multiple_ttm(self) -> builtins.float: ...
     @property
     def dividend_per_share_ttm(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         gross_profit_margin_ttm: builtins.float,
         ebit_margin_ttm: builtins.float,
@@ -408,7 +416,7 @@ class FinancialRatiosTtm:
         enterprise_value_multiple_ttm: builtins.float,
         dividend_per_share_ttm: builtins.float,
     ) -> FinancialRatiosTtm: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

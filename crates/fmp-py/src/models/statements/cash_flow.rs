@@ -2,12 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.cash_flow", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.statements.cash_flow",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CashFlowStatement {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -111,7 +116,7 @@ impl CashFlowStatement {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, net_income, depreciation_and_amortization, deferred_income_tax, stock_based_compensation, change_in_working_capital, accounts_receivables, inventory, accounts_payables, other_working_capital, other_non_cash_items, net_cash_provided_by_operating_activities, investments_in_property_plant_and_equipment, acquisitions_net, purchases_of_investments, sales_maturities_of_investments, other_investing_activities, net_cash_provided_by_investing_activities, net_debt_issuance, long_term_net_debt_issuance, short_term_net_debt_issuance, net_stock_issuance, net_common_stock_issuance, common_stock_issuance, common_stock_repurchased, net_preferred_stock_issuance, net_dividends_paid, common_dividends_paid, preferred_dividends_paid, other_financing_activities, net_cash_provided_by_financing_activities, effect_of_forex_changes_on_cash, net_change_in_cash, cash_at_end_of_period, cash_at_beginning_of_period, operating_cash_flow, capital_expenditure, free_cash_flow, income_taxes_paid, interest_paid))]
+    #[pyo3(signature = (*, date, symbol, reported_currency, cik, filing_date, accepted_date, fiscal_year, period, net_income, depreciation_and_amortization, deferred_income_tax, stock_based_compensation, change_in_working_capital, accounts_receivables, inventory, accounts_payables, other_working_capital, other_non_cash_items, net_cash_provided_by_operating_activities, investments_in_property_plant_and_equipment, acquisitions_net, purchases_of_investments, sales_maturities_of_investments, other_investing_activities, net_cash_provided_by_investing_activities, net_debt_issuance, long_term_net_debt_issuance, short_term_net_debt_issuance, net_stock_issuance, net_common_stock_issuance, common_stock_issuance, common_stock_repurchased, net_preferred_stock_issuance, net_dividends_paid, common_dividends_paid, preferred_dividends_paid, other_financing_activities, net_cash_provided_by_financing_activities, effect_of_forex_changes_on_cash, net_change_in_cash, cash_at_end_of_period, cash_at_beginning_of_period, operating_cash_flow, capital_expenditure, free_cash_flow, income_taxes_paid, interest_paid))]
     fn new(
         date: ::chrono::NaiveDate,
         symbol: String,
@@ -212,96 +217,224 @@ impl CashFlowStatement {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "reported_currency",
             self.reported_currency.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
-            self.net_income.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("net_income", self.net_income.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "depreciation_and_amortization",
             self.depreciation_and_amortization
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "deferred_income_tax",
             self.deferred_income_tax.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "stock_based_compensation",
             self.stock_based_compensation
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "change_in_working_capital",
             self.change_in_working_capital
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accounts_receivables",
             self.accounts_receivables.clone().into_bound_py_any(py)?,
-            self.inventory.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("inventory", self.inventory.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "accounts_payables",
             self.accounts_payables.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_working_capital",
             self.other_working_capital.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_non_cash_items",
             self.other_non_cash_items.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_cash_provided_by_operating_activities",
             self.net_cash_provided_by_operating_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "investments_in_property_plant_and_equipment",
             self.investments_in_property_plant_and_equipment
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "acquisitions_net",
             self.acquisitions_net.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "purchases_of_investments",
             self.purchases_of_investments
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "sales_maturities_of_investments",
             self.sales_maturities_of_investments
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_investing_activities",
             self.other_investing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_cash_provided_by_investing_activities",
             self.net_cash_provided_by_investing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_debt_issuance",
             self.net_debt_issuance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "long_term_net_debt_issuance",
             self.long_term_net_debt_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "short_term_net_debt_issuance",
             self.short_term_net_debt_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_stock_issuance",
             self.net_stock_issuance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_common_stock_issuance",
             self.net_common_stock_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "common_stock_issuance",
             self.common_stock_issuance.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "common_stock_repurchased",
             self.common_stock_repurchased
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_preferred_stock_issuance",
             self.net_preferred_stock_issuance
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_dividends_paid",
             self.net_dividends_paid.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "common_dividends_paid",
             self.common_dividends_paid.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "preferred_dividends_paid",
             self.preferred_dividends_paid
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_financing_activities",
             self.other_financing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_cash_provided_by_financing_activities",
             self.net_cash_provided_by_financing_activities
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "effect_of_forex_changes_on_cash",
             self.effect_of_forex_changes_on_cash
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "net_change_in_cash",
             self.net_change_in_cash.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_at_end_of_period",
             self.cash_at_end_of_period.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "cash_at_beginning_of_period",
             self.cash_at_beginning_of_period
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "operating_cash_flow",
             self.operating_cash_flow.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "capital_expenditure",
             self.capital_expenditure.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "free_cash_flow",
             self.free_cash_flow.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "income_taxes_paid",
             self.income_taxes_paid.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "interest_paid",
             self.interest_paid.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

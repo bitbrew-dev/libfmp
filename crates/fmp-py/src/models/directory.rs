@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CompanySymbol {
     #[pyo3(get)]
     pub symbol: String,
@@ -21,7 +21,7 @@ impl CompanySymbol {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, company_name))]
+    #[pyo3(signature = (*, symbol, company_name))]
     fn new(symbol: String, company_name: String) -> Self {
         Self {
             symbol,
@@ -29,13 +29,21 @@ impl CompanySymbol {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -49,8 +57,8 @@ impl From<libfmp::responses::directory::CompanySymbol> for CompanySymbol {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct FinancialStatementSymbol {
     #[pyo3(get)]
     pub symbol: String,
@@ -68,7 +76,7 @@ impl FinancialStatementSymbol {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, company_name, trading_currency, reporting_currency))]
+    #[pyo3(signature = (*, symbol, company_name, trading_currency, reporting_currency))]
     fn new(
         symbol: String,
         company_name: String,
@@ -83,15 +91,29 @@ impl FinancialStatementSymbol {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "trading_currency",
             self.trading_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "reporting_currency",
             self.reporting_currency.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -107,8 +129,8 @@ impl From<libfmp::responses::directory::FinancialStatementSymbol> for FinancialS
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CikListing {
     #[pyo3(get)]
     pub cik: String,
@@ -122,18 +144,26 @@ impl CikListing {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (cik, company_name))]
+    #[pyo3(signature = (*, cik, company_name))]
     fn new(cik: String, company_name: String) -> Self {
         Self { cik, company_name }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -147,8 +177,8 @@ impl From<libfmp::responses::directory::CikListing> for CikListing {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SymbolChange {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -166,7 +196,7 @@ impl SymbolChange {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, company_name, old_symbol, new_symbol))]
+    #[pyo3(signature = (*, date, company_name, old_symbol, new_symbol))]
     fn new(
         date: ::chrono::NaiveDate,
         company_name: String,
@@ -181,15 +211,23 @@ impl SymbolChange {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
-            self.old_symbol.clone().into_bound_py_any(py)?,
-            self.new_symbol.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("old_symbol", self.old_symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("new_symbol", self.new_symbol.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -205,8 +243,8 @@ impl From<libfmp::responses::directory::SymbolChange> for SymbolChange {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EtfSymbol {
     #[pyo3(get)]
     pub symbol: String,
@@ -220,18 +258,23 @@ impl EtfSymbol {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name))]
+    #[pyo3(signature = (*, symbol, name))]
     fn new(symbol: String, name: String) -> Self {
         Self { symbol, name }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -245,8 +288,8 @@ impl From<libfmp::responses::directory::EtfSymbol> for EtfSymbol {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct ActivelyTradingSymbol {
     #[pyo3(get)]
     pub symbol: String,
@@ -260,18 +303,23 @@ impl ActivelyTradingSymbol {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name))]
+    #[pyo3(signature = (*, symbol, name))]
     fn new(symbol: String, name: String) -> Self {
         Self { symbol, name }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -285,8 +333,8 @@ impl From<libfmp::responses::directory::ActivelyTradingSymbol> for ActivelyTradi
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EarningsTranscriptAvailability {
     #[pyo3(get)]
     pub symbol: String,
@@ -302,7 +350,7 @@ impl EarningsTranscriptAvailability {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, company_name, no_of_transcripts))]
+    #[pyo3(signature = (*, symbol, company_name, no_of_transcripts))]
     fn new(symbol: String, company_name: String, no_of_transcripts: String) -> Self {
         Self {
             symbol,
@@ -311,14 +359,25 @@ impl EarningsTranscriptAvailability {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "company_name",
             self.company_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "no_of_transcripts",
             self.no_of_transcripts.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -335,8 +394,8 @@ impl From<libfmp::responses::directory::EarningsTranscriptAvailability>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct AvailableExchange {
     #[pyo3(get)]
     pub exchange: String,
@@ -358,7 +417,7 @@ impl AvailableExchange {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (exchange, name, country_name, country_code, symbol_suffix, delay))]
+    #[pyo3(signature = (*, exchange, name, country_name, country_code, symbol_suffix, delay))]
     fn new(
         exchange: String,
         name: String,
@@ -377,17 +436,31 @@ impl AvailableExchange {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "country_name",
             self.country_name.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "country_code",
             self.country_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "symbol_suffix",
             self.symbol_suffix.clone().into_bound_py_any(py)?,
-            self.delay.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("delay", self.delay.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -405,8 +478,8 @@ impl From<libfmp::responses::directory::AvailableExchange> for AvailableExchange
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct AvailableSector {
     #[pyo3(get)]
     pub sector: String,
@@ -418,15 +491,22 @@ impl AvailableSector {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (sector))]
+    #[pyo3(signature = (*, sector))]
     fn new(sector: String) -> Self {
         Self { sector }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![self.sector.clone().into_bound_py_any(py)?];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("sector", self.sector.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -439,8 +519,8 @@ impl From<libfmp::responses::directory::AvailableSector> for AvailableSector {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct AvailableIndustry {
     #[pyo3(get)]
     pub industry: String,
@@ -452,15 +532,22 @@ impl AvailableIndustry {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (industry))]
+    #[pyo3(signature = (*, industry))]
     fn new(industry: String) -> Self {
         Self { industry }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![self.industry.clone().into_bound_py_any(py)?];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("industry", self.industry.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -473,8 +560,8 @@ impl From<libfmp::responses::directory::AvailableIndustry> for AvailableIndustry
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.directory", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct AvailableCountry {
     #[pyo3(get)]
     pub country: String,
@@ -486,15 +573,22 @@ impl AvailableCountry {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (country))]
+    #[pyo3(signature = (*, country))]
     fn new(country: String) -> Self {
         Self { country }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![self.country.clone().into_bound_py_any(py)?];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("country", self.country.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

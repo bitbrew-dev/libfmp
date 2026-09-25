@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.sec_filings", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.sec_filings", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SecFiling {
     #[pyo3(get)]
     pub symbol: String,
@@ -33,7 +33,7 @@ impl SecFiling {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, cik, filing_date, accepted_date, form_type, has_financials, link, final_link))]
+    #[pyo3(signature = (*, symbol, cik, filing_date, accepted_date, form_type, has_financials, link, final_link))]
     fn new(
         symbol: String,
         cik: String,
@@ -56,19 +56,33 @@ impl SecFiling {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "filing_date",
             self.filing_date.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "accepted_date",
             self.accepted_date.clone().into_bound_py_any(py)?,
-            self.form_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("form_type", self.form_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "has_financials",
             self.has_financials.clone().into_bound_py_any(py)?,
-            self.link.clone().into_bound_py_any(py)?,
-            self.final_link.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("link", self.link.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("final_link", self.final_link.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -88,8 +102,8 @@ impl From<libfmp::responses::sec_filings::SecFiling> for SecFiling {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.sec_filings", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.sec_filings", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SecCompanySearchResult {
     #[pyo3(get)]
     pub symbol: String,
@@ -113,7 +127,7 @@ impl SecCompanySearchResult {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, cik, sic_code, industry_title, business_address, phone_number))]
+    #[pyo3(signature = (*, symbol, name, cik, sic_code, industry_title, business_address, phone_number))]
     fn new(
         symbol: String,
         name: String,
@@ -134,18 +148,32 @@ impl SecCompanySearchResult {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
-            self.sic_code.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sic_code", self.sic_code.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "industry_title",
             self.industry_title.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "business_address",
             self.business_address.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "phone_number",
             self.phone_number.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -164,8 +192,8 @@ impl From<libfmp::responses::sec_filings::SecCompanySearchResult> for SecCompany
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.sec_filings", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.sec_filings", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SecCompanyProfile {
     #[pyo3(get)]
     pub symbol: String,
@@ -244,7 +272,7 @@ impl SecCompanyProfile {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, cik, registrant_name, sic_code, sic_description, sic_group, isin, business_address, mailing_address, phone_number, postal_code, city, state, country, description, ceo, website, exchange, state_location, state_of_incorporation, fiscal_year_end, ipo_date, employees, sec_filings_url, tax_identification_number, fifty_two_week_range, is_active, asset_type, open_figi_composite, price_currency, market_sector, security_type, is_etf, is_adr, is_fund))]
+    #[pyo3(signature = (*, symbol, cik, registrant_name, sic_code, sic_description, sic_group, isin, business_address, mailing_address, phone_number, postal_code, city, state, country, description, ceo, website, exchange, state_location, state_of_incorporation, fiscal_year_end, ipo_date, employees, sec_filings_url, tax_identification_number, fifty_two_week_range, is_active, asset_type, open_figi_composite, price_currency, market_sector, security_type, is_etf, is_adr, is_fund))]
     fn new(
         symbol: String,
         cik: String,
@@ -331,42 +359,98 @@ impl SecCompanyProfile {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.cik.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("cik", self.cik.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "registrant_name",
             self.registrant_name.clone().into_bound_py_any(py)?,
-            self.sic_code.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("sic_code", self.sic_code.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "sic_description",
             self.sic_description.clone().into_bound_py_any(py)?,
-            self.sic_group.clone().into_bound_py_any(py)?,
-            self.isin.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("sic_group", self.sic_group.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("isin", self.isin.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "business_address",
             self.business_address.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "mailing_address",
             self.mailing_address.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "phone_number",
             self.phone_number.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "postal_code",
             self.postal_code.clone().into_bound_py_any(py)?,
-            self.city.clone().into_bound_py_any(py)?,
-            self.state.clone().into_bound_py_any(py)?,
-            self.country.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("city", self.city.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("state", self.state.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("country", self.country.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "description",
             self.description.clone().into_bound_py_any(py)?,
-            self.ceo.clone().into_bound_py_any(py)?,
-            self.website.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ceo", self.ceo.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("website", self.website.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "state_location",
             self.state_location.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "state_of_incorporation",
             self.state_of_incorporation.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fiscal_year_end",
             self.fiscal_year_end.clone().into_bound_py_any(py)?,
-            self.ipo_date.clone().into_bound_py_any(py)?,
-            self.employees.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("ipo_date", self.ipo_date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("employees", self.employees.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "sec_filings_url",
             self.sec_filings_url.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "tax_identification_number",
             self.tax_identification_number
                 .clone()
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "fifty_two_week_range",
             self.fifty_two_week_range.clone().into_bound_py_any(py)?,
-            self.is_active.clone().into_bound_py_any(py)?,
-            self.asset_type.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("is_active", self.is_active.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("asset_type", self.asset_type.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "open_figi_composite",
             self.open_figi_composite.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "price_currency",
             self.price_currency.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "market_sector",
             self.market_sector.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "security_type",
             self.security_type
                 .as_ref()
                 .map(::serde_json::to_string)
@@ -377,11 +461,11 @@ impl SecCompanyProfile {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-            self.is_etf.clone().into_bound_py_any(py)?,
-            self.is_adr.clone().into_bound_py_any(py)?,
-            self.is_fund.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("is_etf", self.is_etf.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("is_adr", self.is_adr.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("is_fund", self.is_fund.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]
@@ -436,8 +520,8 @@ impl From<libfmp::responses::sec_filings::SecCompanyProfile> for SecCompanyProfi
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.sec_filings", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.sec_filings", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SicClassification {
     #[pyo3(get)]
     pub office: String,
@@ -453,7 +537,7 @@ impl SicClassification {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (office, sic_code, industry_title))]
+    #[pyo3(signature = (*, office, sic_code, industry_title))]
     fn new(office: String, sic_code: String, industry_title: String) -> Self {
         Self {
             office,
@@ -462,14 +546,22 @@ impl SicClassification {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.office.clone().into_bound_py_any(py)?,
-            self.sic_code.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("office", self.office.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sic_code", self.sic_code.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "industry_title",
             self.industry_title.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

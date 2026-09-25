@@ -14,6 +14,8 @@ __all__ = [
 
 @typing.final
 class EarningsTranscript:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -24,33 +26,40 @@ class EarningsTranscript:
     def date(self) -> datetime.date: ...
     @property
     def content(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         period: builtins.str,
         year: builtins.int,
         date: datetime.date,
         content: builtins.str,
     ) -> EarningsTranscript: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EarningsTranscriptDate:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def quarter(self) -> builtins.int: ...
     @property
     def fiscal_year(self) -> builtins.int: ...
     @property
     def date(self) -> datetime.date: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, quarter: builtins.int, fiscal_year: builtins.int, date: datetime.date
+        cls, *, quarter: builtins.int, fiscal_year: builtins.int, date: datetime.date
     ) -> EarningsTranscriptDate: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class LatestEarningsTranscript:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -59,14 +68,16 @@ class LatestEarningsTranscript:
     def fiscal_year(self) -> builtins.int: ...
     @property
     def date(self) -> datetime.date: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         period: builtins.str,
         fiscal_year: builtins.int,
         date: datetime.date,
     ) -> LatestEarningsTranscript: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

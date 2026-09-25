@@ -2,14 +2,14 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 /// NOTE: field `link_json` is a secret URL: it is stored privately and is only readable through its explicit `expose_secret_*` accessor.
 /// NOTE: field `link_xlsx` is a secret URL: it is stored privately and is only readable through its explicit `expose_secret_*` accessor.
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.reports", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.reports", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct FinancialReportDate {
     #[pyo3(get)]
     pub symbol: String,
@@ -27,7 +27,7 @@ impl FinancialReportDate {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, fiscal_year, period, link_json, link_xlsx))]
+    #[pyo3(signature = (*, symbol, fiscal_year, period, link_json, link_xlsx))]
     fn new(
         symbol: String,
         fiscal_year: u32,
@@ -44,16 +44,24 @@ impl FinancialReportDate {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "fiscal_year",
             self.fiscal_year.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
-            self.link_json.clone().into_bound_py_any(py)?,
-            self.link_xlsx.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("link_json", self.link_json.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("link_xlsx", self.link_xlsx.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -70,8 +78,8 @@ impl From<libfmp::responses::statements::reports::FinancialReportDate> for Finan
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.statements.reports", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.statements.reports", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct FinancialReportJson {
     #[pyo3(get)]
     pub symbol: String,
@@ -88,7 +96,7 @@ impl FinancialReportJson {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, period, year, sections))]
+    #[pyo3(signature = (*, symbol, period, year, sections))]
     fn new(symbol: String, period: String, year: String, sections: String) -> PyResult<Self> {
         let sections =
             ::serde_json::from_str::<::serde_json::Map<String, ::serde_json::Value>>(&sections)
@@ -105,12 +113,20 @@ impl FinancialReportJson {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.period.clone().into_bound_py_any(py)?,
-            self.year.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("period", self.period.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year", self.year.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "sections",
             ::serde_json::to_string(&self.sections)
                 .map_err(|error| {
                     ::pyo3::exceptions::PyValueError::new_err(format!(
@@ -118,8 +134,8 @@ impl FinancialReportJson {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]

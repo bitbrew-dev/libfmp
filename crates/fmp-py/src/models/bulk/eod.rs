@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.bulk.eod", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.bulk.eod", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct BulkEodBar {
     #[pyo3(get)]
     pub symbol: String,
@@ -33,7 +33,7 @@ impl BulkEodBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, date, open, low, high, close, adj_close, volume))]
+    #[pyo3(signature = (*, symbol, date, open, low, high, close, adj_close, volume))]
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
@@ -56,19 +56,24 @@ impl BulkEodBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.adj_close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("adj_close", self.adj_close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

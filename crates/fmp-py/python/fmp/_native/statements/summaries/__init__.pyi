@@ -15,6 +15,8 @@ __all__ = [
 
 @typing.final
 class EnterpriseValue:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -31,8 +33,10 @@ class EnterpriseValue:
     def add_total_debt(self) -> builtins.float: ...
     @property
     def enterprise_value(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         stock_price: builtins.float,
@@ -42,11 +46,13 @@ class EnterpriseValue:
         add_total_debt: builtins.float,
         enterprise_value: builtins.float,
     ) -> EnterpriseValue: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class FinancialScore:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -69,8 +75,10 @@ class FinancialScore:
     def total_liabilities(self) -> builtins.float: ...
     @property
     def revenue(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         reported_currency: builtins.str,
         altman_z_score: builtins.float,
@@ -83,11 +91,13 @@ class FinancialScore:
         total_liabilities: builtins.float,
         revenue: builtins.float,
     ) -> FinancialScore: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class LatestFinancialStatement:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -98,19 +108,23 @@ class LatestFinancialStatement:
     def date(self) -> datetime.date: ...
     @property
     def date_added(self) -> datetime.datetime: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         calendar_year: builtins.int,
         period: builtins.str,
         date: datetime.date,
         date_added: datetime.datetime,
     ) -> LatestFinancialStatement: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class OwnerEarnings:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -131,8 +145,10 @@ class OwnerEarnings:
     def growth_capex(self) -> builtins.float: ...
     @property
     def owners_earnings_per_share(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         reported_currency: builtins.str,
         fiscal_year: builtins.str,
@@ -144,7 +160,7 @@ class OwnerEarnings:
         growth_capex: builtins.float,
         owners_earnings_per_share: builtins.float,
     ) -> OwnerEarnings: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final

@@ -2,12 +2,17 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct SimpleMovingAverageBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -31,7 +36,7 @@ impl SimpleMovingAverageBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, sma))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, sma))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -52,18 +57,23 @@ impl SimpleMovingAverageBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.sma.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("sma", self.sma.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -84,8 +94,13 @@ impl From<libfmp::responses::technical_indicators::SimpleMovingAverageBar>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct ExponentialMovingAverageBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -109,7 +124,7 @@ impl ExponentialMovingAverageBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, ema))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, ema))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -130,18 +145,23 @@ impl ExponentialMovingAverageBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.ema.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("ema", self.ema.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -162,8 +182,13 @@ impl From<libfmp::responses::technical_indicators::ExponentialMovingAverageBar>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct WeightedMovingAverageBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -187,7 +212,7 @@ impl WeightedMovingAverageBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, wma))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, wma))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -208,18 +233,23 @@ impl WeightedMovingAverageBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.wma.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("wma", self.wma.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -240,8 +270,13 @@ impl From<libfmp::responses::technical_indicators::WeightedMovingAverageBar>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct DoubleExponentialMovingAverageBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -265,7 +300,7 @@ impl DoubleExponentialMovingAverageBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, dema))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, dema))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -286,18 +321,23 @@ impl DoubleExponentialMovingAverageBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.dema.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("dema", self.dema.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -320,8 +360,13 @@ impl From<libfmp::responses::technical_indicators::DoubleExponentialMovingAverag
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TripleExponentialMovingAverageBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -345,7 +390,7 @@ impl TripleExponentialMovingAverageBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, tema))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, tema))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -366,18 +411,23 @@ impl TripleExponentialMovingAverageBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.tema.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("tema", self.tema.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -400,8 +450,13 @@ impl From<libfmp::responses::technical_indicators::TripleExponentialMovingAverag
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct RelativeStrengthIndexBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -425,7 +480,7 @@ impl RelativeStrengthIndexBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, rsi))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, rsi))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -446,18 +501,23 @@ impl RelativeStrengthIndexBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.rsi.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("rsi", self.rsi.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -478,8 +538,13 @@ impl From<libfmp::responses::technical_indicators::RelativeStrengthIndexBar>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct StandardDeviationBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -503,7 +568,7 @@ impl StandardDeviationBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, standard_deviation))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, standard_deviation))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -524,18 +589,26 @@ impl StandardDeviationBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "standard_deviation",
             self.standard_deviation.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -554,8 +627,13 @@ impl From<libfmp::responses::technical_indicators::StandardDeviationBar> for Sta
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct WilliamsBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -579,7 +657,7 @@ impl WilliamsBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, williams))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, williams))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -600,18 +678,23 @@ impl WilliamsBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.williams.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("williams", self.williams.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -630,8 +713,13 @@ impl From<libfmp::responses::technical_indicators::WilliamsBar> for WilliamsBar 
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.technical_indicators", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(
+    module = "fmp._native.technical_indicators",
+    frozen,
+    eq,
+    from_py_object
+)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct AverageDirectionalIndexBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -655,7 +743,7 @@ impl AverageDirectionalIndexBar {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, open, high, low, close, volume, adx))]
+    #[pyo3(signature = (*, date, open, high, low, close, volume, adx))]
     fn new(
         date: ::chrono::NaiveDateTime,
         open: f64,
@@ -676,18 +764,23 @@ impl AverageDirectionalIndexBar {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.open.clone().into_bound_py_any(py)?,
-            self.high.clone().into_bound_py_any(py)?,
-            self.low.clone().into_bound_py_any(py)?,
-            self.close.clone().into_bound_py_any(py)?,
-            self.volume.clone().into_bound_py_any(py)?,
-            self.adx.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("open", self.open.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("high", self.high.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("low", self.low.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("close", self.close.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("volume", self.volume.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("adx", self.adx.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

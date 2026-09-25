@@ -15,6 +15,8 @@ __all__ = [
 
 @typing.final
 class EconomicCalendarEvent:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -37,8 +39,10 @@ class EconomicCalendarEvent:
     def change_percentage(self) -> builtins.float: ...
     @property
     def unit(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         country: builtins.str,
         event: builtins.str,
@@ -51,21 +55,24 @@ class EconomicCalendarEvent:
         change_percentage: builtins.float,
         unit: builtins.str,
     ) -> EconomicCalendarEvent: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class EconomicIndicatorObservation:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def name(self) -> builtins.str: ...
     @property
     def date(self) -> datetime.date: ...
     @property
     def value(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, name: builtins.str, date: datetime.date, value: builtins.float
+        cls, *, name: builtins.str, date: datetime.date, value: builtins.float
     ) -> EconomicIndicatorObservation: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -114,6 +121,8 @@ class EconomicsNamespace:
 
 @typing.final
 class MarketRiskPremium:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def country(self) -> builtins.str: ...
     @property
@@ -122,18 +131,22 @@ class MarketRiskPremium:
     def country_risk_premium(self) -> builtins.float: ...
     @property
     def total_equity_risk_premium(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         country: builtins.str,
         continent: builtins.str,
         country_risk_premium: builtins.float,
         total_equity_risk_premium: builtins.float,
     ) -> MarketRiskPremium: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class TreasuryRate:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -160,8 +173,10 @@ class TreasuryRate:
     def year_20(self) -> builtins.float: ...
     @property
     def year_30(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.date,
         month_1: builtins.float,
         month_2: builtins.float,
@@ -176,4 +191,4 @@ class TreasuryRate:
         year_20: builtins.float,
         year_30: builtins.float,
     ) -> TreasuryRate: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

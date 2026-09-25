@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.commodities", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.commodities", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct CommodityListing {
     #[pyo3(get)]
     pub symbol: String,
@@ -27,7 +27,7 @@ impl CommodityListing {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (symbol, name, exchange, trade_month, currency))]
+    #[pyo3(signature = (*, symbol, name, exchange, trade_month, currency))]
     fn new(
         symbol: String,
         name: String,
@@ -44,16 +44,24 @@ impl CommodityListing {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.symbol.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.exchange.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("symbol", self.symbol.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "trade_month",
             self.trade_month.clone().into_bound_py_any(py)?,
-            self.currency.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

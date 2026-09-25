@@ -11,6 +11,8 @@ __all__ = [
 
 @typing.final
 class CashFlowStatementGrowth:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -97,8 +99,10 @@ class CashFlowStatementGrowth:
     def growth_income_taxes_paid(self) -> builtins.float: ...
     @property
     def growth_interest_paid(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
@@ -142,4 +146,4 @@ class CashFlowStatementGrowth:
         growth_income_taxes_paid: builtins.float,
         growth_interest_paid: builtins.float,
     ) -> CashFlowStatementGrowth: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

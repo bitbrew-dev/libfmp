@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.economics", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.economics", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct TreasuryRate {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
@@ -43,7 +43,7 @@ impl TreasuryRate {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, month_1, month_2, month_3, month_6, year_1, year_2, year_3, year_5, year_7, year_10, year_20, year_30))]
+    #[pyo3(signature = (*, date, month_1, month_2, month_3, month_6, year_1, year_2, year_3, year_5, year_7, year_10, year_20, year_30))]
     fn new(
         date: ::chrono::NaiveDate,
         month_1: f64,
@@ -76,24 +76,29 @@ impl TreasuryRate {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.month_1.clone().into_bound_py_any(py)?,
-            self.month_2.clone().into_bound_py_any(py)?,
-            self.month_3.clone().into_bound_py_any(py)?,
-            self.month_6.clone().into_bound_py_any(py)?,
-            self.year_1.clone().into_bound_py_any(py)?,
-            self.year_2.clone().into_bound_py_any(py)?,
-            self.year_3.clone().into_bound_py_any(py)?,
-            self.year_5.clone().into_bound_py_any(py)?,
-            self.year_7.clone().into_bound_py_any(py)?,
-            self.year_10.clone().into_bound_py_any(py)?,
-            self.year_20.clone().into_bound_py_any(py)?,
-            self.year_30.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("month_1", self.month_1.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("month_2", self.month_2.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("month_3", self.month_3.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("month_6", self.month_6.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_1", self.year_1.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_2", self.year_2.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_3", self.year_3.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_5", self.year_5.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_7", self.year_7.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_10", self.year_10.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_20", self.year_20.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("year_30", self.year_30.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -118,8 +123,8 @@ impl From<libfmp::responses::economics::TreasuryRate> for TreasuryRate {
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.economics", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.economics", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EconomicIndicatorObservation {
     #[pyo3(get)]
     pub name: String,
@@ -135,19 +140,24 @@ impl EconomicIndicatorObservation {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (name, date, value))]
+    #[pyo3(signature = (*, name, date, value))]
     fn new(name: String, date: ::chrono::NaiveDate, value: f64) -> Self {
         Self { name, date, value }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.name.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.value.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("value", self.value.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -164,8 +174,8 @@ impl From<libfmp::responses::economics::EconomicIndicatorObservation>
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.economics", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.economics", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct EconomicCalendarEvent {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
@@ -197,7 +207,7 @@ impl EconomicCalendarEvent {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (date, country, event, currency, previous, estimate, actual, change, impact, change_percentage, unit))]
+    #[pyo3(signature = (*, date, country, event, currency, previous, estimate, actual, change, impact, change_percentage, unit))]
     fn new(
         date: ::chrono::NaiveDateTime,
         country: String,
@@ -226,22 +236,30 @@ impl EconomicCalendarEvent {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.date.clone().into_bound_py_any(py)?,
-            self.country.clone().into_bound_py_any(py)?,
-            self.event.clone().into_bound_py_any(py)?,
-            self.currency.clone().into_bound_py_any(py)?,
-            self.previous.clone().into_bound_py_any(py)?,
-            self.estimate.clone().into_bound_py_any(py)?,
-            self.actual.clone().into_bound_py_any(py)?,
-            self.change.clone().into_bound_py_any(py)?,
-            self.impact.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("country", self.country.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("event", self.event.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("currency", self.currency.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("previous", self.previous.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("estimate", self.estimate.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("actual", self.actual.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("change", self.change.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("impact", self.impact.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "change_percentage",
             self.change_percentage.clone().into_bound_py_any(py)?,
-            self.unit.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        kwargs.set_item("unit", self.unit.clone().into_bound_py_any(py)?)?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -264,8 +282,8 @@ impl From<libfmp::responses::economics::EconomicCalendarEvent> for EconomicCalen
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.economics", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.economics", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct MarketRiskPremium {
     #[pyo3(get)]
     pub country: String,
@@ -283,7 +301,7 @@ impl MarketRiskPremium {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (country, continent, country_risk_premium, total_equity_risk_premium))]
+    #[pyo3(signature = (*, country, continent, country_risk_premium, total_equity_risk_premium))]
     fn new(
         country: String,
         continent: String,
@@ -298,17 +316,28 @@ impl MarketRiskPremium {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.country.clone().into_bound_py_any(py)?,
-            self.continent.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("country", self.country.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("continent", self.continent.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "country_risk_premium",
             self.country_risk_premium.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "total_equity_risk_premium",
             self.total_equity_risk_premium
                 .clone()
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 

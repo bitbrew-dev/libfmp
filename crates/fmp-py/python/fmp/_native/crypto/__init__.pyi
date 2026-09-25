@@ -95,6 +95,8 @@ class CryptoNamespace:
 
 @typing.final
 class CryptocurrencyListing:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -107,8 +109,10 @@ class CryptocurrencyListing:
     def circulating_supply(self) -> builtins.float: ...
     @property
     def total_supply(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         exchange: builtins.str,
@@ -116,4 +120,4 @@ class CryptocurrencyListing:
         circulating_supply: builtins.float,
         total_supply: builtins.float,
     ) -> CryptocurrencyListing: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

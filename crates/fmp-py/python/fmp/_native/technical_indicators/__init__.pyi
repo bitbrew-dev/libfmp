@@ -20,6 +20,8 @@ __all__ = [
 
 @typing.final
 class AverageDirectionalIndexBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -34,8 +36,10 @@ class AverageDirectionalIndexBar:
     def volume(self) -> builtins.float: ...
     @property
     def adx(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -44,11 +48,13 @@ class AverageDirectionalIndexBar:
         volume: builtins.float,
         adx: builtins.float,
     ) -> AverageDirectionalIndexBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class DoubleExponentialMovingAverageBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -63,8 +69,10 @@ class DoubleExponentialMovingAverageBar:
     def volume(self) -> builtins.float: ...
     @property
     def dema(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -73,11 +81,13 @@ class DoubleExponentialMovingAverageBar:
         volume: builtins.float,
         dema: builtins.float,
     ) -> DoubleExponentialMovingAverageBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class ExponentialMovingAverageBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -92,8 +102,10 @@ class ExponentialMovingAverageBar:
     def volume(self) -> builtins.float: ...
     @property
     def ema(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -102,11 +114,13 @@ class ExponentialMovingAverageBar:
         volume: builtins.float,
         ema: builtins.float,
     ) -> ExponentialMovingAverageBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class RelativeStrengthIndexBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -121,8 +135,10 @@ class RelativeStrengthIndexBar:
     def volume(self) -> builtins.float: ...
     @property
     def rsi(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -131,11 +147,13 @@ class RelativeStrengthIndexBar:
         volume: builtins.float,
         rsi: builtins.float,
     ) -> RelativeStrengthIndexBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class SimpleMovingAverageBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -150,8 +168,10 @@ class SimpleMovingAverageBar:
     def volume(self) -> builtins.float: ...
     @property
     def sma(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -160,11 +180,13 @@ class SimpleMovingAverageBar:
         volume: builtins.float,
         sma: builtins.float,
     ) -> SimpleMovingAverageBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StandardDeviationBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -179,8 +201,10 @@ class StandardDeviationBar:
     def volume(self) -> builtins.float: ...
     @property
     def standard_deviation(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -189,7 +213,7 @@ class StandardDeviationBar:
         volume: builtins.float,
         standard_deviation: builtins.float,
     ) -> StandardDeviationBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -318,6 +342,8 @@ class TechnicalIndicatorsNamespace:
 
 @typing.final
 class TripleExponentialMovingAverageBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -332,8 +358,10 @@ class TripleExponentialMovingAverageBar:
     def volume(self) -> builtins.float: ...
     @property
     def tema(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -342,11 +370,13 @@ class TripleExponentialMovingAverageBar:
         volume: builtins.float,
         tema: builtins.float,
     ) -> TripleExponentialMovingAverageBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class WeightedMovingAverageBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -361,8 +391,10 @@ class WeightedMovingAverageBar:
     def volume(self) -> builtins.float: ...
     @property
     def wma(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -371,11 +403,13 @@ class WeightedMovingAverageBar:
         volume: builtins.float,
         wma: builtins.float,
     ) -> WeightedMovingAverageBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class WilliamsBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def date(self) -> datetime.datetime: ...
     @property
@@ -390,8 +424,10 @@ class WilliamsBar:
     def volume(self) -> builtins.float: ...
     @property
     def williams(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         date: datetime.datetime,
         open: builtins.float,
         high: builtins.float,
@@ -400,4 +436,4 @@ class WilliamsBar:
         volume: builtins.float,
         williams: builtins.float,
     ) -> WilliamsBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

@@ -10,7 +10,7 @@
 //! and `str()` print `[REDACTED URL]` unless the process-wide reveal flag is
 //! on, which is set by `set_reveal_secret_urls(True)` or, at first use, by the
 //! `FMP_REVEAL_SECRET_URLS` environment variable. Pickles carry the real URLs
-//! because `__getnewargs__` must round-trip the value.
+//! because `__getnewargs_ex__` must round-trip the value.
 
 use std::sync::LazyLock;
 use std::sync::atomic::{AtomicBool, Ordering};

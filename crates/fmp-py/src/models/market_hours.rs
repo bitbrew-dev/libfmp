@@ -2,12 +2,12 @@
 
 use pyo3::IntoPyObjectExt;
 use pyo3::prelude::*;
-use pyo3::types::PyTuple;
+use pyo3::types::{PyDict, PyTuple};
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.market_hours", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.market_hours", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct ExchangeMarketHours {
     #[pyo3(get)]
     pub exchange: String,
@@ -29,7 +29,7 @@ impl ExchangeMarketHours {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (exchange, name, opening_hour, closing_hour, timezone, is_market_open))]
+    #[pyo3(signature = (*, exchange, name, opening_hour, closing_hour, timezone, is_market_open))]
     fn new(
         exchange: String,
         name: String,
@@ -48,17 +48,31 @@ impl ExchangeMarketHours {
         }
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "opening_hour",
             self.opening_hour.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "closing_hour",
             self.closing_hour.clone().into_bound_py_any(py)?,
-            self.timezone.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("timezone", self.timezone.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "is_market_open",
             self.is_market_open.clone().into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 }
 
@@ -76,8 +90,8 @@ impl From<libfmp::responses::market_hours::ExchangeMarketHours> for ExchangeMark
 }
 
 #[gen_stub_pyclass]
-#[pyclass(module = "fmp._native.market_hours", frozen, from_py_object)]
-#[derive(Clone)]
+#[pyclass(module = "fmp._native.market_hours", frozen, eq, from_py_object)]
+#[derive(Clone, PartialEq)]
 pub(crate) struct ExchangeHoliday {
     #[pyo3(get)]
     pub exchange: String,
@@ -97,7 +111,7 @@ impl ExchangeHoliday {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (exchange, date, name, is_closed, adj_open_time, adj_close_time))]
+    #[pyo3(signature = (*, exchange, date, name, is_closed, adj_open_time, adj_close_time))]
     fn new(
         exchange: String,
         date: ::chrono::NaiveDate,
@@ -136,13 +150,21 @@ impl ExchangeHoliday {
         })
     }
 
+    #[classattr]
+    const __hash__: Option<Py<PyAny>> = None;
+
     #[allow(clippy::clone_on_copy)]
-    fn __getnewargs__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyTuple>> {
-        let members: Vec<Bound<'py, PyAny>> = vec![
-            self.exchange.clone().into_bound_py_any(py)?,
-            self.date.clone().into_bound_py_any(py)?,
-            self.name.clone().into_bound_py_any(py)?,
-            self.is_closed.clone().into_bound_py_any(py)?,
+    fn __getnewargs_ex__<'py>(
+        &self,
+        py: Python<'py>,
+    ) -> PyResult<(Bound<'py, PyTuple>, Bound<'py, PyDict>)> {
+        let kwargs = PyDict::new(py);
+        kwargs.set_item("exchange", self.exchange.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("date", self.date.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("name", self.name.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item("is_closed", self.is_closed.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "adj_open_time",
             self.adj_open_time
                 .as_ref()
                 .map(::serde_json::to_string)
@@ -153,6 +175,9 @@ impl ExchangeHoliday {
                     ))
                 })?
                 .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "adj_close_time",
             self.adj_close_time
                 .as_ref()
                 .map(::serde_json::to_string)
@@ -163,8 +188,8 @@ impl ExchangeHoliday {
                     ))
                 })?
                 .into_bound_py_any(py)?,
-        ];
-        PyTuple::new(py, members)
+        )?;
+        Ok((PyTuple::empty(py), kwargs))
     }
 
     #[getter]

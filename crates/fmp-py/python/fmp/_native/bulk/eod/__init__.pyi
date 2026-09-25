@@ -11,6 +11,8 @@ __all__ = [
 
 @typing.final
 class BulkEodBar:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -27,8 +29,10 @@ class BulkEodBar:
     def adj_close(self) -> builtins.str: ...
     @property
     def volume(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         open: builtins.str,
@@ -38,4 +42,4 @@ class BulkEodBar:
         adj_close: builtins.str,
         volume: builtins.str,
     ) -> BulkEodBar: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

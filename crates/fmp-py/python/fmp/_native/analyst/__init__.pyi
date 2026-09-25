@@ -83,6 +83,8 @@ class AnalystNamespace:
 
 @typing.final
 class FinancialEstimate:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -127,8 +129,10 @@ class FinancialEstimate:
     def num_analysts_revenue(self) -> builtins.int: ...
     @property
     def num_analysts_eps(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         revenue_low: builtins.float,
@@ -152,11 +156,13 @@ class FinancialEstimate:
         num_analysts_revenue: builtins.int,
         num_analysts_eps: builtins.int,
     ) -> FinancialEstimate: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class HistoricalRating:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -177,8 +183,10 @@ class HistoricalRating:
     def price_to_earnings_score(self) -> builtins.int: ...
     @property
     def price_to_book_score(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         rating: builtins.str,
@@ -190,11 +198,13 @@ class HistoricalRating:
         price_to_earnings_score: builtins.int,
         price_to_book_score: builtins.int,
     ) -> HistoricalRating: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class HistoricalStockGrade:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -209,8 +219,10 @@ class HistoricalStockGrade:
     def analyst_ratings_sell(self) -> builtins.int: ...
     @property
     def analyst_ratings_strong_sell(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         analyst_ratings_strong_buy: builtins.int,
@@ -219,11 +231,13 @@ class HistoricalStockGrade:
         analyst_ratings_sell: builtins.int,
         analyst_ratings_strong_sell: builtins.int,
     ) -> HistoricalStockGrade: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class PriceTargetConsensus:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -234,19 +248,23 @@ class PriceTargetConsensus:
     def target_consensus(self) -> builtins.float: ...
     @property
     def target_median(self) -> builtins.float: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         target_high: builtins.float,
         target_low: builtins.float,
         target_consensus: builtins.float,
         target_median: builtins.float,
     ) -> PriceTargetConsensus: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class PriceTargetSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -267,8 +285,10 @@ class PriceTargetSummary:
     def all_time_avg_price_target(self) -> builtins.float: ...
     @property
     def publishers(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         last_month_count: builtins.int,
         last_month_avg_price_target: builtins.float,
@@ -280,11 +300,13 @@ class PriceTargetSummary:
         all_time_avg_price_target: builtins.float,
         publishers: builtins.str,
     ) -> PriceTargetSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class RatingSnapshot:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -303,8 +325,10 @@ class RatingSnapshot:
     def price_to_earnings_score(self) -> builtins.int: ...
     @property
     def price_to_book_score(self) -> builtins.int: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         rating: builtins.str,
         overall_score: builtins.int,
@@ -315,11 +339,13 @@ class RatingSnapshot:
         price_to_earnings_score: builtins.int,
         price_to_book_score: builtins.int,
     ) -> RatingSnapshot: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockGrade:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -332,8 +358,10 @@ class StockGrade:
     def new_grade(self) -> builtins.str: ...
     @property
     def action(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         date: datetime.date,
         grading_company: builtins.str,
@@ -341,11 +369,13 @@ class StockGrade:
         new_grade: builtins.str,
         action: builtins.str,
     ) -> StockGrade: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class StockGradesSummary:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -360,8 +390,10 @@ class StockGradesSummary:
     def strong_sell(self) -> builtins.int: ...
     @property
     def consensus(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         strong_buy: builtins.int,
         buy: builtins.int,
@@ -370,4 +402,4 @@ class StockGradesSummary:
         strong_sell: builtins.int,
         consensus: builtins.str,
     ) -> StockGradesSummary: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...

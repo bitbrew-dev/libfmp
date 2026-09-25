@@ -15,6 +15,8 @@ __all__ = [
 
 @typing.final
 class SecCompanyProfile:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -85,8 +87,10 @@ class SecCompanyProfile:
     def is_fund(self) -> builtins.bool: ...
     @property
     def security_type(self) -> typing.Any: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         cik: builtins.str,
         registrant_name: builtins.str,
@@ -123,11 +127,13 @@ class SecCompanyProfile:
         is_adr: builtins.bool,
         is_fund: builtins.bool,
     ) -> SecCompanyProfile: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class SecCompanySearchResult:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -142,8 +148,10 @@ class SecCompanySearchResult:
     def business_address(self) -> builtins.str: ...
     @property
     def phone_number(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         name: builtins.str,
         cik: builtins.str,
@@ -152,11 +160,13 @@ class SecCompanySearchResult:
         business_address: builtins.str,
         phone_number: builtins.str,
     ) -> SecCompanySearchResult: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
 class SecFiling:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def symbol(self) -> builtins.str: ...
     @property
@@ -173,8 +183,10 @@ class SecFiling:
     def link(self) -> builtins.str: ...
     @property
     def final_link(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
+        *,
         symbol: builtins.str,
         cik: builtins.str,
         filing_date: datetime.datetime,
@@ -184,7 +196,7 @@ class SecFiling:
         link: builtins.str,
         final_link: builtins.str,
     ) -> SecFiling: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
 
 
 @typing.final
@@ -318,13 +330,20 @@ class SecFilingsNamespace:
 
 @typing.final
 class SicClassification:
+    __hash__: typing.ClassVar[None]  # type: ignore[assignment]
+
     @property
     def office(self) -> builtins.str: ...
     @property
     def sic_code(self) -> builtins.str: ...
     @property
     def industry_title(self) -> builtins.str: ...
+    def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
-        cls, office: builtins.str, sic_code: builtins.str, industry_title: builtins.str
+        cls,
+        *,
+        office: builtins.str,
+        sic_code: builtins.str,
+        industry_title: builtins.str,
     ) -> SicClassification: ...
-    def __getnewargs__(self) -> tuple: ...
+    def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
