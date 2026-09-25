@@ -155,8 +155,8 @@ fn register_commodities(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 
 fn register_company(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "company")?;
-    module.add_class::<crate::models::company::AllSharesFloatRecord>()?;
     module.add_class::<crate::models::company::CompanyExecutive>()?;
+    module.add_class::<crate::models::company::CompanyMarketCapitalization>()?;
     module.add_class::<crate::models::company::CompanyNote>()?;
     module.add_class::<crate::models::company::CompanyProfile>()?;
     module.add_class::<crate::models::company::CompanyShareFloat>()?;
@@ -164,8 +164,8 @@ fn register_company(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::company::EmployeeCount>()?;
     module.add_class::<crate::models::company::ExecutiveCompensation>()?;
     module.add_class::<crate::models::company::ExecutiveCompensationBenchmark>()?;
-    module.add_class::<crate::models::company::MarketCapitalizationRecord>()?;
     module.add_class::<crate::models::company::MergerAcquisition>()?;
+    module.add_class::<crate::models::company::ShareFloat>()?;
     module.add_class::<crate::models::company::StockPeer>()?;
     module.add_class::<crate::namespaces::company::CompanyNamespace>()?;
     add_submodule(parent, "fmp._native.company", &module)

@@ -24,6 +24,87 @@ func newCompanyNamespace(client *Client) CompanyNamespace {
 	}
 }
 
+// AllSharesFloatQuery holds the query parameters of the endpoints that take
+// it: NewAllSharesFloatQuery takes the required arguments and each With method
+// sets an optional one. Values are validated when the request is built.
+type AllSharesFloatQuery struct {
+	page  *uint32
+	limit *uint32
+}
+
+// NewAllSharesFloatQuery creates the query from its required arguments.
+func NewAllSharesFloatQuery() AllSharesFloatQuery {
+	return AllSharesFloatQuery{}
+}
+
+// WithPage sets the optional page parameter and returns the updated query.
+func (q AllSharesFloatQuery) WithPage(page uint32) AllSharesFloatQuery {
+	q.page = &page
+	return q
+}
+
+// Page returns the optional page parameter, or nil when it is unset.
+func (q AllSharesFloatQuery) Page() *uint32 {
+	return q.page
+}
+
+// WithLimit sets the optional limit parameter and returns the updated query.
+func (q AllSharesFloatQuery) WithLimit(limit uint32) AllSharesFloatQuery {
+	q.limit = &limit
+	return q
+}
+
+// Limit returns the optional limit parameter, or nil when it is unset.
+func (q AllSharesFloatQuery) Limit() *uint32 {
+	return q.limit
+}
+
+func (q AllSharesFloatQuery) params() ([]queryParam, error) {
+	params := make([]queryParam, 0, 2)
+	if q.page != nil {
+		page, err := uint32Param("page", *q.page)
+		if err != nil {
+			return nil, err
+		}
+		params = append(params, page)
+	}
+	if q.limit != nil {
+		limit, err := uint32Param("limit", *q.limit)
+		if err != nil {
+			return nil, err
+		}
+		params = append(params, limit)
+	}
+	return params, nil
+}
+
+// BatchMarketCapitalizationQuery holds the query parameters of the endpoints
+// that take it: NewBatchMarketCapitalizationQuery takes the required arguments
+// and each With method sets an optional one. Values are validated when the
+// request is built.
+type BatchMarketCapitalizationQuery struct {
+	symbols []string
+}
+
+// NewBatchMarketCapitalizationQuery creates the query from its required
+// arguments.
+func NewBatchMarketCapitalizationQuery(symbols []string) BatchMarketCapitalizationQuery {
+	return BatchMarketCapitalizationQuery{symbols: slices.Clone(symbols)}
+}
+
+// Symbols returns the symbols argument as given.
+func (q BatchMarketCapitalizationQuery) Symbols() []string {
+	return q.symbols
+}
+
+func (q BatchMarketCapitalizationQuery) params() ([]queryParam, error) {
+	symbols, err := tickerListParam("symbols", q.symbols)
+	if err != nil {
+		return nil, err
+	}
+	return []queryParam{symbols}, nil
+}
+
 // CompanyNotesQuery holds the query parameters of the endpoints that take it:
 // NewCompanyNotesQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
@@ -371,31 +452,60 @@ func (q KeyExecutivesQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// MarketCapitalizationBatchQuery holds the query parameters of the endpoints
-// that take it: NewMarketCapitalizationBatchQuery takes the required arguments
+// LatestMergersAcquisitionsQuery holds the query parameters of the endpoints
+// that take it: NewLatestMergersAcquisitionsQuery takes the required arguments
 // and each With method sets an optional one. Values are validated when the
 // request is built.
-type MarketCapitalizationBatchQuery struct {
-	symbols []string
+type LatestMergersAcquisitionsQuery struct {
+	page  *uint32
+	limit *uint32
 }
 
-// NewMarketCapitalizationBatchQuery creates the query from its required
+// NewLatestMergersAcquisitionsQuery creates the query from its required
 // arguments.
-func NewMarketCapitalizationBatchQuery(symbols []string) MarketCapitalizationBatchQuery {
-	return MarketCapitalizationBatchQuery{symbols: slices.Clone(symbols)}
+func NewLatestMergersAcquisitionsQuery() LatestMergersAcquisitionsQuery {
+	return LatestMergersAcquisitionsQuery{}
 }
 
-// Symbols returns the symbols argument as given.
-func (q MarketCapitalizationBatchQuery) Symbols() []string {
-	return q.symbols
+// WithPage sets the optional page parameter and returns the updated query.
+func (q LatestMergersAcquisitionsQuery) WithPage(page uint32) LatestMergersAcquisitionsQuery {
+	q.page = &page
+	return q
 }
 
-func (q MarketCapitalizationBatchQuery) params() ([]queryParam, error) {
-	symbols, err := tickerListParam("symbols", q.symbols)
-	if err != nil {
-		return nil, err
+// Page returns the optional page parameter, or nil when it is unset.
+func (q LatestMergersAcquisitionsQuery) Page() *uint32 {
+	return q.page
+}
+
+// WithLimit sets the optional limit parameter and returns the updated query.
+func (q LatestMergersAcquisitionsQuery) WithLimit(limit uint32) LatestMergersAcquisitionsQuery {
+	q.limit = &limit
+	return q
+}
+
+// Limit returns the optional limit parameter, or nil when it is unset.
+func (q LatestMergersAcquisitionsQuery) Limit() *uint32 {
+	return q.limit
+}
+
+func (q LatestMergersAcquisitionsQuery) params() ([]queryParam, error) {
+	params := make([]queryParam, 0, 2)
+	if q.page != nil {
+		page, err := uint32Param("page", *q.page)
+		if err != nil {
+			return nil, err
+		}
+		params = append(params, page)
 	}
-	return []queryParam{symbols}, nil
+	if q.limit != nil {
+		limit, err := uint32Param("limit", *q.limit)
+		if err != nil {
+			return nil, err
+		}
+		params = append(params, limit)
+	}
+	return params, nil
 }
 
 // MarketCapitalizationQuery holds the query parameters of the endpoints that
@@ -422,89 +532,6 @@ func (q MarketCapitalizationQuery) params() ([]queryParam, error) {
 		return nil, err
 	}
 	return []queryParam{symbol}, nil
-}
-
-// MergersAcquisitionsLatestQuery holds the query parameters of the endpoints
-// that take it: NewMergersAcquisitionsLatestQuery takes the required arguments
-// and each With method sets an optional one. Values are validated when the
-// request is built.
-type MergersAcquisitionsLatestQuery struct {
-	page  *uint32
-	limit *uint32
-}
-
-// NewMergersAcquisitionsLatestQuery creates the query from its required
-// arguments.
-func NewMergersAcquisitionsLatestQuery() MergersAcquisitionsLatestQuery {
-	return MergersAcquisitionsLatestQuery{}
-}
-
-// WithPage sets the optional page parameter and returns the updated query.
-func (q MergersAcquisitionsLatestQuery) WithPage(page uint32) MergersAcquisitionsLatestQuery {
-	q.page = &page
-	return q
-}
-
-// Page returns the optional page parameter, or nil when it is unset.
-func (q MergersAcquisitionsLatestQuery) Page() *uint32 {
-	return q.page
-}
-
-// WithLimit sets the optional limit parameter and returns the updated query.
-func (q MergersAcquisitionsLatestQuery) WithLimit(limit uint32) MergersAcquisitionsLatestQuery {
-	q.limit = &limit
-	return q
-}
-
-// Limit returns the optional limit parameter, or nil when it is unset.
-func (q MergersAcquisitionsLatestQuery) Limit() *uint32 {
-	return q.limit
-}
-
-func (q MergersAcquisitionsLatestQuery) params() ([]queryParam, error) {
-	params := make([]queryParam, 0, 2)
-	if q.page != nil {
-		page, err := uint32Param("page", *q.page)
-		if err != nil {
-			return nil, err
-		}
-		params = append(params, page)
-	}
-	if q.limit != nil {
-		limit, err := uint32Param("limit", *q.limit)
-		if err != nil {
-			return nil, err
-		}
-		params = append(params, limit)
-	}
-	return params, nil
-}
-
-// MergersAcquisitionsSearchQuery holds the query parameters of the endpoints
-// that take it: NewMergersAcquisitionsSearchQuery takes the required arguments
-// and each With method sets an optional one. Values are validated when the
-// request is built.
-type MergersAcquisitionsSearchQuery struct {
-	name string
-}
-
-// NewMergersAcquisitionsSearchQuery creates the query from its required
-// arguments.
-func NewMergersAcquisitionsSearchQuery(name string) MergersAcquisitionsSearchQuery {
-	return MergersAcquisitionsSearchQuery{name: name}
-}
-
-// Name returns the name argument as given.
-func (q MergersAcquisitionsSearchQuery) Name() string {
-	return q.name
-}
-
-func (q MergersAcquisitionsSearchQuery) params() ([]queryParam, error) {
-	name, err := stringParam("name", q.name)
-	if err != nil {
-		return nil, err
-	}
-	return []queryParam{name}, nil
 }
 
 // ProfileByCikQuery holds the query parameters of the endpoints that take it:
@@ -557,58 +584,31 @@ func (q ProfileQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// SharesFloatAllQuery holds the query parameters of the endpoints that take
-// it: NewSharesFloatAllQuery takes the required arguments and each With method
-// sets an optional one. Values are validated when the request is built.
-type SharesFloatAllQuery struct {
-	page  *uint32
-	limit *uint32
+// SearchMergersAcquisitionsQuery holds the query parameters of the endpoints
+// that take it: NewSearchMergersAcquisitionsQuery takes the required arguments
+// and each With method sets an optional one. Values are validated when the
+// request is built.
+type SearchMergersAcquisitionsQuery struct {
+	name string
 }
 
-// NewSharesFloatAllQuery creates the query from its required arguments.
-func NewSharesFloatAllQuery() SharesFloatAllQuery {
-	return SharesFloatAllQuery{}
+// NewSearchMergersAcquisitionsQuery creates the query from its required
+// arguments.
+func NewSearchMergersAcquisitionsQuery(name string) SearchMergersAcquisitionsQuery {
+	return SearchMergersAcquisitionsQuery{name: name}
 }
 
-// WithPage sets the optional page parameter and returns the updated query.
-func (q SharesFloatAllQuery) WithPage(page uint32) SharesFloatAllQuery {
-	q.page = &page
-	return q
+// Name returns the name argument as given.
+func (q SearchMergersAcquisitionsQuery) Name() string {
+	return q.name
 }
 
-// Page returns the optional page parameter, or nil when it is unset.
-func (q SharesFloatAllQuery) Page() *uint32 {
-	return q.page
-}
-
-// WithLimit sets the optional limit parameter and returns the updated query.
-func (q SharesFloatAllQuery) WithLimit(limit uint32) SharesFloatAllQuery {
-	q.limit = &limit
-	return q
-}
-
-// Limit returns the optional limit parameter, or nil when it is unset.
-func (q SharesFloatAllQuery) Limit() *uint32 {
-	return q.limit
-}
-
-func (q SharesFloatAllQuery) params() ([]queryParam, error) {
-	params := make([]queryParam, 0, 2)
-	if q.page != nil {
-		page, err := uint32Param("page", *q.page)
-		if err != nil {
-			return nil, err
-		}
-		params = append(params, page)
+func (q SearchMergersAcquisitionsQuery) params() ([]queryParam, error) {
+	name, err := stringParam("name", q.name)
+	if err != nil {
+		return nil, err
 	}
-	if q.limit != nil {
-		limit, err := uint32Param("limit", *q.limit)
-		if err != nil {
-			return nil, err
-		}
-		params = append(params, limit)
-	}
-	return params, nil
+	return []queryParam{name}, nil
 }
 
 // SharesFloatQuery holds the query parameters of the endpoints that take it:
@@ -772,28 +772,28 @@ func (n *CompanyNamespace) HistoricalEmployeeCount(ctx context.Context, q Histor
 // one company.
 //
 // GET market-capitalization?symbol=
-func (n *CompanyNamespace) MarketCapitalization(ctx context.Context, q MarketCapitalizationQuery) ([]MarketCapitalizationRecord, error) {
+func (n *CompanyNamespace) MarketCapitalization(ctx context.Context, q MarketCapitalizationQuery) ([]CompanyMarketCapitalization, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []MarketCapitalizationRecord
+	var out []CompanyMarketCapitalization
 	if err := n.client.getJSON(ctx, "market-capitalization", "market-capitalization", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MarketCapitalizationBatch retrieves current worldwide market capitalization
+// BatchMarketCapitalization retrieves current worldwide market capitalization
 // for multiple companies.
 //
 // GET market-capitalization-batch?symbols=
-func (n *CompanyNamespace) MarketCapitalizationBatch(ctx context.Context, q MarketCapitalizationBatchQuery) ([]MarketCapitalizationRecord, error) {
+func (n *CompanyNamespace) BatchMarketCapitalization(ctx context.Context, q BatchMarketCapitalizationQuery) ([]CompanyMarketCapitalization, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []MarketCapitalizationRecord
+	var out []CompanyMarketCapitalization
 	if err := n.client.getJSON(ctx, "market-capitalization-batch", "market-capitalization-batch", params, &out); err != nil {
 		return nil, err
 	}
@@ -804,12 +804,12 @@ func (n *CompanyNamespace) MarketCapitalizationBatch(ctx context.Context, q Mark
 // capitalization for one company.
 //
 // GET historical-market-capitalization?symbol=&limit=&from=&to=
-func (n *CompanyNamespace) HistoricalMarketCapitalization(ctx context.Context, q HistoricalMarketCapitalizationQuery) ([]MarketCapitalizationRecord, error) {
+func (n *CompanyNamespace) HistoricalMarketCapitalization(ctx context.Context, q HistoricalMarketCapitalizationQuery) ([]CompanyMarketCapitalization, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []MarketCapitalizationRecord
+	var out []CompanyMarketCapitalization
 	if err := n.client.getJSON(ctx, "historical-market-capitalization", "historical-market-capitalization", params, &out); err != nil {
 		return nil, err
 	}
@@ -831,27 +831,27 @@ func (n *CompanyNamespace) SharesFloat(ctx context.Context, q SharesFloatQuery) 
 	return out, nil
 }
 
-// SharesFloatAll retrieves paginated worldwide share-float data for all
+// AllSharesFloat retrieves paginated worldwide share-float data for all
 // companies.
 //
 // GET shares-float-all?page=&limit=
-func (n *CompanyNamespace) SharesFloatAll(ctx context.Context, q SharesFloatAllQuery) ([]AllSharesFloatRecord, error) {
+func (n *CompanyNamespace) AllSharesFloat(ctx context.Context, q AllSharesFloatQuery) ([]ShareFloat, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []AllSharesFloatRecord
+	var out []ShareFloat
 	if err := n.client.getJSON(ctx, "shares-float-all", "shares-float-all", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// MergersAcquisitionsLatest retrieves the latest US mergers and acquisitions
+// LatestMergersAcquisitions retrieves the latest US mergers and acquisitions
 // with optional pagination.
 //
 // GET mergers-acquisitions-latest?page=&limit=
-func (n *CompanyNamespace) MergersAcquisitionsLatest(ctx context.Context, q MergersAcquisitionsLatestQuery) ([]MergerAcquisition, error) {
+func (n *CompanyNamespace) LatestMergersAcquisitions(ctx context.Context, q LatestMergersAcquisitionsQuery) ([]MergerAcquisition, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -863,11 +863,11 @@ func (n *CompanyNamespace) MergersAcquisitionsLatest(ctx context.Context, q Merg
 	return out, nil
 }
 
-// MergersAcquisitionsSearch searches US mergers and acquisitions by
+// SearchMergersAcquisitions searches US mergers and acquisitions by
 // representation-preserving company name.
 //
 // GET mergers-acquisitions-search?name=
-func (n *CompanyNamespace) MergersAcquisitionsSearch(ctx context.Context, q MergersAcquisitionsSearchQuery) ([]MergerAcquisition, error) {
+func (n *CompanyNamespace) SearchMergersAcquisitions(ctx context.Context, q SearchMergersAcquisitionsQuery) ([]MergerAcquisition, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

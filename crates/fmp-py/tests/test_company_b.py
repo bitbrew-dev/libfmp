@@ -16,12 +16,12 @@ from typing import Any
 import pytest
 from conftest import FixtureServer, load_fixture
 from fmp.company import (
-    AllSharesFloatRecord,
     CompanyExecutive,
     CompanyShareFloat,
     ExecutiveCompensation,
     ExecutiveCompensationBenchmark,
     MergerAcquisition,
+    ShareFloat,
 )
 
 SEARCH_NAME = "  Apple, Inc. / Class A  "
@@ -47,15 +47,15 @@ def test_shares_float_encodes_a_spaced_symbol(client: Any, fixture_server: Fixtu
     assert row.source.startswith("https://www.sec.gov/")
 
 
-def test_shares_float_all_with_page_and_limit(client: Any, fixture_server: FixtureServer) -> None:
-    """``shares_float_all`` encodes ``page`` then ``limit`` and decodes the source-less record."""
+def test_all_shares_float_with_page_and_limit(client: Any, fixture_server: FixtureServer) -> None:
+    """``all_shares_float`` encodes ``page`` then ``limit`` and decodes the source-less record."""
     fixture_server.route("/shares-float-all", load_fixture("company_shares_float_all.json"))
-    rows = client.company.shares_float_all(page=0, limit=5001)
+    rows = client.company.all_shares_float(page=0, limit=5001)
 
     assert fixture_server.requests[0].target == "/shares-float-all?page=0&limit=5001"
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, AllSharesFloatRecord)
+    assert isinstance(row, ShareFloat)
     assert row.symbol == "000001.SZ"
     assert row.date == datetime.datetime(2026, 7, 29, 14, 23, 30)
     assert row.free_float == pytest.approx(41.40900000201062)
@@ -64,19 +64,19 @@ def test_shares_float_all_with_page_and_limit(client: Any, fixture_server: Fixtu
     assert not hasattr(row, "source")
 
 
-def test_shares_float_all_without_options_sends_the_bare_path(client: Any, fixture_server: FixtureServer) -> None:
-    """``shares_float_all`` with nothing set requests the bare path."""
+def test_all_shares_float_without_options_sends_the_bare_path(client: Any, fixture_server: FixtureServer) -> None:
+    """``all_shares_float`` with nothing set requests the bare path."""
     fixture_server.route("/shares-float-all", load_fixture("company_shares_float_all.json"))
-    rows = client.company.shares_float_all()
+    rows = client.company.all_shares_float()
 
     assert fixture_server.requests[0].target == "/shares-float-all"
     assert len(rows) == 1
 
 
-def test_mergers_acquisitions_latest_with_page_and_limit(client: Any, fixture_server: FixtureServer) -> None:
-    """``mergers_acquisitions_latest`` encodes ``page`` then ``limit`` and decodes both timestamps."""
+def test_latest_mergers_acquisitions_with_page_and_limit(client: Any, fixture_server: FixtureServer) -> None:
+    """``latest_mergers_acquisitions`` encodes ``page`` then ``limit`` and decodes both timestamps."""
     fixture_server.route("/mergers-acquisitions-latest", load_fixture("company_mergers_acquisitions_latest.json"))
-    rows = client.company.mergers_acquisitions_latest(page=0, limit=1001)
+    rows = client.company.latest_mergers_acquisitions(page=0, limit=1001)
 
     assert fixture_server.requests[0].target == "/mergers-acquisitions-latest?page=0&limit=1001"
     assert len(rows) == 1
@@ -90,12 +90,12 @@ def test_mergers_acquisitions_latest_with_page_and_limit(client: Any, fixture_se
     assert row.accepted_date == datetime.datetime(2026, 7, 29, 16, 0, 46)
 
 
-def test_mergers_acquisitions_latest_with_page_only_decodes_multiple_rows(
+def test_latest_mergers_acquisitions_with_page_only_decodes_multiple_rows(
     client: Any, fixture_server: FixtureServer
 ) -> None:
-    """``mergers_acquisitions_latest`` sends ``page=0`` alone and keeps row order."""
+    """``latest_mergers_acquisitions`` sends ``page=0`` alone and keeps row order."""
     fixture_server.route("/mergers-acquisitions-latest", load_fixture("company_mergers_acquisitions_multiple.json"))
-    rows = client.company.mergers_acquisitions_latest(page=0)
+    rows = client.company.latest_mergers_acquisitions(page=0)
 
     assert fixture_server.requests[0].target == "/mergers-acquisitions-latest?page=0"
     assert len(rows) == 2
@@ -103,10 +103,10 @@ def test_mergers_acquisitions_latest_with_page_only_decodes_multiple_rows(
     assert rows[1].transaction_date == datetime.date(2021, 11, 12)
 
 
-def test_mergers_acquisitions_search_preserves_the_name_verbatim(client: Any, fixture_server: FixtureServer) -> None:
-    """``mergers_acquisitions_search`` sends the padded, punctuated name form-encoded as ``name``."""
+def test_search_mergers_acquisitions_preserves_the_name_verbatim(client: Any, fixture_server: FixtureServer) -> None:
+    """``search_mergers_acquisitions`` sends the padded, punctuated name form-encoded as ``name``."""
     fixture_server.route("/mergers-acquisitions-search", load_fixture("company_mergers_acquisitions_search.json"))
-    rows = client.company.mergers_acquisitions_search(SEARCH_NAME)
+    rows = client.company.search_mergers_acquisitions(SEARCH_NAME)
 
     assert fixture_server.requests[0].target == f"/mergers-acquisitions-search?name={SEARCH_NAME_ENCODED}"
     assert fixture_server.requests[0].query["name"] == [SEARCH_NAME]
@@ -254,17 +254,17 @@ def test_executive_compensation_benchmark_without_a_year_sends_the_bare_path(
     [
         pytest.param("profile", "symbol", "   ", "symbol: value must not be empty or whitespace-only", id="ticker"),
         pytest.param(
-            "market_capitalization_batch",
+            "batch_market_capitalization",
             "symbols",
             [],
             "symbols: ticker list must contain at least one ticker",
             id="ticker-list",
         ),
         pytest.param("profile_by_cik", "cik", "", "cik: ", id="cik"),
-        pytest.param("mergers_acquisitions_search", "name", " ", "name: ", id="search-term"),
+        pytest.param("search_mergers_acquisitions", "name", " ", "name: ", id="search-term"),
         pytest.param("executive_compensation_benchmark", "year", "", "year: ", id="benchmark-year"),
         pytest.param("delisted_companies", "page", -1, "page: must be an integer from 0 through 4294967295", id="page"),
-        pytest.param("shares_float_all", "limit", -1, "limit: ", id="limit"),
+        pytest.param("all_shares_float", "limit", -1, "limit: ", id="limit"),
         pytest.param(
             "historical_market_capitalization",
             "to",

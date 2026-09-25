@@ -15,12 +15,12 @@ from typing import Any
 import pytest
 from conftest import FixtureServer, load_fixture
 from fmp.company import (
+    CompanyMarketCapitalization,
     CompanyNamespace,
     CompanyNote,
     CompanyProfile,
     DelistedCompany,
     EmployeeCount,
-    MarketCapitalizationRecord,
     StockPeer,
 )
 
@@ -208,28 +208,28 @@ def test_market_capitalization_encodes_a_spaced_symbol(client: Any, fixture_serv
     assert fixture_server.requests[0].target == f"/market-capitalization?symbol={SPACED_SYMBOL_ENCODED}"
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, MarketCapitalizationRecord)
+    assert isinstance(row, CompanyMarketCapitalization)
     assert row.symbol == "AAPL"
     assert row.date == DATE_2026_07_30
     assert row.market_cap == 4_874_072_686_740
 
 
-def test_market_capitalization_batch_joins_and_encodes_symbols(client: Any, fixture_server: FixtureServer) -> None:
-    """``market_capitalization_batch`` comma-joins the list and percent-encodes each ticker."""
+def test_batch_market_capitalization_joins_and_encodes_symbols(client: Any, fixture_server: FixtureServer) -> None:
+    """``batch_market_capitalization`` comma-joins the list and percent-encodes each ticker."""
     fixture_server.route("/market-capitalization-batch", load_fixture("company_market_capitalization.json"))
-    rows = client.company.market_capitalization_batch(["AAPL", "^VIX", "000001.SZ"])
+    rows = client.company.batch_market_capitalization(["AAPL", "^VIX", "000001.SZ"])
 
     assert fixture_server.requests[0].target == "/market-capitalization-batch?symbols=AAPL%2C%5EVIX%2C000001.SZ"
     assert len(rows) == 1
-    assert isinstance(rows[0], MarketCapitalizationRecord)
+    assert isinstance(rows[0], CompanyMarketCapitalization)
     assert rows[0].date == DATE_2026_07_30
     assert rows[0].market_cap == 4_874_072_686_740
 
 
-def test_market_capitalization_batch_accepts_a_bare_string(client: Any, fixture_server: FixtureServer) -> None:
+def test_batch_market_capitalization_accepts_a_bare_string(client: Any, fixture_server: FixtureServer) -> None:
     """A bare ``str`` is one ticker, never split on commas."""
     fixture_server.route("/market-capitalization-batch", load_fixture("company_market_capitalization.json"))
-    rows = client.company.market_capitalization_batch("AAPL")
+    rows = client.company.batch_market_capitalization("AAPL")
 
     assert fixture_server.requests[0].target == "/market-capitalization-batch?symbols=AAPL"
     assert len(rows) == 1
@@ -246,7 +246,7 @@ def test_historical_market_capitalization_without_options(client: Any, fixture_s
     assert "limit=" not in fixture_server.requests[0].raw_query
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, MarketCapitalizationRecord)
+    assert isinstance(row, CompanyMarketCapitalization)
     assert row.symbol == "AAPL"
     assert row.date == DATE_2026_07_30
     assert row.market_cap == 4_879_177_245_542

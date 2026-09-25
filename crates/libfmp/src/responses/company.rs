@@ -119,7 +119,7 @@ pub struct EmployeeCount {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
-pub struct MarketCapitalizationRecord {
+pub struct CompanyMarketCapitalization {
     pub symbol: Ticker,
     pub date: Date,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
@@ -145,7 +145,7 @@ pub struct CompanyShareFloat {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
-pub struct AllSharesFloatRecord {
+pub struct ShareFloat {
     pub symbol: Ticker,
     pub date: ApiDateTime,
     pub free_float: Percentage,

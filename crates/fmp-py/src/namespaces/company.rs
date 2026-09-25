@@ -4,11 +4,11 @@ use std::sync::Arc;
 
 use libfmp::ClientBuilder;
 use libfmp::endpoints::company::{
-    CompanyNotesQuery, DelistedCompaniesQuery, EmployeeCountQuery,
-    ExecutiveCompensationBenchmarkQuery, ExecutiveCompensationQuery, HistoricalEmployeeCountQuery,
-    HistoricalMarketCapitalizationQuery, KeyExecutivesQuery, MarketCapitalizationBatchQuery,
-    MarketCapitalizationQuery, MergersAcquisitionsLatestQuery, MergersAcquisitionsSearchQuery,
-    ProfileByCikQuery, ProfileQuery, SharesFloatAllQuery, SharesFloatQuery, StockPeersQuery,
+    AllSharesFloatQuery, BatchMarketCapitalizationQuery, CompanyNotesQuery, DelistedCompaniesQuery,
+    EmployeeCountQuery, ExecutiveCompensationBenchmarkQuery, ExecutiveCompensationQuery,
+    HistoricalEmployeeCountQuery, HistoricalMarketCapitalizationQuery, KeyExecutivesQuery,
+    LatestMergersAcquisitionsQuery, MarketCapitalizationQuery, ProfileByCikQuery, ProfileQuery,
+    SearchMergersAcquisitionsQuery, SharesFloatQuery, StockPeersQuery,
 };
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -16,9 +16,9 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::company::{
-    AllSharesFloatRecord, CompanyExecutive, CompanyNote, CompanyProfile, CompanyShareFloat,
+    CompanyExecutive, CompanyMarketCapitalization, CompanyNote, CompanyProfile, CompanyShareFloat,
     DelistedCompany, EmployeeCount, ExecutiveCompensation, ExecutiveCompensationBenchmark,
-    MarketCapitalizationRecord, MergerAcquisition, StockPeer,
+    MergerAcquisition, ShareFloat, StockPeer,
 };
 use crate::runtime::block_on;
 
@@ -156,7 +156,7 @@ impl CompanyNamespace {
         &self,
         py: Python<'_>,
         symbol: &str,
-    ) -> PyResult<Vec<MarketCapitalizationRecord>> {
+    ) -> PyResult<Vec<CompanyMarketCapitalization>> {
         let query = market_capitalization_query(symbol)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
@@ -167,7 +167,7 @@ impl CompanyNamespace {
         rows.map(|items| {
             items
                 .into_iter()
-                .map(MarketCapitalizationRecord::from)
+                .map(CompanyMarketCapitalization::from)
                 .collect()
         })
         .map_err(to_py_error)
@@ -175,22 +175,22 @@ impl CompanyNamespace {
 
     /// Retrieves current worldwide market capitalization for multiple companies.
     #[pyo3(signature = (symbols))]
-    fn market_capitalization_batch(
+    fn batch_market_capitalization(
         &self,
         py: Python<'_>,
         symbols: args::SymbolsArg,
-    ) -> PyResult<Vec<MarketCapitalizationRecord>> {
-        let query = market_capitalization_batch_query(symbols)?;
+    ) -> PyResult<Vec<CompanyMarketCapitalization>> {
+        let query = batch_market_capitalization_query(symbols)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
-                client.market_capitalization_batch(query).await
+                client.batch_market_capitalization(query).await
             })
         })?;
         rows.map(|items| {
             items
                 .into_iter()
-                .map(MarketCapitalizationRecord::from)
+                .map(CompanyMarketCapitalization::from)
                 .collect()
         })
         .map_err(to_py_error)
@@ -205,7 +205,7 @@ impl CompanyNamespace {
         limit: Option<i64>,
         from_: Option<args::DateArg>,
         to: Option<args::DateArg>,
-    ) -> PyResult<Vec<MarketCapitalizationRecord>> {
+    ) -> PyResult<Vec<CompanyMarketCapitalization>> {
         let query = historical_market_capitalization_query(symbol, limit, from_, to)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
@@ -216,7 +216,7 @@ impl CompanyNamespace {
         rows.map(|items| {
             items
                 .into_iter()
-                .map(MarketCapitalizationRecord::from)
+                .map(CompanyMarketCapitalization::from)
                 .collect()
         })
         .map_err(to_py_error)
@@ -239,36 +239,36 @@ impl CompanyNamespace {
 
     /// Retrieves paginated worldwide share-float data for all companies.
     #[pyo3(signature = (*, page=None, limit=None))]
-    fn shares_float_all(
+    fn all_shares_float(
         &self,
         py: Python<'_>,
         page: Option<i64>,
         limit: Option<i64>,
-    ) -> PyResult<Vec<AllSharesFloatRecord>> {
-        let query = shares_float_all_query(page, limit)?;
+    ) -> PyResult<Vec<ShareFloat>> {
+        let query = all_shares_float_query(page, limit)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
-                client.shares_float_all(query).await
+                client.all_shares_float(query).await
             })
         })?;
-        rows.map(|items| items.into_iter().map(AllSharesFloatRecord::from).collect())
+        rows.map(|items| items.into_iter().map(ShareFloat::from).collect())
             .map_err(to_py_error)
     }
 
     /// Retrieves the latest US mergers and acquisitions with optional pagination.
     #[pyo3(signature = (*, page=None, limit=None))]
-    fn mergers_acquisitions_latest(
+    fn latest_mergers_acquisitions(
         &self,
         py: Python<'_>,
         page: Option<i64>,
         limit: Option<i64>,
     ) -> PyResult<Vec<MergerAcquisition>> {
-        let query = mergers_acquisitions_latest_query(page, limit)?;
+        let query = latest_mergers_acquisitions_query(page, limit)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
-                client.mergers_acquisitions_latest(query).await
+                client.latest_mergers_acquisitions(query).await
             })
         })?;
         rows.map(|items| items.into_iter().map(MergerAcquisition::from).collect())
@@ -277,16 +277,16 @@ impl CompanyNamespace {
 
     /// Searches US mergers and acquisitions by representation-preserving company name.
     #[pyo3(signature = (name))]
-    fn mergers_acquisitions_search(
+    fn search_mergers_acquisitions(
         &self,
         py: Python<'_>,
         name: &str,
     ) -> PyResult<Vec<MergerAcquisition>> {
-        let query = mergers_acquisitions_search_query(name)?;
+        let query = search_mergers_acquisitions_query(name)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
-                client.mergers_acquisitions_search(query).await
+                client.search_mergers_acquisitions(query).await
             })
         })?;
         rows.map(|items| items.into_iter().map(MergerAcquisition::from).collect())
@@ -421,12 +421,12 @@ fn market_capitalization_query(symbol: &str) -> PyResult<MarketCapitalizationQue
     Ok(MarketCapitalizationQuery::new(symbol))
 }
 
-/// Builds the `MarketCapitalizationBatchQuery` for `CompanyNamespace::market_capitalization_batch` from validated Python arguments.
-fn market_capitalization_batch_query(
+/// Builds the `BatchMarketCapitalizationQuery` for `CompanyNamespace::batch_market_capitalization` from validated Python arguments.
+fn batch_market_capitalization_query(
     symbols: args::SymbolsArg,
-) -> PyResult<MarketCapitalizationBatchQuery> {
+) -> PyResult<BatchMarketCapitalizationQuery> {
     let symbols = args::ticker_list("symbols", symbols)?;
-    Ok(MarketCapitalizationBatchQuery::new(symbols))
+    Ok(BatchMarketCapitalizationQuery::new(symbols))
 }
 
 /// Builds the `HistoricalMarketCapitalizationQuery` for `CompanyNamespace::historical_market_capitalization` from validated Python arguments.
@@ -459,11 +459,11 @@ fn shares_float_query(symbol: &str) -> PyResult<SharesFloatQuery> {
     Ok(SharesFloatQuery::new(symbol))
 }
 
-/// Builds the `SharesFloatAllQuery` for `CompanyNamespace::shares_float_all` from validated Python arguments.
-fn shares_float_all_query(page: Option<i64>, limit: Option<i64>) -> PyResult<SharesFloatAllQuery> {
+/// Builds the `AllSharesFloatQuery` for `CompanyNamespace::all_shares_float` from validated Python arguments.
+fn all_shares_float_query(page: Option<i64>, limit: Option<i64>) -> PyResult<AllSharesFloatQuery> {
     let page = args::optional("page", page, args::page)?;
     let limit = args::optional("limit", limit, args::limit)?;
-    let mut query = SharesFloatAllQuery::new();
+    let mut query = AllSharesFloatQuery::new();
     if let Some(page) = page {
         query = query.with_page(page);
     }
@@ -473,14 +473,14 @@ fn shares_float_all_query(page: Option<i64>, limit: Option<i64>) -> PyResult<Sha
     Ok(query)
 }
 
-/// Builds the `MergersAcquisitionsLatestQuery` for `CompanyNamespace::mergers_acquisitions_latest` from validated Python arguments.
-fn mergers_acquisitions_latest_query(
+/// Builds the `LatestMergersAcquisitionsQuery` for `CompanyNamespace::latest_mergers_acquisitions` from validated Python arguments.
+fn latest_mergers_acquisitions_query(
     page: Option<i64>,
     limit: Option<i64>,
-) -> PyResult<MergersAcquisitionsLatestQuery> {
+) -> PyResult<LatestMergersAcquisitionsQuery> {
     let page = args::optional("page", page, args::page)?;
     let limit = args::optional("limit", limit, args::limit)?;
-    let mut query = MergersAcquisitionsLatestQuery::new();
+    let mut query = LatestMergersAcquisitionsQuery::new();
     if let Some(page) = page {
         query = query.with_page(page);
     }
@@ -490,10 +490,10 @@ fn mergers_acquisitions_latest_query(
     Ok(query)
 }
 
-/// Builds the `MergersAcquisitionsSearchQuery` for `CompanyNamespace::mergers_acquisitions_search` from validated Python arguments.
-fn mergers_acquisitions_search_query(name: &str) -> PyResult<MergersAcquisitionsSearchQuery> {
+/// Builds the `SearchMergersAcquisitionsQuery` for `CompanyNamespace::search_mergers_acquisitions` from validated Python arguments.
+fn search_mergers_acquisitions_query(name: &str) -> PyResult<SearchMergersAcquisitionsQuery> {
     let name = args::search_term("name", name)?;
-    Ok(MergersAcquisitionsSearchQuery::new(name))
+    Ok(SearchMergersAcquisitionsQuery::new(name))
 }
 
 /// Builds the `KeyExecutivesQuery` for `CompanyNamespace::key_executives` from validated Python arguments.

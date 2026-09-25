@@ -516,7 +516,7 @@ impl From<libfmp::responses::company::EmployeeCount> for EmployeeCount {
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.company", frozen, from_py_object)]
 #[derive(Clone)]
-pub(crate) struct MarketCapitalizationRecord {
+pub(crate) struct CompanyMarketCapitalization {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
@@ -527,7 +527,7 @@ pub(crate) struct MarketCapitalizationRecord {
 
 #[gen_stub_pymethods]
 #[pymethods]
-impl MarketCapitalizationRecord {
+impl CompanyMarketCapitalization {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
@@ -551,8 +551,8 @@ impl MarketCapitalizationRecord {
     }
 }
 
-impl From<libfmp::responses::company::MarketCapitalizationRecord> for MarketCapitalizationRecord {
-    fn from(value: libfmp::responses::company::MarketCapitalizationRecord) -> Self {
+impl From<libfmp::responses::company::CompanyMarketCapitalization> for CompanyMarketCapitalization {
+    fn from(value: libfmp::responses::company::CompanyMarketCapitalization) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
             date: value.date.into_inner(),
@@ -634,7 +634,7 @@ impl From<libfmp::responses::company::CompanyShareFloat> for CompanyShareFloat {
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.company", frozen, from_py_object)]
 #[derive(Clone)]
-pub(crate) struct AllSharesFloatRecord {
+pub(crate) struct ShareFloat {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
@@ -649,7 +649,7 @@ pub(crate) struct AllSharesFloatRecord {
 
 #[gen_stub_pymethods]
 #[pymethods]
-impl AllSharesFloatRecord {
+impl ShareFloat {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
@@ -683,8 +683,8 @@ impl AllSharesFloatRecord {
     }
 }
 
-impl From<libfmp::responses::company::AllSharesFloatRecord> for AllSharesFloatRecord {
-    fn from(value: libfmp::responses::company::AllSharesFloatRecord) -> Self {
+impl From<libfmp::responses::company::ShareFloat> for ShareFloat {
+    fn from(value: libfmp::responses::company::ShareFloat) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
             date: value.date.into_inner(),

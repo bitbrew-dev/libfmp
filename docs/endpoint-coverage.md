@@ -96,12 +96,12 @@ served by the single method that owns the path:
 | `company` | `company.employee_count` | `employee_count` | supported | supported |  |
 | `company` | `company.historical_employee_count` | `historical_employee_count` | supported | supported |  |
 | `company` | `company.market_capitalization` | `market_capitalization` | supported | supported |  |
-| `company` | `company.market_capitalization_batch` | `market_capitalization_batch` | supported | supported |  |
+| `company` | `company.batch_market_capitalization` | `batch_market_capitalization` | supported | supported |  |
 | `company` | `company.historical_market_capitalization` | `historical_market_capitalization` | supported | supported |  |
 | `company` | `company.shares_float` | `shares_float` | supported | supported |  |
-| `company` | `company.shares_float_all` | `shares_float_all` | supported | supported |  |
-| `company` | `company.mergers_acquisitions_latest` | `mergers_acquisitions_latest` | supported | supported |  |
-| `company` | `company.mergers_acquisitions_search` | `mergers_acquisitions_search` | supported | supported |  |
+| `company` | `company.all_shares_float` | `all_shares_float` | supported | supported |  |
+| `company` | `company.latest_mergers_acquisitions` | `latest_mergers_acquisitions` | supported | supported |  |
+| `company` | `company.search_mergers_acquisitions` | `search_mergers_acquisitions` | supported | supported |  |
 | `company` | `company.key_executives` | `key_executives` | supported | supported |  |
 | `company` | `company.executive_compensation` | `executive_compensation` | supported | supported |  |
 | `company` | `company.executive_compensation_benchmark` | `executive_compensation_benchmark` | supported | supported |  |
