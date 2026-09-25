@@ -202,6 +202,7 @@ impl BulkNamespace {
         &self,
         py: Python<'_>,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<Vec<BulkIncomeStatement>> {
         let query = income_statements_query(year, period)?;
@@ -221,6 +222,7 @@ impl BulkNamespace {
         &self,
         py: Python<'_>,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<Vec<BulkIncomeStatementGrowth>> {
         let query = income_statement_growth_query(year, period)?;
@@ -245,6 +247,7 @@ impl BulkNamespace {
         &self,
         py: Python<'_>,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<Vec<BulkBalanceSheetStatement>> {
         let query = balance_sheet_statements_query(year, period)?;
@@ -269,6 +272,7 @@ impl BulkNamespace {
         &self,
         py: Python<'_>,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<Vec<BulkBalanceSheetStatementGrowth>> {
         let query = balance_sheet_statement_growth_query(year, period)?;
@@ -293,6 +297,7 @@ impl BulkNamespace {
         &self,
         py: Python<'_>,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<Vec<BulkCashFlowStatement>> {
         let query = cash_flow_statements_query(year, period)?;
@@ -312,6 +317,7 @@ impl BulkNamespace {
         &self,
         py: Python<'_>,
         year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
     ) -> PyResult<Vec<BulkCashFlowStatementGrowth>> {
         let query = cash_flow_statement_growth_query(year, period)?;

@@ -26,7 +26,7 @@ class AnalystNamespace:
     def financial_estimates(
         self,
         symbol: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["annual", "quarter"],
         *,
         page: typing.Optional[builtins.int] = None,
         limit: typing.Optional[builtins.int] = None,

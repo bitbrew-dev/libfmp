@@ -368,10 +368,19 @@ class FmpClient:
         token: typing.Optional[builtins.str] = None,
         base_url: typing.Optional[builtins.str] = None,
         path_prefix: typing.Optional[builtins.str] = None,
-        auth_mode: typing.Optional[builtins.str] = None,
+        auth_mode: typing.Optional[
+            typing.Literal[
+                "none",
+                "fmp_header",
+                "fmp_query",
+                "bearer",
+                "custom_header",
+                "custom_query",
+            ]
+        ] = None,
         auth_name: typing.Optional[builtins.str] = None,
         auth_prefix: typing.Optional[builtins.str] = None,
-        headers: typing.Optional[dict] = None,
+        headers: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
         timeout: typing.Optional[builtins.float] = None,
         connect_timeout: typing.Optional[builtins.float] = None,
         max_response_body_bytes: typing.Optional[builtins.int] = None,

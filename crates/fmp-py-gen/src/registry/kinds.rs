@@ -92,6 +92,29 @@ arg_kinds! {
     OpenEconomicIndicator => ("open_economic_indicator", "OpenEconomicIndicator", "&str", "str"),
 }
 
+impl ArgKind {
+    /// The `typing.Literal` the stub declares for a closed vocabulary, listing
+    /// the canonical spellings; `None` for every open or non-text kind.
+    ///
+    /// The runtime conversion stays more lenient (case-insensitive, plus
+    /// aliases such as `quarterly`), so the literal only narrows what a type
+    /// checker accepts.
+    pub const fn python_literal(self) -> Option<&'static str> {
+        match self {
+            ArgKind::FiscalPeriod => Some(r#"typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]"#),
+            ArgKind::RetrievalFrequency => Some(r#"typing.Literal["annual", "quarter"]"#),
+            ArgKind::StatementPeriod => {
+                Some(r#"typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]"#)
+            }
+            ArgKind::ChartTimeframe => Some(
+                r#"typing.Literal["1min", "5min", "15min", "30min", "1hour", "4hour", "1day"]"#,
+            ),
+            ArgKind::SegmentationStructure => Some(r#"typing.Literal["flat"]"#),
+            _ => None,
+        }
+    }
+}
+
 /// The error for a registry `kind` value that names no conversion.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UnknownKind(pub String);

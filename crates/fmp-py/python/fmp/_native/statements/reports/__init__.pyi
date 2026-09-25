@@ -116,14 +116,20 @@ class StatementsReportsNamespace:
         """
 
     def json(
-        self, symbol: builtins.str, year: builtins.int, period: builtins.str
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
     ) -> builtins.list[FinancialReportJson]:
         r"""
         Retrieves one dynamic JSON financial report as a bare array.
         """
 
     def xlsx(
-        self, symbol: builtins.str, year: builtins.int, period: builtins.str
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
     ) -> fmp._native.BinaryPayload:
         r"""
         Downloads one financial report using the endpoint's XLSX MIME policy.

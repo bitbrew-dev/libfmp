@@ -422,7 +422,9 @@ class StatementsMetricsNamespace:
         symbol: builtins.str,
         *,
         limit: typing.Optional[builtins.int] = None,
-        period: typing.Optional[builtins.str] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
     ) -> builtins.list[KeyMetrics]:
         r"""
         Retrieves historical worldwide key metrics for one company.

@@ -64,8 +64,8 @@ class StatementsSegmentationNamespace:
         self,
         symbol: builtins.str,
         *,
-        period: typing.Optional[builtins.str] = None,
-        structure: typing.Optional[builtins.str] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+        structure: typing.Optional[typing.Literal["flat"]] = None,
     ) -> builtins.list[RevenueSegmentation]:
         r"""
         Retrieves product revenue segmentation for one company.
@@ -75,8 +75,8 @@ class StatementsSegmentationNamespace:
         self,
         symbol: builtins.str,
         *,
-        period: typing.Optional[builtins.str] = None,
-        structure: typing.Optional[builtins.str] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+        structure: typing.Optional[typing.Literal["flat"]] = None,
     ) -> builtins.list[RevenueSegmentation]:
         r"""
         Retrieves geographic revenue segmentation for one company.

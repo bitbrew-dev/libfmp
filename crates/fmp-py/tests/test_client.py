@@ -1,7 +1,7 @@
 """Runtime contract of ``FmpClient`` and the ``client.quote`` namespace."""
 
 import pickle
-from types import SimpleNamespace
+from types import MappingProxyType, SimpleNamespace
 from typing import Any
 
 import pytest
@@ -40,6 +40,22 @@ def test_proxy_configuration_shapes_the_request(fixture_server: FixtureServer) -
     assert request.target == "/gateway/router/stable/quote-short?symbol=AAPL"
     assert request.headers["x-tenant"] == "blue"
     assert request.headers["x-mode"] == "second"
+
+
+def test_headers_accept_any_mapping(fixture_server: FixtureServer) -> None:
+    """``headers`` takes any ``Mapping[str, str]``, not only a ``dict``."""
+    fixture_server.route("/quote-short", load_fixture("quote_short.json"))
+    proxy = FmpClient(
+        base_url=fixture_server.base_url, auth_mode="none", headers=MappingProxyType({"X-Tenant": "green"})
+    )
+    proxy.quote.short("AAPL")
+    assert fixture_server.requests[0].headers["x-tenant"] == "green"
+
+
+def test_headers_reject_a_non_mapping() -> None:
+    """A sequence of pairs is not a mapping and fails at the argument boundary."""
+    with pytest.raises(TypeError):
+        FmpClient(base_url="https://proxy.example", headers=[("X-Tenant", "blue")])  # type: ignore[arg-type]
 
 
 def test_quote_full_decodes_documented_fixture(client: Any, fixture_server: FixtureServer) -> None:
