@@ -20,7 +20,7 @@ pub(crate) struct EtfFundHolding {
     #[pyo3(get)]
     pub security_cusip: String,
     #[pyo3(get)]
-    pub shares_number: u64,
+    pub shares_number: f64,
     #[pyo3(get)]
     pub weight_percentage: f64,
     #[pyo3(get)]
@@ -42,7 +42,7 @@ impl EtfFundHolding {
         name: String,
         isin: String,
         security_cusip: String,
-        shares_number: u64,
+        shares_number: f64,
         weight_percentage: f64,
         market_value: f64,
         updated_at: ::chrono::NaiveDateTime,
@@ -158,7 +158,7 @@ pub(crate) struct EtfFundInfo {
     #[pyo3(get)]
     pub expense_ratio: f64,
     #[pyo3(get)]
-    pub assets_under_management: u64,
+    pub assets_under_management: f64,
     #[pyo3(get)]
     pub avg_volume: f64,
     #[pyo3(get)]
@@ -195,7 +195,7 @@ impl EtfFundInfo {
         website: String,
         etf_company: String,
         expense_ratio: f64,
-        assets_under_management: u64,
+        assets_under_management: f64,
         avg_volume: f64,
         inception_date: ::chrono::NaiveDate,
         nav: f64,
@@ -337,7 +337,7 @@ pub(crate) struct EtfAssetExposure {
     #[pyo3(get)]
     pub asset: String,
     #[pyo3(get)]
-    pub shares_number: u64,
+    pub shares_number: f64,
     #[pyo3(get)]
     pub weight_percentage: f64,
     #[pyo3(get)]
@@ -354,7 +354,7 @@ impl EtfAssetExposure {
     fn new(
         symbol: String,
         asset: String,
-        shares_number: u64,
+        shares_number: f64,
         weight_percentage: f64,
         market_value: f64,
     ) -> Self {
@@ -451,11 +451,11 @@ pub(crate) struct FundDisclosureHolder {
     #[pyo3(get)]
     pub security_cusip: String,
     #[pyo3(get)]
-    pub shares: u64,
+    pub shares: f64,
     #[pyo3(get)]
     pub date_reported: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub change: i64,
+    pub change: f64,
     #[pyo3(get)]
     pub weight_percent: f64,
 }
@@ -471,9 +471,9 @@ impl FundDisclosureHolder {
         cik: String,
         holder: String,
         security_cusip: String,
-        shares: u64,
+        shares: f64,
         date_reported: ::chrono::NaiveDate,
-        change: i64,
+        change: f64,
         weight_percent: f64,
     ) -> Self {
         Self {
@@ -539,7 +539,7 @@ pub(crate) struct FundDisclosure {
     #[pyo3(get)]
     pub isin: String,
     #[pyo3(get)]
-    pub balance: u64,
+    pub balance: f64,
     #[pyo3(get)]
     pub units: String,
     #[pyo3(get)]
@@ -585,7 +585,7 @@ impl FundDisclosure {
         title: String,
         cusip: String,
         isin: String,
-        balance: u64,
+        balance: f64,
         units: String,
         currency_code: String,
         val_usd: f64,

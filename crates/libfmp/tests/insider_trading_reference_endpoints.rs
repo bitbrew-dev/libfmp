@@ -108,8 +108,8 @@ async fn custom_proxy_preserves_exact_queries_headers_and_fixture_identities() {
     assert_eq!(row.acquired_transactions, 7);
     assert_eq!(row.disposed_transactions, 40);
     assert_eq!(row.acquired_disposed_ratio, 0.175);
-    assert_eq!(row.total_acquired, 303_199);
-    assert_eq!(row.total_disposed, 927_380);
+    assert_eq!(row.total_acquired, 303_199.0);
+    assert_eq!(row.total_disposed, 927_380.0);
     assert_eq!(row.average_acquired, 43_314.142_9);
     assert_eq!(row.average_disposed, 23_184.5);
     assert_eq!(row.total_purchases, 0);

@@ -14,8 +14,14 @@ use std::{
 
 /// The `types` aliases whose response fields need the integral serializer.
 /// Extend this list when another alias moves to `f64`.
-const INTEGRAL_F64_ALIASES: &[&str] =
-    &["Volume", "MarketCapitalization", "TokenSupply", "SplitTerm"];
+const INTEGRAL_F64_ALIASES: &[&str] = &[
+    "Volume",
+    "MarketCapitalization",
+    "TokenSupply",
+    "SplitTerm",
+    "MarketValue",
+    "Quantity",
+];
 
 const SERIALIZE: &str = r#"serialize_with = "crate::codecs::integral_f64::serialize""#;
 const SERIALIZE_OPTION: &str =

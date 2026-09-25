@@ -94,7 +94,7 @@ class InsiderTrade:
     @property
     def transaction_type(self) -> builtins.str: ...
     @property
-    def securities_owned(self) -> builtins.int: ...
+    def securities_owned(self) -> builtins.float: ...
     @property
     def reporting_name(self) -> builtins.str: ...
     @property
@@ -106,7 +106,7 @@ class InsiderTrade:
     @property
     def form_type(self) -> builtins.str: ...
     @property
-    def securities_transacted(self) -> builtins.int: ...
+    def securities_transacted(self) -> builtins.float: ...
     @property
     def price(self) -> builtins.float: ...
     @property
@@ -121,13 +121,13 @@ class InsiderTrade:
         reporting_cik: builtins.str,
         company_cik: builtins.str,
         transaction_type: builtins.str,
-        securities_owned: builtins.int,
+        securities_owned: builtins.float,
         reporting_name: builtins.str,
         type_of_owner: builtins.str,
         acquisition_or_disposition: builtins.str,
         direct_or_indirect: builtins.str,
         form_type: builtins.str,
-        securities_transacted: builtins.int,
+        securities_transacted: builtins.float,
         price: builtins.float,
         security_name: builtins.str,
         url: builtins.str,
@@ -152,9 +152,9 @@ class InsiderTradeStatistics:
     @property
     def acquired_disposed_ratio(self) -> builtins.float: ...
     @property
-    def total_acquired(self) -> builtins.int: ...
+    def total_acquired(self) -> builtins.float: ...
     @property
-    def total_disposed(self) -> builtins.int: ...
+    def total_disposed(self) -> builtins.float: ...
     @property
     def average_acquired(self) -> builtins.float: ...
     @property
@@ -172,8 +172,8 @@ class InsiderTradeStatistics:
         acquired_transactions: builtins.int,
         disposed_transactions: builtins.int,
         acquired_disposed_ratio: builtins.float,
-        total_acquired: builtins.int,
-        total_disposed: builtins.int,
+        total_acquired: builtins.float,
+        total_disposed: builtins.float,
         average_acquired: builtins.float,
         average_disposed: builtins.float,
         total_purchases: builtins.int,

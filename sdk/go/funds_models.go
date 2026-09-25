@@ -17,7 +17,7 @@ type EtfFundHolding struct {
 	Name             string   `json:"name"`
 	Isin             string   `json:"isin"`
 	SecurityCusip    string   `json:"securityCusip"`
-	SharesNumber     uint64   `json:"sharesNumber"`
+	SharesNumber     float64  `json:"sharesNumber"`
 	WeightPercentage float64  `json:"weightPercentage"`
 	MarketValue      float64  `json:"marketValue"`
 	UpdatedAt        DateTime `json:"updatedAt"`
@@ -32,7 +32,7 @@ type etfFundHoldingShadow struct {
 	Name             *string   `json:"name"`
 	Isin             *string   `json:"isin"`
 	SecurityCusip    *string   `json:"securityCusip"`
-	SharesNumber     *uint64   `json:"sharesNumber"`
+	SharesNumber     *float64  `json:"sharesNumber"`
 	WeightPercentage *float64  `json:"weightPercentage"`
 	MarketValue      *float64  `json:"marketValue"`
 	UpdatedAt        *DateTime `json:"updatedAt"`
@@ -129,7 +129,7 @@ type EtfFundInfo struct {
 	Website               string              `json:"website"`
 	EtfCompany            string              `json:"etfCompany"`
 	ExpenseRatio          float64             `json:"expenseRatio"`
-	AssetsUnderManagement uint64              `json:"assetsUnderManagement"`
+	AssetsUnderManagement float64             `json:"assetsUnderManagement"`
 	AvgVolume             float64             `json:"avgVolume"`
 	InceptionDate         Date                `json:"inceptionDate"`
 	Nav                   float64             `json:"nav"`
@@ -153,7 +153,7 @@ type etfFundInfoShadow struct {
 	Website               *string              `json:"website"`
 	EtfCompany            *string              `json:"etfCompany"`
 	ExpenseRatio          *float64             `json:"expenseRatio"`
-	AssetsUnderManagement *uint64              `json:"assetsUnderManagement"`
+	AssetsUnderManagement *float64             `json:"assetsUnderManagement"`
 	AvgVolume             *float64             `json:"avgVolume"`
 	InceptionDate         *Date                `json:"inceptionDate"`
 	Nav                   *float64             `json:"nav"`
@@ -276,7 +276,7 @@ func (m *EtfCountryWeighting) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type EtfAssetExposure struct {
 	Symbol           string  `json:"symbol"`
 	Asset            string  `json:"asset"`
-	SharesNumber     uint64  `json:"sharesNumber"`
+	SharesNumber     float64 `json:"sharesNumber"`
 	WeightPercentage float64 `json:"weightPercentage"`
 	MarketValue      float64 `json:"marketValue"`
 }
@@ -287,7 +287,7 @@ type EtfAssetExposure struct {
 type etfAssetExposureShadow struct {
 	Symbol           *string  `json:"symbol"`
 	Asset            *string  `json:"asset"`
-	SharesNumber     *uint64  `json:"sharesNumber"`
+	SharesNumber     *float64 `json:"sharesNumber"`
 	WeightPercentage *float64 `json:"weightPercentage"`
 	MarketValue      *float64 `json:"marketValue"`
 }
@@ -369,9 +369,9 @@ type FundDisclosureHolder struct {
 	Cik           string  `json:"cik"`
 	Holder        string  `json:"holder"`
 	SecurityCusip string  `json:"securityCusip"`
-	Shares        uint64  `json:"shares"`
+	Shares        float64 `json:"shares"`
 	DateReported  Date    `json:"dateReported"`
-	Change        int64   `json:"change"`
+	Change        float64 `json:"change"`
 	WeightPercent float64 `json:"weightPercent"`
 }
 
@@ -382,9 +382,9 @@ type fundDisclosureHolderShadow struct {
 	Cik           *string  `json:"cik"`
 	Holder        *string  `json:"holder"`
 	SecurityCusip *string  `json:"securityCusip"`
-	Shares        *uint64  `json:"shares"`
+	Shares        *float64 `json:"shares"`
 	DateReported  *Date    `json:"dateReported"`
-	Change        *int64   `json:"change"`
+	Change        *float64 `json:"change"`
 	WeightPercent *float64 `json:"weightPercent"`
 }
 
@@ -435,7 +435,7 @@ type FundDisclosure struct {
 	Title               string   `json:"title"`
 	Cusip               string   `json:"cusip"`
 	Isin                string   `json:"isin"`
-	Balance             uint64   `json:"balance"`
+	Balance             float64  `json:"balance"`
 	Units               string   `json:"units"`
 	CurrencyCode        string   `json:"cur_cd"`
 	ValUsd              float64  `json:"valUsd"`
@@ -464,7 +464,7 @@ type fundDisclosureShadow struct {
 	Title               *string   `json:"title"`
 	Cusip               *string   `json:"cusip"`
 	Isin                *string   `json:"isin"`
-	Balance             *uint64   `json:"balance"`
+	Balance             *float64  `json:"balance"`
 	Units               *string   `json:"units"`
 	CurrencyCode        *string   `json:"cur_cd"`
 	ValUsd              *float64  `json:"valUsd"`

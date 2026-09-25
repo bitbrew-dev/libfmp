@@ -87,10 +87,13 @@ pub struct IpoProspectus {
     pub ipo_date: Date,
     pub cik: Cik,
     pub price_public_per_share: Price,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub price_public_total: MarketValue,
     pub discounts_and_commissions_per_share: Price,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub discounts_and_commissions_total: MarketValue,
     pub proceeds_before_expenses_per_share: Price,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub proceeds_before_expenses_total: MarketValue,
     pub form: String,
     pub url: String,

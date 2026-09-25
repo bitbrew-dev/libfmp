@@ -104,7 +104,7 @@ async fn custom_proxy_preserves_paths_encoding_headers_and_fixture_values() {
     assert_eq!(asset.len(), 1);
     assert_eq!(asset[0].symbol.as_str(), "ZWT-T.TO");
     assert_eq!(asset[0].asset.as_str(), "AAPL");
-    assert_eq!(asset[0].shares_number, 42_372);
+    assert_eq!(asset[0].shares_number, 42_372.0);
     assert_eq!(asset[0].weight_percentage, 10.1);
     assert_eq!(asset[0].market_value, 20_141_231.66);
     assert_eq!(sector.len(), 1);

@@ -23,7 +23,9 @@ pub struct CompanyProfile {
     pub price: Price,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub market_cap: MarketCapitalization,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub beta: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub last_dividend: MarketValue,
     pub range: String,
     pub change: Change,
