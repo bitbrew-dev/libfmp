@@ -212,3 +212,14 @@ def test_status_error_carries_the_statement_endpoint_id(
     assert error.endpoint == "income-statement"
     assert error.status == 403
     assert error.body == '{"error": "denied"}'
+
+
+def test_income_statement_decodes_fractional_share_quantities(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #340: fractional and integral-float weighted share counts decode as ``float``."""
+    fixture_server.route("/income-statement", load_fixture("income_statement_fractional_synthetic.json"))
+    rows = client.statements.income.statement("AAPL")
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].weighted_average_shs_out, float)
+    assert rows[0].weighted_average_shs_out == 14_948_500_000.5
+    assert rows[0].weighted_average_shs_out_dil == 15_004_697_000.0

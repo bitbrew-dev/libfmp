@@ -79,4 +79,44 @@ func TestQuantityAndAmountFieldsDecodeFractionalForms(t *testing.T) {
 		earnings[0].RevenueActual == nil || *earnings[0].RevenueActual != 1_101_500_000 {
 		t.Fatalf("earnings_calendar_fractional_synthetic = %+v", earnings)
 	}
+
+	dcf := assertFixtureParity[CustomDcfValuation](t, "custom_discounted_cash_flow_fractional_synthetic.json")
+	if len(dcf) != 1 || dcf[0].DilutedSharesOutstanding != 15_004_697_000.5 {
+		t.Fatalf("custom_discounted_cash_flow_fractional_synthetic = %+v", dcf)
+	}
+
+	income := assertFixtureParity[IncomeStatement](t, "income_statement_fractional_synthetic.json")
+	if len(income) != 1 || income[0].WeightedAverageShsOut != 14_948_500_000.5 ||
+		income[0].WeightedAverageShsOutDil != 15_004_697_000 {
+		t.Fatalf("income_statement_fractional_synthetic = %+v", income)
+	}
+
+	trades := assertFixtureParity[AftermarketTrade](t, "aftermarket_trade_fractional_synthetic.json")
+	if len(trades) != 1 || trades[0].TradeSize != 16.5 {
+		t.Fatalf("aftermarket_trade_fractional_synthetic = %+v", trades)
+	}
+
+	holdings := assertFixtureParity[InstitutionalHolding](t, "institutional_ownership_extract_fractional_synthetic.json")
+	if len(holdings) != 1 || holdings[0].Shares != 13_280.5 || holdings[0].Value != 1 {
+		t.Fatalf("institutional_ownership_extract_fractional_synthetic = %+v", holdings)
+	}
+}
+
+func TestQuantityAndAmountFieldsDecodeExponentForms(t *testing.T) {
+	t.Parallel()
+
+	var trade AftermarketTrade
+	err := json.Unmarshal([]byte(`{"symbol":"AAPL","price":232.53,"tradeSize":1.6e1,"timestamp":1738715334311}`), &trade)
+	if err != nil || trade.TradeSize != 16 {
+		t.Fatalf("AftermarketTrade = %+v, %v", trade, err)
+	}
+
+	var holding InstitutionalHolding
+	err = json.Unmarshal([]byte(`{"date":"2023-09-30","filingDate":"2023-11-13","acceptedDate":"2023-11-13",`+
+		`"cik":"0001388838","securityCusip":"674215207","symbol":"CHRD","nameOfIssuer":"CHORD ENERGY CORPORATION",`+
+		`"shares":1.32805e4,"titleOfClass":"COM NEW","sharesType":"SH","putCallShare":"","value":2.5E6,`+
+		`"link":"https://example.invalid","finalLink":"https://example.invalid"}`), &holding)
+	if err != nil || holding.Shares != 13_280.5 || holding.Value != 2_500_000 {
+		t.Fatalf("InstitutionalHolding = %+v, %v", holding, err)
+	}
 }

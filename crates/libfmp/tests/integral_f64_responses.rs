@@ -10,10 +10,14 @@ use libfmp::responses::{
     calendar::{EarningsEvent, StockSplitEvent},
     company::CompanyShareFloat,
     crypto::CryptocurrencyListing,
+    dcf::CustomDcfValuation,
     fundraising::RegulationDOffering,
     funds::FundDisclosure,
     insider_trading::InsiderTrade,
+    institutional_ownership::InstitutionalHolding,
+    quote::AftermarketTrade,
     screener::CompanyScreenerEntry,
+    statements::IncomeStatement,
 };
 use serde_json::json;
 
@@ -25,6 +29,12 @@ const DISCLOSURES: &[u8] = include_bytes!("fixtures/fund_disclosures_fractional_
 const FLOAT: &[u8] = include_bytes!("fixtures/company_shares_float_fractional_synthetic.json");
 const REG_D: &[u8] = include_bytes!("fixtures/fundraising_by_cik_fractional_synthetic.json");
 const EARNINGS: &[u8] = include_bytes!("fixtures/earnings_calendar_fractional_synthetic.json");
+const CUSTOM_DCF: &[u8] =
+    include_bytes!("fixtures/custom_discounted_cash_flow_fractional_synthetic.json");
+const INCOME: &[u8] = include_bytes!("fixtures/income_statement_fractional_synthetic.json");
+const TRADES: &[u8] = include_bytes!("fixtures/aftermarket_trade_fractional_synthetic.json");
+const HOLDINGS: &[u8] =
+    include_bytes!("fixtures/institutional_ownership_extract_fractional_synthetic.json");
 
 #[test]
 fn market_cap_decodes_integral_float_and_fractional_forms() {
@@ -115,6 +125,49 @@ fn earnings_revenue_decodes_fractional_and_integral_float_forms() {
 }
 
 #[test]
+fn dcf_diluted_shares_decode_a_fractional_quantity() {
+    let rows: Vec<CustomDcfValuation> = serde_json::from_slice(CUSTOM_DCF).unwrap();
+
+    assert_eq!(rows[0].diluted_shares_outstanding, 15_004_697_000.5);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["dilutedSharesOutstanding"], json!(15_004_697_000.5));
+}
+
+#[test]
+fn income_statement_share_quantities_decode_fractional_and_integral_float_forms() {
+    let rows: Vec<IncomeStatement> = serde_json::from_slice(INCOME).unwrap();
+
+    assert_eq!(rows[0].weighted_average_shs_out, 14_948_500_000.5);
+    assert_eq!(rows[0].weighted_average_shs_out_dil, 15_004_697_000.0);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["weightedAverageShsOut"], json!(14_948_500_000.5));
+    assert_eq!(
+        wire[0]["weightedAverageShsOutDil"],
+        json!(15_004_697_000_u64)
+    );
+}
+
+#[test]
+fn aftermarket_trade_size_decodes_a_fractional_quantity() {
+    let rows: Vec<AftermarketTrade> = serde_json::from_slice(TRADES).unwrap();
+
+    assert_eq!(rows[0].trade_size, 16.5);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["tradeSize"], json!(16.5));
+}
+
+#[test]
+fn institutional_holding_decodes_fractional_shares_and_integral_float_value() {
+    let rows: Vec<InstitutionalHolding> = serde_json::from_slice(HOLDINGS).unwrap();
+
+    assert_eq!(rows[0].shares, 13_280.5);
+    assert_eq!(rows[0].value, 1.0);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["shares"], json!(13_280.5));
+    assert_eq!(wire[0]["value"], json!(1_u64));
+}
+
+#[test]
 fn exponent_form_numbers_decode_into_every_integral_f64_alias() {
     let screener: CompanyScreenerEntry = serde_json::from_value(json!({
         "symbol": "AAPL", "companyName": "Apple Inc.", "marketCap": 4.885602246714e12,
@@ -144,4 +197,23 @@ fn exponent_form_numbers_decode_into_every_integral_f64_alias() {
     )
     .unwrap();
     assert_eq!((split.numerator, split.denominator), (4.0, 1.0));
+
+    let trade: AftermarketTrade = serde_json::from_str(
+        r#"{"symbol":"AAPL","price":232.53,"tradeSize":1.6e1,"timestamp":1738715334311}"#,
+    )
+    .unwrap();
+    assert_eq!(trade.trade_size, 16.0);
+    assert_eq!(
+        serde_json::to_value(&trade).unwrap()["tradeSize"],
+        json!(16_u64)
+    );
+
+    let mut holding: serde_json::Value = serde_json::from_slice(HOLDINGS).unwrap();
+    holding[0]["shares"] = serde_json::from_str("1.32805e4").unwrap();
+    holding[0]["value"] = serde_json::from_str("2.5E6").unwrap();
+    let holdings: Vec<InstitutionalHolding> = serde_json::from_value(holding).unwrap();
+    assert_eq!(
+        (holdings[0].shares, holdings[0].value),
+        (13_280.5, 2_500_000.0)
+    );
 }
