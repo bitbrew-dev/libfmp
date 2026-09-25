@@ -26,7 +26,7 @@ fn documented_key_metrics_decodes_all_47_exact_fields() {
             period: FiscalPeriod::FullYear,
             reported_currency: CurrencyCode::new("USD").unwrap(),
             market_cap: 3_818_743_810_000.0,
-            enterprise_value: 3_895_186_810_000,
+            enterprise_value: 3_895_186_810_000.0,
             ev_to_sales: 9.359807406268247,
             ev_to_operating_cash_flow: 34.94005139843203,
             ev_to_free_cash_flow: 39.43814037077161,
@@ -38,8 +38,8 @@ fn documented_key_metrics_decodes_all_47_exact_fields() {
             graham_net_net: -11.588738000468274,
             tax_burden: 0.8438999766441395,
             interest_burden: 1.0,
-            working_capital: -17_674_000_000,
-            invested_capital: 32_160_000_000,
+            working_capital: -17_674_000_000.0,
+            invested_capital: 32_160_000_000.0,
             return_on_assets: 0.3117962593356549,
             operating_return_on_assets: 0.36742927918411644,
             return_on_tangible_assets: 0.3117962593356549,
@@ -55,18 +55,18 @@ fn documented_key_metrics_decodes_all_47_exact_fields() {
             research_and_developement_to_revenue: 0.08302075398703868,
             stock_based_compensation_to_revenue: 0.030908710811440764,
             intangibles_to_total_assets: 0.0,
-            average_receivables: 69_600_000_000,
-            average_payables: 69_410_000_000,
-            average_inventory: 6_502_000_000,
+            average_receivables: 69_600_000_000.0,
+            average_payables: 69_410_000_000.0,
+            average_inventory: 6_502_000_000.0,
             days_of_sales_outstanding: 63.9879878220208,
             days_of_payables_outstanding: 115.40052498189719,
             days_of_inventory_outstanding: 9.445465242577843,
             operating_cycle: 73.43345306459864,
             cash_conversion_cycle: -41.967071917298554,
-            free_cash_flow_to_equity: 90_284_000_000,
-            free_cash_flow_to_firm: 98_767_000_000,
-            tangible_asset_value: 73_733_000_000,
-            net_current_asset_value: -137_551_000_000,
+            free_cash_flow_to_equity: 90_284_000_000.0,
+            free_cash_flow_to_firm: 98_767_000_000.0,
+            tangible_asset_value: 73_733_000_000.0,
+            net_current_asset_value: -137_551_000_000.0,
         }]
     );
 }
@@ -82,7 +82,7 @@ fn documented_key_metrics_ttm_decodes_all_43_exact_fields() {
         [KeyMetricsTtm {
             symbol: Ticker::new("AAPL").unwrap(),
             market_cap: 4_874_072_686_740.0,
-            enterprise_value_ttm: 4_922_455_686_740,
+            enterprise_value_ttm: 4_922_455_686_740.0,
             ev_to_sales_ttm: 10.903849634593149,
             ev_to_operating_cash_flow_ttm: 35.10473168789491,
             ev_to_free_cash_flow_ttm: 38.107170845061695,
@@ -94,8 +94,8 @@ fn documented_key_metrics_ttm_decodes_all_43_exact_fields() {
             graham_net_net_ttm: -10.37184248926531,
             tax_burden_ttm: 0.8300602695198754,
             interest_burden_ttm: 1.0,
-            working_capital_ttm: 9_473_000_000,
-            invested_capital_ttm: 80_923_000_000,
+            working_capital_ttm: 9_473_000_000.0,
+            invested_capital_ttm: 80_923_000_000.0,
             return_on_assets_ttm: 0.3303178273265747,
             operating_return_on_assets_ttm: 0.3927775164283649,
             return_on_tangible_assets_ttm: 0.3504666216818967,
@@ -111,18 +111,18 @@ fn documented_key_metrics_ttm_decodes_all_43_exact_fields() {
             research_and_developement_to_revenue_ttm: 0.08868913393082611,
             stock_based_compensation_to_revenue_ttm: 0.02984436538913083,
             intangibles_to_total_assets_ttm: 0.057491336146727676,
-            average_receivables_ttm: 61_915_500_000,
-            average_payables_ttm: 63_968_000_000,
-            average_inventory_ttm: 6_311_000_000,
+            average_receivables_ttm: 61_915_500_000.0,
+            average_payables_ttm: 63_968_000_000.0,
+            average_inventory_ttm: 6_311_000_000.0,
             days_of_sales_outstanding_ttm: 43.26472725178429,
             days_of_payables_outstanding_ttm: 88.93357720364871,
             days_of_inventory_outstanding_ttm: 10.462865008858357,
             operating_cycle_ttm: 53.727592260642645,
             cash_conversion_cycle_ttm: -35.205984943006065,
-            free_cash_flow_to_equity_ttm: 114_843_000_000,
-            free_cash_flow_to_firm_ttm: 129_174_000_000,
-            tangible_asset_value_ttm: 85_157_000_000,
-            net_current_asset_value_ttm: -120_477_000_000,
+            free_cash_flow_to_equity_ttm: 114_843_000_000.0,
+            free_cash_flow_to_firm_ttm: 129_174_000_000.0,
+            tangible_asset_value_ttm: 85_157_000_000.0,
+            net_current_asset_value_ttm: -120_477_000_000.0,
         }]
     );
 }
@@ -235,11 +235,11 @@ fn signed_metric_amounts_preserve_large_negative_values() {
     let rows: Vec<KeyMetrics> = serde_json::from_value(historical).unwrap();
     assert_eq!(
         rows[0].net_current_asset_value,
-        -9_000_000_000_000_000_000_i64
+        -9_000_000_000_000_000_000.0
     );
 
     let mut ttm: serde_json::Value = serde_json::from_slice(TTM).unwrap();
     ttm[0]["workingCapitalTTM"] = serde_json::json!(-9_000_000_000_000_000_000_i64);
     let rows: Vec<KeyMetricsTtm> = serde_json::from_value(ttm).unwrap();
-    assert_eq!(rows[0].working_capital_ttm, -9_000_000_000_000_000_000_i64);
+    assert_eq!(rows[0].working_capital_ttm, -9_000_000_000_000_000_000.0);
 }

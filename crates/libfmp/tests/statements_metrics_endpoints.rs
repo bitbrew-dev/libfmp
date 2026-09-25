@@ -169,7 +169,7 @@ async fn direct_header_and_query_auth_use_the_same_typed_contracts() {
                 .key_metrics(Ticker::new("AAPL").unwrap())
                 .await
                 .unwrap();
-            assert_eq!(rows[0].working_capital, -17_674_000_000);
+            assert_eq!(rows[0].working_capital, -17_674_000_000.0);
         } else {
             let rows = client
                 .key_metrics_ttm(Ticker::new("AAPL").unwrap())

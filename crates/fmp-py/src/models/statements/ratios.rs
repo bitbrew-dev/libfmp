@@ -580,7 +580,7 @@ pub(crate) struct FinancialRatiosTtm {
     #[pyo3(get)]
     pub dividend_yield_ttm: f64,
     #[pyo3(get)]
-    pub enterprise_value_ttm: i64,
+    pub enterprise_value_ttm: f64,
     #[pyo3(get)]
     pub revenue_per_share_ttm: f64,
     #[pyo3(get)]
@@ -669,7 +669,7 @@ impl FinancialRatiosTtm {
         dividend_paid_and_capex_coverage_ratio_ttm: f64,
         dividend_payout_ratio_ttm: f64,
         dividend_yield_ttm: f64,
-        enterprise_value_ttm: i64,
+        enterprise_value_ttm: f64,
         revenue_per_share_ttm: f64,
         net_income_per_share_ttm: f64,
         interest_debt_per_share_ttm: f64,

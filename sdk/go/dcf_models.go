@@ -60,23 +60,23 @@ func (m *DcfValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type CustomDcfValuation struct {
 	Year                         string  `json:"year"`
 	Symbol                       string  `json:"symbol"`
-	Revenue                      int64   `json:"revenue"`
+	Revenue                      float64 `json:"revenue"`
 	RevenuePercentage            float64 `json:"revenuePercentage"`
-	Ebitda                       int64   `json:"ebitda"`
+	Ebitda                       float64 `json:"ebitda"`
 	EbitdaPercentage             float64 `json:"ebitdaPercentage"`
-	Ebit                         int64   `json:"ebit"`
+	Ebit                         float64 `json:"ebit"`
 	EbitPercentage               float64 `json:"ebitPercentage"`
-	Depreciation                 int64   `json:"depreciation"`
+	Depreciation                 float64 `json:"depreciation"`
 	DepreciationPercentage       float64 `json:"depreciationPercentage"`
-	TotalCash                    int64   `json:"totalCash"`
+	TotalCash                    float64 `json:"totalCash"`
 	TotalCashPercentage          float64 `json:"totalCashPercentage"`
-	Receivables                  int64   `json:"receivables"`
+	Receivables                  float64 `json:"receivables"`
 	ReceivablesPercentage        float64 `json:"receivablesPercentage"`
-	Inventories                  int64   `json:"inventories"`
+	Inventories                  float64 `json:"inventories"`
 	InventoriesPercentage        float64 `json:"inventoriesPercentage"`
-	Payable                      int64   `json:"payable"`
+	Payable                      float64 `json:"payable"`
 	PayablePercentage            float64 `json:"payablePercentage"`
-	CapitalExpenditure           int64   `json:"capitalExpenditure"`
+	CapitalExpenditure           float64 `json:"capitalExpenditure"`
 	CapitalExpenditurePercentage float64 `json:"capitalExpenditurePercentage"`
 	Price                        float64 `json:"price"`
 	Beta                         float64 `json:"beta"`
@@ -87,24 +87,24 @@ type CustomDcfValuation struct {
 	RiskFreeRate                 float64 `json:"riskFreeRate"`
 	MarketRiskPremium            float64 `json:"marketRiskPremium"`
 	CostOfEquity                 float64 `json:"costOfEquity"`
-	TotalDebt                    int64   `json:"totalDebt"`
-	TotalEquity                  int64   `json:"totalEquity"`
-	TotalCapital                 int64   `json:"totalCapital"`
+	TotalDebt                    float64 `json:"totalDebt"`
+	TotalEquity                  float64 `json:"totalEquity"`
+	TotalCapital                 float64 `json:"totalCapital"`
 	DebtWeighting                float64 `json:"debtWeighting"`
 	EquityWeighting              float64 `json:"equityWeighting"`
 	Wacc                         float64 `json:"wacc"`
-	TaxRateCash                  int64   `json:"taxRateCash"`
-	Ebiat                        int64   `json:"ebiat"`
-	Ufcf                         int64   `json:"ufcf"`
-	SumPvUfcf                    int64   `json:"sumPvUfcf"`
+	TaxRateCash                  float64 `json:"taxRateCash"`
+	Ebiat                        float64 `json:"ebiat"`
+	Ufcf                         float64 `json:"ufcf"`
+	SumPvUfcf                    float64 `json:"sumPvUfcf"`
 	LongTermGrowthRate           float64 `json:"longTermGrowthRate"`
-	TerminalValue                int64   `json:"terminalValue"`
-	PresentTerminalValue         int64   `json:"presentTerminalValue"`
-	EnterpriseValue              int64   `json:"enterpriseValue"`
-	NetDebt                      int64   `json:"netDebt"`
-	EquityValue                  int64   `json:"equityValue"`
+	TerminalValue                float64 `json:"terminalValue"`
+	PresentTerminalValue         float64 `json:"presentTerminalValue"`
+	EnterpriseValue              float64 `json:"enterpriseValue"`
+	NetDebt                      float64 `json:"netDebt"`
+	EquityValue                  float64 `json:"equityValue"`
 	EquityValuePerShare          float64 `json:"equityValuePerShare"`
-	FreeCashFlowT1               int64   `json:"freeCashFlowT1"`
+	FreeCashFlowT1               float64 `json:"freeCashFlowT1"`
 }
 
 // customDcfValuationShadow mirrors CustomDcfValuation with a pointer or raw
@@ -113,23 +113,23 @@ type CustomDcfValuation struct {
 type customDcfValuationShadow struct {
 	Year                         *string  `json:"year"`
 	Symbol                       *string  `json:"symbol"`
-	Revenue                      *int64   `json:"revenue"`
+	Revenue                      *float64 `json:"revenue"`
 	RevenuePercentage            *float64 `json:"revenuePercentage"`
-	Ebitda                       *int64   `json:"ebitda"`
+	Ebitda                       *float64 `json:"ebitda"`
 	EbitdaPercentage             *float64 `json:"ebitdaPercentage"`
-	Ebit                         *int64   `json:"ebit"`
+	Ebit                         *float64 `json:"ebit"`
 	EbitPercentage               *float64 `json:"ebitPercentage"`
-	Depreciation                 *int64   `json:"depreciation"`
+	Depreciation                 *float64 `json:"depreciation"`
 	DepreciationPercentage       *float64 `json:"depreciationPercentage"`
-	TotalCash                    *int64   `json:"totalCash"`
+	TotalCash                    *float64 `json:"totalCash"`
 	TotalCashPercentage          *float64 `json:"totalCashPercentage"`
-	Receivables                  *int64   `json:"receivables"`
+	Receivables                  *float64 `json:"receivables"`
 	ReceivablesPercentage        *float64 `json:"receivablesPercentage"`
-	Inventories                  *int64   `json:"inventories"`
+	Inventories                  *float64 `json:"inventories"`
 	InventoriesPercentage        *float64 `json:"inventoriesPercentage"`
-	Payable                      *int64   `json:"payable"`
+	Payable                      *float64 `json:"payable"`
 	PayablePercentage            *float64 `json:"payablePercentage"`
-	CapitalExpenditure           *int64   `json:"capitalExpenditure"`
+	CapitalExpenditure           *float64 `json:"capitalExpenditure"`
 	CapitalExpenditurePercentage *float64 `json:"capitalExpenditurePercentage"`
 	Price                        *float64 `json:"price"`
 	Beta                         *float64 `json:"beta"`
@@ -140,24 +140,24 @@ type customDcfValuationShadow struct {
 	RiskFreeRate                 *float64 `json:"riskFreeRate"`
 	MarketRiskPremium            *float64 `json:"marketRiskPremium"`
 	CostOfEquity                 *float64 `json:"costOfEquity"`
-	TotalDebt                    *int64   `json:"totalDebt"`
-	TotalEquity                  *int64   `json:"totalEquity"`
-	TotalCapital                 *int64   `json:"totalCapital"`
+	TotalDebt                    *float64 `json:"totalDebt"`
+	TotalEquity                  *float64 `json:"totalEquity"`
+	TotalCapital                 *float64 `json:"totalCapital"`
 	DebtWeighting                *float64 `json:"debtWeighting"`
 	EquityWeighting              *float64 `json:"equityWeighting"`
 	Wacc                         *float64 `json:"wacc"`
-	TaxRateCash                  *int64   `json:"taxRateCash"`
-	Ebiat                        *int64   `json:"ebiat"`
-	Ufcf                         *int64   `json:"ufcf"`
-	SumPvUfcf                    *int64   `json:"sumPvUfcf"`
+	TaxRateCash                  *float64 `json:"taxRateCash"`
+	Ebiat                        *float64 `json:"ebiat"`
+	Ufcf                         *float64 `json:"ufcf"`
+	SumPvUfcf                    *float64 `json:"sumPvUfcf"`
 	LongTermGrowthRate           *float64 `json:"longTermGrowthRate"`
-	TerminalValue                *int64   `json:"terminalValue"`
-	PresentTerminalValue         *int64   `json:"presentTerminalValue"`
-	EnterpriseValue              *int64   `json:"enterpriseValue"`
-	NetDebt                      *int64   `json:"netDebt"`
-	EquityValue                  *int64   `json:"equityValue"`
+	TerminalValue                *float64 `json:"terminalValue"`
+	PresentTerminalValue         *float64 `json:"presentTerminalValue"`
+	EnterpriseValue              *float64 `json:"enterpriseValue"`
+	NetDebt                      *float64 `json:"netDebt"`
+	EquityValue                  *float64 `json:"equityValue"`
 	EquityValuePerShare          *float64 `json:"equityValuePerShare"`
-	FreeCashFlowT1               *int64   `json:"freeCashFlowT1"`
+	FreeCashFlowT1               *float64 `json:"freeCashFlowT1"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -321,9 +321,9 @@ func (m *CustomDcfValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type CustomLeveredDcfValuation struct {
 	Year                         string  `json:"year"`
 	Symbol                       string  `json:"symbol"`
-	Revenue                      int64   `json:"revenue"`
+	Revenue                      float64 `json:"revenue"`
 	RevenuePercentage            float64 `json:"revenuePercentage"`
-	CapitalExpenditure           int64   `json:"capitalExpenditure"`
+	CapitalExpenditure           float64 `json:"capitalExpenditure"`
 	CapitalExpenditurePercentage float64 `json:"capitalExpenditurePercentage"`
 	Price                        float64 `json:"price"`
 	Beta                         float64 `json:"beta"`
@@ -334,24 +334,24 @@ type CustomLeveredDcfValuation struct {
 	RiskFreeRate                 float64 `json:"riskFreeRate"`
 	MarketRiskPremium            float64 `json:"marketRiskPremium"`
 	CostOfEquity                 float64 `json:"costOfEquity"`
-	TotalDebt                    int64   `json:"totalDebt"`
-	TotalEquity                  int64   `json:"totalEquity"`
-	TotalCapital                 int64   `json:"totalCapital"`
+	TotalDebt                    float64 `json:"totalDebt"`
+	TotalEquity                  float64 `json:"totalEquity"`
+	TotalCapital                 float64 `json:"totalCapital"`
 	DebtWeighting                float64 `json:"debtWeighting"`
 	EquityWeighting              float64 `json:"equityWeighting"`
 	Wacc                         float64 `json:"wacc"`
-	OperatingCashFlow            int64   `json:"operatingCashFlow"`
-	PvLfcf                       int64   `json:"pvLfcf"`
-	SumPvLfcf                    int64   `json:"sumPvLfcf"`
+	OperatingCashFlow            float64 `json:"operatingCashFlow"`
+	PvLfcf                       float64 `json:"pvLfcf"`
+	SumPvLfcf                    float64 `json:"sumPvLfcf"`
 	LongTermGrowthRate           float64 `json:"longTermGrowthRate"`
-	FreeCashFlow                 int64   `json:"freeCashFlow"`
-	TerminalValue                int64   `json:"terminalValue"`
-	PresentTerminalValue         int64   `json:"presentTerminalValue"`
-	EnterpriseValue              int64   `json:"enterpriseValue"`
-	NetDebt                      int64   `json:"netDebt"`
-	EquityValue                  int64   `json:"equityValue"`
+	FreeCashFlow                 float64 `json:"freeCashFlow"`
+	TerminalValue                float64 `json:"terminalValue"`
+	PresentTerminalValue         float64 `json:"presentTerminalValue"`
+	EnterpriseValue              float64 `json:"enterpriseValue"`
+	NetDebt                      float64 `json:"netDebt"`
+	EquityValue                  float64 `json:"equityValue"`
 	EquityValuePerShare          float64 `json:"equityValuePerShare"`
-	FreeCashFlowT1               int64   `json:"freeCashFlowT1"`
+	FreeCashFlowT1               float64 `json:"freeCashFlowT1"`
 	OperatingCashFlowPercentage  float64 `json:"operatingCashFlowPercentage"`
 }
 
@@ -361,9 +361,9 @@ type CustomLeveredDcfValuation struct {
 type customLeveredDcfValuationShadow struct {
 	Year                         *string  `json:"year"`
 	Symbol                       *string  `json:"symbol"`
-	Revenue                      *int64   `json:"revenue"`
+	Revenue                      *float64 `json:"revenue"`
 	RevenuePercentage            *float64 `json:"revenuePercentage"`
-	CapitalExpenditure           *int64   `json:"capitalExpenditure"`
+	CapitalExpenditure           *float64 `json:"capitalExpenditure"`
 	CapitalExpenditurePercentage *float64 `json:"capitalExpenditurePercentage"`
 	Price                        *float64 `json:"price"`
 	Beta                         *float64 `json:"beta"`
@@ -374,24 +374,24 @@ type customLeveredDcfValuationShadow struct {
 	RiskFreeRate                 *float64 `json:"riskFreeRate"`
 	MarketRiskPremium            *float64 `json:"marketRiskPremium"`
 	CostOfEquity                 *float64 `json:"costOfEquity"`
-	TotalDebt                    *int64   `json:"totalDebt"`
-	TotalEquity                  *int64   `json:"totalEquity"`
-	TotalCapital                 *int64   `json:"totalCapital"`
+	TotalDebt                    *float64 `json:"totalDebt"`
+	TotalEquity                  *float64 `json:"totalEquity"`
+	TotalCapital                 *float64 `json:"totalCapital"`
 	DebtWeighting                *float64 `json:"debtWeighting"`
 	EquityWeighting              *float64 `json:"equityWeighting"`
 	Wacc                         *float64 `json:"wacc"`
-	OperatingCashFlow            *int64   `json:"operatingCashFlow"`
-	PvLfcf                       *int64   `json:"pvLfcf"`
-	SumPvLfcf                    *int64   `json:"sumPvLfcf"`
+	OperatingCashFlow            *float64 `json:"operatingCashFlow"`
+	PvLfcf                       *float64 `json:"pvLfcf"`
+	SumPvLfcf                    *float64 `json:"sumPvLfcf"`
 	LongTermGrowthRate           *float64 `json:"longTermGrowthRate"`
-	FreeCashFlow                 *int64   `json:"freeCashFlow"`
-	TerminalValue                *int64   `json:"terminalValue"`
-	PresentTerminalValue         *int64   `json:"presentTerminalValue"`
-	EnterpriseValue              *int64   `json:"enterpriseValue"`
-	NetDebt                      *int64   `json:"netDebt"`
-	EquityValue                  *int64   `json:"equityValue"`
+	FreeCashFlow                 *float64 `json:"freeCashFlow"`
+	TerminalValue                *float64 `json:"terminalValue"`
+	PresentTerminalValue         *float64 `json:"presentTerminalValue"`
+	EnterpriseValue              *float64 `json:"enterpriseValue"`
+	NetDebt                      *float64 `json:"netDebt"`
+	EquityValue                  *float64 `json:"equityValue"`
 	EquityValuePerShare          *float64 `json:"equityValuePerShare"`
-	FreeCashFlowT1               *int64   `json:"freeCashFlowT1"`
+	FreeCashFlowT1               *float64 `json:"freeCashFlowT1"`
 	OperatingCashFlowPercentage  *float64 `json:"operatingCashFlowPercentage"`
 }
 

@@ -175,53 +175,53 @@ pub(crate) struct CrowdfundingOffering {
     pub number_of_security_offered: f64,
     offering_price: ::serde_json::Number,
     #[pyo3(get)]
-    pub offering_amount: i64,
+    pub offering_amount: f64,
     #[pyo3(get)]
     pub over_subscription_accepted: String,
     #[pyo3(get)]
     pub over_subscription_allocation_type: String,
     #[pyo3(get)]
-    pub maximum_offering_amount: i64,
+    pub maximum_offering_amount: f64,
     #[pyo3(get)]
     pub offering_deadline_date: ::chrono::NaiveDate,
     #[pyo3(get)]
     pub current_number_of_employees: u64,
     #[pyo3(get)]
-    pub total_asset_most_recent_fiscal_year: i64,
+    pub total_asset_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub total_asset_prior_fiscal_year: i64,
+    pub total_asset_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub cash_and_cash_equivalent_most_recent_fiscal_year: i64,
+    pub cash_and_cash_equivalent_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub cash_and_cash_equivalent_prior_fiscal_year: i64,
+    pub cash_and_cash_equivalent_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub accounts_receivable_most_recent_fiscal_year: i64,
+    pub accounts_receivable_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub accounts_receivable_prior_fiscal_year: i64,
+    pub accounts_receivable_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub short_term_debt_most_recent_fiscal_year: i64,
+    pub short_term_debt_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub short_term_debt_prior_fiscal_year: i64,
+    pub short_term_debt_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub long_term_debt_most_recent_fiscal_year: i64,
+    pub long_term_debt_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub long_term_debt_prior_fiscal_year: i64,
+    pub long_term_debt_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub revenue_most_recent_fiscal_year: i64,
+    pub revenue_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub revenue_prior_fiscal_year: i64,
+    pub revenue_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub cost_goods_sold_most_recent_fiscal_year: i64,
+    pub cost_goods_sold_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub cost_goods_sold_prior_fiscal_year: i64,
+    pub cost_goods_sold_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub taxes_paid_most_recent_fiscal_year: i64,
+    pub taxes_paid_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub taxes_paid_prior_fiscal_year: i64,
+    pub taxes_paid_prior_fiscal_year: f64,
     #[pyo3(get)]
-    pub net_income_most_recent_fiscal_year: i64,
+    pub net_income_most_recent_fiscal_year: f64,
     #[pyo3(get)]
-    pub net_income_prior_fiscal_year: i64,
+    pub net_income_prior_fiscal_year: f64,
 }
 
 #[gen_stub_pymethods]
@@ -256,30 +256,30 @@ impl CrowdfundingOffering {
         security_offered_other_description: Option<String>,
         number_of_security_offered: f64,
         offering_price: String,
-        offering_amount: i64,
+        offering_amount: f64,
         over_subscription_accepted: String,
         over_subscription_allocation_type: String,
-        maximum_offering_amount: i64,
+        maximum_offering_amount: f64,
         offering_deadline_date: ::chrono::NaiveDate,
         current_number_of_employees: u64,
-        total_asset_most_recent_fiscal_year: i64,
-        total_asset_prior_fiscal_year: i64,
-        cash_and_cash_equivalent_most_recent_fiscal_year: i64,
-        cash_and_cash_equivalent_prior_fiscal_year: i64,
-        accounts_receivable_most_recent_fiscal_year: i64,
-        accounts_receivable_prior_fiscal_year: i64,
-        short_term_debt_most_recent_fiscal_year: i64,
-        short_term_debt_prior_fiscal_year: i64,
-        long_term_debt_most_recent_fiscal_year: i64,
-        long_term_debt_prior_fiscal_year: i64,
-        revenue_most_recent_fiscal_year: i64,
-        revenue_prior_fiscal_year: i64,
-        cost_goods_sold_most_recent_fiscal_year: i64,
-        cost_goods_sold_prior_fiscal_year: i64,
-        taxes_paid_most_recent_fiscal_year: i64,
-        taxes_paid_prior_fiscal_year: i64,
-        net_income_most_recent_fiscal_year: i64,
-        net_income_prior_fiscal_year: i64,
+        total_asset_most_recent_fiscal_year: f64,
+        total_asset_prior_fiscal_year: f64,
+        cash_and_cash_equivalent_most_recent_fiscal_year: f64,
+        cash_and_cash_equivalent_prior_fiscal_year: f64,
+        accounts_receivable_most_recent_fiscal_year: f64,
+        accounts_receivable_prior_fiscal_year: f64,
+        short_term_debt_most_recent_fiscal_year: f64,
+        short_term_debt_prior_fiscal_year: f64,
+        long_term_debt_most_recent_fiscal_year: f64,
+        long_term_debt_prior_fiscal_year: f64,
+        revenue_most_recent_fiscal_year: f64,
+        revenue_prior_fiscal_year: f64,
+        cost_goods_sold_most_recent_fiscal_year: f64,
+        cost_goods_sold_prior_fiscal_year: f64,
+        taxes_paid_most_recent_fiscal_year: f64,
+        taxes_paid_prior_fiscal_year: f64,
+        net_income_most_recent_fiscal_year: f64,
+        net_income_prior_fiscal_year: f64,
     ) -> PyResult<Self> {
         let offering_price = ::serde_json::from_str::<::serde_json::Number>(&offering_price)
             .map_err(|error| {

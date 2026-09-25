@@ -722,48 +722,23 @@ pub mod empty_date {
 pub(crate) mod integral_f64 {
     use super::*;
 
-    /// A field value the integral serializer accepts.
-    ///
-    /// `i64` is transitional: it lets `StatementAmount` fields carry the
-    /// attribute before the alias moves to `f64` (#341).
-    pub(crate) trait IntegralNumber {
-        fn serialize_integral<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error>;
-    }
-
-    impl IntegralNumber for f64 {
-        fn serialize_integral<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-            if self.is_finite() && self.fract() == 0.0 {
-                if *self >= 0.0 && *self < u64::MAX as f64 {
-                    return serializer.serialize_u64(*self as u64);
-                }
-                if *self < 0.0 && *self >= i64::MIN as f64 {
-                    return serializer.serialize_i64(*self as i64);
-                }
-            }
-            serializer.serialize_f64(*self)
-        }
-    }
-
-    impl IntegralNumber for i64 {
-        fn serialize_integral<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-            serializer.serialize_i64(*self)
-        }
-    }
-
-    pub(crate) fn serialize<T, S>(value: &T, serializer: S) -> Result<S::Ok, S::Error>
+    pub(crate) fn serialize<S>(value: &f64, serializer: S) -> Result<S::Ok, S::Error>
     where
-        T: IntegralNumber,
         S: Serializer,
     {
-        value.serialize_integral(serializer)
+        if value.is_finite() && value.fract() == 0.0 {
+            if *value >= 0.0 && *value < u64::MAX as f64 {
+                return serializer.serialize_u64(*value as u64);
+            }
+            if *value < 0.0 && *value >= i64::MIN as f64 {
+                return serializer.serialize_i64(*value as i64);
+            }
+        }
+        serializer.serialize_f64(*value)
     }
 
-    pub(crate) fn serialize_option<T, S>(
-        value: &Option<T>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
+    pub(crate) fn serialize_option<S>(value: &Option<f64>, serializer: S) -> Result<S::Ok, S::Error>
     where
-        T: IntegralNumber,
         S: Serializer,
     {
         match value {

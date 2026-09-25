@@ -22,7 +22,7 @@ pub(crate) struct KeyMetrics {
     #[pyo3(get)]
     pub market_cap: f64,
     #[pyo3(get)]
-    pub enterprise_value: i64,
+    pub enterprise_value: f64,
     #[pyo3(get)]
     pub ev_to_sales: f64,
     #[pyo3(get)]
@@ -46,9 +46,9 @@ pub(crate) struct KeyMetrics {
     #[pyo3(get)]
     pub interest_burden: f64,
     #[pyo3(get)]
-    pub working_capital: i64,
+    pub working_capital: f64,
     #[pyo3(get)]
-    pub invested_capital: i64,
+    pub invested_capital: f64,
     #[pyo3(get)]
     pub return_on_assets: f64,
     #[pyo3(get)]
@@ -80,11 +80,11 @@ pub(crate) struct KeyMetrics {
     #[pyo3(get)]
     pub intangibles_to_total_assets: f64,
     #[pyo3(get)]
-    pub average_receivables: i64,
+    pub average_receivables: f64,
     #[pyo3(get)]
-    pub average_payables: i64,
+    pub average_payables: f64,
     #[pyo3(get)]
-    pub average_inventory: i64,
+    pub average_inventory: f64,
     #[pyo3(get)]
     pub days_of_sales_outstanding: f64,
     #[pyo3(get)]
@@ -96,13 +96,13 @@ pub(crate) struct KeyMetrics {
     #[pyo3(get)]
     pub cash_conversion_cycle: f64,
     #[pyo3(get)]
-    pub free_cash_flow_to_equity: i64,
+    pub free_cash_flow_to_equity: f64,
     #[pyo3(get)]
-    pub free_cash_flow_to_firm: i64,
+    pub free_cash_flow_to_firm: f64,
     #[pyo3(get)]
-    pub tangible_asset_value: i64,
+    pub tangible_asset_value: f64,
     #[pyo3(get)]
-    pub net_current_asset_value: i64,
+    pub net_current_asset_value: f64,
 }
 
 #[gen_stub_pymethods]
@@ -119,7 +119,7 @@ impl KeyMetrics {
         period: String,
         reported_currency: String,
         market_cap: f64,
-        enterprise_value: i64,
+        enterprise_value: f64,
         ev_to_sales: f64,
         ev_to_operating_cash_flow: f64,
         ev_to_free_cash_flow: f64,
@@ -131,8 +131,8 @@ impl KeyMetrics {
         graham_net_net: f64,
         tax_burden: f64,
         interest_burden: f64,
-        working_capital: i64,
-        invested_capital: i64,
+        working_capital: f64,
+        invested_capital: f64,
         return_on_assets: f64,
         operating_return_on_assets: f64,
         return_on_tangible_assets: f64,
@@ -148,18 +148,18 @@ impl KeyMetrics {
         research_and_developement_to_revenue: f64,
         stock_based_compensation_to_revenue: f64,
         intangibles_to_total_assets: f64,
-        average_receivables: i64,
-        average_payables: i64,
-        average_inventory: i64,
+        average_receivables: f64,
+        average_payables: f64,
+        average_inventory: f64,
         days_of_sales_outstanding: f64,
         days_of_payables_outstanding: f64,
         days_of_inventory_outstanding: f64,
         operating_cycle: f64,
         cash_conversion_cycle: f64,
-        free_cash_flow_to_equity: i64,
-        free_cash_flow_to_firm: i64,
-        tangible_asset_value: i64,
-        net_current_asset_value: i64,
+        free_cash_flow_to_equity: f64,
+        free_cash_flow_to_firm: f64,
+        tangible_asset_value: f64,
+        net_current_asset_value: f64,
     ) -> Self {
         Self {
             symbol,
@@ -359,7 +359,7 @@ pub(crate) struct KeyMetricsTtm {
     #[pyo3(get)]
     pub market_cap: f64,
     #[pyo3(get)]
-    pub enterprise_value_ttm: i64,
+    pub enterprise_value_ttm: f64,
     #[pyo3(get)]
     pub ev_to_sales_ttm: f64,
     #[pyo3(get)]
@@ -383,9 +383,9 @@ pub(crate) struct KeyMetricsTtm {
     #[pyo3(get)]
     pub interest_burden_ttm: f64,
     #[pyo3(get)]
-    pub working_capital_ttm: i64,
+    pub working_capital_ttm: f64,
     #[pyo3(get)]
-    pub invested_capital_ttm: i64,
+    pub invested_capital_ttm: f64,
     #[pyo3(get)]
     pub return_on_assets_ttm: f64,
     #[pyo3(get)]
@@ -417,11 +417,11 @@ pub(crate) struct KeyMetricsTtm {
     #[pyo3(get)]
     pub intangibles_to_total_assets_ttm: f64,
     #[pyo3(get)]
-    pub average_receivables_ttm: i64,
+    pub average_receivables_ttm: f64,
     #[pyo3(get)]
-    pub average_payables_ttm: i64,
+    pub average_payables_ttm: f64,
     #[pyo3(get)]
-    pub average_inventory_ttm: i64,
+    pub average_inventory_ttm: f64,
     #[pyo3(get)]
     pub days_of_sales_outstanding_ttm: f64,
     #[pyo3(get)]
@@ -433,13 +433,13 @@ pub(crate) struct KeyMetricsTtm {
     #[pyo3(get)]
     pub cash_conversion_cycle_ttm: f64,
     #[pyo3(get)]
-    pub free_cash_flow_to_equity_ttm: i64,
+    pub free_cash_flow_to_equity_ttm: f64,
     #[pyo3(get)]
-    pub free_cash_flow_to_firm_ttm: i64,
+    pub free_cash_flow_to_firm_ttm: f64,
     #[pyo3(get)]
-    pub tangible_asset_value_ttm: i64,
+    pub tangible_asset_value_ttm: f64,
     #[pyo3(get)]
-    pub net_current_asset_value_ttm: i64,
+    pub net_current_asset_value_ttm: f64,
 }
 
 #[gen_stub_pymethods]
@@ -452,7 +452,7 @@ impl KeyMetricsTtm {
     fn new(
         symbol: String,
         market_cap: f64,
-        enterprise_value_ttm: i64,
+        enterprise_value_ttm: f64,
         ev_to_sales_ttm: f64,
         ev_to_operating_cash_flow_ttm: f64,
         ev_to_free_cash_flow_ttm: f64,
@@ -464,8 +464,8 @@ impl KeyMetricsTtm {
         graham_net_net_ttm: f64,
         tax_burden_ttm: f64,
         interest_burden_ttm: f64,
-        working_capital_ttm: i64,
-        invested_capital_ttm: i64,
+        working_capital_ttm: f64,
+        invested_capital_ttm: f64,
         return_on_assets_ttm: f64,
         operating_return_on_assets_ttm: f64,
         return_on_tangible_assets_ttm: f64,
@@ -481,18 +481,18 @@ impl KeyMetricsTtm {
         research_and_developement_to_revenue_ttm: f64,
         stock_based_compensation_to_revenue_ttm: f64,
         intangibles_to_total_assets_ttm: f64,
-        average_receivables_ttm: i64,
-        average_payables_ttm: i64,
-        average_inventory_ttm: i64,
+        average_receivables_ttm: f64,
+        average_payables_ttm: f64,
+        average_inventory_ttm: f64,
         days_of_sales_outstanding_ttm: f64,
         days_of_payables_outstanding_ttm: f64,
         days_of_inventory_outstanding_ttm: f64,
         operating_cycle_ttm: f64,
         cash_conversion_cycle_ttm: f64,
-        free_cash_flow_to_equity_ttm: i64,
-        free_cash_flow_to_firm_ttm: i64,
-        tangible_asset_value_ttm: i64,
-        net_current_asset_value_ttm: i64,
+        free_cash_flow_to_equity_ttm: f64,
+        free_cash_flow_to_firm_ttm: f64,
+        tangible_asset_value_ttm: f64,
+        net_current_asset_value_ttm: f64,
     ) -> Self {
         Self {
             symbol,

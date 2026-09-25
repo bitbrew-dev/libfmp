@@ -133,7 +133,7 @@ async fn custom_proxy_preserves_exact_query_order_auth_headers_and_bare_arrays()
         .unwrap();
 
     assert_eq!(estimates.len(), 1);
-    assert_eq!(estimates[0].revenue_high, 735_022_980_353);
+    assert_eq!(estimates[0].revenue_high, 735_022_980_353.0);
     assert_eq!(snapshot.len(), 1);
     assert_eq!(snapshot[0].rating, "B");
     assert_eq!(historical.len(), 1);

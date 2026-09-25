@@ -109,7 +109,7 @@ def check_statements_contract(client: FmpClient) -> None:
     income: StatementsIncomeNamespace = statements.income
     rows: list[IncomeStatement] = income.statement("AAPL", period="annual", limit=5)
     reported_on: datetime.date = rows[0].date
-    revenue: int = rows[0].revenue
+    revenue: float = rows[0].revenue
     dates: list[FinancialReportDate] = client.statements.reports.dates("AAPL")
     link: str = dates[0].expose_secret_url_json()
     workbook: BinaryPayload = client.statements.reports.xlsx("AAPL", 2024, "FY")
@@ -406,7 +406,7 @@ def check_analyst_contract(client: FmpClient) -> None:
     analyst: AnalystNamespace = client.analyst
     estimates: list[FinancialEstimate] = analyst.financial_estimates("AAPL", "quarter", page=0, limit=10)
     estimated_on: datetime.date = estimates[0].date
-    revenue_high: int = estimates[0].revenue_high
+    revenue_high: float = estimates[0].revenue_high
     eps_avg: float = estimates[0].eps_avg
     consensus: list[PriceTargetConsensus] = client.analyst.price_target_consensus("AAPL")
     target_high: float = consensus[0].target_high
@@ -607,7 +607,7 @@ def check_dcf_contract(client: FmpClient) -> None:
         "AAPL", cost_of_debt=3.64, cost_of_equity=9.51168, risk_free_rate=3.64
     )
     year: str = custom[0].year
-    capital_expenditure: int = custom[0].capital_expenditure
+    capital_expenditure: float = custom[0].capital_expenditure
     per_share: float = custom_levered[0].equity_value_per_share
     _ = (valued_on, value, year, capital_expenditure, per_share)
 

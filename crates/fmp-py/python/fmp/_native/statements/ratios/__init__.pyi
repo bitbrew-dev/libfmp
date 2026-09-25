@@ -308,7 +308,7 @@ class FinancialRatiosTtm:
     @property
     def dividend_yield_ttm(self) -> builtins.float: ...
     @property
-    def enterprise_value_ttm(self) -> builtins.int: ...
+    def enterprise_value_ttm(self) -> builtins.float: ...
     @property
     def revenue_per_share_ttm(self) -> builtins.float: ...
     @property
@@ -389,7 +389,7 @@ class FinancialRatiosTtm:
         dividend_paid_and_capex_coverage_ratio_ttm: builtins.float,
         dividend_payout_ratio_ttm: builtins.float,
         dividend_yield_ttm: builtins.float,
-        enterprise_value_ttm: builtins.int,
+        enterprise_value_ttm: builtins.float,
         revenue_per_share_ttm: builtins.float,
         net_income_per_share_ttm: builtins.float,
         interest_debt_per_share_ttm: builtins.float,

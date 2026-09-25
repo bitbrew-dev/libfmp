@@ -26,59 +26,59 @@ pub(crate) struct IncomeStatement {
     #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
-    pub revenue: i64,
+    pub revenue: f64,
     #[pyo3(get)]
-    pub cost_of_revenue: i64,
+    pub cost_of_revenue: f64,
     #[pyo3(get)]
-    pub gross_profit: i64,
+    pub gross_profit: f64,
     #[pyo3(get)]
-    pub research_and_development_expenses: i64,
+    pub research_and_development_expenses: f64,
     #[pyo3(get)]
-    pub general_and_administrative_expenses: i64,
+    pub general_and_administrative_expenses: f64,
     #[pyo3(get)]
-    pub selling_and_marketing_expenses: i64,
+    pub selling_and_marketing_expenses: f64,
     #[pyo3(get)]
-    pub selling_general_and_administrative_expenses: i64,
+    pub selling_general_and_administrative_expenses: f64,
     #[pyo3(get)]
-    pub other_expenses: i64,
+    pub other_expenses: f64,
     #[pyo3(get)]
-    pub operating_expenses: i64,
+    pub operating_expenses: f64,
     #[pyo3(get)]
-    pub cost_and_expenses: i64,
+    pub cost_and_expenses: f64,
     #[pyo3(get)]
-    pub net_interest_income: i64,
+    pub net_interest_income: f64,
     #[pyo3(get)]
-    pub interest_income: i64,
+    pub interest_income: f64,
     #[pyo3(get)]
-    pub interest_expense: i64,
+    pub interest_expense: f64,
     #[pyo3(get)]
-    pub depreciation_and_amortization: i64,
+    pub depreciation_and_amortization: f64,
     #[pyo3(get)]
-    pub ebitda: i64,
+    pub ebitda: f64,
     #[pyo3(get)]
-    pub ebit: i64,
+    pub ebit: f64,
     #[pyo3(get)]
-    pub non_operating_income_excluding_interest: i64,
+    pub non_operating_income_excluding_interest: f64,
     #[pyo3(get)]
-    pub operating_income: i64,
+    pub operating_income: f64,
     #[pyo3(get)]
-    pub total_other_income_expenses_net: i64,
+    pub total_other_income_expenses_net: f64,
     #[pyo3(get)]
-    pub income_before_tax: i64,
+    pub income_before_tax: f64,
     #[pyo3(get)]
-    pub income_tax_expense: i64,
+    pub income_tax_expense: f64,
     #[pyo3(get)]
-    pub net_income_from_continuing_operations: i64,
+    pub net_income_from_continuing_operations: f64,
     #[pyo3(get)]
-    pub net_income_from_discontinued_operations: i64,
+    pub net_income_from_discontinued_operations: f64,
     #[pyo3(get)]
-    pub other_adjustments_to_net_income: i64,
+    pub other_adjustments_to_net_income: f64,
     #[pyo3(get)]
-    pub net_income: i64,
+    pub net_income: f64,
     #[pyo3(get)]
-    pub net_income_deductions: i64,
+    pub net_income_deductions: f64,
     #[pyo3(get)]
-    pub bottom_line_net_income: i64,
+    pub bottom_line_net_income: f64,
     #[pyo3(get)]
     pub eps: f64,
     #[pyo3(get)]
@@ -105,33 +105,33 @@ impl IncomeStatement {
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
         period: String,
-        revenue: i64,
-        cost_of_revenue: i64,
-        gross_profit: i64,
-        research_and_development_expenses: i64,
-        general_and_administrative_expenses: i64,
-        selling_and_marketing_expenses: i64,
-        selling_general_and_administrative_expenses: i64,
-        other_expenses: i64,
-        operating_expenses: i64,
-        cost_and_expenses: i64,
-        net_interest_income: i64,
-        interest_income: i64,
-        interest_expense: i64,
-        depreciation_and_amortization: i64,
-        ebitda: i64,
-        ebit: i64,
-        non_operating_income_excluding_interest: i64,
-        operating_income: i64,
-        total_other_income_expenses_net: i64,
-        income_before_tax: i64,
-        income_tax_expense: i64,
-        net_income_from_continuing_operations: i64,
-        net_income_from_discontinued_operations: i64,
-        other_adjustments_to_net_income: i64,
-        net_income: i64,
-        net_income_deductions: i64,
-        bottom_line_net_income: i64,
+        revenue: f64,
+        cost_of_revenue: f64,
+        gross_profit: f64,
+        research_and_development_expenses: f64,
+        general_and_administrative_expenses: f64,
+        selling_and_marketing_expenses: f64,
+        selling_general_and_administrative_expenses: f64,
+        other_expenses: f64,
+        operating_expenses: f64,
+        cost_and_expenses: f64,
+        net_interest_income: f64,
+        interest_income: f64,
+        interest_expense: f64,
+        depreciation_and_amortization: f64,
+        ebitda: f64,
+        ebit: f64,
+        non_operating_income_excluding_interest: f64,
+        operating_income: f64,
+        total_other_income_expenses_net: f64,
+        income_before_tax: f64,
+        income_tax_expense: f64,
+        net_income_from_continuing_operations: f64,
+        net_income_from_discontinued_operations: f64,
+        other_adjustments_to_net_income: f64,
+        net_income: f64,
+        net_income_deductions: f64,
+        bottom_line_net_income: f64,
         eps: f64,
         eps_diluted: f64,
         weighted_average_shs_out: f64,

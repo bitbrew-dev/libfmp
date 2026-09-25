@@ -14,21 +14,21 @@ import (
 type FinancialEstimate struct {
 	Symbol             string  `json:"symbol"`
 	Date               Date    `json:"date"`
-	RevenueLow         int64   `json:"revenueLow"`
-	RevenueHigh        int64   `json:"revenueHigh"`
-	RevenueAvg         int64   `json:"revenueAvg"`
-	EbitdaLow          int64   `json:"ebitdaLow"`
-	EbitdaHigh         int64   `json:"ebitdaHigh"`
-	EbitdaAvg          int64   `json:"ebitdaAvg"`
-	EbitLow            int64   `json:"ebitLow"`
-	EbitHigh           int64   `json:"ebitHigh"`
-	EbitAvg            int64   `json:"ebitAvg"`
-	NetIncomeLow       int64   `json:"netIncomeLow"`
-	NetIncomeHigh      int64   `json:"netIncomeHigh"`
-	NetIncomeAvg       int64   `json:"netIncomeAvg"`
-	SgaExpenseLow      int64   `json:"sgaExpenseLow"`
-	SgaExpenseHigh     int64   `json:"sgaExpenseHigh"`
-	SgaExpenseAvg      int64   `json:"sgaExpenseAvg"`
+	RevenueLow         float64 `json:"revenueLow"`
+	RevenueHigh        float64 `json:"revenueHigh"`
+	RevenueAvg         float64 `json:"revenueAvg"`
+	EbitdaLow          float64 `json:"ebitdaLow"`
+	EbitdaHigh         float64 `json:"ebitdaHigh"`
+	EbitdaAvg          float64 `json:"ebitdaAvg"`
+	EbitLow            float64 `json:"ebitLow"`
+	EbitHigh           float64 `json:"ebitHigh"`
+	EbitAvg            float64 `json:"ebitAvg"`
+	NetIncomeLow       float64 `json:"netIncomeLow"`
+	NetIncomeHigh      float64 `json:"netIncomeHigh"`
+	NetIncomeAvg       float64 `json:"netIncomeAvg"`
+	SgaExpenseLow      float64 `json:"sgaExpenseLow"`
+	SgaExpenseHigh     float64 `json:"sgaExpenseHigh"`
+	SgaExpenseAvg      float64 `json:"sgaExpenseAvg"`
 	EpsAvg             float64 `json:"epsAvg"`
 	EpsHigh            float64 `json:"epsHigh"`
 	EpsLow             float64 `json:"epsLow"`
@@ -42,21 +42,21 @@ type FinancialEstimate struct {
 type financialEstimateShadow struct {
 	Symbol             *string  `json:"symbol"`
 	Date               *Date    `json:"date"`
-	RevenueLow         *int64   `json:"revenueLow"`
-	RevenueHigh        *int64   `json:"revenueHigh"`
-	RevenueAvg         *int64   `json:"revenueAvg"`
-	EbitdaLow          *int64   `json:"ebitdaLow"`
-	EbitdaHigh         *int64   `json:"ebitdaHigh"`
-	EbitdaAvg          *int64   `json:"ebitdaAvg"`
-	EbitLow            *int64   `json:"ebitLow"`
-	EbitHigh           *int64   `json:"ebitHigh"`
-	EbitAvg            *int64   `json:"ebitAvg"`
-	NetIncomeLow       *int64   `json:"netIncomeLow"`
-	NetIncomeHigh      *int64   `json:"netIncomeHigh"`
-	NetIncomeAvg       *int64   `json:"netIncomeAvg"`
-	SgaExpenseLow      *int64   `json:"sgaExpenseLow"`
-	SgaExpenseHigh     *int64   `json:"sgaExpenseHigh"`
-	SgaExpenseAvg      *int64   `json:"sgaExpenseAvg"`
+	RevenueLow         *float64 `json:"revenueLow"`
+	RevenueHigh        *float64 `json:"revenueHigh"`
+	RevenueAvg         *float64 `json:"revenueAvg"`
+	EbitdaLow          *float64 `json:"ebitdaLow"`
+	EbitdaHigh         *float64 `json:"ebitdaHigh"`
+	EbitdaAvg          *float64 `json:"ebitdaAvg"`
+	EbitLow            *float64 `json:"ebitLow"`
+	EbitHigh           *float64 `json:"ebitHigh"`
+	EbitAvg            *float64 `json:"ebitAvg"`
+	NetIncomeLow       *float64 `json:"netIncomeLow"`
+	NetIncomeHigh      *float64 `json:"netIncomeHigh"`
+	NetIncomeAvg       *float64 `json:"netIncomeAvg"`
+	SgaExpenseLow      *float64 `json:"sgaExpenseLow"`
+	SgaExpenseHigh     *float64 `json:"sgaExpenseHigh"`
+	SgaExpenseAvg      *float64 `json:"sgaExpenseAvg"`
 	EpsAvg             *float64 `json:"epsAvg"`
 	EpsHigh            *float64 `json:"epsHigh"`
 	EpsLow             *float64 `json:"epsLow"`

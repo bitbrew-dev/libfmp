@@ -28,7 +28,7 @@ fn ttm_fixture_has_exactly_62_required_fields_and_preserves_acronym_keys() {
     assert_eq!(rows.len(), 1);
     assert_eq!(source[0].as_object().unwrap().len(), 62);
     assert_exact_wire_keys(&rows, &source);
-    assert_eq!(rows[0].enterprise_value_ttm, 4_922_455_686_740);
+    assert_eq!(rows[0].enterprise_value_ttm, 4_922_455_686_740.0);
     assert_eq!(rows[0].interest_coverage_ratio_ttm, 0.0);
     assert_eq!(rows[0].dividend_yield_ttm, 0.0);
     assert_eq!(rows[0].dividend_per_share_ttm, 0.0);

@@ -126,30 +126,30 @@ type CrowdfundingOffering struct {
 	SecurityOfferedOtherDescription           *string        `json:"securityOfferedOtherDescription"`
 	NumberOfSecurityOffered                   float64        `json:"numberOfSecurityOffered"`
 	OfferingPrice                             jsontext.Value `json:"offeringPrice"`
-	OfferingAmount                            int64          `json:"offeringAmount"`
+	OfferingAmount                            float64        `json:"offeringAmount"`
 	OverSubscriptionAccepted                  string         `json:"overSubscriptionAccepted"`
 	OverSubscriptionAllocationType            string         `json:"overSubscriptionAllocationType"`
-	MaximumOfferingAmount                     int64          `json:"maximumOfferingAmount"`
+	MaximumOfferingAmount                     float64        `json:"maximumOfferingAmount"`
 	OfferingDeadlineDate                      UsDate         `json:"offeringDeadlineDate"`
 	CurrentNumberOfEmployees                  uint64         `json:"currentNumberOfEmployees"`
-	TotalAssetMostRecentFiscalYear            int64          `json:"totalAssetMostRecentFiscalYear"`
-	TotalAssetPriorFiscalYear                 int64          `json:"totalAssetPriorFiscalYear"`
-	CashAndCashEquivalentMostRecentFiscalYear int64          `json:"cashAndCashEquiValentMostRecentFiscalYear"`
-	CashAndCashEquivalentPriorFiscalYear      int64          `json:"cashAndCashEquiValentPriorFiscalYear"`
-	AccountsReceivableMostRecentFiscalYear    int64          `json:"accountsReceivableMostRecentFiscalYear"`
-	AccountsReceivablePriorFiscalYear         int64          `json:"accountsReceivablePriorFiscalYear"`
-	ShortTermDebtMostRecentFiscalYear         int64          `json:"shortTermDebtMostRecentFiscalYear"`
-	ShortTermDebtPriorFiscalYear              int64          `json:"shortTermDebtPriorFiscalYear"`
-	LongTermDebtMostRecentFiscalYear          int64          `json:"longTermDebtMostRecentFiscalYear"`
-	LongTermDebtPriorFiscalYear               int64          `json:"longTermDebtPriorFiscalYear"`
-	RevenueMostRecentFiscalYear               int64          `json:"revenueMostRecentFiscalYear"`
-	RevenuePriorFiscalYear                    int64          `json:"revenuePriorFiscalYear"`
-	CostGoodsSoldMostRecentFiscalYear         int64          `json:"costGoodsSoldMostRecentFiscalYear"`
-	CostGoodsSoldPriorFiscalYear              int64          `json:"costGoodsSoldPriorFiscalYear"`
-	TaxesPaidMostRecentFiscalYear             int64          `json:"taxesPaidMostRecentFiscalYear"`
-	TaxesPaidPriorFiscalYear                  int64          `json:"taxesPaidPriorFiscalYear"`
-	NetIncomeMostRecentFiscalYear             int64          `json:"netIncomeMostRecentFiscalYear"`
-	NetIncomePriorFiscalYear                  int64          `json:"netIncomePriorFiscalYear"`
+	TotalAssetMostRecentFiscalYear            float64        `json:"totalAssetMostRecentFiscalYear"`
+	TotalAssetPriorFiscalYear                 float64        `json:"totalAssetPriorFiscalYear"`
+	CashAndCashEquivalentMostRecentFiscalYear float64        `json:"cashAndCashEquiValentMostRecentFiscalYear"`
+	CashAndCashEquivalentPriorFiscalYear      float64        `json:"cashAndCashEquiValentPriorFiscalYear"`
+	AccountsReceivableMostRecentFiscalYear    float64        `json:"accountsReceivableMostRecentFiscalYear"`
+	AccountsReceivablePriorFiscalYear         float64        `json:"accountsReceivablePriorFiscalYear"`
+	ShortTermDebtMostRecentFiscalYear         float64        `json:"shortTermDebtMostRecentFiscalYear"`
+	ShortTermDebtPriorFiscalYear              float64        `json:"shortTermDebtPriorFiscalYear"`
+	LongTermDebtMostRecentFiscalYear          float64        `json:"longTermDebtMostRecentFiscalYear"`
+	LongTermDebtPriorFiscalYear               float64        `json:"longTermDebtPriorFiscalYear"`
+	RevenueMostRecentFiscalYear               float64        `json:"revenueMostRecentFiscalYear"`
+	RevenuePriorFiscalYear                    float64        `json:"revenuePriorFiscalYear"`
+	CostGoodsSoldMostRecentFiscalYear         float64        `json:"costGoodsSoldMostRecentFiscalYear"`
+	CostGoodsSoldPriorFiscalYear              float64        `json:"costGoodsSoldPriorFiscalYear"`
+	TaxesPaidMostRecentFiscalYear             float64        `json:"taxesPaidMostRecentFiscalYear"`
+	TaxesPaidPriorFiscalYear                  float64        `json:"taxesPaidPriorFiscalYear"`
+	NetIncomeMostRecentFiscalYear             float64        `json:"netIncomeMostRecentFiscalYear"`
+	NetIncomePriorFiscalYear                  float64        `json:"netIncomePriorFiscalYear"`
 }
 
 // crowdfundingOfferingShadow mirrors CrowdfundingOffering with a pointer or
@@ -180,30 +180,30 @@ type crowdfundingOfferingShadow struct {
 	SecurityOfferedOtherDescription           jsontext.Value  `json:"securityOfferedOtherDescription"`
 	NumberOfSecurityOffered                   *float64        `json:"numberOfSecurityOffered"`
 	OfferingPrice                             *jsontext.Value `json:"offeringPrice"`
-	OfferingAmount                            *int64          `json:"offeringAmount"`
+	OfferingAmount                            *float64        `json:"offeringAmount"`
 	OverSubscriptionAccepted                  *string         `json:"overSubscriptionAccepted"`
 	OverSubscriptionAllocationType            *string         `json:"overSubscriptionAllocationType"`
-	MaximumOfferingAmount                     *int64          `json:"maximumOfferingAmount"`
+	MaximumOfferingAmount                     *float64        `json:"maximumOfferingAmount"`
 	OfferingDeadlineDate                      *UsDate         `json:"offeringDeadlineDate"`
 	CurrentNumberOfEmployees                  *uint64         `json:"currentNumberOfEmployees"`
-	TotalAssetMostRecentFiscalYear            *int64          `json:"totalAssetMostRecentFiscalYear"`
-	TotalAssetPriorFiscalYear                 *int64          `json:"totalAssetPriorFiscalYear"`
-	CashAndCashEquivalentMostRecentFiscalYear *int64          `json:"cashAndCashEquiValentMostRecentFiscalYear"`
-	CashAndCashEquivalentPriorFiscalYear      *int64          `json:"cashAndCashEquiValentPriorFiscalYear"`
-	AccountsReceivableMostRecentFiscalYear    *int64          `json:"accountsReceivableMostRecentFiscalYear"`
-	AccountsReceivablePriorFiscalYear         *int64          `json:"accountsReceivablePriorFiscalYear"`
-	ShortTermDebtMostRecentFiscalYear         *int64          `json:"shortTermDebtMostRecentFiscalYear"`
-	ShortTermDebtPriorFiscalYear              *int64          `json:"shortTermDebtPriorFiscalYear"`
-	LongTermDebtMostRecentFiscalYear          *int64          `json:"longTermDebtMostRecentFiscalYear"`
-	LongTermDebtPriorFiscalYear               *int64          `json:"longTermDebtPriorFiscalYear"`
-	RevenueMostRecentFiscalYear               *int64          `json:"revenueMostRecentFiscalYear"`
-	RevenuePriorFiscalYear                    *int64          `json:"revenuePriorFiscalYear"`
-	CostGoodsSoldMostRecentFiscalYear         *int64          `json:"costGoodsSoldMostRecentFiscalYear"`
-	CostGoodsSoldPriorFiscalYear              *int64          `json:"costGoodsSoldPriorFiscalYear"`
-	TaxesPaidMostRecentFiscalYear             *int64          `json:"taxesPaidMostRecentFiscalYear"`
-	TaxesPaidPriorFiscalYear                  *int64          `json:"taxesPaidPriorFiscalYear"`
-	NetIncomeMostRecentFiscalYear             *int64          `json:"netIncomeMostRecentFiscalYear"`
-	NetIncomePriorFiscalYear                  *int64          `json:"netIncomePriorFiscalYear"`
+	TotalAssetMostRecentFiscalYear            *float64        `json:"totalAssetMostRecentFiscalYear"`
+	TotalAssetPriorFiscalYear                 *float64        `json:"totalAssetPriorFiscalYear"`
+	CashAndCashEquivalentMostRecentFiscalYear *float64        `json:"cashAndCashEquiValentMostRecentFiscalYear"`
+	CashAndCashEquivalentPriorFiscalYear      *float64        `json:"cashAndCashEquiValentPriorFiscalYear"`
+	AccountsReceivableMostRecentFiscalYear    *float64        `json:"accountsReceivableMostRecentFiscalYear"`
+	AccountsReceivablePriorFiscalYear         *float64        `json:"accountsReceivablePriorFiscalYear"`
+	ShortTermDebtMostRecentFiscalYear         *float64        `json:"shortTermDebtMostRecentFiscalYear"`
+	ShortTermDebtPriorFiscalYear              *float64        `json:"shortTermDebtPriorFiscalYear"`
+	LongTermDebtMostRecentFiscalYear          *float64        `json:"longTermDebtMostRecentFiscalYear"`
+	LongTermDebtPriorFiscalYear               *float64        `json:"longTermDebtPriorFiscalYear"`
+	RevenueMostRecentFiscalYear               *float64        `json:"revenueMostRecentFiscalYear"`
+	RevenuePriorFiscalYear                    *float64        `json:"revenuePriorFiscalYear"`
+	CostGoodsSoldMostRecentFiscalYear         *float64        `json:"costGoodsSoldMostRecentFiscalYear"`
+	CostGoodsSoldPriorFiscalYear              *float64        `json:"costGoodsSoldPriorFiscalYear"`
+	TaxesPaidMostRecentFiscalYear             *float64        `json:"taxesPaidMostRecentFiscalYear"`
+	TaxesPaidPriorFiscalYear                  *float64        `json:"taxesPaidPriorFiscalYear"`
+	NetIncomeMostRecentFiscalYear             *float64        `json:"netIncomeMostRecentFiscalYear"`
+	NetIncomePriorFiscalYear                  *float64        `json:"netIncomePriorFiscalYear"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode

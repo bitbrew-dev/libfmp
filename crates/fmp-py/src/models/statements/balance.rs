@@ -26,111 +26,111 @@ pub(crate) struct BalanceSheetStatement {
     #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
-    pub cash_and_cash_equivalents: i64,
+    pub cash_and_cash_equivalents: f64,
     #[pyo3(get)]
-    pub short_term_investments: i64,
+    pub short_term_investments: f64,
     #[pyo3(get)]
-    pub cash_and_short_term_investments: i64,
+    pub cash_and_short_term_investments: f64,
     #[pyo3(get)]
-    pub net_receivables: i64,
+    pub net_receivables: f64,
     #[pyo3(get)]
-    pub accounts_receivables: i64,
+    pub accounts_receivables: f64,
     #[pyo3(get)]
-    pub other_receivables: i64,
+    pub other_receivables: f64,
     #[pyo3(get)]
-    pub inventory: i64,
+    pub inventory: f64,
     #[pyo3(get)]
-    pub prepaids: i64,
+    pub prepaids: f64,
     #[pyo3(get)]
-    pub other_current_assets: i64,
+    pub other_current_assets: f64,
     #[pyo3(get)]
-    pub total_current_assets: i64,
+    pub total_current_assets: f64,
     #[pyo3(get)]
-    pub property_plant_equipment_net: i64,
+    pub property_plant_equipment_net: f64,
     #[pyo3(get)]
-    pub goodwill: i64,
+    pub goodwill: f64,
     #[pyo3(get)]
-    pub intangible_assets: i64,
+    pub intangible_assets: f64,
     #[pyo3(get)]
-    pub goodwill_and_intangible_assets: i64,
+    pub goodwill_and_intangible_assets: f64,
     #[pyo3(get)]
-    pub long_term_investments: i64,
+    pub long_term_investments: f64,
     #[pyo3(get)]
-    pub tax_assets: i64,
+    pub tax_assets: f64,
     #[pyo3(get)]
-    pub other_non_current_assets: i64,
+    pub other_non_current_assets: f64,
     #[pyo3(get)]
-    pub total_non_current_assets: i64,
+    pub total_non_current_assets: f64,
     #[pyo3(get)]
-    pub other_assets: i64,
+    pub other_assets: f64,
     #[pyo3(get)]
-    pub total_assets: i64,
+    pub total_assets: f64,
     #[pyo3(get)]
-    pub total_payables: i64,
+    pub total_payables: f64,
     #[pyo3(get)]
-    pub account_payables: i64,
+    pub account_payables: f64,
     #[pyo3(get)]
-    pub other_payables: i64,
+    pub other_payables: f64,
     #[pyo3(get)]
-    pub accrued_expenses: i64,
+    pub accrued_expenses: f64,
     #[pyo3(get)]
-    pub short_term_debt: i64,
+    pub short_term_debt: f64,
     #[pyo3(get)]
-    pub capital_lease_obligations_current: i64,
+    pub capital_lease_obligations_current: f64,
     #[pyo3(get)]
-    pub tax_payables: i64,
+    pub tax_payables: f64,
     #[pyo3(get)]
-    pub deferred_revenue: i64,
+    pub deferred_revenue: f64,
     #[pyo3(get)]
-    pub other_current_liabilities: i64,
+    pub other_current_liabilities: f64,
     #[pyo3(get)]
-    pub total_current_liabilities: i64,
+    pub total_current_liabilities: f64,
     #[pyo3(get)]
-    pub long_term_debt: i64,
+    pub long_term_debt: f64,
     #[pyo3(get)]
-    pub capital_lease_obligations_non_current: i64,
+    pub capital_lease_obligations_non_current: f64,
     #[pyo3(get)]
-    pub deferred_revenue_non_current: i64,
+    pub deferred_revenue_non_current: f64,
     #[pyo3(get)]
-    pub deferred_tax_liabilities_non_current: i64,
+    pub deferred_tax_liabilities_non_current: f64,
     #[pyo3(get)]
-    pub other_non_current_liabilities: i64,
+    pub other_non_current_liabilities: f64,
     #[pyo3(get)]
-    pub total_non_current_liabilities: i64,
+    pub total_non_current_liabilities: f64,
     #[pyo3(get)]
-    pub other_liabilities: i64,
+    pub other_liabilities: f64,
     #[pyo3(get)]
-    pub capital_lease_obligations: i64,
+    pub capital_lease_obligations: f64,
     #[pyo3(get)]
-    pub total_liabilities: i64,
+    pub total_liabilities: f64,
     #[pyo3(get)]
-    pub treasury_stock: i64,
+    pub treasury_stock: f64,
     #[pyo3(get)]
-    pub preferred_stock: i64,
+    pub preferred_stock: f64,
     #[pyo3(get)]
-    pub common_stock: i64,
+    pub common_stock: f64,
     #[pyo3(get)]
-    pub retained_earnings: i64,
+    pub retained_earnings: f64,
     #[pyo3(get)]
-    pub additional_paid_in_capital: i64,
+    pub additional_paid_in_capital: f64,
     #[pyo3(get)]
-    pub accumulated_other_comprehensive_income_loss: i64,
+    pub accumulated_other_comprehensive_income_loss: f64,
     #[pyo3(get)]
-    pub other_total_stockholders_equity: i64,
+    pub other_total_stockholders_equity: f64,
     #[pyo3(get)]
-    pub total_stockholders_equity: i64,
+    pub total_stockholders_equity: f64,
     #[pyo3(get)]
-    pub total_equity: i64,
+    pub total_equity: f64,
     #[pyo3(get)]
-    pub minority_interest: i64,
+    pub minority_interest: f64,
     #[pyo3(get)]
-    pub total_liabilities_and_total_equity: i64,
+    pub total_liabilities_and_total_equity: f64,
     #[pyo3(get)]
-    pub total_investments: i64,
+    pub total_investments: f64,
     #[pyo3(get)]
-    pub total_debt: i64,
+    pub total_debt: f64,
     #[pyo3(get)]
-    pub net_debt: i64,
+    pub net_debt: f64,
 }
 
 #[gen_stub_pymethods]
@@ -149,59 +149,59 @@ impl BalanceSheetStatement {
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
         period: String,
-        cash_and_cash_equivalents: i64,
-        short_term_investments: i64,
-        cash_and_short_term_investments: i64,
-        net_receivables: i64,
-        accounts_receivables: i64,
-        other_receivables: i64,
-        inventory: i64,
-        prepaids: i64,
-        other_current_assets: i64,
-        total_current_assets: i64,
-        property_plant_equipment_net: i64,
-        goodwill: i64,
-        intangible_assets: i64,
-        goodwill_and_intangible_assets: i64,
-        long_term_investments: i64,
-        tax_assets: i64,
-        other_non_current_assets: i64,
-        total_non_current_assets: i64,
-        other_assets: i64,
-        total_assets: i64,
-        total_payables: i64,
-        account_payables: i64,
-        other_payables: i64,
-        accrued_expenses: i64,
-        short_term_debt: i64,
-        capital_lease_obligations_current: i64,
-        tax_payables: i64,
-        deferred_revenue: i64,
-        other_current_liabilities: i64,
-        total_current_liabilities: i64,
-        long_term_debt: i64,
-        capital_lease_obligations_non_current: i64,
-        deferred_revenue_non_current: i64,
-        deferred_tax_liabilities_non_current: i64,
-        other_non_current_liabilities: i64,
-        total_non_current_liabilities: i64,
-        other_liabilities: i64,
-        capital_lease_obligations: i64,
-        total_liabilities: i64,
-        treasury_stock: i64,
-        preferred_stock: i64,
-        common_stock: i64,
-        retained_earnings: i64,
-        additional_paid_in_capital: i64,
-        accumulated_other_comprehensive_income_loss: i64,
-        other_total_stockholders_equity: i64,
-        total_stockholders_equity: i64,
-        total_equity: i64,
-        minority_interest: i64,
-        total_liabilities_and_total_equity: i64,
-        total_investments: i64,
-        total_debt: i64,
-        net_debt: i64,
+        cash_and_cash_equivalents: f64,
+        short_term_investments: f64,
+        cash_and_short_term_investments: f64,
+        net_receivables: f64,
+        accounts_receivables: f64,
+        other_receivables: f64,
+        inventory: f64,
+        prepaids: f64,
+        other_current_assets: f64,
+        total_current_assets: f64,
+        property_plant_equipment_net: f64,
+        goodwill: f64,
+        intangible_assets: f64,
+        goodwill_and_intangible_assets: f64,
+        long_term_investments: f64,
+        tax_assets: f64,
+        other_non_current_assets: f64,
+        total_non_current_assets: f64,
+        other_assets: f64,
+        total_assets: f64,
+        total_payables: f64,
+        account_payables: f64,
+        other_payables: f64,
+        accrued_expenses: f64,
+        short_term_debt: f64,
+        capital_lease_obligations_current: f64,
+        tax_payables: f64,
+        deferred_revenue: f64,
+        other_current_liabilities: f64,
+        total_current_liabilities: f64,
+        long_term_debt: f64,
+        capital_lease_obligations_non_current: f64,
+        deferred_revenue_non_current: f64,
+        deferred_tax_liabilities_non_current: f64,
+        other_non_current_liabilities: f64,
+        total_non_current_liabilities: f64,
+        other_liabilities: f64,
+        capital_lease_obligations: f64,
+        total_liabilities: f64,
+        treasury_stock: f64,
+        preferred_stock: f64,
+        common_stock: f64,
+        retained_earnings: f64,
+        additional_paid_in_capital: f64,
+        accumulated_other_comprehensive_income_loss: f64,
+        other_total_stockholders_equity: f64,
+        total_stockholders_equity: f64,
+        total_equity: f64,
+        minority_interest: f64,
+        total_liabilities_and_total_equity: f64,
+        total_investments: f64,
+        total_debt: f64,
+        net_debt: f64,
     ) -> Self {
         Self {
             date,
@@ -467,109 +467,109 @@ pub(crate) struct BalanceSheetStatementTtm {
     #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
-    pub cash_and_cash_equivalents: i64,
+    pub cash_and_cash_equivalents: f64,
     #[pyo3(get)]
-    pub short_term_investments: i64,
+    pub short_term_investments: f64,
     #[pyo3(get)]
-    pub cash_and_short_term_investments: i64,
+    pub cash_and_short_term_investments: f64,
     #[pyo3(get)]
-    pub net_receivables: i64,
+    pub net_receivables: f64,
     #[pyo3(get)]
-    pub accounts_receivables: i64,
+    pub accounts_receivables: f64,
     #[pyo3(get)]
-    pub other_receivables: i64,
+    pub other_receivables: f64,
     #[pyo3(get)]
-    pub inventory: i64,
+    pub inventory: f64,
     #[pyo3(get)]
-    pub prepaids: i64,
+    pub prepaids: f64,
     #[pyo3(get)]
-    pub other_current_assets: i64,
+    pub other_current_assets: f64,
     #[pyo3(get)]
-    pub total_current_assets: i64,
+    pub total_current_assets: f64,
     #[pyo3(get)]
-    pub property_plant_equipment_net: i64,
+    pub property_plant_equipment_net: f64,
     #[pyo3(get)]
-    pub goodwill: i64,
+    pub goodwill: f64,
     #[pyo3(get)]
-    pub intangible_assets: i64,
+    pub intangible_assets: f64,
     #[pyo3(get)]
-    pub goodwill_and_intangible_assets: i64,
+    pub goodwill_and_intangible_assets: f64,
     #[pyo3(get)]
-    pub long_term_investments: i64,
+    pub long_term_investments: f64,
     #[pyo3(get)]
-    pub tax_assets: i64,
+    pub tax_assets: f64,
     #[pyo3(get)]
-    pub other_non_current_assets: i64,
+    pub other_non_current_assets: f64,
     #[pyo3(get)]
-    pub total_non_current_assets: i64,
+    pub total_non_current_assets: f64,
     #[pyo3(get)]
-    pub other_assets: i64,
+    pub other_assets: f64,
     #[pyo3(get)]
-    pub total_assets: i64,
+    pub total_assets: f64,
     #[pyo3(get)]
-    pub total_payables: i64,
+    pub total_payables: f64,
     #[pyo3(get)]
-    pub account_payables: i64,
+    pub account_payables: f64,
     #[pyo3(get)]
-    pub other_payables: i64,
+    pub other_payables: f64,
     #[pyo3(get)]
-    pub accrued_expenses: i64,
+    pub accrued_expenses: f64,
     #[pyo3(get)]
-    pub short_term_debt: i64,
+    pub short_term_debt: f64,
     #[pyo3(get)]
-    pub capital_lease_obligations_current: i64,
+    pub capital_lease_obligations_current: f64,
     #[pyo3(get)]
-    pub tax_payables: i64,
+    pub tax_payables: f64,
     #[pyo3(get)]
-    pub deferred_revenue: i64,
+    pub deferred_revenue: f64,
     #[pyo3(get)]
-    pub other_current_liabilities: i64,
+    pub other_current_liabilities: f64,
     #[pyo3(get)]
-    pub total_current_liabilities: i64,
+    pub total_current_liabilities: f64,
     #[pyo3(get)]
-    pub long_term_debt: i64,
+    pub long_term_debt: f64,
     #[pyo3(get)]
-    pub deferred_revenue_non_current: i64,
+    pub deferred_revenue_non_current: f64,
     #[pyo3(get)]
-    pub deferred_tax_liabilities_non_current: i64,
+    pub deferred_tax_liabilities_non_current: f64,
     #[pyo3(get)]
-    pub other_non_current_liabilities: i64,
+    pub other_non_current_liabilities: f64,
     #[pyo3(get)]
-    pub total_non_current_liabilities: i64,
+    pub total_non_current_liabilities: f64,
     #[pyo3(get)]
-    pub other_liabilities: i64,
+    pub other_liabilities: f64,
     #[pyo3(get)]
-    pub capital_lease_obligations: i64,
+    pub capital_lease_obligations: f64,
     #[pyo3(get)]
-    pub total_liabilities: i64,
+    pub total_liabilities: f64,
     #[pyo3(get)]
-    pub treasury_stock: i64,
+    pub treasury_stock: f64,
     #[pyo3(get)]
-    pub preferred_stock: i64,
+    pub preferred_stock: f64,
     #[pyo3(get)]
-    pub common_stock: i64,
+    pub common_stock: f64,
     #[pyo3(get)]
-    pub retained_earnings: i64,
+    pub retained_earnings: f64,
     #[pyo3(get)]
-    pub additional_paid_in_capital: i64,
+    pub additional_paid_in_capital: f64,
     #[pyo3(get)]
-    pub accumulated_other_comprehensive_income_loss: i64,
+    pub accumulated_other_comprehensive_income_loss: f64,
     #[pyo3(get)]
-    pub other_total_stockholders_equity: i64,
+    pub other_total_stockholders_equity: f64,
     #[pyo3(get)]
-    pub total_stockholders_equity: i64,
+    pub total_stockholders_equity: f64,
     #[pyo3(get)]
-    pub total_equity: i64,
+    pub total_equity: f64,
     #[pyo3(get)]
-    pub minority_interest: i64,
+    pub minority_interest: f64,
     #[pyo3(get)]
-    pub total_liabilities_and_total_equity: i64,
+    pub total_liabilities_and_total_equity: f64,
     #[pyo3(get)]
-    pub total_investments: i64,
+    pub total_investments: f64,
     #[pyo3(get)]
-    pub total_debt: i64,
+    pub total_debt: f64,
     #[pyo3(get)]
-    pub net_debt: i64,
+    pub net_debt: f64,
 }
 
 #[gen_stub_pymethods]
@@ -588,58 +588,58 @@ impl BalanceSheetStatementTtm {
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
         period: String,
-        cash_and_cash_equivalents: i64,
-        short_term_investments: i64,
-        cash_and_short_term_investments: i64,
-        net_receivables: i64,
-        accounts_receivables: i64,
-        other_receivables: i64,
-        inventory: i64,
-        prepaids: i64,
-        other_current_assets: i64,
-        total_current_assets: i64,
-        property_plant_equipment_net: i64,
-        goodwill: i64,
-        intangible_assets: i64,
-        goodwill_and_intangible_assets: i64,
-        long_term_investments: i64,
-        tax_assets: i64,
-        other_non_current_assets: i64,
-        total_non_current_assets: i64,
-        other_assets: i64,
-        total_assets: i64,
-        total_payables: i64,
-        account_payables: i64,
-        other_payables: i64,
-        accrued_expenses: i64,
-        short_term_debt: i64,
-        capital_lease_obligations_current: i64,
-        tax_payables: i64,
-        deferred_revenue: i64,
-        other_current_liabilities: i64,
-        total_current_liabilities: i64,
-        long_term_debt: i64,
-        deferred_revenue_non_current: i64,
-        deferred_tax_liabilities_non_current: i64,
-        other_non_current_liabilities: i64,
-        total_non_current_liabilities: i64,
-        other_liabilities: i64,
-        capital_lease_obligations: i64,
-        total_liabilities: i64,
-        treasury_stock: i64,
-        preferred_stock: i64,
-        common_stock: i64,
-        retained_earnings: i64,
-        additional_paid_in_capital: i64,
-        accumulated_other_comprehensive_income_loss: i64,
-        other_total_stockholders_equity: i64,
-        total_stockholders_equity: i64,
-        total_equity: i64,
-        minority_interest: i64,
-        total_liabilities_and_total_equity: i64,
-        total_investments: i64,
-        total_debt: i64,
-        net_debt: i64,
+        cash_and_cash_equivalents: f64,
+        short_term_investments: f64,
+        cash_and_short_term_investments: f64,
+        net_receivables: f64,
+        accounts_receivables: f64,
+        other_receivables: f64,
+        inventory: f64,
+        prepaids: f64,
+        other_current_assets: f64,
+        total_current_assets: f64,
+        property_plant_equipment_net: f64,
+        goodwill: f64,
+        intangible_assets: f64,
+        goodwill_and_intangible_assets: f64,
+        long_term_investments: f64,
+        tax_assets: f64,
+        other_non_current_assets: f64,
+        total_non_current_assets: f64,
+        other_assets: f64,
+        total_assets: f64,
+        total_payables: f64,
+        account_payables: f64,
+        other_payables: f64,
+        accrued_expenses: f64,
+        short_term_debt: f64,
+        capital_lease_obligations_current: f64,
+        tax_payables: f64,
+        deferred_revenue: f64,
+        other_current_liabilities: f64,
+        total_current_liabilities: f64,
+        long_term_debt: f64,
+        deferred_revenue_non_current: f64,
+        deferred_tax_liabilities_non_current: f64,
+        other_non_current_liabilities: f64,
+        total_non_current_liabilities: f64,
+        other_liabilities: f64,
+        capital_lease_obligations: f64,
+        total_liabilities: f64,
+        treasury_stock: f64,
+        preferred_stock: f64,
+        common_stock: f64,
+        retained_earnings: f64,
+        additional_paid_in_capital: f64,
+        accumulated_other_comprehensive_income_loss: f64,
+        other_total_stockholders_equity: f64,
+        total_stockholders_equity: f64,
+        total_equity: f64,
+        minority_interest: f64,
+        total_liabilities_and_total_equity: f64,
+        total_investments: f64,
+        total_debt: f64,
+        net_debt: f64,
     ) -> Self {
         Self {
             date,

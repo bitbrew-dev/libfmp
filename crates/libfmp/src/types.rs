@@ -712,6 +712,9 @@ pub type SplitTerm = f64;
 pub type Count = u64;
 /// A signed currency amount reported in a financial statement.
 ///
-/// Statement values can be negative (for example, expenses and cash outflows),
-/// so this deliberately differs from non-negative market-cap and volume types.
-pub type StatementAmount = i64;
+/// Covers statement lines, estimates, DCF outputs and filing amounts. Values
+/// can be negative (expenses, cash outflows) or fractional, so the type is
+/// `f64`; values above `2^53` round to the nearest `f64`. Response fields
+/// re-encode an integral value as a JSON integer through
+/// `crate::codecs::integral_f64`.
+pub type StatementAmount = f64;

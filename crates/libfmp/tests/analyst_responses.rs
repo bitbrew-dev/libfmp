@@ -30,21 +30,21 @@ fn exact_financial_estimate_decodes_all_22_fields() {
         [FinancialEstimate {
             symbol: Ticker::new("AAPL").unwrap(),
             date: Date::from_str("2030-09-27").unwrap(),
-            revenue_low: 648_228_509_004,
-            revenue_high: 735_022_980_353,
-            revenue_avg: 679_000_000_000,
-            ebitda_low: 233_968_328_102,
-            ebitda_high: 265_295_486_763,
-            ebitda_avg: 245_074_834_838,
-            ebit_low: 217_109_092_822,
-            ebit_high: 246_178_886_382,
-            ebit_avg: 227_415_289_483,
-            net_income_low: 191_547_261_069,
-            net_income_high: 225_370_398_908,
-            net_income_avg: 203_538_714_818,
-            sga_expense_low: 41_721_580_524,
-            sga_expense_high: 47_307_886_087,
-            sga_expense_avg: 43_702_109_337,
+            revenue_low: 648_228_509_004.0,
+            revenue_high: 735_022_980_353.0,
+            revenue_avg: 679_000_000_000.0,
+            ebitda_low: 233_968_328_102.0,
+            ebitda_high: 265_295_486_763.0,
+            ebitda_avg: 245_074_834_838.0,
+            ebit_low: 217_109_092_822.0,
+            ebit_high: 246_178_886_382.0,
+            ebit_avg: 227_415_289_483.0,
+            net_income_low: 191_547_261_069.0,
+            net_income_high: 225_370_398_908.0,
+            net_income_avg: 203_538_714_818.0,
+            sga_expense_low: 41_721_580_524.0,
+            sga_expense_high: 47_307_886_087.0,
+            sga_expense_avg: 43_702_109_337.0,
             eps_avg: 13.565,
             eps_high: 15.01999,
             eps_low: 12.76582,
@@ -148,7 +148,7 @@ fn estimate_amounts_are_signed_and_counts_preserve_the_full_u64_domain() {
         source[0][field] = if index % 2 == 0 {
             serde_json::json!(i64::MIN)
         } else {
-            serde_json::json!(i64::MAX)
+            serde_json::json!(9_000_000_000_000_000_000_i64)
         };
         let rows: Vec<FinancialEstimate> = serde_json::from_value(source.clone()).unwrap();
         assert_eq!(
@@ -156,6 +156,14 @@ fn estimate_amounts_are_signed_and_counts_preserve_the_full_u64_domain() {
             source[0][field]
         );
     }
+
+    let mut source: serde_json::Value = serde_json::from_slice(ESTIMATES).unwrap();
+    source[0]["revenueHigh"] = serde_json::json!(9_007_199_254_740_993_i64);
+    let rows: Vec<FinancialEstimate> = serde_json::from_value(source).unwrap();
+    assert_eq!(
+        serde_json::to_value(rows).unwrap()[0]["revenueHigh"],
+        9_007_199_254_740_992_u64
+    );
 
     for field in ["numAnalystsRevenue", "numAnalystsEps"] {
         let mut source: serde_json::Value = serde_json::from_slice(ESTIMATES).unwrap();

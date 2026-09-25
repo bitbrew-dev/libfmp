@@ -111,7 +111,7 @@ async fn custom_proxy_preserves_exact_query_order_encoding_headers_and_shapes() 
     assert_eq!(omitted[0].dividend_yield_percentage, 0.4038238951672435);
     assert_eq!(annual[0].period, FiscalPeriod::FullYear);
     assert_eq!(quarterly[0].interest_coverage_ratio, 0.0);
-    assert_eq!(ttm[0].enterprise_value_ttm, 4_922_455_686_740);
+    assert_eq!(ttm[0].enterprise_value_ttm, 4_922_455_686_740.0);
 
     let requests = executor.requests();
     assert!(

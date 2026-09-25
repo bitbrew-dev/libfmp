@@ -84,19 +84,19 @@ pub(crate) struct FinancialScore {
     #[pyo3(get)]
     pub piotroski_score: u64,
     #[pyo3(get)]
-    pub working_capital: i64,
+    pub working_capital: f64,
     #[pyo3(get)]
-    pub total_assets: i64,
+    pub total_assets: f64,
     #[pyo3(get)]
-    pub retained_earnings: i64,
+    pub retained_earnings: f64,
     #[pyo3(get)]
-    pub ebit: i64,
+    pub ebit: f64,
     #[pyo3(get)]
     pub market_cap: f64,
     #[pyo3(get)]
-    pub total_liabilities: i64,
+    pub total_liabilities: f64,
     #[pyo3(get)]
-    pub revenue: i64,
+    pub revenue: f64,
 }
 
 #[gen_stub_pymethods]
@@ -111,13 +111,13 @@ impl FinancialScore {
         reported_currency: String,
         altman_z_score: f64,
         piotroski_score: u64,
-        working_capital: i64,
-        total_assets: i64,
-        retained_earnings: i64,
-        ebit: i64,
+        working_capital: f64,
+        total_assets: f64,
+        retained_earnings: f64,
+        ebit: f64,
         market_cap: f64,
-        total_liabilities: i64,
-        revenue: i64,
+        total_liabilities: f64,
+        revenue: f64,
     ) -> Self {
         Self {
             symbol,
@@ -188,11 +188,11 @@ pub(crate) struct OwnerEarnings {
     #[pyo3(get)]
     pub average_ppe: f64,
     #[pyo3(get)]
-    pub maintenance_capex: i64,
+    pub maintenance_capex: f64,
     #[pyo3(get)]
-    pub owners_earnings: i64,
+    pub owners_earnings: f64,
     #[pyo3(get)]
-    pub growth_capex: i64,
+    pub growth_capex: f64,
     #[pyo3(get)]
     pub owners_earnings_per_share: f64,
 }
@@ -211,9 +211,9 @@ impl OwnerEarnings {
         period: String,
         date: ::chrono::NaiveDate,
         average_ppe: f64,
-        maintenance_capex: i64,
-        owners_earnings: i64,
-        growth_capex: i64,
+        maintenance_capex: f64,
+        owners_earnings: f64,
+        growth_capex: f64,
         owners_earnings_per_share: f64,
     ) -> Self {
         Self {
@@ -282,11 +282,11 @@ pub(crate) struct EnterpriseValue {
     #[pyo3(get)]
     pub market_capitalization: f64,
     #[pyo3(get)]
-    pub minus_cash_and_cash_equivalents: i64,
+    pub minus_cash_and_cash_equivalents: f64,
     #[pyo3(get)]
-    pub add_total_debt: i64,
+    pub add_total_debt: f64,
     #[pyo3(get)]
-    pub enterprise_value: i64,
+    pub enterprise_value: f64,
 }
 
 #[gen_stub_pymethods]
@@ -302,9 +302,9 @@ impl EnterpriseValue {
         stock_price: f64,
         number_of_shares: f64,
         market_capitalization: f64,
-        minus_cash_and_cash_equivalents: i64,
-        add_total_debt: i64,
-        enterprise_value: i64,
+        minus_cash_and_cash_equivalents: f64,
+        add_total_debt: f64,
+        enterprise_value: f64,
     ) -> Self {
         Self {
             symbol,

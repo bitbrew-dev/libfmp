@@ -93,9 +93,9 @@ async fn proxy_client_uses_exact_queries_custom_auth_and_decodes_both_bare_array
         .unwrap();
 
     assert_eq!(historical.len(), 1);
-    assert_eq!(historical[0].revenue, 416_161_000_000);
+    assert_eq!(historical[0].revenue, 416_161_000_000.0);
     assert_eq!(ttm.len(), 1);
-    assert_eq!(ttm[0].revenue, 451_442_000_000);
+    assert_eq!(ttm[0].revenue, 451_442_000_000.0);
 
     let requests = executor.requests();
     assert!(
