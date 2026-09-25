@@ -13,7 +13,7 @@ import (
 func TestIntegralFloatFieldsDecodeFractionalAndExponentForms(t *testing.T) {
 	t.Parallel()
 
-	screener := assertFixtureParity[CompanyScreenerEntry](t, "company_screener_fractional_synthetic.json")
+	screener := assertFixtureParity[CompanyScreenerResult](t, "company_screener_fractional_synthetic.json")
 	if len(screener) != 2 || screener[0].MarketCap != 4_885_602_246_714 ||
 		screener[1].MarketCap != 1_234_567.5 || screener[1].Volume != 1 {
 		t.Fatalf("company_screener_fractional_synthetic = %+v", screener)

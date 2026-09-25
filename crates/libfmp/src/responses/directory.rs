@@ -33,7 +33,7 @@ pub struct FinancialStatementSymbol {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
-pub struct CikEntry {
+pub struct CikListing {
     pub cik: Cik,
     pub company_name: String,
 }

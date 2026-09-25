@@ -1,8 +1,8 @@
-use libfmp::responses::screener::CompanyScreenerEntry;
+use libfmp::responses::screener::CompanyScreenerResult;
 
 #[test]
 fn documented_company_screener_entry_decodes_every_exact_field() {
-    let rows: Vec<CompanyScreenerEntry> =
+    let rows: Vec<CompanyScreenerResult> =
         serde_json::from_str(include_str!("fixtures/company_screener.json")).unwrap();
 
     assert_eq!(rows.len(), 1);
@@ -36,11 +36,11 @@ fn documented_company_screener_entry_decodes_every_exact_field() {
 
 #[test]
 fn screener_arrays_preserve_empty_multiple_unknown_and_large_integer_values() {
-    let empty: Vec<CompanyScreenerEntry> =
+    let empty: Vec<CompanyScreenerResult> =
         serde_json::from_str(include_str!("fixtures/company_screener_empty.json")).unwrap();
-    let multiple: Vec<CompanyScreenerEntry> =
+    let multiple: Vec<CompanyScreenerResult> =
         serde_json::from_str(include_str!("fixtures/company_screener_multiple.json")).unwrap();
-    let unknown: Vec<CompanyScreenerEntry> =
+    let unknown: Vec<CompanyScreenerResult> =
         serde_json::from_str(include_str!("fixtures/company_screener_unknown.json")).unwrap();
 
     assert!(empty.is_empty());

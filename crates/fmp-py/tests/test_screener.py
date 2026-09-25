@@ -15,7 +15,7 @@ from typing import Any
 
 import pytest
 from conftest import FixtureServer, load_fixture
-from fmp.screener import CompanyScreenerEntry, ScreenerNamespace
+from fmp.screener import CompanyScreenerResult, ScreenerNamespace
 
 I64_MAX = 2**63 - 1
 
@@ -55,7 +55,7 @@ def test_companies_without_filters_sends_the_bare_path(client: Any, fixture_serv
     assert fixture_server.requests[0].target == "/company-screener"
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, CompanyScreenerEntry)
+    assert isinstance(row, CompanyScreenerResult)
     assert row.symbol == "AAPL"
     assert row.company_name == "Apple Inc."
     assert row.market_cap == 4_885_602_246_714
@@ -101,7 +101,7 @@ def test_companies_with_every_filter_encodes_in_documented_order(client: Any, fi
 
     assert fixture_server.requests[0].target == ALL_FILTERS_TARGET
     assert len(rows) == 1
-    assert isinstance(rows[0], CompanyScreenerEntry)
+    assert isinstance(rows[0], CompanyScreenerResult)
     assert rows[0].symbol == "AAPL"
 
 

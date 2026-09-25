@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::args;
 use crate::errors::to_py_error;
-use crate::models::screener::CompanyScreenerEntry;
+use crate::models::screener::CompanyScreenerResult;
 use crate::runtime::block_on;
 
 /// Screener endpoints for a single client, exposed as `client.screener`.
@@ -54,7 +54,7 @@ impl ScreenerNamespace {
         page: Option<i64>,
         limit: Option<i64>,
         include_all_share_classes: Option<bool>,
-    ) -> PyResult<Vec<CompanyScreenerEntry>> {
+    ) -> PyResult<Vec<CompanyScreenerResult>> {
         let query = companies_query(
             market_cap_more_than,
             market_cap_lower_than,
@@ -83,7 +83,7 @@ impl ScreenerNamespace {
                 client.company_screener(query).await
             })
         })?;
-        rows.map(|items| items.into_iter().map(CompanyScreenerEntry::from).collect())
+        rows.map(|items| items.into_iter().map(CompanyScreenerResult::from).collect())
             .map_err(to_py_error)
     }
 }

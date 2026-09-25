@@ -79,7 +79,7 @@ class BulkNamespace:
         Retrieves worldwide trailing-twelve-month financial ratios in one bulk response.
         """
 
-    def stock_peers(self) -> builtins.list[metrics.BulkStockPeers]:
+    def stock_peers(self) -> builtins.list[metrics.BulkStockPeer]:
         r"""
         Retrieves worldwide stock peers in one provider bulk response.
         """

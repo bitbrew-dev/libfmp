@@ -1,5 +1,5 @@
 use libfmp::responses::directory::{
-    ActivelyTradingSymbol, CikEntry, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
+    ActivelyTradingSymbol, CikListing, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
     FinancialStatementSymbol, SymbolChange,
 };
 
@@ -11,7 +11,7 @@ fn documented_directory_rows_decode_exact_field_names_and_wire_types() {
         "fixtures/directory_financial_statement_symbols.json"
     ))
     .unwrap();
-    let ciks: Vec<CikEntry> =
+    let ciks: Vec<CikListing> =
         serde_json::from_str(include_str!("fixtures/directory_cik_list.json")).unwrap();
     let changes: Vec<SymbolChange> =
         serde_json::from_str(include_str!("fixtures/directory_symbol_changes.json")).unwrap();
@@ -84,7 +84,7 @@ fn every_directory_response_contract_preserves_empty_arrays() {
             .is_empty()
     );
     assert!(
-        serde_json::from_str::<Vec<CikEntry>>(empty)
+        serde_json::from_str::<Vec<CikListing>>(empty)
             .unwrap()
             .is_empty()
     );

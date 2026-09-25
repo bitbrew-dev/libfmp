@@ -399,7 +399,7 @@ impl From<libfmp::responses::congressional::CongressionalDebtDetails> for Congre
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.congressional", frozen, from_py_object)]
 #[derive(Clone)]
-pub(crate) struct CongressionalMemberNetWorthEntry {
+pub(crate) struct CongressionalMemberNetWorth {
     #[pyo3(get)]
     pub member_id: String,
     #[pyo3(get)]
@@ -437,7 +437,7 @@ pub(crate) struct CongressionalMemberNetWorthEntry {
 
 #[gen_stub_pymethods]
 #[pymethods]
-impl CongressionalMemberNetWorthEntry {
+impl CongressionalMemberNetWorth {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
@@ -534,10 +534,10 @@ impl CongressionalMemberNetWorthEntry {
     }
 }
 
-impl From<libfmp::responses::congressional::CongressionalMemberNetWorthEntry>
-    for CongressionalMemberNetWorthEntry
+impl From<libfmp::responses::congressional::CongressionalMemberNetWorth>
+    for CongressionalMemberNetWorth
 {
-    fn from(value: libfmp::responses::congressional::CongressionalMemberNetWorthEntry) -> Self {
+    fn from(value: libfmp::responses::congressional::CongressionalMemberNetWorth) -> Self {
         Self {
             member_id: value.member_id.into_inner(),
             form_type: value.form_type.into_inner(),

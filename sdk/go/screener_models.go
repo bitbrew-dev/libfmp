@@ -10,9 +10,9 @@ import (
 	"encoding/json/v2"
 )
 
-// CompanyScreenerEntry is one worldwide company returned by the stock
+// CompanyScreenerResult is one worldwide company returned by the stock
 // screener.
-type CompanyScreenerEntry struct {
+type CompanyScreenerResult struct {
 	Symbol             string  `json:"symbol"`
 	CompanyName        string  `json:"companyName"`
 	MarketCap          float64 `json:"marketCap"`
@@ -30,10 +30,10 @@ type CompanyScreenerEntry struct {
 	IsActivelyTrading  bool    `json:"isActivelyTrading"`
 }
 
-// companyScreenerEntryShadow mirrors CompanyScreenerEntry with a pointer or
+// companyScreenerResultShadow mirrors CompanyScreenerResult with a pointer or
 // raw value for every required member so a missing or null member is
 // observable after decoding.
-type companyScreenerEntryShadow struct {
+type companyScreenerResultShadow struct {
 	Symbol             *string  `json:"symbol"`
 	CompanyName        *string  `json:"companyName"`
 	MarketCap          *float64 `json:"marketCap"`
@@ -54,44 +54,44 @@ type companyScreenerEntryShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CompanyScreenerEntry) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow companyScreenerEntryShadow
+func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow companyScreenerResultShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("CompanyScreenerEntry", "symbol")
+		return missingMemberError("CompanyScreenerResult", "symbol")
 	case shadow.CompanyName == nil:
-		return missingMemberError("CompanyScreenerEntry", "companyName")
+		return missingMemberError("CompanyScreenerResult", "companyName")
 	case shadow.MarketCap == nil:
-		return missingMemberError("CompanyScreenerEntry", "marketCap")
+		return missingMemberError("CompanyScreenerResult", "marketCap")
 	case shadow.Sector == nil:
-		return missingMemberError("CompanyScreenerEntry", "sector")
+		return missingMemberError("CompanyScreenerResult", "sector")
 	case shadow.Industry == nil:
-		return missingMemberError("CompanyScreenerEntry", "industry")
+		return missingMemberError("CompanyScreenerResult", "industry")
 	case shadow.Beta == nil:
-		return missingMemberError("CompanyScreenerEntry", "beta")
+		return missingMemberError("CompanyScreenerResult", "beta")
 	case shadow.Price == nil:
-		return missingMemberError("CompanyScreenerEntry", "price")
+		return missingMemberError("CompanyScreenerResult", "price")
 	case shadow.LastAnnualDividend == nil:
-		return missingMemberError("CompanyScreenerEntry", "lastAnnualDividend")
+		return missingMemberError("CompanyScreenerResult", "lastAnnualDividend")
 	case shadow.Volume == nil:
-		return missingMemberError("CompanyScreenerEntry", "volume")
+		return missingMemberError("CompanyScreenerResult", "volume")
 	case shadow.Exchange == nil:
-		return missingMemberError("CompanyScreenerEntry", "exchange")
+		return missingMemberError("CompanyScreenerResult", "exchange")
 	case shadow.ExchangeShortName == nil:
-		return missingMemberError("CompanyScreenerEntry", "exchangeShortName")
+		return missingMemberError("CompanyScreenerResult", "exchangeShortName")
 	case shadow.Country == nil:
-		return missingMemberError("CompanyScreenerEntry", "country")
+		return missingMemberError("CompanyScreenerResult", "country")
 	case shadow.IsEtf == nil:
-		return missingMemberError("CompanyScreenerEntry", "isEtf")
+		return missingMemberError("CompanyScreenerResult", "isEtf")
 	case shadow.IsFund == nil:
-		return missingMemberError("CompanyScreenerEntry", "isFund")
+		return missingMemberError("CompanyScreenerResult", "isFund")
 	case shadow.IsActivelyTrading == nil:
-		return missingMemberError("CompanyScreenerEntry", "isActivelyTrading")
+		return missingMemberError("CompanyScreenerResult", "isActivelyTrading")
 	}
-	*m = CompanyScreenerEntry{
+	*m = CompanyScreenerResult{
 		Symbol:             *shadow.Symbol,
 		CompanyName:        *shadow.CompanyName,
 		MarketCap:          *shadow.MarketCap,

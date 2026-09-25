@@ -193,12 +193,12 @@ func (n *DirectoryNamespace) FinancialStatementSymbols(ctx context.Context) ([]F
 // CikList lists US SEC entities with optional provider pagination.
 //
 // GET cik-list?page=&limit=
-func (n *DirectoryNamespace) CikList(ctx context.Context, q CikListQuery) ([]CikEntry, error) {
+func (n *DirectoryNamespace) CikList(ctx context.Context, q CikListQuery) ([]CikListing, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CikEntry
+	var out []CikListing
 	if err := n.client.getJSON(ctx, "cik-list", "cik-list", params, &out); err != nil {
 		return nil, err
 	}

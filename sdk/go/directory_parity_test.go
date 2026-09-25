@@ -14,7 +14,7 @@ func TestDirectoryFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
 	assertFixtureParity[CompanySymbol](t, "directory_company_symbols.json")
 	assertFixtureParity[FinancialStatementSymbol](t, "directory_financial_statement_symbols.json")
-	assertFixtureParity[CikEntry](t, "directory_cik_list.json")
+	assertFixtureParity[CikListing](t, "directory_cik_list.json")
 	assertFixtureParity[SymbolChange](t, "directory_symbol_changes.json")
 	assertFixtureParity[EtfSymbol](t, "directory_etf_symbols.json")
 	assertFixtureParity[ActivelyTradingSymbol](t, "directory_actively_trading.json")
@@ -39,7 +39,7 @@ func TestDirectoryEmptyFixtureDecodesIntoEveryModelWithoutRows(t *testing.T) {
 	t.Parallel()
 	directoryAssertEmptyFixture[CompanySymbol](t)
 	directoryAssertEmptyFixture[FinancialStatementSymbol](t)
-	directoryAssertEmptyFixture[CikEntry](t)
+	directoryAssertEmptyFixture[CikListing](t)
 	directoryAssertEmptyFixture[SymbolChange](t)
 	directoryAssertEmptyFixture[EtfSymbol](t)
 	directoryAssertEmptyFixture[ActivelyTradingSymbol](t)
@@ -63,8 +63,8 @@ func TestDocumentedDirectoryRowsDecodeExactFieldNamesAndWireTypes(t *testing.T) 
 		TradingCurrency: "CAD", ReportingCurrency: "USD"}); len(financials) != 1 || financials[0] != want {
 		t.Fatalf("directory_financial_statement_symbols = %+v, want %+v", financials, want)
 	}
-	ciks := assertFixtureParity[CikEntry](t, "directory_cik_list.json")
-	if want := (CikEntry{Cik: "0002137358", CompanyName: "Osotspa Public Co Limited/ADR"}); len(ciks) != 1 ||
+	ciks := assertFixtureParity[CikListing](t, "directory_cik_list.json")
+	if want := (CikListing{Cik: "0002137358", CompanyName: "Osotspa Public Co Limited/ADR"}); len(ciks) != 1 ||
 		ciks[0] != want {
 		t.Fatalf("directory_cik_list = %+v, want %+v", ciks, want)
 	}

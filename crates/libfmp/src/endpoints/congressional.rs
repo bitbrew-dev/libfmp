@@ -12,7 +12,7 @@ use crate::{
         metadata::{EndpointBounds, EndpointMetadata, GeographicAvailability},
     },
     responses::congressional::{
-        CongressionalMemberNetWorthAggregate, CongressionalMemberNetWorthEntry,
+        CongressionalMemberNetWorth, CongressionalMemberNetWorthAggregate,
         CongressionalMemberPosition, CongressionalMemberProfile, CongressionalTrade,
     },
     types::{CongressionalMemberId, Limit, Page, SearchTerm, Ticker},
@@ -618,7 +618,7 @@ pub fn congressional_positions(
 /// Describes `GET senate-net-worth` without binding a transport.
 pub fn congressional_net_worth(
     query: CongressionalNetWorthQuery,
-) -> EndpointSpec<CongressionalNetWorthQuery, Vec<CongressionalMemberNetWorthEntry>> {
+) -> EndpointSpec<CongressionalNetWorthQuery, Vec<CongressionalMemberNetWorth>> {
     EndpointSpec::get("senate-net-worth", "senate-net-worth", query)
         .with_metadata(CONGRESSIONAL_NET_WORTH_METADATA)
 }
@@ -720,7 +720,7 @@ impl Client {
     pub async fn congressional_net_worth(
         &self,
         query: impl Into<CongressionalNetWorthQuery>,
-    ) -> Result<Vec<CongressionalMemberNetWorthEntry>> {
+    ) -> Result<Vec<CongressionalMemberNetWorth>> {
         self.execute(&congressional_net_worth(query.into())).await
     }
 

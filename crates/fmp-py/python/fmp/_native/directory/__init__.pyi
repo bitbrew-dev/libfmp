@@ -10,7 +10,7 @@ __all__ = [
     "AvailableExchange",
     "AvailableIndustry",
     "AvailableSector",
-    "CikEntry",
+    "CikListing",
     "CompanySymbol",
     "DirectoryNamespace",
     "EarningsTranscriptAvailability",
@@ -83,12 +83,12 @@ class AvailableSector:
 
 
 @typing.final
-class CikEntry:
+class CikListing:
     @property
     def cik(self) -> builtins.str: ...
     @property
     def company_name(self) -> builtins.str: ...
-    def __new__(cls, cik: builtins.str, company_name: builtins.str) -> CikEntry: ...
+    def __new__(cls, cik: builtins.str, company_name: builtins.str) -> CikListing: ...
     def __getnewargs__(self) -> tuple: ...
 
 
@@ -125,7 +125,7 @@ class DirectoryNamespace:
         *,
         page: typing.Optional[builtins.int] = None,
         limit: typing.Optional[builtins.int] = None,
-    ) -> builtins.list[CikEntry]:
+    ) -> builtins.list[CikListing]:
         r"""
         Lists US SEC entities with optional provider pagination.
         """

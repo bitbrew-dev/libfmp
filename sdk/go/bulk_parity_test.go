@@ -24,7 +24,7 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[BulkUpgradesDowngradesConsensus](t, "bulk_upgrades_downgrades_consensus.json")
 	assertFixtureParity[BulkKeyMetricsTtm](t, "bulk_key_metrics_ttm.json")
 	assertFixtureParity[BulkFinancialRatiosTtm](t, "bulk_financial_ratios_ttm.json")
-	assertFixtureParity[BulkStockPeers](t, "bulk_stock_peers.json")
+	assertFixtureParity[BulkStockPeer](t, "bulk_stock_peers.json")
 	assertFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.json")
 	assertFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.json")
 	assertFixtureParity[BulkIncomeStatementGrowth](t, "bulk_income_statement_growth.json")
@@ -189,8 +189,8 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 		t.Fatalf("a JSON number decoded into the numeric-string member marketCap: %+v", decoded)
 	}
 
-	peers := assertFixtureParity[BulkStockPeers](t, "bulk_stock_peers.json")
-	if want := (BulkStockPeers{Symbol: "000001.SZ", Peers: "600036.SS"}); len(peers) != 1 || peers[0] != want {
+	peers := assertFixtureParity[BulkStockPeer](t, "bulk_stock_peers.json")
+	if want := (BulkStockPeer{Symbol: "000001.SZ", Peers: "600036.SS"}); len(peers) != 1 || peers[0] != want {
 		t.Fatalf("bulk_stock_peers = %+v", peers)
 	}
 	surprises := assertFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.json")

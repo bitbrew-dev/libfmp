@@ -248,8 +248,8 @@ func (n *BulkNamespace) FinancialRatiosTtm(ctx context.Context) ([]BulkFinancial
 // StockPeers retrieves worldwide stock peers in one provider bulk response.
 //
 // GET peers-bulk
-func (n *BulkNamespace) StockPeers(ctx context.Context) ([]BulkStockPeers, error) {
-	var out []BulkStockPeers
+func (n *BulkNamespace) StockPeers(ctx context.Context) ([]BulkStockPeer, error) {
+	var out []BulkStockPeer
 	if err := n.client.getJSON(ctx, "peers-bulk", "peers-bulk", nil, &out); err != nil {
 		return nil, err
 	}

@@ -16,7 +16,7 @@ use libfmp::responses::{
     insider_trading::InsiderTrade,
     institutional_ownership::InstitutionalHolding,
     quote::AftermarketTrade,
-    screener::CompanyScreenerEntry,
+    screener::CompanyScreenerResult,
     statements::IncomeStatement,
 };
 use serde_json::json;
@@ -38,7 +38,7 @@ const HOLDINGS: &[u8] =
 
 #[test]
 fn market_cap_decodes_integral_float_and_fractional_forms() {
-    let rows: Vec<CompanyScreenerEntry> = serde_json::from_slice(SCREENER).unwrap();
+    let rows: Vec<CompanyScreenerResult> = serde_json::from_slice(SCREENER).unwrap();
 
     assert_eq!(rows[0].market_cap, 4_885_602_246_714.0);
     assert_eq!(rows[1].market_cap, 1_234_567.5);
@@ -189,7 +189,7 @@ fn institutional_holding_decodes_fractional_shares_and_integral_float_value() {
 
 #[test]
 fn exponent_form_numbers_decode_into_every_integral_f64_alias() {
-    let screener: CompanyScreenerEntry = serde_json::from_value(json!({
+    let screener: CompanyScreenerResult = serde_json::from_value(json!({
         "symbol": "AAPL", "companyName": "Apple Inc.", "marketCap": 4.885602246714e12,
         "sector": "Technology", "industry": "Consumer Electronics", "beta": 1.097,
         "price": 332.64001, "lastAnnualDividend": 1.05, "volume": 2.9909012e7,

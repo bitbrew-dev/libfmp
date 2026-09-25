@@ -13,7 +13,7 @@ use crate::types::{
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
-pub struct CompanyScreenerEntry {
+pub struct CompanyScreenerResult {
     pub symbol: Ticker,
     pub company_name: String,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]

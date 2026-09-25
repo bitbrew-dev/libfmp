@@ -838,7 +838,7 @@ impl From<libfmp::responses::bulk::BulkFinancialRatiosTtm> for BulkFinancialRati
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.bulk.metrics", frozen, from_py_object)]
 #[derive(Clone)]
-pub(crate) struct BulkStockPeers {
+pub(crate) struct BulkStockPeer {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
@@ -847,7 +847,7 @@ pub(crate) struct BulkStockPeers {
 
 #[gen_stub_pymethods]
 #[pymethods]
-impl BulkStockPeers {
+impl BulkStockPeer {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
@@ -866,8 +866,8 @@ impl BulkStockPeers {
     }
 }
 
-impl From<libfmp::responses::bulk::BulkStockPeers> for BulkStockPeers {
-    fn from(value: libfmp::responses::bulk::BulkStockPeers) -> Self {
+impl From<libfmp::responses::bulk::BulkStockPeer> for BulkStockPeer {
+    fn from(value: libfmp::responses::bulk::BulkStockPeer) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
             peers: value.peers,

@@ -16,7 +16,7 @@ use libfmp::{
     error::ErrorCategory,
     query::Year,
     responses::bulk::{
-        BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeers,
+        BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeer,
     },
     transport::{HttpMethod, TransportResponse},
 };
@@ -71,7 +71,7 @@ fn assert_facts<Q, R>(endpoint: &EndpointSpec<Q, Vec<R>>, path: &'static str) {
 fn assert_response_types(
     _: &EndpointSpec<(), Vec<BulkKeyMetricsTtm>>,
     _: &EndpointSpec<(), Vec<BulkFinancialRatiosTtm>>,
-    _: &EndpointSpec<(), Vec<BulkStockPeers>>,
+    _: &EndpointSpec<(), Vec<BulkStockPeer>>,
     _: &EndpointSpec<BulkYearQuery, Vec<BulkEarningsSurprise>>,
 ) {
 }

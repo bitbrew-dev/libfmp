@@ -8,7 +8,7 @@ __all__ = [
     "BulkEarningsSurprise",
     "BulkFinancialRatiosTtm",
     "BulkKeyMetricsTtm",
-    "BulkStockPeers",
+    "BulkStockPeer",
 ]
 
 
@@ -361,10 +361,10 @@ class BulkKeyMetricsTtm:
 
 
 @typing.final
-class BulkStockPeers:
+class BulkStockPeer:
     @property
     def symbol(self) -> builtins.str: ...
     @property
     def peers(self) -> builtins.str: ...
-    def __new__(cls, symbol: builtins.str, peers: builtins.str) -> BulkStockPeers: ...
+    def __new__(cls, symbol: builtins.str, peers: builtins.str) -> BulkStockPeer: ...
     def __getnewargs__(self) -> tuple: ...

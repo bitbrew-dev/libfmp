@@ -14,8 +14,8 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::congressional::{
-    CongressionalMemberNetWorthAggregate, CongressionalMemberNetWorthEntry,
-    CongressionalMemberPosition, CongressionalMemberProfile, CongressionalTrade,
+    CongressionalMemberNetWorth, CongressionalMemberNetWorthAggregate, CongressionalMemberPosition,
+    CongressionalMemberProfile, CongressionalTrade,
 };
 use crate::runtime::block_on;
 
@@ -261,7 +261,7 @@ impl CongressionalNamespace {
         member_id: &str,
         page: Option<i64>,
         limit: Option<i64>,
-    ) -> PyResult<Vec<CongressionalMemberNetWorthEntry>> {
+    ) -> PyResult<Vec<CongressionalMemberNetWorth>> {
         let query = net_worth_query(member_id, page, limit)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
@@ -272,7 +272,7 @@ impl CongressionalNamespace {
         rows.map(|items| {
             items
                 .into_iter()
-                .map(CongressionalMemberNetWorthEntry::from)
+                .map(CongressionalMemberNetWorth::from)
                 .collect()
         })
         .map_err(to_py_error)

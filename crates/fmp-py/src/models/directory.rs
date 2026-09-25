@@ -109,7 +109,7 @@ impl From<libfmp::responses::directory::FinancialStatementSymbol> for FinancialS
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.directory", frozen, from_py_object)]
 #[derive(Clone)]
-pub(crate) struct CikEntry {
+pub(crate) struct CikListing {
     #[pyo3(get)]
     pub cik: String,
     #[pyo3(get)]
@@ -118,7 +118,7 @@ pub(crate) struct CikEntry {
 
 #[gen_stub_pymethods]
 #[pymethods]
-impl CikEntry {
+impl CikListing {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
@@ -137,8 +137,8 @@ impl CikEntry {
     }
 }
 
-impl From<libfmp::responses::directory::CikEntry> for CikEntry {
-    fn from(value: libfmp::responses::directory::CikEntry) -> Self {
+impl From<libfmp::responses::directory::CikListing> for CikListing {
+    fn from(value: libfmp::responses::directory::CikListing) -> Self {
         Self {
             cik: value.cik.into_inner(),
             company_name: value.company_name,

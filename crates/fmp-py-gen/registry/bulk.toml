@@ -65,7 +65,7 @@ doc = "Retrieves worldwide trailing-twelve-month financial ratios in one bulk re
 [[endpoint]]
 name = "stock_peers"
 method = "bulk_stock_peers"
-response = "bulk::metrics::BulkStockPeers"
+response = "bulk::metrics::BulkStockPeer"
 doc = "Retrieves worldwide stock peers in one provider bulk response."
 
 [[endpoint]]

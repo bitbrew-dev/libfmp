@@ -13,8 +13,8 @@ import pytest
 from conftest import FixtureServer, load_fixture
 from fmp.congressional import (
     CongressionalDebtDetails,
+    CongressionalMemberNetWorth,
     CongressionalMemberNetWorthAggregate,
-    CongressionalMemberNetWorthEntry,
     CongressionalMemberPosition,
     CongressionalMemberProfile,
     CongressionalNetWorthRange,
@@ -130,7 +130,7 @@ def test_net_worth_with_page_and_limit(client: Any, fixture_server: FixtureServe
     assert fixture_server.requests[0].target == "/senate-net-worth?senateID=P000197&page=0&limit=250"
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, CongressionalMemberNetWorthEntry)
+    assert isinstance(row, CongressionalMemberNetWorth)
     assert row.member_id == MEMBER_ID
     assert row.form_type == "House Report"
     assert row.year == 2022

@@ -11,7 +11,7 @@ use crate::args;
 use crate::errors::to_py_error;
 use crate::models::directory::{
     ActivelyTradingSymbol, AvailableCountry, AvailableExchange, AvailableIndustry, AvailableSector,
-    CikEntry, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol, FinancialStatementSymbol,
+    CikListing, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol, FinancialStatementSymbol,
     SymbolChange,
 };
 use crate::runtime::block_on;
@@ -72,7 +72,7 @@ impl DirectoryNamespace {
         py: Python<'_>,
         page: Option<i64>,
         limit: Option<i64>,
-    ) -> PyResult<Vec<CikEntry>> {
+    ) -> PyResult<Vec<CikListing>> {
         let query = cik_list_query(page, limit)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
@@ -81,7 +81,7 @@ impl DirectoryNamespace {
                 |client| async move { client.cik_list(query).await },
             )
         })?;
-        rows.map(|items| items.into_iter().map(CikEntry::from).collect())
+        rows.map(|items| items.into_iter().map(CikListing::from).collect())
             .map_err(to_py_error)
     }
 

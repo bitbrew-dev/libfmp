@@ -100,7 +100,7 @@ fn register_bulk_metrics(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::bulk::metrics::BulkEarningsSurprise>()?;
     module.add_class::<crate::models::bulk::metrics::BulkFinancialRatiosTtm>()?;
     module.add_class::<crate::models::bulk::metrics::BulkKeyMetricsTtm>()?;
-    module.add_class::<crate::models::bulk::metrics::BulkStockPeers>()?;
+    module.add_class::<crate::models::bulk::metrics::BulkStockPeer>()?;
     add_submodule(parent, "fmp._native.bulk.metrics", &module)
 }
 
@@ -174,8 +174,8 @@ fn register_company(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 fn register_congressional(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "congressional")?;
     module.add_class::<crate::models::congressional::CongressionalDebtDetails>()?;
+    module.add_class::<crate::models::congressional::CongressionalMemberNetWorth>()?;
     module.add_class::<crate::models::congressional::CongressionalMemberNetWorthAggregate>()?;
-    module.add_class::<crate::models::congressional::CongressionalMemberNetWorthEntry>()?;
     module.add_class::<crate::models::congressional::CongressionalMemberPosition>()?;
     module.add_class::<crate::models::congressional::CongressionalMemberProfile>()?;
     module.add_class::<crate::models::congressional::CongressionalNetWorthRange>()?;
@@ -207,7 +207,7 @@ fn register_directory(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::directory::AvailableExchange>()?;
     module.add_class::<crate::models::directory::AvailableIndustry>()?;
     module.add_class::<crate::models::directory::AvailableSector>()?;
-    module.add_class::<crate::models::directory::CikEntry>()?;
+    module.add_class::<crate::models::directory::CikListing>()?;
     module.add_class::<crate::models::directory::CompanySymbol>()?;
     module.add_class::<crate::models::directory::EarningsTranscriptAvailability>()?;
     module.add_class::<crate::models::directory::EtfSymbol>()?;
@@ -344,7 +344,7 @@ fn register_quote(parent: &Bound<'_, PyModule>) -> PyResult<()> {
 
 fn register_screener(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "screener")?;
-    module.add_class::<crate::models::screener::CompanyScreenerEntry>()?;
+    module.add_class::<crate::models::screener::CompanyScreenerResult>()?;
     module.add_class::<crate::namespaces::screener::ScreenerNamespace>()?;
     add_submodule(parent, "fmp._native.screener", &module)
 }

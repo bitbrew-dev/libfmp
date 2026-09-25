@@ -24,7 +24,7 @@ from fmp.directory import (
     AvailableExchange,
     AvailableIndustry,
     AvailableSector,
-    CikEntry,
+    CikListing,
     CompanySymbol,
     DirectoryNamespace,
     EarningsTranscriptAvailability,
@@ -91,7 +91,7 @@ def test_cik_list_with_page_and_limit(client: Any, fixture_server: FixtureServer
     assert fixture_server.requests[0].target == "/cik-list?page=0&limit=10001"
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, CikEntry)
+    assert isinstance(row, CikListing)
     assert row.cik == "0002137358"
     assert row.company_name == "Osotspa Public Co Limited/ADR"
 

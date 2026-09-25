@@ -769,12 +769,12 @@ func (n *CongressionalNamespace) Positions(ctx context.Context, q CongressionalP
 // NetWorth retrieves itemized congressional net-worth disclosures.
 //
 // GET senate-net-worth?senateID=&page=&limit=
-func (n *CongressionalNamespace) NetWorth(ctx context.Context, q CongressionalNetWorthQuery) ([]CongressionalMemberNetWorthEntry, error) {
+func (n *CongressionalNamespace) NetWorth(ctx context.Context, q CongressionalNetWorthQuery) ([]CongressionalMemberNetWorth, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CongressionalMemberNetWorthEntry
+	var out []CongressionalMemberNetWorth
 	if err := n.client.getJSON(ctx, "senate-net-worth", "senate-net-worth", params, &out); err != nil {
 		return nil, err
 	}

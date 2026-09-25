@@ -328,9 +328,9 @@ func (m *CongressionalDebtDetails) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 	return nil
 }
 
-// CongressionalMemberNetWorthEntry is one itemized congressional net-worth
+// CongressionalMemberNetWorth is one itemized congressional net-worth
 // disclosure.
-type CongressionalMemberNetWorthEntry struct {
+type CongressionalMemberNetWorth struct {
 	MemberId    string                      `json:"senateID"`
 	FormType    string                      `json:"formType"`
 	Year        uint32                      `json:"year"`
@@ -350,10 +350,10 @@ type CongressionalMemberNetWorthEntry struct {
 	Link        string                      `json:"link"`
 }
 
-// congressionalMemberNetWorthEntryShadow mirrors
-// CongressionalMemberNetWorthEntry with a pointer or raw value for every
-// required member so a missing or null member is observable after decoding.
-type congressionalMemberNetWorthEntryShadow struct {
+// congressionalMemberNetWorthShadow mirrors CongressionalMemberNetWorth with a
+// pointer or raw value for every required member so a missing or null member
+// is observable after decoding.
+type congressionalMemberNetWorthShadow struct {
 	MemberId    *string        `json:"senateID"`
 	FormType    *string        `json:"formType"`
 	Year        *uint32        `json:"year"`
@@ -376,46 +376,46 @@ type congressionalMemberNetWorthEntryShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CongressionalMemberNetWorthEntry) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow congressionalMemberNetWorthEntryShadow
+func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow congressionalMemberNetWorthShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.MemberId == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "senateID")
+		return missingMemberError("CongressionalMemberNetWorth", "senateID")
 	case shadow.FormType == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "formType")
+		return missingMemberError("CongressionalMemberNetWorth", "formType")
 	case shadow.Year == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "year")
+		return missingMemberError("CongressionalMemberNetWorth", "year")
 	case shadow.FilingDate == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "filingDate")
+		return missingMemberError("CongressionalMemberNetWorth", "filingDate")
 	case shadow.Section == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "section")
+		return missingMemberError("CongressionalMemberNetWorth", "section")
 	case shadow.Category == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "category")
+		return missingMemberError("CongressionalMemberNetWorth", "category")
 	case shadow.Name == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "name")
+		return missingMemberError("CongressionalMemberNetWorth", "name")
 	case shadow.AssetType == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "assetType")
+		return missingMemberError("CongressionalMemberNetWorth", "assetType")
 	case len(shadow.IncomeType) == 0:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "incomeType")
+		return missingMemberError("CongressionalMemberNetWorth", "incomeType")
 	case shadow.Owner == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "owner")
+		return missingMemberError("CongressionalMemberNetWorth", "owner")
 	case len(shadow.Comment) == 0:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "comment")
+		return missingMemberError("CongressionalMemberNetWorth", "comment")
 	case len(shadow.DebtDetails) == 0:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "debtDetails")
+		return missingMemberError("CongressionalMemberNetWorth", "debtDetails")
 	case len(shadow.ValueRange) == 0:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "valueRange")
+		return missingMemberError("CongressionalMemberNetWorth", "valueRange")
 	case shadow.Value == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "value")
+		return missingMemberError("CongressionalMemberNetWorth", "value")
 	case len(shadow.IncomeRange) == 0:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "incomeRange")
+		return missingMemberError("CongressionalMemberNetWorth", "incomeRange")
 	case len(shadow.Income) == 0:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "income")
+		return missingMemberError("CongressionalMemberNetWorth", "income")
 	case shadow.Link == nil:
-		return missingMemberError("CongressionalMemberNetWorthEntry", "link")
+		return missingMemberError("CongressionalMemberNetWorth", "link")
 	}
 	var incomeType *string
 	if shadow.IncomeType.Kind() != 'n' {
@@ -465,7 +465,7 @@ func (m *CongressionalMemberNetWorthEntry) UnmarshalJSONFrom(dec *jsontext.Decod
 		}
 		income = &value
 	}
-	*m = CongressionalMemberNetWorthEntry{
+	*m = CongressionalMemberNetWorth{
 		MemberId:    *shadow.MemberId,
 		FormType:    *shadow.FormType,
 		Year:        *shadow.Year,

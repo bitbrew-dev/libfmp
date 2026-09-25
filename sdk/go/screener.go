@@ -448,12 +448,12 @@ func (q CompanyScreenerQuery) params() ([]queryParam, error) {
 // Companies screens worldwide companies using the supplied optional filters.
 //
 // GET company-screener?marketCapMoreThan=&marketCapLowerThan=&sector=&industry=&betaMoreThan=&betaLowerThan=&priceMoreThan=&priceLowerThan=&dividendMoreThan=&dividendLowerThan=&volumeMoreThan=&volumeLowerThan=&exchange=&country=&isEtf=&isFund=&isActivelyTrading=&page=&limit=&includeAllShareClasses=
-func (n *ScreenerNamespace) Companies(ctx context.Context, q CompanyScreenerQuery) ([]CompanyScreenerEntry, error) {
+func (n *ScreenerNamespace) Companies(ctx context.Context, q CompanyScreenerQuery) ([]CompanyScreenerResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CompanyScreenerEntry
+	var out []CompanyScreenerResult
 	if err := n.client.getJSON(ctx, "company-screener", "company-screener", params, &out); err != nil {
 		return nil, err
 	}
