@@ -90,7 +90,7 @@ async fn custom_proxy_preserves_exact_query_order_auth_headers_and_bare_array() 
     assert_eq!(rows.len(), 1);
     assert_eq!(rows[0].cik.as_str(), "0000102909");
     assert_eq!(rows[0].security_cusip.as_str(), "037833100");
-    assert_eq!(rows[0].change_in_performance, -67_750_129_670);
+    assert_eq!(rows[0].change_in_performance, -67_750_129_670.0);
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 1);

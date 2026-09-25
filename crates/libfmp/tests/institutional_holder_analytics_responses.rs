@@ -32,13 +32,13 @@ fn exact_fixture_decodes_all_39_required_fields_and_wire_casing() {
             last_weight: 5.996,
             change_in_weight: -0.5287,
             change_in_weight_percentage: -8.8175,
-            market_value: 222_572_509_140,
-            last_market_value: 252_876_459_509,
-            change_in_market_value: -30_303_950_369,
+            market_value: 222_572_509_140.0,
+            last_market_value: 252_876_459_509.0,
+            change_in_market_value: -30_303_950_369.0,
             change_in_market_value_percentage: -11.9837,
-            shares_number: 1_299_997_133,
-            last_shares_number: 1_303_688_506,
-            change_in_shares_number: -3_691_373,
+            shares_number: 1_299_997_133.0,
+            last_shares_number: 1_303_688_506.0,
+            change_in_shares_number: -3_691_373.0,
             change_in_shares_number_percentage: -0.2831,
             quarter_end_price: 171.21,
             avg_price_paid: 20.65,
@@ -50,10 +50,10 @@ fn exact_fixture_decodes_all_39_required_fields_and_wire_casing() {
             change_in_ownership_percentage: 0.3445,
             holding_period: 75,
             first_added: Date::from_str("2005-03-31").unwrap(),
-            performance: -29_671_950_396,
+            performance: -29_671_950_396.0,
             performance_percentage: -11.7338,
-            last_performance: 38_078_179_274,
-            change_in_performance: -67_750_129_670,
+            last_performance: 38_078_179_274.0,
+            change_in_performance: -67_750_129_670.0,
             is_counted_for_performance: true,
         }]
     );
@@ -63,7 +63,7 @@ fn exact_fixture_decodes_all_39_required_fields_and_wire_casing() {
 }
 
 #[test]
-fn integer_domains_preserve_above_u32_above_2pow53_and_negative_values() {
+fn amounts_and_shares_decode_large_and_negative_values_and_holding_period_stays_u64() {
     let mut source: serde_json::Value = serde_json::from_slice(ANALYTICS).unwrap();
     source[0]["marketValue"] = serde_json::json!(9_007_199_254_740_993_u64);
     source[0]["lastMarketValue"] = serde_json::json!(u64::MAX);
@@ -77,15 +77,15 @@ fn integer_domains_preserve_above_u32_above_2pow53_and_negative_values() {
     source[0]["holdingPeriod"] = serde_json::json!(u64::MAX);
 
     let rows: Vec<InstitutionalHolderAnalytics> = serde_json::from_value(source).unwrap();
-    assert_eq!(rows[0].market_value, 9_007_199_254_740_993);
-    assert_eq!(rows[0].last_market_value, u64::MAX);
-    assert_eq!(rows[0].shares_number, 4_294_967_296);
-    assert_eq!(rows[0].last_shares_number, 9_007_199_254_740_993);
-    assert_eq!(rows[0].change_in_market_value, i64::MIN);
-    assert_eq!(rows[0].change_in_shares_number, -4_294_967_297);
-    assert_eq!(rows[0].performance, -9_007_199_254_740_993);
-    assert_eq!(rows[0].last_performance, 9_007_199_254_740_993);
-    assert_eq!(rows[0].change_in_performance, i64::MIN);
+    assert_eq!(rows[0].market_value, 9_007_199_254_740_992.0);
+    assert_eq!(rows[0].last_market_value, u64::MAX as f64);
+    assert_eq!(rows[0].shares_number, 4_294_967_296.0);
+    assert_eq!(rows[0].last_shares_number, 9_007_199_254_740_992.0);
+    assert_eq!(rows[0].change_in_market_value, i64::MIN as f64);
+    assert_eq!(rows[0].change_in_shares_number, -4_294_967_297.0);
+    assert_eq!(rows[0].performance, -9_007_199_254_740_992.0);
+    assert_eq!(rows[0].last_performance, 9_007_199_254_740_992.0);
+    assert_eq!(rows[0].change_in_performance, i64::MIN as f64);
     assert_eq!(rows[0].holding_period, u64::MAX);
 }
 

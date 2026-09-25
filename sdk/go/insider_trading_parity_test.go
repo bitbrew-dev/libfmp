@@ -52,18 +52,18 @@ func TestDocumentedInsiderTradeRowsDecodeExactValues(t *testing.T) {
 		t.Fatalf("latest_insider_trades[0] = %+v, want %+v", latest[0], want)
 	}
 
-	// Counts keep the full u64 range and an integer price decodes as a price
-	// (counts_preserve_u64_and_integer_prices_decode_as_prices).
+	// Share quantities decode as float64 and an integer price decodes as a price
+	// (counts_preserve_u64_quantities_decode_as_f64_and_integer_prices_decode_as_prices).
 	var rows []InsiderTrade
 	if err := json.Unmarshal([]byte(`[{"symbol":"TRMK","filingDate":"2026-07-30","transactionDate":"2026-07-28",`+
 		`"reportingCik":"0001661867","companyCik":"0000036146","transactionType":"A-Award",`+
-		`"securitiesOwned":18446744073709551615,"reportingName":"Tate Granville Jr","typeOfOwner":"officer: Secretary",`+
-		`"acquisitionOrDisposition":"A","directOrIndirect":"D","formType":"4","securitiesTransacted":18446744073709551615,`+
+		`"securitiesOwned":1500.5,"reportingName":"Tate Granville Jr","typeOfOwner":"officer: Secretary",`+
+		`"acquisitionOrDisposition":"A","directOrIndirect":"D","formType":"4","securitiesTransacted":-3,`+
 		`"price":225,"securityName":"Common Stock","url":"https://example.invalid"}]`), &rows); err != nil {
 		t.Fatal(err)
 	}
-	if rows[0].SecuritiesOwned != 1<<64-1 || rows[0].SecuritiesTransacted != 1<<64-1 || rows[0].Price != 225.0 {
-		t.Fatalf("u64 counts or integer price were not preserved: %+v", rows[0])
+	if rows[0].SecuritiesOwned != 1500.5 || rows[0].SecuritiesTransacted != -3 || rows[0].Price != 225.0 {
+		t.Fatalf("share quantities or integer price were not preserved: %+v", rows[0])
 	}
 }
 
