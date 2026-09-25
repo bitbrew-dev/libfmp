@@ -20,6 +20,9 @@ linters:
       # follow the ADR 0032 initialism table that gen_go applies.
       checks: ["all", "-ST1000", "-ST1016", "-ST1020", "-ST1021", "-ST1022"]
       # staticcheck's default initialisms first, then the ADR 0032 additions.
+      # The defaults are spelled out rather than pulled in with "inherit"
+      # because "inherit" panics golangci-lint 2.14.0; keep them in step with
+      # staticcheck's DefaultConfig.Initialisms.
       initialisms:
         - ACL
         - API
