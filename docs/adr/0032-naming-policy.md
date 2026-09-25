@@ -14,8 +14,9 @@ idea is spelled several ways: `quote.batch_quote` repeats its namespace,
 `Sp500`, and `Ttm` with `URL` and `HTTP`. 1.0 freezes names, so the policy is
 set now.
 
-This ADR is the rule. The renames land in #343 and #344; until they merge,
-the code, examples, and guides keep the current names.
+This ADR is the rule. #343 made the cross-SDK renames and #344 the Go
+casing pass (plus `news.fmp_articles` to `news.articles`, `FmpArticle` to
+`Article`, in all three SDKs).
 
 ## Decision
 

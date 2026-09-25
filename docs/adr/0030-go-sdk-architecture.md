@@ -291,7 +291,8 @@ Go checks, mirroring the sibling's `go-bindings-tests` hook.
 
 - Status moved from Proposed to Accepted: phases 0 to 4 shipped and
   `sdk/go/vX.Y.Z` tags are published with each release.
-- Go identifier casing and method names follow ADR 0032. The auth
-  constructors named in the client-surface table above (`FmpHeader`,
-  `FmpQuery`, `FmpHeaderFromEnv`) become `FMPHeader`, `FMPQuery`, and
-  `FMPHeaderFromEnv` when #344 lands; this ADR keeps the names as shipped.
+- Go identifier casing and method names follow ADR 0032. Since #344 the
+  auth constructors named in the client-surface table above (`FmpHeader`,
+  `FmpQuery`, `FmpHeaderFromEnv`) are `FMPHeader`, `FMPQuery`, and
+  `FMPHeaderFromEnv`, and `FmpAPIKeyFromEnv` is `APIKeyFromEnv`; this ADR
+  keeps the names as first shipped.

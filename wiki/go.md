@@ -37,6 +37,16 @@ proxy token without a separator of its own. The full proxy example, with a
 `router/stable` path prefix and an optional `X-Tenant` header, is in the Go
 README under [Building a client](../sdk/go/README.md#building-a-client).
 
+## Names
+
+Every endpoint has one name across Rust, Python, and Go
+([ADR 0032](../docs/adr/0032-naming-policy.md)). Go spells initialisms in all
+caps (`ID`, `URL`, `FMP`, `SEC`, `ETF`, `CIK`, `DCF`, `ESG`, `TTM`, `SP500`,
+`8K`, `13F`, and the rest of the ADR table), so the namespaces are
+`client.TipRanks`, `client.DCF`, `client.ESG`, and `client.SECFilings`, and a
+model such as `KeyMetricsTTM` keeps its wire names in its struct tags. See
+[Names](../sdk/go/README.md#names).
+
 ## Errors
 
 Every client operation returns a `*fmp.Error`; match it with `errors.As`.

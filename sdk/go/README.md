@@ -116,6 +116,26 @@ The environment names match the Rust crate's live opt-in tests:
 | `FMP_LIVE_TESTS` | live tests (`live_test.go`), which run only when it is `1` |
 | `FMP_PROXY_BASE_URL`, `FMP_PROXY_TOKEN`, `FMP_PROXY_PATH_PREFIX`, `FMP_TENANT` | live tests against a proxy |
 
+## Names
+
+Endpoint methods, query types, and models are generated from the same
+registry as the Rust and Python SDKs, so each endpoint has one name in all
+three ([ADR 0032](../../docs/adr/0032-naming-policy.md)). Go spells
+initialisms in all caps, generated and hand-written alike:
+
+| Group | Initialisms |
+| --- | --- |
+| Web and data | `ID`, `URL`, `JSON`, `API`, `HTTP` |
+| Provider and regulators | `FMP`, `SEC`, `US`, `COT` |
+| Instruments and identifiers | `ETF`, `CIK`, `CUSIP`, `ISIN`, `IPO`, `SP500` |
+| Metrics | `ESG`, `DCF`, `EPS`, `TTM` |
+| Form names | `8K`, `13F` |
+
+So the Python `sec_filings.latest_8k` is `client.SECFilings.Latest8K`,
+`statements.metrics.key_metrics_ttm` returns `[]fmp.KeyMetricsTTM`, and the
+namespaces are `TipRanks`, `DCF`, `ESG`, and `SECFilings`. Struct tags keep
+the wire names (`json:"cik"`).
+
 ## Errors
 
 Every client operation returns a `*fmp.Error`. Use `errors.As` rather than a
