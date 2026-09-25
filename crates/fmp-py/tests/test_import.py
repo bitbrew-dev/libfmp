@@ -66,6 +66,9 @@ def test_public_names_are_exported() -> None:
     assert "FmpClient" in fmp.__all__
     assert "__version__" in fmp.__all__
     assert {"FmpError", "FmpStatusError"} <= set(fmp.__all__)
+    assert "QuoteShort" not in fmp.__all__
+    assert not hasattr(fmp, "QuoteShort")
+    assert not hasattr(fmp._native, "_FmpError")
     assert FmpClient is fmp._native.FmpClient
     assert type(FmpClient(auth_mode="none", base_url="http://127.0.0.1:0").quote).__name__ == "QuoteNamespace"
 

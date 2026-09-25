@@ -3,7 +3,6 @@
 
 from fmp._native import BinaryPayload, FmpClient, __version__, reveal_secret_urls, set_reveal_secret_urls
 from fmp._native.errors import FmpConfigError, FmpDecodeError, FmpError, FmpStatusError, FmpTransportError, FmpValidationError
-from fmp._native.quote import QuoteShort
 __all__ = [
     "BinaryPayload",
     "FmpClient",
@@ -13,7 +12,6 @@ __all__ = [
     "FmpStatusError",
     "FmpTransportError",
     "FmpValidationError",
-    "QuoteShort",
     "__version__",
     "reveal_secret_urls",
     "set_reveal_secret_urls",

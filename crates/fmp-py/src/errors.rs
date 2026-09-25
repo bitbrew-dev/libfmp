@@ -206,9 +206,8 @@ fn set_error_attributes(
     Ok(())
 }
 
-/// Publishes the hierarchy under `fmp._native.errors` (public names, the
-/// module the generated `fmp.errors` package re-exports from) and, for one
-/// release, under the private `_Fmp*` names directly on `fmp._native`.
+/// Publishes the hierarchy under `fmp._native.errors`, the module the
+/// generated `fmp.errors` package re-exports from.
 ///
 /// Class-level attribute defaults make a bare instance report its category
 /// and no request context, matching what `to_py_error` sets per instance.
@@ -239,13 +238,5 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     errors.add("FmpTransportError", py.get_type::<FmpTransportError>())?;
     errors.add("FmpStatusError", py.get_type::<FmpStatusError>())?;
     errors.add("FmpDecodeError", py.get_type::<FmpDecodeError>())?;
-    super::add_submodule(module, NATIVE_MODULE, &errors)?;
-
-    module.add("_FmpError", base)?;
-    module.add("_FmpValidationError", py.get_type::<FmpValidationError>())?;
-    module.add("_FmpConfigError", py.get_type::<FmpConfigError>())?;
-    module.add("_FmpTransportError", py.get_type::<FmpTransportError>())?;
-    module.add("_FmpStatusError", py.get_type::<FmpStatusError>())?;
-    module.add("_FmpDecodeError", py.get_type::<FmpDecodeError>())?;
-    Ok(())
+    super::add_submodule(module, NATIVE_MODULE, &errors)
 }
