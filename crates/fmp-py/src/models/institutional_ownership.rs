@@ -110,7 +110,7 @@ pub(crate) struct InstitutionalHolding {
     #[pyo3(get)]
     pub name_of_issuer: String,
     #[pyo3(get)]
-    pub shares: u64,
+    pub shares: f64,
     #[pyo3(get)]
     pub title_of_class: String,
     #[pyo3(get)]
@@ -118,7 +118,7 @@ pub(crate) struct InstitutionalHolding {
     #[pyo3(get)]
     pub put_call_share: String,
     #[pyo3(get)]
-    pub value: u64,
+    pub value: f64,
     #[pyo3(get)]
     pub link: String,
     #[pyo3(get)]
@@ -140,11 +140,11 @@ impl InstitutionalHolding {
         security_cusip: String,
         symbol: String,
         name_of_issuer: String,
-        shares: u64,
+        shares: f64,
         title_of_class: String,
         shares_type: String,
         put_call_share: String,
-        value: u64,
+        value: f64,
         link: String,
         final_link: String,
     ) -> Self {
@@ -296,19 +296,19 @@ pub(crate) struct InstitutionalHolderAnalytics {
     #[pyo3(get)]
     pub change_in_weight_percentage: f64,
     #[pyo3(get)]
-    pub market_value: u64,
+    pub market_value: f64,
     #[pyo3(get)]
-    pub last_market_value: u64,
+    pub last_market_value: f64,
     #[pyo3(get)]
-    pub change_in_market_value: i64,
+    pub change_in_market_value: f64,
     #[pyo3(get)]
     pub change_in_market_value_percentage: f64,
     #[pyo3(get)]
-    pub shares_number: u64,
+    pub shares_number: f64,
     #[pyo3(get)]
-    pub last_shares_number: u64,
+    pub last_shares_number: f64,
     #[pyo3(get)]
-    pub change_in_shares_number: i64,
+    pub change_in_shares_number: f64,
     #[pyo3(get)]
     pub change_in_shares_number_percentage: f64,
     #[pyo3(get)]
@@ -332,13 +332,13 @@ pub(crate) struct InstitutionalHolderAnalytics {
     #[pyo3(get)]
     pub first_added: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub performance: i64,
+    pub performance: f64,
     #[pyo3(get)]
     pub performance_percentage: f64,
     #[pyo3(get)]
-    pub last_performance: i64,
+    pub last_performance: f64,
     #[pyo3(get)]
-    pub change_in_performance: i64,
+    pub change_in_performance: f64,
     #[pyo3(get)]
     pub is_counted_for_performance: bool,
 }
@@ -367,13 +367,13 @@ impl InstitutionalHolderAnalytics {
         last_weight: f64,
         change_in_weight: f64,
         change_in_weight_percentage: f64,
-        market_value: u64,
-        last_market_value: u64,
-        change_in_market_value: i64,
+        market_value: f64,
+        last_market_value: f64,
+        change_in_market_value: f64,
         change_in_market_value_percentage: f64,
-        shares_number: u64,
-        last_shares_number: u64,
-        change_in_shares_number: i64,
+        shares_number: f64,
+        last_shares_number: f64,
+        change_in_shares_number: f64,
         change_in_shares_number_percentage: f64,
         quarter_end_price: f64,
         avg_price_paid: f64,
@@ -385,10 +385,10 @@ impl InstitutionalHolderAnalytics {
         change_in_ownership_percentage: f64,
         holding_period: u64,
         first_added: ::chrono::NaiveDate,
-        performance: i64,
+        performance: f64,
         performance_percentage: f64,
-        last_performance: i64,
-        change_in_performance: i64,
+        last_performance: f64,
+        change_in_performance: f64,
         is_counted_for_performance: bool,
     ) -> Self {
         Self {
@@ -558,19 +558,19 @@ pub(crate) struct HolderPerformanceSummary {
     #[pyo3(get)]
     pub securities_removed: u64,
     #[pyo3(get)]
-    pub market_value: u64,
+    pub market_value: f64,
     #[pyo3(get)]
-    pub previous_market_value: u64,
+    pub previous_market_value: f64,
     #[pyo3(get)]
-    pub change_in_market_value: i64,
+    pub change_in_market_value: f64,
     #[pyo3(get)]
     pub change_in_market_value_percentage: f64,
     #[pyo3(get)]
-    pub average_holding_period: u64,
+    pub average_holding_period: f64,
     #[pyo3(get)]
-    pub average_holding_period_top10: u64,
+    pub average_holding_period_top10: f64,
     #[pyo3(get)]
-    pub average_holding_period_top20: u64,
+    pub average_holding_period_top20: f64,
     #[pyo3(get)]
     pub turnover: f64,
     #[pyo3(get)]
@@ -578,27 +578,27 @@ pub(crate) struct HolderPerformanceSummary {
     #[pyo3(get)]
     pub turnover_alternate_buy: f64,
     #[pyo3(get)]
-    pub performance: i64,
+    pub performance: f64,
     #[pyo3(get)]
     pub performance_percentage: f64,
     #[pyo3(get)]
-    pub last_performance: i64,
+    pub last_performance: f64,
     #[pyo3(get)]
-    pub change_in_performance: i64,
+    pub change_in_performance: f64,
     #[pyo3(get)]
-    pub performance_1_year: i64,
+    pub performance_1_year: f64,
     #[pyo3(get)]
     pub performance_percentage_1_year: f64,
     #[pyo3(get)]
-    pub performance_3_year: i64,
+    pub performance_3_year: f64,
     #[pyo3(get)]
     pub performance_percentage_3_year: f64,
     #[pyo3(get)]
-    pub performance_5_year: i64,
+    pub performance_5_year: f64,
     #[pyo3(get)]
     pub performance_percentage_5_year: f64,
     #[pyo3(get)]
-    pub performance_since_inception: i64,
+    pub performance_since_inception: f64,
     #[pyo3(get)]
     pub performance_since_inception_percentage: f64,
     #[pyo3(get)]
@@ -627,27 +627,27 @@ impl HolderPerformanceSummary {
         portfolio_size: u64,
         securities_added: u64,
         securities_removed: u64,
-        market_value: u64,
-        previous_market_value: u64,
-        change_in_market_value: i64,
+        market_value: f64,
+        previous_market_value: f64,
+        change_in_market_value: f64,
         change_in_market_value_percentage: f64,
-        average_holding_period: u64,
-        average_holding_period_top10: u64,
-        average_holding_period_top20: u64,
+        average_holding_period: f64,
+        average_holding_period_top10: f64,
+        average_holding_period_top20: f64,
         turnover: f64,
         turnover_alternate_sell: f64,
         turnover_alternate_buy: f64,
-        performance: i64,
+        performance: f64,
         performance_percentage: f64,
-        last_performance: i64,
-        change_in_performance: i64,
-        performance_1_year: i64,
+        last_performance: f64,
+        change_in_performance: f64,
+        performance_1_year: f64,
         performance_percentage_1_year: f64,
-        performance_3_year: i64,
+        performance_3_year: f64,
         performance_percentage_3_year: f64,
-        performance_5_year: i64,
+        performance_5_year: f64,
         performance_percentage_5_year: f64,
-        performance_since_inception: i64,
+        performance_since_inception: f64,
         performance_since_inception_percentage: f64,
         performance_relative_to_sp500_percentage: f64,
         performance_1_year_relative_to_sp500_percentage: f64,
@@ -827,13 +827,13 @@ pub(crate) struct HolderIndustryBreakdown {
     #[pyo3(get)]
     pub change_in_weight_percentage: f64,
     #[pyo3(get)]
-    pub performance: i64,
+    pub performance: f64,
     #[pyo3(get)]
     pub performance_percentage: f64,
     #[pyo3(get)]
-    pub last_performance: i64,
+    pub last_performance: f64,
     #[pyo3(get)]
-    pub change_in_performance: i64,
+    pub change_in_performance: f64,
 }
 
 #[gen_stub_pymethods]
@@ -852,10 +852,10 @@ impl HolderIndustryBreakdown {
         last_weight: f64,
         change_in_weight: f64,
         change_in_weight_percentage: f64,
-        performance: i64,
+        performance: f64,
         performance_percentage: f64,
-        last_performance: i64,
-        change_in_performance: i64,
+        last_performance: f64,
+        change_in_performance: f64,
     ) -> Self {
         Self {
             date,
@@ -933,17 +933,17 @@ pub(crate) struct InstitutionalPositionSummary {
     #[pyo3(get)]
     pub investors_holding_change: i64,
     #[pyo3(get)]
-    pub number_of_13f_shares: u64,
+    pub number_of_13f_shares: f64,
     #[pyo3(get)]
-    pub last_number_of_13f_shares: u64,
+    pub last_number_of_13f_shares: f64,
     #[pyo3(get)]
-    pub number_of_13f_shares_change: i64,
+    pub number_of_13f_shares_change: f64,
     #[pyo3(get)]
-    pub total_invested: u64,
+    pub total_invested: f64,
     #[pyo3(get)]
-    pub last_total_invested: u64,
+    pub last_total_invested: f64,
     #[pyo3(get)]
-    pub total_invested_change: i64,
+    pub total_invested_change: f64,
     #[pyo3(get)]
     pub ownership_percent: f64,
     #[pyo3(get)]
@@ -975,17 +975,17 @@ pub(crate) struct InstitutionalPositionSummary {
     #[pyo3(get)]
     pub reduced_positions_change: i64,
     #[pyo3(get)]
-    pub total_calls: u64,
+    pub total_calls: f64,
     #[pyo3(get)]
-    pub last_total_calls: u64,
+    pub last_total_calls: f64,
     #[pyo3(get)]
-    pub total_calls_change: i64,
+    pub total_calls_change: f64,
     #[pyo3(get)]
-    pub total_puts: u64,
+    pub total_puts: f64,
     #[pyo3(get)]
-    pub last_total_puts: u64,
+    pub last_total_puts: f64,
     #[pyo3(get)]
-    pub total_puts_change: i64,
+    pub total_puts_change: f64,
     #[pyo3(get)]
     pub put_call_ratio: f64,
     #[pyo3(get)]
@@ -1008,12 +1008,12 @@ impl InstitutionalPositionSummary {
         investors_holding: u64,
         last_investors_holding: u64,
         investors_holding_change: i64,
-        number_of_13f_shares: u64,
-        last_number_of_13f_shares: u64,
-        number_of_13f_shares_change: i64,
-        total_invested: u64,
-        last_total_invested: u64,
-        total_invested_change: i64,
+        number_of_13f_shares: f64,
+        last_number_of_13f_shares: f64,
+        number_of_13f_shares_change: f64,
+        total_invested: f64,
+        last_total_invested: f64,
+        total_invested_change: f64,
         ownership_percent: f64,
         last_ownership_percent: f64,
         ownership_percent_change: f64,
@@ -1029,12 +1029,12 @@ impl InstitutionalPositionSummary {
         reduced_positions: u64,
         last_reduced_positions: u64,
         reduced_positions_change: i64,
-        total_calls: u64,
-        last_total_calls: u64,
-        total_calls_change: i64,
-        total_puts: u64,
-        last_total_puts: u64,
-        total_puts_change: i64,
+        total_calls: f64,
+        last_total_calls: f64,
+        total_calls_change: f64,
+        total_puts: f64,
+        last_total_puts: f64,
+        total_puts_change: f64,
         put_call_ratio: f64,
         last_put_call_ratio: f64,
         put_call_ratio_change: f64,
@@ -1191,7 +1191,7 @@ pub(crate) struct InstitutionalIndustrySummary {
     #[pyo3(get)]
     pub industry_title: String,
     #[pyo3(get)]
-    pub industry_value: u64,
+    pub industry_value: f64,
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
 }
@@ -1203,7 +1203,7 @@ impl InstitutionalIndustrySummary {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (industry_title, industry_value, date))]
-    fn new(industry_title: String, industry_value: u64, date: ::chrono::NaiveDate) -> Self {
+    fn new(industry_title: String, industry_value: f64, date: ::chrono::NaiveDate) -> Self {
         Self {
             industry_title,
             industry_value,

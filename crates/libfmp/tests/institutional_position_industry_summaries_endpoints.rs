@@ -103,7 +103,7 @@ async fn proxy_preserves_exact_query_order_complex_symbol_auth_headers_and_sourc
     assert_eq!(positions.len(), 1);
     assert_eq!(positions[0].symbol.as_str(), "AAPL");
     assert_eq!(positions[0].cik.as_str(), "0000320193");
-    assert_eq!(positions[0].total_invested_change, -245_052_087_186);
+    assert_eq!(positions[0].total_invested_change, -245_052_087_186.0);
     assert_eq!(industry.len(), 1);
     assert_eq!(
         industry[0].industry_title,

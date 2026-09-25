@@ -23,27 +23,27 @@ fn exact_performance_fixture_decodes_all_33_fields_and_provider_casing() {
             portfolio_size: 29,
             securities_added: 3,
             securities_removed: 16,
-            market_value: 263_095_703_570,
-            previous_market_value: 274_160_086_701,
-            change_in_market_value: -11_064_383_131,
+            market_value: 263_095_703_570.0,
+            previous_market_value: 274_160_086_701.0,
+            change_in_market_value: -11_064_383_131.0,
             change_in_market_value_percentage: -4.0357,
-            average_holding_period: 19,
-            average_holding_period_top10: 32,
-            average_holding_period_top20: 25,
+            average_holding_period: 19.0,
+            average_holding_period_top10: 32.0,
+            average_holding_period_top20: 25.0,
             turnover: 0.6552,
             turnover_alternate_sell: 9.1702,
             turnover_alternate_buy: 5.8198,
-            performance: -2_243_708_176,
+            performance: -2_243_708_176.0,
             performance_percentage: -0.8184,
-            last_performance: 12_155_036_983,
-            change_in_performance: -14_398_745_159,
-            performance_1_year: 28_972_527_543,
+            last_performance: 12_155_036_983.0,
+            change_in_performance: -14_398_745_159.0,
+            performance_1_year: 28_972_527_543.0,
             performance_percentage_1_year: 11.3877,
-            performance_3_year: 118_145_912_143,
+            performance_3_year: 118_145_912_143.0,
             performance_percentage_3_year: 45.9009,
-            performance_5_year: 146_867_544_096,
+            performance_5_year: 146_867_544_096.0,
             performance_percentage_5_year: 63.1842,
-            performance_since_inception: 267_584_180_516,
+            performance_since_inception: 267_584_180_516.0,
             performance_since_inception_percentage: 203.9112,
             performance_relative_to_sp500_percentage: 3.8118,
             performance_1_year_relative_to_sp500_percentage: -4.9473,
@@ -72,28 +72,18 @@ fn exact_industry_fixture_decodes_all_12_fields() {
             last_weight: 51.0035,
             change_in_weight: -1.2332,
             change_in_weight_percentage: -2.4178,
-            performance: -20_838_154_294,
+            performance: -20_838_154_294.0,
             performance_percentage: -178.2938,
-            last_performance: 26_615_340_304,
-            change_in_performance: -47_453_494_598,
+            last_performance: 26_615_340_304.0,
+            change_in_performance: -47_453_494_598.0,
         }]
     );
     assert_eq!(serde_json::to_value(rows).unwrap(), source);
 }
 
 #[test]
-fn unsigned_counts_values_and_periods_preserve_the_full_u64_domain() {
-    let fields = [
-        "portfolioSize",
-        "securitiesAdded",
-        "securitiesRemoved",
-        "marketValue",
-        "previousMarketValue",
-        "averageHoldingPeriod",
-        "averageHoldingPeriodTop10",
-        "averageHoldingPeriodTop20",
-    ];
-    for field in fields {
+fn counts_preserve_the_full_u64_domain_and_values_and_periods_keep_fractions() {
+    for field in ["portfolioSize", "securitiesAdded", "securitiesRemoved"] {
         let mut source: serde_json::Value = serde_json::from_slice(PERFORMANCE).unwrap();
         source[0][field] = serde_json::json!(u64::MAX);
         let rows: Vec<HolderPerformanceSummary> = serde_json::from_value(source).unwrap();
@@ -104,6 +94,25 @@ fn unsigned_counts_values_and_periods_preserve_the_full_u64_domain() {
             let mut source: serde_json::Value = serde_json::from_slice(PERFORMANCE).unwrap();
             source[0][field] = invalid;
             assert!(serde_json::from_value::<Vec<HolderPerformanceSummary>>(source).is_err());
+        }
+    }
+
+    let fields = [
+        "marketValue",
+        "previousMarketValue",
+        "averageHoldingPeriod",
+        "averageHoldingPeriodTop10",
+        "averageHoldingPeriodTop20",
+    ];
+    for field in fields {
+        for value in [
+            serde_json::json!(19.5),
+            serde_json::json!(4_294_967_296_u64),
+        ] {
+            let mut source: serde_json::Value = serde_json::from_slice(PERFORMANCE).unwrap();
+            source[0][field] = value.clone();
+            let rows: Vec<HolderPerformanceSummary> = serde_json::from_value(source).unwrap();
+            assert_eq!(serde_json::to_value(&rows[0]).unwrap()[field], value);
         }
     }
 }
@@ -125,7 +134,7 @@ fn all_performance_and_change_amounts_preserve_large_signed_values() {
         source[0][field] = if index % 2 == 0 {
             serde_json::json!(i64::MIN)
         } else {
-            serde_json::json!(i64::MAX)
+            serde_json::json!(12_155_036_983.25)
         };
         let rows: Vec<HolderPerformanceSummary> = serde_json::from_value(source.clone()).unwrap();
         assert_eq!(

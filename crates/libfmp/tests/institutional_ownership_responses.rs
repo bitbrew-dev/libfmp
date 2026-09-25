@@ -46,11 +46,11 @@ fn exact_extract_fixture_decodes_fourteen_fields_and_required_empty_put_call() {
             security_cusip: Cusip::new("674215207").unwrap(),
             symbol: Ticker::new("CHRD").unwrap(),
             name_of_issuer: "CHORD ENERGY CORPORATION".to_owned(),
-            shares: 13_280,
+            shares: 13_280.0,
             title_of_class: "COM NEW".to_owned(),
             shares_type: "SH".to_owned(),
             put_call_share: String::new(),
-            value: 2_152_290,
+            value: 2_152_290.0,
             link: "https://www.sec.gov/Archives/edgar/data/1388838/000117266123003760/0001172661-23-003760-index.htm".to_owned(),
             final_link: "https://www.sec.gov/Archives/edgar/data/1388838/000117266123003760/infotable.xml".to_owned(),
         }]
@@ -110,24 +110,24 @@ fn date_and_datetime_fields_reject_each_others_wire_kinds() {
 }
 
 #[test]
-fn shares_and_value_preserve_large_unsigned_integers_without_coercion() {
+fn shares_and_value_decode_large_fractional_and_negative_numbers_but_reject_text() {
     let mut value: serde_json::Value = serde_json::from_slice(EXTRACT).unwrap();
     value[0]["shares"] = serde_json::json!(u64::MAX);
     value[0]["value"] = serde_json::json!(u64::MAX - 1);
     let rows: Vec<InstitutionalHolding> = serde_json::from_value(value).unwrap();
-    assert_eq!(rows[0].shares, u64::MAX);
-    assert_eq!(rows[0].value, u64::MAX - 1);
+    assert_eq!(rows[0].shares, u64::MAX as f64);
+    assert_eq!(rows[0].value, (u64::MAX - 1) as f64);
 
     for field in ["shares", "value"] {
-        for replacement in [
-            serde_json::json!(-1),
-            serde_json::json!(1.5),
-            serde_json::json!("13280"),
-        ] {
+        for number in [serde_json::json!(-1), serde_json::json!(1.5)] {
             let mut value: serde_json::Value = serde_json::from_slice(EXTRACT).unwrap();
-            value[0][field] = replacement;
-            assert!(serde_json::from_value::<Vec<InstitutionalHolding>>(value).is_err());
+            value[0][field] = number.clone();
+            let rows: Vec<InstitutionalHolding> = serde_json::from_value(value).unwrap();
+            assert_eq!(serde_json::to_value(&rows[0]).unwrap()[field], number);
         }
+        let mut value: serde_json::Value = serde_json::from_slice(EXTRACT).unwrap();
+        value[0][field] = serde_json::json!("13280");
+        assert!(serde_json::from_value::<Vec<InstitutionalHolding>>(value).is_err());
     }
 }
 

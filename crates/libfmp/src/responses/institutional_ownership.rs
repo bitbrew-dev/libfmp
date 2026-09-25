@@ -2,7 +2,10 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::types::{ApiDateTime, CalendarQuarter, CalendarYear, Cik, Cusip, Date, Price, Ticker};
+use crate::types::{
+    ApiDateTime, CalendarQuarter, CalendarYear, Cik, Cusip, Date, MarketValue, Price, Quantity,
+    Ticker,
+};
 
 /// One recent institutional-ownership filing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -19,7 +22,7 @@ pub struct InstitutionalOwnershipFiling {
 }
 
 /// One security position extracted from an institutional-ownership filing.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InstitutionalHolding {
     pub date: Date,
@@ -29,11 +32,13 @@ pub struct InstitutionalHolding {
     pub security_cusip: Cusip,
     pub symbol: Ticker,
     pub name_of_issuer: String,
-    pub shares: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub shares: Quantity,
     pub title_of_class: String,
     pub shares_type: String,
     pub put_call_share: String,
-    pub value: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub value: MarketValue,
     pub link: String,
     pub final_link: String,
 }
@@ -67,13 +72,19 @@ pub struct InstitutionalHolderAnalytics {
     pub last_weight: f64,
     pub change_in_weight: f64,
     pub change_in_weight_percentage: f64,
-    pub market_value: u64,
-    pub last_market_value: u64,
-    pub change_in_market_value: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub market_value: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_market_value: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub change_in_market_value: MarketValue,
     pub change_in_market_value_percentage: f64,
-    pub shares_number: u64,
-    pub last_shares_number: u64,
-    pub change_in_shares_number: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub shares_number: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_shares_number: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub change_in_shares_number: Quantity,
     pub change_in_shares_number_percentage: f64,
     pub quarter_end_price: Price,
     pub avg_price_paid: Price,
@@ -85,10 +96,13 @@ pub struct InstitutionalHolderAnalytics {
     pub change_in_ownership_percentage: f64,
     pub holding_period: u64,
     pub first_added: Date,
-    pub performance: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub performance: MarketValue,
     pub performance_percentage: f64,
-    pub last_performance: i64,
-    pub change_in_performance: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_performance: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub change_in_performance: MarketValue,
     pub is_counted_for_performance: bool,
 }
 
@@ -102,33 +116,46 @@ pub struct HolderPerformanceSummary {
     pub portfolio_size: u64,
     pub securities_added: u64,
     pub securities_removed: u64,
-    pub market_value: u64,
-    pub previous_market_value: u64,
-    pub change_in_market_value: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub market_value: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub previous_market_value: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub change_in_market_value: MarketValue,
     pub change_in_market_value_percentage: f64,
-    pub average_holding_period: u64,
-    pub average_holding_period_top10: u64,
-    pub average_holding_period_top20: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub average_holding_period: f64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub average_holding_period_top10: f64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub average_holding_period_top20: f64,
     pub turnover: f64,
     pub turnover_alternate_sell: f64,
     pub turnover_alternate_buy: f64,
-    pub performance: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub performance: MarketValue,
     pub performance_percentage: f64,
-    pub last_performance: i64,
-    pub change_in_performance: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_performance: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub change_in_performance: MarketValue,
     #[serde(rename = "performance1year")]
-    pub performance_1_year: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub performance_1_year: MarketValue,
     #[serde(rename = "performancePercentage1year")]
     pub performance_percentage_1_year: f64,
     #[serde(rename = "performance3year")]
-    pub performance_3_year: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub performance_3_year: MarketValue,
     #[serde(rename = "performancePercentage3year")]
     pub performance_percentage_3_year: f64,
     #[serde(rename = "performance5year")]
-    pub performance_5_year: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub performance_5_year: MarketValue,
     #[serde(rename = "performancePercentage5year")]
     pub performance_percentage_5_year: f64,
-    pub performance_since_inception: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub performance_since_inception: MarketValue,
     pub performance_since_inception_percentage: f64,
     #[serde(rename = "performanceRelativeToSP500Percentage")]
     pub performance_relative_to_sp500_percentage: f64,
@@ -154,10 +181,13 @@ pub struct HolderIndustryBreakdown {
     pub last_weight: f64,
     pub change_in_weight: f64,
     pub change_in_weight_percentage: f64,
-    pub performance: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub performance: MarketValue,
     pub performance_percentage: f64,
-    pub last_performance: i64,
-    pub change_in_performance: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_performance: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub change_in_performance: MarketValue,
 }
 
 /// Cross-holder position totals and changes for one security and filing period.
@@ -171,14 +201,20 @@ pub struct InstitutionalPositionSummary {
     pub last_investors_holding: u64,
     pub investors_holding_change: i64,
     #[serde(rename = "numberOf13Fshares")]
-    pub number_of_13f_shares: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub number_of_13f_shares: Quantity,
     #[serde(rename = "lastNumberOf13Fshares")]
-    pub last_number_of_13f_shares: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_number_of_13f_shares: Quantity,
     #[serde(rename = "numberOf13FsharesChange")]
-    pub number_of_13f_shares_change: i64,
-    pub total_invested: u64,
-    pub last_total_invested: u64,
-    pub total_invested_change: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub number_of_13f_shares_change: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_invested: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_total_invested: MarketValue,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_invested_change: MarketValue,
     pub ownership_percent: f64,
     pub last_ownership_percent: f64,
     pub ownership_percent_change: f64,
@@ -194,22 +230,29 @@ pub struct InstitutionalPositionSummary {
     pub reduced_positions: u64,
     pub last_reduced_positions: u64,
     pub reduced_positions_change: i64,
-    pub total_calls: u64,
-    pub last_total_calls: u64,
-    pub total_calls_change: i64,
-    pub total_puts: u64,
-    pub last_total_puts: u64,
-    pub total_puts_change: i64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_calls: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_total_calls: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_calls_change: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_puts: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub last_total_puts: Quantity,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub total_puts_change: Quantity,
     pub put_call_ratio: f64,
     pub last_put_call_ratio: f64,
     pub put_call_ratio_change: f64,
 }
 
 /// Aggregate value for one US industry and filing date.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InstitutionalIndustrySummary {
     pub industry_title: String,
-    pub industry_value: u64,
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
+    pub industry_value: MarketValue,
     pub date: Date,
 }

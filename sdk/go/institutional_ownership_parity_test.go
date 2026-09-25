@@ -132,9 +132,9 @@ func TestDocumentedPositionAndIndustrySummaryFixturesDecodeExactly(t *testing.T)
 	}
 }
 
-// Mirrors shares_and_value_preserve_large_unsigned_integers_without_coercion
-// and integer_domains_preserve_above_u32_above_2pow53_and_negative_values.
-func TestInstitutionalOwnershipIntegersPreserveTheFullInt64AndUint64Domains(t *testing.T) {
+// Mirrors shares_and_value_decode_large_fractional_and_negative_numbers_but_reject_text
+// and amounts_and_shares_decode_large_and_negative_values_and_holding_period_stays_u64.
+func TestInstitutionalOwnershipAmountsAndSharesDecodeAsFloat64(t *testing.T) {
 	t.Parallel()
 	rewrite := func(fixture string, members map[string]string) []byte {
 		t.Helper()
@@ -153,24 +153,23 @@ func TestInstitutionalOwnershipIntegersPreserveTheFullInt64AndUint64Domains(t *t
 	}
 	var holdings []InstitutionalHolding
 	if err := json.Unmarshal(rewrite("institutional_ownership_extract.json",
-		map[string]string{"shares": "18446744073709551615", "value": "18446744073709551614"}), &holdings); err != nil ||
-		holdings[0].Shares != math.MaxUint64 || holdings[0].Value != math.MaxUint64-1 {
+		map[string]string{"shares": "-1", "value": "1.5"}), &holdings); err != nil ||
+		holdings[0].Shares != -1 || holdings[0].Value != 1.5 {
 		t.Fatalf("shares and value = %+v, %v", holdings, err)
 	}
-	for _, invalid := range []string{"-1", "1.5", `"13280"`} {
-		if err := json.Unmarshal(rewrite("institutional_ownership_extract.json",
-			map[string]string{"shares": invalid}), &holdings); err == nil {
-			t.Fatalf("shares %s decoded into a uint64 member", invalid)
-		}
+	if err := json.Unmarshal(rewrite("institutional_ownership_extract.json",
+		map[string]string{"shares": `"13280"`}), &holdings); err == nil {
+		t.Fatal("string shares decoded into a float64 member")
 	}
 	var analytics []InstitutionalHolderAnalytics
 	if err := json.Unmarshal(rewrite("institutional_holder_analytics.json", map[string]string{
 		"lastMarketValue": "18446744073709551615", "marketValue": "9007199254740993",
 		"changeInMarketValue": "-9223372036854775808", "changeInSharesNumber": "-4294967297",
-	}), &analytics); err != nil || analytics[0].LastMarketValue != math.MaxUint64 ||
-		analytics[0].MarketValue != 9_007_199_254_740_993 || analytics[0].ChangeInMarketValue != math.MinInt64 ||
-		analytics[0].ChangeInSharesNumber != -4_294_967_297 {
-		t.Fatalf("analytics integers = %+v, %v", analytics, err)
+		"holdingPeriod": "18446744073709551615",
+	}), &analytics); err != nil || analytics[0].LastMarketValue != 18_446_744_073_709_551_616 ||
+		analytics[0].MarketValue != 9_007_199_254_740_992 || analytics[0].ChangeInMarketValue != math.MinInt64 ||
+		analytics[0].ChangeInSharesNumber != -4_294_967_297 || analytics[0].HoldingPeriod != math.MaxUint64 {
+		t.Fatalf("analytics amounts = %+v, %v", analytics, err)
 	}
 }
 

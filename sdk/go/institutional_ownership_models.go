@@ -78,40 +78,40 @@ func (m *InstitutionalOwnershipFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 // InstitutionalHolding is one security position extracted from an
 // institutional-ownership filing.
 type InstitutionalHolding struct {
-	Date          Date   `json:"date"`
-	FilingDate    Date   `json:"filingDate"`
-	AcceptedDate  Date   `json:"acceptedDate"`
-	Cik           string `json:"cik"`
-	SecurityCusip string `json:"securityCusip"`
-	Symbol        string `json:"symbol"`
-	NameOfIssuer  string `json:"nameOfIssuer"`
-	Shares        uint64 `json:"shares"`
-	TitleOfClass  string `json:"titleOfClass"`
-	SharesType    string `json:"sharesType"`
-	PutCallShare  string `json:"putCallShare"`
-	Value         uint64 `json:"value"`
-	Link          string `json:"link"`
-	FinalLink     string `json:"finalLink"`
+	Date          Date    `json:"date"`
+	FilingDate    Date    `json:"filingDate"`
+	AcceptedDate  Date    `json:"acceptedDate"`
+	Cik           string  `json:"cik"`
+	SecurityCusip string  `json:"securityCusip"`
+	Symbol        string  `json:"symbol"`
+	NameOfIssuer  string  `json:"nameOfIssuer"`
+	Shares        float64 `json:"shares"`
+	TitleOfClass  string  `json:"titleOfClass"`
+	SharesType    string  `json:"sharesType"`
+	PutCallShare  string  `json:"putCallShare"`
+	Value         float64 `json:"value"`
+	Link          string  `json:"link"`
+	FinalLink     string  `json:"finalLink"`
 }
 
 // institutionalHoldingShadow mirrors InstitutionalHolding with a pointer or
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type institutionalHoldingShadow struct {
-	Date          *Date   `json:"date"`
-	FilingDate    *Date   `json:"filingDate"`
-	AcceptedDate  *Date   `json:"acceptedDate"`
-	Cik           *string `json:"cik"`
-	SecurityCusip *string `json:"securityCusip"`
-	Symbol        *string `json:"symbol"`
-	NameOfIssuer  *string `json:"nameOfIssuer"`
-	Shares        *uint64 `json:"shares"`
-	TitleOfClass  *string `json:"titleOfClass"`
-	SharesType    *string `json:"sharesType"`
-	PutCallShare  *string `json:"putCallShare"`
-	Value         *uint64 `json:"value"`
-	Link          *string `json:"link"`
-	FinalLink     *string `json:"finalLink"`
+	Date          *Date    `json:"date"`
+	FilingDate    *Date    `json:"filingDate"`
+	AcceptedDate  *Date    `json:"acceptedDate"`
+	Cik           *string  `json:"cik"`
+	SecurityCusip *string  `json:"securityCusip"`
+	Symbol        *string  `json:"symbol"`
+	NameOfIssuer  *string  `json:"nameOfIssuer"`
+	Shares        *float64 `json:"shares"`
+	TitleOfClass  *string  `json:"titleOfClass"`
+	SharesType    *string  `json:"sharesType"`
+	PutCallShare  *string  `json:"putCallShare"`
+	Value         *float64 `json:"value"`
+	Link          *string  `json:"link"`
+	FinalLink     *string  `json:"finalLink"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -231,13 +231,13 @@ type InstitutionalHolderAnalytics struct {
 	LastWeight                     float64 `json:"lastWeight"`
 	ChangeInWeight                 float64 `json:"changeInWeight"`
 	ChangeInWeightPercentage       float64 `json:"changeInWeightPercentage"`
-	MarketValue                    uint64  `json:"marketValue"`
-	LastMarketValue                uint64  `json:"lastMarketValue"`
-	ChangeInMarketValue            int64   `json:"changeInMarketValue"`
+	MarketValue                    float64 `json:"marketValue"`
+	LastMarketValue                float64 `json:"lastMarketValue"`
+	ChangeInMarketValue            float64 `json:"changeInMarketValue"`
 	ChangeInMarketValuePercentage  float64 `json:"changeInMarketValuePercentage"`
-	SharesNumber                   uint64  `json:"sharesNumber"`
-	LastSharesNumber               uint64  `json:"lastSharesNumber"`
-	ChangeInSharesNumber           int64   `json:"changeInSharesNumber"`
+	SharesNumber                   float64 `json:"sharesNumber"`
+	LastSharesNumber               float64 `json:"lastSharesNumber"`
+	ChangeInSharesNumber           float64 `json:"changeInSharesNumber"`
 	ChangeInSharesNumberPercentage float64 `json:"changeInSharesNumberPercentage"`
 	QuarterEndPrice                float64 `json:"quarterEndPrice"`
 	AvgPricePaid                   float64 `json:"avgPricePaid"`
@@ -249,10 +249,10 @@ type InstitutionalHolderAnalytics struct {
 	ChangeInOwnershipPercentage    float64 `json:"changeInOwnershipPercentage"`
 	HoldingPeriod                  uint64  `json:"holdingPeriod"`
 	FirstAdded                     Date    `json:"firstAdded"`
-	Performance                    int64   `json:"performance"`
+	Performance                    float64 `json:"performance"`
 	PerformancePercentage          float64 `json:"performancePercentage"`
-	LastPerformance                int64   `json:"lastPerformance"`
-	ChangeInPerformance            int64   `json:"changeInPerformance"`
+	LastPerformance                float64 `json:"lastPerformance"`
+	ChangeInPerformance            float64 `json:"changeInPerformance"`
 	IsCountedForPerformance        bool    `json:"isCountedForPerformance"`
 }
 
@@ -276,13 +276,13 @@ type institutionalHolderAnalyticsShadow struct {
 	LastWeight                     *float64 `json:"lastWeight"`
 	ChangeInWeight                 *float64 `json:"changeInWeight"`
 	ChangeInWeightPercentage       *float64 `json:"changeInWeightPercentage"`
-	MarketValue                    *uint64  `json:"marketValue"`
-	LastMarketValue                *uint64  `json:"lastMarketValue"`
-	ChangeInMarketValue            *int64   `json:"changeInMarketValue"`
+	MarketValue                    *float64 `json:"marketValue"`
+	LastMarketValue                *float64 `json:"lastMarketValue"`
+	ChangeInMarketValue            *float64 `json:"changeInMarketValue"`
 	ChangeInMarketValuePercentage  *float64 `json:"changeInMarketValuePercentage"`
-	SharesNumber                   *uint64  `json:"sharesNumber"`
-	LastSharesNumber               *uint64  `json:"lastSharesNumber"`
-	ChangeInSharesNumber           *int64   `json:"changeInSharesNumber"`
+	SharesNumber                   *float64 `json:"sharesNumber"`
+	LastSharesNumber               *float64 `json:"lastSharesNumber"`
+	ChangeInSharesNumber           *float64 `json:"changeInSharesNumber"`
 	ChangeInSharesNumberPercentage *float64 `json:"changeInSharesNumberPercentage"`
 	QuarterEndPrice                *float64 `json:"quarterEndPrice"`
 	AvgPricePaid                   *float64 `json:"avgPricePaid"`
@@ -294,10 +294,10 @@ type institutionalHolderAnalyticsShadow struct {
 	ChangeInOwnershipPercentage    *float64 `json:"changeInOwnershipPercentage"`
 	HoldingPeriod                  *uint64  `json:"holdingPeriod"`
 	FirstAdded                     *Date    `json:"firstAdded"`
-	Performance                    *int64   `json:"performance"`
+	Performance                    *float64 `json:"performance"`
 	PerformancePercentage          *float64 `json:"performancePercentage"`
-	LastPerformance                *int64   `json:"lastPerformance"`
-	ChangeInPerformance            *int64   `json:"changeInPerformance"`
+	LastPerformance                *float64 `json:"lastPerformance"`
+	ChangeInPerformance            *float64 `json:"changeInPerformance"`
 	IsCountedForPerformance        *bool    `json:"isCountedForPerformance"`
 }
 
@@ -442,27 +442,27 @@ type HolderPerformanceSummary struct {
 	PortfolioSize                                      uint64  `json:"portfolioSize"`
 	SecuritiesAdded                                    uint64  `json:"securitiesAdded"`
 	SecuritiesRemoved                                  uint64  `json:"securitiesRemoved"`
-	MarketValue                                        uint64  `json:"marketValue"`
-	PreviousMarketValue                                uint64  `json:"previousMarketValue"`
-	ChangeInMarketValue                                int64   `json:"changeInMarketValue"`
+	MarketValue                                        float64 `json:"marketValue"`
+	PreviousMarketValue                                float64 `json:"previousMarketValue"`
+	ChangeInMarketValue                                float64 `json:"changeInMarketValue"`
 	ChangeInMarketValuePercentage                      float64 `json:"changeInMarketValuePercentage"`
-	AverageHoldingPeriod                               uint64  `json:"averageHoldingPeriod"`
-	AverageHoldingPeriodTop10                          uint64  `json:"averageHoldingPeriodTop10"`
-	AverageHoldingPeriodTop20                          uint64  `json:"averageHoldingPeriodTop20"`
+	AverageHoldingPeriod                               float64 `json:"averageHoldingPeriod"`
+	AverageHoldingPeriodTop10                          float64 `json:"averageHoldingPeriodTop10"`
+	AverageHoldingPeriodTop20                          float64 `json:"averageHoldingPeriodTop20"`
 	Turnover                                           float64 `json:"turnover"`
 	TurnoverAlternateSell                              float64 `json:"turnoverAlternateSell"`
 	TurnoverAlternateBuy                               float64 `json:"turnoverAlternateBuy"`
-	Performance                                        int64   `json:"performance"`
+	Performance                                        float64 `json:"performance"`
 	PerformancePercentage                              float64 `json:"performancePercentage"`
-	LastPerformance                                    int64   `json:"lastPerformance"`
-	ChangeInPerformance                                int64   `json:"changeInPerformance"`
-	Performance1Year                                   int64   `json:"performance1year"`
+	LastPerformance                                    float64 `json:"lastPerformance"`
+	ChangeInPerformance                                float64 `json:"changeInPerformance"`
+	Performance1Year                                   float64 `json:"performance1year"`
 	PerformancePercentage1Year                         float64 `json:"performancePercentage1year"`
-	Performance3Year                                   int64   `json:"performance3year"`
+	Performance3Year                                   float64 `json:"performance3year"`
 	PerformancePercentage3Year                         float64 `json:"performancePercentage3year"`
-	Performance5Year                                   int64   `json:"performance5year"`
+	Performance5Year                                   float64 `json:"performance5year"`
 	PerformancePercentage5Year                         float64 `json:"performancePercentage5year"`
-	PerformanceSinceInception                          int64   `json:"performanceSinceInception"`
+	PerformanceSinceInception                          float64 `json:"performanceSinceInception"`
 	PerformanceSinceInceptionPercentage                float64 `json:"performanceSinceInceptionPercentage"`
 	PerformanceRelativeToSp500Percentage               float64 `json:"performanceRelativeToSP500Percentage"`
 	Performance1YearRelativeToSp500Percentage          float64 `json:"performance1yearRelativeToSP500Percentage"`
@@ -481,27 +481,27 @@ type holderPerformanceSummaryShadow struct {
 	PortfolioSize                                      *uint64  `json:"portfolioSize"`
 	SecuritiesAdded                                    *uint64  `json:"securitiesAdded"`
 	SecuritiesRemoved                                  *uint64  `json:"securitiesRemoved"`
-	MarketValue                                        *uint64  `json:"marketValue"`
-	PreviousMarketValue                                *uint64  `json:"previousMarketValue"`
-	ChangeInMarketValue                                *int64   `json:"changeInMarketValue"`
+	MarketValue                                        *float64 `json:"marketValue"`
+	PreviousMarketValue                                *float64 `json:"previousMarketValue"`
+	ChangeInMarketValue                                *float64 `json:"changeInMarketValue"`
 	ChangeInMarketValuePercentage                      *float64 `json:"changeInMarketValuePercentage"`
-	AverageHoldingPeriod                               *uint64  `json:"averageHoldingPeriod"`
-	AverageHoldingPeriodTop10                          *uint64  `json:"averageHoldingPeriodTop10"`
-	AverageHoldingPeriodTop20                          *uint64  `json:"averageHoldingPeriodTop20"`
+	AverageHoldingPeriod                               *float64 `json:"averageHoldingPeriod"`
+	AverageHoldingPeriodTop10                          *float64 `json:"averageHoldingPeriodTop10"`
+	AverageHoldingPeriodTop20                          *float64 `json:"averageHoldingPeriodTop20"`
 	Turnover                                           *float64 `json:"turnover"`
 	TurnoverAlternateSell                              *float64 `json:"turnoverAlternateSell"`
 	TurnoverAlternateBuy                               *float64 `json:"turnoverAlternateBuy"`
-	Performance                                        *int64   `json:"performance"`
+	Performance                                        *float64 `json:"performance"`
 	PerformancePercentage                              *float64 `json:"performancePercentage"`
-	LastPerformance                                    *int64   `json:"lastPerformance"`
-	ChangeInPerformance                                *int64   `json:"changeInPerformance"`
-	Performance1Year                                   *int64   `json:"performance1year"`
+	LastPerformance                                    *float64 `json:"lastPerformance"`
+	ChangeInPerformance                                *float64 `json:"changeInPerformance"`
+	Performance1Year                                   *float64 `json:"performance1year"`
 	PerformancePercentage1Year                         *float64 `json:"performancePercentage1year"`
-	Performance3Year                                   *int64   `json:"performance3year"`
+	Performance3Year                                   *float64 `json:"performance3year"`
 	PerformancePercentage3Year                         *float64 `json:"performancePercentage3year"`
-	Performance5Year                                   *int64   `json:"performance5year"`
+	Performance5Year                                   *float64 `json:"performance5year"`
 	PerformancePercentage5Year                         *float64 `json:"performancePercentage5year"`
-	PerformanceSinceInception                          *int64   `json:"performanceSinceInception"`
+	PerformanceSinceInception                          *float64 `json:"performanceSinceInception"`
 	PerformanceSinceInceptionPercentage                *float64 `json:"performanceSinceInceptionPercentage"`
 	PerformanceRelativeToSp500Percentage               *float64 `json:"performanceRelativeToSP500Percentage"`
 	Performance1YearRelativeToSp500Percentage          *float64 `json:"performance1yearRelativeToSP500Percentage"`
@@ -635,10 +635,10 @@ type HolderIndustryBreakdown struct {
 	LastWeight               float64 `json:"lastWeight"`
 	ChangeInWeight           float64 `json:"changeInWeight"`
 	ChangeInWeightPercentage float64 `json:"changeInWeightPercentage"`
-	Performance              int64   `json:"performance"`
+	Performance              float64 `json:"performance"`
 	PerformancePercentage    float64 `json:"performancePercentage"`
-	LastPerformance          int64   `json:"lastPerformance"`
-	ChangeInPerformance      int64   `json:"changeInPerformance"`
+	LastPerformance          float64 `json:"lastPerformance"`
+	ChangeInPerformance      float64 `json:"changeInPerformance"`
 }
 
 // holderIndustryBreakdownShadow mirrors HolderIndustryBreakdown with a pointer
@@ -653,10 +653,10 @@ type holderIndustryBreakdownShadow struct {
 	LastWeight               *float64 `json:"lastWeight"`
 	ChangeInWeight           *float64 `json:"changeInWeight"`
 	ChangeInWeightPercentage *float64 `json:"changeInWeightPercentage"`
-	Performance              *int64   `json:"performance"`
+	Performance              *float64 `json:"performance"`
 	PerformancePercentage    *float64 `json:"performancePercentage"`
-	LastPerformance          *int64   `json:"lastPerformance"`
-	ChangeInPerformance      *int64   `json:"changeInPerformance"`
+	LastPerformance          *float64 `json:"lastPerformance"`
+	ChangeInPerformance      *float64 `json:"changeInPerformance"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -719,12 +719,12 @@ type InstitutionalPositionSummary struct {
 	InvestorsHolding         uint64  `json:"investorsHolding"`
 	LastInvestorsHolding     uint64  `json:"lastInvestorsHolding"`
 	InvestorsHoldingChange   int64   `json:"investorsHoldingChange"`
-	NumberOf13fShares        uint64  `json:"numberOf13Fshares"`
-	LastNumberOf13fShares    uint64  `json:"lastNumberOf13Fshares"`
-	NumberOf13fSharesChange  int64   `json:"numberOf13FsharesChange"`
-	TotalInvested            uint64  `json:"totalInvested"`
-	LastTotalInvested        uint64  `json:"lastTotalInvested"`
-	TotalInvestedChange      int64   `json:"totalInvestedChange"`
+	NumberOf13fShares        float64 `json:"numberOf13Fshares"`
+	LastNumberOf13fShares    float64 `json:"lastNumberOf13Fshares"`
+	NumberOf13fSharesChange  float64 `json:"numberOf13FsharesChange"`
+	TotalInvested            float64 `json:"totalInvested"`
+	LastTotalInvested        float64 `json:"lastTotalInvested"`
+	TotalInvestedChange      float64 `json:"totalInvestedChange"`
 	OwnershipPercent         float64 `json:"ownershipPercent"`
 	LastOwnershipPercent     float64 `json:"lastOwnershipPercent"`
 	OwnershipPercentChange   float64 `json:"ownershipPercentChange"`
@@ -740,12 +740,12 @@ type InstitutionalPositionSummary struct {
 	ReducedPositions         uint64  `json:"reducedPositions"`
 	LastReducedPositions     uint64  `json:"lastReducedPositions"`
 	ReducedPositionsChange   int64   `json:"reducedPositionsChange"`
-	TotalCalls               uint64  `json:"totalCalls"`
-	LastTotalCalls           uint64  `json:"lastTotalCalls"`
-	TotalCallsChange         int64   `json:"totalCallsChange"`
-	TotalPuts                uint64  `json:"totalPuts"`
-	LastTotalPuts            uint64  `json:"lastTotalPuts"`
-	TotalPutsChange          int64   `json:"totalPutsChange"`
+	TotalCalls               float64 `json:"totalCalls"`
+	LastTotalCalls           float64 `json:"lastTotalCalls"`
+	TotalCallsChange         float64 `json:"totalCallsChange"`
+	TotalPuts                float64 `json:"totalPuts"`
+	LastTotalPuts            float64 `json:"lastTotalPuts"`
+	TotalPutsChange          float64 `json:"totalPutsChange"`
 	PutCallRatio             float64 `json:"putCallRatio"`
 	LastPutCallRatio         float64 `json:"lastPutCallRatio"`
 	PutCallRatioChange       float64 `json:"putCallRatioChange"`
@@ -761,12 +761,12 @@ type institutionalPositionSummaryShadow struct {
 	InvestorsHolding         *uint64  `json:"investorsHolding"`
 	LastInvestorsHolding     *uint64  `json:"lastInvestorsHolding"`
 	InvestorsHoldingChange   *int64   `json:"investorsHoldingChange"`
-	NumberOf13fShares        *uint64  `json:"numberOf13Fshares"`
-	LastNumberOf13fShares    *uint64  `json:"lastNumberOf13Fshares"`
-	NumberOf13fSharesChange  *int64   `json:"numberOf13FsharesChange"`
-	TotalInvested            *uint64  `json:"totalInvested"`
-	LastTotalInvested        *uint64  `json:"lastTotalInvested"`
-	TotalInvestedChange      *int64   `json:"totalInvestedChange"`
+	NumberOf13fShares        *float64 `json:"numberOf13Fshares"`
+	LastNumberOf13fShares    *float64 `json:"lastNumberOf13Fshares"`
+	NumberOf13fSharesChange  *float64 `json:"numberOf13FsharesChange"`
+	TotalInvested            *float64 `json:"totalInvested"`
+	LastTotalInvested        *float64 `json:"lastTotalInvested"`
+	TotalInvestedChange      *float64 `json:"totalInvestedChange"`
 	OwnershipPercent         *float64 `json:"ownershipPercent"`
 	LastOwnershipPercent     *float64 `json:"lastOwnershipPercent"`
 	OwnershipPercentChange   *float64 `json:"ownershipPercentChange"`
@@ -782,12 +782,12 @@ type institutionalPositionSummaryShadow struct {
 	ReducedPositions         *uint64  `json:"reducedPositions"`
 	LastReducedPositions     *uint64  `json:"lastReducedPositions"`
 	ReducedPositionsChange   *int64   `json:"reducedPositionsChange"`
-	TotalCalls               *uint64  `json:"totalCalls"`
-	LastTotalCalls           *uint64  `json:"lastTotalCalls"`
-	TotalCallsChange         *int64   `json:"totalCallsChange"`
-	TotalPuts                *uint64  `json:"totalPuts"`
-	LastTotalPuts            *uint64  `json:"lastTotalPuts"`
-	TotalPutsChange          *int64   `json:"totalPutsChange"`
+	TotalCalls               *float64 `json:"totalCalls"`
+	LastTotalCalls           *float64 `json:"lastTotalCalls"`
+	TotalCallsChange         *float64 `json:"totalCallsChange"`
+	TotalPuts                *float64 `json:"totalPuts"`
+	LastTotalPuts            *float64 `json:"lastTotalPuts"`
+	TotalPutsChange          *float64 `json:"totalPutsChange"`
 	PutCallRatio             *float64 `json:"putCallRatio"`
 	LastPutCallRatio         *float64 `json:"lastPutCallRatio"`
 	PutCallRatioChange       *float64 `json:"putCallRatioChange"`
@@ -919,18 +919,18 @@ func (m *InstitutionalPositionSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 // InstitutionalIndustrySummary is aggregate value for one US industry and
 // filing date.
 type InstitutionalIndustrySummary struct {
-	IndustryTitle string `json:"industryTitle"`
-	IndustryValue uint64 `json:"industryValue"`
-	Date          Date   `json:"date"`
+	IndustryTitle string  `json:"industryTitle"`
+	IndustryValue float64 `json:"industryValue"`
+	Date          Date    `json:"date"`
 }
 
 // institutionalIndustrySummaryShadow mirrors InstitutionalIndustrySummary with
 // a pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type institutionalIndustrySummaryShadow struct {
-	IndustryTitle *string `json:"industryTitle"`
-	IndustryValue *uint64 `json:"industryValue"`
-	Date          *Date   `json:"date"`
+	IndustryTitle *string  `json:"industryTitle"`
+	IndustryValue *float64 `json:"industryValue"`
+	Date          *Date    `json:"date"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode

@@ -25,12 +25,12 @@ fn exact_positions_fixture_decodes_all_36_fields_and_provider_casing() {
             investors_holding: 4_863,
             last_investors_holding: 4_805,
             investors_holding_change: 58,
-            number_of_13f_shares: 9_139_920_744,
-            last_number_of_13f_shares: 9_360_939_709,
-            number_of_13f_shares_change: -221_018_965,
-            total_invested: 1_575_774_922_899,
-            last_total_invested: 1_820_827_010_085,
-            total_invested_change: -245_052_087_186,
+            number_of_13f_shares: 9_139_920_744.0,
+            last_number_of_13f_shares: 9_360_939_709.0,
+            number_of_13f_shares_change: -221_018_965.0,
+            total_invested: 1_575_774_922_899.0,
+            last_total_invested: 1_820_827_010_085.0,
+            total_invested_change: -245_052_087_186.0,
             ownership_percent: 58.5914,
             last_ownership_percent: 59.6329,
             ownership_percent_change: -1.0415,
@@ -46,12 +46,12 @@ fn exact_positions_fixture_decodes_all_36_fields_and_provider_casing() {
             reduced_positions: 2_408,
             last_reduced_positions: 2_543,
             reduced_positions_change: -135,
-            total_calls: 173_627_138,
-            last_total_calls: 198_895_582,
-            total_calls_change: -25_268_444,
-            total_puts: 192_913_290,
-            last_total_puts: 177_042_062,
-            total_puts_change: 15_871_228,
+            total_calls: 173_627_138.0,
+            last_total_calls: 198_895_582.0,
+            total_calls_change: -25_268_444.0,
+            total_puts: 192_913_290.0,
+            last_total_puts: 177_042_062.0,
+            total_puts_change: 15_871_228.0,
             put_call_ratio: 1.1111,
             last_put_call_ratio: 0.8901,
             put_call_ratio_change: 22.0952,
@@ -69,7 +69,7 @@ fn exact_industry_fixture_decodes_all_three_fields() {
         rows,
         [InstitutionalIndustrySummary {
             industry_title: "ABRASIVE, ASBESTOS & MISC NONMETALLIC MINERAL PRODS".to_owned(),
-            industry_value: 11_088_059_691,
+            industry_value: 11_088_059_691.0,
             date: Date::from_str("2023-09-30").unwrap(),
         }]
     );
@@ -77,14 +77,10 @@ fn exact_industry_fixture_decodes_all_three_fields() {
 }
 
 #[test]
-fn every_nonnegative_count_share_value_and_position_preserves_u64_max() {
-    let fields = [
+fn counts_preserve_u64_max_and_shares_and_values_keep_fractions() {
+    let counts = [
         "investorsHolding",
         "lastInvestorsHolding",
-        "numberOf13Fshares",
-        "lastNumberOf13Fshares",
-        "totalInvested",
-        "lastTotalInvested",
         "newPositions",
         "lastNewPositions",
         "increasedPositions",
@@ -93,12 +89,8 @@ fn every_nonnegative_count_share_value_and_position_preserves_u64_max() {
         "lastClosedPositions",
         "reducedPositions",
         "lastReducedPositions",
-        "totalCalls",
-        "lastTotalCalls",
-        "totalPuts",
-        "lastTotalPuts",
     ];
-    for field in fields {
+    for field in counts {
         let mut source: serde_json::Value = serde_json::from_slice(POSITIONS).unwrap();
         source[0][field] = serde_json::json!(u64::MAX);
         let rows: Vec<InstitutionalPositionSummary> =
@@ -118,21 +110,42 @@ fn every_nonnegative_count_share_value_and_position_preserves_u64_max() {
         }
     }
 
+    let amounts = [
+        "numberOf13Fshares",
+        "lastNumberOf13Fshares",
+        "totalInvested",
+        "lastTotalInvested",
+        "totalCalls",
+        "lastTotalCalls",
+        "totalPuts",
+        "lastTotalPuts",
+    ];
+    for field in amounts {
+        let mut source: serde_json::Value = serde_json::from_slice(POSITIONS).unwrap();
+        source[0][field] = serde_json::json!(173_627_138.5);
+        let rows: Vec<InstitutionalPositionSummary> =
+            serde_json::from_value(source.clone()).unwrap();
+        assert_eq!(
+            serde_json::to_value(&rows[0]).unwrap()[field],
+            source[0][field]
+        );
+    }
+
     let mut widths: serde_json::Value = serde_json::from_slice(POSITIONS).unwrap();
     widths[0]["investorsHolding"] = serde_json::json!(u64::from(u32::MAX) + 1);
     widths[0]["totalInvested"] = serde_json::json!((1_u64 << 53) + 1);
     let rows: Vec<InstitutionalPositionSummary> = serde_json::from_value(widths).unwrap();
     assert_eq!(rows[0].investors_holding, u64::from(u32::MAX) + 1);
-    assert_eq!(rows[0].total_invested, (1_u64 << 53) + 1);
+    assert_eq!(rows[0].total_invested, 9_007_199_254_740_992.0);
 
     let mut industry: serde_json::Value = serde_json::from_slice(INDUSTRY).unwrap();
     industry[0]["industryValue"] = serde_json::json!(u64::MAX);
     let rows: Vec<InstitutionalIndustrySummary> = serde_json::from_value(industry).unwrap();
-    assert_eq!(rows[0].industry_value, u64::MAX);
+    assert_eq!(rows[0].industry_value, u64::MAX as f64);
 }
 
 #[test]
-fn every_integer_change_preserves_negative_and_i64_extreme_values() {
+fn every_change_preserves_negative_values_and_count_changes_keep_i64_extremes() {
     let fields = [
         "investorsHoldingChange",
         "numberOf13FsharesChange",
@@ -146,8 +159,17 @@ fn every_integer_change_preserves_negative_and_i64_extreme_values() {
     ];
     for (index, field) in fields.into_iter().enumerate() {
         let mut source: serde_json::Value = serde_json::from_slice(POSITIONS).unwrap();
+        let amount = matches!(
+            field,
+            "numberOf13FsharesChange"
+                | "totalInvestedChange"
+                | "totalCallsChange"
+                | "totalPutsChange"
+        );
         source[0][field] = if index % 2 == 0 {
             serde_json::json!(i64::MIN)
+        } else if amount {
+            serde_json::json!(-25_268_444.5)
         } else {
             serde_json::json!(i64::MAX)
         };
