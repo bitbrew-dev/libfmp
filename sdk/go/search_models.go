@@ -110,23 +110,23 @@ func (m *NameSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// CikSearchResult is a US company returned by CIK search.
-type CikSearchResult struct {
+// CIKSearchResult is a US company returned by CIK search.
+type CIKSearchResult struct {
 	Symbol           string `json:"symbol"`
 	CompanyName      string `json:"companyName"`
-	Cik              string `json:"cik"`
+	CIK              string `json:"cik"`
 	ExchangeFullName string `json:"exchangeFullName"`
 	Exchange         string `json:"exchange"`
 	Currency         string `json:"currency"`
 }
 
-// cikSearchResultShadow mirrors CikSearchResult with a pointer or raw value
+// cikSearchResultShadow mirrors CIKSearchResult with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type cikSearchResultShadow struct {
 	Symbol           *string `json:"symbol"`
 	CompanyName      *string `json:"companyName"`
-	Cik              *string `json:"cik"`
+	CIK              *string `json:"cik"`
 	ExchangeFullName *string `json:"exchangeFullName"`
 	Exchange         *string `json:"exchange"`
 	Currency         *string `json:"currency"`
@@ -135,29 +135,29 @@ type cikSearchResultShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CikSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *CIKSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow cikSearchResultShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("CikSearchResult", "symbol")
+		return missingMemberError("CIKSearchResult", "symbol")
 	case shadow.CompanyName == nil:
-		return missingMemberError("CikSearchResult", "companyName")
-	case shadow.Cik == nil:
-		return missingMemberError("CikSearchResult", "cik")
+		return missingMemberError("CIKSearchResult", "companyName")
+	case shadow.CIK == nil:
+		return missingMemberError("CIKSearchResult", "cik")
 	case shadow.ExchangeFullName == nil:
-		return missingMemberError("CikSearchResult", "exchangeFullName")
+		return missingMemberError("CIKSearchResult", "exchangeFullName")
 	case shadow.Exchange == nil:
-		return missingMemberError("CikSearchResult", "exchange")
+		return missingMemberError("CIKSearchResult", "exchange")
 	case shadow.Currency == nil:
-		return missingMemberError("CikSearchResult", "currency")
+		return missingMemberError("CIKSearchResult", "currency")
 	}
-	*m = CikSearchResult{
+	*m = CIKSearchResult{
 		Symbol:           *shadow.Symbol,
 		CompanyName:      *shadow.CompanyName,
-		Cik:              *shadow.Cik,
+		CIK:              *shadow.CIK,
 		ExchangeFullName: *shadow.ExchangeFullName,
 		Exchange:         *shadow.Exchange,
 		Currency:         *shadow.Currency,
@@ -268,7 +268,7 @@ type ExchangeVariant struct {
 	Changes           float64 `json:"changes"`
 	CompanyName       string  `json:"companyName"`
 	Currency          string  `json:"currency"`
-	Cik               string  `json:"cik"`
+	CIK               string  `json:"cik"`
 	Isin              string  `json:"isin"`
 	Cusip             string  `json:"cusip"`
 	Exchange          string  `json:"exchange"`
@@ -310,7 +310,7 @@ type exchangeVariantShadow struct {
 	Changes           *float64 `json:"changes"`
 	CompanyName       *string  `json:"companyName"`
 	Currency          *string  `json:"currency"`
-	Cik               *string  `json:"cik"`
+	CIK               *string  `json:"cik"`
 	Isin              *string  `json:"isin"`
 	Cusip             *string  `json:"cusip"`
 	Exchange          *string  `json:"exchange"`
@@ -367,7 +367,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeVariant", "companyName")
 	case shadow.Currency == nil:
 		return missingMemberError("ExchangeVariant", "currency")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("ExchangeVariant", "cik")
 	case shadow.Isin == nil:
 		return missingMemberError("ExchangeVariant", "isin")
@@ -431,7 +431,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Changes:           *shadow.Changes,
 		CompanyName:       *shadow.CompanyName,
 		Currency:          *shadow.Currency,
-		Cik:               *shadow.Cik,
+		CIK:               *shadow.CIK,
 		Isin:              *shadow.Isin,
 		Cusip:             *shadow.Cusip,
 		Exchange:          *shadow.Exchange,

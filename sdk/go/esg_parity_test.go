@@ -27,7 +27,7 @@ func TestDocumentedEsgDisclosureDecodesExactValuesAndKeepsAcronymKey(t *testing.
 	}
 	disclosure := disclosures[0]
 	if disclosure.Date.String() != "2026-03-28" || disclosure.AcceptedDate.String() != "2026-04-30" ||
-		disclosure.Symbol != "AAPL" || disclosure.Cik != "0000320193" || disclosure.CompanyName != "Apple Inc." ||
+		disclosure.Symbol != "AAPL" || disclosure.CIK != "0000320193" || disclosure.CompanyName != "Apple Inc." ||
 		disclosure.FormType != "8-K" || disclosure.EnvironmentalScore != 66.29 || disclosure.SocialScore != 45.21 ||
 		disclosure.GovernanceScore != 58.87 || disclosure.EsgScore != 56.79 ||
 		disclosure.URL != "https://www.sec.gov/Archives/edgar/data/320193/000032019326000011/0000320193-26-000011-index.htm" {
@@ -47,7 +47,7 @@ func TestDocumentedEsgRatingAndBenchmarkDecodeExactValues(t *testing.T) {
 		t.Fatalf("rows = %d, want 1", len(ratings))
 	}
 	rating := ratings[0]
-	if rating.Symbol != "AAPL" || rating.Cik != "0000320193" || rating.CompanyName != "Apple Inc." ||
+	if rating.Symbol != "AAPL" || rating.CIK != "0000320193" || rating.CompanyName != "Apple Inc." ||
 		rating.Industry != "CONSUMER ELECTRONICS" || rating.FiscalYear != 2025 || rating.EsgRiskRating != "B" ||
 		rating.IndustryRank != "17 out of 20" {
 		t.Fatalf("esg_ratings = %+v", rating)

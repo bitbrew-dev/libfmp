@@ -19,7 +19,7 @@ func TestSearchFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	}
 	assertFixtureParity[SymbolSearchResult](t, "search_symbol_unknown.json", "futureProviderField")
 	assertFixtureParity[NameSearchResult](t, "search_name.json")
-	assertFixtureParity[CikSearchResult](t, "search_cik.json")
+	assertFixtureParity[CIKSearchResult](t, "search_cik.json")
 	assertFixtureParity[CusipSearchResult](t, "search_cusip.json")
 	assertFixtureParity[IsinSearchResult](t, "search_isin.json")
 	assertFixtureParity[ExchangeVariant](t, "search_exchange_variants.json")
@@ -65,9 +65,9 @@ func TestDocumentedSymbolAndNameResultsDecodeExactValues(t *testing.T) {
 // wire names stay as documented and market caps exceed the u32 range.
 func TestDocumentedIdentifierResultsDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	cik := assertFixtureParity[CikSearchResult](t, "search_cik.json")
-	wantCik := CikSearchResult{
-		Symbol: "AAPL", CompanyName: "Apple Inc.", Cik: "0000320193",
+	cik := assertFixtureParity[CIKSearchResult](t, "search_cik.json")
+	wantCik := CIKSearchResult{
+		Symbol: "AAPL", CompanyName: "Apple Inc.", CIK: "0000320193",
 		ExchangeFullName: "NASDAQ Global Select", Exchange: "NASDAQ", Currency: "USD",
 	}
 	if len(cik) != 1 || cik[0] != wantCik {
@@ -113,7 +113,7 @@ func TestDocumentedExchangeVariantDecodesExactValues(t *testing.T) {
 	want := ExchangeVariant{
 		Symbol: "AAPL", Price: 331.85501, Beta: 1.097, VolAvg: 55_309_000, MarketCap: 4_874_072_686_740,
 		LastDiv: 1.05, Range: "201.5-344.57", Changes: -6.33498, CompanyName: "Apple Inc.", Currency: "USD",
-		Cik: "0000320193", Isin: "US0378331005", Cusip: "037833100", Exchange: "NASDAQ Global Select",
+		CIK: "0000320193", Isin: "US0378331005", Cusip: "037833100", Exchange: "NASDAQ Global Select",
 		ExchangeShortName: "NASDAQ", Industry: "Consumer Electronics", Website: "https://www.apple.com",
 		Description: row.Description, Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US",
 		FullTimeEmployees: "166000", Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino",

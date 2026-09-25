@@ -13,7 +13,7 @@ import (
 // CrowdfundingOfferingSearchResult is one compact crowdfunding-offering search
 // result.
 type CrowdfundingOfferingSearchResult struct {
-	Cik  string          `json:"cik"`
+	CIK  string          `json:"cik"`
 	Name string          `json:"name"`
 	Date *jsontext.Value `json:"date"`
 }
@@ -22,7 +22,7 @@ type CrowdfundingOfferingSearchResult struct {
 // CrowdfundingOfferingSearchResult with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type crowdfundingOfferingSearchResultShadow struct {
-	Cik  *string        `json:"cik"`
+	CIK  *string        `json:"cik"`
 	Name *string        `json:"name"`
 	Date jsontext.Value `json:"date"`
 }
@@ -36,7 +36,7 @@ func (m *CrowdfundingOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decod
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("CrowdfundingOfferingSearchResult", "cik")
 	case shadow.Name == nil:
 		return missingMemberError("CrowdfundingOfferingSearchResult", "name")
@@ -52,7 +52,7 @@ func (m *CrowdfundingOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decod
 		date = &value
 	}
 	*m = CrowdfundingOfferingSearchResult{
-		Cik:  *shadow.Cik,
+		CIK:  *shadow.CIK,
 		Name: *shadow.Name,
 		Date: date,
 	}
@@ -62,7 +62,7 @@ func (m *CrowdfundingOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decod
 // RegulationDOfferingSearchResult is one compact Regulation D offering search
 // result.
 type RegulationDOfferingSearchResult struct {
-	Cik  string   `json:"cik"`
+	CIK  string   `json:"cik"`
 	Name string   `json:"name"`
 	Date DateTime `json:"date"`
 }
@@ -71,7 +71,7 @@ type RegulationDOfferingSearchResult struct {
 // RegulationDOfferingSearchResult with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type regulationDOfferingSearchResultShadow struct {
-	Cik  *string   `json:"cik"`
+	CIK  *string   `json:"cik"`
 	Name *string   `json:"name"`
 	Date *DateTime `json:"date"`
 }
@@ -85,7 +85,7 @@ func (m *RegulationDOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decode
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("RegulationDOfferingSearchResult", "cik")
 	case shadow.Name == nil:
 		return missingMemberError("RegulationDOfferingSearchResult", "name")
@@ -93,7 +93,7 @@ func (m *RegulationDOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decode
 		return missingMemberError("RegulationDOfferingSearchResult", "date")
 	}
 	*m = RegulationDOfferingSearchResult{
-		Cik:  *shadow.Cik,
+		CIK:  *shadow.CIK,
 		Name: *shadow.Name,
 		Date: *shadow.Date,
 	}
@@ -102,7 +102,7 @@ func (m *RegulationDOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decode
 
 // CrowdfundingOffering is one detailed crowdfunding offering.
 type CrowdfundingOffering struct {
-	Cik                                       string         `json:"cik"`
+	CIK                                       string         `json:"cik"`
 	CompanyName                               string         `json:"companyName"`
 	Date                                      USDate         `json:"date"`
 	FilingDate                                DateTime       `json:"filingDate"`
@@ -118,7 +118,7 @@ type CrowdfundingOffering struct {
 	IssuerZipCode                             string         `json:"issuerZipCode"`
 	IssuerWebsite                             string         `json:"issuerWebsite"`
 	IntermediaryCompanyName                   string         `json:"intermediaryCompanyName"`
-	IntermediaryCommissionCik                 string         `json:"intermediaryCommissionCik"`
+	IntermediaryCommissionCIK                 string         `json:"intermediaryCommissionCik"`
 	IntermediaryCommissionFileNumber          string         `json:"intermediaryCommissionFileNumber"`
 	CompensationAmount                        string         `json:"compensationAmount"`
 	FinancialInterest                         string         `json:"financialInterest"`
@@ -156,7 +156,7 @@ type CrowdfundingOffering struct {
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type crowdfundingOfferingShadow struct {
-	Cik                                       *string         `json:"cik"`
+	CIK                                       *string         `json:"cik"`
 	CompanyName                               *string         `json:"companyName"`
 	Date                                      *USDate         `json:"date"`
 	FilingDate                                *DateTime       `json:"filingDate"`
@@ -172,7 +172,7 @@ type crowdfundingOfferingShadow struct {
 	IssuerZipCode                             *string         `json:"issuerZipCode"`
 	IssuerWebsite                             *string         `json:"issuerWebsite"`
 	IntermediaryCompanyName                   *string         `json:"intermediaryCompanyName"`
-	IntermediaryCommissionCik                 *string         `json:"intermediaryCommissionCik"`
+	IntermediaryCommissionCIK                 *string         `json:"intermediaryCommissionCik"`
 	IntermediaryCommissionFileNumber          *string         `json:"intermediaryCommissionFileNumber"`
 	CompensationAmount                        *string         `json:"compensationAmount"`
 	FinancialInterest                         *string         `json:"financialInterest"`
@@ -215,7 +215,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("CrowdfundingOffering", "cik")
 	case shadow.CompanyName == nil:
 		return missingMemberError("CrowdfundingOffering", "companyName")
@@ -247,7 +247,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CrowdfundingOffering", "issuerWebsite")
 	case shadow.IntermediaryCompanyName == nil:
 		return missingMemberError("CrowdfundingOffering", "intermediaryCompanyName")
-	case shadow.IntermediaryCommissionCik == nil:
+	case shadow.IntermediaryCommissionCIK == nil:
 		return missingMemberError("CrowdfundingOffering", "intermediaryCommissionCik")
 	case shadow.IntermediaryCommissionFileNumber == nil:
 		return missingMemberError("CrowdfundingOffering", "intermediaryCommissionFileNumber")
@@ -324,7 +324,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return invalidMemberError("CrowdfundingOffering", "offeringPrice", "number")
 	}
 	*m = CrowdfundingOffering{
-		Cik:                              *shadow.Cik,
+		CIK:                              *shadow.CIK,
 		CompanyName:                      *shadow.CompanyName,
 		Date:                             *shadow.Date,
 		FilingDate:                       *shadow.FilingDate,
@@ -340,7 +340,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		IssuerZipCode:                    *shadow.IssuerZipCode,
 		IssuerWebsite:                    *shadow.IssuerWebsite,
 		IntermediaryCompanyName:          *shadow.IntermediaryCompanyName,
-		IntermediaryCommissionCik:        *shadow.IntermediaryCommissionCik,
+		IntermediaryCommissionCIK:        *shadow.IntermediaryCommissionCIK,
 		IntermediaryCommissionFileNumber: *shadow.IntermediaryCommissionFileNumber,
 		CompensationAmount:               *shadow.CompensationAmount,
 		FinancialInterest:                *shadow.FinancialInterest,
@@ -378,7 +378,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // RegulationDOffering is one detailed Regulation D exempt offering.
 type RegulationDOffering struct {
-	Cik                                    string   `json:"cik"`
+	CIK                                    string   `json:"cik"`
 	CompanyName                            string   `json:"companyName"`
 	Date                                   Date     `json:"date"`
 	FilingDate                             DateTime `json:"filingDate"`
@@ -427,7 +427,7 @@ type RegulationDOffering struct {
 // value for every required member so a missing or null member is observable
 // after decoding.
 type regulationDOfferingShadow struct {
-	Cik                                    *string        `json:"cik"`
+	CIK                                    *string        `json:"cik"`
 	CompanyName                            *string        `json:"companyName"`
 	Date                                   *Date          `json:"date"`
 	FilingDate                             *DateTime      `json:"filingDate"`
@@ -481,7 +481,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("RegulationDOffering", "cik")
 	case shadow.CompanyName == nil:
 		return missingMemberError("RegulationDOffering", "companyName")
@@ -581,7 +581,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return err
 	}
 	*m = RegulationDOffering{
-		Cik:                                    *shadow.Cik,
+		CIK:                                    *shadow.CIK,
 		CompanyName:                            *shadow.CompanyName,
 		Date:                                   *shadow.Date,
 		FilingDate:                             *shadow.FilingDate,

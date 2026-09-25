@@ -75,7 +75,7 @@ func TestFundsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if err != nil || len(holders) != 1 || holders[0].Change != -316_881 {
 		t.Fatalf("LatestDisclosureHolders = %+v, %v", holders, err)
 	}
-	disclosures, err := ns.Disclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4).WithCik("0000857489"))
+	disclosures, err := ns.Disclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4).WithCIK("0000857489"))
 	if err != nil || len(disclosures) != 1 || disclosures[0].Cusip != "N/A" || disclosures[0].CurrencyCode != "CNY" {
 		t.Fatalf("Disclosures = %+v, %v", disclosures, err)
 	}
@@ -84,7 +84,7 @@ func TestFundsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if err != nil || len(results) != 1 || results[0].EntityOrgType != "30" {
 		t.Fatalf("SearchDisclosureHolders = %+v, %v", results, err)
 	}
-	dates, err := ns.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCik("0000036405"))
+	dates, err := ns.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCIK("0000036405"))
 	if err != nil || len(dates) != 1 || dates[0].Year != 2026 || dates[0].Quarter != 2 {
 		t.Fatalf("DisclosureDates = %+v, %v", dates, err)
 	}
@@ -161,7 +161,7 @@ func TestFundsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			t.Fatalf("quarter %q: error = %v", quarter, err)
 		}
 	}
-	_, err = ns.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCik(" "))
+	_, err = ns.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCIK(" "))
 	if typed := assertQuoteError(t, err, CategoryValidation, 0, ""); !errors.Is(err, ErrEmptyValue) ||
 		typed.Message != "cik: "+ErrEmptyValue.Error() {
 		t.Fatalf("blank optional cik: error = %v", err)
@@ -176,11 +176,11 @@ func TestFundsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	}
 
 	q := NewFundDisclosureQuery(" VWO ", 2023, QuarterQ4)
-	if q.Symbol() != " VWO " || q.Year() != 2023 || q.Quarter() != QuarterQ4 || q.Cik() != nil {
-		t.Fatalf("getters = %q %d %q %v", q.Symbol(), q.Year(), q.Quarter(), q.Cik())
+	if q.Symbol() != " VWO " || q.Year() != 2023 || q.Quarter() != QuarterQ4 || q.CIK() != nil {
+		t.Fatalf("getters = %q %d %q %v", q.Symbol(), q.Year(), q.Quarter(), q.CIK())
 	}
-	if cik := q.WithCik("0000857489").Cik(); cik == nil || *cik != "0000857489" || q.Cik() != nil {
-		t.Fatalf("WithCik mutated the receiver or lost the value: %v %v", cik, q.Cik())
+	if cik := q.WithCIK("0000857489").CIK(); cik == nil || *cik != "0000857489" || q.CIK() != nil {
+		t.Fatalf("WithCIK mutated the receiver or lost the value: %v %v", cik, q.CIK())
 	}
 	if name := NewFundDisclosureHolderSearchQuery("Fund, Inc.").Name(); name != "Fund, Inc." {
 		t.Fatalf("Name() = %q, want the comma preserved", name)

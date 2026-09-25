@@ -109,7 +109,7 @@ func TestDocumentedIndexChartFixturesDecodeExactValues(t *testing.T) {
 func TestDocumentedIndexConstituentFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	sp500 := assertFixtureParity[IndexConstituent](t, "indexes_sp500_constituents.json")
-	if len(sp500) != 1 || sp500[0].Symbol != "HONA" || sp500[0].Cik != "0002089271" ||
+	if len(sp500) != 1 || sp500[0].Symbol != "HONA" || sp500[0].CIK != "0002089271" ||
 		sp500[0].SubSector != "Aerospace & Defense" || sp500[0].Founded != mustParseDate(t, "1913-12-31") {
 		t.Fatalf("indexes_sp500_constituents = %+v", sp500)
 	}
@@ -118,7 +118,7 @@ func TestDocumentedIndexConstituentFixturesDecodeExactValues(t *testing.T) {
 	}
 
 	nasdaq := assertFixtureParity[IndexConstituent](t, "indexes_nasdaq_constituents.json")
-	if len(nasdaq) != 1 || nasdaq[0].Symbol != "ADBE" || nasdaq[0].Cik != "0000796343" ||
+	if len(nasdaq) != 1 || nasdaq[0].Symbol != "ADBE" || nasdaq[0].CIK != "0000796343" ||
 		nasdaq[0].HeadQuarter != "San Jose, CA" {
 		t.Fatalf("indexes_nasdaq_constituents = %+v", nasdaq)
 	}

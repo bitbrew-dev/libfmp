@@ -107,14 +107,14 @@ func (q IndustryClassificationSearchQuery) Symbol() *string {
 	return q.symbol
 }
 
-// WithCik sets the optional cik parameter and returns the updated query.
-func (q IndustryClassificationSearchQuery) WithCik(cik string) IndustryClassificationSearchQuery {
+// WithCIK sets the optional cik parameter and returns the updated query.
+func (q IndustryClassificationSearchQuery) WithCIK(cik string) IndustryClassificationSearchQuery {
 	q.cik = &cik
 	return q
 }
 
-// Cik returns the optional cik parameter, or nil when it is unset.
-func (q IndustryClassificationSearchQuery) Cik() *string {
+// CIK returns the optional cik parameter, or nil when it is unset.
+func (q IndustryClassificationSearchQuery) CIK() *string {
 	return q.cik
 }
 
@@ -368,24 +368,24 @@ func (q LatestSecFilingsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// SecCompaniesByCikQuery holds the query parameters of the endpoints that take
-// it: NewSecCompaniesByCikQuery takes the required arguments and each With
+// SecCompaniesByCIKQuery holds the query parameters of the endpoints that take
+// it: NewSecCompaniesByCIKQuery takes the required arguments and each With
 // method sets an optional one. Values are validated when the request is built.
-type SecCompaniesByCikQuery struct {
+type SecCompaniesByCIKQuery struct {
 	cik string
 }
 
-// NewSecCompaniesByCikQuery creates the query from its required arguments.
-func NewSecCompaniesByCikQuery(cik string) SecCompaniesByCikQuery {
-	return SecCompaniesByCikQuery{cik: cik}
+// NewSecCompaniesByCIKQuery creates the query from its required arguments.
+func NewSecCompaniesByCIKQuery(cik string) SecCompaniesByCIKQuery {
+	return SecCompaniesByCIKQuery{cik: cik}
 }
 
-// Cik returns the cik argument as given.
-func (q SecCompaniesByCikQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q SecCompaniesByCIKQuery) CIK() string {
 	return q.cik
 }
 
-func (q SecCompaniesByCikQuery) params() ([]queryParam, error) {
+func (q SecCompaniesByCIKQuery) params() ([]queryParam, error) {
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
 		return nil, err
@@ -463,14 +463,14 @@ func (q SecCompanyProfileQuery) Symbol() string {
 	return q.symbol
 }
 
-// WithCikA sets the optional cik_a parameter and returns the updated query.
-func (q SecCompanyProfileQuery) WithCikA(cikA string) SecCompanyProfileQuery {
+// WithCIKA sets the optional cik_a parameter and returns the updated query.
+func (q SecCompanyProfileQuery) WithCIKA(cikA string) SecCompanyProfileQuery {
 	q.cikA = &cikA
 	return q
 }
 
-// CikA returns the optional cik_a parameter, or nil when it is unset.
-func (q SecCompanyProfileQuery) CikA() *string {
+// CIKA returns the optional cik_a parameter, or nil when it is unset.
+func (q SecCompanyProfileQuery) CIKA() *string {
 	return q.cikA
 }
 
@@ -491,10 +491,10 @@ func (q SecCompanyProfileQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// SecFilingsByCikQuery holds the query parameters of the endpoints that take
-// it: NewSecFilingsByCikQuery takes the required arguments and each With
+// SecFilingsByCIKQuery holds the query parameters of the endpoints that take
+// it: NewSecFilingsByCIKQuery takes the required arguments and each With
 // method sets an optional one. Values are validated when the request is built.
-type SecFilingsByCikQuery struct {
+type SecFilingsByCIKQuery struct {
 	cik   string
 	from  Date
 	to    Date
@@ -502,49 +502,49 @@ type SecFilingsByCikQuery struct {
 	limit *uint32
 }
 
-// NewSecFilingsByCikQuery creates the query from its required arguments.
-func NewSecFilingsByCikQuery(cik string, from Date, to Date) SecFilingsByCikQuery {
-	return SecFilingsByCikQuery{cik: cik, from: from, to: to}
+// NewSecFilingsByCIKQuery creates the query from its required arguments.
+func NewSecFilingsByCIKQuery(cik string, from Date, to Date) SecFilingsByCIKQuery {
+	return SecFilingsByCIKQuery{cik: cik, from: from, to: to}
 }
 
-// Cik returns the cik argument as given.
-func (q SecFilingsByCikQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q SecFilingsByCIKQuery) CIK() string {
 	return q.cik
 }
 
 // From returns the from argument as given.
-func (q SecFilingsByCikQuery) From() Date {
+func (q SecFilingsByCIKQuery) From() Date {
 	return q.from
 }
 
 // To returns the to argument as given.
-func (q SecFilingsByCikQuery) To() Date {
+func (q SecFilingsByCIKQuery) To() Date {
 	return q.to
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q SecFilingsByCikQuery) WithPage(page uint32) SecFilingsByCikQuery {
+func (q SecFilingsByCIKQuery) WithPage(page uint32) SecFilingsByCIKQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q SecFilingsByCikQuery) Page() *uint32 {
+func (q SecFilingsByCIKQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q SecFilingsByCikQuery) WithLimit(limit uint32) SecFilingsByCikQuery {
+func (q SecFilingsByCIKQuery) WithLimit(limit uint32) SecFilingsByCIKQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q SecFilingsByCikQuery) Limit() *uint32 {
+func (q SecFilingsByCIKQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q SecFilingsByCikQuery) params() ([]queryParam, error) {
+func (q SecFilingsByCIKQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 5)
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
@@ -816,10 +816,10 @@ func (n *SecFilingsNamespace) BySymbol(ctx context.Context, q SecFilingsBySymbol
 	return out, nil
 }
 
-// ByCik retrieves US SEC filings for a string-backed CIK.
+// ByCIK retrieves US SEC filings for a string-backed CIK.
 //
 // GET sec-filings-search/cik?cik=&from=&to=&page=&limit=
-func (n *SecFilingsNamespace) ByCik(ctx context.Context, q SecFilingsByCikQuery) ([]SecFiling, error) {
+func (n *SecFilingsNamespace) ByCIK(ctx context.Context, q SecFilingsByCIKQuery) ([]SecFiling, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -861,10 +861,10 @@ func (n *SecFilingsNamespace) SearchCompaniesBySymbol(ctx context.Context, q Sec
 	return out, nil
 }
 
-// SearchCompaniesByCik searches US SEC companies by string-backed CIK.
+// SearchCompaniesByCIK searches US SEC companies by string-backed CIK.
 //
 // GET sec-filings-company-search/cik?cik=
-func (n *SecFilingsNamespace) SearchCompaniesByCik(ctx context.Context, q SecCompaniesByCikQuery) ([]SecCompanySearchResult, error) {
+func (n *SecFilingsNamespace) SearchCompaniesByCIK(ctx context.Context, q SecCompaniesByCIKQuery) ([]SecCompanySearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

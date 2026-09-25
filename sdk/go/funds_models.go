@@ -366,7 +366,7 @@ func (m *EtfSectorWeighting) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // FundDisclosureHolder is one fund holder from the latest disclosure for a
 // security.
 type FundDisclosureHolder struct {
-	Cik           string  `json:"cik"`
+	CIK           string  `json:"cik"`
 	Holder        string  `json:"holder"`
 	SecurityCusip string  `json:"securityCusip"`
 	Shares        float64 `json:"shares"`
@@ -379,7 +379,7 @@ type FundDisclosureHolder struct {
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type fundDisclosureHolderShadow struct {
-	Cik           *string  `json:"cik"`
+	CIK           *string  `json:"cik"`
 	Holder        *string  `json:"holder"`
 	SecurityCusip *string  `json:"securityCusip"`
 	Shares        *float64 `json:"shares"`
@@ -397,7 +397,7 @@ func (m *FundDisclosureHolder) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("FundDisclosureHolder", "cik")
 	case shadow.Holder == nil:
 		return missingMemberError("FundDisclosureHolder", "holder")
@@ -413,7 +413,7 @@ func (m *FundDisclosureHolder) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FundDisclosureHolder", "weightPercent")
 	}
 	*m = FundDisclosureHolder{
-		Cik:           *shadow.Cik,
+		CIK:           *shadow.CIK,
 		Holder:        *shadow.Holder,
 		SecurityCusip: *shadow.SecurityCusip,
 		Shares:        *shadow.Shares,
@@ -426,7 +426,7 @@ func (m *FundDisclosureHolder) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // FundDisclosure is one position in a mutual-fund disclosure filing.
 type FundDisclosure struct {
-	Cik                 string   `json:"cik"`
+	CIK                 string   `json:"cik"`
 	Date                Date     `json:"date"`
 	AcceptedDate        DateTime `json:"acceptedDate"`
 	Symbol              string   `json:"symbol"`
@@ -455,7 +455,7 @@ type FundDisclosure struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type fundDisclosureShadow struct {
-	Cik                 *string   `json:"cik"`
+	CIK                 *string   `json:"cik"`
 	Date                *Date     `json:"date"`
 	AcceptedDate        *DateTime `json:"acceptedDate"`
 	Symbol              *string   `json:"symbol"`
@@ -489,7 +489,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("FundDisclosure", "cik")
 	case shadow.Date == nil:
 		return missingMemberError("FundDisclosure", "date")
@@ -537,7 +537,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FundDisclosure", "isLoanByFund")
 	}
 	*m = FundDisclosure{
-		Cik:                 *shadow.Cik,
+		CIK:                 *shadow.CIK,
 		Date:                *shadow.Date,
 		AcceptedDate:        *shadow.AcceptedDate,
 		Symbol:              *shadow.Symbol,
@@ -568,9 +568,9 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // by fund or ETF name.
 type FundDisclosureSearchResult struct {
 	Symbol              string `json:"symbol"`
-	Cik                 string `json:"cik"`
-	ClassId             string `json:"classId"`
-	SeriesId            string `json:"seriesId"`
+	CIK                 string `json:"cik"`
+	ClassID             string `json:"classId"`
+	SeriesID            string `json:"seriesId"`
 	EntityName          string `json:"entityName"`
 	EntityOrgType       string `json:"entityOrgType"`
 	SeriesName          string `json:"seriesName"`
@@ -587,9 +587,9 @@ type FundDisclosureSearchResult struct {
 // is observable after decoding.
 type fundDisclosureSearchResultShadow struct {
 	Symbol              *string `json:"symbol"`
-	Cik                 *string `json:"cik"`
-	ClassId             *string `json:"classId"`
-	SeriesId            *string `json:"seriesId"`
+	CIK                 *string `json:"cik"`
+	ClassID             *string `json:"classId"`
+	SeriesID            *string `json:"seriesId"`
 	EntityName          *string `json:"entityName"`
 	EntityOrgType       *string `json:"entityOrgType"`
 	SeriesName          *string `json:"seriesName"`
@@ -612,11 +612,11 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("FundDisclosureSearchResult", "symbol")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("FundDisclosureSearchResult", "cik")
-	case shadow.ClassId == nil:
+	case shadow.ClassID == nil:
 		return missingMemberError("FundDisclosureSearchResult", "classId")
-	case shadow.SeriesId == nil:
+	case shadow.SeriesID == nil:
 		return missingMemberError("FundDisclosureSearchResult", "seriesId")
 	case shadow.EntityName == nil:
 		return missingMemberError("FundDisclosureSearchResult", "entityName")
@@ -639,9 +639,9 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	}
 	*m = FundDisclosureSearchResult{
 		Symbol:              *shadow.Symbol,
-		Cik:                 *shadow.Cik,
-		ClassId:             *shadow.ClassId,
-		SeriesId:            *shadow.SeriesId,
+		CIK:                 *shadow.CIK,
+		ClassID:             *shadow.ClassID,
+		SeriesID:            *shadow.SeriesID,
 		EntityName:          *shadow.EntityName,
 		EntityOrgType:       *shadow.EntityOrgType,
 		SeriesName:          *shadow.SeriesName,

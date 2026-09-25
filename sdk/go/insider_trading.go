@@ -131,8 +131,8 @@ type InsiderTradesSearchQuery struct {
 	symbol          *string
 	page            *uint32
 	limit           *uint32
-	reportingCik    *string
-	companyCik      *string
+	reportingCIK    *string
+	companyCIK      *string
 	transactionType *string
 }
 
@@ -174,30 +174,30 @@ func (q InsiderTradesSearchQuery) Limit() *uint32 {
 	return q.limit
 }
 
-// WithReportingCik sets the optional reporting_cik parameter and returns the
+// WithReportingCIK sets the optional reporting_cik parameter and returns the
 // updated query.
-func (q InsiderTradesSearchQuery) WithReportingCik(reportingCik string) InsiderTradesSearchQuery {
-	q.reportingCik = &reportingCik
+func (q InsiderTradesSearchQuery) WithReportingCIK(reportingCIK string) InsiderTradesSearchQuery {
+	q.reportingCIK = &reportingCIK
 	return q
 }
 
-// ReportingCik returns the optional reporting_cik parameter, or nil when it is
+// ReportingCIK returns the optional reporting_cik parameter, or nil when it is
 // unset.
-func (q InsiderTradesSearchQuery) ReportingCik() *string {
-	return q.reportingCik
+func (q InsiderTradesSearchQuery) ReportingCIK() *string {
+	return q.reportingCIK
 }
 
-// WithCompanyCik sets the optional company_cik parameter and returns the
+// WithCompanyCIK sets the optional company_cik parameter and returns the
 // updated query.
-func (q InsiderTradesSearchQuery) WithCompanyCik(companyCik string) InsiderTradesSearchQuery {
-	q.companyCik = &companyCik
+func (q InsiderTradesSearchQuery) WithCompanyCIK(companyCIK string) InsiderTradesSearchQuery {
+	q.companyCIK = &companyCIK
 	return q
 }
 
-// CompanyCik returns the optional company_cik parameter, or nil when it is
+// CompanyCIK returns the optional company_cik parameter, or nil when it is
 // unset.
-func (q InsiderTradesSearchQuery) CompanyCik() *string {
-	return q.companyCik
+func (q InsiderTradesSearchQuery) CompanyCIK() *string {
+	return q.companyCIK
 }
 
 // WithTransactionType sets the optional transaction_type parameter and returns
@@ -236,19 +236,19 @@ func (q InsiderTradesSearchQuery) params() ([]queryParam, error) {
 		}
 		params = append(params, limit)
 	}
-	if q.reportingCik != nil {
-		reportingCik, err := stringParam("reportingCik", *q.reportingCik)
+	if q.reportingCIK != nil {
+		reportingCIK, err := stringParam("reportingCik", *q.reportingCIK)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, reportingCik)
+		params = append(params, reportingCIK)
 	}
-	if q.companyCik != nil {
-		companyCik, err := stringParam("companyCik", *q.companyCik)
+	if q.companyCIK != nil {
+		companyCIK, err := stringParam("companyCik", *q.companyCIK)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, companyCik)
+		params = append(params, companyCIK)
 	}
 	if q.transactionType != nil {
 		transactionType, err := stringParam("transactionType", *q.transactionType)

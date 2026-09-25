@@ -58,9 +58,9 @@ func TestSearchMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(names) != 1 || names[0].Symbol != "AAGUSD" {
 		t.Fatalf("Name = %+v, %v", names, err)
 	}
-	ciks, err := client.Search.Cik(ctx, NewCikSearchQuery("0000320193").WithLimit(50))
-	if err != nil || len(ciks) != 1 || ciks[0].Cik != "0000320193" {
-		t.Fatalf("Cik = %+v, %v", ciks, err)
+	ciks, err := client.Search.CIK(ctx, NewCIKSearchQuery("0000320193").WithLimit(50))
+	if err != nil || len(ciks) != 1 || ciks[0].CIK != "0000320193" {
+		t.Fatalf("CIK = %+v, %v", ciks, err)
 	}
 	cusips, err := client.Search.Cusip(ctx, NewCusipSearchQuery("037833100"))
 	if err != nil || len(cusips) != 1 || cusips[0].Symbol != "APC.F" {
@@ -117,7 +117,7 @@ func TestSearchQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "query", ErrEmptyValue},
 		{"cik empty", func() error {
-			_, err := client.Search.Cik(ctx, NewCikSearchQuery(""))
+			_, err := client.Search.CIK(ctx, NewCIKSearchQuery(""))
 			return err
 		}, "cik", ErrEmptyValue},
 		{"cusip control", func() error {
@@ -159,8 +159,8 @@ func TestSearchQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		set.Exchange() == nil || *set.Exchange() != " NASDAQ " || set.Limit() == nil || *set.Limit() != 7 {
 		t.Fatalf("SymbolSearchQuery setters mutated the receiver or normalized a value: %+v %+v", base, set)
 	}
-	if q := NewCikSearchQuery("320193"); q.Cik() != "320193" || q.Limit() != nil {
-		t.Fatalf("CikSearchQuery getters = %q, %v", q.Cik(), q.Limit())
+	if q := NewCIKSearchQuery("320193"); q.CIK() != "320193" || q.Limit() != nil {
+		t.Fatalf("CIKSearchQuery getters = %q, %v", q.CIK(), q.Limit())
 	}
 }
 

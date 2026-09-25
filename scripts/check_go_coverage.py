@@ -53,9 +53,11 @@ METHOD_RE = re.compile(
 # lowercase word.
 WORDS = {
     "api": "API",
+    "cik": "CIK",
     "ciks": "CIKs",
     "fmp": "FMP",
     "http": "HTTP",
+    "id": "ID",
     "ids": "IDs",
     "json": "JSON",
     "url": "URL",

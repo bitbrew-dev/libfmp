@@ -78,25 +78,25 @@ func TestSecFilingsMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(bySymbol) != 1 || bySymbol[0].Symbol != "AAPL" {
 		t.Fatalf("BySymbol = %+v, %v", bySymbol, err)
 	}
-	byCik, err := client.SecFilings.ByCik(ctx, NewSecFilingsByCikQuery("0000320193", from, to).
+	byCik, err := client.SecFilings.ByCIK(ctx, NewSecFilingsByCIKQuery("0000320193", from, to).
 		WithLimit(math.MaxUint32).WithPage(math.MaxUint32))
-	if err != nil || len(byCik) != 1 || byCik[0].Cik != "0000320193" || byCik[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
-		t.Fatalf("ByCik = %+v, %v", byCik, err)
+	if err != nil || len(byCik) != 1 || byCik[0].CIK != "0000320193" || byCik[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
+		t.Fatalf("ByCIK = %+v, %v", byCik, err)
 	}
 
 	byName, err := client.SecFilings.SearchCompaniesByName(ctx, NewSecCompaniesByNameQuery("Berkshire, Hathaway / Fund"))
-	if err != nil || len(byName) != 1 || byName[0].Symbol != "None" || byName[0].Cik != "0001418405" {
+	if err != nil || len(byName) != 1 || byName[0].Symbol != "None" || byName[0].CIK != "0001418405" {
 		t.Fatalf("SearchCompaniesByName = %+v, %v", byName, err)
 	}
 	companyBySymbol, err := client.SecFilings.SearchCompaniesBySymbol(ctx, NewSecCompaniesBySymbolQuery("BRK.B / Class A"))
 	if err != nil || len(companyBySymbol) != 1 || companyBySymbol[0].Name != "APPLE INC." {
 		t.Fatalf("SearchCompaniesBySymbol = %+v, %v", companyBySymbol, err)
 	}
-	companyByCik, err := client.SecFilings.SearchCompaniesByCik(ctx, NewSecCompaniesByCikQuery("0000320193"))
+	companyByCik, err := client.SecFilings.SearchCompaniesByCIK(ctx, NewSecCompaniesByCIKQuery("0000320193"))
 	if err != nil || len(companyByCik) != 1 || companyByCik[0] != companyBySymbol[0] {
-		t.Fatalf("SearchCompaniesByCik = %+v, %v", companyByCik, err)
+		t.Fatalf("SearchCompaniesByCIK = %+v, %v", companyByCik, err)
 	}
-	profile, err := client.SecFilings.CompanyProfile(ctx, NewSecCompanyProfileQuery("AAPL").WithCikA("0000320193"))
+	profile, err := client.SecFilings.CompanyProfile(ctx, NewSecCompanyProfileQuery("AAPL").WithCIKA("0000320193"))
 	if err != nil || len(profile) != 1 || profile[0].Symbol != "AAPL" || profile[0].SecurityType != nil {
 		t.Fatalf("CompanyProfile = %+v, %v", profile, err)
 	}
@@ -113,7 +113,7 @@ func TestSecFilingsMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("IndustryClassifications without filters = %+v, %v", bare, err)
 	}
 	search, err := client.SecFilings.SearchIndustryClassifications(ctx, NewIndustryClassificationSearchQuery().
-		WithSicCode("07371").WithCik("0000320193").WithSymbol("BRK.B / Class A"))
+		WithSicCode("07371").WithCIK("0000320193").WithSymbol("BRK.B / Class A"))
 	if err != nil || len(search) != 1 || strings.TrimSpace(string(search[0])) != "{}" {
 		t.Fatalf("SearchIndustryClassifications = %s, %v", search, err)
 	}
@@ -198,7 +198,7 @@ func TestSecFilingsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "symbol", ErrCommaInTicker},
 		{"filings empty cik", func() error {
-			_, err := client.SecFilings.ByCik(ctx, NewSecFilingsByCikQuery(" ", from, to))
+			_, err := client.SecFilings.ByCIK(ctx, NewSecFilingsByCIKQuery(" ", from, to))
 			return err
 		}, "cik", ErrEmptyValue},
 		{"filings control form type", func() error {
@@ -218,7 +218,7 @@ func TestSecFilingsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "company", ErrEmptyValue},
 		{"profile empty cik-A", func() error {
-			_, err := client.SecFilings.CompanyProfile(ctx, NewSecCompanyProfileQuery("AAPL").WithCikA(""))
+			_, err := client.SecFilings.CompanyProfile(ctx, NewSecCompanyProfileQuery("AAPL").WithCIKA(""))
 			return err
 		}, "cik-A", ErrEmptyValue},
 		{"classification search comma ticker", func() error {
@@ -244,8 +244,8 @@ func TestSecFilingsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	// Getters return the values as given, never normalized, and the setters
 	// copy the query instead of mutating the receiver.
 	base := NewSecCompanyProfileQuery(" AAPL ")
-	set := base.WithCikA("0000320193")
-	if base.CikA() != nil || set.CikA() == nil || *set.CikA() != "0000320193" || set.Symbol() != " AAPL " {
+	set := base.WithCIKA("0000320193")
+	if base.CIKA() != nil || set.CIKA() == nil || *set.CIKA() != "0000320193" || set.Symbol() != " AAPL " {
 		t.Fatalf("SecCompanyProfileQuery setters mutated the receiver or normalized a value: %+v %+v", base, set)
 	}
 	filings := NewSecFilingsByFormTypeQuery("8-K", from, to)

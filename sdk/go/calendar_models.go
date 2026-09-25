@@ -260,7 +260,7 @@ type IpoDisclosure struct {
 	FilingDate        Date   `json:"filingDate"`
 	AcceptedDate      Date   `json:"acceptedDate"`
 	EffectivenessDate Date   `json:"effectivenessDate"`
-	Cik               string `json:"cik"`
+	CIK               string `json:"cik"`
 	Form              string `json:"form"`
 	URL               string `json:"url"`
 }
@@ -273,7 +273,7 @@ type ipoDisclosureShadow struct {
 	FilingDate        *Date   `json:"filingDate"`
 	AcceptedDate      *Date   `json:"acceptedDate"`
 	EffectivenessDate *Date   `json:"effectivenessDate"`
-	Cik               *string `json:"cik"`
+	CIK               *string `json:"cik"`
 	Form              *string `json:"form"`
 	URL               *string `json:"url"`
 }
@@ -295,7 +295,7 @@ func (m *IpoDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IpoDisclosure", "acceptedDate")
 	case shadow.EffectivenessDate == nil:
 		return missingMemberError("IpoDisclosure", "effectivenessDate")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("IpoDisclosure", "cik")
 	case shadow.Form == nil:
 		return missingMemberError("IpoDisclosure", "form")
@@ -307,7 +307,7 @@ func (m *IpoDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		FilingDate:        *shadow.FilingDate,
 		AcceptedDate:      *shadow.AcceptedDate,
 		EffectivenessDate: *shadow.EffectivenessDate,
-		Cik:               *shadow.Cik,
+		CIK:               *shadow.CIK,
 		Form:              *shadow.Form,
 		URL:               *shadow.URL,
 	}
@@ -321,7 +321,7 @@ type IpoProspectus struct {
 	AcceptedDate                    Date    `json:"acceptedDate"`
 	FilingDate                      Date    `json:"filingDate"`
 	IpoDate                         Date    `json:"ipoDate"`
-	Cik                             string  `json:"cik"`
+	CIK                             string  `json:"cik"`
 	PricePublicPerShare             float64 `json:"pricePublicPerShare"`
 	PricePublicTotal                float64 `json:"pricePublicTotal"`
 	DiscountsAndCommissionsPerShare float64 `json:"discountsAndCommissionsPerShare"`
@@ -340,7 +340,7 @@ type ipoProspectusShadow struct {
 	AcceptedDate                    *Date    `json:"acceptedDate"`
 	FilingDate                      *Date    `json:"filingDate"`
 	IpoDate                         *Date    `json:"ipoDate"`
-	Cik                             *string  `json:"cik"`
+	CIK                             *string  `json:"cik"`
 	PricePublicPerShare             *float64 `json:"pricePublicPerShare"`
 	PricePublicTotal                *float64 `json:"pricePublicTotal"`
 	DiscountsAndCommissionsPerShare *float64 `json:"discountsAndCommissionsPerShare"`
@@ -368,7 +368,7 @@ func (m *IpoProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IpoProspectus", "filingDate")
 	case shadow.IpoDate == nil:
 		return missingMemberError("IpoProspectus", "ipoDate")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("IpoProspectus", "cik")
 	case shadow.PricePublicPerShare == nil:
 		return missingMemberError("IpoProspectus", "pricePublicPerShare")
@@ -392,7 +392,7 @@ func (m *IpoProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		AcceptedDate:                    *shadow.AcceptedDate,
 		FilingDate:                      *shadow.FilingDate,
 		IpoDate:                         *shadow.IpoDate,
-		Cik:                             *shadow.Cik,
+		CIK:                             *shadow.CIK,
 		PricePublicPerShare:             *shadow.PricePublicPerShare,
 		PricePublicTotal:                *shadow.PricePublicTotal,
 		DiscountsAndCommissionsPerShare: *shadow.DiscountsAndCommissionsPerShare,

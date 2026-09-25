@@ -20,36 +20,36 @@ func newSearchNamespace(client *Client) SearchNamespace {
 	}
 }
 
-// CikSearchQuery holds the query parameters of the endpoints that take it:
-// NewCikSearchQuery takes the required arguments and each With method sets an
+// CIKSearchQuery holds the query parameters of the endpoints that take it:
+// NewCIKSearchQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type CikSearchQuery struct {
+type CIKSearchQuery struct {
 	cik   string
 	limit *uint32
 }
 
-// NewCikSearchQuery creates the query from its required arguments.
-func NewCikSearchQuery(cik string) CikSearchQuery {
-	return CikSearchQuery{cik: cik}
+// NewCIKSearchQuery creates the query from its required arguments.
+func NewCIKSearchQuery(cik string) CIKSearchQuery {
+	return CIKSearchQuery{cik: cik}
 }
 
-// Cik returns the cik argument as given.
-func (q CikSearchQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q CIKSearchQuery) CIK() string {
 	return q.cik
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q CikSearchQuery) WithLimit(limit uint32) CikSearchQuery {
+func (q CIKSearchQuery) WithLimit(limit uint32) CIKSearchQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q CikSearchQuery) Limit() *uint32 {
+func (q CIKSearchQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q CikSearchQuery) params() ([]queryParam, error) {
+func (q CIKSearchQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
@@ -303,15 +303,15 @@ func (n *SearchNamespace) Name(ctx context.Context, q NameSearchQuery) ([]NameSe
 	return out, nil
 }
 
-// Cik searches US companies by Central Index Key.
+// CIK searches US companies by Central Index Key.
 //
 // GET search-cik?cik=&limit=
-func (n *SearchNamespace) Cik(ctx context.Context, q CikSearchQuery) ([]CikSearchResult, error) {
+func (n *SearchNamespace) CIK(ctx context.Context, q CIKSearchQuery) ([]CIKSearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CikSearchResult
+	var out []CIKSearchResult
 	if err := n.client.getJSON(ctx, "search-cik", "search-cik", params, &out); err != nil {
 		return nil, err
 	}

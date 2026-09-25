@@ -49,12 +49,12 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	ctx := context.Background()
 
 	profile, err := client.Company.Profile(ctx, NewProfileQuery("AAPL"))
-	if err != nil || len(profile) != 1 || profile[0].Cik != "0000320193" {
+	if err != nil || len(profile) != 1 || profile[0].CIK != "0000320193" {
 		t.Fatalf("Profile = %+v, %v", profile, err)
 	}
-	byCik, err := client.Company.ProfileByCik(ctx, NewProfileByCikQuery("0000320193"))
+	byCik, err := client.Company.ProfileByCIK(ctx, NewProfileByCIKQuery("0000320193"))
 	if err != nil || len(byCik) != 1 || byCik[0].Symbol != "AAPL" {
-		t.Fatalf("ProfileByCik = %+v, %v", byCik, err)
+		t.Fatalf("ProfileByCIK = %+v, %v", byCik, err)
 	}
 	batch, err := client.Company.BatchMarketCapitalization(ctx, NewBatchMarketCapitalizationQuery([]string{"AAPL", "MSFT"}))
 	if err != nil || len(batch) != 1 || batch[0].MarketCap != 4_874_072_686_740 {
@@ -131,7 +131,7 @@ func TestCompanyQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		reason   error
 	}{
 		{"empty cik", func() error {
-			_, err := client.Company.ProfileByCik(ctx, NewProfileByCikQuery(""))
+			_, err := client.Company.ProfileByCIK(ctx, NewProfileByCIKQuery(""))
 			return err
 		}, "cik", ErrEmptyValue},
 		{"whitespace search term", func() error {
@@ -172,8 +172,8 @@ func TestCompanyQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	if base.Page() != nil || paged.Page() == nil || *paged.Page() != 0 || paged.Limit() != nil {
 		t.Fatalf("WithPage mutated the receiver or dropped the zero page: base=%+v paged=%+v", base, paged)
 	}
-	if q := NewProfileByCikQuery(" 0000320193 "); q.Cik() != " 0000320193 " {
-		t.Fatalf("Cik() normalized the value: %q", q.Cik())
+	if q := NewProfileByCIKQuery(" 0000320193 "); q.CIK() != " 0000320193 " {
+		t.Fatalf("CIK() normalized the value: %q", q.CIK())
 	}
 }
 

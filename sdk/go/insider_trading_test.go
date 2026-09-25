@@ -59,11 +59,11 @@ func TestInsiderTradingMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("LatestTrades filtered = %+v, %v", filtered, err)
 	}
 	searched, err := client.InsiderTrading.SearchTrades(ctx, NewInsiderTradesSearchQuery())
-	if err != nil || len(searched) != 1 || searched[0].ReportingCik != "0001661867" {
+	if err != nil || len(searched) != 1 || searched[0].ReportingCIK != "0001661867" {
 		t.Fatalf("SearchTrades = %+v, %v", searched, err)
 	}
 	full, err := client.InsiderTrading.SearchTrades(ctx, NewInsiderTradesSearchQuery().
-		WithTransactionType("S-Sale / future").WithCompanyCik("0000320193").WithReportingCik("0001496686").
+		WithTransactionType("S-Sale / future").WithCompanyCIK("0000320193").WithReportingCIK("0001496686").
 		WithLimit(0).WithPage(math.MaxUint32).WithSymbol("BRK.B / Class A"))
 	if err != nil || len(full) != 1 {
 		t.Fatalf("SearchTrades full = %+v, %v", full, err)
@@ -131,7 +131,7 @@ func TestInsiderTradingQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "symbol", ErrCommaInTicker},
 		{"search empty reporting cik", func() error {
-			_, err := client.InsiderTrading.SearchTrades(ctx, NewInsiderTradesSearchQuery().WithReportingCik(""))
+			_, err := client.InsiderTrading.SearchTrades(ctx, NewInsiderTradesSearchQuery().WithReportingCIK(""))
 			return err
 		}, "reportingCik", ErrEmptyValue},
 		{"search control transaction type", func() error {

@@ -47,7 +47,7 @@ func TestDocumentedIncomeStatementDecodesAll39FieldsExactly(t *testing.T) {
 	t.Parallel()
 	rows := assertFixtureParity[IncomeStatement](t, "income_statement.json")
 	want := IncomeStatement{
-		Date: mustParseDate(t, "2025-09-27"), Symbol: "AAPL", ReportedCurrency: "USD", Cik: "0000320193",
+		Date: mustParseDate(t, "2025-09-27"), Symbol: "AAPL", ReportedCurrency: "USD", CIK: "0000320193",
 		FilingDate: mustParseDate(t, "2025-10-31"), AcceptedDate: mustParseDateTime(t, "2025-10-31 06:01:26"),
 		FiscalYear: "2025", Period: "FY",
 		Revenue: 416_161_000_000, CostOfRevenue: 220_960_000_000, GrossProfit: 195_201_000_000,
@@ -79,7 +79,7 @@ func TestDocumentedIncomeStatementDecodesAll39FieldsExactly(t *testing.T) {
 func TestDocumentedBalanceSheetAndCashFlowFixturesDecodeExactAmounts(t *testing.T) {
 	t.Parallel()
 	balance := assertFixtureParity[BalanceSheetStatement](t, "balance_sheet_statement.json")
-	if len(balance) != 1 || balance[0].Cik != "0000320193" || balance[0].FiscalYear != "2025" ||
+	if len(balance) != 1 || balance[0].CIK != "0000320193" || balance[0].FiscalYear != "2025" ||
 		balance[0].Period != "FY" || balance[0].TotalAssets != 359_241_000_000 ||
 		balance[0].RetainedEarnings != -14_264_000_000 || len(memberSet(t, balance[0])) != 61 {
 		t.Fatalf("balance_sheet_statement = %+v", balance)
