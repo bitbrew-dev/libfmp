@@ -206,9 +206,9 @@ def check_funds_contract(client: FmpClient) -> None:
     info: list[EtfFundInfo] = client.funds.etf_info("SPY")
     inception: datetime.date = info[0].inception_date
     exposure: float = info[0].sectors_list[0].exposure
-    positions: list[FundDisclosure] = client.funds.fund_disclosures("VWO", 2023, 4, cik="0000857489")
+    positions: list[FundDisclosure] = client.funds.disclosures("VWO", 2023, 4, cik="0000857489")
     accepted: datetime.datetime = positions[0].accepted_date
-    dates: list[Form13fFilingDate] = client.funds.fund_disclosure_dates("VWO", cik="0000036405")
+    dates: list[Form13fFilingDate] = client.funds.disclosure_dates("VWO", cik="0000036405")
     quarter: int = dates[0].quarter
     _ = (updated, inception, exposure, accepted, quarter)
 

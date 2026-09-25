@@ -118,12 +118,12 @@ impl FundsNamespace {
 
     /// Retrieves the latest US fund disclosures holding one requested asset.
     #[pyo3(signature = (symbol))]
-    fn latest_fund_disclosure_holders(
+    fn latest_disclosure_holders(
         &self,
         py: Python<'_>,
         symbol: &str,
     ) -> PyResult<Vec<FundDisclosureHolder>> {
-        let query = latest_fund_disclosure_holders_query(symbol)?;
+        let query = latest_disclosure_holders_query(symbol)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -136,7 +136,7 @@ impl FundsNamespace {
 
     /// Retrieves positions from one US mutual-fund disclosure period.
     #[pyo3(signature = (symbol, year, quarter, *, cik=None))]
-    fn fund_disclosures(
+    fn disclosures(
         &self,
         py: Python<'_>,
         symbol: &str,
@@ -144,7 +144,7 @@ impl FundsNamespace {
         quarter: i64,
         cik: Option<&str>,
     ) -> PyResult<Vec<FundDisclosure>> {
-        let query = fund_disclosures_query(symbol, year, quarter, cik)?;
+        let query = disclosures_query(symbol, year, quarter, cik)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -157,12 +157,12 @@ impl FundsNamespace {
 
     /// Searches US mutual-fund and ETF disclosure holders by exact name text.
     #[pyo3(signature = (name))]
-    fn search_fund_disclosure_holders(
+    fn search_disclosure_holders(
         &self,
         py: Python<'_>,
         name: &str,
     ) -> PyResult<Vec<FundDisclosureSearchResult>> {
-        let query = search_fund_disclosure_holders_query(name)?;
+        let query = search_disclosure_holders_query(name)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -180,13 +180,13 @@ impl FundsNamespace {
 
     /// Retrieves available US fund-disclosure reporting dates.
     #[pyo3(signature = (symbol, *, cik=None))]
-    fn fund_disclosure_dates(
+    fn disclosure_dates(
         &self,
         py: Python<'_>,
         symbol: &str,
         cik: Option<&str>,
     ) -> PyResult<Vec<Form13fFilingDate>> {
-        let query = fund_disclosure_dates_query(symbol, cik)?;
+        let query = disclosure_dates_query(symbol, cik)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -228,16 +228,14 @@ fn etf_sector_weightings_query(symbol: &str) -> PyResult<EtfSectorWeightingsQuer
     Ok(EtfSectorWeightingsQuery::new(symbol))
 }
 
-/// Builds the `LatestFundDisclosureHoldersQuery` for `FundsNamespace::latest_fund_disclosure_holders` from validated Python arguments.
-fn latest_fund_disclosure_holders_query(
-    symbol: &str,
-) -> PyResult<LatestFundDisclosureHoldersQuery> {
+/// Builds the `LatestFundDisclosureHoldersQuery` for `FundsNamespace::latest_disclosure_holders` from validated Python arguments.
+fn latest_disclosure_holders_query(symbol: &str) -> PyResult<LatestFundDisclosureHoldersQuery> {
     let symbol = args::ticker("symbol", symbol)?;
     Ok(LatestFundDisclosureHoldersQuery::new(symbol))
 }
 
-/// Builds the `FundDisclosureQuery` for `FundsNamespace::fund_disclosures` from validated Python arguments.
-fn fund_disclosures_query(
+/// Builds the `FundDisclosureQuery` for `FundsNamespace::disclosures` from validated Python arguments.
+fn disclosures_query(
     symbol: &str,
     year: i64,
     quarter: i64,
@@ -254,17 +252,14 @@ fn fund_disclosures_query(
     Ok(query)
 }
 
-/// Builds the `FundDisclosureHolderSearchQuery` for `FundsNamespace::search_fund_disclosure_holders` from validated Python arguments.
-fn search_fund_disclosure_holders_query(name: &str) -> PyResult<FundDisclosureHolderSearchQuery> {
+/// Builds the `FundDisclosureHolderSearchQuery` for `FundsNamespace::search_disclosure_holders` from validated Python arguments.
+fn search_disclosure_holders_query(name: &str) -> PyResult<FundDisclosureHolderSearchQuery> {
     let name = args::search_term("name", name)?;
     Ok(FundDisclosureHolderSearchQuery::new(name))
 }
 
-/// Builds the `FundDisclosureDatesQuery` for `FundsNamespace::fund_disclosure_dates` from validated Python arguments.
-fn fund_disclosure_dates_query(
-    symbol: &str,
-    cik: Option<&str>,
-) -> PyResult<FundDisclosureDatesQuery> {
+/// Builds the `FundDisclosureDatesQuery` for `FundsNamespace::disclosure_dates` from validated Python arguments.
+fn disclosure_dates_query(symbol: &str, cik: Option<&str>) -> PyResult<FundDisclosureDatesQuery> {
     let symbol = args::ticker("symbol", symbol)?;
     let cik = args::optional("cik", cik, args::cik)?;
     let mut query = FundDisclosureDatesQuery::new(symbol);

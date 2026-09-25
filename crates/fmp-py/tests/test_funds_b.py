@@ -1,8 +1,8 @@
 """Runtime contract of ``client.funds`` for the disclosure queries and the negatives.
 
-Covers ``fund_disclosures`` (required ticker, year, quarter plus the
-keyword-only ``cik``), ``search_fund_disclosure_holders`` (a free-text
-name), and ``fund_disclosure_dates`` (ticker plus keyword-only ``cik``),
+Covers ``disclosures`` (required ticker, year, quarter plus the
+keyword-only ``cik``), ``search_disclosure_holders`` (a free-text
+name), and ``disclosure_dates`` (ticker plus keyword-only ``cik``),
 whose rows are the ``Form13fFilingDate`` model shared with
 ``fmp.institutional_ownership`` because libfmp aliases the two. The expected
 targets are the ones the Rust ``fund_disclosure_endpoints.rs`` test pins.
@@ -24,9 +24,9 @@ FEDERATED = "Federated Hermes Government Income Securities, Inc."
 
 
 def test_fund_disclosures_with_cik(client: Any, fixture_server: FixtureServer) -> None:
-    """``fund_disclosures`` encodes ``symbol``, ``year``, ``quarter``, then ``cik`` and decodes the position row."""
+    """``disclosures`` encodes ``symbol``, ``year``, ``quarter``, then ``cik`` and decodes the position row."""
     fixture_server.route("/funds/disclosure", load_fixture("fund_disclosures.json"))
-    rows = client.funds.fund_disclosures("VWO", 2023, 4, cik="0000857489")
+    rows = client.funds.disclosures("VWO", 2023, 4, cik="0000857489")
 
     assert fixture_server.requests[0].target == "/funds/disclosure?symbol=VWO&year=2023&quarter=4&cik=0000857489"
     assert len(rows) == 1
@@ -53,23 +53,23 @@ def test_fund_disclosures_with_cik(client: Any, fixture_server: FixtureServer) -
 
 
 def test_fund_disclosures_without_cik(client: Any, fixture_server: FixtureServer) -> None:
-    """``fund_disclosures`` omits ``cik`` when it is not given and keeps ``cik`` keyword-only."""
+    """``disclosures`` omits ``cik`` when it is not given and keeps ``cik`` keyword-only."""
     fixture_server.route("/funds/disclosure", load_fixture("fund_disclosures.json"))
-    rows = client.funds.fund_disclosures("VWO", 2023, 4)
+    rows = client.funds.disclosures("VWO", 2023, 4)
 
     assert fixture_server.requests[0].target == "/funds/disclosure?symbol=VWO&year=2023&quarter=4"
     assert fixture_server.requests[0].query == {"symbol": ["VWO"], "year": ["2023"], "quarter": ["4"]}
     assert len(rows) == 1
     with pytest.raises(TypeError):
-        client.funds.fund_disclosures("VWO", 2023, 4, "0000857489")
+        client.funds.disclosures("VWO", 2023, 4, "0000857489")
     with pytest.raises(TypeError):
-        client.funds.fund_disclosures("VWO", 2023)
+        client.funds.disclosures("VWO", 2023)
 
 
 def test_search_fund_disclosure_holders_encodes_punctuation(client: Any, fixture_server: FixtureServer) -> None:
-    """``search_fund_disclosure_holders`` form-encodes the exact name and decodes the string row."""
+    """``search_disclosure_holders`` form-encodes the exact name and decodes the string row."""
     fixture_server.route("/funds/disclosure-holders-search", load_fixture("fund_disclosure_holder_search.json"))
-    rows = client.funds.search_fund_disclosure_holders(FEDERATED)
+    rows = client.funds.search_disclosure_holders(FEDERATED)
 
     assert (
         fixture_server.requests[0].target
@@ -92,18 +92,18 @@ def test_search_fund_disclosure_holders_encodes_punctuation(client: Any, fixture
 
 
 def test_search_fund_disclosure_holders_with_a_plain_name(client: Any, fixture_server: FixtureServer) -> None:
-    """``search_fund_disclosure_holders`` sends a space-separated name as ``+`` and nothing else."""
+    """``search_disclosure_holders`` sends a space-separated name as ``+`` and nothing else."""
     fixture_server.route("/funds/disclosure-holders-search", load_fixture("fund_disclosure_holder_search.json"))
-    rows = client.funds.search_fund_disclosure_holders("Vanguard Total World")
+    rows = client.funds.search_disclosure_holders("Vanguard Total World")
 
     assert fixture_server.requests[0].target == "/funds/disclosure-holders-search?name=Vanguard+Total+World"
     assert len(rows) == 1
 
 
 def test_fund_disclosure_dates_with_cik(client: Any, fixture_server: FixtureServer) -> None:
-    """``fund_disclosure_dates`` encodes ``symbol`` then ``cik`` and returns the shared filing-date row."""
+    """``disclosure_dates`` encodes ``symbol`` then ``cik`` and returns the shared filing-date row."""
     fixture_server.route("/funds/disclosure-dates", load_fixture("fund_disclosure_dates.json"))
-    rows = client.funds.fund_disclosure_dates("VWO", cik="0000036405")
+    rows = client.funds.disclosure_dates("VWO", cik="0000036405")
 
     assert fixture_server.requests[0].target == "/funds/disclosure-dates?symbol=VWO&cik=0000036405"
     assert len(rows) == 1
@@ -115,15 +115,15 @@ def test_fund_disclosure_dates_with_cik(client: Any, fixture_server: FixtureServ
 
 
 def test_fund_disclosure_dates_without_cik(client: Any, fixture_server: FixtureServer) -> None:
-    """``fund_disclosure_dates`` sends only ``symbol`` when ``cik`` is omitted."""
+    """``disclosure_dates`` sends only ``symbol`` when ``cik`` is omitted."""
     fixture_server.route("/funds/disclosure-dates", load_fixture("fund_disclosure_dates.json"))
-    rows = client.funds.fund_disclosure_dates("VWO")
+    rows = client.funds.disclosure_dates("VWO")
 
     assert fixture_server.requests[0].target == "/funds/disclosure-dates?symbol=VWO"
     assert len(rows) == 1
     assert isinstance(rows[0], Form13fFilingDate)
     with pytest.raises(TypeError):
-        client.funds.fund_disclosure_dates("VWO", "0000036405")
+        client.funds.disclosure_dates("VWO", "0000036405")
 
 
 def test_disclosure_queries_decode_an_empty_array(client: Any, fixture_server: FixtureServer) -> None:
@@ -132,9 +132,9 @@ def test_disclosure_queries_decode_an_empty_array(client: Any, fixture_server: F
     fixture_server.route("/funds/disclosure-holders-search", [])
     fixture_server.route("/funds/disclosure-dates", [])
 
-    assert client.funds.fund_disclosures("VWO", 2023, 4) == []
-    assert client.funds.search_fund_disclosure_holders("Vanguard") == []
-    assert client.funds.fund_disclosure_dates("VWO") == []
+    assert client.funds.disclosures("VWO", 2023, 4) == []
+    assert client.funds.search_disclosure_holders("Vanguard") == []
+    assert client.funds.disclosure_dates("VWO") == []
     assert [request.target for request in fixture_server.requests] == [
         "/funds/disclosure?symbol=VWO&year=2023&quarter=4",
         "/funds/disclosure-holders-search?name=Vanguard",
@@ -150,9 +150,9 @@ def test_disclosure_queries_decode_an_empty_array(client: Any, fixture_server: F
         pytest.param("etf_country_weightings", ("\t",), id="etf_country_weightings"),
         pytest.param("etf_asset_exposure", ("  ",), id="etf_asset_exposure"),
         pytest.param("etf_sector_weightings", ("",), id="etf_sector_weightings"),
-        pytest.param("latest_fund_disclosure_holders", (" ",), id="latest_fund_disclosure_holders"),
-        pytest.param("fund_disclosures", ("", 2023, 4), id="fund_disclosures"),
-        pytest.param("fund_disclosure_dates", (" ",), id="fund_disclosure_dates"),
+        pytest.param("latest_disclosure_holders", (" ",), id="latest_disclosure_holders"),
+        pytest.param("disclosures", ("", 2023, 4), id="disclosures"),
+        pytest.param("disclosure_dates", (" ",), id="disclosure_dates"),
     ],
 )
 def test_blank_symbol_names_the_argument(
@@ -173,7 +173,7 @@ def test_out_of_range_year_names_the_argument(
 ) -> None:
     """A year outside the provider's unsigned 32-bit range is rejected locally."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.funds.fund_disclosures("VWO", year, 4)
+        client.funds.disclosures("VWO", year, 4)
     assert str(raised.value) == "year: must be an integer from 0 through 4294967295"
     assert fixture_server.requests == []
 
@@ -184,18 +184,18 @@ def test_out_of_range_quarter_names_the_argument(
 ) -> None:
     """A quarter outside 1 through 4 is rejected locally; a float quarter is a ``TypeError``."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.funds.fund_disclosures("VWO", 2023, quarter)
+        client.funds.disclosures("VWO", 2023, quarter)
     assert str(raised.value) == "quarter: quarter must be an integer from 1 through 4"
     assert fixture_server.requests == []
     with pytest.raises(TypeError):
-        client.funds.fund_disclosures("VWO", 2023, 4.0)
+        client.funds.disclosures("VWO", 2023, 4.0)
 
 
 @pytest.mark.parametrize(
     ("method", "args"),
     [
-        pytest.param("fund_disclosures", ("VWO", 2023, 4), id="fund_disclosures"),
-        pytest.param("fund_disclosure_dates", ("VWO",), id="fund_disclosure_dates"),
+        pytest.param("disclosures", ("VWO", 2023, 4), id="disclosures"),
+        pytest.param("disclosure_dates", ("VWO",), id="disclosure_dates"),
     ],
 )
 def test_blank_cik_names_the_argument(
@@ -223,7 +223,7 @@ def test_invalid_search_name_names_the_argument(
 ) -> None:
     """``search_term`` validation fails locally and names ``name``."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.funds.search_fund_disclosure_holders(name)
+        client.funds.search_disclosure_holders(name)
     error = raised.value
     assert str(error) == message
     assert error.category == "validation"
@@ -236,7 +236,7 @@ def test_status_error_carries_the_funds_endpoint_id(
     """A non-success status on a nested funds path maps to ``FmpStatusError`` with the endpoint id."""
     fixture_server.route("/funds/disclosure", {"error": "denied"}, status=401)
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.funds.fund_disclosures("VWO", 2023, 4)
+        client.funds.disclosures("VWO", 2023, 4)
     error = raised.value
     assert error.endpoint == "funds/disclosure"
     assert error.status == 401
@@ -264,7 +264,7 @@ def test_wrong_percent_kind_is_a_decode_error(
 def test_fund_disclosures_decode_a_negative_fractional_balance(client: Any, fixture_server: FixtureServer) -> None:
     """Issue #340: a short position's fractional, negative balance decodes as ``float``."""
     fixture_server.route("/funds/disclosure", load_fixture("fund_disclosures_fractional_synthetic.json"))
-    rows = client.funds.fund_disclosures("VWO", 2023, 4)
+    rows = client.funds.disclosures("VWO", 2023, 4)
 
     assert len(rows) == 1
     assert isinstance(rows[0].balance, float)

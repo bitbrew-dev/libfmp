@@ -226,10 +226,10 @@ served by the single method that owns the path:
 | `funds` | `funds.etf_country_weightings` | `etf_country_weightings` | supported | supported |  |
 | `funds` | `funds.etf_asset_exposure` | `etf_asset_exposure` | supported | supported |  |
 | `funds` | `funds.etf_sector_weightings` | `etf_sector_weightings` | supported | supported |  |
-| `funds` | `funds.latest_fund_disclosure_holders` | `latest_fund_disclosure_holders` | supported | supported |  |
-| `funds` | `funds.fund_disclosures` | `fund_disclosures` | supported | supported |  |
-| `funds` | `funds.search_fund_disclosure_holders` | `search_fund_disclosure_holders` | supported | supported |  |
-| `funds` | `funds.fund_disclosure_dates` | `fund_disclosure_dates` | supported | supported |  |
+| `funds` | `funds.latest_disclosure_holders` | `latest_fund_disclosure_holders` | supported | supported |  |
+| `funds` | `funds.disclosures` | `fund_disclosures` | supported | supported |  |
+| `funds` | `funds.search_disclosure_holders` | `search_fund_disclosure_holders` | supported | supported |  |
+| `funds` | `funds.disclosure_dates` | `fund_disclosure_dates` | supported | supported |  |
 | `sec_filings` | `sec_filings.latest_8k` | `latest_8k_sec_filings` | supported | supported |  |
 | `sec_filings` | `sec_filings.latest` | `latest_sec_filings` | supported | supported |  |
 | `sec_filings` | `sec_filings.by_form_type` | `sec_filings_by_form_type` | supported | supported |  |
