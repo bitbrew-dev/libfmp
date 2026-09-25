@@ -28,7 +28,13 @@ network connection.
   JSON formatter hook rewrites exponent spellings, so exponent-form cases are
   inline in the Rust and Go tests); they are the issue #339 decode proof in
   `integral_f64_responses.rs`, the fmp-py screener, crypto, and calendar
-  tests, and `sdk/go/integral_f64_parity_test.go`.
+  tests, and `sdk/go/integral_f64_parity_test.go`. The nine issue #340
+  `*_fractional_synthetic.json` files (`latest_insider_trades`,
+  `fund_disclosures`, `company_shares_float`, `fundraising_by_cik`,
+  `earnings_calendar`, `custom_discounted_cash_flow`, `income_statement`,
+  `aftermarket_trade`, `institutional_ownership_extract`) do the same for the
+  `Quantity` and `MarketValue` fields, including a negative fractional fund
+  `balance`, in the same three test suites.
 - **Observed-shape reproductions.** `quote_short_fractional_volume.json`
   reproduces the one live `quote-short` row that motivated issue #337 (seen
   2026-09-23: a fractional `volume`, `20201922.82733`); the four values are
