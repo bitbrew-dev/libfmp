@@ -138,7 +138,7 @@ args = [{ name = "symbol", kind = "ticker" }]
 path = "statements.growth"
 
 [[namespace.endpoint]]
-name = "income_statement"
+name = "income"
 method = "income_statement_growth"
 query = "IncomeStatementGrowthQuery"
 response = "statements::growth::income::IncomeStatementGrowth"
@@ -151,7 +151,7 @@ args = [
 setters = [{ arg = "limit" }, { arg = "period" }]
 
 [[namespace.endpoint]]
-name = "balance_sheet_statement"
+name = "balance_sheet"
 method = "balance_sheet_statement_growth"
 query = "BalanceSheetStatementGrowthQuery"
 response = "statements::growth::balance::BalanceSheetStatementGrowth"
@@ -164,7 +164,7 @@ args = [
 setters = [{ arg = "limit" }, { arg = "period" }]
 
 [[namespace.endpoint]]
-name = "cash_flow_statement"
+name = "cash_flow"
 method = "cash_flow_statement_growth"
 query = "CashFlowStatementGrowthQuery"
 response = "statements::growth::cash_flow::CashFlowStatementGrowth"
@@ -177,7 +177,7 @@ args = [
 setters = [{ arg = "limit" }, { arg = "period" }]
 
 [[namespace.endpoint]]
-name = "financial_statement"
+name = "financial"
 method = "financial_statement_growth"
 query = "FinancialStatementGrowthQuery"
 response = "statements::growth::combined::FinancialStatementGrowth"

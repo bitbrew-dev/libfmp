@@ -1804,10 +1804,10 @@ func (n *StatementsCashFlowNamespace) StatementTtm(ctx context.Context, q CashFl
 	return out, nil
 }
 
-// IncomeStatement retrieves worldwide income-statement growth for one company.
+// Income retrieves worldwide income-statement growth for one company.
 //
 // GET income-statement-growth?symbol=&limit=&period=
-func (n *StatementsGrowthNamespace) IncomeStatement(ctx context.Context, q IncomeStatementGrowthQuery) ([]IncomeStatementGrowth, error) {
+func (n *StatementsGrowthNamespace) Income(ctx context.Context, q IncomeStatementGrowthQuery) ([]IncomeStatementGrowth, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -1819,11 +1819,11 @@ func (n *StatementsGrowthNamespace) IncomeStatement(ctx context.Context, q Incom
 	return out, nil
 }
 
-// BalanceSheetStatement retrieves worldwide balance-sheet-statement growth for
-// one company.
+// BalanceSheet retrieves worldwide balance-sheet-statement growth for one
+// company.
 //
 // GET balance-sheet-statement-growth?symbol=&limit=&period=
-func (n *StatementsGrowthNamespace) BalanceSheetStatement(ctx context.Context, q BalanceSheetStatementGrowthQuery) ([]BalanceSheetStatementGrowth, error) {
+func (n *StatementsGrowthNamespace) BalanceSheet(ctx context.Context, q BalanceSheetStatementGrowthQuery) ([]BalanceSheetStatementGrowth, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -1835,11 +1835,10 @@ func (n *StatementsGrowthNamespace) BalanceSheetStatement(ctx context.Context, q
 	return out, nil
 }
 
-// CashFlowStatement retrieves worldwide cash-flow-statement growth for one
-// company.
+// CashFlow retrieves worldwide cash-flow-statement growth for one company.
 //
 // GET cash-flow-statement-growth?symbol=&limit=&period=
-func (n *StatementsGrowthNamespace) CashFlowStatement(ctx context.Context, q CashFlowStatementGrowthQuery) ([]CashFlowStatementGrowth, error) {
+func (n *StatementsGrowthNamespace) CashFlow(ctx context.Context, q CashFlowStatementGrowthQuery) ([]CashFlowStatementGrowth, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -1851,11 +1850,11 @@ func (n *StatementsGrowthNamespace) CashFlowStatement(ctx context.Context, q Cas
 	return out, nil
 }
 
-// FinancialStatement retrieves combined worldwide financial-statement growth
-// for one company.
+// Financial retrieves combined worldwide financial-statement growth for one
+// company.
 //
 // GET financial-growth?symbol=&limit=&period=
-func (n *StatementsGrowthNamespace) FinancialStatement(ctx context.Context, q FinancialStatementGrowthQuery) ([]FinancialStatementGrowth, error) {
+func (n *StatementsGrowthNamespace) Financial(ctx context.Context, q FinancialStatementGrowthQuery) ([]FinancialStatementGrowth, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

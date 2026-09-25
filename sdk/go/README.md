@@ -146,7 +146,7 @@ and `Error` without any secret value, so an error is safe to log.
 
 Every endpoint method whose Rust descriptor attaches advisory metadata has an
 entry in the generated `metadata_table.go`, keyed by the Go call path without
-the client (`Quote.Full`, `Statements.Growth.IncomeStatement`):
+the client (`Quote.Full`, `Statements.Growth.Income`):
 
 ```go
 metadata, ok := fmp.EndpointMetadataFor("Tipranks.SearchRatings")

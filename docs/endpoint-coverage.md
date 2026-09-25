@@ -132,10 +132,10 @@ served by the single method that owns the path:
 | `statements` | `statements.metrics.key_metrics_ttm` | `key_metrics_ttm` | supported | supported |  |
 | `statements` | `statements.ratios.financial_ratios` | `financial_ratios` | supported | supported |  |
 | `statements` | `statements.ratios.financial_ratios_ttm` | `financial_ratios_ttm` | supported | supported |  |
-| `statements` | `statements.growth.income_statement` | `income_statement_growth` | supported | supported |  |
-| `statements` | `statements.growth.balance_sheet_statement` | `balance_sheet_statement_growth` | supported | supported |  |
-| `statements` | `statements.growth.cash_flow_statement` | `cash_flow_statement_growth` | supported | supported |  |
-| `statements` | `statements.growth.financial_statement` | `financial_statement_growth` | supported | supported |  |
+| `statements` | `statements.growth.income` | `income_statement_growth` | supported | supported |  |
+| `statements` | `statements.growth.balance_sheet` | `balance_sheet_statement_growth` | supported | supported |  |
+| `statements` | `statements.growth.cash_flow` | `cash_flow_statement_growth` | supported | supported |  |
+| `statements` | `statements.growth.financial` | `financial_statement_growth` | supported | supported |  |
 | `statements` | `statements.as_reported.income` | `income_statement_as_reported` | supported | supported |  |
 | `statements` | `statements.as_reported.balance_sheet` | `balance_sheet_statement_as_reported` | supported | supported |  |
 | `statements` | `statements.as_reported.cash_flow` | `cash_flow_statement_as_reported` | supported | supported |  |
