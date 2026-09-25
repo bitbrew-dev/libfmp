@@ -90,8 +90,6 @@ class FinancialRatios:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def reported_currency(self) -> builtins.str: ...
     @property
     def gross_profit_margin(self) -> builtins.float: ...
@@ -215,6 +213,8 @@ class FinancialRatios:
     def enterprise_value_multiple(self) -> builtins.float: ...
     @property
     def dividend_per_share(self) -> builtins.float: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -222,7 +222,7 @@ class FinancialRatios:
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         reported_currency: builtins.str,
         gross_profit_margin: builtins.float,
         ebit_margin: builtins.float,

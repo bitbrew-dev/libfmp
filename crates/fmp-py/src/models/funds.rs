@@ -1216,15 +1216,11 @@ pub(crate) struct FundDisclosure {
     pub issuer_cat: String,
     #[pyo3(get)]
     pub inv_country: String,
-    #[pyo3(get)]
     pub is_restricted_sec: String,
     #[pyo3(get)]
     pub fair_val_level: String,
-    #[pyo3(get)]
     pub is_cash_collateral: String,
-    #[pyo3(get)]
     pub is_non_cash_collateral: String,
-    #[pyo3(get)]
     pub is_loan_by_fund: String,
 }
 
@@ -1254,10 +1250,14 @@ impl FundDisclosure {
         asset_cat: String,
         issuer_cat: String,
         inv_country: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
         is_restricted_sec: String,
         fair_val_level: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
         is_cash_collateral: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
         is_non_cash_collateral: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
         is_loan_by_fund: String,
     ) -> Self {
         Self {
@@ -1538,6 +1538,30 @@ impl FundDisclosure {
             crate::models::convert::DictValue::dict_value(&self.is_loan_by_fund, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
+    fn is_restricted_sec(&self) -> String {
+        self.is_restricted_sec.clone()
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
+    fn is_cash_collateral(&self) -> String {
+        self.is_cash_collateral.clone()
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
+    fn is_non_cash_collateral(&self) -> String {
+        self.is_non_cash_collateral.clone()
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
+    fn is_loan_by_fund(&self) -> String {
+        self.is_loan_by_fund.clone()
     }
 }
 

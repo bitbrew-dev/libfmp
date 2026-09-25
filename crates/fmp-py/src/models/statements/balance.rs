@@ -23,7 +23,6 @@ pub(crate) struct BalanceSheetStatement {
     pub accepted_date: ::chrono::NaiveDateTime,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub cash_and_cash_equivalents: f64,
@@ -148,6 +147,7 @@ impl BalanceSheetStatement {
         filing_date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         cash_and_cash_equivalents: f64,
         short_term_investments: f64,
@@ -1142,6 +1142,12 @@ impl BalanceSheetStatement {
         )?;
         Ok(dict)
     }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
+    }
 }
 
 impl From<libfmp::responses::statements::balance::BalanceSheetStatement> for BalanceSheetStatement {
@@ -1237,7 +1243,6 @@ pub(crate) struct BalanceSheetStatementTtm {
     pub accepted_date: ::chrono::NaiveDateTime,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub cash_and_cash_equivalents: f64,
@@ -1360,6 +1365,7 @@ impl BalanceSheetStatementTtm {
         filing_date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         cash_and_cash_equivalents: f64,
         short_term_investments: f64,
@@ -2331,6 +2337,12 @@ impl BalanceSheetStatementTtm {
             crate::models::convert::DictValue::dict_value(&self.net_debt, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 

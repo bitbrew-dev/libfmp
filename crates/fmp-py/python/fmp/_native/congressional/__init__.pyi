@@ -514,11 +514,13 @@ class CongressionalTrade:
     @property
     def amount(self) -> builtins.str: ...
     @property
-    def capital_gains_over_200_usd(self) -> typing.Optional[builtins.str]: ...
-    @property
     def comment(self) -> builtins.str: ...
     @property
     def link(self) -> builtins.str: ...
+    @property
+    def capital_gains_over_200_usd(
+        self,
+    ) -> typing.Optional[typing.Literal["True", "False"]]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -536,7 +538,7 @@ class CongressionalTrade:
         asset_type: builtins.str,
         transaction_type: builtins.str,
         amount: builtins.str,
-        capital_gains_over_200_usd: typing.Optional[builtins.str],
+        capital_gains_over_200_usd: typing.Optional[typing.Literal["True", "False"]],
         comment: builtins.str,
         link: builtins.str,
     ) -> CongressionalTrade: ...

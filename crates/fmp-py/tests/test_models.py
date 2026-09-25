@@ -77,6 +77,8 @@ def _sample(annotation: str, module: str) -> Any:
         if annotation.startswith(wrapper):
             inner = _sample(annotation[len(wrapper) : -1], module)
             return inner if wrapper == "typing.Optional[" else [inner]
+    if annotation.startswith("typing.Literal["):
+        return ast.literal_eval(annotation.removeprefix("typing.Literal[").split(",")[0].rstrip("]"))
     simple: dict[str, Any] = {
         "builtins.str": "x",
         "builtins.int": 7,

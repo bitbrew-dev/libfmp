@@ -117,12 +117,13 @@ def check_statements_contract(client: FmpClient) -> None:
     rows: list[IncomeStatement] = income.statement("AAPL", period="annual", limit=5)
     reported_on: datetime.date = rows[0].date
     revenue: float = rows[0].revenue
+    fiscal: Literal["Q1", "Q2", "Q3", "Q4", "FY"] = rows[0].period
     dates: list[FinancialReportDate] = client.statements.reports.dates("AAPL")
     link: str = dates[0].expose_secret_url_json()
     workbook: BinaryPayload = client.statements.reports.xlsx("AAPL", 2024, "FY")
     latest: list[LatestFinancialStatement] = client.statements.summaries.latest_financial_statements(page=0, limit=10)
     added: datetime.datetime = latest[0].date_added
-    _ = (reported_on, revenue, link, workbook.data, added)
+    _ = (reported_on, revenue, fiscal, link, workbook.data, added)
 
 
 def check_calendar_contract(client: FmpClient) -> None:

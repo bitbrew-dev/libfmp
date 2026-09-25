@@ -20,7 +20,6 @@ pub(crate) struct FinancialStatementGrowth {
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub reported_currency: String,
@@ -115,6 +114,7 @@ impl FinancialStatementGrowth {
         symbol: String,
         date: ::chrono::NaiveDate,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         reported_currency: String,
         revenue_growth: f64,
@@ -945,6 +945,12 @@ impl FinancialStatementGrowth {
             )?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 

@@ -35,7 +35,6 @@ pub(crate) struct CongressionalTrade {
     pub transaction_type: String,
     #[pyo3(get)]
     pub amount: String,
-    #[pyo3(get)]
     pub capital_gains_over_200_usd: Option<String>,
     #[pyo3(get)]
     pub comment: String,
@@ -64,6 +63,7 @@ impl CongressionalTrade {
         asset_type: String,
         transaction_type: String,
         amount: String,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"True\", \"False\"]]", imports = ("builtins", "typing")))]
         capital_gains_over_200_usd: Option<String>,
         comment: String,
         link: String,
@@ -270,6 +270,12 @@ impl CongressionalTrade {
             crate::models::convert::DictValue::dict_value(&self.link, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Optional[typing.Literal[\"True\", \"False\"]]", imports = ("builtins", "typing")))]
+    fn capital_gains_over_200_usd(&self) -> Option<String> {
+        self.capital_gains_over_200_usd.clone()
     }
 }
 

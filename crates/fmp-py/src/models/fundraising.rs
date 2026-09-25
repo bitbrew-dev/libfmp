@@ -272,7 +272,6 @@ pub(crate) struct CrowdfundingOffering {
     offering_price: ::serde_json::Number,
     #[pyo3(get)]
     pub offering_amount: f64,
-    #[pyo3(get)]
     pub over_subscription_accepted: String,
     #[pyo3(get)]
     pub over_subscription_allocation_type: String,
@@ -354,6 +353,7 @@ impl CrowdfundingOffering {
         #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
         offering_price: Bound<'_, PyAny>,
         offering_amount: f64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
         over_subscription_accepted: String,
         over_subscription_allocation_type: String,
         maximum_offering_amount: f64,
@@ -1229,6 +1229,12 @@ impl CrowdfundingOffering {
     #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn offering_price<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.offering_price)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
+    fn over_subscription_accepted(&self) -> String {
+        self.over_subscription_accepted.clone()
     }
 }
 

@@ -15,7 +15,6 @@ pub(crate) struct FinancialRatios {
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
     pub fiscal_year: String,
-    #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
     pub reported_currency: String,
@@ -154,6 +153,7 @@ impl FinancialRatios {
         symbol: String,
         date: ::chrono::NaiveDate,
         fiscal_year: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         reported_currency: String,
         gross_profit_margin: f64,
@@ -1300,6 +1300,12 @@ impl FinancialRatios {
             crate::models::convert::DictValue::dict_value(&self.dividend_per_share, py)?,
         )?;
         Ok(dict)
+    }
+
+    #[getter]
+    #[gen_stub(override_return_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
+    fn period(&self) -> String {
+        self.period.clone()
     }
 }
 

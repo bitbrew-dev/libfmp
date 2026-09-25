@@ -93,8 +93,6 @@ class BalanceSheetStatement:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def cash_and_cash_equivalents(self) -> builtins.float: ...
     @property
     def short_term_investments(self) -> builtins.float: ...
@@ -200,6 +198,8 @@ class BalanceSheetStatement:
     def total_debt(self) -> builtins.float: ...
     @property
     def net_debt(self) -> builtins.float: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -211,7 +211,7 @@ class BalanceSheetStatement:
         filing_date: datetime.date,
         accepted_date: datetime.datetime,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         cash_and_cash_equivalents: builtins.float,
         short_term_investments: builtins.float,
         cash_and_short_term_investments: builtins.float,
@@ -356,8 +356,6 @@ class BalanceSheetStatementTtm:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def cash_and_cash_equivalents(self) -> builtins.float: ...
     @property
     def short_term_investments(self) -> builtins.float: ...
@@ -461,6 +459,8 @@ class BalanceSheetStatementTtm:
     def total_debt(self) -> builtins.float: ...
     @property
     def net_debt(self) -> builtins.float: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -472,7 +472,7 @@ class BalanceSheetStatementTtm:
         filing_date: datetime.date,
         accepted_date: datetime.datetime,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         cash_and_cash_equivalents: builtins.float,
         short_term_investments: builtins.float,
         cash_and_short_term_investments: builtins.float,

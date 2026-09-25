@@ -66,8 +66,6 @@ class FinancialStatementGrowth:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def reported_currency(self) -> builtins.str: ...
     @property
     def revenue_growth(self) -> builtins.float: ...
@@ -147,6 +145,8 @@ class FinancialStatementGrowth:
     def five_y_bottom_line_net_income_growth_per_share(self) -> builtins.float: ...
     @property
     def three_y_bottom_line_net_income_growth_per_share(self) -> builtins.float: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -154,7 +154,7 @@ class FinancialStatementGrowth:
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         reported_currency: builtins.str,
         revenue_growth: builtins.float,
         gross_profit_growth: builtins.float,

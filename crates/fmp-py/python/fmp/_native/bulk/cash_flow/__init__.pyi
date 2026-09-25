@@ -78,8 +78,6 @@ class BulkCashFlowStatement:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def net_income(self) -> builtins.str: ...
     @property
     def depreciation_and_amortization(self) -> builtins.str: ...
@@ -157,6 +155,8 @@ class BulkCashFlowStatement:
     def income_taxes_paid(self) -> builtins.str: ...
     @property
     def interest_paid(self) -> builtins.str: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -168,7 +168,7 @@ class BulkCashFlowStatement:
         filing_date: datetime.date,
         accepted_date: datetime.datetime,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         net_income: builtins.str,
         depreciation_and_amortization: builtins.str,
         deferred_income_tax: builtins.str,
@@ -273,8 +273,6 @@ class BulkCashFlowStatementGrowth:
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
-    def period(self) -> builtins.str: ...
-    @property
     def reported_currency(self) -> builtins.str: ...
     @property
     def growth_net_income(self) -> builtins.str: ...
@@ -350,6 +348,8 @@ class BulkCashFlowStatementGrowth:
     def growth_income_taxes_paid(self) -> builtins.str: ...
     @property
     def growth_interest_paid(self) -> builtins.str: ...
+    @property
+    def period(self) -> typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -357,7 +357,7 @@ class BulkCashFlowStatementGrowth:
         symbol: builtins.str,
         date: datetime.date,
         fiscal_year: builtins.str,
-        period: builtins.str,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         reported_currency: builtins.str,
         growth_net_income: builtins.str,
         growth_depreciation_and_amortization: builtins.str,

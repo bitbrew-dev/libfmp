@@ -116,8 +116,6 @@ class CrowdfundingOffering:
     @property
     def offering_amount(self) -> builtins.float: ...
     @property
-    def over_subscription_accepted(self) -> builtins.str: ...
-    @property
     def over_subscription_allocation_type(self) -> builtins.str: ...
     @property
     def maximum_offering_amount(self) -> builtins.float: ...
@@ -163,6 +161,8 @@ class CrowdfundingOffering:
     def net_income_prior_fiscal_year(self) -> builtins.float: ...
     @property
     def offering_price(self) -> builtins.int | builtins.float: ...
+    @property
+    def over_subscription_accepted(self) -> typing.Literal["Y", "N"]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -192,7 +192,7 @@ class CrowdfundingOffering:
         number_of_security_offered: builtins.float,
         offering_price: builtins.int | builtins.float,
         offering_amount: builtins.float,
-        over_subscription_accepted: builtins.str,
+        over_subscription_accepted: typing.Literal["Y", "N"],
         over_subscription_allocation_type: builtins.str,
         maximum_offering_amount: builtins.float,
         offering_deadline_date: datetime.date,
