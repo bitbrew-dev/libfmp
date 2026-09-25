@@ -3,8 +3,6 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
-	"math"
-	"strconv"
 	"testing"
 )
 
@@ -147,44 +145,44 @@ func statementsRoundTripExtreme[T any](t *testing.T, fixture, member, digits str
 	return rows[0]
 }
 
-// The i64 and u64 extremes of statements_income_responses.rs,
+// The large-value cases of statements_income_responses.rs,
 // statements_balance_responses.rs, statements_cash_flow_responses.rs, and
-// statements_summary_responses.rs: StatementAmount is int64, so every extreme
-// survives without a float64 round trip; share quantities are float64 and
-// keep a fractional value.
-func TestStatementAmountsPreserveI64ExtremesAndShareQuantitiesKeepFractions(t *testing.T) {
+// statements_summary_responses.rs: StatementAmount is float64, so large signed
+// integral amounts round-trip as JSON integers; share quantities keep a
+// fractional value.
+func TestStatementAmountsPreserveLargeIntegralValuesAndShareQuantitiesKeepFractions(t *testing.T) {
 	t.Parallel()
-	maxI64 := strconv.FormatInt(math.MaxInt64, 10)
-	minI64 := strconv.FormatInt(math.MinInt64, 10)
+	large := "9000000000000000000"
+	negative := "-9000000000000000000"
 
-	income := statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "revenue", maxI64)
-	if income.Revenue != math.MaxInt64 {
-		t.Fatalf("revenue = %d", income.Revenue)
+	income := statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "revenue", large)
+	if income.Revenue != 9e18 {
+		t.Fatalf("revenue = %v", income.Revenue)
 	}
-	income = statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "totalOtherIncomeExpensesNet", minI64)
-	if income.TotalOtherIncomeExpensesNet != math.MinInt64 {
-		t.Fatalf("totalOtherIncomeExpensesNet = %d", income.TotalOtherIncomeExpensesNet)
+	income = statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "totalOtherIncomeExpensesNet", negative)
+	if income.TotalOtherIncomeExpensesNet != -9e18 {
+		t.Fatalf("totalOtherIncomeExpensesNet = %v", income.TotalOtherIncomeExpensesNet)
 	}
 	income = statementsRoundTripExtreme[IncomeStatement](t, "income_statement.json", "weightedAverageShsOutDil", "15004697000.5")
 	if income.WeightedAverageShsOutDil != 15_004_697_000.5 {
 		t.Fatalf("weightedAverageShsOutDil = %v", income.WeightedAverageShsOutDil)
 	}
 
-	balance := statementsRoundTripExtreme[BalanceSheetStatement](t, "balance_sheet_statement.json", "totalAssets", maxI64)
-	balanceTtm := statementsRoundTripExtreme[BalanceSheetStatementTtm](t, "balance_sheet_statement_ttm.json", "retainedEarnings", minI64)
-	if balance.TotalAssets != math.MaxInt64 || balanceTtm.RetainedEarnings != math.MinInt64 {
-		t.Fatalf("balance extremes = %d %d", balance.TotalAssets, balanceTtm.RetainedEarnings)
+	balance := statementsRoundTripExtreme[BalanceSheetStatement](t, "balance_sheet_statement.json", "totalAssets", large)
+	balanceTtm := statementsRoundTripExtreme[BalanceSheetStatementTtm](t, "balance_sheet_statement_ttm.json", "retainedEarnings", negative)
+	if balance.TotalAssets != 9e18 || balanceTtm.RetainedEarnings != -9e18 {
+		t.Fatalf("balance extremes = %v %v", balance.TotalAssets, balanceTtm.RetainedEarnings)
 	}
 	for _, fixture := range []string{"cash_flow_statement.json", "cash_flow_statement_ttm.json"} {
-		cash := statementsRoundTripExtreme[CashFlowStatement](t, fixture, "freeCashFlow", maxI64)
-		financing := statementsRoundTripExtreme[CashFlowStatement](t, fixture, "netCashProvidedByFinancingActivities", minI64)
-		if cash.FreeCashFlow != math.MaxInt64 || financing.NetCashProvidedByFinancingActivities != math.MinInt64 {
-			t.Fatalf("%s extremes = %d %d", fixture, cash.FreeCashFlow, financing.NetCashProvidedByFinancingActivities)
+		cash := statementsRoundTripExtreme[CashFlowStatement](t, fixture, "freeCashFlow", large)
+		financing := statementsRoundTripExtreme[CashFlowStatement](t, fixture, "netCashProvidedByFinancingActivities", negative)
+		if cash.FreeCashFlow != 9e18 || financing.NetCashProvidedByFinancingActivities != -9e18 {
+			t.Fatalf("%s extremes = %v %v", fixture, cash.FreeCashFlow, financing.NetCashProvidedByFinancingActivities)
 		}
 	}
 	owner := statementsRoundTripExtreme[OwnerEarnings](t, "owner_earnings.json", "growthCapex", "-9000000000000000000")
 	if owner.GrowthCapex != -9_000_000_000_000_000_000 {
-		t.Fatalf("growthCapex = %d", owner.GrowthCapex)
+		t.Fatalf("growthCapex = %v", owner.GrowthCapex)
 	}
 
 	// A signed value in an unsigned Count and a number in a FiscalYearString

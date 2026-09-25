@@ -67,39 +67,39 @@ pub(crate) struct CustomDcfValuation {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub revenue: i64,
+    pub revenue: f64,
     #[pyo3(get)]
     pub revenue_percentage: f64,
     #[pyo3(get)]
-    pub ebitda: i64,
+    pub ebitda: f64,
     #[pyo3(get)]
     pub ebitda_percentage: f64,
     #[pyo3(get)]
-    pub ebit: i64,
+    pub ebit: f64,
     #[pyo3(get)]
     pub ebit_percentage: f64,
     #[pyo3(get)]
-    pub depreciation: i64,
+    pub depreciation: f64,
     #[pyo3(get)]
     pub depreciation_percentage: f64,
     #[pyo3(get)]
-    pub total_cash: i64,
+    pub total_cash: f64,
     #[pyo3(get)]
     pub total_cash_percentage: f64,
     #[pyo3(get)]
-    pub receivables: i64,
+    pub receivables: f64,
     #[pyo3(get)]
     pub receivables_percentage: f64,
     #[pyo3(get)]
-    pub inventories: i64,
+    pub inventories: f64,
     #[pyo3(get)]
     pub inventories_percentage: f64,
     #[pyo3(get)]
-    pub payable: i64,
+    pub payable: f64,
     #[pyo3(get)]
     pub payable_percentage: f64,
     #[pyo3(get)]
-    pub capital_expenditure: i64,
+    pub capital_expenditure: f64,
     #[pyo3(get)]
     pub capital_expenditure_percentage: f64,
     #[pyo3(get)]
@@ -121,11 +121,11 @@ pub(crate) struct CustomDcfValuation {
     #[pyo3(get)]
     pub cost_of_equity: f64,
     #[pyo3(get)]
-    pub total_debt: i64,
+    pub total_debt: f64,
     #[pyo3(get)]
-    pub total_equity: i64,
+    pub total_equity: f64,
     #[pyo3(get)]
-    pub total_capital: i64,
+    pub total_capital: f64,
     #[pyo3(get)]
     pub debt_weighting: f64,
     #[pyo3(get)]
@@ -133,29 +133,29 @@ pub(crate) struct CustomDcfValuation {
     #[pyo3(get)]
     pub wacc: f64,
     #[pyo3(get)]
-    pub tax_rate_cash: i64,
+    pub tax_rate_cash: f64,
     #[pyo3(get)]
-    pub ebiat: i64,
+    pub ebiat: f64,
     #[pyo3(get)]
-    pub ufcf: i64,
+    pub ufcf: f64,
     #[pyo3(get)]
-    pub sum_pv_ufcf: i64,
+    pub sum_pv_ufcf: f64,
     #[pyo3(get)]
     pub long_term_growth_rate: f64,
     #[pyo3(get)]
-    pub terminal_value: i64,
+    pub terminal_value: f64,
     #[pyo3(get)]
-    pub present_terminal_value: i64,
+    pub present_terminal_value: f64,
     #[pyo3(get)]
-    pub enterprise_value: i64,
+    pub enterprise_value: f64,
     #[pyo3(get)]
-    pub net_debt: i64,
+    pub net_debt: f64,
     #[pyo3(get)]
-    pub equity_value: i64,
+    pub equity_value: f64,
     #[pyo3(get)]
     pub equity_value_per_share: f64,
     #[pyo3(get)]
-    pub free_cash_flow_t1: i64,
+    pub free_cash_flow_t1: f64,
 }
 
 #[gen_stub_pymethods]
@@ -168,23 +168,23 @@ impl CustomDcfValuation {
     fn new(
         year: String,
         symbol: String,
-        revenue: i64,
+        revenue: f64,
         revenue_percentage: f64,
-        ebitda: i64,
+        ebitda: f64,
         ebitda_percentage: f64,
-        ebit: i64,
+        ebit: f64,
         ebit_percentage: f64,
-        depreciation: i64,
+        depreciation: f64,
         depreciation_percentage: f64,
-        total_cash: i64,
+        total_cash: f64,
         total_cash_percentage: f64,
-        receivables: i64,
+        receivables: f64,
         receivables_percentage: f64,
-        inventories: i64,
+        inventories: f64,
         inventories_percentage: f64,
-        payable: i64,
+        payable: f64,
         payable_percentage: f64,
-        capital_expenditure: i64,
+        capital_expenditure: f64,
         capital_expenditure_percentage: f64,
         price: f64,
         beta: f64,
@@ -195,24 +195,24 @@ impl CustomDcfValuation {
         risk_free_rate: f64,
         market_risk_premium: f64,
         cost_of_equity: f64,
-        total_debt: i64,
-        total_equity: i64,
-        total_capital: i64,
+        total_debt: f64,
+        total_equity: f64,
+        total_capital: f64,
         debt_weighting: f64,
         equity_weighting: f64,
         wacc: f64,
-        tax_rate_cash: i64,
-        ebiat: i64,
-        ufcf: i64,
-        sum_pv_ufcf: i64,
+        tax_rate_cash: f64,
+        ebiat: f64,
+        ufcf: f64,
+        sum_pv_ufcf: f64,
         long_term_growth_rate: f64,
-        terminal_value: i64,
-        present_terminal_value: i64,
-        enterprise_value: i64,
-        net_debt: i64,
-        equity_value: i64,
+        terminal_value: f64,
+        present_terminal_value: f64,
+        enterprise_value: f64,
+        net_debt: f64,
+        equity_value: f64,
         equity_value_per_share: f64,
-        free_cash_flow_t1: i64,
+        free_cash_flow_t1: f64,
     ) -> Self {
         Self {
             year,
@@ -387,11 +387,11 @@ pub(crate) struct CustomLeveredDcfValuation {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub revenue: i64,
+    pub revenue: f64,
     #[pyo3(get)]
     pub revenue_percentage: f64,
     #[pyo3(get)]
-    pub capital_expenditure: i64,
+    pub capital_expenditure: f64,
     #[pyo3(get)]
     pub capital_expenditure_percentage: f64,
     #[pyo3(get)]
@@ -413,11 +413,11 @@ pub(crate) struct CustomLeveredDcfValuation {
     #[pyo3(get)]
     pub cost_of_equity: f64,
     #[pyo3(get)]
-    pub total_debt: i64,
+    pub total_debt: f64,
     #[pyo3(get)]
-    pub total_equity: i64,
+    pub total_equity: f64,
     #[pyo3(get)]
-    pub total_capital: i64,
+    pub total_capital: f64,
     #[pyo3(get)]
     pub debt_weighting: f64,
     #[pyo3(get)]
@@ -425,29 +425,29 @@ pub(crate) struct CustomLeveredDcfValuation {
     #[pyo3(get)]
     pub wacc: f64,
     #[pyo3(get)]
-    pub operating_cash_flow: i64,
+    pub operating_cash_flow: f64,
     #[pyo3(get)]
-    pub pv_lfcf: i64,
+    pub pv_lfcf: f64,
     #[pyo3(get)]
-    pub sum_pv_lfcf: i64,
+    pub sum_pv_lfcf: f64,
     #[pyo3(get)]
     pub long_term_growth_rate: f64,
     #[pyo3(get)]
-    pub free_cash_flow: i64,
+    pub free_cash_flow: f64,
     #[pyo3(get)]
-    pub terminal_value: i64,
+    pub terminal_value: f64,
     #[pyo3(get)]
-    pub present_terminal_value: i64,
+    pub present_terminal_value: f64,
     #[pyo3(get)]
-    pub enterprise_value: i64,
+    pub enterprise_value: f64,
     #[pyo3(get)]
-    pub net_debt: i64,
+    pub net_debt: f64,
     #[pyo3(get)]
-    pub equity_value: i64,
+    pub equity_value: f64,
     #[pyo3(get)]
     pub equity_value_per_share: f64,
     #[pyo3(get)]
-    pub free_cash_flow_t1: i64,
+    pub free_cash_flow_t1: f64,
     #[pyo3(get)]
     pub operating_cash_flow_percentage: f64,
 }
@@ -462,9 +462,9 @@ impl CustomLeveredDcfValuation {
     fn new(
         year: String,
         symbol: String,
-        revenue: i64,
+        revenue: f64,
         revenue_percentage: f64,
-        capital_expenditure: i64,
+        capital_expenditure: f64,
         capital_expenditure_percentage: f64,
         price: f64,
         beta: f64,
@@ -475,24 +475,24 @@ impl CustomLeveredDcfValuation {
         risk_free_rate: f64,
         market_risk_premium: f64,
         cost_of_equity: f64,
-        total_debt: i64,
-        total_equity: i64,
-        total_capital: i64,
+        total_debt: f64,
+        total_equity: f64,
+        total_capital: f64,
         debt_weighting: f64,
         equity_weighting: f64,
         wacc: f64,
-        operating_cash_flow: i64,
-        pv_lfcf: i64,
-        sum_pv_lfcf: i64,
+        operating_cash_flow: f64,
+        pv_lfcf: f64,
+        sum_pv_lfcf: f64,
         long_term_growth_rate: f64,
-        free_cash_flow: i64,
-        terminal_value: i64,
-        present_terminal_value: i64,
-        enterprise_value: i64,
-        net_debt: i64,
-        equity_value: i64,
+        free_cash_flow: f64,
+        terminal_value: f64,
+        present_terminal_value: f64,
+        enterprise_value: f64,
+        net_debt: f64,
+        equity_value: f64,
         equity_value_per_share: f64,
-        free_cash_flow_t1: i64,
+        free_cash_flow_t1: f64,
         operating_cash_flow_percentage: f64,
     ) -> Self {
         Self {

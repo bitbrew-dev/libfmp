@@ -26,83 +26,83 @@ pub(crate) struct CashFlowStatement {
     #[pyo3(get)]
     pub period: String,
     #[pyo3(get)]
-    pub net_income: i64,
+    pub net_income: f64,
     #[pyo3(get)]
-    pub depreciation_and_amortization: i64,
+    pub depreciation_and_amortization: f64,
     #[pyo3(get)]
-    pub deferred_income_tax: i64,
+    pub deferred_income_tax: f64,
     #[pyo3(get)]
-    pub stock_based_compensation: i64,
+    pub stock_based_compensation: f64,
     #[pyo3(get)]
-    pub change_in_working_capital: i64,
+    pub change_in_working_capital: f64,
     #[pyo3(get)]
-    pub accounts_receivables: i64,
+    pub accounts_receivables: f64,
     #[pyo3(get)]
-    pub inventory: i64,
+    pub inventory: f64,
     #[pyo3(get)]
-    pub accounts_payables: i64,
+    pub accounts_payables: f64,
     #[pyo3(get)]
-    pub other_working_capital: i64,
+    pub other_working_capital: f64,
     #[pyo3(get)]
-    pub other_non_cash_items: i64,
+    pub other_non_cash_items: f64,
     #[pyo3(get)]
-    pub net_cash_provided_by_operating_activities: i64,
+    pub net_cash_provided_by_operating_activities: f64,
     #[pyo3(get)]
-    pub investments_in_property_plant_and_equipment: i64,
+    pub investments_in_property_plant_and_equipment: f64,
     #[pyo3(get)]
-    pub acquisitions_net: i64,
+    pub acquisitions_net: f64,
     #[pyo3(get)]
-    pub purchases_of_investments: i64,
+    pub purchases_of_investments: f64,
     #[pyo3(get)]
-    pub sales_maturities_of_investments: i64,
+    pub sales_maturities_of_investments: f64,
     #[pyo3(get)]
-    pub other_investing_activities: i64,
+    pub other_investing_activities: f64,
     #[pyo3(get)]
-    pub net_cash_provided_by_investing_activities: i64,
+    pub net_cash_provided_by_investing_activities: f64,
     #[pyo3(get)]
-    pub net_debt_issuance: i64,
+    pub net_debt_issuance: f64,
     #[pyo3(get)]
-    pub long_term_net_debt_issuance: i64,
+    pub long_term_net_debt_issuance: f64,
     #[pyo3(get)]
-    pub short_term_net_debt_issuance: i64,
+    pub short_term_net_debt_issuance: f64,
     #[pyo3(get)]
-    pub net_stock_issuance: i64,
+    pub net_stock_issuance: f64,
     #[pyo3(get)]
-    pub net_common_stock_issuance: i64,
+    pub net_common_stock_issuance: f64,
     #[pyo3(get)]
-    pub common_stock_issuance: i64,
+    pub common_stock_issuance: f64,
     #[pyo3(get)]
-    pub common_stock_repurchased: i64,
+    pub common_stock_repurchased: f64,
     #[pyo3(get)]
-    pub net_preferred_stock_issuance: i64,
+    pub net_preferred_stock_issuance: f64,
     #[pyo3(get)]
-    pub net_dividends_paid: i64,
+    pub net_dividends_paid: f64,
     #[pyo3(get)]
-    pub common_dividends_paid: i64,
+    pub common_dividends_paid: f64,
     #[pyo3(get)]
-    pub preferred_dividends_paid: i64,
+    pub preferred_dividends_paid: f64,
     #[pyo3(get)]
-    pub other_financing_activities: i64,
+    pub other_financing_activities: f64,
     #[pyo3(get)]
-    pub net_cash_provided_by_financing_activities: i64,
+    pub net_cash_provided_by_financing_activities: f64,
     #[pyo3(get)]
-    pub effect_of_forex_changes_on_cash: i64,
+    pub effect_of_forex_changes_on_cash: f64,
     #[pyo3(get)]
-    pub net_change_in_cash: i64,
+    pub net_change_in_cash: f64,
     #[pyo3(get)]
-    pub cash_at_end_of_period: i64,
+    pub cash_at_end_of_period: f64,
     #[pyo3(get)]
-    pub cash_at_beginning_of_period: i64,
+    pub cash_at_beginning_of_period: f64,
     #[pyo3(get)]
-    pub operating_cash_flow: i64,
+    pub operating_cash_flow: f64,
     #[pyo3(get)]
-    pub capital_expenditure: i64,
+    pub capital_expenditure: f64,
     #[pyo3(get)]
-    pub free_cash_flow: i64,
+    pub free_cash_flow: f64,
     #[pyo3(get)]
-    pub income_taxes_paid: i64,
+    pub income_taxes_paid: f64,
     #[pyo3(get)]
-    pub interest_paid: i64,
+    pub interest_paid: f64,
 }
 
 #[gen_stub_pymethods]
@@ -121,45 +121,45 @@ impl CashFlowStatement {
         accepted_date: ::chrono::NaiveDateTime,
         fiscal_year: String,
         period: String,
-        net_income: i64,
-        depreciation_and_amortization: i64,
-        deferred_income_tax: i64,
-        stock_based_compensation: i64,
-        change_in_working_capital: i64,
-        accounts_receivables: i64,
-        inventory: i64,
-        accounts_payables: i64,
-        other_working_capital: i64,
-        other_non_cash_items: i64,
-        net_cash_provided_by_operating_activities: i64,
-        investments_in_property_plant_and_equipment: i64,
-        acquisitions_net: i64,
-        purchases_of_investments: i64,
-        sales_maturities_of_investments: i64,
-        other_investing_activities: i64,
-        net_cash_provided_by_investing_activities: i64,
-        net_debt_issuance: i64,
-        long_term_net_debt_issuance: i64,
-        short_term_net_debt_issuance: i64,
-        net_stock_issuance: i64,
-        net_common_stock_issuance: i64,
-        common_stock_issuance: i64,
-        common_stock_repurchased: i64,
-        net_preferred_stock_issuance: i64,
-        net_dividends_paid: i64,
-        common_dividends_paid: i64,
-        preferred_dividends_paid: i64,
-        other_financing_activities: i64,
-        net_cash_provided_by_financing_activities: i64,
-        effect_of_forex_changes_on_cash: i64,
-        net_change_in_cash: i64,
-        cash_at_end_of_period: i64,
-        cash_at_beginning_of_period: i64,
-        operating_cash_flow: i64,
-        capital_expenditure: i64,
-        free_cash_flow: i64,
-        income_taxes_paid: i64,
-        interest_paid: i64,
+        net_income: f64,
+        depreciation_and_amortization: f64,
+        deferred_income_tax: f64,
+        stock_based_compensation: f64,
+        change_in_working_capital: f64,
+        accounts_receivables: f64,
+        inventory: f64,
+        accounts_payables: f64,
+        other_working_capital: f64,
+        other_non_cash_items: f64,
+        net_cash_provided_by_operating_activities: f64,
+        investments_in_property_plant_and_equipment: f64,
+        acquisitions_net: f64,
+        purchases_of_investments: f64,
+        sales_maturities_of_investments: f64,
+        other_investing_activities: f64,
+        net_cash_provided_by_investing_activities: f64,
+        net_debt_issuance: f64,
+        long_term_net_debt_issuance: f64,
+        short_term_net_debt_issuance: f64,
+        net_stock_issuance: f64,
+        net_common_stock_issuance: f64,
+        common_stock_issuance: f64,
+        common_stock_repurchased: f64,
+        net_preferred_stock_issuance: f64,
+        net_dividends_paid: f64,
+        common_dividends_paid: f64,
+        preferred_dividends_paid: f64,
+        other_financing_activities: f64,
+        net_cash_provided_by_financing_activities: f64,
+        effect_of_forex_changes_on_cash: f64,
+        net_change_in_cash: f64,
+        cash_at_end_of_period: f64,
+        cash_at_beginning_of_period: f64,
+        operating_cash_flow: f64,
+        capital_expenditure: f64,
+        free_cash_flow: f64,
+        income_taxes_paid: f64,
+        interest_paid: f64,
     ) -> Self {
         Self {
             date,

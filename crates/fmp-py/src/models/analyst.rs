@@ -14,35 +14,35 @@ pub(crate) struct FinancialEstimate {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub revenue_low: i64,
+    pub revenue_low: f64,
     #[pyo3(get)]
-    pub revenue_high: i64,
+    pub revenue_high: f64,
     #[pyo3(get)]
-    pub revenue_avg: i64,
+    pub revenue_avg: f64,
     #[pyo3(get)]
-    pub ebitda_low: i64,
+    pub ebitda_low: f64,
     #[pyo3(get)]
-    pub ebitda_high: i64,
+    pub ebitda_high: f64,
     #[pyo3(get)]
-    pub ebitda_avg: i64,
+    pub ebitda_avg: f64,
     #[pyo3(get)]
-    pub ebit_low: i64,
+    pub ebit_low: f64,
     #[pyo3(get)]
-    pub ebit_high: i64,
+    pub ebit_high: f64,
     #[pyo3(get)]
-    pub ebit_avg: i64,
+    pub ebit_avg: f64,
     #[pyo3(get)]
-    pub net_income_low: i64,
+    pub net_income_low: f64,
     #[pyo3(get)]
-    pub net_income_high: i64,
+    pub net_income_high: f64,
     #[pyo3(get)]
-    pub net_income_avg: i64,
+    pub net_income_avg: f64,
     #[pyo3(get)]
-    pub sga_expense_low: i64,
+    pub sga_expense_low: f64,
     #[pyo3(get)]
-    pub sga_expense_high: i64,
+    pub sga_expense_high: f64,
     #[pyo3(get)]
-    pub sga_expense_avg: i64,
+    pub sga_expense_avg: f64,
     #[pyo3(get)]
     pub eps_avg: f64,
     #[pyo3(get)]
@@ -65,21 +65,21 @@ impl FinancialEstimate {
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
-        revenue_low: i64,
-        revenue_high: i64,
-        revenue_avg: i64,
-        ebitda_low: i64,
-        ebitda_high: i64,
-        ebitda_avg: i64,
-        ebit_low: i64,
-        ebit_high: i64,
-        ebit_avg: i64,
-        net_income_low: i64,
-        net_income_high: i64,
-        net_income_avg: i64,
-        sga_expense_low: i64,
-        sga_expense_high: i64,
-        sga_expense_avg: i64,
+        revenue_low: f64,
+        revenue_high: f64,
+        revenue_avg: f64,
+        ebitda_low: f64,
+        ebitda_high: f64,
+        ebitda_avg: f64,
+        ebit_low: f64,
+        ebit_high: f64,
+        ebit_avg: f64,
+        net_income_low: f64,
+        net_income_high: f64,
+        net_income_avg: f64,
+        sga_expense_low: f64,
+        sga_expense_high: f64,
+        sga_expense_avg: f64,
         eps_avg: f64,
         eps_high: f64,
         eps_low: f64,

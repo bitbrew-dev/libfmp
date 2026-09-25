@@ -26,7 +26,7 @@ class KeyMetrics:
     @property
     def market_cap(self) -> builtins.float: ...
     @property
-    def enterprise_value(self) -> builtins.int: ...
+    def enterprise_value(self) -> builtins.float: ...
     @property
     def ev_to_sales(self) -> builtins.float: ...
     @property
@@ -50,9 +50,9 @@ class KeyMetrics:
     @property
     def interest_burden(self) -> builtins.float: ...
     @property
-    def working_capital(self) -> builtins.int: ...
+    def working_capital(self) -> builtins.float: ...
     @property
-    def invested_capital(self) -> builtins.int: ...
+    def invested_capital(self) -> builtins.float: ...
     @property
     def return_on_assets(self) -> builtins.float: ...
     @property
@@ -84,11 +84,11 @@ class KeyMetrics:
     @property
     def intangibles_to_total_assets(self) -> builtins.float: ...
     @property
-    def average_receivables(self) -> builtins.int: ...
+    def average_receivables(self) -> builtins.float: ...
     @property
-    def average_payables(self) -> builtins.int: ...
+    def average_payables(self) -> builtins.float: ...
     @property
-    def average_inventory(self) -> builtins.int: ...
+    def average_inventory(self) -> builtins.float: ...
     @property
     def days_of_sales_outstanding(self) -> builtins.float: ...
     @property
@@ -100,13 +100,13 @@ class KeyMetrics:
     @property
     def cash_conversion_cycle(self) -> builtins.float: ...
     @property
-    def free_cash_flow_to_equity(self) -> builtins.int: ...
+    def free_cash_flow_to_equity(self) -> builtins.float: ...
     @property
-    def free_cash_flow_to_firm(self) -> builtins.int: ...
+    def free_cash_flow_to_firm(self) -> builtins.float: ...
     @property
-    def tangible_asset_value(self) -> builtins.int: ...
+    def tangible_asset_value(self) -> builtins.float: ...
     @property
-    def net_current_asset_value(self) -> builtins.int: ...
+    def net_current_asset_value(self) -> builtins.float: ...
     def __new__(
         cls,
         symbol: builtins.str,
@@ -115,7 +115,7 @@ class KeyMetrics:
         period: builtins.str,
         reported_currency: builtins.str,
         market_cap: builtins.float,
-        enterprise_value: builtins.int,
+        enterprise_value: builtins.float,
         ev_to_sales: builtins.float,
         ev_to_operating_cash_flow: builtins.float,
         ev_to_free_cash_flow: builtins.float,
@@ -127,8 +127,8 @@ class KeyMetrics:
         graham_net_net: builtins.float,
         tax_burden: builtins.float,
         interest_burden: builtins.float,
-        working_capital: builtins.int,
-        invested_capital: builtins.int,
+        working_capital: builtins.float,
+        invested_capital: builtins.float,
         return_on_assets: builtins.float,
         operating_return_on_assets: builtins.float,
         return_on_tangible_assets: builtins.float,
@@ -144,18 +144,18 @@ class KeyMetrics:
         research_and_developement_to_revenue: builtins.float,
         stock_based_compensation_to_revenue: builtins.float,
         intangibles_to_total_assets: builtins.float,
-        average_receivables: builtins.int,
-        average_payables: builtins.int,
-        average_inventory: builtins.int,
+        average_receivables: builtins.float,
+        average_payables: builtins.float,
+        average_inventory: builtins.float,
         days_of_sales_outstanding: builtins.float,
         days_of_payables_outstanding: builtins.float,
         days_of_inventory_outstanding: builtins.float,
         operating_cycle: builtins.float,
         cash_conversion_cycle: builtins.float,
-        free_cash_flow_to_equity: builtins.int,
-        free_cash_flow_to_firm: builtins.int,
-        tangible_asset_value: builtins.int,
-        net_current_asset_value: builtins.int,
+        free_cash_flow_to_equity: builtins.float,
+        free_cash_flow_to_firm: builtins.float,
+        tangible_asset_value: builtins.float,
+        net_current_asset_value: builtins.float,
     ) -> KeyMetrics: ...
     def __getnewargs__(self) -> tuple: ...
 
@@ -167,7 +167,7 @@ class KeyMetricsTtm:
     @property
     def market_cap(self) -> builtins.float: ...
     @property
-    def enterprise_value_ttm(self) -> builtins.int: ...
+    def enterprise_value_ttm(self) -> builtins.float: ...
     @property
     def ev_to_sales_ttm(self) -> builtins.float: ...
     @property
@@ -191,9 +191,9 @@ class KeyMetricsTtm:
     @property
     def interest_burden_ttm(self) -> builtins.float: ...
     @property
-    def working_capital_ttm(self) -> builtins.int: ...
+    def working_capital_ttm(self) -> builtins.float: ...
     @property
-    def invested_capital_ttm(self) -> builtins.int: ...
+    def invested_capital_ttm(self) -> builtins.float: ...
     @property
     def return_on_assets_ttm(self) -> builtins.float: ...
     @property
@@ -225,11 +225,11 @@ class KeyMetricsTtm:
     @property
     def intangibles_to_total_assets_ttm(self) -> builtins.float: ...
     @property
-    def average_receivables_ttm(self) -> builtins.int: ...
+    def average_receivables_ttm(self) -> builtins.float: ...
     @property
-    def average_payables_ttm(self) -> builtins.int: ...
+    def average_payables_ttm(self) -> builtins.float: ...
     @property
-    def average_inventory_ttm(self) -> builtins.int: ...
+    def average_inventory_ttm(self) -> builtins.float: ...
     @property
     def days_of_sales_outstanding_ttm(self) -> builtins.float: ...
     @property
@@ -241,18 +241,18 @@ class KeyMetricsTtm:
     @property
     def cash_conversion_cycle_ttm(self) -> builtins.float: ...
     @property
-    def free_cash_flow_to_equity_ttm(self) -> builtins.int: ...
+    def free_cash_flow_to_equity_ttm(self) -> builtins.float: ...
     @property
-    def free_cash_flow_to_firm_ttm(self) -> builtins.int: ...
+    def free_cash_flow_to_firm_ttm(self) -> builtins.float: ...
     @property
-    def tangible_asset_value_ttm(self) -> builtins.int: ...
+    def tangible_asset_value_ttm(self) -> builtins.float: ...
     @property
-    def net_current_asset_value_ttm(self) -> builtins.int: ...
+    def net_current_asset_value_ttm(self) -> builtins.float: ...
     def __new__(
         cls,
         symbol: builtins.str,
         market_cap: builtins.float,
-        enterprise_value_ttm: builtins.int,
+        enterprise_value_ttm: builtins.float,
         ev_to_sales_ttm: builtins.float,
         ev_to_operating_cash_flow_ttm: builtins.float,
         ev_to_free_cash_flow_ttm: builtins.float,
@@ -264,8 +264,8 @@ class KeyMetricsTtm:
         graham_net_net_ttm: builtins.float,
         tax_burden_ttm: builtins.float,
         interest_burden_ttm: builtins.float,
-        working_capital_ttm: builtins.int,
-        invested_capital_ttm: builtins.int,
+        working_capital_ttm: builtins.float,
+        invested_capital_ttm: builtins.float,
         return_on_assets_ttm: builtins.float,
         operating_return_on_assets_ttm: builtins.float,
         return_on_tangible_assets_ttm: builtins.float,
@@ -281,18 +281,18 @@ class KeyMetricsTtm:
         research_and_developement_to_revenue_ttm: builtins.float,
         stock_based_compensation_to_revenue_ttm: builtins.float,
         intangibles_to_total_assets_ttm: builtins.float,
-        average_receivables_ttm: builtins.int,
-        average_payables_ttm: builtins.int,
-        average_inventory_ttm: builtins.int,
+        average_receivables_ttm: builtins.float,
+        average_payables_ttm: builtins.float,
+        average_inventory_ttm: builtins.float,
         days_of_sales_outstanding_ttm: builtins.float,
         days_of_payables_outstanding_ttm: builtins.float,
         days_of_inventory_outstanding_ttm: builtins.float,
         operating_cycle_ttm: builtins.float,
         cash_conversion_cycle_ttm: builtins.float,
-        free_cash_flow_to_equity_ttm: builtins.int,
-        free_cash_flow_to_firm_ttm: builtins.int,
-        tangible_asset_value_ttm: builtins.int,
-        net_current_asset_value_ttm: builtins.int,
+        free_cash_flow_to_equity_ttm: builtins.float,
+        free_cash_flow_to_firm_ttm: builtins.float,
+        tangible_asset_value_ttm: builtins.float,
+        net_current_asset_value_ttm: builtins.float,
     ) -> KeyMetricsTtm: ...
     def __getnewargs__(self) -> tuple: ...
 

@@ -21,6 +21,7 @@ const INTEGRAL_F64_ALIASES: &[&str] = &[
     "SplitTerm",
     "MarketValue",
     "Quantity",
+    "StatementAmount",
 ];
 
 const SERIALIZE: &str = r#"serialize_with = "crate::codecs::integral_f64::serialize""#;

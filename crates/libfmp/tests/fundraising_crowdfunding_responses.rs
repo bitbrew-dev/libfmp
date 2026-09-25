@@ -39,16 +39,16 @@ fn typed_fields_preserve_dates_ciks_flags_prices_counts_and_signed_financials() 
     assert_eq!(latest.number_of_security_offered, 100_000.0);
     assert_eq!(latest.current_number_of_employees, 5);
     assert_eq!(latest.offering_price.to_string(), "0.1");
-    assert_eq!(latest.net_income_most_recent_fiscal_year, -152_577);
-    assert_eq!(latest.net_income_prior_fiscal_year, -105_631);
+    assert_eq!(latest.net_income_most_recent_fiscal_year, -152_577.0);
+    assert_eq!(latest.net_income_prior_fiscal_year, -105_631.0);
     assert_eq!(latest.security_offered_other_description, None);
 
     let by_cik = rows::<CrowdfundingOffering>(BY_CIK).remove(0);
     assert_eq!(by_cik.cik.as_str(), "0001916078");
     assert_eq!(by_cik.intermediary_commission_cik.as_str(), "0001665160");
     assert_eq!(by_cik.offering_price.to_string(), "2");
-    assert_eq!(by_cik.net_income_most_recent_fiscal_year, -964_551);
-    assert_eq!(by_cik.net_income_prior_fiscal_year, -10_860);
+    assert_eq!(by_cik.net_income_most_recent_fiscal_year, -964_551.0);
+    assert_eq!(by_cik.net_income_prior_fiscal_year, -10_860.0);
     assert_eq!(
         by_cik.security_offered_other_description.as_deref(),
         Some("Non-Voting Common Stock")

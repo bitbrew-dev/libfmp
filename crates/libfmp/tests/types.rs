@@ -52,12 +52,12 @@ fn calendar_quarter_is_a_validated_numeric_response_fundamental() {
 }
 
 #[test]
-fn statement_amount_is_a_signed_exact_integer() {
-    let debit: StatementAmount = -416_161_000_000;
-    let credit: StatementAmount = 416_161_000_000;
+fn statement_amount_is_a_signed_f64() {
+    let debit: StatementAmount = serde_json::from_str("-416161000000").unwrap();
+    let fractional: StatementAmount = serde_json::from_str("1234.56").unwrap();
 
-    assert_eq!(debit, -416_161_000_000_i64);
-    assert_eq!(credit, 416_161_000_000_i64);
+    assert_eq!(debit, -416_161_000_000.0);
+    assert_eq!(fractional, 1_234.56);
 }
 
 #[test]

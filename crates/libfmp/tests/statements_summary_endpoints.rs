@@ -159,8 +159,8 @@ async fn custom_proxy_auth_headers_and_routing_preserve_all_four_contracts() {
 
     assert_eq!(latest[0].calendar_year.get(), 2026);
     assert_eq!(scores[0].market_cap, 5_042_169_135_511.0);
-    assert_eq!(owner[0].growth_capex, -2_130_994_500);
-    assert_eq!(enterprise[0].enterprise_value, 3_895_186_810_000);
+    assert_eq!(owner[0].growth_capex, -2_130_994_500.0);
+    assert_eq!(enterprise[0].enterprise_value, 3_895_186_810_000.0);
 
     let requests = executor.requests();
     assert!(

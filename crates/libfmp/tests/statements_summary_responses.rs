@@ -48,13 +48,13 @@ fn documented_financial_score_decodes_all_eleven_exact_fields() {
             reported_currency: CurrencyCode::new("USD").unwrap(),
             altman_z_score: 14.041374927993303,
             piotroski_score: 9,
-            working_capital: 9_473_000_000,
-            total_assets: 371_082_000_000,
-            retained_earnings: 12_359_000_000,
-            ebit: 147_722_000_000,
+            working_capital: 9_473_000_000.0,
+            total_assets: 371_082_000_000.0,
+            retained_earnings: 12_359_000_000.0,
+            ebit: 147_722_000_000.0,
             market_cap: 5_042_169_135_511.0,
-            total_liabilities: 264_591_000_000,
-            revenue: 451_442_000_000,
+            total_liabilities: 264_591_000_000.0,
+            revenue: 451_442_000_000.0,
         }]
     );
 }
@@ -74,9 +74,9 @@ fn documented_owner_earnings_decodes_exact_average_ppe_and_signed_fields() {
             period: FiscalPeriod::Q2,
             date: Date::from_str("2026-03-28").unwrap(),
             average_ppe: 0.13466,
-            maintenance_capex: 159_994_500,
-            owners_earnings: 28_861_994_500,
-            growth_capex: -2_130_994_500,
+            maintenance_capex: 159_994_500.0,
+            owners_earnings: 28_861_994_500.0,
+            growth_capex: -2_130_994_500.0,
             owners_earnings_per_share: 1.95,
         }]
     );
@@ -100,9 +100,9 @@ fn documented_enterprise_value_decodes_all_eight_exact_fields() {
             stock_price: 255.46,
             number_of_shares: 14_948_500_000.0,
             market_capitalization: 3_818_743_810_000.0,
-            minus_cash_and_cash_equivalents: 35_934_000_000,
-            add_total_debt: 112_377_000_000,
-            enterprise_value: 3_895_186_810_000,
+            minus_cash_and_cash_equivalents: 35_934_000_000.0,
+            add_total_debt: 112_377_000_000.0,
+            enterprise_value: 3_895_186_810_000.0,
         }]
     );
 }
@@ -206,7 +206,7 @@ fn signed_statement_amounts_preserve_large_negative_values() {
     owner[0]["growthCapex"] = serde_json::json!(-9_000_000_000_000_000_000_i64);
 
     let rows: Vec<OwnerEarnings> = serde_json::from_value(owner).unwrap();
-    assert_eq!(rows[0].growth_capex, -9_000_000_000_000_000_000_i64);
+    assert_eq!(rows[0].growth_capex, -9_000_000_000_000_000_000.0);
 
     let mut score: serde_json::Value = serde_json::from_slice(SCORES).unwrap();
     score[0]["piotroskiScore"] = serde_json::json!(-1);

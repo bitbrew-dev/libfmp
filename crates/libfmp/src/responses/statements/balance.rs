@@ -9,7 +9,7 @@ use crate::{
 };
 
 /// One historical worldwide balance-sheet statement.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BalanceSheetStatement {
     pub date: Date,
@@ -133,7 +133,7 @@ pub struct BalanceSheetStatement {
 /// The provider's documented TTM row omits
 /// `capitalLeaseObligationsNonCurrent`, so this is intentionally distinct from
 /// [`BalanceSheetStatement`].
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BalanceSheetStatementTtm {
     pub date: Date,

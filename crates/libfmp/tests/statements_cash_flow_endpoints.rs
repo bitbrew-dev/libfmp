@@ -102,10 +102,10 @@ async fn proxy_client_uses_exact_queries_custom_auth_and_decodes_both_bare_array
     assert_eq!(historical.len(), 1);
     assert_eq!(
         historical[0].net_cash_provided_by_operating_activities,
-        111_482_000_000
+        111_482_000_000.0
     );
     assert_eq!(ttm.len(), 1);
-    assert_eq!(ttm[0].free_cash_flow, 129_174_000_000);
+    assert_eq!(ttm[0].free_cash_flow, 129_174_000_000.0);
 
     let requests = executor.requests();
     assert!(
