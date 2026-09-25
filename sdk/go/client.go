@@ -217,7 +217,7 @@ func NewClient(opts ...Option) (*Client, error) {
 			"header value is not a valid HTTP field value")
 	}
 	defaultHeaders.Set("User-Agent", cfg.userAgent)
-	if cfg.authentication.mode == authNone && isDefaultFmpOrigin(baseURL) {
+	if cfg.authentication.mode == authNone && isDefaultFMPOrigin(baseURL) {
 		return nil, configurationError(ConfigurationKindMissingCredential,
 			"direct FMP access requires explicit authentication")
 	}
@@ -332,7 +332,7 @@ func parseBaseURL(value string) (*url.URL, error) {
 	return parsed, nil
 }
 
-func isDefaultFmpOrigin(u *url.URL) bool {
+func isDefaultFMPOrigin(u *url.URL) bool {
 	return u.Scheme == "https" && strings.EqualFold(u.Hostname(), "financialmodelingprep.com") &&
 		(u.Port() == "" || u.Port() == "443")
 }

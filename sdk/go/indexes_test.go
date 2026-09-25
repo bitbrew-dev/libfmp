@@ -53,7 +53,7 @@ func indexesRouter(t *testing.T) http.HandlerFunc {
 func TestIndexesMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, indexesRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	eodFrom, eodTo := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-27")
 	from, to := mustParseDate(t, "2024-01-01"), mustParseDate(t, "2024-03-01")
@@ -173,7 +173,7 @@ func TestIndexChartQueryExposesItsArgumentsAsGiven(t *testing.T) {
 func TestIndexesQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, indexesRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	for _, tc := range []struct {
 		name   string
@@ -210,7 +210,7 @@ func TestIndexesQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestIndexesMethodsReportMalformedBodiesAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`{}`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Indexes.Sp500Constituents(context.Background())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "sp500-constituent")

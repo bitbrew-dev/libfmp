@@ -42,7 +42,7 @@ func searchRouter(t *testing.T) http.HandlerFunc {
 func TestSearchMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, searchRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	symbols, err := client.Search.Symbol(ctx, NewSymbolSearchQuery("Apple / Class A").
@@ -96,7 +96,7 @@ func TestSearchMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 func TestSearchQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, searchRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name   string
@@ -167,7 +167,7 @@ func TestSearchQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestSearchMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"AAPL","name":"Apple Inc.","currency":"USD"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Search.Symbol(context.Background(), NewSymbolSearchQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "search-symbol")

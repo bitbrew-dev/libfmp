@@ -85,7 +85,7 @@ func statementsCheck[T any](t *testing.T, name string, rows []T, err error, ok f
 func TestStatementsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, statementsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	s := client.Statements
 
@@ -164,7 +164,7 @@ func TestStatementsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestStatementsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, statementsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	_, err := client.Statements.Income.Statement(ctx, NewIncomeStatementQuery("AAPL").WithPeriod("yearly"))
@@ -207,7 +207,7 @@ func TestStatementsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestStatementsXlsxRejectsAnUnexpectedMediaTypeAfterOneRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Statements.Reports.Xlsx(context.Background(), NewFinancialReportsXlsxQuery("AAPL", 2022, FiscalPeriodFullYear))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "financial-reports-xlsx")
@@ -220,7 +220,7 @@ func TestStatementsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"AAPL","date":"2025-09-27","stockPrice":255.46,"numberOfShares":1,`+
 		`"marketCapitalization":1,"minusCashAndCashEquivalents":1,"addTotalDebt":1}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Statements.Summaries.EnterpriseValues(context.Background(), NewEnterpriseValuesQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "enterprise-values")

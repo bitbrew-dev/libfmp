@@ -40,7 +40,7 @@ func transcriptsRouter(t *testing.T) http.HandlerFunc {
 func TestTranscriptsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, transcriptsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	ns := client.Transcripts
 
@@ -79,7 +79,7 @@ func TestTranscriptsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestTranscriptsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, transcriptsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	ns := client.Transcripts
 
@@ -139,7 +139,7 @@ func TestTranscriptsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestTranscriptsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"AAPL","period":"Q3","year":2020,"date":"2020-07-30"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Transcripts.ByQuarter(context.Background(), NewEarningsTranscriptQuery("AAPL", 2020, QuarterQ3))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "earning-call-transcript")

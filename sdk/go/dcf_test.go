@@ -74,7 +74,7 @@ func dcfDocumentedQuery(symbol string) CustomDcfQuery {
 func TestDcfMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, dcfRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	standard, err := client.Dcf.Standard(ctx, NewDcfQuery("BRK.B / Class A"))
@@ -120,7 +120,7 @@ func TestDcfMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestDcfQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, dcfRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	_, err := client.Dcf.Standard(ctx, NewDcfQuery("AAPL,MSFT"))
@@ -156,7 +156,7 @@ func TestDcfQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestDcfMethodsReportMalformedRootsAsDecodeErrorsPerEndpoint(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`{}`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	calls := []struct {

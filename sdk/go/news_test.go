@@ -52,7 +52,7 @@ func newsRouter(t *testing.T) http.HandlerFunc {
 func TestNewsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, newsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	from, to := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-28")
 	symbols := []string{"AAPL", "MSFT"}
@@ -132,7 +132,7 @@ func TestNewsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestNewsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, newsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	for _, tc := range []struct {
@@ -202,7 +202,7 @@ func TestNewsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 		t.Fatal("the symbol member was not removed from the fixture text")
 	}
 	server, rec := newServer(t, jsonHandler(corrupted))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.News.LatestGeneralNews(context.Background(), NewLatestGeneralNewsQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "news/general-latest")

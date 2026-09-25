@@ -51,7 +51,7 @@ func bulkRouter(t *testing.T) http.HandlerFunc {
 func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, bulkRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	profiles, err := client.Bulk.CompanyProfiles(ctx, NewBulkPartQuery("0"))
@@ -147,7 +147,7 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 func TestBulkQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, bulkRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name     string
@@ -212,7 +212,7 @@ func TestBulkMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 		t.Fatal("fixture no longer carries the quoted lastUpdated member on one line")
 	}
 	server, _ := newServer(t, jsonHandler(body))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Bulk.EtfHoldings(context.Background(), NewBulkPartQuery("0"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "etf-holder-bulk")

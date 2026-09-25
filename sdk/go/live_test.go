@@ -120,7 +120,7 @@ func liveAssertAppleRows(t *testing.T, rows []QuoteShort) {
 func TestLiveDirectHeaderAuthenticationReturnsQuoteShortRows(t *testing.T) {
 	values := liveEnv(t, liveAPIKeyEnv)
 	apiKey := values[0]
-	client, err := NewClient(WithAuthentication(FmpHeader(apiKey)))
+	client, err := NewClient(WithAuthentication(FMPHeader(apiKey)))
 	if err != nil {
 		liveAssertNoLeak(t, liveErrorText(err), apiKey)
 		t.Fatalf("NewClient: %v", err)

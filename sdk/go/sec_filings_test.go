@@ -54,7 +54,7 @@ func secFilingsRouter(t *testing.T) http.HandlerFunc {
 func TestSecFilingsMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, secFilingsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	from := mustParseDate(t, "2024-01-01")
 	to := mustParseDate(t, "2024-03-01")
@@ -151,7 +151,7 @@ func TestSecFilingsDynamicSearchRowsSurviveByteIdenticalAndMustBeObjects(t *test
 	t.Parallel()
 	body := `[{"future":[1,true,null],"nested":{"sicCode":"07371"}},{}]`
 	server, _ := newServer(t, jsonHandler(body))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	rows, err := client.SecFilings.SearchIndustryClassifications(context.Background(), NewIndustryClassificationSearchQuery())
 	if err != nil || len(rows) != 2 {
 		t.Fatalf("SearchIndustryClassifications = %s, %v", rows, err)
@@ -165,7 +165,7 @@ func TestSecFilingsDynamicSearchRowsSurviveByteIdenticalAndMustBeObjects(t *test
 	}
 
 	scalar, rec := newServer(t, jsonHandler(`[{"sicCode":"07371"},1]`))
-	client = newClient(t, scalar, WithAuthentication(FmpHeader("route-secret")))
+	client = newClient(t, scalar, WithAuthentication(FMPHeader("route-secret")))
 	_, err = client.SecFilings.SearchIndustryClassifications(context.Background(), NewIndustryClassificationSearchQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, 0, "industry-classification-search")
 	if !strings.Contains(typed.Message, "row 1") {
@@ -183,7 +183,7 @@ func TestSecFilingsDynamicSearchRowsSurviveByteIdenticalAndMustBeObjects(t *test
 func TestSecFilingsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, secFilingsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	from := mustParseDate(t, "2024-01-01")
 	to := mustParseDate(t, "2024-03-01")
@@ -260,7 +260,7 @@ func TestSecFilingsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"SUNE","cik":"0000022701","filingDate":"2024-03-04 00:00:00",`+
 		`"acceptedDate":"2024-03-01 22:47:48","formType":"8-K"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	from := mustParseDate(t, "2024-01-01")
 	to := mustParseDate(t, "2024-03-01")
 

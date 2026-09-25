@@ -23,7 +23,7 @@ lists the published versions and the private-repository setup.
 `NewClient` takes functional options (`WithAuthentication`, `WithTimeout`,
 `WithBaseURL`, `WithPathPrefix`, `WithDefaultHeader`, `WithHTTPClient`) and
 validates every one before any request is made. The client never reads the
-environment on its own: `FmpHeaderFromEnv` is the explicit opt-in for
+environment on its own: `FMPHeaderFromEnv` is the explicit opt-in for
 `FMP_API_KEY`. Header modes never place a credential in the URL; query modes
 append the secret as the last query pair. See
 [Building a client](../sdk/go/README.md#building-a-client) for the option

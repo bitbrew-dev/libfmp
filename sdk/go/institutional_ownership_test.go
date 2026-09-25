@@ -46,7 +46,7 @@ func institutionalOwnershipRouter(t *testing.T) http.HandlerFunc {
 func TestInstitutionalOwnershipMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, institutionalOwnershipRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	ns := client.InstitutionalOwnership
 
@@ -101,7 +101,7 @@ func TestInstitutionalOwnershipMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestInstitutionalOwnershipQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, institutionalOwnershipRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	ns := client.InstitutionalOwnership
 
@@ -143,7 +143,7 @@ func TestInstitutionalOwnershipQueriesAreValidatedBeforeAnyRequest(t *testing.T)
 func TestInstitutionalOwnershipMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"date":"2026-03-31","year":2026}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.InstitutionalOwnership.Form13fFilingDates(context.Background(), NewForm13fFilingDatesQuery("0001067983"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "institutional-ownership/dates")

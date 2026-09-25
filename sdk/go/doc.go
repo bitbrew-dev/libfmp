@@ -14,15 +14,15 @@
 // or inconsistent. Direct access to the default FMP origin requires explicit
 // authentication:
 //
-//	auth, ok := fmp.FmpHeaderFromEnv()
+//	auth, ok := fmp.FMPHeaderFromEnv()
 //	if !ok {
 //		return errors.New("FMP_API_KEY is not set")
 //	}
 //	client, err := fmp.NewClient(fmp.WithAuthentication(auth))
 //
-// Header authentication modes (FmpHeader, Bearer, CustomHeader,
+// Header authentication modes (FMPHeader, Bearer, CustomHeader,
 // CustomHeaderWithPrefix) never place a credential in the URL. Query modes
-// (FmpQuery, CustomQuery) append the secret as the last query pair of every
+// (FMPQuery, CustomQuery) append the secret as the last query pair of every
 // request. CustomHeaderWithPrefix sends the header value as prefix followed
 // by secret with no separator inserted, mirroring the Rust
 // Authentication::custom_header(name, Some(prefix), secret) form; an empty
@@ -60,7 +60,7 @@
 //
 // # Environment
 //
-// FmpHeaderFromEnv reads FMP_API_KEY. NewClient never reads a credential
+// FMPHeaderFromEnv reads FMP_API_KEY. NewClient never reads a credential
 // from the environment; it consults the proxy variables (HTTP_PROXY,
 // HTTPS_PROXY, NO_PROXY) once through the transport's proxy function, as the
 // first request would, to register the proxy host for cause redaction. The

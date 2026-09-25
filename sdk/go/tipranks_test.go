@@ -47,7 +47,7 @@ func tipranksRouter(t *testing.T) http.HandlerFunc {
 func TestTipranksMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, tipranksRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	tip := client.Tipranks
 	from := mustParseDate(t, "2025-06-10")
@@ -136,7 +136,7 @@ func TestTipranksMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestTipranksQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, tipranksRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	tip := client.Tipranks
 	cases := []struct {
@@ -206,7 +206,7 @@ func TestTipranksMethodsReportNumberKindAndMissingMembersAsDecodeErrors(t *testi
 		t.Fatal("tipranks_ratings_search.json no longer spells priceTarget as the integer 1500")
 	}
 	server, rec := newServer(t, jsonHandler(corrupted))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Tipranks.SearchRatings(context.Background(), NewTipRanksSearchQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "tipranks-search")
@@ -216,7 +216,7 @@ func TestTipranksMethodsReportNumberKindAndMissingMembersAsDecodeErrors(t *testi
 	}
 
 	missing, _ := newServer(t, jsonHandler(`[{"expertUID":"0458","analystName":"Sujeeva De Silva","firmName":"Roth MKM"}]`))
-	client = newClient(t, missing, WithAuthentication(FmpHeader("route-secret")))
+	client = newClient(t, missing, WithAuthentication(FMPHeader("route-secret")))
 	_, err = client.Tipranks.Analysts(context.Background(), NewTipRanksAnalystsQuery())
 	typed = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "tipranks-analysts")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"successRate"`) {

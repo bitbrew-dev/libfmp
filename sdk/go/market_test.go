@@ -46,7 +46,7 @@ func marketRouter(t *testing.T) http.HandlerFunc {
 func TestMarketMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, marketRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	feb := mustParseDate(t, "2024-02-01")
 	mar := mustParseDate(t, "2024-03-01")
@@ -134,7 +134,7 @@ func TestMarketMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestMarketQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, marketRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	feb := mustParseDate(t, "2024-02-01")
 	cases := []struct {
@@ -206,7 +206,7 @@ func TestMarketMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 		t.Fatal("biggest_gainers.json no longer spells the changesPercentage member as 100")
 	}
 	server, _ := newServer(t, jsonHandler(corrupted))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Market.BiggestGainers(context.Background())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "biggest-gainers")

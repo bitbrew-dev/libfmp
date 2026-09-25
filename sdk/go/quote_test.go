@@ -58,7 +58,7 @@ func assertQuoteError(t *testing.T, err error, category ErrorCategory, status in
 func TestQuoteMethodsUseExactPathsQueriesAndHeaderAuthentication(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, quoteRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	full, err := client.Quote.Full(ctx, NewQuoteQuery("^VIX"))
@@ -129,7 +129,7 @@ func TestQuoteMethodsSurfaceStatusFamiliesAfterOneRequest(t *testing.T) {
 				w.WriteHeader(status)
 				_, _ = fmt.Fprint(w, `{"Error Message":"denied"}`)
 			})
-			client := newClient(t, server, WithAuthentication(FmpHeader("status-secret")))
+			client := newClient(t, server, WithAuthentication(FMPHeader("status-secret")))
 
 			_, err := client.Quote.Full(context.Background(), NewQuoteQuery("AAPL"))
 			typed := assertQuoteError(t, err, CategoryStatus, status, "quote")
@@ -149,7 +149,7 @@ func TestQuoteMethodsSurfaceStatusFamiliesAfterOneRequest(t *testing.T) {
 func TestQuoteQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, quoteRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	cases := []struct {
 		name   string
 		symbol string
@@ -197,7 +197,7 @@ func TestQuoteQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestQuoteMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`[{"symbol":"AAPL","price":1.5,"volume":1}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Quote.Short(context.Background(), NewQuoteShortQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "quote-short")
@@ -212,7 +212,7 @@ func TestQuoteMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 func TestQuoteShortDecodesTheFractionalVolumeObservedLive(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`[{"symbol":"AAPL","price":342.395,"change":3.415,"volume":20201922.82733}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	short, err := client.Quote.Short(context.Background(), NewQuoteShortQuery("AAPL"))
 	if err != nil || len(short) != 1 || short[0].Volume != 20_201_922.82733 || short[0].Price != 342.395 {

@@ -50,7 +50,7 @@ func calendarRouter(t *testing.T) http.HandlerFunc {
 func TestCalendarMethodsUseExactPathsAndWireQueryOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, calendarRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	jan27, apr27 := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-27")
 	mar6, jun6 := mustParseDate(t, "2026-03-06"), mustParseDate(t, "2026-06-06")
@@ -137,7 +137,7 @@ func TestCalendarOptionalParametersAreOmittedUntilSet(t *testing.T) {
 func TestCalendarQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, calendarRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	_, err := client.Calendar.Dividends(ctx, NewDividendsQuery("AAPL,MSFT"))
@@ -162,7 +162,7 @@ func TestCalendarQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestCalendarMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`[{"symbol":"AAPL"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Calendar.StockSplits(context.Background(), NewStockSplitsQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "splits")

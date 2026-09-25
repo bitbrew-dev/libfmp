@@ -45,7 +45,7 @@ func companyRouter(t *testing.T) http.HandlerFunc {
 func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, companyRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	profile, err := client.Company.Profile(ctx, NewProfileQuery("AAPL"))
@@ -122,7 +122,7 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 func TestCompanyQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, companyRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name     string
@@ -180,7 +180,7 @@ func TestCompanyQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestCompanyMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(string(readFixture(t, "company_shares_float_all.json"))))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Company.SharesFloat(context.Background(), NewSharesFloatQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "shares-float")

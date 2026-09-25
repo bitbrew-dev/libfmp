@@ -43,7 +43,7 @@ func forexRouter(t *testing.T) http.HandlerFunc {
 func TestForexMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, forexRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	eodFrom, eodTo := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-27")
 	from, to := mustParseDate(t, "2024-01-01"), mustParseDate(t, "2024-03-01")
@@ -121,7 +121,7 @@ func TestForexAssetChartQueryExposesItsArgumentsAsGiven(t *testing.T) {
 func TestForexQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, forexRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	for _, tc := range []struct {
 		name   string
@@ -167,7 +167,7 @@ func TestForexMethodsReportMissingMembersAndObjectRootsAsDecodeErrors(t *testing
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`[{"symbol":"ARSMXN","fromCurrency":"ARS","toCurrency":"MXN",`+
 		`"fromName":"Argentine Peso"}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Forex.List(context.Background())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "forex-list")
@@ -179,7 +179,7 @@ func TestForexMethodsReportMissingMembersAndObjectRootsAsDecodeErrors(t *testing
 	}
 
 	objectRoot, _ := newServer(t, jsonHandler(`{}`))
-	client = newClient(t, objectRoot, WithAuthentication(FmpHeader("route-secret")))
+	client = newClient(t, objectRoot, WithAuthentication(FMPHeader("route-secret")))
 	_, err = client.Forex.Quote(context.Background(), NewQuoteQuery("EURUSD"))
 	if typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "quote"); typed.Unwrap() == nil {
 		t.Fatalf("object root error %v carries no cause", typed)

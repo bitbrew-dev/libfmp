@@ -46,7 +46,7 @@ func economicsRouter(t *testing.T) http.HandlerFunc {
 func TestEconomicsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, economicsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	from, to := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-27")
 
@@ -98,7 +98,7 @@ func TestEconomicsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestEconomicsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, economicsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	_, err := client.Economics.Indicators(ctx, NewEconomicIndicatorsQuery(" "))
@@ -142,7 +142,7 @@ func TestEconomicsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestEconomicsMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"country":"Zimbabwe","continent":"Africa","countryRiskPremium":11.66}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Economics.MarketRiskPremium(context.Background())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "market-risk-premium")

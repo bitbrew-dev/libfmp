@@ -48,7 +48,7 @@ func technicalIndicatorsRouter(t *testing.T) http.HandlerFunc {
 func TestTechnicalIndicatorsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, technicalIndicatorsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	from, to := mustParseDate(t, "2026-06-01"), mustParseDate(t, "2026-03-01")
 	daily := NewTechnicalIndicatorQuery("AAPL", 10, ChartTimeframeOneDay)
@@ -116,7 +116,7 @@ func TestTechnicalIndicatorsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestTechnicalIndicatorsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, technicalIndicatorsRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	_, err := client.TechnicalIndicators.SimpleMovingAverage(ctx, NewTechnicalIndicatorQuery("AAPL,MSFT", 10, ChartTimeframeOneDay))

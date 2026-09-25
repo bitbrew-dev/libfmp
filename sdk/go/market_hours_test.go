@@ -42,7 +42,7 @@ func marketHoursRouter(t *testing.T) http.HandlerFunc {
 func TestMarketHoursMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, marketHoursRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	hours := client.MarketHours
 	from := mustParseDate(t, "2025-04-27")
@@ -109,7 +109,7 @@ func TestMarketHoursMethodsUseExactPathsAndWireOrder(t *testing.T) {
 func TestMarketHoursQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, marketHoursRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	hours := client.MarketHours
 	cases := []struct {
@@ -178,7 +178,7 @@ func TestMarketHoursQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestMarketHoursMethodsKeepEndpointIdentityOnNonArrayBodies(t *testing.T) {
 	t.Parallel()
 	server, _ := newServer(t, jsonHandler(`{}`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	hours := client.MarketHours
 

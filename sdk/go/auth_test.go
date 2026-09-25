@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestFmpHeaderFromEnvNormalizesTheVariable(t *testing.T) {
+func TestFMPHeaderFromEnvNormalizesTheVariable(t *testing.T) {
 	cases := []struct {
 		name  string
 		value string
@@ -32,11 +32,11 @@ func TestFmpHeaderFromEnvNormalizesTheVariable(t *testing.T) {
 			} else {
 				t.Setenv(EnvAPIKey, tc.value)
 			}
-			auth, ok := FmpHeaderFromEnv()
+			auth, ok := FMPHeaderFromEnv()
 			if ok != tc.ok {
 				t.Fatalf("ok = %v, want %v", ok, tc.ok)
 			}
-			if ok && (auth.mode != authFmpHeader || auth.secret != tc.want) {
+			if ok && (auth.mode != authFMPHeader || auth.secret != tc.want) {
 				t.Fatalf("auth = mode %d secret %q, want %q", auth.mode, auth.secret, tc.want)
 			}
 			if !ok && auth != (Authentication{}) {
@@ -50,7 +50,7 @@ func TestAuthenticationFormattingNeverPrintsSecrets(t *testing.T) {
 	t.Parallel()
 	const secret = "format-secret"
 	auths := []Authentication{
-		FmpHeader(secret), FmpQuery(secret), Bearer(secret),
+		FMPHeader(secret), FMPQuery(secret), Bearer(secret),
 		CustomHeader("X-Proxy-Token", secret), CustomQuery("router_token", secret),
 		CustomHeaderWithPrefix("X-Proxy-Token", "Bearer ", secret),
 	}
@@ -72,9 +72,9 @@ func TestAuthenticationFormattingNeverPrintsSecrets(t *testing.T) {
 
 func TestAuthMaterialMirrorsTheRustModes(t *testing.T) {
 	t.Parallel()
-	header, err := buildAuthMaterial(FmpHeader("k"))
+	header, err := buildAuthMaterial(FMPHeader("k"))
 	if err != nil || header.headerName != fmpHeaderName || header.headerValue != "k" || header.queryName != "" {
-		t.Fatalf("FmpHeader material = %+v, err %v", header, err)
+		t.Fatalf("FMPHeader material = %+v, err %v", header, err)
 	}
 	bearer, err := buildAuthMaterial(Bearer("tok"))
 	if err != nil || bearer.headerName != bearerHeader || bearer.headerValue != bearerPrefix+"tok" {
@@ -113,8 +113,8 @@ func TestAuthMaterialRejectsUnsafeInput(t *testing.T) {
 		auth Authentication
 		kind ConfigurationKind
 	}{
-		{"empty header key", FmpHeader(""), ConfigurationKindEmptyCredential},
-		{"empty query key", FmpQuery(""), ConfigurationKindEmptyCredential},
+		{"empty header key", FMPHeader(""), ConfigurationKindEmptyCredential},
+		{"empty query key", FMPQuery(""), ConfigurationKindEmptyCredential},
 		{"empty bearer", Bearer(""), ConfigurationKindEmptyCredential},
 		{"custom header bad name", CustomHeader("x proxy", "tok"), ConfigurationKindInvalidHeaderName},
 		{"custom header transport owned", CustomHeader("Host", "tok"), ConfigurationKindProtectedFieldCollision},

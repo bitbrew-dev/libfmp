@@ -61,7 +61,7 @@ func screenerAllFilters() CompanyScreenerQuery {
 func TestScreenerCompaniesUsesExactPathAndWireParameterOrder(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, screenerRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 
 	bare, err := client.Screener.Companies(ctx, NewCompanyScreenerQuery())
@@ -107,7 +107,7 @@ func TestScreenerCompaniesUsesExactPathAndWireParameterOrder(t *testing.T) {
 func TestScreenerQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, screenerRouter(t))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
 	cases := []struct {
 		name   string
@@ -171,7 +171,7 @@ func TestScreenerQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 func TestScreenerCompaniesReportsMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
 	server, rec := newServer(t, jsonHandler(`[{"symbol":"AAPL","companyName":"Apple Inc.","marketCap":1}]`))
-	client := newClient(t, server, WithAuthentication(FmpHeader("route-secret")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Screener.Companies(context.Background(), NewCompanyScreenerQuery())
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "company-screener")
