@@ -66,24 +66,24 @@ func (q CIKSearchQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// CusipSearchQuery holds the query parameters of the endpoints that take it:
-// NewCusipSearchQuery takes the required arguments and each With method sets
+// CUSIPSearchQuery holds the query parameters of the endpoints that take it:
+// NewCUSIPSearchQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
-type CusipSearchQuery struct {
+type CUSIPSearchQuery struct {
 	cusip string
 }
 
-// NewCusipSearchQuery creates the query from its required arguments.
-func NewCusipSearchQuery(cusip string) CusipSearchQuery {
-	return CusipSearchQuery{cusip: cusip}
+// NewCUSIPSearchQuery creates the query from its required arguments.
+func NewCUSIPSearchQuery(cusip string) CUSIPSearchQuery {
+	return CUSIPSearchQuery{cusip: cusip}
 }
 
-// Cusip returns the cusip argument as given.
-func (q CusipSearchQuery) Cusip() string {
+// CUSIP returns the cusip argument as given.
+func (q CUSIPSearchQuery) CUSIP() string {
 	return q.cusip
 }
 
-func (q CusipSearchQuery) params() ([]queryParam, error) {
+func (q CUSIPSearchQuery) params() ([]queryParam, error) {
 	cusip, err := stringParam("cusip", q.cusip)
 	if err != nil {
 		return nil, err
@@ -116,24 +116,24 @@ func (q ExchangeVariantsQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// IsinSearchQuery holds the query parameters of the endpoints that take it:
-// NewIsinSearchQuery takes the required arguments and each With method sets an
+// ISINSearchQuery holds the query parameters of the endpoints that take it:
+// NewISINSearchQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type IsinSearchQuery struct {
+type ISINSearchQuery struct {
 	isin string
 }
 
-// NewIsinSearchQuery creates the query from its required arguments.
-func NewIsinSearchQuery(isin string) IsinSearchQuery {
-	return IsinSearchQuery{isin: isin}
+// NewISINSearchQuery creates the query from its required arguments.
+func NewISINSearchQuery(isin string) ISINSearchQuery {
+	return ISINSearchQuery{isin: isin}
 }
 
-// Isin returns the isin argument as given.
-func (q IsinSearchQuery) Isin() string {
+// ISIN returns the isin argument as given.
+func (q ISINSearchQuery) ISIN() string {
 	return q.isin
 }
 
-func (q IsinSearchQuery) params() ([]queryParam, error) {
+func (q ISINSearchQuery) params() ([]queryParam, error) {
 	isin, err := stringParam("isin", q.isin)
 	if err != nil {
 		return nil, err
@@ -318,31 +318,31 @@ func (n *SearchNamespace) CIK(ctx context.Context, q CIKSearchQuery) ([]CIKSearc
 	return out, nil
 }
 
-// Cusip searches worldwide securities by CUSIP without constraining its
+// CUSIP searches worldwide securities by CUSIP without constraining its
 // length.
 //
 // GET search-cusip?cusip=
-func (n *SearchNamespace) Cusip(ctx context.Context, q CusipSearchQuery) ([]CusipSearchResult, error) {
+func (n *SearchNamespace) CUSIP(ctx context.Context, q CUSIPSearchQuery) ([]CUSIPSearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CusipSearchResult
+	var out []CUSIPSearchResult
 	if err := n.client.getJSON(ctx, "search-cusip", "search-cusip", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// Isin searches worldwide securities by ISIN without constraining its length.
+// ISIN searches worldwide securities by ISIN without constraining its length.
 //
 // GET search-isin?isin=
-func (n *SearchNamespace) Isin(ctx context.Context, q IsinSearchQuery) ([]IsinSearchResult, error) {
+func (n *SearchNamespace) ISIN(ctx context.Context, q ISINSearchQuery) ([]ISINSearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []IsinSearchResult
+	var out []ISINSearchResult
 	if err := n.client.getJSON(ctx, "search-isin", "search-isin", params, &out); err != nil {
 		return nil, err
 	}

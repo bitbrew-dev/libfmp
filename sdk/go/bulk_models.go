@@ -2550,8 +2550,8 @@ type BulkETFHolding struct {
 	SharesNumber     string `json:"sharesNumber"`
 	Asset            string `json:"asset"`
 	WeightPercentage string `json:"weightPercentage"`
-	Cusip            string `json:"cusip"`
-	Isin             string `json:"isin"`
+	CUSIP            string `json:"cusip"`
+	ISIN             string `json:"isin"`
 	MarketValue      string `json:"marketValue"`
 	LastUpdatedRaw   string `json:"-"`
 }
@@ -2566,8 +2566,8 @@ type bulkETFHoldingShadow struct {
 	SharesNumber     *string                   `json:"sharesNumber"`
 	Asset            *string                   `json:"asset"`
 	WeightPercentage *string                   `json:"weightPercentage"`
-	Cusip            *string                   `json:"cusip"`
-	Isin             *string                   `json:"isin"`
+	CUSIP            *string                   `json:"cusip"`
+	ISIN             *string                   `json:"isin"`
 	MarketValue      *string                   `json:"marketValue"`
 	RawMembers       map[string]jsontext.Value `json:",embed"`
 }
@@ -2592,9 +2592,9 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkETFHolding", "asset")
 	case shadow.WeightPercentage == nil:
 		return missingMemberError("BulkETFHolding", "weightPercentage")
-	case shadow.Cusip == nil:
+	case shadow.CUSIP == nil:
 		return missingMemberError("BulkETFHolding", "cusip")
-	case shadow.Isin == nil:
+	case shadow.ISIN == nil:
 		return missingMemberError("BulkETFHolding", "isin")
 	case shadow.MarketValue == nil:
 		return missingMemberError("BulkETFHolding", "marketValue")
@@ -2611,8 +2611,8 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		SharesNumber:     *shadow.SharesNumber,
 		Asset:            *shadow.Asset,
 		WeightPercentage: *shadow.WeightPercentage,
-		Cusip:            *shadow.Cusip,
-		Isin:             *shadow.Isin,
+		CUSIP:            *shadow.CUSIP,
+		ISIN:             *shadow.ISIN,
 		MarketValue:      *shadow.MarketValue,
 		LastUpdatedRaw:   lastUpdatedRaw,
 	}

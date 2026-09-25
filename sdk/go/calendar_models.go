@@ -160,8 +160,8 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// IpoCalendarEvent is one worldwide IPO calendar event.
-type IpoCalendarEvent struct {
+// IPOCalendarEvent is one worldwide IPO calendar event.
+type IPOCalendarEvent struct {
 	Symbol     string          `json:"symbol"`
 	Date       Date            `json:"date"`
 	Daa        string          `json:"daa"`
@@ -173,7 +173,7 @@ type IpoCalendarEvent struct {
 	MarketCap  *jsontext.Value `json:"marketCap"`
 }
 
-// ipoCalendarEventShadow mirrors IpoCalendarEvent with a pointer or raw value
+// ipoCalendarEventShadow mirrors IPOCalendarEvent with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type ipoCalendarEventShadow struct {
@@ -191,30 +191,30 @@ type ipoCalendarEventShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *IpoCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow ipoCalendarEventShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("IpoCalendarEvent", "symbol")
+		return missingMemberError("IPOCalendarEvent", "symbol")
 	case shadow.Date == nil:
-		return missingMemberError("IpoCalendarEvent", "date")
+		return missingMemberError("IPOCalendarEvent", "date")
 	case shadow.Daa == nil:
-		return missingMemberError("IpoCalendarEvent", "daa")
+		return missingMemberError("IPOCalendarEvent", "daa")
 	case shadow.Company == nil:
-		return missingMemberError("IpoCalendarEvent", "company")
+		return missingMemberError("IPOCalendarEvent", "company")
 	case shadow.Exchange == nil:
-		return missingMemberError("IpoCalendarEvent", "exchange")
+		return missingMemberError("IPOCalendarEvent", "exchange")
 	case shadow.Actions == nil:
-		return missingMemberError("IpoCalendarEvent", "actions")
+		return missingMemberError("IPOCalendarEvent", "actions")
 	case len(shadow.Shares) == 0:
-		return missingMemberError("IpoCalendarEvent", "shares")
+		return missingMemberError("IPOCalendarEvent", "shares")
 	case len(shadow.PriceRange) == 0:
-		return missingMemberError("IpoCalendarEvent", "priceRange")
+		return missingMemberError("IPOCalendarEvent", "priceRange")
 	case len(shadow.MarketCap) == 0:
-		return missingMemberError("IpoCalendarEvent", "marketCap")
+		return missingMemberError("IPOCalendarEvent", "marketCap")
 	}
 	var shares *jsontext.Value
 	if shadow.Shares.Kind() != 'n' {
@@ -240,7 +240,7 @@ func (m *IpoCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		marketCap = &value
 	}
-	*m = IpoCalendarEvent{
+	*m = IPOCalendarEvent{
 		Symbol:     *shadow.Symbol,
 		Date:       *shadow.Date,
 		Daa:        *shadow.Daa,
@@ -254,8 +254,8 @@ func (m *IpoCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// IpoDisclosure is one US IPO disclosure filing.
-type IpoDisclosure struct {
+// IPODisclosure is one US IPO disclosure filing.
+type IPODisclosure struct {
 	Symbol            string `json:"symbol"`
 	FilingDate        Date   `json:"filingDate"`
 	AcceptedDate      Date   `json:"acceptedDate"`
@@ -265,7 +265,7 @@ type IpoDisclosure struct {
 	URL               string `json:"url"`
 }
 
-// ipoDisclosureShadow mirrors IpoDisclosure with a pointer or raw value for
+// ipoDisclosureShadow mirrors IPODisclosure with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type ipoDisclosureShadow struct {
@@ -281,28 +281,28 @@ type ipoDisclosureShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *IpoDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *IPODisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow ipoDisclosureShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("IpoDisclosure", "symbol")
+		return missingMemberError("IPODisclosure", "symbol")
 	case shadow.FilingDate == nil:
-		return missingMemberError("IpoDisclosure", "filingDate")
+		return missingMemberError("IPODisclosure", "filingDate")
 	case shadow.AcceptedDate == nil:
-		return missingMemberError("IpoDisclosure", "acceptedDate")
+		return missingMemberError("IPODisclosure", "acceptedDate")
 	case shadow.EffectivenessDate == nil:
-		return missingMemberError("IpoDisclosure", "effectivenessDate")
+		return missingMemberError("IPODisclosure", "effectivenessDate")
 	case shadow.CIK == nil:
-		return missingMemberError("IpoDisclosure", "cik")
+		return missingMemberError("IPODisclosure", "cik")
 	case shadow.Form == nil:
-		return missingMemberError("IpoDisclosure", "form")
+		return missingMemberError("IPODisclosure", "form")
 	case shadow.URL == nil:
-		return missingMemberError("IpoDisclosure", "url")
+		return missingMemberError("IPODisclosure", "url")
 	}
-	*m = IpoDisclosure{
+	*m = IPODisclosure{
 		Symbol:            *shadow.Symbol,
 		FilingDate:        *shadow.FilingDate,
 		AcceptedDate:      *shadow.AcceptedDate,
@@ -314,13 +314,13 @@ func (m *IpoDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// IpoProspectus is one US IPO prospectus filing and its documented offering
+// IPOProspectus is one US IPO prospectus filing and its documented offering
 // values.
-type IpoProspectus struct {
+type IPOProspectus struct {
 	Symbol                          string  `json:"symbol"`
 	AcceptedDate                    Date    `json:"acceptedDate"`
 	FilingDate                      Date    `json:"filingDate"`
-	IpoDate                         Date    `json:"ipoDate"`
+	IPODate                         Date    `json:"ipoDate"`
 	CIK                             string  `json:"cik"`
 	PricePublicPerShare             float64 `json:"pricePublicPerShare"`
 	PricePublicTotal                float64 `json:"pricePublicTotal"`
@@ -332,14 +332,14 @@ type IpoProspectus struct {
 	URL                             string  `json:"url"`
 }
 
-// ipoProspectusShadow mirrors IpoProspectus with a pointer or raw value for
+// ipoProspectusShadow mirrors IPOProspectus with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type ipoProspectusShadow struct {
 	Symbol                          *string  `json:"symbol"`
 	AcceptedDate                    *Date    `json:"acceptedDate"`
 	FilingDate                      *Date    `json:"filingDate"`
-	IpoDate                         *Date    `json:"ipoDate"`
+	IPODate                         *Date    `json:"ipoDate"`
 	CIK                             *string  `json:"cik"`
 	PricePublicPerShare             *float64 `json:"pricePublicPerShare"`
 	PricePublicTotal                *float64 `json:"pricePublicTotal"`
@@ -354,44 +354,44 @@ type ipoProspectusShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *IpoProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *IPOProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow ipoProspectusShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("IpoProspectus", "symbol")
+		return missingMemberError("IPOProspectus", "symbol")
 	case shadow.AcceptedDate == nil:
-		return missingMemberError("IpoProspectus", "acceptedDate")
+		return missingMemberError("IPOProspectus", "acceptedDate")
 	case shadow.FilingDate == nil:
-		return missingMemberError("IpoProspectus", "filingDate")
-	case shadow.IpoDate == nil:
-		return missingMemberError("IpoProspectus", "ipoDate")
+		return missingMemberError("IPOProspectus", "filingDate")
+	case shadow.IPODate == nil:
+		return missingMemberError("IPOProspectus", "ipoDate")
 	case shadow.CIK == nil:
-		return missingMemberError("IpoProspectus", "cik")
+		return missingMemberError("IPOProspectus", "cik")
 	case shadow.PricePublicPerShare == nil:
-		return missingMemberError("IpoProspectus", "pricePublicPerShare")
+		return missingMemberError("IPOProspectus", "pricePublicPerShare")
 	case shadow.PricePublicTotal == nil:
-		return missingMemberError("IpoProspectus", "pricePublicTotal")
+		return missingMemberError("IPOProspectus", "pricePublicTotal")
 	case shadow.DiscountsAndCommissionsPerShare == nil:
-		return missingMemberError("IpoProspectus", "discountsAndCommissionsPerShare")
+		return missingMemberError("IPOProspectus", "discountsAndCommissionsPerShare")
 	case shadow.DiscountsAndCommissionsTotal == nil:
-		return missingMemberError("IpoProspectus", "discountsAndCommissionsTotal")
+		return missingMemberError("IPOProspectus", "discountsAndCommissionsTotal")
 	case shadow.ProceedsBeforeExpensesPerShare == nil:
-		return missingMemberError("IpoProspectus", "proceedsBeforeExpensesPerShare")
+		return missingMemberError("IPOProspectus", "proceedsBeforeExpensesPerShare")
 	case shadow.ProceedsBeforeExpensesTotal == nil:
-		return missingMemberError("IpoProspectus", "proceedsBeforeExpensesTotal")
+		return missingMemberError("IPOProspectus", "proceedsBeforeExpensesTotal")
 	case shadow.Form == nil:
-		return missingMemberError("IpoProspectus", "form")
+		return missingMemberError("IPOProspectus", "form")
 	case shadow.URL == nil:
-		return missingMemberError("IpoProspectus", "url")
+		return missingMemberError("IPOProspectus", "url")
 	}
-	*m = IpoProspectus{
+	*m = IPOProspectus{
 		Symbol:                          *shadow.Symbol,
 		AcceptedDate:                    *shadow.AcceptedDate,
 		FilingDate:                      *shadow.FilingDate,
-		IpoDate:                         *shadow.IpoDate,
+		IPODate:                         *shadow.IPODate,
 		CIK:                             *shadow.CIK,
 		PricePublicPerShare:             *shadow.PricePublicPerShare,
 		PricePublicTotal:                *shadow.PricePublicTotal,

@@ -202,10 +202,10 @@ func (n *IndexesNamespace) ChartOneHour(ctx context.Context, q IndexChartQuery) 
 	return out, nil
 }
 
-// Sp500Constituents lists the current S&P 500 constituents.
+// SP500Constituents lists the current S&P 500 constituents.
 //
 // GET sp500-constituent
-func (n *IndexesNamespace) Sp500Constituents(ctx context.Context) ([]IndexConstituent, error) {
+func (n *IndexesNamespace) SP500Constituents(ctx context.Context) ([]IndexConstituent, error) {
 	var out []IndexConstituent
 	if err := n.client.getJSON(ctx, "sp500-constituent", "sp500-constituent", nil, &out); err != nil {
 		return nil, err
@@ -235,10 +235,10 @@ func (n *IndexesNamespace) DowJonesConstituents(ctx context.Context) ([]IndexCon
 	return out, nil
 }
 
-// HistoricalSp500Constituents lists historical S&P 500 constituent changes.
+// HistoricalSP500Constituents lists historical S&P 500 constituent changes.
 //
 // GET historical-sp500-constituent
-func (n *IndexesNamespace) HistoricalSp500Constituents(ctx context.Context) ([]HistoricalIndexConstituent, error) {
+func (n *IndexesNamespace) HistoricalSP500Constituents(ctx context.Context) ([]HistoricalIndexConstituent, error) {
 	var out []HistoricalIndexConstituent
 	if err := n.client.getJSON(ctx, "historical-sp500-constituent", "historical-sp500-constituent", nil, &out); err != nil {
 		return nil, err

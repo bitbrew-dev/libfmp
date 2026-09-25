@@ -165,91 +165,91 @@ func (m *CIKSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// CusipSearchResult is a security returned by CUSIP search.
-type CusipSearchResult struct {
+// CUSIPSearchResult is a security returned by CUSIP search.
+type CUSIPSearchResult struct {
 	Symbol      string  `json:"symbol"`
 	CompanyName string  `json:"companyName"`
-	Cusip       string  `json:"cusip"`
+	CUSIP       string  `json:"cusip"`
 	MarketCap   float64 `json:"marketCap"`
 }
 
-// cusipSearchResultShadow mirrors CusipSearchResult with a pointer or raw
+// cusipSearchResultShadow mirrors CUSIPSearchResult with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type cusipSearchResultShadow struct {
 	Symbol      *string  `json:"symbol"`
 	CompanyName *string  `json:"companyName"`
-	Cusip       *string  `json:"cusip"`
+	CUSIP       *string  `json:"cusip"`
 	MarketCap   *float64 `json:"marketCap"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *CusipSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *CUSIPSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow cusipSearchResultShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("CusipSearchResult", "symbol")
+		return missingMemberError("CUSIPSearchResult", "symbol")
 	case shadow.CompanyName == nil:
-		return missingMemberError("CusipSearchResult", "companyName")
-	case shadow.Cusip == nil:
-		return missingMemberError("CusipSearchResult", "cusip")
+		return missingMemberError("CUSIPSearchResult", "companyName")
+	case shadow.CUSIP == nil:
+		return missingMemberError("CUSIPSearchResult", "cusip")
 	case shadow.MarketCap == nil:
-		return missingMemberError("CusipSearchResult", "marketCap")
+		return missingMemberError("CUSIPSearchResult", "marketCap")
 	}
-	*m = CusipSearchResult{
+	*m = CUSIPSearchResult{
 		Symbol:      *shadow.Symbol,
 		CompanyName: *shadow.CompanyName,
-		Cusip:       *shadow.Cusip,
+		CUSIP:       *shadow.CUSIP,
 		MarketCap:   *shadow.MarketCap,
 	}
 	return nil
 }
 
-// IsinSearchResult is a security returned by ISIN search.
-type IsinSearchResult struct {
+// ISINSearchResult is a security returned by ISIN search.
+type ISINSearchResult struct {
 	Symbol    string  `json:"symbol"`
 	Name      string  `json:"name"`
-	Isin      string  `json:"isin"`
+	ISIN      string  `json:"isin"`
 	MarketCap float64 `json:"marketCap"`
 }
 
-// isinSearchResultShadow mirrors IsinSearchResult with a pointer or raw value
+// isinSearchResultShadow mirrors ISINSearchResult with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type isinSearchResultShadow struct {
 	Symbol    *string  `json:"symbol"`
 	Name      *string  `json:"name"`
-	Isin      *string  `json:"isin"`
+	ISIN      *string  `json:"isin"`
 	MarketCap *float64 `json:"marketCap"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *IsinSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ISINSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow isinSearchResultShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("IsinSearchResult", "symbol")
+		return missingMemberError("ISINSearchResult", "symbol")
 	case shadow.Name == nil:
-		return missingMemberError("IsinSearchResult", "name")
-	case shadow.Isin == nil:
-		return missingMemberError("IsinSearchResult", "isin")
+		return missingMemberError("ISINSearchResult", "name")
+	case shadow.ISIN == nil:
+		return missingMemberError("ISINSearchResult", "isin")
 	case shadow.MarketCap == nil:
-		return missingMemberError("IsinSearchResult", "marketCap")
+		return missingMemberError("ISINSearchResult", "marketCap")
 	}
-	*m = IsinSearchResult{
+	*m = ISINSearchResult{
 		Symbol:    *shadow.Symbol,
 		Name:      *shadow.Name,
-		Isin:      *shadow.Isin,
+		ISIN:      *shadow.ISIN,
 		MarketCap: *shadow.MarketCap,
 	}
 	return nil
@@ -269,8 +269,8 @@ type ExchangeVariant struct {
 	CompanyName       string  `json:"companyName"`
 	Currency          string  `json:"currency"`
 	CIK               string  `json:"cik"`
-	Isin              string  `json:"isin"`
-	Cusip             string  `json:"cusip"`
+	ISIN              string  `json:"isin"`
+	CUSIP             string  `json:"cusip"`
 	Exchange          string  `json:"exchange"`
 	ExchangeShortName string  `json:"exchangeShortName"`
 	Industry          string  `json:"industry"`
@@ -288,7 +288,7 @@ type ExchangeVariant struct {
 	DCFDiff           float64 `json:"dcfDiff"`
 	DCF               float64 `json:"dcf"`
 	Image             string  `json:"image"`
-	IpoDate           Date    `json:"ipoDate"`
+	IPODate           Date    `json:"ipoDate"`
 	DefaultImage      bool    `json:"defaultImage"`
 	IsETF             bool    `json:"isEtf"`
 	IsActivelyTrading bool    `json:"isActivelyTrading"`
@@ -311,8 +311,8 @@ type exchangeVariantShadow struct {
 	CompanyName       *string  `json:"companyName"`
 	Currency          *string  `json:"currency"`
 	CIK               *string  `json:"cik"`
-	Isin              *string  `json:"isin"`
-	Cusip             *string  `json:"cusip"`
+	ISIN              *string  `json:"isin"`
+	CUSIP             *string  `json:"cusip"`
 	Exchange          *string  `json:"exchange"`
 	ExchangeShortName *string  `json:"exchangeShortName"`
 	Industry          *string  `json:"industry"`
@@ -330,7 +330,7 @@ type exchangeVariantShadow struct {
 	DCFDiff           *float64 `json:"dcfDiff"`
 	DCF               *float64 `json:"dcf"`
 	Image             *string  `json:"image"`
-	IpoDate           *Date    `json:"ipoDate"`
+	IPODate           *Date    `json:"ipoDate"`
 	DefaultImage      *bool    `json:"defaultImage"`
 	IsETF             *bool    `json:"isEtf"`
 	IsActivelyTrading *bool    `json:"isActivelyTrading"`
@@ -369,9 +369,9 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeVariant", "currency")
 	case shadow.CIK == nil:
 		return missingMemberError("ExchangeVariant", "cik")
-	case shadow.Isin == nil:
+	case shadow.ISIN == nil:
 		return missingMemberError("ExchangeVariant", "isin")
-	case shadow.Cusip == nil:
+	case shadow.CUSIP == nil:
 		return missingMemberError("ExchangeVariant", "cusip")
 	case shadow.Exchange == nil:
 		return missingMemberError("ExchangeVariant", "exchange")
@@ -407,7 +407,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeVariant", "dcf")
 	case shadow.Image == nil:
 		return missingMemberError("ExchangeVariant", "image")
-	case shadow.IpoDate == nil:
+	case shadow.IPODate == nil:
 		return missingMemberError("ExchangeVariant", "ipoDate")
 	case shadow.DefaultImage == nil:
 		return missingMemberError("ExchangeVariant", "defaultImage")
@@ -432,8 +432,8 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		CompanyName:       *shadow.CompanyName,
 		Currency:          *shadow.Currency,
 		CIK:               *shadow.CIK,
-		Isin:              *shadow.Isin,
-		Cusip:             *shadow.Cusip,
+		ISIN:              *shadow.ISIN,
+		CUSIP:             *shadow.CUSIP,
 		Exchange:          *shadow.Exchange,
 		ExchangeShortName: *shadow.ExchangeShortName,
 		Industry:          *shadow.Industry,
@@ -451,7 +451,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		DCFDiff:           *shadow.DCFDiff,
 		DCF:               *shadow.DCF,
 		Image:             *shadow.Image,
-		IpoDate:           *shadow.IpoDate,
+		IPODate:           *shadow.IPODate,
 		DefaultImage:      *shadow.DefaultImage,
 		IsETF:             *shadow.IsETF,
 		IsActivelyTrading: *shadow.IsActivelyTrading,

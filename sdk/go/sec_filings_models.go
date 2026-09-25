@@ -142,7 +142,7 @@ type SECCompanyProfile struct {
 	SicCode                 string          `json:"sicCode"`
 	SicDescription          string          `json:"sicDescription"`
 	SicGroup                string          `json:"sicGroup"`
-	Isin                    string          `json:"isin"`
+	ISIN                    string          `json:"isin"`
 	BusinessAddress         string          `json:"businessAddress"`
 	MailingAddress          string          `json:"mailingAddress"`
 	PhoneNumber             string          `json:"phoneNumber"`
@@ -157,7 +157,7 @@ type SECCompanyProfile struct {
 	StateLocation           string          `json:"stateLocation"`
 	StateOfIncorporation    string          `json:"stateOfIncorporation"`
 	FiscalYearEnd           string          `json:"fiscalYearEnd"`
-	IpoDate                 Date            `json:"ipoDate"`
+	IPODate                 Date            `json:"ipoDate"`
 	Employees               string          `json:"employees"`
 	SECFilingsURL           string          `json:"secFilingsUrl"`
 	TaxIdentificationNumber string          `json:"taxIdentificationNumber"`
@@ -183,7 +183,7 @@ type secCompanyProfileShadow struct {
 	SicCode                 *string        `json:"sicCode"`
 	SicDescription          *string        `json:"sicDescription"`
 	SicGroup                *string        `json:"sicGroup"`
-	Isin                    *string        `json:"isin"`
+	ISIN                    *string        `json:"isin"`
 	BusinessAddress         *string        `json:"businessAddress"`
 	MailingAddress          *string        `json:"mailingAddress"`
 	PhoneNumber             *string        `json:"phoneNumber"`
@@ -198,7 +198,7 @@ type secCompanyProfileShadow struct {
 	StateLocation           *string        `json:"stateLocation"`
 	StateOfIncorporation    *string        `json:"stateOfIncorporation"`
 	FiscalYearEnd           *string        `json:"fiscalYearEnd"`
-	IpoDate                 *Date          `json:"ipoDate"`
+	IPODate                 *Date          `json:"ipoDate"`
 	Employees               *string        `json:"employees"`
 	SECFilingsURL           *string        `json:"secFilingsUrl"`
 	TaxIdentificationNumber *string        `json:"taxIdentificationNumber"`
@@ -235,7 +235,7 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("SECCompanyProfile", "sicDescription")
 	case shadow.SicGroup == nil:
 		return missingMemberError("SECCompanyProfile", "sicGroup")
-	case shadow.Isin == nil:
+	case shadow.ISIN == nil:
 		return missingMemberError("SECCompanyProfile", "isin")
 	case shadow.BusinessAddress == nil:
 		return missingMemberError("SECCompanyProfile", "businessAddress")
@@ -265,7 +265,7 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("SECCompanyProfile", "stateOfIncorporation")
 	case shadow.FiscalYearEnd == nil:
 		return missingMemberError("SECCompanyProfile", "fiscalYearEnd")
-	case shadow.IpoDate == nil:
+	case shadow.IPODate == nil:
 		return missingMemberError("SECCompanyProfile", "ipoDate")
 	case shadow.Employees == nil:
 		return missingMemberError("SECCompanyProfile", "employees")
@@ -309,7 +309,7 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		SicCode:                 *shadow.SicCode,
 		SicDescription:          *shadow.SicDescription,
 		SicGroup:                *shadow.SicGroup,
-		Isin:                    *shadow.Isin,
+		ISIN:                    *shadow.ISIN,
 		BusinessAddress:         *shadow.BusinessAddress,
 		MailingAddress:          *shadow.MailingAddress,
 		PhoneNumber:             *shadow.PhoneNumber,
@@ -324,7 +324,7 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		StateLocation:           *shadow.StateLocation,
 		StateOfIncorporation:    *shadow.StateOfIncorporation,
 		FiscalYearEnd:           *shadow.FiscalYearEnd,
-		IpoDate:                 *shadow.IpoDate,
+		IPODate:                 *shadow.IPODate,
 		Employees:               *shadow.Employees,
 		SECFilingsURL:           *shadow.SECFilingsURL,
 		TaxIdentificationNumber: *shadow.TaxIdentificationNumber,

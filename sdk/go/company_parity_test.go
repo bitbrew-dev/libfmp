@@ -53,11 +53,11 @@ func TestDocumentedCompanyProfileNoteAndPeerDecodeExactValues(t *testing.T) {
 		Symbol: "AAPL", Price: 331.85501, MarketCap: 4_874_072_686_740, Beta: 1.097, LastDividend: 1.05,
 		Range: "201.5-344.57", Change: -6.33498, ChangePercentage: -1.8732, Volume: 28_718_014,
 		AverageVolume: 55_309_000, CompanyName: "Apple Inc.", Currency: "USD", CIK: "0000320193",
-		Isin: "US0378331005", Cusip: "037833100", ExchangeFullName: "NASDAQ Global Select", Exchange: "NASDAQ",
+		ISIN: "US0378331005", CUSIP: "037833100", ExchangeFullName: "NASDAQ Global Select", Exchange: "NASDAQ",
 		Industry: "Consumer Electronics", Website: "https://www.apple.com", Description: profile.Description,
 		Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US", FullTimeEmployees: "166000",
 		Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino", State: "CA", Zip: "95014",
-		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IpoDate: mustParseDate(t, "1980-12-12"),
+		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IPODate: mustParseDate(t, "1980-12-12"),
 		DefaultImage: false, IsETF: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
 	}
 	if profile != want {
@@ -107,7 +107,7 @@ func TestDocumentedWorkforceAndMarketDataFixturesDecodeExactValues(t *testing.T)
 	t.Parallel()
 	delisted := assertFixtureParity[DelistedCompany](t, "company_delisted.json")
 	if want := (DelistedCompany{Symbol: "CCIX", CompanyName: "Churchill Capital Corp IX Ordinary Shares", Exchange: "NASDAQ",
-		IpoDate: mustParseDate(t, "2007-03-01"), DelistedDate: mustParseDate(t, "2026-07-28")}); len(delisted) != 1 || delisted[0] != want {
+		IPODate: mustParseDate(t, "2007-03-01"), DelistedDate: mustParseDate(t, "2026-07-28")}); len(delisted) != 1 || delisted[0] != want {
 		t.Fatalf("company_delisted = %+v", delisted)
 	}
 	employees := assertFixtureParity[EmployeeCount](t, "company_employee_count.json")

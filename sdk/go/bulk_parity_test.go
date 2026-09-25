@@ -85,7 +85,7 @@ func TestBulkEtfHoldingKeepsTheQuotedLastUpdatedKeyVerbatim(t *testing.T) {
 	t.Parallel()
 	holdings := assertFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.json")
 	if want := (BulkETFHolding{Symbol: "EXCH.AS", Name: "SAMSUNG ELECTRO MECHANICS LTD", SharesNumber: "15514",
-		Asset: "009150.KS", WeightPercentage: "0.09611", Cusip: "", Isin: "KR7009150004", MarketValue: "1553142.49",
+		Asset: "009150.KS", WeightPercentage: "0.09611", CUSIP: "", ISIN: "KR7009150004", MarketValue: "1553142.49",
 		LastUpdatedRaw: `2024-09-06"`}); len(holdings) != 1 || holdings[0] != want {
 		t.Fatalf("bulk_etf_holdings = %+v", holdings)
 	}

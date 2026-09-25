@@ -40,24 +40,24 @@ func TestEsgMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	server, rec := newServer(t, esgRouter(t))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	ctx := context.Background()
-	symbol := NewEsgSymbolQuery("BRK.B / Class A")
+	symbol := NewESGSymbolQuery("BRK.B / Class A")
 
-	disclosures, err := client.Esg.Disclosures(ctx, symbol)
-	if err != nil || len(disclosures) != 1 || disclosures[0].EsgScore != 56.79 {
+	disclosures, err := client.ESG.Disclosures(ctx, symbol)
+	if err != nil || len(disclosures) != 1 || disclosures[0].ESGScore != 56.79 {
 		t.Fatalf("Disclosures = %+v, %v", disclosures, err)
 	}
-	ratings, err := client.Esg.Ratings(ctx, symbol)
-	if err != nil || len(ratings) != 1 || ratings[0].EsgRiskRating != "B" {
+	ratings, err := client.ESG.Ratings(ctx, symbol)
+	if err != nil || len(ratings) != 1 || ratings[0].ESGRiskRating != "B" {
 		t.Fatalf("Ratings = %+v, %v", ratings, err)
 	}
-	benchmarks, err := client.Esg.Benchmark(ctx, NewEsgBenchmarkQuery())
-	if err != nil || len(benchmarks) != 1 || benchmarks[0].EsgScore != 65.63 {
+	benchmarks, err := client.ESG.Benchmark(ctx, NewESGBenchmarkQuery())
+	if err != nil || len(benchmarks) != 1 || benchmarks[0].ESGScore != 65.63 {
 		t.Fatalf("Benchmark = %+v, %v", benchmarks, err)
 	}
-	if _, err := client.Esg.Benchmark(ctx, NewEsgBenchmarkQuery().WithYear("FY 2024/25")); err != nil {
+	if _, err := client.ESG.Benchmark(ctx, NewESGBenchmarkQuery().WithYear("FY 2024/25")); err != nil {
 		t.Fatalf("Benchmark with a provider year string: %v", err)
 	}
-	if _, err := client.Esg.Benchmark(ctx, NewEsgBenchmarkQuery().WithYear("2023")); err != nil {
+	if _, err := client.ESG.Benchmark(ctx, NewESGBenchmarkQuery().WithYear("2023")); err != nil {
 		t.Fatalf("Benchmark with a plain year: %v", err)
 	}
 
@@ -101,12 +101,12 @@ func TestEsgQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		{"comma", "AAPL,MSFT", ErrCommaInTicker},
 	}
 	for _, tc := range cases {
-		_, err := client.Esg.Disclosures(ctx, NewEsgSymbolQuery(tc.symbol))
+		_, err := client.ESG.Disclosures(ctx, NewESGSymbolQuery(tc.symbol))
 		typed := assertQuoteError(t, err, CategoryValidation, 0, "")
 		if !errors.Is(err, tc.reason) || typed.Message != "symbol: "+tc.reason.Error() {
 			t.Fatalf("%s: error = %v, want symbol: %v", tc.name, err, tc.reason)
 		}
-		_, err = client.Esg.Ratings(ctx, NewEsgSymbolQuery(tc.symbol))
+		_, err = client.ESG.Ratings(ctx, NewESGSymbolQuery(tc.symbol))
 		if ratings := assertQuoteError(t, err, CategoryValidation, 0, ""); ratings.Message != typed.Message {
 			t.Fatalf("%s: Ratings message %q differs from Disclosures message %q", tc.name, ratings.Message, typed.Message)
 		}
@@ -119,7 +119,7 @@ func TestEsgQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		{"blank year", " ", ErrEmptyValue},
 		{"control year", "20\x0023", ErrControlCharacterValue},
 	} {
-		_, err := client.Esg.Benchmark(ctx, NewEsgBenchmarkQuery().WithYear(tc.year))
+		_, err := client.ESG.Benchmark(ctx, NewESGBenchmarkQuery().WithYear(tc.year))
 		typed := assertQuoteError(t, err, CategoryValidation, 0, "")
 		if !errors.Is(err, tc.reason) || typed.Message != "year: "+tc.reason.Error() {
 			t.Fatalf("%s: error = %v, want year: %v", tc.name, err, tc.reason)
@@ -128,16 +128,16 @@ func TestEsgQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	if rec.count() != 0 {
 		t.Fatalf("validation failures sent %d requests", rec.count())
 	}
-	if q := NewEsgSymbolQuery(" AAPL "); q.Symbol() != " AAPL " {
+	if q := NewESGSymbolQuery(" AAPL "); q.Symbol() != " AAPL " {
 		t.Fatalf("Symbol() normalized the ticker: %q", q.Symbol())
 	}
-	if q := NewEsgBenchmarkQuery(); q.Year() != nil {
-		t.Fatalf("NewEsgBenchmarkQuery() set a year: %v", *q.Year())
+	if q := NewESGBenchmarkQuery(); q.Year() != nil {
+		t.Fatalf("NewESGBenchmarkQuery() set a year: %v", *q.Year())
 	}
-	if q := NewEsgBenchmarkQuery().WithYear("FY 2024/25"); q.Year() == nil || *q.Year() != "FY 2024/25" {
+	if q := NewESGBenchmarkQuery().WithYear("FY 2024/25"); q.Year() == nil || *q.Year() != "FY 2024/25" {
 		t.Fatalf("Year() normalized the provider string: %v", q.Year())
 	}
-	commaYear, err := NewEsgBenchmarkQuery().WithYear("2023,2024").params()
+	commaYear, err := NewESGBenchmarkQuery().WithYear("2023,2024").params()
 	if err != nil || len(commaYear) != 1 || commaYear[0].Value != "2023,2024" {
 		t.Fatalf("a comma in the benchmark year was not accepted as BenchmarkYear allows: %v, %v", commaYear, err)
 	}
@@ -153,7 +153,7 @@ func TestEsgMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	server, _ := newServer(t, jsonHandler(corrupted))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
-	_, err := client.Esg.Disclosures(context.Background(), NewEsgSymbolQuery("AAPL"))
+	_, err := client.ESG.Disclosures(context.Background(), NewESGSymbolQuery("AAPL"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "esg-disclosures")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"ESGScore"`) {
 		t.Fatalf("cause = %v, want it to name the missing member ESGScore", cause)

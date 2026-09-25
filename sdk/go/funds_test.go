@@ -76,7 +76,7 @@ func TestFundsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 		t.Fatalf("LatestDisclosureHolders = %+v, %v", holders, err)
 	}
 	disclosures, err := ns.Disclosures(ctx, NewFundDisclosureQuery("VWO", 2023, QuarterQ4).WithCIK("0000857489"))
-	if err != nil || len(disclosures) != 1 || disclosures[0].Cusip != "N/A" || disclosures[0].CurrencyCode != "CNY" {
+	if err != nil || len(disclosures) != 1 || disclosures[0].CUSIP != "N/A" || disclosures[0].CurrencyCode != "CNY" {
 		t.Fatalf("Disclosures = %+v, %v", disclosures, err)
 	}
 	results, err := ns.SearchDisclosureHolders(ctx,

@@ -16,9 +16,9 @@ func TestCalendarFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[DividendEvent](t, "dividends_calendar.json")
 	assertFixtureParity[EarningsEvent](t, "earnings.json")
 	assertFixtureParity[EarningsEvent](t, "earnings_calendar.json")
-	assertFixtureParity[IpoCalendarEvent](t, "ipos_calendar.json")
-	assertFixtureParity[IpoDisclosure](t, "ipos_disclosure.json")
-	assertFixtureParity[IpoProspectus](t, "ipos_prospectus.json")
+	assertFixtureParity[IPOCalendarEvent](t, "ipos_calendar.json")
+	assertFixtureParity[IPODisclosure](t, "ipos_disclosure.json")
+	assertFixtureParity[IPOProspectus](t, "ipos_prospectus.json")
 	assertFixtureParity[StockSplitEvent](t, "stock_splits.json")
 	assertFixtureParity[StockSplitEvent](t, "stock_splits_calendar.json")
 }
@@ -118,8 +118,8 @@ func TestDocumentedEarningsFixturesKeepOnlyActualValuesNullable(t *testing.T) {
 // precision, an object, and an array come back exactly as sent.
 func TestDocumentedIpoCalendarFixturePreservesLiteralDaaAndRawDynamicMembers(t *testing.T) {
 	t.Parallel()
-	rows := assertFixtureParity[IpoCalendarEvent](t, "ipos_calendar.json")
-	want := IpoCalendarEvent{
+	rows := assertFixtureParity[IPOCalendarEvent](t, "ipos_calendar.json")
+	want := IPOCalendarEvent{
 		Symbol: "IMC", Date: mustParseDate(t, "2026-07-29"), Daa: "2026-07-29T04:00:00.000Z",
 		Company: "IMC Rare Earths Ltd", Exchange: "NYSE", Actions: "Priced",
 	}
@@ -146,8 +146,8 @@ func TestDocumentedIpoCalendarFixturePreservesLiteralDaaAndRawDynamicMembers(t *
 
 func TestDocumentedIpoFilingAndStockSplitFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	disclosure := assertFixtureParity[IpoDisclosure](t, "ipos_disclosure.json")
-	wantDisclosure := IpoDisclosure{
+	disclosure := assertFixtureParity[IPODisclosure](t, "ipos_disclosure.json")
+	wantDisclosure := IPODisclosure{
 		Symbol: "QTJA", FilingDate: mustParseDate(t, "2026-07-30"), AcceptedDate: mustParseDate(t, "2026-07-30"),
 		EffectivenessDate: mustParseDate(t, "2026-07-30"), CIK: "0001415726", Form: "CERT",
 		URL: "https://www.sec.gov/Archives/edgar/data/1415726/000141783526000235/8A_Cert_DDTG_DDFG.pdf",
@@ -156,10 +156,10 @@ func TestDocumentedIpoFilingAndStockSplitFixturesDecodeExactValues(t *testing.T)
 		t.Fatalf("ipos_disclosure = %+v", disclosure)
 	}
 
-	prospectus := assertFixtureParity[IpoProspectus](t, "ipos_prospectus.json")
-	wantProspectus := IpoProspectus{
+	prospectus := assertFixtureParity[IPOProspectus](t, "ipos_prospectus.json")
+	wantProspectus := IPOProspectus{
 		Symbol: "FTW-WT", AcceptedDate: mustParseDate(t, "2026-07-29"), FilingDate: mustParseDate(t, "2026-07-30"),
-		IpoDate: mustParseDate(t, "2026-07-28"), CIK: "0002083125", PricePublicPerShare: 1, PricePublicTotal: 434,
+		IPODate: mustParseDate(t, "2026-07-28"), CIK: "0002083125", PricePublicPerShare: 1, PricePublicTotal: 434,
 		DiscountsAndCommissionsPerShare: 0, DiscountsAndCommissionsTotal: 82_251, ProceedsBeforeExpensesPerShare: 1,
 		ProceedsBeforeExpensesTotal: 82_251, Form: "S-1",
 		URL: "https://www.sec.gov/Archives/edgar/data/2083125/000121390026082963/ea0298363-s1_presidio.htm",
@@ -215,9 +215,9 @@ func TestCalendarRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	assertMemberContract[DividendEvent](t, "dividends_calendar.json", "declarationDate")
 	assertMemberContract[EarningsEvent](t, "earnings.json", "epsActual", "revenueActual")
 	assertMemberContract[EarningsEvent](t, "earnings_calendar.json", "epsActual", "revenueActual")
-	assertMemberContract[IpoCalendarEvent](t, "ipos_calendar.json", "shares", "priceRange", "marketCap")
-	assertMemberContract[IpoDisclosure](t, "ipos_disclosure.json")
-	assertMemberContract[IpoProspectus](t, "ipos_prospectus.json")
+	assertMemberContract[IPOCalendarEvent](t, "ipos_calendar.json", "shares", "priceRange", "marketCap")
+	assertMemberContract[IPODisclosure](t, "ipos_disclosure.json")
+	assertMemberContract[IPOProspectus](t, "ipos_prospectus.json")
 	assertMemberContract[StockSplitEvent](t, "stock_splits.json")
 	assertMemberContract[StockSplitEvent](t, "stock_splits_calendar.json")
 

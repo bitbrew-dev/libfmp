@@ -45,7 +45,7 @@ func TestDocumentedFilingExtractAndDatesFixturesDecodeExactly(t *testing.T) {
 	holdings := assertFixtureParity[InstitutionalHolding](t, "institutional_ownership_extract.json")
 	wantHolding := InstitutionalHolding{
 		Date: mustParseDate(t, "2023-09-30"), FilingDate: mustParseDate(t, "2023-11-13"),
-		AcceptedDate: mustParseDate(t, "2023-11-13"), CIK: "0001388838", SecurityCusip: "674215207", Symbol: "CHRD",
+		AcceptedDate: mustParseDate(t, "2023-11-13"), CIK: "0001388838", SecurityCUSIP: "674215207", Symbol: "CHRD",
 		NameOfIssuer: "CHORD ENERGY CORPORATION", Shares: 13_280, TitleOfClass: "COM NEW", SharesType: "SH",
 		PutCallShare: "", Value: 2_152_290,
 		Link:      "https://www.sec.gov/Archives/edgar/data/1388838/000117266123003760/0001172661-23-003760-index.htm",
@@ -71,7 +71,7 @@ func TestDocumentedFilingExtractAndDatesFixturesDecodeExactly(t *testing.T) {
 func TestDocumentedHolderFixturesDecodeAnalyticsPerformanceAndIndustryRows(t *testing.T) {
 	t.Parallel()
 	analytics := assertFixtureParity[InstitutionalHolderAnalytics](t, "institutional_holder_analytics.json")
-	if len(analytics) != 1 || analytics[0].CIK != "0000102909" || analytics[0].SecurityCusip != "037833100" ||
+	if len(analytics) != 1 || analytics[0].CIK != "0000102909" || analytics[0].SecurityCUSIP != "037833100" ||
 		analytics[0].InvestorName != "VANGUARD GROUP INC" || analytics[0].FilingDate != mustParseDate(t, "2023-12-18") ||
 		analytics[0].FirstAdded != mustParseDate(t, "2005-03-31") || analytics[0].QuarterEndPrice != 171.21 ||
 		analytics[0].AvgPricePaid != 20.65 || analytics[0].ChangeInPerformance != -67_750_129_670 ||
@@ -88,7 +88,7 @@ func TestDocumentedHolderFixturesDecodeAnalyticsPerformanceAndIndustryRows(t *te
 		performance[0].PortfolioSize != 29 || performance[0].AverageHoldingPeriodTop10 != 32 ||
 		performance[0].ChangeInPerformance != -14_398_745_159 || performance[0].Performance1Year != 28_972_527_543 ||
 		performance[0].PerformancePercentage5Year != 63.1842 ||
-		performance[0].PerformanceSinceInceptionRelativeToSp500Percentage != -114.003 {
+		performance[0].PerformanceSinceInceptionRelativeToSP500Percentage != -114.003 {
 		t.Fatalf("holder_performance_summary = %+v", performance)
 	}
 	if got := memberSet(t, performance[0]); len(got) != 33 {

@@ -10,8 +10,8 @@ import (
 	"encoding/json/v2"
 )
 
-// EsgDisclosure is one company ESG disclosure filing and its component scores.
-type EsgDisclosure struct {
+// ESGDisclosure is one company ESG disclosure filing and its component scores.
+type ESGDisclosure struct {
 	Date               Date    `json:"date"`
 	AcceptedDate       Date    `json:"acceptedDate"`
 	Symbol             string  `json:"symbol"`
@@ -21,11 +21,11 @@ type EsgDisclosure struct {
 	EnvironmentalScore float64 `json:"environmentalScore"`
 	SocialScore        float64 `json:"socialScore"`
 	GovernanceScore    float64 `json:"governanceScore"`
-	EsgScore           float64 `json:"ESGScore"`
+	ESGScore           float64 `json:"ESGScore"`
 	URL                string  `json:"url"`
 }
 
-// esgDisclosureShadow mirrors EsgDisclosure with a pointer or raw value for
+// esgDisclosureShadow mirrors ESGDisclosure with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type esgDisclosureShadow struct {
@@ -38,43 +38,43 @@ type esgDisclosureShadow struct {
 	EnvironmentalScore *float64 `json:"environmentalScore"`
 	SocialScore        *float64 `json:"socialScore"`
 	GovernanceScore    *float64 `json:"governanceScore"`
-	EsgScore           *float64 `json:"ESGScore"`
+	ESGScore           *float64 `json:"ESGScore"`
 	URL                *string  `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EsgDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ESGDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow esgDisclosureShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Date == nil:
-		return missingMemberError("EsgDisclosure", "date")
+		return missingMemberError("ESGDisclosure", "date")
 	case shadow.AcceptedDate == nil:
-		return missingMemberError("EsgDisclosure", "acceptedDate")
+		return missingMemberError("ESGDisclosure", "acceptedDate")
 	case shadow.Symbol == nil:
-		return missingMemberError("EsgDisclosure", "symbol")
+		return missingMemberError("ESGDisclosure", "symbol")
 	case shadow.CIK == nil:
-		return missingMemberError("EsgDisclosure", "cik")
+		return missingMemberError("ESGDisclosure", "cik")
 	case shadow.CompanyName == nil:
-		return missingMemberError("EsgDisclosure", "companyName")
+		return missingMemberError("ESGDisclosure", "companyName")
 	case shadow.FormType == nil:
-		return missingMemberError("EsgDisclosure", "formType")
+		return missingMemberError("ESGDisclosure", "formType")
 	case shadow.EnvironmentalScore == nil:
-		return missingMemberError("EsgDisclosure", "environmentalScore")
+		return missingMemberError("ESGDisclosure", "environmentalScore")
 	case shadow.SocialScore == nil:
-		return missingMemberError("EsgDisclosure", "socialScore")
+		return missingMemberError("ESGDisclosure", "socialScore")
 	case shadow.GovernanceScore == nil:
-		return missingMemberError("EsgDisclosure", "governanceScore")
-	case shadow.EsgScore == nil:
-		return missingMemberError("EsgDisclosure", "ESGScore")
+		return missingMemberError("ESGDisclosure", "governanceScore")
+	case shadow.ESGScore == nil:
+		return missingMemberError("ESGDisclosure", "ESGScore")
 	case shadow.URL == nil:
-		return missingMemberError("EsgDisclosure", "url")
+		return missingMemberError("ESGDisclosure", "url")
 	}
-	*m = EsgDisclosure{
+	*m = ESGDisclosure{
 		Date:               *shadow.Date,
 		AcceptedDate:       *shadow.AcceptedDate,
 		Symbol:             *shadow.Symbol,
@@ -84,24 +84,24 @@ func (m *EsgDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		EnvironmentalScore: *shadow.EnvironmentalScore,
 		SocialScore:        *shadow.SocialScore,
 		GovernanceScore:    *shadow.GovernanceScore,
-		EsgScore:           *shadow.EsgScore,
+		ESGScore:           *shadow.ESGScore,
 		URL:                *shadow.URL,
 	}
 	return nil
 }
 
-// EsgRating is one company's ESG risk rating for a fiscal year.
-type EsgRating struct {
+// ESGRating is one company's ESG risk rating for a fiscal year.
+type ESGRating struct {
 	Symbol        string `json:"symbol"`
 	CIK           string `json:"cik"`
 	CompanyName   string `json:"companyName"`
 	Industry      string `json:"industry"`
 	FiscalYear    uint32 `json:"fiscalYear"`
-	EsgRiskRating string `json:"ESGRiskRating"`
+	ESGRiskRating string `json:"ESGRiskRating"`
 	IndustryRank  string `json:"industryRank"`
 }
 
-// esgRatingShadow mirrors EsgRating with a pointer or raw value for every
+// esgRatingShadow mirrors ESGRating with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type esgRatingShadow struct {
 	Symbol        *string `json:"symbol"`
@@ -109,57 +109,57 @@ type esgRatingShadow struct {
 	CompanyName   *string `json:"companyName"`
 	Industry      *string `json:"industry"`
 	FiscalYear    *uint32 `json:"fiscalYear"`
-	EsgRiskRating *string `json:"ESGRiskRating"`
+	ESGRiskRating *string `json:"ESGRiskRating"`
 	IndustryRank  *string `json:"industryRank"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EsgRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ESGRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow esgRatingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("EsgRating", "symbol")
+		return missingMemberError("ESGRating", "symbol")
 	case shadow.CIK == nil:
-		return missingMemberError("EsgRating", "cik")
+		return missingMemberError("ESGRating", "cik")
 	case shadow.CompanyName == nil:
-		return missingMemberError("EsgRating", "companyName")
+		return missingMemberError("ESGRating", "companyName")
 	case shadow.Industry == nil:
-		return missingMemberError("EsgRating", "industry")
+		return missingMemberError("ESGRating", "industry")
 	case shadow.FiscalYear == nil:
-		return missingMemberError("EsgRating", "fiscalYear")
-	case shadow.EsgRiskRating == nil:
-		return missingMemberError("EsgRating", "ESGRiskRating")
+		return missingMemberError("ESGRating", "fiscalYear")
+	case shadow.ESGRiskRating == nil:
+		return missingMemberError("ESGRating", "ESGRiskRating")
 	case shadow.IndustryRank == nil:
-		return missingMemberError("EsgRating", "industryRank")
+		return missingMemberError("ESGRating", "industryRank")
 	}
-	*m = EsgRating{
+	*m = ESGRating{
 		Symbol:        *shadow.Symbol,
 		CIK:           *shadow.CIK,
 		CompanyName:   *shadow.CompanyName,
 		Industry:      *shadow.Industry,
 		FiscalYear:    *shadow.FiscalYear,
-		EsgRiskRating: *shadow.EsgRiskRating,
+		ESGRiskRating: *shadow.ESGRiskRating,
 		IndustryRank:  *shadow.IndustryRank,
 	}
 	return nil
 }
 
-// EsgBenchmark is one sector ESG benchmark for a fiscal year.
-type EsgBenchmark struct {
+// ESGBenchmark is one sector ESG benchmark for a fiscal year.
+type ESGBenchmark struct {
 	FiscalYear         uint32  `json:"fiscalYear"`
 	Sector             string  `json:"sector"`
 	EnvironmentalScore float64 `json:"environmentalScore"`
 	SocialScore        float64 `json:"socialScore"`
 	GovernanceScore    float64 `json:"governanceScore"`
-	EsgScore           float64 `json:"ESGScore"`
+	ESGScore           float64 `json:"ESGScore"`
 }
 
-// esgBenchmarkShadow mirrors EsgBenchmark with a pointer or raw value for
+// esgBenchmarkShadow mirrors ESGBenchmark with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type esgBenchmarkShadow struct {
@@ -168,38 +168,38 @@ type esgBenchmarkShadow struct {
 	EnvironmentalScore *float64 `json:"environmentalScore"`
 	SocialScore        *float64 `json:"socialScore"`
 	GovernanceScore    *float64 `json:"governanceScore"`
-	EsgScore           *float64 `json:"ESGScore"`
+	ESGScore           *float64 `json:"ESGScore"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EsgBenchmark) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ESGBenchmark) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow esgBenchmarkShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.FiscalYear == nil:
-		return missingMemberError("EsgBenchmark", "fiscalYear")
+		return missingMemberError("ESGBenchmark", "fiscalYear")
 	case shadow.Sector == nil:
-		return missingMemberError("EsgBenchmark", "sector")
+		return missingMemberError("ESGBenchmark", "sector")
 	case shadow.EnvironmentalScore == nil:
-		return missingMemberError("EsgBenchmark", "environmentalScore")
+		return missingMemberError("ESGBenchmark", "environmentalScore")
 	case shadow.SocialScore == nil:
-		return missingMemberError("EsgBenchmark", "socialScore")
+		return missingMemberError("ESGBenchmark", "socialScore")
 	case shadow.GovernanceScore == nil:
-		return missingMemberError("EsgBenchmark", "governanceScore")
-	case shadow.EsgScore == nil:
-		return missingMemberError("EsgBenchmark", "ESGScore")
+		return missingMemberError("ESGBenchmark", "governanceScore")
+	case shadow.ESGScore == nil:
+		return missingMemberError("ESGBenchmark", "ESGScore")
 	}
-	*m = EsgBenchmark{
+	*m = ESGBenchmark{
 		FiscalYear:         *shadow.FiscalYear,
 		Sector:             *shadow.Sector,
 		EnvironmentalScore: *shadow.EnvironmentalScore,
 		SocialScore:        *shadow.SocialScore,
 		GovernanceScore:    *shadow.GovernanceScore,
-		EsgScore:           *shadow.EsgScore,
+		ESGScore:           *shadow.ESGScore,
 	}
 	return nil
 }

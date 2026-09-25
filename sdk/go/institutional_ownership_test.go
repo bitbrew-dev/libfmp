@@ -55,7 +55,7 @@ func TestInstitutionalOwnershipMethodsUseExactPathsAndWireOrder(t *testing.T) {
 		t.Fatalf("LatestFilings = %+v, %v", filings, err)
 	}
 	holdings, err := ns.Extract(ctx, NewInstitutionalOwnershipExtractQuery("0001388838", 2023, QuarterQ3))
-	if err != nil || len(holdings) != 1 || holdings[0].SecurityCusip != "674215207" {
+	if err != nil || len(holdings) != 1 || holdings[0].SecurityCUSIP != "674215207" {
 		t.Fatalf("Extract = %+v, %v", holdings, err)
 	}
 	dates, err := ns.Form13FFilingDates(ctx, NewForm13FFilingDatesQuery("0001067983"))

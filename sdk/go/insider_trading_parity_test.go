@@ -104,7 +104,7 @@ func TestDocumentedInsiderReferenceRowsDecodeExactValues(t *testing.T) {
 	wantOwnership := BeneficialOwnershipAcquisition{
 		CIK: "0000320193", Symbol: "AAPL",
 		FilingDate: mustParseDate(t, "2026-04-29"), AcceptedDate: mustParseDate(t, "2026-04-29"),
-		Cusip: "037833100", NameOfReportingPerson: "Vanguard Capital Management",
+		CUSIP: "037833100", NameOfReportingPerson: "Vanguard Capital Management",
 		CitizenshipOrPlaceOfOrganization: "PENNSYLVANIA",
 		SoleVotingPower:                  "0", SharedVotingPower: "0", SoleDispositivePower: "0", SharedDispositivePower: "0",
 		AmountBeneficiallyOwned: "1099168953", PercentOfClass: "7.48", TypeOfReportingPerson: "IA",

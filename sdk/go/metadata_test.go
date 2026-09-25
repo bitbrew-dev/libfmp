@@ -135,7 +135,7 @@ func TestEndpointMetadataForPinsValuesFromTheRustConsts(t *testing.T) {
 	}{
 		{"Quote.Full", EndpointMetadata{Geography: GeographyWorldwide, Realtime: metadataNasdaqRealtime()}},
 		{"Quote.AftermarketTrade", EndpointMetadata{Geography: GeographyUSOnly, Realtime: metadataNasdaqRealtime()}},
-		{"Tipranks.SearchRatings", EndpointMetadata{
+		{"TipRanks.SearchRatings", EndpointMetadata{
 			Access: AccessRequirement{Kind: AccessNamedAddOn, AddOn: "TipRanks"},
 			ConditionalPlan: &ConditionalPlanRequirement{
 				Plan:      "Enterprise",
@@ -180,10 +180,10 @@ func TestEndpointMetadataForReportsFalseWithTheZeroValue(t *testing.T) {
 
 func TestEndpointMetadataForReturnsACopy(t *testing.T) {
 	t.Parallel()
-	first, _ := EndpointMetadataFor("Tipranks.SearchRatings")
+	first, _ := EndpointMetadataFor("TipRanks.SearchRatings")
 	first.ConditionalPlan.Plan = "Other"
 	*first.Bounds.Limit = 1
-	second, _ := EndpointMetadataFor("Tipranks.SearchRatings")
+	second, _ := EndpointMetadataFor("TipRanks.SearchRatings")
 	if second.ConditionalPlan.Plan != "Enterprise" || *second.Bounds.Limit != 5000 {
 		t.Fatalf("a mutated lookup changed the table: %s", second)
 	}

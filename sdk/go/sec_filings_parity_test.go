@@ -121,8 +121,8 @@ func TestDocumentedSecCompanyProfileDecodesExactValues(t *testing.T) {
 		t.Fatalf("sec_company_profile = %+v, want one row", rows)
 	}
 	row := rows[0]
-	if row.Symbol != "AAPL" || row.CIK != "0000320193" || row.Isin != "US0378331005" || row.Country != "US" ||
-		row.Exchange != "NASDAQ" || row.IpoDate != mustParseDate(t, "1980-12-12") || row.Employees != "166000" ||
+	if row.Symbol != "AAPL" || row.CIK != "0000320193" || row.ISIN != "US0378331005" || row.Country != "US" ||
+		row.Exchange != "NASDAQ" || row.IPODate != mustParseDate(t, "1980-12-12") || row.Employees != "166000" ||
 		row.PriceCurrency != "USD" || row.MarketSector != "Technology" || row.SecurityType != nil ||
 		!row.IsActive || row.IsETF || row.IsAdr || row.IsFund {
 		t.Fatalf("sec_company_profile[0] = %+v", row)

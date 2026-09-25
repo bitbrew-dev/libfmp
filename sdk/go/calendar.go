@@ -301,42 +301,42 @@ func (q EarningsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// IposCalendarQuery holds the query parameters of the endpoints that take it:
-// NewIposCalendarQuery takes the required arguments and each With method sets
+// IPOCalendarQuery holds the query parameters of the endpoints that take it:
+// NewIPOCalendarQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
-type IposCalendarQuery struct {
+type IPOCalendarQuery struct {
 	from *Date
 	to   *Date
 }
 
-// NewIposCalendarQuery creates the query from its required arguments.
-func NewIposCalendarQuery() IposCalendarQuery {
-	return IposCalendarQuery{}
+// NewIPOCalendarQuery creates the query from its required arguments.
+func NewIPOCalendarQuery() IPOCalendarQuery {
+	return IPOCalendarQuery{}
 }
 
 // WithFrom sets the optional from parameter and returns the updated query.
-func (q IposCalendarQuery) WithFrom(from Date) IposCalendarQuery {
+func (q IPOCalendarQuery) WithFrom(from Date) IPOCalendarQuery {
 	q.from = &from
 	return q
 }
 
 // From returns the optional from parameter, or nil when it is unset.
-func (q IposCalendarQuery) From() *Date {
+func (q IPOCalendarQuery) From() *Date {
 	return q.from
 }
 
 // WithTo sets the optional to parameter and returns the updated query.
-func (q IposCalendarQuery) WithTo(to Date) IposCalendarQuery {
+func (q IPOCalendarQuery) WithTo(to Date) IPOCalendarQuery {
 	q.to = &to
 	return q
 }
 
 // To returns the optional to parameter, or nil when it is unset.
-func (q IposCalendarQuery) To() *Date {
+func (q IPOCalendarQuery) To() *Date {
 	return q.to
 }
 
-func (q IposCalendarQuery) params() ([]queryParam, error) {
+func (q IPOCalendarQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	if q.from != nil {
 		from, err := dateParam("from", *q.from)
@@ -355,42 +355,42 @@ func (q IposCalendarQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// IposDisclosureQuery holds the query parameters of the endpoints that take
-// it: NewIposDisclosureQuery takes the required arguments and each With method
-// sets an optional one. Values are validated when the request is built.
-type IposDisclosureQuery struct {
+// IPODisclosureQuery holds the query parameters of the endpoints that take it:
+// NewIPODisclosureQuery takes the required arguments and each With method sets
+// an optional one. Values are validated when the request is built.
+type IPODisclosureQuery struct {
 	from *Date
 	to   *Date
 }
 
-// NewIposDisclosureQuery creates the query from its required arguments.
-func NewIposDisclosureQuery() IposDisclosureQuery {
-	return IposDisclosureQuery{}
+// NewIPODisclosureQuery creates the query from its required arguments.
+func NewIPODisclosureQuery() IPODisclosureQuery {
+	return IPODisclosureQuery{}
 }
 
 // WithFrom sets the optional from parameter and returns the updated query.
-func (q IposDisclosureQuery) WithFrom(from Date) IposDisclosureQuery {
+func (q IPODisclosureQuery) WithFrom(from Date) IPODisclosureQuery {
 	q.from = &from
 	return q
 }
 
 // From returns the optional from parameter, or nil when it is unset.
-func (q IposDisclosureQuery) From() *Date {
+func (q IPODisclosureQuery) From() *Date {
 	return q.from
 }
 
 // WithTo sets the optional to parameter and returns the updated query.
-func (q IposDisclosureQuery) WithTo(to Date) IposDisclosureQuery {
+func (q IPODisclosureQuery) WithTo(to Date) IPODisclosureQuery {
 	q.to = &to
 	return q
 }
 
 // To returns the optional to parameter, or nil when it is unset.
-func (q IposDisclosureQuery) To() *Date {
+func (q IPODisclosureQuery) To() *Date {
 	return q.to
 }
 
-func (q IposDisclosureQuery) params() ([]queryParam, error) {
+func (q IPODisclosureQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	if q.from != nil {
 		from, err := dateParam("from", *q.from)
@@ -409,42 +409,42 @@ func (q IposDisclosureQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// IposProspectusQuery holds the query parameters of the endpoints that take
-// it: NewIposProspectusQuery takes the required arguments and each With method
-// sets an optional one. Values are validated when the request is built.
-type IposProspectusQuery struct {
+// IPOProspectusQuery holds the query parameters of the endpoints that take it:
+// NewIPOProspectusQuery takes the required arguments and each With method sets
+// an optional one. Values are validated when the request is built.
+type IPOProspectusQuery struct {
 	from *Date
 	to   *Date
 }
 
-// NewIposProspectusQuery creates the query from its required arguments.
-func NewIposProspectusQuery() IposProspectusQuery {
-	return IposProspectusQuery{}
+// NewIPOProspectusQuery creates the query from its required arguments.
+func NewIPOProspectusQuery() IPOProspectusQuery {
+	return IPOProspectusQuery{}
 }
 
 // WithFrom sets the optional from parameter and returns the updated query.
-func (q IposProspectusQuery) WithFrom(from Date) IposProspectusQuery {
+func (q IPOProspectusQuery) WithFrom(from Date) IPOProspectusQuery {
 	q.from = &from
 	return q
 }
 
 // From returns the optional from parameter, or nil when it is unset.
-func (q IposProspectusQuery) From() *Date {
+func (q IPOProspectusQuery) From() *Date {
 	return q.from
 }
 
 // WithTo sets the optional to parameter and returns the updated query.
-func (q IposProspectusQuery) WithTo(to Date) IposProspectusQuery {
+func (q IPOProspectusQuery) WithTo(to Date) IPOProspectusQuery {
 	q.to = &to
 	return q
 }
 
 // To returns the optional to parameter, or nil when it is unset.
-func (q IposProspectusQuery) To() *Date {
+func (q IPOProspectusQuery) To() *Date {
 	return q.to
 }
 
-func (q IposProspectusQuery) params() ([]queryParam, error) {
+func (q IPOProspectusQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	if q.from != nil {
 		from, err := dateParam("from", *q.from)
@@ -643,46 +643,46 @@ func (n *CalendarNamespace) EarningsCalendar(ctx context.Context, q EarningsCale
 	return out, nil
 }
 
-// IposCalendar retrieves the worldwide IPO calendar.
+// IPOCalendar retrieves the worldwide IPO calendar.
 //
 // GET ipos-calendar?from=&to=
-func (n *CalendarNamespace) IposCalendar(ctx context.Context, q IposCalendarQuery) ([]IpoCalendarEvent, error) {
+func (n *CalendarNamespace) IPOCalendar(ctx context.Context, q IPOCalendarQuery) ([]IPOCalendarEvent, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []IpoCalendarEvent
+	var out []IPOCalendarEvent
 	if err := n.client.getJSON(ctx, "ipos-calendar", "ipos-calendar", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// IposDisclosure retrieves US IPO disclosure filings.
+// IPODisclosure retrieves US IPO disclosure filings.
 //
 // GET ipos-disclosure?from=&to=
-func (n *CalendarNamespace) IposDisclosure(ctx context.Context, q IposDisclosureQuery) ([]IpoDisclosure, error) {
+func (n *CalendarNamespace) IPODisclosure(ctx context.Context, q IPODisclosureQuery) ([]IPODisclosure, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []IpoDisclosure
+	var out []IPODisclosure
 	if err := n.client.getJSON(ctx, "ipos-disclosure", "ipos-disclosure", params, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// IposProspectus retrieves US IPO prospectus filings and documented offering
+// IPOProspectus retrieves US IPO prospectus filings and documented offering
 // values.
 //
 // GET ipos-prospectus?from=&to=
-func (n *CalendarNamespace) IposProspectus(ctx context.Context, q IposProspectusQuery) ([]IpoProspectus, error) {
+func (n *CalendarNamespace) IPOProspectus(ctx context.Context, q IPOProspectusQuery) ([]IPOProspectus, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []IpoProspectus
+	var out []IPOProspectus
 	if err := n.client.getJSON(ctx, "ipos-prospectus", "ipos-prospectus", params, &out); err != nil {
 		return nil, err
 	}

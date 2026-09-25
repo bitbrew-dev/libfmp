@@ -33,7 +33,7 @@ func TestDocumentedEtfFixturesDecodeExactly(t *testing.T) {
 	t.Parallel()
 	holdings := assertFixtureParity[ETFFundHolding](t, "etf_fund_holdings.json")
 	wantHolding := ETFFundHolding{
-		Symbol: "SPY", Asset: "AAPL", Name: "APPLE INC", Isin: "US0378331005", SecurityCusip: "037833100",
+		Symbol: "SPY", Asset: "AAPL", Name: "APPLE INC", ISIN: "US0378331005", SecurityCUSIP: "037833100",
 		SharesNumber: 181_418_073, WeightPercentage: 7.79997012, MarketValue: 61_679_458_958.0,
 		UpdatedAt: mustParseDateTime(t, "2026-07-30 08:07:21"),
 	}
@@ -51,8 +51,8 @@ func TestDocumentedEtfFixturesDecodeExactly(t *testing.T) {
 		{Industry: "Communication Services", Exposure: 9.23211353485037},
 	}
 	if len(info) != 1 || info[0].Symbol != "SPY" || info[0].Name != "State Street SPDR S&P 500 ETF" ||
-		!strings.Contains(info[0].Description, "It also can`t reinvest") || info[0].Isin != "US78462F1030" ||
-		info[0].AssetClass != "Equity" || info[0].SecurityCusip != "78462F103" || info[0].Domicile != "US" ||
+		!strings.Contains(info[0].Description, "It also can`t reinvest") || info[0].ISIN != "US78462F1030" ||
+		info[0].AssetClass != "Equity" || info[0].SecurityCUSIP != "78462F103" || info[0].Domicile != "US" ||
 		info[0].ETFCompany != "SPDR" || info[0].ExpenseRatio != 0.09 ||
 		info[0].AssetsUnderManagement != 777_349_860_000 || info[0].AvgVolume != 52_093_933 ||
 		info[0].InceptionDate != mustParseDate(t, "1993-01-22") || info[0].Nav != 729.27 ||
@@ -103,7 +103,7 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 	t.Parallel()
 	holders := assertFixtureParity[FundDisclosureHolder](t, "latest_fund_disclosure_holders.json")
 	wantHolder := FundDisclosureHolder{
-		CIK: "0000866256", Holder: "PARNASSUS INCOME FUNDS", SecurityCusip: "037833100", Shares: 3_638_451,
+		CIK: "0000866256", Holder: "PARNASSUS INCOME FUNDS", SecurityCUSIP: "037833100", Shares: 3_638_451,
 		DateReported: mustParseDate(t, "2026-06-30"), Change: -316_881, WeightPercent: 4.06607721,
 	}
 	if len(holders) != 1 || holders[0] != wantHolder {
@@ -117,7 +117,7 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 	wantDisclosure := FundDisclosure{
 		CIK: "0000857489", Date: mustParseDate(t, "2023-10-31"), AcceptedDate: mustParseDateTime(t, "2023-12-28 09:26:13"),
 		Symbol: "000089.SZ", Name: "Shenzhen Airport Co Ltd", Lei: "3003009W045RIKRBZI44", Title: "SHENZ AIRPORT-A",
-		Cusip: "N/A", Isin: "CNE000000VK1", Balance: 2_438_784, Units: "NS", CurrencyCode: "CNY",
+		CUSIP: "N/A", ISIN: "CNE000000VK1", Balance: 2_438_784, Units: "NS", CurrencyCode: "CNY",
 		ValUsd: 2_255_873.6, PctVal: 0.0023838966190458206, PayoffProfile: "Long", AssetCat: "EC", IssuerCat: "CORP",
 		InvCountry: "CN", IsRestrictedSEC: "N", FairValLevel: "2", IsCashCollateral: "N", IsNonCashCollateral: "N",
 		IsLoanByFund: "N",

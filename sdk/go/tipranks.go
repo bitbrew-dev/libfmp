@@ -8,15 +8,15 @@ package fmp
 
 import "context"
 
-// TipranksNamespace groups the tipranks endpoints. It is reached as
-// Client.Tipranks and is valid only when obtained from a Client built by
+// TipRanksNamespace groups the tipranks endpoints. It is reached as
+// Client.TipRanks and is valid only when obtained from a Client built by
 // NewClient.
-type TipranksNamespace struct {
+type TipRanksNamespace struct {
 	client *Client
 }
 
-func newTipranksNamespace(client *Client) TipranksNamespace {
-	return TipranksNamespace{
+func newTipRanksNamespace(client *Client) TipRanksNamespace {
+	return TipRanksNamespace{
 		client: client,
 	}
 }
@@ -716,7 +716,7 @@ func (q TipRanksSymbolSummaryQuery) params() ([]queryParam, error) {
 // SearchRatings retrieves individual analyst ratings from the TipRanks add-on.
 //
 // GET tipranks-search?expertUID=&symbol=&from=&to=&limit=&page=&nonadjusted=
-func (n *TipranksNamespace) SearchRatings(ctx context.Context, q TipRanksSearchQuery) ([]TipRanksRatingSearchResult, error) {
+func (n *TipRanksNamespace) SearchRatings(ctx context.Context, q TipRanksSearchQuery) ([]TipRanksRatingSearchResult, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -732,7 +732,7 @@ func (n *TipranksNamespace) SearchRatings(ctx context.Context, q TipRanksSearchQ
 // optional snapshot date.
 //
 // GET tipranks-pit-symbol?symbol=&date=&limit=&page=&nonadjusted=
-func (n *TipranksNamespace) PointInTimeRatingsBySymbol(ctx context.Context, q PointInTimeRatingsBySymbolQuery) ([]TipRanksPointInTimeRating, error) {
+func (n *TipRanksNamespace) PointInTimeRatingsBySymbol(ctx context.Context, q PointInTimeRatingsBySymbolQuery) ([]TipRanksPointInTimeRating, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -748,7 +748,7 @@ func (n *TipranksNamespace) PointInTimeRatingsBySymbol(ctx context.Context, q Po
 // optional snapshot date.
 //
 // GET tipranks-pit-analyst?expertUID=&analystName=&date=&limit=&page=&nonadjusted=
-func (n *TipranksNamespace) PointInTimeRatingsByAnalyst(ctx context.Context, q PointInTimeRatingsByAnalystQuery) ([]TipRanksPointInTimeRating, error) {
+func (n *TipRanksNamespace) PointInTimeRatingsByAnalyst(ctx context.Context, q PointInTimeRatingsByAnalystQuery) ([]TipRanksPointInTimeRating, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -763,7 +763,7 @@ func (n *TipranksNamespace) PointInTimeRatingsByAnalyst(ctx context.Context, q P
 // SymbolSummary retrieves a ticker's aggregate TipRanks ratings summary.
 //
 // GET tipranks-symbol-summary?symbol=&from=&to=
-func (n *TipranksNamespace) SymbolSummary(ctx context.Context, q TipRanksSymbolSummaryQuery) ([]TipRanksSymbolSummary, error) {
+func (n *TipRanksNamespace) SymbolSummary(ctx context.Context, q TipRanksSymbolSummaryQuery) ([]TipRanksSymbolSummary, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -778,7 +778,7 @@ func (n *TipranksNamespace) SymbolSummary(ctx context.Context, q TipRanksSymbolS
 // AnalystSummary retrieves an analyst's aggregate TipRanks ratings summary.
 //
 // GET tipranks-analyst-summary?expertUID=&from=&to=
-func (n *TipranksNamespace) AnalystSummary(ctx context.Context, q TipRanksAnalystSummaryQuery) ([]TipRanksAnalystSummary, error) {
+func (n *TipRanksNamespace) AnalystSummary(ctx context.Context, q TipRanksAnalystSummaryQuery) ([]TipRanksAnalystSummary, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -793,7 +793,7 @@ func (n *TipranksNamespace) AnalystSummary(ctx context.Context, q TipRanksAnalys
 // FirmSummary retrieves a firm's aggregate TipRanks ratings summary.
 //
 // GET tipranks-firm-summary?firmName=&from=&to=
-func (n *TipranksNamespace) FirmSummary(ctx context.Context, q TipRanksFirmSummaryQuery) ([]TipRanksFirmSummary, error) {
+func (n *TipRanksNamespace) FirmSummary(ctx context.Context, q TipRanksFirmSummaryQuery) ([]TipRanksFirmSummary, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -808,7 +808,7 @@ func (n *TipranksNamespace) FirmSummary(ctx context.Context, q TipRanksFirmSumma
 // Analysts retrieves analyst profiles from the TipRanks directory.
 //
 // GET tipranks-analysts?page=&limit=&firmName=&analystName=
-func (n *TipranksNamespace) Analysts(ctx context.Context, q TipRanksAnalystsQuery) ([]TipRanksAnalystProfile, error) {
+func (n *TipRanksNamespace) Analysts(ctx context.Context, q TipRanksAnalystsQuery) ([]TipRanksAnalystProfile, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
