@@ -48,7 +48,7 @@ func screenerRouter(t *testing.T) http.HandlerFunc {
 func screenerAllFilters() CompanyScreenerQuery {
 	return NewCompanyScreenerQuery().
 		WithIncludeAllShareClasses(false).WithLimit(math.MaxUint32).WithPage(0).
-		WithIsActivelyTrading(true).WithIsFund(false).WithIsEtf(false).
+		WithIsActivelyTrading(true).WithIsFund(false).WithIsETF(false).
 		WithCountry("US / CA").WithExchange("NASDAQ Global").
 		WithVolumeLowerThan(math.MaxUint64).WithVolumeMoreThan(1_000).
 		WithDividendLowerThan(2.0).WithDividendMoreThan(0.5).
@@ -76,7 +76,7 @@ func TestScreenerCompaniesUsesExactPathAndWireParameterOrder(t *testing.T) {
 	// (zero_and_false_are_emitted_while_absent_filters_are_omitted).
 	zero, err := client.Screener.Companies(ctx, NewCompanyScreenerQuery().
 		WithMarketCapMoreThan(0).WithPriceMoreThan(0).WithVolumeMoreThan(0).
-		WithIsEtf(false).WithIsFund(false).WithIsActivelyTrading(false).
+		WithIsETF(false).WithIsFund(false).WithIsActivelyTrading(false).
 		WithPage(0).WithLimit(0).WithIncludeAllShareClasses(false))
 	if err != nil || len(zero) != 0 {
 		t.Fatalf("Companies zero filters = %+v, %v", zero, err)
@@ -148,7 +148,7 @@ func TestScreenerQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	// receiver (fluent_query_exposes_all_twenty_private_filters).
 	base := NewCompanyScreenerQuery()
 	set := screenerAllFilters()
-	if base.Sector() != nil || base.MarketCapMoreThan() != nil || base.IsEtf() != nil || base.Limit() != nil ||
+	if base.Sector() != nil || base.MarketCapMoreThan() != nil || base.IsETF() != nil || base.Limit() != nil ||
 		base.BetaMoreThan() != nil {
 		t.Fatalf("NewCompanyScreenerQuery has a set filter: %+v", base)
 	}
@@ -158,7 +158,7 @@ func TestScreenerQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		*set.PriceLowerThan() != 500 || *set.DividendMoreThan() != 0.5 || *set.DividendLowerThan() != 2 ||
 		*set.VolumeMoreThan() != 1_000 || *set.VolumeLowerThan() != math.MaxUint64 ||
 		*set.Exchange() != "NASDAQ Global" || *set.Country() != "US / CA" ||
-		*set.IsEtf() || *set.IsFund() || !*set.IsActivelyTrading() ||
+		*set.IsETF() || *set.IsFund() || !*set.IsActivelyTrading() ||
 		*set.Page() != 0 || *set.Limit() != math.MaxUint32 || *set.IncludeAllShareClasses() {
 		t.Fatalf("CompanyScreenerQuery getters do not return the twenty filters as given: %+v", set)
 	}

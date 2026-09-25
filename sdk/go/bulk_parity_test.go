@@ -20,10 +20,10 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[BulkDcfValuation](t, "bulk_dcf_valuations.json")
 	assertFixtureParity[BulkFinancialScore](t, "bulk_financial_scores.json")
 	assertFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.json")
-	assertFixtureParity[BulkEtfHolding](t, "bulk_etf_holdings.json")
+	assertFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.json")
 	assertFixtureParity[BulkUpgradesDowngradesConsensus](t, "bulk_upgrades_downgrades_consensus.json")
-	assertFixtureParity[BulkKeyMetricsTtm](t, "bulk_key_metrics_ttm.json")
-	assertFixtureParity[BulkFinancialRatiosTtm](t, "bulk_financial_ratios_ttm.json")
+	assertFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.json")
+	assertFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.json")
 	assertFixtureParity[BulkStockPeer](t, "bulk_stock_peers.json")
 	assertFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.json")
 	assertFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.json")
@@ -83,8 +83,8 @@ func TestDocumentedBulkSnapshotsDecodeExactValues(t *testing.T) {
 // the trailing quote, re-encodes under the exact key, and is required.
 func TestBulkEtfHoldingKeepsTheQuotedLastUpdatedKeyVerbatim(t *testing.T) {
 	t.Parallel()
-	holdings := assertFixtureParity[BulkEtfHolding](t, "bulk_etf_holdings.json")
-	if want := (BulkEtfHolding{Symbol: "EXCH.AS", Name: "SAMSUNG ELECTRO MECHANICS LTD", SharesNumber: "15514",
+	holdings := assertFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.json")
+	if want := (BulkETFHolding{Symbol: "EXCH.AS", Name: "SAMSUNG ELECTRO MECHANICS LTD", SharesNumber: "15514",
 		Asset: "009150.KS", WeightPercentage: "0.09611", Cusip: "", Isin: "KR7009150004", MarketValue: "1553142.49",
 		LastUpdatedRaw: `2024-09-06"`}); len(holdings) != 1 || holdings[0] != want {
 		t.Fatalf("bulk_etf_holdings = %+v", holdings)
@@ -94,7 +94,7 @@ func TestBulkEtfHoldingKeepsTheQuotedLastUpdatedKeyVerbatim(t *testing.T) {
 		strings.Contains(string(encoded), `"lastUpdated":`) || strings.Contains(string(encoded), "RawMembers") {
 		t.Fatalf("re-encoded holdings = %s, %v", encoded, err)
 	}
-	var decoded []BulkEtfHolding
+	var decoded []BulkETFHolding
 	if err := json.Unmarshal(encoded, &decoded); err != nil || len(decoded) != 1 || decoded[0] != holdings[0] {
 		t.Fatalf("round trip = %+v, %v", decoded, err)
 	}
@@ -121,11 +121,11 @@ func TestBulkEtfHoldingKeepsTheQuotedLastUpdatedKeyVerbatim(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		var rows []BulkEtfHolding
+		var rows []BulkETFHolding
 		err = json.Unmarshal(body, &rows)
 		var typed *Error
 		if !errors.As(err, &typed) || typed.Category != CategoryDecode ||
-			!strings.Contains(typed.Message, "required member "+strconv.Quote(tc.member)+" of BulkEtfHolding") {
+			!strings.Contains(typed.Message, "required member "+strconv.Quote(tc.member)+" of BulkETFHolding") {
 			t.Fatalf("%s: error = %v, want a Decode *Error naming %q", tc.name, err, tc.member)
 		}
 	}
@@ -136,10 +136,10 @@ func TestBulkEtfHoldingKeepsTheQuotedLastUpdatedKeyVerbatim(t *testing.T) {
 // untouched (ADR 0028: numeric strings are never parsed).
 func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 	t.Parallel()
-	metrics := assertFixtureParity[BulkKeyMetricsTtm](t, "bulk_key_metrics_ttm.json")
+	metrics := assertFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.json")
 	if len(metrics) != 1 || metrics[0].Symbol != "000001.SZ" || metrics[0].MarketCap != "249171756000" ||
-		metrics[0].EnterpriseValueTtm != "-496959244000" || metrics[0].CurrentRatioTtm != "0" ||
-		metrics[0].FreeCashFlowToFirmTtm != "-35237570137.11014" {
+		metrics[0].EnterpriseValueTTM != "-496959244000" || metrics[0].CurrentRatioTTM != "0" ||
+		metrics[0].FreeCashFlowToFirmTTM != "-35237570137.11014" {
 		t.Fatalf("bulk_key_metrics_ttm = %+v", metrics)
 	}
 	encoded, err := json.Marshal(metrics[0])
@@ -149,9 +149,9 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 		strings.Contains(string(encoded), "Ttm") {
 		t.Fatalf("re-encoded key metrics = %s, %v", encoded, err)
 	}
-	ratios := assertFixtureParity[BulkFinancialRatiosTtm](t, "bulk_financial_ratios_ttm.json")
-	if len(ratios) != 1 || ratios[0].EnterpriseValueTtm != "-496959244000" || ratios[0].ReceivablesTurnoverTtm != "0" ||
-		ratios[0].GrossProfitMarginTtm != "1.1622776732779352" {
+	ratios := assertFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.json")
+	if len(ratios) != 1 || ratios[0].EnterpriseValueTTM != "-496959244000" || ratios[0].ReceivablesTurnoverTTM != "0" ||
+		ratios[0].GrossProfitMarginTTM != "1.1622776732779352" {
 		t.Fatalf("bulk_financial_ratios_ttm = %+v", ratios)
 	}
 	if encoded, err := json.Marshal(ratios[0]); err != nil || !strings.Contains(string(encoded), `"netIncomePerEBTTTM":`) {
@@ -170,9 +170,9 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	var decoded []BulkKeyMetricsTtm
+	var decoded []BulkKeyMetricsTTM
 	if err := json.Unmarshal(huge, &decoded); err != nil || len(decoded) != 1 ||
-		decoded[0].MarketCap != beyondU64 || decoded[0].FreeCashFlowToFirmTtm != highPrecision {
+		decoded[0].MarketCap != beyondU64 || decoded[0].FreeCashFlowToFirmTTM != highPrecision {
 		t.Fatalf("beyond-u64 decode = %+v, %v", decoded, err)
 	}
 	if encoded, err := json.Marshal(decoded[0]); err != nil ||
@@ -194,8 +194,8 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 		t.Fatalf("bulk_stock_peers = %+v", peers)
 	}
 	surprises := assertFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.json")
-	if want := (BulkEarningsSurprise{Symbol: "AMKYF", Date: mustParseDate(t, "2025-07-09"), EpsActual: "0.3631",
-		EpsEstimated: "0.3615", LastUpdated: mustParseDate(t, "2025-07-09")}); len(surprises) != 1 || surprises[0] != want {
+	if want := (BulkEarningsSurprise{Symbol: "AMKYF", Date: mustParseDate(t, "2025-07-09"), EPSActual: "0.3631",
+		EPSEstimated: "0.3615", LastUpdated: mustParseDate(t, "2025-07-09")}); len(surprises) != 1 || surprises[0] != want {
 		t.Fatalf("bulk_earnings_surprises = %+v", surprises)
 	}
 }
@@ -211,7 +211,7 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 		income[0].FilingDate != mustParseDate(t, "2025-03-31") ||
 		income[0].AcceptedDate != mustParseDateTime(t, "2025-03-31 00:00:00") || income[0].FiscalYear != "2025" ||
 		income[0].Period != "Q1" || income[0].Revenue != "33644000000" || income[0].CostOfRevenue != "0" ||
-		income[0].TotalOtherIncomeExpensesNet != "-7392000000" || income[0].Eps != "0.62" ||
+		income[0].TotalOtherIncomeExpensesNet != "-7392000000" || income[0].EPS != "0.62" ||
 		income[0].WeightedAverageShsOut != "22735483871" {
 		t.Fatalf("bulk_income_statements = %+v", income)
 	}

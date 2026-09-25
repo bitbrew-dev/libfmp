@@ -221,11 +221,11 @@ func (n *DirectoryNamespace) SymbolChanges(ctx context.Context, q SymbolChangesQ
 	return out, nil
 }
 
-// EtfSymbols lists worldwide exchange-traded fund symbols.
+// ETFSymbols lists worldwide exchange-traded fund symbols.
 //
 // GET etf-list
-func (n *DirectoryNamespace) EtfSymbols(ctx context.Context) ([]EtfSymbol, error) {
-	var out []EtfSymbol
+func (n *DirectoryNamespace) ETFSymbols(ctx context.Context) ([]ETFSymbol, error) {
+	var out []ETFSymbol
 	if err := n.client.getJSON(ctx, "etf-list", "etf-list", nil, &out); err != nil {
 		return nil, err
 	}

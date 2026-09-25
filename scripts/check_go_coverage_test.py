@@ -52,7 +52,7 @@ func (n *QuoteNamespace) Full(ctx context.Context, q QuoteQuery) ([]Quote, error
 \treturn nil, nil
 }
 
-func (n *QuoteNamespace) Etfs(ctx context.Context) ([]QuoteShort, error) {
+func (n *QuoteNamespace) ETFs(ctx context.Context) ([]QuoteShort, error) {
 \treturn nil, nil
 }
 
@@ -116,7 +116,7 @@ class GoParserTest(unittest.TestCase):
             [m.go_key for m in methods],
             [
                 ("QuoteNamespace", "Full"),
-                ("QuoteNamespace", "Etfs"),
+                ("QuoteNamespace", "ETFs"),
                 ("StatementsIncomeNamespace", "Statement"),
             ],
         )
@@ -199,7 +199,7 @@ class RealTreeTest(unittest.TestCase):
         actual = {m.go_key for m in cov.actual_from_source(quote_go.read_text(), "quote.go")}
         expected = {e.go_key for e in cov.load_expected() if e.domain == "quote"}
         self.assertEqual(actual, expected)
-        self.assertIn(("QuoteNamespace", "Etfs"), actual)
+        self.assertIn(("QuoteNamespace", "ETFs"), actual)
         self.assertIn(("QuoteNamespace", "BatchShort"), actual)
 
 

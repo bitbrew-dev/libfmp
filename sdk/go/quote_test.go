@@ -69,9 +69,9 @@ func TestQuoteMethodsUseExactPathsQueriesAndHeaderAuthentication(t *testing.T) {
 	if err != nil || len(short) != 1 || short[0].Volume != 28_718_014 {
 		t.Fatalf("Short = %+v, %v", short, err)
 	}
-	etfs, err := client.Quote.Etfs(ctx)
+	etfs, err := client.Quote.ETFs(ctx)
 	if err != nil || len(etfs) != 1 || etfs[0].Symbol != "P60.SI" || etfs[0].Volume != 1 {
-		t.Fatalf("Etfs = %+v, %v", etfs, err)
+		t.Fatalf("ETFs = %+v, %v", etfs, err)
 	}
 
 	batch, err := client.Quote.BatchShort(ctx, NewBatchQuoteShortQuery([]string{"AAPL", "^VIX"}))

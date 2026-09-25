@@ -168,7 +168,7 @@ type SecCompanyProfile struct {
 	PriceCurrency           string          `json:"priceCurrency"`
 	MarketSector            string          `json:"marketSector"`
 	SecurityType            *jsontext.Value `json:"securityType"`
-	IsEtf                   bool            `json:"isEtf"`
+	IsETF                   bool            `json:"isEtf"`
 	IsAdr                   bool            `json:"isAdr"`
 	IsFund                  bool            `json:"isFund"`
 }
@@ -209,7 +209,7 @@ type secCompanyProfileShadow struct {
 	PriceCurrency           *string        `json:"priceCurrency"`
 	MarketSector            *string        `json:"marketSector"`
 	SecurityType            jsontext.Value `json:"securityType"`
-	IsEtf                   *bool          `json:"isEtf"`
+	IsETF                   *bool          `json:"isEtf"`
 	IsAdr                   *bool          `json:"isAdr"`
 	IsFund                  *bool          `json:"isFund"`
 }
@@ -287,7 +287,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("SecCompanyProfile", "marketSector")
 	case len(shadow.SecurityType) == 0:
 		return missingMemberError("SecCompanyProfile", "securityType")
-	case shadow.IsEtf == nil:
+	case shadow.IsETF == nil:
 		return missingMemberError("SecCompanyProfile", "isEtf")
 	case shadow.IsAdr == nil:
 		return missingMemberError("SecCompanyProfile", "isAdr")
@@ -335,7 +335,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		PriceCurrency:           *shadow.PriceCurrency,
 		MarketSector:            *shadow.MarketSector,
 		SecurityType:            securityType,
-		IsEtf:                   *shadow.IsEtf,
+		IsETF:                   *shadow.IsETF,
 		IsAdr:                   *shadow.IsAdr,
 		IsFund:                  *shadow.IsFund,
 	}

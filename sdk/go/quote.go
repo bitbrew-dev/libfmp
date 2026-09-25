@@ -394,10 +394,10 @@ func (n *QuoteNamespace) Exchange(ctx context.Context, q ExchangeQuotesQuery) ([
 	return out, nil
 }
 
-// Etfs retrieves compact quotes for the documented ETF universe.
+// ETFs retrieves compact quotes for the documented ETF universe.
 //
 // GET batch-etf-quotes?short=true
-func (n *QuoteNamespace) Etfs(ctx context.Context) ([]QuoteShort, error) {
+func (n *QuoteNamespace) ETFs(ctx context.Context) ([]QuoteShort, error) {
 	var out []QuoteShort
 	if err := n.client.getJSON(ctx, "batch-etf-quotes", "batch-etf-quotes", shortOnlyParams, &out); err != nil {
 		return nil, err

@@ -38,7 +38,7 @@ func TestDocumentedCompanyScreenerResultDecodesExactValues(t *testing.T) {
 		Exchange:           "NASDAQ Global Select",
 		ExchangeShortName:  "NASDAQ",
 		Country:            "US",
-		IsEtf:              false,
+		IsETF:              false,
 		IsFund:             false,
 		IsActivelyTrading:  true,
 	}
@@ -82,7 +82,7 @@ func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T
 		Symbol: "BIG", CompanyName: "Beyond Float Precision Corp.", MarketCap: 9_007_199_254_740_992,
 		Sector: "Future Sector", Industry: "Future Industry", Beta: 0, Price: 0, LastAnnualDividend: 0,
 		Volume: math.MaxUint64, Exchange: "Future Exchange", ExchangeShortName: "NEXT", Country: "ZZ",
-		IsEtf: false, IsFund: false, IsActivelyTrading: false,
+		IsETF: false, IsFund: false, IsActivelyTrading: false,
 	}
 	if multiple[0] != first || multiple[0].MarketCap < 1<<53 {
 		t.Fatalf("company_screener_multiple[0] = %+v, want %+v", multiple[0], first)
@@ -91,7 +91,7 @@ func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T
 		Symbol: "FUND", CompanyName: "Example Fund", MarketCap: 4_294_967_296,
 		Sector: "Financial Services", Industry: "Asset Management", Beta: 1.25, Price: 42.5, LastAnnualDividend: 2.5,
 		Volume: 4_294_967_296, Exchange: "New York Stock Exchange", ExchangeShortName: "NYSE", Country: "US",
-		IsEtf: false, IsFund: true, IsActivelyTrading: true,
+		IsETF: false, IsFund: true, IsActivelyTrading: true,
 	}
 	if multiple[1] != second {
 		t.Fatalf("company_screener_multiple[1] = %+v, want %+v", multiple[1], second)

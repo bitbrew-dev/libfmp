@@ -10,8 +10,8 @@ import (
 	"encoding/json/v2"
 )
 
-// EtfFundHolding is one asset held by an ETF or mutual fund.
-type EtfFundHolding struct {
+// ETFFundHolding is one asset held by an ETF or mutual fund.
+type ETFFundHolding struct {
 	Symbol           string   `json:"symbol"`
 	Asset            string   `json:"asset"`
 	Name             string   `json:"name"`
@@ -23,7 +23,7 @@ type EtfFundHolding struct {
 	UpdatedAt        DateTime `json:"updatedAt"`
 }
 
-// etfFundHoldingShadow mirrors EtfFundHolding with a pointer or raw value for
+// etfFundHoldingShadow mirrors ETFFundHolding with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type etfFundHoldingShadow struct {
@@ -41,32 +41,32 @@ type etfFundHoldingShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EtfFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow etfFundHoldingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("EtfFundHolding", "symbol")
+		return missingMemberError("ETFFundHolding", "symbol")
 	case shadow.Asset == nil:
-		return missingMemberError("EtfFundHolding", "asset")
+		return missingMemberError("ETFFundHolding", "asset")
 	case shadow.Name == nil:
-		return missingMemberError("EtfFundHolding", "name")
+		return missingMemberError("ETFFundHolding", "name")
 	case shadow.Isin == nil:
-		return missingMemberError("EtfFundHolding", "isin")
+		return missingMemberError("ETFFundHolding", "isin")
 	case shadow.SecurityCusip == nil:
-		return missingMemberError("EtfFundHolding", "securityCusip")
+		return missingMemberError("ETFFundHolding", "securityCusip")
 	case shadow.SharesNumber == nil:
-		return missingMemberError("EtfFundHolding", "sharesNumber")
+		return missingMemberError("ETFFundHolding", "sharesNumber")
 	case shadow.WeightPercentage == nil:
-		return missingMemberError("EtfFundHolding", "weightPercentage")
+		return missingMemberError("ETFFundHolding", "weightPercentage")
 	case shadow.MarketValue == nil:
-		return missingMemberError("EtfFundHolding", "marketValue")
+		return missingMemberError("ETFFundHolding", "marketValue")
 	case shadow.UpdatedAt == nil:
-		return missingMemberError("EtfFundHolding", "updatedAt")
+		return missingMemberError("ETFFundHolding", "updatedAt")
 	}
-	*m = EtfFundHolding{
+	*m = ETFFundHolding{
 		Symbol:           *shadow.Symbol,
 		Asset:            *shadow.Asset,
 		Name:             *shadow.Name,
@@ -80,14 +80,14 @@ func (m *EtfFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// EtfSectorExposure is one sector exposure nested within a fund-information
+// ETFSectorExposure is one sector exposure nested within a fund-information
 // row.
-type EtfSectorExposure struct {
+type ETFSectorExposure struct {
 	Industry string  `json:"industry"`
 	Exposure float64 `json:"exposure"`
 }
 
-// etfSectorExposureShadow mirrors EtfSectorExposure with a pointer or raw
+// etfSectorExposureShadow mirrors ETFSectorExposure with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type etfSectorExposureShadow struct {
@@ -98,27 +98,27 @@ type etfSectorExposureShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EtfSectorExposure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ETFSectorExposure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow etfSectorExposureShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Industry == nil:
-		return missingMemberError("EtfSectorExposure", "industry")
+		return missingMemberError("ETFSectorExposure", "industry")
 	case shadow.Exposure == nil:
-		return missingMemberError("EtfSectorExposure", "exposure")
+		return missingMemberError("ETFSectorExposure", "exposure")
 	}
-	*m = EtfSectorExposure{
+	*m = ETFSectorExposure{
 		Industry: *shadow.Industry,
 		Exposure: *shadow.Exposure,
 	}
 	return nil
 }
 
-// EtfFundInfo is descriptive, structural, and trading information for an ETF
+// ETFFundInfo is descriptive, structural, and trading information for an ETF
 // or mutual fund.
-type EtfFundInfo struct {
+type ETFFundInfo struct {
 	Symbol                string              `json:"symbol"`
 	Name                  string              `json:"name"`
 	Description           string              `json:"description"`
@@ -127,7 +127,7 @@ type EtfFundInfo struct {
 	SecurityCusip         string              `json:"securityCusip"`
 	Domicile              string              `json:"domicile"`
 	Website               string              `json:"website"`
-	EtfCompany            string              `json:"etfCompany"`
+	ETFCompany            string              `json:"etfCompany"`
 	ExpenseRatio          float64             `json:"expenseRatio"`
 	AssetsUnderManagement float64             `json:"assetsUnderManagement"`
 	AvgVolume             float64             `json:"avgVolume"`
@@ -137,10 +137,10 @@ type EtfFundInfo struct {
 	HoldingsCount         uint64              `json:"holdingsCount"`
 	IsActivelyTrading     bool                `json:"isActivelyTrading"`
 	UpdatedAt             string              `json:"updatedAt"`
-	SectorsList           []EtfSectorExposure `json:"sectorsList"`
+	SectorsList           []ETFSectorExposure `json:"sectorsList"`
 }
 
-// etfFundInfoShadow mirrors EtfFundInfo with a pointer or raw value for every
+// etfFundInfoShadow mirrors ETFFundInfo with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type etfFundInfoShadow struct {
 	Symbol                *string              `json:"symbol"`
@@ -151,7 +151,7 @@ type etfFundInfoShadow struct {
 	SecurityCusip         *string              `json:"securityCusip"`
 	Domicile              *string              `json:"domicile"`
 	Website               *string              `json:"website"`
-	EtfCompany            *string              `json:"etfCompany"`
+	ETFCompany            *string              `json:"etfCompany"`
 	ExpenseRatio          *float64             `json:"expenseRatio"`
 	AssetsUnderManagement *float64             `json:"assetsUnderManagement"`
 	AvgVolume             *float64             `json:"avgVolume"`
@@ -161,58 +161,58 @@ type etfFundInfoShadow struct {
 	HoldingsCount         *uint64              `json:"holdingsCount"`
 	IsActivelyTrading     *bool                `json:"isActivelyTrading"`
 	UpdatedAt             *string              `json:"updatedAt"`
-	SectorsList           *[]EtfSectorExposure `json:"sectorsList"`
+	SectorsList           *[]ETFSectorExposure `json:"sectorsList"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EtfFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ETFFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow etfFundInfoShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("EtfFundInfo", "symbol")
+		return missingMemberError("ETFFundInfo", "symbol")
 	case shadow.Name == nil:
-		return missingMemberError("EtfFundInfo", "name")
+		return missingMemberError("ETFFundInfo", "name")
 	case shadow.Description == nil:
-		return missingMemberError("EtfFundInfo", "description")
+		return missingMemberError("ETFFundInfo", "description")
 	case shadow.Isin == nil:
-		return missingMemberError("EtfFundInfo", "isin")
+		return missingMemberError("ETFFundInfo", "isin")
 	case shadow.AssetClass == nil:
-		return missingMemberError("EtfFundInfo", "assetClass")
+		return missingMemberError("ETFFundInfo", "assetClass")
 	case shadow.SecurityCusip == nil:
-		return missingMemberError("EtfFundInfo", "securityCusip")
+		return missingMemberError("ETFFundInfo", "securityCusip")
 	case shadow.Domicile == nil:
-		return missingMemberError("EtfFundInfo", "domicile")
+		return missingMemberError("ETFFundInfo", "domicile")
 	case shadow.Website == nil:
-		return missingMemberError("EtfFundInfo", "website")
-	case shadow.EtfCompany == nil:
-		return missingMemberError("EtfFundInfo", "etfCompany")
+		return missingMemberError("ETFFundInfo", "website")
+	case shadow.ETFCompany == nil:
+		return missingMemberError("ETFFundInfo", "etfCompany")
 	case shadow.ExpenseRatio == nil:
-		return missingMemberError("EtfFundInfo", "expenseRatio")
+		return missingMemberError("ETFFundInfo", "expenseRatio")
 	case shadow.AssetsUnderManagement == nil:
-		return missingMemberError("EtfFundInfo", "assetsUnderManagement")
+		return missingMemberError("ETFFundInfo", "assetsUnderManagement")
 	case shadow.AvgVolume == nil:
-		return missingMemberError("EtfFundInfo", "avgVolume")
+		return missingMemberError("ETFFundInfo", "avgVolume")
 	case shadow.InceptionDate == nil:
-		return missingMemberError("EtfFundInfo", "inceptionDate")
+		return missingMemberError("ETFFundInfo", "inceptionDate")
 	case shadow.Nav == nil:
-		return missingMemberError("EtfFundInfo", "nav")
+		return missingMemberError("ETFFundInfo", "nav")
 	case shadow.NavCurrency == nil:
-		return missingMemberError("EtfFundInfo", "navCurrency")
+		return missingMemberError("ETFFundInfo", "navCurrency")
 	case shadow.HoldingsCount == nil:
-		return missingMemberError("EtfFundInfo", "holdingsCount")
+		return missingMemberError("ETFFundInfo", "holdingsCount")
 	case shadow.IsActivelyTrading == nil:
-		return missingMemberError("EtfFundInfo", "isActivelyTrading")
+		return missingMemberError("ETFFundInfo", "isActivelyTrading")
 	case shadow.UpdatedAt == nil:
-		return missingMemberError("EtfFundInfo", "updatedAt")
+		return missingMemberError("ETFFundInfo", "updatedAt")
 	case shadow.SectorsList == nil:
-		return missingMemberError("EtfFundInfo", "sectorsList")
+		return missingMemberError("ETFFundInfo", "sectorsList")
 	}
-	*m = EtfFundInfo{
+	*m = ETFFundInfo{
 		Symbol:                *shadow.Symbol,
 		Name:                  *shadow.Name,
 		Description:           *shadow.Description,
@@ -221,7 +221,7 @@ func (m *EtfFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		SecurityCusip:         *shadow.SecurityCusip,
 		Domicile:              *shadow.Domicile,
 		Website:               *shadow.Website,
-		EtfCompany:            *shadow.EtfCompany,
+		ETFCompany:            *shadow.ETFCompany,
 		ExpenseRatio:          *shadow.ExpenseRatio,
 		AssetsUnderManagement: *shadow.AssetsUnderManagement,
 		AvgVolume:             *shadow.AvgVolume,
@@ -236,14 +236,14 @@ func (m *EtfFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// EtfCountryWeighting is one country allocation reported as an exact
+// ETFCountryWeighting is one country allocation reported as an exact
 // percent-bearing string.
-type EtfCountryWeighting struct {
+type ETFCountryWeighting struct {
 	Country          string `json:"country"`
 	WeightPercentage string `json:"weightPercentage"`
 }
 
-// etfCountryWeightingShadow mirrors EtfCountryWeighting with a pointer or raw
+// etfCountryWeightingShadow mirrors ETFCountryWeighting with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type etfCountryWeightingShadow struct {
@@ -254,26 +254,26 @@ type etfCountryWeightingShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EtfCountryWeighting) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ETFCountryWeighting) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow etfCountryWeightingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Country == nil:
-		return missingMemberError("EtfCountryWeighting", "country")
+		return missingMemberError("ETFCountryWeighting", "country")
 	case shadow.WeightPercentage == nil:
-		return missingMemberError("EtfCountryWeighting", "weightPercentage")
+		return missingMemberError("ETFCountryWeighting", "weightPercentage")
 	}
-	*m = EtfCountryWeighting{
+	*m = ETFCountryWeighting{
 		Country:          *shadow.Country,
 		WeightPercentage: *shadow.WeightPercentage,
 	}
 	return nil
 }
 
-// EtfAssetExposure is one ETF's exposure to a requested asset.
-type EtfAssetExposure struct {
+// ETFAssetExposure is one ETF's exposure to a requested asset.
+type ETFAssetExposure struct {
 	Symbol           string  `json:"symbol"`
 	Asset            string  `json:"asset"`
 	SharesNumber     float64 `json:"sharesNumber"`
@@ -281,7 +281,7 @@ type EtfAssetExposure struct {
 	MarketValue      float64 `json:"marketValue"`
 }
 
-// etfAssetExposureShadow mirrors EtfAssetExposure with a pointer or raw value
+// etfAssetExposureShadow mirrors ETFAssetExposure with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type etfAssetExposureShadow struct {
@@ -295,24 +295,24 @@ type etfAssetExposureShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EtfAssetExposure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ETFAssetExposure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow etfAssetExposureShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("EtfAssetExposure", "symbol")
+		return missingMemberError("ETFAssetExposure", "symbol")
 	case shadow.Asset == nil:
-		return missingMemberError("EtfAssetExposure", "asset")
+		return missingMemberError("ETFAssetExposure", "asset")
 	case shadow.SharesNumber == nil:
-		return missingMemberError("EtfAssetExposure", "sharesNumber")
+		return missingMemberError("ETFAssetExposure", "sharesNumber")
 	case shadow.WeightPercentage == nil:
-		return missingMemberError("EtfAssetExposure", "weightPercentage")
+		return missingMemberError("ETFAssetExposure", "weightPercentage")
 	case shadow.MarketValue == nil:
-		return missingMemberError("EtfAssetExposure", "marketValue")
+		return missingMemberError("ETFAssetExposure", "marketValue")
 	}
-	*m = EtfAssetExposure{
+	*m = ETFAssetExposure{
 		Symbol:           *shadow.Symbol,
 		Asset:            *shadow.Asset,
 		SharesNumber:     *shadow.SharesNumber,
@@ -322,15 +322,15 @@ func (m *EtfAssetExposure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	return nil
 }
 
-// EtfSectorWeighting is one numeric sector allocation for an ETF or mutual
+// ETFSectorWeighting is one numeric sector allocation for an ETF or mutual
 // fund.
-type EtfSectorWeighting struct {
+type ETFSectorWeighting struct {
 	Symbol           string  `json:"symbol"`
 	Sector           string  `json:"sector"`
 	WeightPercentage float64 `json:"weightPercentage"`
 }
 
-// etfSectorWeightingShadow mirrors EtfSectorWeighting with a pointer or raw
+// etfSectorWeightingShadow mirrors ETFSectorWeighting with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type etfSectorWeightingShadow struct {
@@ -342,20 +342,20 @@ type etfSectorWeightingShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *EtfSectorWeighting) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+func (m *ETFSectorWeighting) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow etfSectorWeightingShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Symbol == nil:
-		return missingMemberError("EtfSectorWeighting", "symbol")
+		return missingMemberError("ETFSectorWeighting", "symbol")
 	case shadow.Sector == nil:
-		return missingMemberError("EtfSectorWeighting", "sector")
+		return missingMemberError("ETFSectorWeighting", "sector")
 	case shadow.WeightPercentage == nil:
-		return missingMemberError("EtfSectorWeighting", "weightPercentage")
+		return missingMemberError("ETFSectorWeighting", "weightPercentage")
 	}
-	*m = EtfSectorWeighting{
+	*m = ETFSectorWeighting{
 		Symbol:           *shadow.Symbol,
 		Sector:           *shadow.Sector,
 		WeightPercentage: *shadow.WeightPercentage,

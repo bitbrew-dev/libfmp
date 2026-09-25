@@ -96,7 +96,7 @@ func TestDocumentedEarningsFixturesKeepOnlyActualValuesNullable(t *testing.T) {
 	t.Parallel()
 	company := assertFixtureParity[EarningsEvent](t, "earnings.json")
 	want := EarningsEvent{
-		Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), EpsEstimated: 1.88,
+		Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), EPSEstimated: 1.88,
 		RevenueEstimated: 109_038_900_000, LastUpdated: mustParseDate(t, "2026-07-30"),
 	}
 	if len(company) != 1 || company[0] != want {
@@ -104,13 +104,13 @@ func TestDocumentedEarningsFixturesKeepOnlyActualValuesNullable(t *testing.T) {
 	}
 
 	calendar := assertFixtureParity[EarningsEvent](t, "earnings_calendar.json")
-	if len(calendar) != 1 || calendar[0].Symbol != "GRG.L" || calendar[0].EpsEstimated != 0.501 ||
+	if len(calendar) != 1 || calendar[0].Symbol != "GRG.L" || calendar[0].EPSEstimated != 0.501 ||
 		calendar[0].RevenueEstimated != 1_086_300_000 {
 		t.Fatalf("earnings_calendar = %+v", calendar)
 	}
-	if calendar[0].EpsActual == nil || *calendar[0].EpsActual != 0.549 ||
+	if calendar[0].EPSActual == nil || *calendar[0].EPSActual != 0.549 ||
 		calendar[0].RevenueActual == nil || *calendar[0].RevenueActual != 1_101_500_000 {
-		t.Fatalf("earnings_calendar actuals = %v, %v", calendar[0].EpsActual, calendar[0].RevenueActual)
+		t.Fatalf("earnings_calendar actuals = %v, %v", calendar[0].EPSActual, calendar[0].RevenueActual)
 	}
 }
 

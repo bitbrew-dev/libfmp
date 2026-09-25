@@ -16,13 +16,13 @@ func TestStatementsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[IncomeStatement](t, "income_statement.json")
 	assertFixtureParity[IncomeStatement](t, "income_statement_ttm.json")
 	assertFixtureParity[BalanceSheetStatement](t, "balance_sheet_statement.json")
-	assertFixtureParity[BalanceSheetStatementTtm](t, "balance_sheet_statement_ttm.json")
+	assertFixtureParity[BalanceSheetStatementTTM](t, "balance_sheet_statement_ttm.json")
 	assertFixtureParity[CashFlowStatement](t, "cash_flow_statement.json")
 	assertFixtureParity[CashFlowStatement](t, "cash_flow_statement_ttm.json")
 	assertFixtureParity[KeyMetrics](t, "key_metrics.json")
-	assertFixtureParity[KeyMetricsTtm](t, "key_metrics_ttm.json")
+	assertFixtureParity[KeyMetricsTTM](t, "key_metrics_ttm.json")
 	assertFixtureParity[FinancialRatios](t, "financial_ratios.json")
-	assertFixtureParity[FinancialRatiosTtm](t, "financial_ratios_ttm.json")
+	assertFixtureParity[FinancialRatiosTTM](t, "financial_ratios_ttm.json")
 	assertFixtureParity[IncomeStatementGrowth](t, "income_statement_growth.json")
 	assertFixtureParity[BalanceSheetStatementGrowth](t, "balance_sheet_statement_growth.json")
 	assertFixtureParity[CashFlowStatementGrowth](t, "cash_flow_statement_growth.json")
@@ -60,7 +60,7 @@ func TestDocumentedIncomeStatementDecodesAll39FieldsExactly(t *testing.T) {
 		TotalOtherIncomeExpensesNet: -321_000_000, IncomeBeforeTax: 132_729_000_000,
 		IncomeTaxExpense: 20_719_000_000, NetIncomeFromContinuingOperations: 112_010_000_000,
 		NetIncomeFromDiscontinuedOperations: 0, OtherAdjustmentsToNetIncome: 0, NetIncome: 112_010_000_000,
-		NetIncomeDeductions: 0, BottomLineNetIncome: 112_010_000_000, Eps: 7.49, EpsDiluted: 7.46,
+		NetIncomeDeductions: 0, BottomLineNetIncome: 112_010_000_000, EPS: 7.49, EPSDiluted: 7.46,
 		WeightedAverageShsOut: 14_948_500_000, WeightedAverageShsOutDil: 15_004_697_000,
 	}
 	if len(rows) != 1 || rows[0] != want {
@@ -84,7 +84,7 @@ func TestDocumentedBalanceSheetAndCashFlowFixturesDecodeExactAmounts(t *testing.
 		balance[0].RetainedEarnings != -14_264_000_000 || len(memberSet(t, balance[0])) != 61 {
 		t.Fatalf("balance_sheet_statement = %+v", balance)
 	}
-	ttm := assertFixtureParity[BalanceSheetStatementTtm](t, "balance_sheet_statement_ttm.json")
+	ttm := assertFixtureParity[BalanceSheetStatementTTM](t, "balance_sheet_statement_ttm.json")
 	if len(ttm) != 1 || ttm[0].Date != mustParseDate(t, "2026-03-28") || ttm[0].Period != "Q2" ||
 		ttm[0].TotalAssets != 371_082_000_000 || ttm[0].RetainedEarnings != 12_359_000_000 ||
 		len(memberSet(t, ttm[0])) != 60 {
@@ -169,7 +169,7 @@ func TestStatementAmountsPreserveLargeIntegralValuesAndShareQuantitiesKeepFracti
 	}
 
 	balance := statementsRoundTripExtreme[BalanceSheetStatement](t, "balance_sheet_statement.json", "totalAssets", large)
-	balanceTtm := statementsRoundTripExtreme[BalanceSheetStatementTtm](t, "balance_sheet_statement_ttm.json", "retainedEarnings", negative)
+	balanceTtm := statementsRoundTripExtreme[BalanceSheetStatementTTM](t, "balance_sheet_statement_ttm.json", "retainedEarnings", negative)
 	if balance.TotalAssets != 9e18 || balanceTtm.RetainedEarnings != -9e18 {
 		t.Fatalf("balance extremes = %v %v", balance.TotalAssets, balanceTtm.RetainedEarnings)
 	}
@@ -195,7 +195,7 @@ func TestStatementAmountsPreserveLargeIntegralValuesAndShareQuantitiesKeepFracti
 	if err := json.Unmarshal(statementsWithMember(t, "income_statement.json", "fiscalYear", "2025"), &incomes); err == nil {
 		t.Fatal("numeric fiscalYear decoded into a string")
 	}
-	var balances []BalanceSheetStatementTtm
+	var balances []BalanceSheetStatementTTM
 	if err := json.Unmarshal(statementsWithMember(t, "balance_sheet_statement_ttm.json", "fiscalYear", "2026"), &balances); err == nil {
 		t.Fatal("numeric fiscalYear decoded into a string on the TTM contract")
 	}

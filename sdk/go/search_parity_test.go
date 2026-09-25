@@ -119,7 +119,7 @@ func TestDocumentedExchangeVariantDecodesExactValues(t *testing.T) {
 		FullTimeEmployees: "166000", Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino",
 		State: "CA", Zip: "95014", DcfDiff: 191.60731, Dcf: 140.70269296445176,
 		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IpoDate: mustParseDate(t, "1980-12-12"),
-		DefaultImage: false, IsEtf: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
+		DefaultImage: false, IsETF: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
 	}
 	if row != want {
 		t.Fatalf("search_exchange_variants[0] = %+v, want %+v", row, want)

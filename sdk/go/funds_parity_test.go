@@ -16,11 +16,11 @@ import (
 // institutional_ownership Form13fFilingDate model.
 func TestFundsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[EtfFundHolding](t, "etf_fund_holdings.json")
-	assertFixtureParity[EtfFundInfo](t, "etf_fund_info.json")
-	assertFixtureParity[EtfCountryWeighting](t, "etf_country_weightings.json")
-	assertFixtureParity[EtfAssetExposure](t, "etf_asset_exposure.json")
-	assertFixtureParity[EtfSectorWeighting](t, "etf_sector_weightings.json")
+	assertFixtureParity[ETFFundHolding](t, "etf_fund_holdings.json")
+	assertFixtureParity[ETFFundInfo](t, "etf_fund_info.json")
+	assertFixtureParity[ETFCountryWeighting](t, "etf_country_weightings.json")
+	assertFixtureParity[ETFAssetExposure](t, "etf_asset_exposure.json")
+	assertFixtureParity[ETFSectorWeighting](t, "etf_sector_weightings.json")
 	assertFixtureParity[FundDisclosureHolder](t, "latest_fund_disclosure_holders.json")
 	assertFixtureParity[FundDisclosure](t, "fund_disclosures.json")
 	assertFixtureParity[FundDisclosureSearchResult](t, "fund_disclosure_holder_search.json")
@@ -31,8 +31,8 @@ func TestFundsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 // counts mirror the Rust assert_field_count calls (9, 19, 2, 5, 3).
 func TestDocumentedEtfFixturesDecodeExactly(t *testing.T) {
 	t.Parallel()
-	holdings := assertFixtureParity[EtfFundHolding](t, "etf_fund_holdings.json")
-	wantHolding := EtfFundHolding{
+	holdings := assertFixtureParity[ETFFundHolding](t, "etf_fund_holdings.json")
+	wantHolding := ETFFundHolding{
 		Symbol: "SPY", Asset: "AAPL", Name: "APPLE INC", Isin: "US0378331005", SecurityCusip: "037833100",
 		SharesNumber: 181_418_073, WeightPercentage: 7.79997012, MarketValue: 61_679_458_958.0,
 		UpdatedAt: mustParseDateTime(t, "2026-07-30 08:07:21"),
@@ -44,8 +44,8 @@ func TestDocumentedEtfFixturesDecodeExactly(t *testing.T) {
 		t.Fatalf("re-encoded holding members = %d, want 9", len(got))
 	}
 
-	info := assertFixtureParity[EtfFundInfo](t, "etf_fund_info.json")
-	wantSectors := []EtfSectorExposure{
+	info := assertFixtureParity[ETFFundInfo](t, "etf_fund_info.json")
+	wantSectors := []ETFSectorExposure{
 		{Industry: "Basic Materials", Exposure: 1.6916311902850854},
 		{Industry: "Cash & Others", Exposure: 0.30489782336177595},
 		{Industry: "Communication Services", Exposure: 9.23211353485037},
@@ -53,7 +53,7 @@ func TestDocumentedEtfFixturesDecodeExactly(t *testing.T) {
 	if len(info) != 1 || info[0].Symbol != "SPY" || info[0].Name != "State Street SPDR S&P 500 ETF" ||
 		!strings.Contains(info[0].Description, "It also can`t reinvest") || info[0].Isin != "US78462F1030" ||
 		info[0].AssetClass != "Equity" || info[0].SecurityCusip != "78462F103" || info[0].Domicile != "US" ||
-		info[0].EtfCompany != "SPDR" || info[0].ExpenseRatio != 0.09 ||
+		info[0].ETFCompany != "SPDR" || info[0].ExpenseRatio != 0.09 ||
 		info[0].AssetsUnderManagement != 777_349_860_000 || info[0].AvgVolume != 52_093_933 ||
 		info[0].InceptionDate != mustParseDate(t, "1993-01-22") || info[0].Nav != 729.27 ||
 		info[0].NavCurrency != "USD" || info[0].HoldingsCount != 504 || !info[0].IsActivelyTrading ||
@@ -64,24 +64,24 @@ func TestDocumentedEtfFixturesDecodeExactly(t *testing.T) {
 		t.Fatalf("re-encoded info members = %d, want 19", len(got))
 	}
 
-	countries := assertFixtureParity[EtfCountryWeighting](t, "etf_country_weightings.json")
-	wantCountry := EtfCountryWeighting{Country: "United States", WeightPercentage: "97.26%"}
+	countries := assertFixtureParity[ETFCountryWeighting](t, "etf_country_weightings.json")
+	wantCountry := ETFCountryWeighting{Country: "United States", WeightPercentage: "97.26%"}
 	if len(countries) != 1 || countries[0] != wantCountry {
 		t.Fatalf("etf_country_weightings = %+v, want %+v", countries, wantCountry)
 	}
 	// The fixture spells weightPercentage as 10.100000000000001, which Go
 	// parses correctly rounded to the f64 above 10.1; serde_json's default
 	// float parser lands on 10.1, which is what the Rust test asserts.
-	assets := assertFixtureParity[EtfAssetExposure](t, "etf_asset_exposure.json")
-	wantAsset := EtfAssetExposure{
+	assets := assertFixtureParity[ETFAssetExposure](t, "etf_asset_exposure.json")
+	wantAsset := ETFAssetExposure{
 		Symbol: "ZWT-T.TO", Asset: "AAPL", SharesNumber: 42_372, WeightPercentage: 10.100000000000001,
 		MarketValue: 20_141_231.66,
 	}
 	if len(assets) != 1 || assets[0] != wantAsset {
 		t.Fatalf("etf_asset_exposure = %+v, want %+v", assets, wantAsset)
 	}
-	sectors := assertFixtureParity[EtfSectorWeighting](t, "etf_sector_weightings.json")
-	wantSector := EtfSectorWeighting{Symbol: "SPY", Sector: "Basic Materials", WeightPercentage: 1.6916311902850854}
+	sectors := assertFixtureParity[ETFSectorWeighting](t, "etf_sector_weightings.json")
+	wantSector := ETFSectorWeighting{Symbol: "SPY", Sector: "Basic Materials", WeightPercentage: 1.6916311902850854}
 	if len(sectors) != 1 || sectors[0] != wantSector {
 		t.Fatalf("etf_sector_weightings = %+v, want %+v", sectors, wantSector)
 	}
@@ -173,12 +173,12 @@ func fundsRewrite(t *testing.T, fixture string, members map[string]string) []byt
 func TestFundsExtremeIntegersDecodeIntoQuantityAmountAndCountMembers(t *testing.T) {
 	t.Parallel()
 	const maxUint64 = "18446744073709551615"
-	var holdings []EtfFundHolding
+	var holdings []ETFFundHolding
 	if err := json.Unmarshal(fundsRewrite(t, "etf_fund_holdings.json",
 		map[string]string{"sharesNumber": maxUint64}), &holdings); err != nil || holdings[0].SharesNumber != math.MaxUint64 {
 		t.Fatalf("sharesNumber = %+v, %v", holdings, err)
 	}
-	var info []EtfFundInfo
+	var info []ETFFundInfo
 	if err := json.Unmarshal(fundsRewrite(t, "etf_fund_info.json", map[string]string{
 		"assetsUnderManagement": maxUint64, "avgVolume": maxUint64, "holdingsCount": maxUint64,
 	}), &info); err != nil || info[0].AssetsUnderManagement != math.MaxUint64 ||
@@ -202,7 +202,7 @@ func TestFundsExtremeIntegersDecodeIntoQuantityAmountAndCountMembers(t *testing.
 // Mirrors exact_allocation_fixtures_preserve_string_and_numeric_percent_kinds
 // and identifiers_flags_and_temporal_wire_kinds_are_not_coerced: a member of
 // the wrong JSON kind is rejected, never coerced. The IsoTimestamp member
-// updatedAt of EtfFundInfo is a plain string under the ADR 0030 type table,
+// updatedAt of ETFFundInfo is a plain string under the ADR 0030 type table,
 // so the Rust rejection of a space-separated timestamp there has no Go
 // mirror.
 func TestFundsMembersRejectTheWrongWireKind(t *testing.T) {
@@ -215,15 +215,15 @@ func TestFundsMembersRejectTheWrongWireKind(t *testing.T) {
 		decode  func([]byte) error
 	}{
 		{"country percent as number", "etf_country_weightings.json", "weightPercentage", "97.26",
-			func(b []byte) error { var r []EtfCountryWeighting; return json.Unmarshal(b, &r) }},
+			func(b []byte) error { var r []ETFCountryWeighting; return json.Unmarshal(b, &r) }},
 		{"asset percent as string", "etf_asset_exposure.json", "weightPercentage", `"10.1%"`,
-			func(b []byte) error { var r []EtfAssetExposure; return json.Unmarshal(b, &r) }},
+			func(b []byte) error { var r []ETFAssetExposure; return json.Unmarshal(b, &r) }},
 		{"sector percent as string", "etf_sector_weightings.json", "weightPercentage", `"1.69%"`,
-			func(b []byte) error { var r []EtfSectorWeighting; return json.Unmarshal(b, &r) }},
+			func(b []byte) error { var r []ETFSectorWeighting; return json.Unmarshal(b, &r) }},
 		{"info trading flag as text", "etf_fund_info.json", "isActivelyTrading", `"Y"`,
-			func(b []byte) error { var r []EtfFundInfo; return json.Unmarshal(b, &r) }},
+			func(b []byte) error { var r []ETFFundInfo; return json.Unmarshal(b, &r) }},
 		{"holding updatedAt as ISO timestamp", "etf_fund_holdings.json", "updatedAt", `"2026-07-30T08:07:21.000Z"`,
-			func(b []byte) error { var r []EtfFundHolding; return json.Unmarshal(b, &r) }},
+			func(b []byte) error { var r []ETFFundHolding; return json.Unmarshal(b, &r) }},
 		{"disclosure date with time", "fund_disclosures.json", "date", `"2023-10-31 00:00:00"`,
 			func(b []byte) error { var r []FundDisclosure; return json.Unmarshal(b, &r) }},
 		{"disclosure acceptedDate without time", "fund_disclosures.json", "acceptedDate", `"2023-12-28"`,
@@ -252,7 +252,7 @@ func TestFundsMembersRejectTheWrongWireKind(t *testing.T) {
 }
 
 // The missing-required-member path of the generated decoders, once for this
-// domain, including the nested EtfSectorExposure rows of EtfFundInfo: serde
+// domain, including the nested ETFSectorExposure rows of ETFFundInfo: serde
 // rejects a missing and a null member alike, and tolerates an unknown one.
 func TestFundsRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	t.Parallel()
@@ -262,14 +262,14 @@ func TestFundsRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		member string
 		model  string
 	}{
-		{"missing member", `[{"symbol":"SPY","weightPercentage":1.69}]`, "sector", "EtfSectorWeighting"},
-		{"null member", `[{"symbol":"SPY","sector":null,"weightPercentage":1.69}]`, "sector", "EtfSectorWeighting"},
-		{"empty object", `[{}]`, "symbol", "EtfSectorWeighting"},
+		{"missing member", `[{"symbol":"SPY","weightPercentage":1.69}]`, "sector", "ETFSectorWeighting"},
+		{"null member", `[{"symbol":"SPY","sector":null,"weightPercentage":1.69}]`, "sector", "ETFSectorWeighting"},
+		{"empty object", `[{}]`, "symbol", "ETFSectorWeighting"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			var rows []EtfSectorWeighting
+			var rows []ETFSectorWeighting
 			err := json.Unmarshal([]byte(tc.wire), &rows)
 			var typed *Error
 			if !errors.As(err, &typed) || typed.Category != CategoryDecode {
@@ -296,16 +296,16 @@ func TestFundsRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		if !strings.Contains(source, tc.old) {
 			t.Fatalf("%s: fixture text %q not found", tc.name, tc.old)
 		}
-		var rows []EtfFundInfo
+		var rows []ETFFundInfo
 		err := json.Unmarshal([]byte(strings.Replace(source, tc.old, tc.new, 1)), &rows)
 		var typed *Error
-		if !errors.As(err, &typed) || typed.Category != CategoryDecode || !strings.Contains(typed.Message, "EtfSectorExposure") {
-			t.Fatalf("%s: error = %v, want a CategoryDecode *Error naming EtfSectorExposure", tc.name, err)
+		if !errors.As(err, &typed) || typed.Category != CategoryDecode || !strings.Contains(typed.Message, "ETFSectorExposure") {
+			t.Fatalf("%s: error = %v, want a CategoryDecode *Error naming ETFSectorExposure", tc.name, err)
 		}
 	}
 	forward := strings.Replace(source, `"industry": "Basic Materials"`,
 		`"industry": "Basic Materials", "futureProviderField": [1, true]`, 1)
-	var rows []EtfFundInfo
+	var rows []ETFFundInfo
 	if err := json.Unmarshal([]byte(forward), &rows); err != nil || len(rows) != 1 || len(rows[0].SectorsList) != 3 {
 		t.Fatalf("nested unknown member was not ignored: %+v, %v", rows, err)
 	}

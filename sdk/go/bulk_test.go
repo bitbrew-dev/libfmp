@@ -74,21 +74,21 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(targets) != 1 || targets[0].Symbol != "A" {
 		t.Fatalf("PriceTargetSummaries = %+v, %v", targets, err)
 	}
-	holdings, err := client.Bulk.EtfHoldings(ctx, NewBulkPartQuery("segment A/7"))
+	holdings, err := client.Bulk.ETFHoldings(ctx, NewBulkPartQuery("segment A/7"))
 	if err != nil || len(holdings) != 1 || holdings[0].LastUpdatedRaw != `2024-09-06"` {
-		t.Fatalf("EtfHoldings = %+v, %v", holdings, err)
+		t.Fatalf("ETFHoldings = %+v, %v", holdings, err)
 	}
 	consensus, err := client.Bulk.UpgradesDowngradesConsensus(ctx)
 	if err != nil || len(consensus) != 1 || consensus[0].Consensus != "Buy" {
 		t.Fatalf("UpgradesDowngradesConsensus = %+v, %v", consensus, err)
 	}
-	metrics, err := client.Bulk.KeyMetricsTtm(ctx)
+	metrics, err := client.Bulk.KeyMetricsTTM(ctx)
 	if err != nil || len(metrics) != 1 || metrics[0].MarketCap != "249171756000" {
-		t.Fatalf("KeyMetricsTtm = %+v, %v", metrics, err)
+		t.Fatalf("KeyMetricsTTM = %+v, %v", metrics, err)
 	}
-	ratios, err := client.Bulk.FinancialRatiosTtm(ctx)
-	if err != nil || len(ratios) != 1 || ratios[0].GrossProfitMarginTtm != "1.1622776732779352" {
-		t.Fatalf("FinancialRatiosTtm = %+v, %v", ratios, err)
+	ratios, err := client.Bulk.FinancialRatiosTTM(ctx)
+	if err != nil || len(ratios) != 1 || ratios[0].GrossProfitMarginTTM != "1.1622776732779352" {
+		t.Fatalf("FinancialRatiosTTM = %+v, %v", ratios, err)
 	}
 	peers, err := client.Bulk.StockPeers(ctx)
 	if err != nil || len(peers) != 1 || peers[0].Peers != "600036.SS" {
@@ -161,11 +161,11 @@ func TestBulkQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "part", ErrEmptyValue, ""},
 		{"whitespace part", func() error {
-			_, err := client.Bulk.EtfHoldings(ctx, NewBulkPartQuery("  "))
+			_, err := client.Bulk.ETFHoldings(ctx, NewBulkPartQuery("  "))
 			return err
 		}, "part", ErrEmptyValue, ""},
 		{"control character part", func() error {
-			_, err := client.Bulk.EtfHoldings(ctx, NewBulkPartQuery("part\n1"))
+			_, err := client.Bulk.ETFHoldings(ctx, NewBulkPartQuery("part\n1"))
 			return err
 		}, "part", ErrControlCharacterValue, ""},
 		{"retrieval frequency is not a fiscal period", func() error {
@@ -214,7 +214,7 @@ func TestBulkMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	server, _ := newServer(t, jsonHandler(body))
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
-	_, err := client.Bulk.EtfHoldings(context.Background(), NewBulkPartQuery("0"))
+	_, err := client.Bulk.ETFHoldings(context.Background(), NewBulkPartQuery("0"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "etf-holder-bulk")
 	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"lastUpdated\""`) {
 		t.Fatalf("cause = %v, want it to name the missing member lastUpdated\"", cause)

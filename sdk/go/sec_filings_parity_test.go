@@ -124,7 +124,7 @@ func TestDocumentedSecCompanyProfileDecodesExactValues(t *testing.T) {
 	if row.Symbol != "AAPL" || row.CIK != "0000320193" || row.Isin != "US0378331005" || row.Country != "US" ||
 		row.Exchange != "NASDAQ" || row.IpoDate != mustParseDate(t, "1980-12-12") || row.Employees != "166000" ||
 		row.PriceCurrency != "USD" || row.MarketSector != "Technology" || row.SecurityType != nil ||
-		!row.IsActive || row.IsEtf || row.IsAdr || row.IsFund {
+		!row.IsActive || row.IsETF || row.IsAdr || row.IsFund {
 		t.Fatalf("sec_company_profile[0] = %+v", row)
 	}
 	if members := memberSet(t, row); len(members) != 35 {

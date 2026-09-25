@@ -194,15 +194,15 @@ func (n *BulkNamespace) PriceTargetSummaries(ctx context.Context) ([]BulkPriceTa
 	return out, nil
 }
 
-// EtfHoldings retrieves one provider partition of worldwide ETF holdings.
+// ETFHoldings retrieves one provider partition of worldwide ETF holdings.
 //
 // GET etf-holder-bulk?part=
-func (n *BulkNamespace) EtfHoldings(ctx context.Context, q BulkPartQuery) ([]BulkEtfHolding, error) {
+func (n *BulkNamespace) ETFHoldings(ctx context.Context, q BulkPartQuery) ([]BulkETFHolding, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkEtfHolding
+	var out []BulkETFHolding
 	if err := n.client.getJSON(ctx, "etf-holder-bulk", "etf-holder-bulk", params, &out); err != nil {
 		return nil, err
 	}
@@ -221,24 +221,24 @@ func (n *BulkNamespace) UpgradesDowngradesConsensus(ctx context.Context) ([]Bulk
 	return out, nil
 }
 
-// KeyMetricsTtm retrieves worldwide trailing-twelve-month key metrics in one
+// KeyMetricsTTM retrieves worldwide trailing-twelve-month key metrics in one
 // bulk response.
 //
 // GET key-metrics-ttm-bulk
-func (n *BulkNamespace) KeyMetricsTtm(ctx context.Context) ([]BulkKeyMetricsTtm, error) {
-	var out []BulkKeyMetricsTtm
+func (n *BulkNamespace) KeyMetricsTTM(ctx context.Context) ([]BulkKeyMetricsTTM, error) {
+	var out []BulkKeyMetricsTTM
 	if err := n.client.getJSON(ctx, "key-metrics-ttm-bulk", "key-metrics-ttm-bulk", nil, &out); err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// FinancialRatiosTtm retrieves worldwide trailing-twelve-month financial
+// FinancialRatiosTTM retrieves worldwide trailing-twelve-month financial
 // ratios in one bulk response.
 //
 // GET ratios-ttm-bulk
-func (n *BulkNamespace) FinancialRatiosTtm(ctx context.Context) ([]BulkFinancialRatiosTtm, error) {
-	var out []BulkFinancialRatiosTtm
+func (n *BulkNamespace) FinancialRatiosTTM(ctx context.Context) ([]BulkFinancialRatiosTTM, error) {
+	var out []BulkFinancialRatiosTTM
 	if err := n.client.getJSON(ctx, "ratios-ttm-bulk", "ratios-ttm-bulk", nil, &out); err != nil {
 		return nil, err
 	}
