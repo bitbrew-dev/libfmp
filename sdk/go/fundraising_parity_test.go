@@ -54,14 +54,14 @@ func TestDocumentedCrowdfundingOfferingsDecodeExactValuesAndKeepWireHazards(t *t
 		t.Fatal("corrected but wrong wire key cashAndCashEquivalentMostRecentFiscalYear was emitted")
 	}
 
-	byCik := assertFixtureParity[CrowdfundingOffering](t, "crowdfunding_offerings_by_cik.json")[0]
-	if byCik.CIK != "0001916078" || byCik.IntermediaryCommissionCIK != "0001665160" ||
-		string(byCik.OfferingPrice) != "2" || byCik.NetIncomeMostRecentFiscalYear != -964_551 ||
-		byCik.NetIncomePriorFiscalYear != -10_860 || byCik.SecurityOfferedOtherDescription == nil ||
-		*byCik.SecurityOfferedOtherDescription != "Non-Voting Common Stock" {
-		t.Fatalf("crowdfunding_offerings_by_cik = %+v", byCik)
+	byCIK := assertFixtureParity[CrowdfundingOffering](t, "crowdfunding_offerings_by_cik.json")[0]
+	if byCIK.CIK != "0001916078" || byCIK.IntermediaryCommissionCIK != "0001665160" ||
+		string(byCIK.OfferingPrice) != "2" || byCIK.NetIncomeMostRecentFiscalYear != -964_551 ||
+		byCIK.NetIncomePriorFiscalYear != -10_860 || byCIK.SecurityOfferedOtherDescription == nil ||
+		*byCIK.SecurityOfferedOtherDescription != "Non-Voting Common Stock" {
+		t.Fatalf("crowdfunding_offerings_by_cik = %+v", byCIK)
 	}
-	encoded, err := json.Marshal(byCik)
+	encoded, err := json.Marshal(byCIK)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -90,11 +90,11 @@ func TestDocumentedRegulationDOfferingsDecodeExactValues(t *testing.T) {
 		t.Fatalf("re-encoded members = %d, want the documented 43", len(members))
 	}
 
-	byCik := assertFixtureParity[RegulationDOffering](t, "fundraising_by_cik.json")[0]
-	if byCik.CIK != "0001547416" || byCik.IncorporatedWithinFiveYears != nil || byCik.YearOfIncorporation != "" ||
-		byCik.DateOfFirstSale == nil || *byCik.DateOfFirstSale != mustParseDate(t, "2014-02-14") ||
-		byCik.TotalOfferingAmount != 71_999_990 || byCik.TotalNumberAlreadyInvested != 24 {
-		t.Fatalf("fundraising_by_cik = %+v", byCik)
+	byCIK := assertFixtureParity[RegulationDOffering](t, "fundraising_by_cik.json")[0]
+	if byCIK.CIK != "0001547416" || byCIK.IncorporatedWithinFiveYears != nil || byCIK.YearOfIncorporation != "" ||
+		byCIK.DateOfFirstSale == nil || *byCIK.DateOfFirstSale != mustParseDate(t, "2014-02-14") ||
+		byCIK.TotalOfferingAmount != 71_999_990 || byCIK.TotalNumberAlreadyInvested != 24 {
+		t.Fatalf("fundraising_by_cik = %+v", byCIK)
 	}
 }
 

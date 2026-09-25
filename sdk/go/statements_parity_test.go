@@ -95,10 +95,10 @@ func TestDocumentedBalanceSheetAndCashFlowFixturesDecodeExactAmounts(t *testing.
 		cash[0].NetCashProvidedByFinancingActivities != -120_686_000_000 || len(memberSet(t, cash[0])) != 47 {
 		t.Fatalf("cash_flow_statement = %+v", cash)
 	}
-	cashTtm := assertFixtureParity[CashFlowStatement](t, "cash_flow_statement_ttm.json")
-	if len(cashTtm) != 1 || cashTtm[0].Period != "Q2" || cashTtm[0].FreeCashFlow != 129_174_000_000 ||
-		cashTtm[0].NetCashProvidedByFinancingActivities != -114_244_000_000 {
-		t.Fatalf("cash_flow_statement_ttm = %+v", cashTtm)
+	cashTTM := assertFixtureParity[CashFlowStatement](t, "cash_flow_statement_ttm.json")
+	if len(cashTTM) != 1 || cashTTM[0].Period != "Q2" || cashTTM[0].FreeCashFlow != 129_174_000_000 ||
+		cashTTM[0].NetCashProvidedByFinancingActivities != -114_244_000_000 {
+		t.Fatalf("cash_flow_statement_ttm = %+v", cashTTM)
 	}
 }
 
@@ -169,9 +169,9 @@ func TestStatementAmountsPreserveLargeIntegralValuesAndShareQuantitiesKeepFracti
 	}
 
 	balance := statementsRoundTripExtreme[BalanceSheetStatement](t, "balance_sheet_statement.json", "totalAssets", large)
-	balanceTtm := statementsRoundTripExtreme[BalanceSheetStatementTTM](t, "balance_sheet_statement_ttm.json", "retainedEarnings", negative)
-	if balance.TotalAssets != 9e18 || balanceTtm.RetainedEarnings != -9e18 {
-		t.Fatalf("balance extremes = %v %v", balance.TotalAssets, balanceTtm.RetainedEarnings)
+	balanceTTM := statementsRoundTripExtreme[BalanceSheetStatementTTM](t, "balance_sheet_statement_ttm.json", "retainedEarnings", negative)
+	if balance.TotalAssets != 9e18 || balanceTTM.RetainedEarnings != -9e18 {
+		t.Fatalf("balance extremes = %v %v", balance.TotalAssets, balanceTTM.RetainedEarnings)
 	}
 	for _, fixture := range []string{"cash_flow_statement.json", "cash_flow_statement_ttm.json"} {
 		cash := statementsRoundTripExtreme[CashFlowStatement](t, fixture, "freeCashFlow", large)

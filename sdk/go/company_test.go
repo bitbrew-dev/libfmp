@@ -52,9 +52,9 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(profile) != 1 || profile[0].CIK != "0000320193" {
 		t.Fatalf("Profile = %+v, %v", profile, err)
 	}
-	byCik, err := client.Company.ProfileByCIK(ctx, NewProfileByCIKQuery("0000320193"))
-	if err != nil || len(byCik) != 1 || byCik[0].Symbol != "AAPL" {
-		t.Fatalf("ProfileByCIK = %+v, %v", byCik, err)
+	byCIK, err := client.Company.ProfileByCIK(ctx, NewProfileByCIKQuery("0000320193"))
+	if err != nil || len(byCIK) != 1 || byCIK[0].Symbol != "AAPL" {
+		t.Fatalf("ProfileByCIK = %+v, %v", byCIK, err)
 	}
 	batch, err := client.Company.BatchMarketCapitalization(ctx, NewBatchMarketCapitalizationQuery([]string{"AAPL", "MSFT"}))
 	if err != nil || len(batch) != 1 || batch[0].MarketCap != 4_874_072_686_740 {

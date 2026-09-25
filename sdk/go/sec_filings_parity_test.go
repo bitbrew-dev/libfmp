@@ -69,10 +69,10 @@ func TestDocumentedSecFilingRowsDecodeExactValues(t *testing.T) {
 		}
 	}
 	bySymbol := assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_symbol.json", omitted)
-	byCik := assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_cik.json", omitted)
-	if bySymbol[0].Symbol != "AAPL" || byCik[0].CIK != "0000320193" || bySymbol[0].FormType != "4" ||
-		byCik[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
-		t.Fatalf("by_symbol = %+v, by_cik = %+v", bySymbol[0], byCik[0])
+	byCIK := assertFixtureParityNullWhenOmitted[SECFiling](t, "sec_filings_by_cik.json", omitted)
+	if bySymbol[0].Symbol != "AAPL" || byCIK[0].CIK != "0000320193" || bySymbol[0].FormType != "4" ||
+		byCIK[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
+		t.Fatalf("by_symbol = %+v, by_cik = %+v", bySymbol[0], byCIK[0])
 	}
 }
 
@@ -96,10 +96,10 @@ func TestDocumentedSecCompanySearchRowsDecodeExactValues(t *testing.T) {
 	}
 
 	bySymbol := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_symbol.json")
-	byCik := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_cik.json")
-	if len(bySymbol) != 1 || len(byCik) != 1 || bySymbol[0] != byCik[0] ||
-		bySymbol[0].Symbol != "AAPL" || bySymbol[0].Name != "APPLE INC." || byCik[0].CIK != "0000320193" {
-		t.Fatalf("by_symbol = %+v, by_cik = %+v, want the same AAPL row", bySymbol, byCik)
+	byCIK := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_cik.json")
+	if len(bySymbol) != 1 || len(byCIK) != 1 || bySymbol[0] != byCIK[0] ||
+		bySymbol[0].Symbol != "AAPL" || bySymbol[0].Name != "APPLE INC." || byCIK[0].CIK != "0000320193" {
+		t.Fatalf("by_symbol = %+v, by_cik = %+v, want the same AAPL row", bySymbol, byCIK)
 	}
 
 	all := assertFixtureParity[SECCompanySearchResult](t, "all_industry_classifications.json")

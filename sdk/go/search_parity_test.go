@@ -66,22 +66,22 @@ func TestDocumentedSymbolAndNameResultsDecodeExactValues(t *testing.T) {
 func TestDocumentedIdentifierResultsDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	cik := assertFixtureParity[CIKSearchResult](t, "search_cik.json")
-	wantCik := CIKSearchResult{
+	wantCIK := CIKSearchResult{
 		Symbol: "AAPL", CompanyName: "Apple Inc.", CIK: "0000320193",
 		ExchangeFullName: "NASDAQ Global Select", Exchange: "NASDAQ", Currency: "USD",
 	}
-	if len(cik) != 1 || cik[0] != wantCik {
-		t.Fatalf("search_cik = %+v, want %+v", cik, wantCik)
+	if len(cik) != 1 || cik[0] != wantCIK {
+		t.Fatalf("search_cik = %+v, want %+v", cik, wantCIK)
 	}
 	cusip := assertFixtureParity[CUSIPSearchResult](t, "search_cusip.json")
-	wantCusip := CUSIPSearchResult{Symbol: "APC.F", CompanyName: "Apple Inc.", CUSIP: "037833100", MarketCap: 4_227_021_056_800}
-	if len(cusip) != 1 || cusip[0] != wantCusip || cusip[0].MarketCap <= math.MaxUint32 {
-		t.Fatalf("search_cusip = %+v, want %+v", cusip, wantCusip)
+	wantCUSIP := CUSIPSearchResult{Symbol: "APC.F", CompanyName: "Apple Inc.", CUSIP: "037833100", MarketCap: 4_227_021_056_800}
+	if len(cusip) != 1 || cusip[0] != wantCUSIP || cusip[0].MarketCap <= math.MaxUint32 {
+		t.Fatalf("search_cusip = %+v, want %+v", cusip, wantCUSIP)
 	}
 	isin := assertFixtureParity[ISINSearchResult](t, "search_isin.json")
-	wantIsin := ISINSearchResult{Symbol: "AAPL", Name: "Apple Inc.", ISIN: "US0378331005", MarketCap: 4_874_072_686_740}
-	if len(isin) != 1 || isin[0] != wantIsin || isin[0].MarketCap <= math.MaxUint32 {
-		t.Fatalf("search_isin = %+v, want %+v", isin, wantIsin)
+	wantISIN := ISINSearchResult{Symbol: "AAPL", Name: "Apple Inc.", ISIN: "US0378331005", MarketCap: 4_874_072_686_740}
+	if len(isin) != 1 || isin[0] != wantISIN || isin[0].MarketCap <= math.MaxUint32 {
+		t.Fatalf("search_isin = %+v, want %+v", isin, wantISIN)
 	}
 
 	cikWire, err := json.Marshal(cik[0])

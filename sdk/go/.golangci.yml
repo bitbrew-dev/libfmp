@@ -15,6 +15,68 @@ linters:
   settings:
     misspell:
       locale: US
+    staticcheck:
+      # The golangci-lint default set plus ST1003, so hand-written names
+      # follow the ADR 0032 initialism table that gen_go applies.
+      checks: ["all", "-ST1000", "-ST1016", "-ST1020", "-ST1021", "-ST1022"]
+      # staticcheck's default initialisms first, then the ADR 0032 additions.
+      initialisms:
+        - ACL
+        - API
+        - ASCII
+        - CPU
+        - CSS
+        - DNS
+        - EOF
+        - GUID
+        - HTML
+        - HTTP
+        - HTTPS
+        - ID
+        - IP
+        - JSON
+        - QPS
+        - RAM
+        - RPC
+        - SLA
+        - SMTP
+        - SQL
+        - SSH
+        - TCP
+        - TLS
+        - TTL
+        - UDP
+        - UI
+        - GID
+        - UID
+        - UUID
+        - URI
+        - URL
+        - UTF8
+        - VM
+        - XML
+        - XMPP
+        - XSRF
+        - XSS
+        - SIP
+        - RTP
+        - AMQP
+        - DB
+        - TS
+        - CIK
+        - COT
+        - CUSIP
+        - DCF
+        - EPS
+        - ESG
+        - ETF
+        - FMP
+        - IPO
+        - ISIN
+        - SEC
+        - SP500
+        - TTM
+        - US
 
 formatters:
   enable:
