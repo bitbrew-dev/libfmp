@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -14,7 +18,7 @@ fn exact_performance_fixture_decodes_all_33_fields_and_provider_casing() {
     let source: serde_json::Value = serde_json::from_slice(PERFORMANCE).unwrap();
     assert_eq!(source[0].as_object().unwrap().len(), 33);
     let rows: Vec<HolderPerformanceSummary> = serde_json::from_value(source.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [HolderPerformanceSummary {
             date: Date::from_str("2026-03-31").unwrap(),
@@ -61,7 +65,7 @@ fn exact_industry_fixture_decodes_all_12_fields() {
     let source: serde_json::Value = serde_json::from_slice(INDUSTRY).unwrap();
     assert_eq!(source[0].as_object().unwrap().len(), 12);
     let rows: Vec<HolderIndustryBreakdown> = serde_json::from_value(source.clone()).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [HolderIndustryBreakdown {
             date: Date::from_str("2023-09-30").unwrap(),

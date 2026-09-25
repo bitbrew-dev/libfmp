@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use std::str::FromStr;
 
 use libfmp::{
@@ -21,7 +25,7 @@ fn documented_latest_statement_decodes_all_five_exact_fields() {
     assert_eq!(value[0].as_object().unwrap().len(), 5);
 
     let rows: Vec<LatestFinancialStatement> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [LatestFinancialStatement {
             symbol: Ticker::new("UFPI").unwrap(),
@@ -41,7 +45,7 @@ fn documented_financial_score_decodes_all_eleven_exact_fields() {
     assert_eq!(value[0].as_object().unwrap().len(), 11);
 
     let rows: Vec<FinancialScore> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [FinancialScore {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -65,7 +69,7 @@ fn documented_owner_earnings_decodes_exact_average_ppe_and_signed_fields() {
     assert_eq!(value[0].as_object().unwrap().len(), 10);
 
     let rows: Vec<OwnerEarnings> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [OwnerEarnings {
             symbol: Ticker::new("AAPL").unwrap(),
@@ -92,7 +96,7 @@ fn documented_enterprise_value_decodes_all_eight_exact_fields() {
     assert_eq!(value[0].as_object().unwrap().len(), 8);
 
     let rows: Vec<EnterpriseValue> = serde_json::from_value(value).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [EnterpriseValue {
             symbol: Ticker::new("AAPL").unwrap(),

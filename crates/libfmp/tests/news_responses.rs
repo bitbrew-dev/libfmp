@@ -1,3 +1,7 @@
+#[macro_use]
+#[path = "support/assert_row.rs"]
+mod assert_row;
+
 use libfmp::{
     responses::news::{FmpArticle, NewsArticle},
     types::{ApiDateTime, Ticker},
@@ -23,7 +27,7 @@ const APPLE_TEXT: &str = "CUPERTINO, Calif.--(BUSINESS WIRE)--Apple® today anno
 fn exact_fmp_fixture_preserves_all_eight_required_opaque_fields() {
     assert_field_count(FMP_ARTICLES, 8);
     let rows: Vec<FmpArticle> = serde_json::from_slice(FMP_ARTICLES).unwrap();
-    assert_eq!(
+    assert_rows!(
         rows,
         [FmpArticle {
             title: "Centerra Gold (NYSE:CGAU) Drives Growth with North American Investments and Strong Financials".to_owned(),
