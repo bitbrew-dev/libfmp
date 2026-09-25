@@ -31,9 +31,9 @@ def test_transcripts_namespace_is_the_generated_type(client: Any) -> None:
 
 
 def test_latest_earnings_transcripts_with_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
-    """``latest_earnings_transcripts`` maps to the bare latest path and decodes the metadata row."""
+    """``latest`` maps to the bare latest path and decodes the metadata row."""
     fixture_server.route("/earning-call-transcript-latest", load_fixture("latest_earnings_transcripts.json"))
-    rows = client.transcripts.latest_earnings_transcripts()
+    rows = client.transcripts.latest()
 
     assert fixture_server.requests[0].target == "/earning-call-transcript-latest"
     assert len(rows) == 1
@@ -46,9 +46,9 @@ def test_latest_earnings_transcripts_with_no_arguments(client: Any, fixture_serv
 
 
 def test_latest_earnings_transcripts_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
-    """``latest_earnings_transcripts`` encodes ``limit`` then ``page``."""
+    """``latest`` encodes ``limit`` then ``page``."""
     fixture_server.route("/earning-call-transcript-latest", load_fixture("latest_earnings_transcripts.json"))
-    rows = client.transcripts.latest_earnings_transcripts(limit=100, page=0)
+    rows = client.transcripts.latest(limit=100, page=0)
 
     assert fixture_server.requests[0].target == "/earning-call-transcript-latest?limit=100&page=0"
     assert len(rows) == 1
@@ -67,7 +67,7 @@ def test_latest_earnings_transcripts_options_are_independent(
 ) -> None:
     """Each latest option is sent alone when the other one is left out."""
     fixture_server.route("/earning-call-transcript-latest", load_fixture("latest_earnings_transcripts.json"))
-    rows = client.transcripts.latest_earnings_transcripts(**keywords)
+    rows = client.transcripts.latest(**keywords)
 
     assert fixture_server.requests[0].target == target
     assert len(rows) == 1
@@ -76,16 +76,16 @@ def test_latest_earnings_transcripts_options_are_independent(
 def test_latest_earnings_transcripts_passes_bound_values_through(client: Any, fixture_server: FixtureServer) -> None:
     """The documented page bound and a limit above the 100-row bound reach the wire unchanged."""
     fixture_server.route("/earning-call-transcript-latest", load_fixture("latest_earnings_transcripts.json"))
-    rows = client.transcripts.latest_earnings_transcripts(limit=101, page=100)
+    rows = client.transcripts.latest(limit=101, page=100)
 
     assert fixture_server.requests[0].target == "/earning-call-transcript-latest?limit=101&page=100"
     assert len(rows) == 1
 
 
 def test_earnings_transcript_with_required_arguments(client: Any, fixture_server: FixtureServer) -> None:
-    """``earnings_transcript`` encodes ``symbol``, ``year``, ``quarter`` and decodes the full transcript row."""
+    """``by_quarter`` encodes ``symbol``, ``year``, ``quarter`` and decodes the full transcript row."""
     fixture_server.route("/earning-call-transcript", load_fixture("earnings_transcript.json"))
-    rows = client.transcripts.earnings_transcript("AAPL", 2020, 3)
+    rows = client.transcripts.by_quarter("AAPL", 2020, 3)
 
     assert fixture_server.requests[0].target == "/earning-call-transcript?symbol=AAPL&year=2020&quarter=3"
     assert fixture_server.requests[0].query == {"symbol": ["AAPL"], "year": ["2020"], "quarter": ["3"]}
@@ -101,9 +101,9 @@ def test_earnings_transcript_with_required_arguments(client: Any, fixture_server
 
 
 def test_earnings_transcript_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
-    """``earnings_transcript`` appends the optional ``limit`` after the required trio."""
+    """``by_quarter`` appends the optional ``limit`` after the required trio."""
     fixture_server.route("/earning-call-transcript", load_fixture("earnings_transcript.json"))
-    rows = client.transcripts.earnings_transcript("AAPL", 2020, 3, limit=1)
+    rows = client.transcripts.by_quarter("AAPL", 2020, 3, limit=1)
 
     assert fixture_server.requests[0].target == "/earning-call-transcript?symbol=AAPL&year=2020&quarter=3&limit=1"
     assert len(rows) == 1
@@ -113,7 +113,7 @@ def test_earnings_transcript_with_every_option(client: Any, fixture_server: Fixt
 def test_earnings_transcript_accepts_the_u32_limit_boundary(client: Any, fixture_server: FixtureServer) -> None:
     """The largest unsigned 32-bit ``limit`` reaches the wire unchanged."""
     fixture_server.route("/earning-call-transcript", load_fixture("earnings_transcript.json"))
-    client.transcripts.earnings_transcript("AAPL", 2020, 3, limit=4_294_967_295)
+    client.transcripts.by_quarter("AAPL", 2020, 3, limit=4_294_967_295)
 
     assert (
         fixture_server.requests[0].target == "/earning-call-transcript?symbol=AAPL&year=2020&quarter=3&limit=4294967295"
@@ -123,16 +123,16 @@ def test_earnings_transcript_accepts_the_u32_limit_boundary(client: Any, fixture
 def test_earnings_transcript_accepts_keywords_for_the_required_trio(client: Any, fixture_server: FixtureServer) -> None:
     """The required ``symbol``, ``year``, ``quarter`` may be passed as keywords in any order."""
     fixture_server.route("/earning-call-transcript", load_fixture("earnings_transcript.json"))
-    rows = client.transcripts.earnings_transcript(quarter=3, year=2020, symbol="AAPL")
+    rows = client.transcripts.by_quarter(quarter=3, year=2020, symbol="AAPL")
 
     assert fixture_server.requests[0].target == "/earning-call-transcript?symbol=AAPL&year=2020&quarter=3"
     assert len(rows) == 1
 
 
 def test_earnings_transcript_dates_with_a_ticker(client: Any, fixture_server: FixtureServer) -> None:
-    """``earnings_transcript_dates`` sends only ``symbol`` and decodes the numeric quarter row."""
+    """``dates`` sends only ``symbol`` and decodes the numeric quarter row."""
     fixture_server.route("/earning-call-transcript-dates", load_fixture("earnings_transcript_dates.json"))
-    rows = client.transcripts.earnings_transcript_dates("AAPL")
+    rows = client.transcripts.dates("AAPL")
 
     assert fixture_server.requests[0].target == "/earning-call-transcript-dates?symbol=AAPL"
     assert len(rows) == 1
@@ -146,17 +146,17 @@ def test_earnings_transcript_dates_with_a_ticker(client: Any, fixture_server: Fi
 def test_optionals_are_keyword_only(client: Any, fixture_server: FixtureServer) -> None:
     """A positional limit or page is a ``TypeError``, never a silent option."""
     with pytest.raises(TypeError):
-        client.transcripts.latest_earnings_transcripts(100)
+        client.transcripts.latest(100)
     with pytest.raises(TypeError):
-        client.transcripts.earnings_transcript("AAPL", 2020, 3, 1)
+        client.transcripts.by_quarter("AAPL", 2020, 3, 1)
     assert fixture_server.requests == []
 
 
 @pytest.mark.parametrize(
     ("method", "args"),
     [
-        pytest.param("earnings_transcript", ("AAPL", 2020), id="earnings_transcript"),
-        pytest.param("earnings_transcript_dates", (), id="earnings_transcript_dates"),
+        pytest.param("by_quarter", ("AAPL", 2020), id="by_quarter"),
+        pytest.param("dates", (), id="dates"),
     ],
 )
 def test_missing_required_arguments_are_type_errors(
@@ -168,13 +168,13 @@ def test_missing_required_arguments_are_type_errors(
     assert fixture_server.requests == []
 
 
-@pytest.mark.parametrize("method", ["earnings_transcript", "earnings_transcript_dates"])
+@pytest.mark.parametrize("method", ["by_quarter", "dates"])
 @pytest.mark.parametrize("value", ["", "   ", "AA\nPL"])
 def test_invalid_symbol_names_the_argument(
     client: Any, fixture_server: FixtureServer, errors: SimpleNamespace, method: str, value: str
 ) -> None:
     """A blank or control-character ``symbol`` is rejected locally, prefixed with the argument name."""
-    args = (value, 2020, 3) if method == "earnings_transcript" else (value,)
+    args = (value, 2020, 3) if method == "by_quarter" else (value,)
     with pytest.raises(errors.FmpValidationError) as raised:
         getattr(client.transcripts, method)(*args)
     error = raised.value
@@ -189,7 +189,7 @@ def test_out_of_range_year_names_the_argument(
 ) -> None:
     """A year outside the provider's unsigned 32-bit range is rejected locally."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.transcripts.earnings_transcript("AAPL", year, 3)
+        client.transcripts.by_quarter("AAPL", year, 3)
     assert str(raised.value) == f"year: {U32_MESSAGE}"
     assert fixture_server.requests == []
 
@@ -200,7 +200,7 @@ def test_out_of_range_quarter_names_the_argument(
 ) -> None:
     """A quarter outside 1 through 4 is rejected locally."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.transcripts.earnings_transcript("AAPL", 2020, quarter)
+        client.transcripts.by_quarter("AAPL", 2020, quarter)
     assert str(raised.value) == "quarter: quarter must be an integer from 1 through 4"
     assert fixture_server.requests == []
 
@@ -212,7 +212,7 @@ def test_out_of_range_latest_options_name_the_argument(
 ) -> None:
     """A ``limit`` or ``page`` outside the unsigned 32-bit range is rejected locally."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.transcripts.latest_earnings_transcripts(**{keyword: value})
+        client.transcripts.latest(**{keyword: value})
     error = raised.value
     assert str(error) == f"{keyword}: {U32_MESSAGE}"
     assert error.category == "validation"
@@ -222,9 +222,9 @@ def test_out_of_range_latest_options_name_the_argument(
 def test_out_of_range_transcript_limit_names_the_argument(
     client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
 ) -> None:
-    """``earnings_transcript`` validates its ``limit`` the same way once the trio has been accepted."""
+    """``by_quarter`` validates its ``limit`` the same way once the trio has been accepted."""
     with pytest.raises(errors.FmpValidationError) as raised:
-        client.transcripts.earnings_transcript("AAPL", 2020, 3, limit=-1)
+        client.transcripts.by_quarter("AAPL", 2020, 3, limit=-1)
     assert str(raised.value) == f"limit: {U32_MESSAGE}"
     assert fixture_server.requests == []
 
@@ -232,13 +232,13 @@ def test_out_of_range_transcript_limit_names_the_argument(
 def test_wrong_shapes_are_type_errors(client: Any, fixture_server: FixtureServer) -> None:
     """An ``int`` symbol, a ``str`` year, or a ``float`` quarter or limit is a shape error reported as ``TypeError``."""
     with pytest.raises(TypeError):
-        client.transcripts.earnings_transcript_dates(123)
+        client.transcripts.dates(123)
     with pytest.raises(TypeError):
-        client.transcripts.earnings_transcript("AAPL", "2020", 3)
+        client.transcripts.by_quarter("AAPL", "2020", 3)
     with pytest.raises(TypeError):
-        client.transcripts.earnings_transcript("AAPL", 2020, 3.0)
+        client.transcripts.by_quarter("AAPL", 2020, 3.0)
     with pytest.raises(TypeError):
-        client.transcripts.latest_earnings_transcripts(limit=1.5)
+        client.transcripts.latest(limit=1.5)
     assert fixture_server.requests == []
 
 
@@ -248,7 +248,7 @@ def test_status_error_names_the_latest_endpoint(
     """A non-success status carries the libfmp endpoint id, status, and body."""
     fixture_server.route("/earning-call-transcript-latest", {"error": "denied"}, status=403)
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.transcripts.latest_earnings_transcripts()
+        client.transcripts.latest()
     error = raised.value
     assert error.endpoint == "earning-call-transcript-latest"
     assert error.status == 403
@@ -261,7 +261,7 @@ def test_status_error_names_the_transcript_endpoint(
     """A failing transcript route reports the ``earning-call-transcript`` endpoint id and the raw body."""
     fixture_server.route("/earning-call-transcript", b"not-json", status=500, content_type="text/plain")
     with pytest.raises(errors.FmpStatusError) as raised:
-        client.transcripts.earnings_transcript("AAPL", 2020, 3)
+        client.transcripts.by_quarter("AAPL", 2020, 3)
     assert raised.value.endpoint == "earning-call-transcript"
     assert raised.value.status == 500
     assert raised.value.body == "not-json"
@@ -273,7 +273,7 @@ def test_decode_error_names_the_dates_endpoint(
     """A non-array body on the dates route surfaces as a decode error with the endpoint id."""
     fixture_server.route("/earning-call-transcript-dates", {})
     with pytest.raises(errors.FmpDecodeError) as raised:
-        client.transcripts.earnings_transcript_dates("AAPL")
+        client.transcripts.dates("AAPL")
     assert raised.value.endpoint == "earning-call-transcript-dates"
 
 
@@ -283,5 +283,5 @@ def test_decode_error_names_the_transcript_endpoint(
     """A well-formed but wrongly shaped row on the transcript route is a decode error."""
     fixture_server.route("/earning-call-transcript", [{"symbol": "AAPL"}])
     with pytest.raises(errors.FmpDecodeError) as raised:
-        client.transcripts.earnings_transcript("AAPL", 2020, 3)
+        client.transcripts.by_quarter("AAPL", 2020, 3)
     assert raised.value.endpoint == "earning-call-transcript"

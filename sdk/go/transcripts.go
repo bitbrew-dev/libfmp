@@ -173,11 +173,10 @@ func (q LatestEarningsTranscriptsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// LatestEarningsTranscripts retrieves the latest worldwide earnings-transcript
-// metadata.
+// Latest retrieves the latest worldwide earnings-transcript metadata.
 //
 // GET earning-call-transcript-latest?limit=&page=
-func (n *TranscriptsNamespace) LatestEarningsTranscripts(ctx context.Context, q LatestEarningsTranscriptsQuery) ([]LatestEarningsTranscript, error) {
+func (n *TranscriptsNamespace) Latest(ctx context.Context, q LatestEarningsTranscriptsQuery) ([]LatestEarningsTranscript, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -189,10 +188,10 @@ func (n *TranscriptsNamespace) LatestEarningsTranscripts(ctx context.Context, q 
 	return out, nil
 }
 
-// EarningsTranscript retrieves complete worldwide earnings-call transcripts.
+// ByQuarter retrieves complete worldwide earnings-call transcripts.
 //
 // GET earning-call-transcript?symbol=&year=&quarter=&limit=
-func (n *TranscriptsNamespace) EarningsTranscript(ctx context.Context, q EarningsTranscriptQuery) ([]EarningsTranscript, error) {
+func (n *TranscriptsNamespace) ByQuarter(ctx context.Context, q EarningsTranscriptQuery) ([]EarningsTranscript, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -204,11 +203,10 @@ func (n *TranscriptsNamespace) EarningsTranscript(ctx context.Context, q Earning
 	return out, nil
 }
 
-// EarningsTranscriptDates retrieves available worldwide transcript dates for
-// one ticker.
+// Dates retrieves available worldwide transcript dates for one ticker.
 //
 // GET earning-call-transcript-dates?symbol=
-func (n *TranscriptsNamespace) EarningsTranscriptDates(ctx context.Context, q EarningsTranscriptDatesQuery) ([]EarningsTranscriptDate, error) {
+func (n *TranscriptsNamespace) Dates(ctx context.Context, q EarningsTranscriptDatesQuery) ([]EarningsTranscriptDate, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

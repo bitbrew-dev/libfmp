@@ -527,16 +527,16 @@ def check_economics_contract(client: FmpClient) -> None:
 def check_market_hours_contract(client: FmpClient) -> None:
     """Type-check the flat market-hours namespace, its required exchange, the keyword-only filters, and the rows."""
     market_hours: MarketHoursNamespace = client.market_hours
-    hours: list[ExchangeMarketHours] = market_hours.exchange_market_hours("NASDAQ", timestamp="001769527402")
+    hours: list[ExchangeMarketHours] = market_hours.exchange("NASDAQ", timestamp="001769527402")
     opening_hour: str = hours[0].opening_hour
     is_open: bool = hours[0].is_market_open
-    holidays: list[ExchangeHoliday] = client.market_hours.holidays_by_exchange(
+    holidays: list[ExchangeHoliday] = client.market_hours.holidays(
         "NASDAQ", from_=datetime.date(2025, 4, 27), to="2026-04-27"
     )
     holiday_date: datetime.date = holidays[0].date
     is_closed: bool = holidays[0].is_closed
     adj_open_time: Any = holidays[0].adj_open_time
-    everywhere: list[ExchangeMarketHours] = client.market_hours.all_exchange_market_hours()
+    everywhere: list[ExchangeMarketHours] = client.market_hours.all_exchanges()
     timezone: str = everywhere[0].timezone
     _ = (opening_hour, is_open, holiday_date, is_closed, adj_open_time, timezone)
 
@@ -579,15 +579,15 @@ def check_esg_contract(client: FmpClient) -> None:
 def check_transcripts_contract(client: FmpClient) -> None:
     """Type-check the flat transcripts namespace, its required trio, the keyword-only options, and the rows."""
     transcripts: TranscriptsNamespace = client.transcripts
-    latest: list[LatestEarningsTranscript] = transcripts.latest_earnings_transcripts(limit=100, page=0)
+    latest: list[LatestEarningsTranscript] = transcripts.latest(limit=100, page=0)
     latest_period: str = latest[0].period
     latest_fiscal_year: int = latest[0].fiscal_year
     latest_date: datetime.date = latest[0].date
-    full: list[EarningsTranscript] = client.transcripts.earnings_transcript("AAPL", 2020, 3, limit=1)
+    full: list[EarningsTranscript] = client.transcripts.by_quarter("AAPL", 2020, 3, limit=1)
     year: int = full[0].year
     content: str = full[0].content
     held_on: datetime.date = full[0].date
-    dates: list[EarningsTranscriptDate] = client.transcripts.earnings_transcript_dates("AAPL")
+    dates: list[EarningsTranscriptDate] = client.transcripts.dates("AAPL")
     quarter: int = dates[0].quarter
     available_on: datetime.date = dates[0].date
     _ = (latest_period, latest_fiscal_year, latest_date, year, content, held_on, quarter, available_on)

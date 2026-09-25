@@ -48,32 +48,32 @@ func TestMarketHoursMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	from := mustParseDate(t, "2025-04-27")
 	to := mustParseDate(t, "2026-04-27")
 
-	exchange, err := hours.ExchangeMarketHours(ctx, NewExchangeMarketHoursQuery("NASDAQ / Global").WithTimestamp("001769527402"))
+	exchange, err := hours.Exchange(ctx, NewExchangeMarketHoursQuery("NASDAQ / Global").WithTimestamp("001769527402"))
 	if err != nil || len(exchange) != 1 || exchange[0].OpeningHour != "09:30 AM -04:00" {
-		t.Fatalf("ExchangeMarketHours = %+v, %v", exchange, err)
+		t.Fatalf("Exchange = %+v, %v", exchange, err)
 	}
-	if _, err := hours.ExchangeMarketHours(ctx, NewExchangeMarketHoursQuery("NASDAQ")); err != nil {
-		t.Fatalf("ExchangeMarketHours without timestamp: %v", err)
+	if _, err := hours.Exchange(ctx, NewExchangeMarketHoursQuery("NASDAQ")); err != nil {
+		t.Fatalf("Exchange without timestamp: %v", err)
 	}
-	holidays, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NASDAQ / Global").WithFrom(from).WithTo(to))
+	holidays, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery("NASDAQ / Global").WithFrom(from).WithTo(to))
 	if err != nil || len(holidays) != 1 || holidays[0].Name != "Independence Day" || holidays[0].AdjOpenTime != nil {
-		t.Fatalf("HolidaysByExchange = %+v, %v", holidays, err)
+		t.Fatalf("Holidays = %+v, %v", holidays, err)
 	}
-	if _, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithFrom(from)); err != nil {
-		t.Fatalf("HolidaysByExchange from only: %v", err)
+	if _, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithFrom(from)); err != nil {
+		t.Fatalf("Holidays from only: %v", err)
 	}
-	if _, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithTo(to)); err != nil {
-		t.Fatalf("HolidaysByExchange to only: %v", err)
+	if _, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithTo(to)); err != nil {
+		t.Fatalf("Holidays to only: %v", err)
 	}
-	if _, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NASDAQ")); err != nil {
-		t.Fatalf("HolidaysByExchange exchange only: %v", err)
+	if _, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery("NASDAQ")); err != nil {
+		t.Fatalf("Holidays exchange only: %v", err)
 	}
-	all, err := hours.AllExchangeMarketHours(ctx, NewAllExchangeMarketHoursQuery().WithTimestamp("001769527402"))
+	all, err := hours.AllExchanges(ctx, NewAllExchangeMarketHoursQuery().WithTimestamp("001769527402"))
 	if err != nil || len(all) != 1 || all[0].Exchange != "ASX" {
-		t.Fatalf("AllExchangeMarketHours = %+v, %v", all, err)
+		t.Fatalf("AllExchanges = %+v, %v", all, err)
 	}
-	if _, err := hours.AllExchangeMarketHours(ctx, NewAllExchangeMarketHoursQuery()); err != nil {
-		t.Fatalf("AllExchangeMarketHours without timestamp: %v", err)
+	if _, err := hours.AllExchanges(ctx, NewAllExchangeMarketHoursQuery()); err != nil {
+		t.Fatalf("AllExchanges without timestamp: %v", err)
 	}
 
 	want := []string{
@@ -119,31 +119,31 @@ func TestMarketHoursQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		reason error
 	}{
 		{"empty exchange", func() error {
-			_, err := hours.ExchangeMarketHours(ctx, NewExchangeMarketHoursQuery(""))
+			_, err := hours.Exchange(ctx, NewExchangeMarketHoursQuery(""))
 			return err
 		}, "exchange", ErrEmptyValue},
 		{"whitespace exchange", func() error {
-			_, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery(" \t "))
+			_, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery(" \t "))
 			return err
 		}, "exchange", ErrEmptyValue},
 		{"control character in exchange", func() error {
-			_, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NAS\nDAQ"))
+			_, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery("NAS\nDAQ"))
 			return err
 		}, "exchange", ErrControlCharacterValue},
 		{"blank optional timestamp", func() error {
-			_, err := hours.ExchangeMarketHours(ctx, NewExchangeMarketHoursQuery("NASDAQ").WithTimestamp(" "))
+			_, err := hours.Exchange(ctx, NewExchangeMarketHoursQuery("NASDAQ").WithTimestamp(" "))
 			return err
 		}, "timestamp", ErrEmptyValue},
 		{"tab in all-exchanges timestamp", func() error {
-			_, err := hours.AllExchangeMarketHours(ctx, NewAllExchangeMarketHoursQuery().WithTimestamp("0017\t69527402"))
+			_, err := hours.AllExchanges(ctx, NewAllExchangeMarketHoursQuery().WithTimestamp("0017\t69527402"))
 			return err
 		}, "timestamp", ErrControlCharacterValue},
 		{"zero from date", func() error {
-			_, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithFrom(Date{}))
+			_, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithFrom(Date{}))
 			return err
 		}, "from", ErrZeroTemporalValue},
 		{"zero to date", func() error {
-			_, err := hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithTo(Date{}))
+			_, err := hours.Holidays(ctx, NewHolidaysByExchangeQuery("NASDAQ").WithTo(Date{}))
 			return err
 		}, "to", ErrZeroTemporalValue},
 	}
@@ -182,10 +182,10 @@ func TestMarketHoursMethodsKeepEndpointIdentityOnNonArrayBodies(t *testing.T) {
 	ctx := context.Background()
 	hours := client.MarketHours
 
-	_, err := hours.ExchangeMarketHours(ctx, NewExchangeMarketHoursQuery("NASDAQ"))
+	_, err := hours.Exchange(ctx, NewExchangeMarketHoursQuery("NASDAQ"))
 	_ = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "exchange-market-hours")
-	_, err = hours.HolidaysByExchange(ctx, NewHolidaysByExchangeQuery("NASDAQ"))
+	_, err = hours.Holidays(ctx, NewHolidaysByExchangeQuery("NASDAQ"))
 	_ = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "holidays-by-exchange")
-	_, err = hours.AllExchangeMarketHours(ctx, NewAllExchangeMarketHoursQuery())
+	_, err = hours.AllExchanges(ctx, NewAllExchangeMarketHoursQuery())
 	_ = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "all-exchange-market-hours")
 }

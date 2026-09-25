@@ -173,10 +173,10 @@ func (q HolidaysByExchangeQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// ExchangeMarketHours retrieves trading hours for one exchange.
+// Exchange retrieves trading hours for one exchange.
 //
 // GET exchange-market-hours?exchange=&timestamp=
-func (n *MarketHoursNamespace) ExchangeMarketHours(ctx context.Context, q ExchangeMarketHoursQuery) ([]ExchangeMarketHours, error) {
+func (n *MarketHoursNamespace) Exchange(ctx context.Context, q ExchangeMarketHoursQuery) ([]ExchangeMarketHours, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -188,10 +188,10 @@ func (n *MarketHoursNamespace) ExchangeMarketHours(ctx context.Context, q Exchan
 	return out, nil
 }
 
-// HolidaysByExchange retrieves holidays for one exchange.
+// Holidays retrieves holidays for one exchange.
 //
 // GET holidays-by-exchange?exchange=&from=&to=
-func (n *MarketHoursNamespace) HolidaysByExchange(ctx context.Context, q HolidaysByExchangeQuery) ([]ExchangeHoliday, error) {
+func (n *MarketHoursNamespace) Holidays(ctx context.Context, q HolidaysByExchangeQuery) ([]ExchangeHoliday, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -203,10 +203,10 @@ func (n *MarketHoursNamespace) HolidaysByExchange(ctx context.Context, q Holiday
 	return out, nil
 }
 
-// AllExchangeMarketHours retrieves trading hours for all exchanges.
+// AllExchanges retrieves trading hours for all exchanges.
 //
 // GET all-exchange-market-hours?timestamp=
-func (n *MarketHoursNamespace) AllExchangeMarketHours(ctx context.Context, q AllExchangeMarketHoursQuery) ([]ExchangeMarketHours, error) {
+func (n *MarketHoursNamespace) AllExchanges(ctx context.Context, q AllExchangeMarketHoursQuery) ([]ExchangeMarketHours, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
