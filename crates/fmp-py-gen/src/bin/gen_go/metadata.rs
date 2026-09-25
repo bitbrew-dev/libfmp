@@ -1,6 +1,6 @@
 //! Renders `sdk/go/metadata_table.go`: the advisory `EndpointMetadata` of
 //! every generated method whose descriptor attaches one, keyed by the Go
-//! call path (`Quote.Full`, `Statements.Growth.IncomeStatement`), behind the
+//! call path (`Quote.Full`, `Statements.Growth.Income`), behind the
 //! package-level `EndpointMetadataFor` lookup.
 //!
 //! The table is keyed per method, not per endpoint id: several methods share
@@ -58,7 +58,7 @@ pub(crate) fn render_metadata_table(domains: &[&DomainPlan]) -> Result<String, S
     out.push_str(&doc_comment(
         "EndpointMetadataFor returns the advisory metadata of one endpoint method, keyed \
          by its Go call path without the client: \"Quote.Full\", \
-         \"Statements.Growth.IncomeStatement\". It reports false, with the zero value, for a \
+         \"Statements.Growth.Income\". It reports false, with the zero value, for a \
          method whose descriptor attaches no metadata and for an unknown key. The value \
          is a copy: mutating it does not change later lookups. The client never \
          validates a request against it.",

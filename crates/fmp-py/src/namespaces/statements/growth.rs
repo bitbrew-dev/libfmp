@@ -36,14 +36,14 @@ impl StatementsGrowthNamespace {
 impl StatementsGrowthNamespace {
     /// Retrieves worldwide income-statement growth for one company.
     #[pyo3(signature = (symbol, *, limit=None, period=None))]
-    fn income_statement(
+    fn income(
         &self,
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
         period: Option<&str>,
     ) -> PyResult<Vec<IncomeStatementGrowth>> {
-        let query = income_statement_query(symbol, limit, period)?;
+        let query = income_query(symbol, limit, period)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -56,14 +56,14 @@ impl StatementsGrowthNamespace {
 
     /// Retrieves worldwide balance-sheet-statement growth for one company.
     #[pyo3(signature = (symbol, *, limit=None, period=None))]
-    fn balance_sheet_statement(
+    fn balance_sheet(
         &self,
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
         period: Option<&str>,
     ) -> PyResult<Vec<BalanceSheetStatementGrowth>> {
-        let query = balance_sheet_statement_query(symbol, limit, period)?;
+        let query = balance_sheet_query(symbol, limit, period)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -81,14 +81,14 @@ impl StatementsGrowthNamespace {
 
     /// Retrieves worldwide cash-flow-statement growth for one company.
     #[pyo3(signature = (symbol, *, limit=None, period=None))]
-    fn cash_flow_statement(
+    fn cash_flow(
         &self,
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
         period: Option<&str>,
     ) -> PyResult<Vec<CashFlowStatementGrowth>> {
-        let query = cash_flow_statement_query(symbol, limit, period)?;
+        let query = cash_flow_query(symbol, limit, period)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -106,14 +106,14 @@ impl StatementsGrowthNamespace {
 
     /// Retrieves combined worldwide financial-statement growth for one company.
     #[pyo3(signature = (symbol, *, limit=None, period=None))]
-    fn financial_statement(
+    fn financial(
         &self,
         py: Python<'_>,
         symbol: &str,
         limit: Option<i64>,
         period: Option<&str>,
     ) -> PyResult<Vec<FinancialStatementGrowth>> {
-        let query = financial_statement_query(symbol, limit, period)?;
+        let query = financial_query(symbol, limit, period)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(builder, |client| async move {
@@ -130,8 +130,8 @@ impl StatementsGrowthNamespace {
     }
 }
 
-/// Builds the `IncomeStatementGrowthQuery` for `StatementsGrowthNamespace::income_statement` from validated Python arguments.
-fn income_statement_query(
+/// Builds the `IncomeStatementGrowthQuery` for `StatementsGrowthNamespace::income` from validated Python arguments.
+fn income_query(
     symbol: &str,
     limit: Option<i64>,
     period: Option<&str>,
@@ -149,8 +149,8 @@ fn income_statement_query(
     Ok(query)
 }
 
-/// Builds the `BalanceSheetStatementGrowthQuery` for `StatementsGrowthNamespace::balance_sheet_statement` from validated Python arguments.
-fn balance_sheet_statement_query(
+/// Builds the `BalanceSheetStatementGrowthQuery` for `StatementsGrowthNamespace::balance_sheet` from validated Python arguments.
+fn balance_sheet_query(
     symbol: &str,
     limit: Option<i64>,
     period: Option<&str>,
@@ -168,8 +168,8 @@ fn balance_sheet_statement_query(
     Ok(query)
 }
 
-/// Builds the `CashFlowStatementGrowthQuery` for `StatementsGrowthNamespace::cash_flow_statement` from validated Python arguments.
-fn cash_flow_statement_query(
+/// Builds the `CashFlowStatementGrowthQuery` for `StatementsGrowthNamespace::cash_flow` from validated Python arguments.
+fn cash_flow_query(
     symbol: &str,
     limit: Option<i64>,
     period: Option<&str>,
@@ -187,8 +187,8 @@ fn cash_flow_statement_query(
     Ok(query)
 }
 
-/// Builds the `FinancialStatementGrowthQuery` for `StatementsGrowthNamespace::financial_statement` from validated Python arguments.
-fn financial_statement_query(
+/// Builds the `FinancialStatementGrowthQuery` for `StatementsGrowthNamespace::financial` from validated Python arguments.
+fn financial_query(
     symbol: &str,
     limit: Option<i64>,
     period: Option<&str>,

@@ -143,7 +143,7 @@ func TestEndpointMetadataForPinsValuesFromTheRustConsts(t *testing.T) {
 			},
 			Bounds: EndpointBounds{Limit: inclusiveMaximum(5000), ResponseRows: inclusiveMaximum(5000)},
 		}},
-		{"Statements.Growth.IncomeStatement", EndpointMetadata{
+		{"Statements.Growth.Income", EndpointMetadata{
 			Geography: GeographyWorldwide,
 			Bounds:    EndpointBounds{ResponseRows: inclusiveMaximum(1000)},
 		}},

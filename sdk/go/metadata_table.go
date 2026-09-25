@@ -8,10 +8,10 @@ package fmp
 
 // EndpointMetadataFor returns the advisory metadata of one endpoint method,
 // keyed by its Go call path without the client: "Quote.Full",
-// "Statements.Growth.IncomeStatement". It reports false, with the zero value,
-// for a method whose descriptor attaches no metadata and for an unknown key.
-// The value is a copy: mutating it does not change later lookups. The client
-// never validates a request against it.
+// "Statements.Growth.Income". It reports false, with the zero value, for a
+// method whose descriptor attaches no metadata and for an unknown key. The
+// value is a copy: mutating it does not change later lookups. The client never
+// validates a request against it.
 func EndpointMetadataFor(method string) (EndpointMetadata, bool) {
 	metadata, ok := endpointMetadataTable[method]
 	if !ok {
@@ -239,10 +239,10 @@ var endpointMetadataTable = map[string]EndpointMetadata{
 	"Statements.Balance.StatementTtm":                    {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
 	"Statements.CashFlow.Statement":                      {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
 	"Statements.CashFlow.StatementTtm":                   {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
-	"Statements.Growth.BalanceSheetStatement":            {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
-	"Statements.Growth.CashFlowStatement":                {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
-	"Statements.Growth.FinancialStatement":               {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
-	"Statements.Growth.IncomeStatement":                  {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
+	"Statements.Growth.BalanceSheet":                     {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
+	"Statements.Growth.CashFlow":                         {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
+	"Statements.Growth.Financial":                        {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
+	"Statements.Growth.Income":                           {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
 	"Statements.Income.Statement":                        {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
 	"Statements.Income.StatementTtm":                     {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
 	"Statements.Metrics.KeyMetrics":                      {Geography: GeographyWorldwide, Bounds: EndpointBounds{ResponseRows: inclusiveMaximum(1000)}},
@@ -294,7 +294,7 @@ var endpointMethodsByID = map[string][]string{
 	"balance-sheet-statement":                            {"Statements.Balance.Statement"},
 	"balance-sheet-statement-as-reported":                {"Statements.AsReported.BalanceSheet"},
 	"balance-sheet-statement-bulk":                       {"Bulk.BalanceSheetStatements"},
-	"balance-sheet-statement-growth":                     {"Statements.Growth.BalanceSheetStatement"},
+	"balance-sheet-statement-growth":                     {"Statements.Growth.BalanceSheet"},
 	"balance-sheet-statement-growth-bulk":                {"Bulk.BalanceSheetStatementGrowth"},
 	"balance-sheet-statement-ttm":                        {"Statements.Balance.StatementTtm"},
 	"batch-aftermarket-quote":                            {"Quote.BatchAftermarketQuote"},
@@ -313,7 +313,7 @@ var endpointMethodsByID = map[string][]string{
 	"cash-flow-statement":                                {"Statements.CashFlow.Statement"},
 	"cash-flow-statement-as-reported":                    {"Statements.AsReported.CashFlow"},
 	"cash-flow-statement-bulk":                           {"Bulk.CashFlowStatements"},
-	"cash-flow-statement-growth":                         {"Statements.Growth.CashFlowStatement"},
+	"cash-flow-statement-growth":                         {"Statements.Growth.CashFlow"},
 	"cash-flow-statement-growth-bulk":                    {"Bulk.CashFlowStatementGrowth"},
 	"cash-flow-statement-ttm":                            {"Statements.CashFlow.StatementTtm"},
 	"cik-list":                                           {"Directory.CikList"},
@@ -359,7 +359,7 @@ var endpointMethodsByID = map[string][]string{
 	"etf/sector-weightings":                              {"Funds.EtfSectorWeightings"},
 	"exchange-market-hours":                              {"MarketHours.Exchange"},
 	"executive-compensation-benchmark":                   {"Company.ExecutiveCompensationBenchmark"},
-	"financial-growth":                                   {"Statements.Growth.FinancialStatement"},
+	"financial-growth":                                   {"Statements.Growth.Financial"},
 	"financial-reports-dates":                            {"Statements.Reports.Dates"},
 	"financial-reports-json":                             {"Statements.Reports.Json"},
 	"financial-reports-xlsx":                             {"Statements.Reports.Xlsx"},
@@ -406,7 +406,7 @@ var endpointMethodsByID = map[string][]string{
 	"income-statement":                                   {"Statements.Income.Statement"},
 	"income-statement-as-reported":                       {"Statements.AsReported.Income"},
 	"income-statement-bulk":                              {"Bulk.IncomeStatements"},
-	"income-statement-growth":                            {"Statements.Growth.IncomeStatement"},
+	"income-statement-growth":                            {"Statements.Growth.Income"},
 	"income-statement-growth-bulk":                       {"Bulk.IncomeStatementGrowth"},
 	"income-statement-ttm":                               {"Statements.Income.StatementTtm"},
 	"index-list":                                         {"Indexes.List"},

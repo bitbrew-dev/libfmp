@@ -22,7 +22,7 @@ class StatementsGrowthNamespace:
     Statements growth endpoints for a single client, exposed as `client.statements.growth`.
     """
 
-    def income_statement(
+    def income(
         self,
         symbol: builtins.str,
         *,
@@ -33,7 +33,7 @@ class StatementsGrowthNamespace:
         Retrieves worldwide income-statement growth for one company.
         """
 
-    def balance_sheet_statement(
+    def balance_sheet(
         self,
         symbol: builtins.str,
         *,
@@ -44,7 +44,7 @@ class StatementsGrowthNamespace:
         Retrieves worldwide balance-sheet-statement growth for one company.
         """
 
-    def cash_flow_statement(
+    def cash_flow(
         self,
         symbol: builtins.str,
         *,
@@ -55,7 +55,7 @@ class StatementsGrowthNamespace:
         Retrieves worldwide cash-flow-statement growth for one company.
         """
 
-    def financial_statement(
+    def financial(
         self,
         symbol: builtins.str,
         *,

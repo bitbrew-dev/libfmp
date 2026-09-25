@@ -32,9 +32,9 @@ def test_growth_as_reported_and_segmentation_namespaces(client: Any) -> None:
 
 
 def test_income_statement_growth_with_limit_and_quarter(client: Any, fixture_server: FixtureServer) -> None:
-    """``growth.income_statement`` encodes ``symbol``, ``limit``, ``period``."""
+    """``growth.income`` encodes ``symbol``, ``limit``, ``period``."""
     fixture_server.route("/income-statement-growth", load_fixture("income_statement_growth.json"))
-    rows = client.statements.growth.income_statement("AAPL", limit=5, period="Q1")
+    rows = client.statements.growth.income("AAPL", limit=5, period="Q1")
 
     assert fixture_server.requests[0].target == "/income-statement-growth?symbol=AAPL&limit=5&period=Q1"
     assert len(rows) == 1
@@ -47,9 +47,9 @@ def test_income_statement_growth_with_limit_and_quarter(client: Any, fixture_ser
 
 
 def test_balance_sheet_statement_growth_with_quarter_frequency(client: Any, fixture_server: FixtureServer) -> None:
-    """``growth.balance_sheet_statement`` accepts the ``quarter`` retrieval frequency."""
+    """``growth.balance_sheet`` accepts the ``quarter`` retrieval frequency."""
     fixture_server.route("/balance-sheet-statement-growth", load_fixture("balance_sheet_statement_growth.json"))
-    rows = client.statements.growth.balance_sheet_statement("AAPL", limit=7, period="quarter")
+    rows = client.statements.growth.balance_sheet("AAPL", limit=7, period="quarter")
 
     assert fixture_server.requests[0].target == "/balance-sheet-statement-growth?symbol=AAPL&limit=7&period=quarter"
     assert len(rows) == 1
@@ -61,9 +61,9 @@ def test_balance_sheet_statement_growth_with_quarter_frequency(client: Any, fixt
 
 
 def test_cash_flow_statement_growth_with_limit_only(client: Any, fixture_server: FixtureServer) -> None:
-    """``growth.cash_flow_statement`` omits ``period`` when it is not given."""
+    """``growth.cash_flow`` omits ``period`` when it is not given."""
     fixture_server.route("/cash-flow-statement-growth", load_fixture("cash_flow_statement_growth.json"))
-    rows = client.statements.growth.cash_flow_statement("AAPL", limit=5)
+    rows = client.statements.growth.cash_flow("AAPL", limit=5)
 
     assert fixture_server.requests[0].target == "/cash-flow-statement-growth?symbol=AAPL&limit=5"
     assert len(rows) == 1
@@ -75,9 +75,9 @@ def test_cash_flow_statement_growth_with_limit_only(client: Any, fixture_server:
 
 
 def test_financial_statement_growth_maps_to_financial_growth(client: Any, fixture_server: FixtureServer) -> None:
-    """``growth.financial_statement`` uses the provider's ``/financial-growth`` path."""
+    """``growth.financial`` uses the provider's ``/financial-growth`` path."""
     fixture_server.route("/financial-growth", load_fixture("financial_statement_growth.json"))
-    rows = client.statements.growth.financial_statement("AAPL", period="Q2")
+    rows = client.statements.growth.financial("AAPL", period="Q2")
 
     assert fixture_server.requests[0].target == "/financial-growth?symbol=AAPL&period=Q2"
     assert len(rows) == 1
