@@ -5,8 +5,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::types::{
-    CountryCode, ExchangeCode, Industry, MarketCapitalization, MarketValue, Price, Sector, Ticker,
-    Volume,
+    CountryCode, ExchangeCode, Industry, MarketCapitalization, PerShareAmount, Price, Ratio,
+    Sector, Ticker, Volume,
 };
 
 /// One worldwide company returned by the stock screener.
@@ -21,10 +21,10 @@ pub struct CompanyScreenerResult {
     pub sector: Sector,
     pub industry: Industry,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub beta: MarketValue,
+    pub beta: Ratio,
     pub price: Price,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub last_annual_dividend: MarketValue,
+    pub last_annual_dividend: PerShareAmount,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub volume: Volume,
     /// The provider's full exchange name.

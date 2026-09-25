@@ -671,6 +671,17 @@ pub type Percentage = f64;
 /// `f64`. Response fields re-encode an integral value as a JSON integer
 /// through `crate::codecs::integral_f64`.
 pub type MarketValue = f64;
+/// A dimensionless ratio represented by the provider as a JSON number.
+///
+/// Covers coefficients such as a stock's beta. Response fields re-encode an
+/// integral value as a JSON integer through `crate::codecs::integral_f64`.
+pub type Ratio = f64;
+/// A per-share amount represented by the provider as a JSON number.
+///
+/// Covers the last dividend per share and the discounted-cash-flow value per
+/// share and its difference from the price. Response fields re-encode an
+/// integral value as a JSON integer through `crate::codecs::integral_f64`.
+pub type PerShareAmount = f64;
 /// A share or unit quantity represented by the provider as a JSON number.
 ///
 /// Holdings, float, outstanding and transacted share amounts can be
