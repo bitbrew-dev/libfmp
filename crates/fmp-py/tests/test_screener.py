@@ -215,3 +215,15 @@ def test_decode_error_for_a_non_json_body(client: Any, fixture_server: FixtureSe
     fixture_server.route("/company-screener", b"not-json")
     with pytest.raises(errors.FmpDecodeError):
         client.screener.companies()
+
+
+def test_companies_decodes_integral_float_and_fractional_market_caps(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #339: an integral-float or fractional ``marketCap`` decodes as a ``float``."""
+    fixture_server.route("/company-screener", load_fixture("company_screener_fractional_synthetic.json"))
+    rows = client.screener.companies()
+
+    assert [row.symbol for row in rows] == ["AAPL", "FRAC"]
+    assert isinstance(rows[0].market_cap, float)
+    assert rows[0].market_cap == 4_885_602_246_714.0
+    assert rows[1].market_cap == 1_234_567.5
+    assert rows[1].volume == 1.0

@@ -163,6 +163,16 @@ def test_stock_splits_with_zero_limit(client: Any, fixture_server: FixtureServer
     assert row.split_type == "stock-split"
 
 
+def test_stock_splits_decode_fractional_terms(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #339: a fractional or ``1.0``-form split term decodes as a ``float``."""
+    fixture_server.route("/splits", load_fixture("stock_splits_fractional_synthetic.json"))
+    rows = client.calendar.stock_splits("AAPL")
+
+    assert len(rows) == 1
+    assert isinstance(rows[0].numerator, float)
+    assert (rows[0].numerator, rows[0].denominator) == (1.5, 1.0)
+
+
 def test_stock_splits_without_options_sends_only_the_symbol(client: Any, fixture_server: FixtureServer) -> None:
     """``stock_splits`` omits ``limit`` when it is not given."""
     fixture_server.route("/splits", load_fixture("stock_splits.json"))
