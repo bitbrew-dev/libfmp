@@ -166,14 +166,14 @@ func (q FundDisclosureDatesQuery) Symbol() string {
 	return q.symbol
 }
 
-// WithCik sets the optional cik parameter and returns the updated query.
-func (q FundDisclosureDatesQuery) WithCik(cik string) FundDisclosureDatesQuery {
+// WithCIK sets the optional cik parameter and returns the updated query.
+func (q FundDisclosureDatesQuery) WithCIK(cik string) FundDisclosureDatesQuery {
 	q.cik = &cik
 	return q
 }
 
-// Cik returns the optional cik parameter, or nil when it is unset.
-func (q FundDisclosureDatesQuery) Cik() *string {
+// CIK returns the optional cik parameter, or nil when it is unset.
+func (q FundDisclosureDatesQuery) CIK() *string {
 	return q.cik
 }
 
@@ -251,14 +251,14 @@ func (q FundDisclosureQuery) Quarter() Quarter {
 	return q.quarter
 }
 
-// WithCik sets the optional cik parameter and returns the updated query.
-func (q FundDisclosureQuery) WithCik(cik string) FundDisclosureQuery {
+// WithCIK sets the optional cik parameter and returns the updated query.
+func (q FundDisclosureQuery) WithCIK(cik string) FundDisclosureQuery {
 	q.cik = &cik
 	return q
 }
 
-// Cik returns the optional cik parameter, or nil when it is unset.
-func (q FundDisclosureQuery) Cik() *string {
+// CIK returns the optional cik parameter, or nil when it is unset.
+func (q FundDisclosureQuery) CIK() *string {
 	return q.cik
 }
 

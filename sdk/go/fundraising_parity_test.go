@@ -29,7 +29,7 @@ func TestDocumentedCrowdfundingOfferingsDecodeExactValuesAndKeepWireHazards(t *t
 		t.Fatalf("rows = %d, want 1", len(latest))
 	}
 	row := latest[0]
-	if row.Cik != "0001621902" || row.IntermediaryCommissionCik != "0001669191" ||
+	if row.CIK != "0001621902" || row.IntermediaryCommissionCIK != "0001669191" ||
 		row.Date.String() != "11-22-2011" || row.FilingDate.String() != "2026-07-30 00:00:00" ||
 		row.AcceptedDate.String() != "2026-07-30 12:54:38" || row.OfferingDeadlineDate.String() != "10-31-2026" ||
 		row.FormType != "C/A" || row.OverSubscriptionAccepted != "Y" || row.NumberOfSecurityOffered != 100_000 ||
@@ -55,7 +55,7 @@ func TestDocumentedCrowdfundingOfferingsDecodeExactValuesAndKeepWireHazards(t *t
 	}
 
 	byCik := assertFixtureParity[CrowdfundingOffering](t, "crowdfunding_offerings_by_cik.json")[0]
-	if byCik.Cik != "0001916078" || byCik.IntermediaryCommissionCik != "0001665160" ||
+	if byCik.CIK != "0001916078" || byCik.IntermediaryCommissionCIK != "0001665160" ||
 		string(byCik.OfferingPrice) != "2" || byCik.NetIncomeMostRecentFiscalYear != -964_551 ||
 		byCik.NetIncomePriorFiscalYear != -10_860 || byCik.SecurityOfferedOtherDescription == nil ||
 		*byCik.SecurityOfferedOtherDescription != "Non-Voting Common Stock" {
@@ -79,7 +79,7 @@ func TestDocumentedRegulationDOfferingsDecodeExactValues(t *testing.T) {
 		t.Fatalf("rows = %d, want 1", len(latest))
 	}
 	row := latest[0]
-	if row.Cik != "0002127786" || row.Date.String() != "2026-07-30" || row.FilingDate.String() != "2026-07-30 00:00:00" ||
+	if row.CIK != "0002127786" || row.Date.String() != "2026-07-30" || row.FilingDate.String() != "2026-07-30 00:00:00" ||
 		row.AcceptedDate.String() != "2026-07-30 13:05:23" || row.FormType != "D" ||
 		row.IncorporatedWithinFiveYears == nil || !*row.IncorporatedWithinFiveYears ||
 		row.YearOfIncorporation != "2026" || row.DateOfFirstSale != nil || row.TotalNumberAlreadyInvested != 0 ||
@@ -91,7 +91,7 @@ func TestDocumentedRegulationDOfferingsDecodeExactValues(t *testing.T) {
 	}
 
 	byCik := assertFixtureParity[RegulationDOffering](t, "fundraising_by_cik.json")[0]
-	if byCik.Cik != "0001547416" || byCik.IncorporatedWithinFiveYears != nil || byCik.YearOfIncorporation != "" ||
+	if byCik.CIK != "0001547416" || byCik.IncorporatedWithinFiveYears != nil || byCik.YearOfIncorporation != "" ||
 		byCik.DateOfFirstSale == nil || *byCik.DateOfFirstSale != mustParseDate(t, "2014-02-14") ||
 		byCik.TotalOfferingAmount != 71_999_990 || byCik.TotalNumberAlreadyInvested != 24 {
 		t.Fatalf("fundraising_by_cik = %+v", byCik)
@@ -104,12 +104,12 @@ func TestDocumentedRegulationDOfferingsDecodeExactValues(t *testing.T) {
 func TestDocumentedOfferingSearchResultsDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	crowdfunding := assertFixtureParity[CrowdfundingOfferingSearchResult](t, "crowdfunding_offerings_search.json")
-	if want := (CrowdfundingOfferingSearchResult{Cik: "0001912939", Name: "Enotap LLC"}); len(crowdfunding) != 1 ||
-		crowdfunding[0].Cik != want.Cik || crowdfunding[0].Name != want.Name || crowdfunding[0].Date != nil {
+	if want := (CrowdfundingOfferingSearchResult{CIK: "0001912939", Name: "Enotap LLC"}); len(crowdfunding) != 1 ||
+		crowdfunding[0].CIK != want.CIK || crowdfunding[0].Name != want.Name || crowdfunding[0].Date != nil {
 		t.Fatalf("crowdfunding_offerings_search = %+v", crowdfunding)
 	}
 	regulationD := assertFixtureParity[RegulationDOfferingSearchResult](t, "fundraising_search.json")
-	want := RegulationDOfferingSearchResult{Cik: "0001547416", Name: "NJOY INC", Date: mustParseDateTime(t, "2014-02-28 16:00:25")}
+	want := RegulationDOfferingSearchResult{CIK: "0001547416", Name: "NJOY INC", Date: mustParseDateTime(t, "2014-02-28 16:00:25")}
 	if len(regulationD) != 1 || regulationD[0] != want {
 		t.Fatalf("fundraising_search = %+v", regulationD)
 	}

@@ -26,19 +26,19 @@ func newCongressionalNamespace(client *Client) CongressionalNamespace {
 // required arguments and each With method sets an optional one. Values are
 // validated when the request is built.
 type CongressionalNetWorthAggregatedQuery struct {
-	memberId  string
+	memberID  string
 	totalsCol *string
 }
 
 // NewCongressionalNetWorthAggregatedQuery creates the query from its required
 // arguments.
-func NewCongressionalNetWorthAggregatedQuery(memberId string) CongressionalNetWorthAggregatedQuery {
-	return CongressionalNetWorthAggregatedQuery{memberId: memberId}
+func NewCongressionalNetWorthAggregatedQuery(memberID string) CongressionalNetWorthAggregatedQuery {
+	return CongressionalNetWorthAggregatedQuery{memberID: memberID}
 }
 
-// MemberId returns the member_id argument as given.
-func (q CongressionalNetWorthAggregatedQuery) MemberId() string {
-	return q.memberId
+// MemberID returns the member_id argument as given.
+func (q CongressionalNetWorthAggregatedQuery) MemberID() string {
+	return q.memberID
 }
 
 // WithTotalsCol sets the optional totals_col parameter and returns the updated
@@ -56,11 +56,11 @@ func (q CongressionalNetWorthAggregatedQuery) TotalsCol() *string {
 
 func (q CongressionalNetWorthAggregatedQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
-	memberId, err := stringParam("senateID", q.memberId)
+	memberID, err := stringParam("senateID", q.memberID)
 	if err != nil {
 		return nil, err
 	}
-	params = append(params, memberId)
+	params = append(params, memberID)
 	if q.totalsCol != nil {
 		totalsCol, err := textParam("totalsCol", *q.totalsCol)
 		if err != nil {
@@ -76,19 +76,19 @@ func (q CongressionalNetWorthAggregatedQuery) params() ([]queryParam, error) {
 // With method sets an optional one. Values are validated when the request is
 // built.
 type CongressionalNetWorthQuery struct {
-	memberId string
+	memberID string
 	page     *uint32
 	limit    *uint32
 }
 
 // NewCongressionalNetWorthQuery creates the query from its required arguments.
-func NewCongressionalNetWorthQuery(memberId string) CongressionalNetWorthQuery {
-	return CongressionalNetWorthQuery{memberId: memberId}
+func NewCongressionalNetWorthQuery(memberID string) CongressionalNetWorthQuery {
+	return CongressionalNetWorthQuery{memberID: memberID}
 }
 
-// MemberId returns the member_id argument as given.
-func (q CongressionalNetWorthQuery) MemberId() string {
-	return q.memberId
+// MemberID returns the member_id argument as given.
+func (q CongressionalNetWorthQuery) MemberID() string {
+	return q.memberID
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
@@ -115,11 +115,11 @@ func (q CongressionalNetWorthQuery) Limit() *uint32 {
 
 func (q CongressionalNetWorthQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 3)
-	memberId, err := stringParam("senateID", q.memberId)
+	memberID, err := stringParam("senateID", q.memberID)
 	if err != nil {
 		return nil, err
 	}
-	params = append(params, memberId)
+	params = append(params, memberID)
 	if q.page != nil {
 		page, err := uint32Param("page", *q.page)
 		if err != nil {
@@ -142,7 +142,7 @@ func (q CongressionalNetWorthQuery) params() ([]queryParam, error) {
 // each With method sets an optional one. Values are validated when the request
 // is built.
 type CongressionalPositionsQuery struct {
-	memberId *string
+	memberID *string
 	party    *string
 	position *string
 	page     *uint32
@@ -155,16 +155,16 @@ func NewCongressionalPositionsQuery() CongressionalPositionsQuery {
 	return CongressionalPositionsQuery{}
 }
 
-// WithMemberId sets the optional member_id parameter and returns the updated
+// WithMemberID sets the optional member_id parameter and returns the updated
 // query.
-func (q CongressionalPositionsQuery) WithMemberId(memberId string) CongressionalPositionsQuery {
-	q.memberId = &memberId
+func (q CongressionalPositionsQuery) WithMemberID(memberID string) CongressionalPositionsQuery {
+	q.memberID = &memberID
 	return q
 }
 
-// MemberId returns the optional member_id parameter, or nil when it is unset.
-func (q CongressionalPositionsQuery) MemberId() *string {
-	return q.memberId
+// MemberID returns the optional member_id parameter, or nil when it is unset.
+func (q CongressionalPositionsQuery) MemberID() *string {
+	return q.memberID
 }
 
 // WithParty sets the optional party parameter and returns the updated query.
@@ -214,12 +214,12 @@ func (q CongressionalPositionsQuery) Limit() *uint32 {
 
 func (q CongressionalPositionsQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 5)
-	if q.memberId != nil {
-		memberId, err := stringParam("senateID", *q.memberId)
+	if q.memberID != nil {
+		memberID, err := stringParam("senateID", *q.memberID)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, memberId)
+		params = append(params, memberID)
 	}
 	if q.party != nil {
 		party, err := textParam("party", *q.party)
@@ -258,7 +258,7 @@ func (q CongressionalPositionsQuery) params() ([]queryParam, error) {
 // built.
 type CongressionalProfilesQuery struct {
 	active         *bool
-	memberId       *string
+	memberID       *string
 	latestParty    *string
 	latestPosition *string
 	page           *uint32
@@ -281,16 +281,16 @@ func (q CongressionalProfilesQuery) Active() *bool {
 	return q.active
 }
 
-// WithMemberId sets the optional member_id parameter and returns the updated
+// WithMemberID sets the optional member_id parameter and returns the updated
 // query.
-func (q CongressionalProfilesQuery) WithMemberId(memberId string) CongressionalProfilesQuery {
-	q.memberId = &memberId
+func (q CongressionalProfilesQuery) WithMemberID(memberID string) CongressionalProfilesQuery {
+	q.memberID = &memberID
 	return q
 }
 
-// MemberId returns the optional member_id parameter, or nil when it is unset.
-func (q CongressionalProfilesQuery) MemberId() *string {
-	return q.memberId
+// MemberID returns the optional member_id parameter, or nil when it is unset.
+func (q CongressionalProfilesQuery) MemberID() *string {
+	return q.memberID
 }
 
 // WithLatestParty sets the optional latest_party parameter and returns the
@@ -350,12 +350,12 @@ func (q CongressionalProfilesQuery) params() ([]queryParam, error) {
 		}
 		params = append(params, active)
 	}
-	if q.memberId != nil {
-		memberId, err := stringParam("senateID", *q.memberId)
+	if q.memberID != nil {
+		memberID, err := stringParam("senateID", *q.memberID)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, memberId)
+		params = append(params, memberID)
 	}
 	if q.latestParty != nil {
 		latestParty, err := textParam("latestParty", *q.latestParty)
@@ -388,57 +388,57 @@ func (q CongressionalProfilesQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// CongressionalTradesByMemberIdQuery holds the query parameters of the
-// endpoints that take it: NewCongressionalTradesByMemberIdQuery takes the
+// CongressionalTradesByMemberIDQuery holds the query parameters of the
+// endpoints that take it: NewCongressionalTradesByMemberIDQuery takes the
 // required arguments and each With method sets an optional one. Values are
 // validated when the request is built.
-type CongressionalTradesByMemberIdQuery struct {
+type CongressionalTradesByMemberIDQuery struct {
 	page     *uint32
 	limit    *uint32
-	memberId *string
+	memberID *string
 }
 
-// NewCongressionalTradesByMemberIdQuery creates the query from its required
+// NewCongressionalTradesByMemberIDQuery creates the query from its required
 // arguments.
-func NewCongressionalTradesByMemberIdQuery() CongressionalTradesByMemberIdQuery {
-	return CongressionalTradesByMemberIdQuery{}
+func NewCongressionalTradesByMemberIDQuery() CongressionalTradesByMemberIDQuery {
+	return CongressionalTradesByMemberIDQuery{}
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q CongressionalTradesByMemberIdQuery) WithPage(page uint32) CongressionalTradesByMemberIdQuery {
+func (q CongressionalTradesByMemberIDQuery) WithPage(page uint32) CongressionalTradesByMemberIDQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q CongressionalTradesByMemberIdQuery) Page() *uint32 {
+func (q CongressionalTradesByMemberIDQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q CongressionalTradesByMemberIdQuery) WithLimit(limit uint32) CongressionalTradesByMemberIdQuery {
+func (q CongressionalTradesByMemberIDQuery) WithLimit(limit uint32) CongressionalTradesByMemberIDQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q CongressionalTradesByMemberIdQuery) Limit() *uint32 {
+func (q CongressionalTradesByMemberIDQuery) Limit() *uint32 {
 	return q.limit
 }
 
-// WithMemberId sets the optional member_id parameter and returns the updated
+// WithMemberID sets the optional member_id parameter and returns the updated
 // query.
-func (q CongressionalTradesByMemberIdQuery) WithMemberId(memberId string) CongressionalTradesByMemberIdQuery {
-	q.memberId = &memberId
+func (q CongressionalTradesByMemberIDQuery) WithMemberID(memberID string) CongressionalTradesByMemberIDQuery {
+	q.memberID = &memberID
 	return q
 }
 
-// MemberId returns the optional member_id parameter, or nil when it is unset.
-func (q CongressionalTradesByMemberIdQuery) MemberId() *string {
-	return q.memberId
+// MemberID returns the optional member_id parameter, or nil when it is unset.
+func (q CongressionalTradesByMemberIDQuery) MemberID() *string {
+	return q.memberID
 }
 
-func (q CongressionalTradesByMemberIdQuery) params() ([]queryParam, error) {
+func (q CongressionalTradesByMemberIDQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 3)
 	if q.page != nil {
 		page, err := uint32Param("page", *q.page)
@@ -454,12 +454,12 @@ func (q CongressionalTradesByMemberIdQuery) params() ([]queryParam, error) {
 		}
 		params = append(params, limit)
 	}
-	if q.memberId != nil {
-		memberId, err := stringParam("senateID", *q.memberId)
+	if q.memberID != nil {
+		memberID, err := stringParam("senateID", *q.memberID)
 		if err != nil {
 			return nil, err
 		}
-		params = append(params, memberId)
+		params = append(params, memberID)
 	}
 	return params, nil
 }
@@ -673,11 +673,11 @@ func (n *CongressionalNamespace) SenateTradesByName(ctx context.Context, q Congr
 	return out, nil
 }
 
-// SenateTradesByMemberId looks up Senate trades by an optional member ID and
+// SenateTradesByMemberID looks up Senate trades by an optional member ID and
 // pagination.
 //
 // GET senate-trades-by-id?page=&limit=&senateID=
-func (n *CongressionalNamespace) SenateTradesByMemberId(ctx context.Context, q CongressionalTradesByMemberIdQuery) ([]CongressionalTrade, error) {
+func (n *CongressionalNamespace) SenateTradesByMemberID(ctx context.Context, q CongressionalTradesByMemberIDQuery) ([]CongressionalTrade, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -719,11 +719,11 @@ func (n *CongressionalNamespace) HouseTradesByName(ctx context.Context, q Congre
 	return out, nil
 }
 
-// HouseTradesByMemberId looks up House trades by an optional member ID and
+// HouseTradesByMemberID looks up House trades by an optional member ID and
 // pagination.
 //
 // GET house-trades-by-id?page=&limit=&senateID=
-func (n *CongressionalNamespace) HouseTradesByMemberId(ctx context.Context, q CongressionalTradesByMemberIdQuery) ([]CongressionalTrade, error) {
+func (n *CongressionalNamespace) HouseTradesByMemberID(ctx context.Context, q CongressionalTradesByMemberIDQuery) ([]CongressionalTrade, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

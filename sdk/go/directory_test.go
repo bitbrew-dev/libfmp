@@ -59,13 +59,13 @@ func TestDirectoryMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	if err != nil || len(financials) != 1 || financials[0].TradingCurrency != "CAD" {
 		t.Fatalf("FinancialStatementSymbols = %+v, %v", financials, err)
 	}
-	ciks, err := client.Directory.CikList(ctx, NewCikListQuery())
-	if err != nil || len(ciks) != 1 || ciks[0].Cik != "0002137358" {
-		t.Fatalf("CikList = %+v, %v", ciks, err)
+	ciks, err := client.Directory.CIKList(ctx, NewCIKListQuery())
+	if err != nil || len(ciks) != 1 || ciks[0].CIK != "0002137358" {
+		t.Fatalf("CIKList = %+v, %v", ciks, err)
 	}
-	paged, err := client.Directory.CikList(ctx, NewCikListQuery().WithLimit(10_001).WithPage(0))
+	paged, err := client.Directory.CIKList(ctx, NewCIKListQuery().WithLimit(10_001).WithPage(0))
 	if err != nil || len(paged) != 1 {
-		t.Fatalf("CikList paged = %+v, %v", paged, err)
+		t.Fatalf("CIKList paged = %+v, %v", paged, err)
 	}
 	changes, err := client.Directory.SymbolChanges(ctx, NewSymbolChangesQuery())
 	if err != nil || len(changes) != 1 || changes[0].NewSymbol != "YARW" {
@@ -129,13 +129,13 @@ func TestDirectoryMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 // the value semantics of the setters are what remains to check.
 func TestDirectoryQuerySettersReturnCopiesAndKeepGettersNil(t *testing.T) {
 	t.Parallel()
-	cik := NewCikListQuery()
+	cik := NewCIKListQuery()
 	if cik.Page() != nil || cik.Limit() != nil {
-		t.Fatalf("new CikListQuery getters = %v %v, want nil", cik.Page(), cik.Limit())
+		t.Fatalf("new CIKListQuery getters = %v %v, want nil", cik.Page(), cik.Limit())
 	}
 	if paged := cik.WithPage(3).WithLimit(7); paged.Page() == nil || *paged.Page() != 3 ||
 		paged.Limit() == nil || *paged.Limit() != 7 || cik.Page() != nil || cik.Limit() != nil {
-		t.Fatalf("CikListQuery setters mutated the receiver or lost a value: %+v %+v", paged, cik)
+		t.Fatalf("CIKListQuery setters mutated the receiver or lost a value: %+v %+v", paged, cik)
 	}
 	changes := NewSymbolChangesQuery()
 	if changes.Invalid() != nil || changes.Limit() != nil {

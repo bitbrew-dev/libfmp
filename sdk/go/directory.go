@@ -58,42 +58,42 @@ func (q AvailableExchangesQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// CikListQuery holds the query parameters of the endpoints that take it:
-// NewCikListQuery takes the required arguments and each With method sets an
+// CIKListQuery holds the query parameters of the endpoints that take it:
+// NewCIKListQuery takes the required arguments and each With method sets an
 // optional one. Values are validated when the request is built.
-type CikListQuery struct {
+type CIKListQuery struct {
 	page  *uint32
 	limit *uint32
 }
 
-// NewCikListQuery creates the query from its required arguments.
-func NewCikListQuery() CikListQuery {
-	return CikListQuery{}
+// NewCIKListQuery creates the query from its required arguments.
+func NewCIKListQuery() CIKListQuery {
+	return CIKListQuery{}
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q CikListQuery) WithPage(page uint32) CikListQuery {
+func (q CIKListQuery) WithPage(page uint32) CIKListQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q CikListQuery) Page() *uint32 {
+func (q CIKListQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q CikListQuery) WithLimit(limit uint32) CikListQuery {
+func (q CIKListQuery) WithLimit(limit uint32) CIKListQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q CikListQuery) Limit() *uint32 {
+func (q CIKListQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q CikListQuery) params() ([]queryParam, error) {
+func (q CIKListQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	if q.page != nil {
 		page, err := uint32Param("page", *q.page)
@@ -190,15 +190,15 @@ func (n *DirectoryNamespace) FinancialStatementSymbols(ctx context.Context) ([]F
 	return out, nil
 }
 
-// CikList lists US SEC entities with optional provider pagination.
+// CIKList lists US SEC entities with optional provider pagination.
 //
 // GET cik-list?page=&limit=
-func (n *DirectoryNamespace) CikList(ctx context.Context, q CikListQuery) ([]CikListing, error) {
+func (n *DirectoryNamespace) CIKList(ctx context.Context, q CIKListQuery) ([]CIKListing, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []CikListing
+	var out []CIKListing
 	if err := n.client.getJSON(ctx, "cik-list", "cik-list", params, &out); err != nil {
 		return nil, err
 	}

@@ -41,7 +41,7 @@ func TestDocumentedSecFilingRowsDecodeExactValues(t *testing.T) {
 		t.Fatalf("latest_8k_sec_filings = %+v, want one row", latest8k)
 	}
 	row := latest8k[0]
-	if row.Symbol != "SUNE" || row.Cik != "0000022701" || row.FormType != "8-K" ||
+	if row.Symbol != "SUNE" || row.CIK != "0000022701" || row.FormType != "8-K" ||
 		row.FilingDate != mustParseDateTime(t, "2024-03-04 00:00:00") ||
 		row.AcceptedDate != mustParseDateTime(t, "2024-03-01 22:47:48") ||
 		row.HasFinancials != nil ||
@@ -70,7 +70,7 @@ func TestDocumentedSecFilingRowsDecodeExactValues(t *testing.T) {
 	}
 	bySymbol := assertFixtureParityNullWhenOmitted[SecFiling](t, "sec_filings_by_symbol.json", omitted)
 	byCik := assertFixtureParityNullWhenOmitted[SecFiling](t, "sec_filings_by_cik.json", omitted)
-	if bySymbol[0].Symbol != "AAPL" || byCik[0].Cik != "0000320193" || bySymbol[0].FormType != "4" ||
+	if bySymbol[0].Symbol != "AAPL" || byCik[0].CIK != "0000320193" || bySymbol[0].FormType != "4" ||
 		byCik[0].AcceptedDate.String() != "2024-03-01 18:36:45" {
 		t.Fatalf("by_symbol = %+v, by_cik = %+v", bySymbol[0], byCik[0])
 	}
@@ -85,7 +85,7 @@ func TestDocumentedSecCompanySearchRowsDecodeExactValues(t *testing.T) {
 	wantName := SecCompanySearchResult{
 		Symbol:          "None",
 		Name:            "BERKSHIRE MULTIFAMILY VALUE FUND II LP",
-		Cik:             "0001418405",
+		CIK:             "0001418405",
 		SicCode:         "",
 		IndustryTitle:   "",
 		BusinessAddress: "c/o Berkshire Property Advisors LLC, Boston MA 02108",
@@ -98,12 +98,12 @@ func TestDocumentedSecCompanySearchRowsDecodeExactValues(t *testing.T) {
 	bySymbol := assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_symbol.json")
 	byCik := assertFixtureParity[SecCompanySearchResult](t, "sec_companies_by_cik.json")
 	if len(bySymbol) != 1 || len(byCik) != 1 || bySymbol[0] != byCik[0] ||
-		bySymbol[0].Symbol != "AAPL" || bySymbol[0].Name != "APPLE INC." || byCik[0].Cik != "0000320193" {
+		bySymbol[0].Symbol != "AAPL" || bySymbol[0].Name != "APPLE INC." || byCik[0].CIK != "0000320193" {
 		t.Fatalf("by_symbol = %+v, by_cik = %+v, want the same AAPL row", bySymbol, byCik)
 	}
 
 	all := assertFixtureParity[SecCompanySearchResult](t, "all_industry_classifications.json")
-	if len(all) != 1 || all[0].Symbol != "0Q16.L" || all[0].Cik != "0000070858" ||
+	if len(all) != 1 || all[0].Symbol != "0Q16.L" || all[0].CIK != "0000070858" ||
 		all[0].BusinessAddress != "['BANK OF AMERICA CORPORATE CENTER', 'CHARLOTTE NC 28255']" {
 		t.Fatalf("all_industry_classifications = %+v", all)
 	}
@@ -121,7 +121,7 @@ func TestDocumentedSecCompanyProfileDecodesExactValues(t *testing.T) {
 		t.Fatalf("sec_company_profile = %+v, want one row", rows)
 	}
 	row := rows[0]
-	if row.Symbol != "AAPL" || row.Cik != "0000320193" || row.Isin != "US0378331005" || row.Country != "US" ||
+	if row.Symbol != "AAPL" || row.CIK != "0000320193" || row.Isin != "US0378331005" || row.Country != "US" ||
 		row.Exchange != "NASDAQ" || row.IpoDate != mustParseDate(t, "1980-12-12") || row.Employees != "166000" ||
 		row.PriceCurrency != "USD" || row.MarketSector != "Technology" || row.SecurityType != nil ||
 		!row.IsActive || row.IsEtf || row.IsAdr || row.IsFund {

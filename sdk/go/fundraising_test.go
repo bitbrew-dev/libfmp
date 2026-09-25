@@ -48,7 +48,7 @@ func TestFundraisingMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	fund := client.Fundraising
 
 	latest, err := fund.LatestCrowdfundingOfferings(ctx, NewLatestCrowdfundingOfferingsQuery())
-	if err != nil || len(latest) != 1 || latest[0].Cik != "0001621902" {
+	if err != nil || len(latest) != 1 || latest[0].CIK != "0001621902" {
 		t.Fatalf("LatestCrowdfundingOfferings = %+v, %v", latest, err)
 	}
 	if _, err := fund.LatestCrowdfundingOfferings(ctx, NewLatestCrowdfundingOfferingsQuery().WithPage(0).WithLimit(100)); err != nil {
@@ -57,32 +57,32 @@ func TestFundraisingMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	if _, err := fund.LatestCrowdfundingOfferings(ctx, NewLatestCrowdfundingOfferingsQuery().WithLimit(0)); err != nil {
 		t.Fatalf("LatestCrowdfundingOfferings limit only: %v", err)
 	}
-	byCik, err := fund.CrowdfundingOfferingsByCik(ctx, NewOfferingByCikQuery("0001916078"))
+	byCik, err := fund.CrowdfundingOfferingsByCIK(ctx, NewOfferingByCIKQuery("0001916078"))
 	if err != nil || len(byCik) != 1 || string(byCik[0].OfferingPrice) != "2" {
-		t.Fatalf("CrowdfundingOfferingsByCik = %+v, %v", byCik, err)
+		t.Fatalf("CrowdfundingOfferingsByCIK = %+v, %v", byCik, err)
 	}
 	search, err := fund.SearchCrowdfundingOfferings(ctx, NewOfferingSearchQuery("NJOY / Class A"))
-	if err != nil || len(search) != 1 || search[0].Cik != "0001912939" {
+	if err != nil || len(search) != 1 || search[0].CIK != "0001912939" {
 		t.Fatalf("SearchCrowdfundingOfferings = %+v, %v", search, err)
 	}
 	regulationD, err := fund.SearchRegulationDOfferings(ctx, NewOfferingSearchQuery("NJOY / Class A"))
-	if err != nil || len(regulationD) != 1 || regulationD[0].Cik != "0001547416" {
+	if err != nil || len(regulationD) != 1 || regulationD[0].CIK != "0001547416" {
 		t.Fatalf("SearchRegulationDOfferings = %+v, %v", regulationD, err)
 	}
-	full := NewLatestRegulationDOfferingsQuery().WithPage(0).WithLimit(10).WithCik("0002013736")
+	full := NewLatestRegulationDOfferingsQuery().WithPage(0).WithLimit(10).WithCIK("0002013736")
 	offerings, err := fund.LatestRegulationDOfferings(ctx, full)
-	if err != nil || len(offerings) != 1 || offerings[0].Cik != "0002127786" {
+	if err != nil || len(offerings) != 1 || offerings[0].CIK != "0002127786" {
 		t.Fatalf("LatestRegulationDOfferings = %+v, %v", offerings, err)
 	}
-	if _, err := fund.LatestRegulationDOfferings(ctx, NewLatestRegulationDOfferingsQuery().WithCik("0002013736")); err != nil {
+	if _, err := fund.LatestRegulationDOfferings(ctx, NewLatestRegulationDOfferingsQuery().WithCIK("0002013736")); err != nil {
 		t.Fatalf("LatestRegulationDOfferings cik only: %v", err)
 	}
 	if _, err := fund.LatestRegulationDOfferings(ctx, NewLatestRegulationDOfferingsQuery().WithLimit(0).WithPage(4_294_967_295)); err != nil {
 		t.Fatalf("LatestRegulationDOfferings page and limit: %v", err)
 	}
-	dOfferings, err := fund.RegulationDOfferingsByCik(ctx, NewOfferingByCikQuery("0001547416"))
+	dOfferings, err := fund.RegulationDOfferingsByCIK(ctx, NewOfferingByCIKQuery("0001547416"))
 	if err != nil || len(dOfferings) != 1 || dOfferings[0].TotalNumberAlreadyInvested != 24 {
-		t.Fatalf("RegulationDOfferingsByCik = %+v, %v", dOfferings, err)
+		t.Fatalf("RegulationDOfferingsByCIK = %+v, %v", dOfferings, err)
 	}
 
 	want := []string{
@@ -139,15 +139,15 @@ func TestFundraisingQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "name", ErrControlCharacterValue},
 		{"empty cik", func() error {
-			_, err := fund.CrowdfundingOfferingsByCik(ctx, NewOfferingByCikQuery(""))
+			_, err := fund.CrowdfundingOfferingsByCIK(ctx, NewOfferingByCIKQuery(""))
 			return err
 		}, "cik", ErrEmptyValue},
 		{"newline cik", func() error {
-			_, err := fund.RegulationDOfferingsByCik(ctx, NewOfferingByCikQuery("\n"))
+			_, err := fund.RegulationDOfferingsByCIK(ctx, NewOfferingByCIKQuery("\n"))
 			return err
 		}, "cik", ErrEmptyValue},
 		{"blank optional cik", func() error {
-			_, err := fund.LatestRegulationDOfferings(ctx, NewLatestRegulationDOfferingsQuery().WithCik(" "))
+			_, err := fund.LatestRegulationDOfferings(ctx, NewLatestRegulationDOfferingsQuery().WithCIK(" "))
 			return err
 		}, "cik", ErrEmptyValue},
 	}
@@ -162,14 +162,14 @@ func TestFundraisingQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		t.Fatalf("validation failures sent %d requests", rec.count())
 	}
 	empty := NewLatestRegulationDOfferingsQuery()
-	if empty.Page() != nil || empty.Limit() != nil || empty.Cik() != nil {
+	if empty.Page() != nil || empty.Limit() != nil || empty.CIK() != nil {
 		t.Fatalf("NewLatestRegulationDOfferingsQuery() set a parameter: %+v", empty)
 	}
 	if q := NewOfferingSearchQuery("NJOY / Class A"); q.Name() != "NJOY / Class A" {
 		t.Fatalf("Name() normalized the search text: %q", q.Name())
 	}
-	if q := NewOfferingByCikQuery("0001916078"); q.Cik() != "0001916078" {
-		t.Fatalf("Cik() dropped the leading zeros: %q", q.Cik())
+	if q := NewOfferingByCIKQuery("0001916078"); q.CIK() != "0001916078" {
+		t.Fatalf("CIK() dropped the leading zeros: %q", q.CIK())
 	}
 }
 

@@ -65,7 +65,7 @@ type IndexConstituent struct {
 	SubSector      string `json:"subSector"`
 	HeadQuarter    string `json:"headQuarter"`
 	DateFirstAdded *Date  `json:"dateFirstAdded"`
-	Cik            string `json:"cik"`
+	CIK            string `json:"cik"`
 	Founded        Date   `json:"founded"`
 }
 
@@ -79,7 +79,7 @@ type indexConstituentShadow struct {
 	SubSector      *string        `json:"subSector"`
 	HeadQuarter    *string        `json:"headQuarter"`
 	DateFirstAdded jsontext.Value `json:"dateFirstAdded"`
-	Cik            *string        `json:"cik"`
+	CIK            *string        `json:"cik"`
 	Founded        *Date          `json:"founded"`
 }
 
@@ -104,7 +104,7 @@ func (m *IndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IndexConstituent", "headQuarter")
 	case len(shadow.DateFirstAdded) == 0:
 		return missingMemberError("IndexConstituent", "dateFirstAdded")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("IndexConstituent", "cik")
 	case shadow.Founded == nil:
 		return missingMemberError("IndexConstituent", "founded")
@@ -124,7 +124,7 @@ func (m *IndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		SubSector:      *shadow.SubSector,
 		HeadQuarter:    *shadow.HeadQuarter,
 		DateFirstAdded: dateFirstAdded,
-		Cik:            *shadow.Cik,
+		CIK:            *shadow.CIK,
 		Founded:        *shadow.Founded,
 	}
 	return nil

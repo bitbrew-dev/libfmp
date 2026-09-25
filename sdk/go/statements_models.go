@@ -74,7 +74,7 @@ type BalanceSheetStatement struct {
 	Date                                    Date     `json:"date"`
 	Symbol                                  string   `json:"symbol"`
 	ReportedCurrency                        string   `json:"reportedCurrency"`
-	Cik                                     string   `json:"cik"`
+	CIK                                     string   `json:"cik"`
 	FilingDate                              Date     `json:"filingDate"`
 	AcceptedDate                            DateTime `json:"acceptedDate"`
 	FiscalYear                              string   `json:"fiscalYear"`
@@ -141,7 +141,7 @@ type balanceSheetStatementShadow struct {
 	Date                                    *Date     `json:"date"`
 	Symbol                                  *string   `json:"symbol"`
 	ReportedCurrency                        *string   `json:"reportedCurrency"`
-	Cik                                     *string   `json:"cik"`
+	CIK                                     *string   `json:"cik"`
 	FilingDate                              *Date     `json:"filingDate"`
 	AcceptedDate                            *DateTime `json:"acceptedDate"`
 	FiscalYear                              *string   `json:"fiscalYear"`
@@ -216,7 +216,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BalanceSheetStatement", "symbol")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("BalanceSheetStatement", "reportedCurrency")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("BalanceSheetStatement", "cik")
 	case shadow.FilingDate == nil:
 		return missingMemberError("BalanceSheetStatement", "filingDate")
@@ -337,7 +337,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Date:                                    *shadow.Date,
 		Symbol:                                  *shadow.Symbol,
 		ReportedCurrency:                        *shadow.ReportedCurrency,
-		Cik:                                     *shadow.Cik,
+		CIK:                                     *shadow.CIK,
 		FilingDate:                              *shadow.FilingDate,
 		AcceptedDate:                            *shadow.AcceptedDate,
 		FiscalYear:                              *shadow.FiscalYear,
@@ -405,7 +405,7 @@ type BalanceSheetStatementTtm struct {
 	Date                                    Date     `json:"date"`
 	Symbol                                  string   `json:"symbol"`
 	ReportedCurrency                        string   `json:"reportedCurrency"`
-	Cik                                     string   `json:"cik"`
+	CIK                                     string   `json:"cik"`
 	FilingDate                              Date     `json:"filingDate"`
 	AcceptedDate                            DateTime `json:"acceptedDate"`
 	FiscalYear                              string   `json:"fiscalYear"`
@@ -471,7 +471,7 @@ type balanceSheetStatementTtmShadow struct {
 	Date                                    *Date     `json:"date"`
 	Symbol                                  *string   `json:"symbol"`
 	ReportedCurrency                        *string   `json:"reportedCurrency"`
-	Cik                                     *string   `json:"cik"`
+	CIK                                     *string   `json:"cik"`
 	FilingDate                              *Date     `json:"filingDate"`
 	AcceptedDate                            *DateTime `json:"acceptedDate"`
 	FiscalYear                              *string   `json:"fiscalYear"`
@@ -545,7 +545,7 @@ func (m *BalanceSheetStatementTtm) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 		return missingMemberError("BalanceSheetStatementTtm", "symbol")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("BalanceSheetStatementTtm", "reportedCurrency")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("BalanceSheetStatementTtm", "cik")
 	case shadow.FilingDate == nil:
 		return missingMemberError("BalanceSheetStatementTtm", "filingDate")
@@ -664,7 +664,7 @@ func (m *BalanceSheetStatementTtm) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 		Date:                                    *shadow.Date,
 		Symbol:                                  *shadow.Symbol,
 		ReportedCurrency:                        *shadow.ReportedCurrency,
-		Cik:                                     *shadow.Cik,
+		CIK:                                     *shadow.CIK,
 		FilingDate:                              *shadow.FilingDate,
 		AcceptedDate:                            *shadow.AcceptedDate,
 		FiscalYear:                              *shadow.FiscalYear,
@@ -731,7 +731,7 @@ type CashFlowStatement struct {
 	Date                                   Date     `json:"date"`
 	Symbol                                 string   `json:"symbol"`
 	ReportedCurrency                       string   `json:"reportedCurrency"`
-	Cik                                    string   `json:"cik"`
+	CIK                                    string   `json:"cik"`
 	FilingDate                             Date     `json:"filingDate"`
 	AcceptedDate                           DateTime `json:"acceptedDate"`
 	FiscalYear                             string   `json:"fiscalYear"`
@@ -784,7 +784,7 @@ type cashFlowStatementShadow struct {
 	Date                                   *Date     `json:"date"`
 	Symbol                                 *string   `json:"symbol"`
 	ReportedCurrency                       *string   `json:"reportedCurrency"`
-	Cik                                    *string   `json:"cik"`
+	CIK                                    *string   `json:"cik"`
 	FilingDate                             *Date     `json:"filingDate"`
 	AcceptedDate                           *DateTime `json:"acceptedDate"`
 	FiscalYear                             *string   `json:"fiscalYear"`
@@ -845,7 +845,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CashFlowStatement", "symbol")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("CashFlowStatement", "reportedCurrency")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("CashFlowStatement", "cik")
 	case shadow.FilingDate == nil:
 		return missingMemberError("CashFlowStatement", "filingDate")
@@ -938,7 +938,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Date:                                   *shadow.Date,
 		Symbol:                                 *shadow.Symbol,
 		ReportedCurrency:                       *shadow.ReportedCurrency,
-		Cik:                                    *shadow.Cik,
+		CIK:                                    *shadow.CIK,
 		FilingDate:                             *shadow.FilingDate,
 		AcceptedDate:                           *shadow.AcceptedDate,
 		FiscalYear:                             *shadow.FiscalYear,
@@ -1973,7 +1973,7 @@ type IncomeStatement struct {
 	Date                                    Date     `json:"date"`
 	Symbol                                  string   `json:"symbol"`
 	ReportedCurrency                        string   `json:"reportedCurrency"`
-	Cik                                     string   `json:"cik"`
+	CIK                                     string   `json:"cik"`
 	FilingDate                              Date     `json:"filingDate"`
 	AcceptedDate                            DateTime `json:"acceptedDate"`
 	FiscalYear                              string   `json:"fiscalYear"`
@@ -2018,7 +2018,7 @@ type incomeStatementShadow struct {
 	Date                                    *Date     `json:"date"`
 	Symbol                                  *string   `json:"symbol"`
 	ReportedCurrency                        *string   `json:"reportedCurrency"`
-	Cik                                     *string   `json:"cik"`
+	CIK                                     *string   `json:"cik"`
 	FilingDate                              *Date     `json:"filingDate"`
 	AcceptedDate                            *DateTime `json:"acceptedDate"`
 	FiscalYear                              *string   `json:"fiscalYear"`
@@ -2071,7 +2071,7 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IncomeStatement", "symbol")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("IncomeStatement", "reportedCurrency")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("IncomeStatement", "cik")
 	case shadow.FilingDate == nil:
 		return missingMemberError("IncomeStatement", "filingDate")
@@ -2148,7 +2148,7 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Date:                                    *shadow.Date,
 		Symbol:                                  *shadow.Symbol,
 		ReportedCurrency:                        *shadow.ReportedCurrency,
-		Cik:                                     *shadow.Cik,
+		CIK:                                     *shadow.CIK,
 		FilingDate:                              *shadow.FilingDate,
 		AcceptedDate:                            *shadow.AcceptedDate,
 		FiscalYear:                              *shadow.FiscalYear,

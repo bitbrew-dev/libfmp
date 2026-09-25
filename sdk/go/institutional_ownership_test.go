@@ -51,7 +51,7 @@ func TestInstitutionalOwnershipMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	ns := client.InstitutionalOwnership
 
 	filings, err := ns.LatestFilings(ctx, NewLatestInstitutionalOwnershipFilingsQuery())
-	if err != nil || len(filings) != 1 || filings[0].Cik != "0001803005" {
+	if err != nil || len(filings) != 1 || filings[0].CIK != "0001803005" {
 		t.Fatalf("LatestFilings = %+v, %v", filings, err)
 	}
 	holdings, err := ns.Extract(ctx, NewInstitutionalOwnershipExtractQuery("0001388838", 2023, QuarterQ3))

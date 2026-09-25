@@ -56,7 +56,7 @@ func TestCongressionalTradeMethodsUseExactPathsAndWireParameterOrder(t *testing.
 
 	senateLatest, err := client.Congressional.LatestSenateDisclosures(ctx,
 		NewLatestCongressionalDisclosuresQuery().WithPage(0).WithLimit(250))
-	if err != nil || len(senateLatest) != 1 || senateLatest[0].MemberId != "M001242" {
+	if err != nil || len(senateLatest) != 1 || senateLatest[0].MemberID != "M001242" {
 		t.Fatalf("LatestSenateDisclosures = %+v, %v", senateLatest, err)
 	}
 	houseLatest, err := client.Congressional.LatestHouseDisclosures(ctx,
@@ -73,10 +73,10 @@ func TestCongressionalTradeMethodsUseExactPathsAndWireParameterOrder(t *testing.
 	if err != nil || len(byName) != 1 || byName[0].Symbol != "" {
 		t.Fatalf("SenateTradesByName = %+v, %v", byName, err)
 	}
-	byID, err := client.Congressional.SenateTradesByMemberId(ctx,
-		NewCongressionalTradesByMemberIdQuery().WithPage(3).WithLimit(4).WithMemberId("M001242"))
+	byID, err := client.Congressional.SenateTradesByMemberID(ctx,
+		NewCongressionalTradesByMemberIDQuery().WithPage(3).WithLimit(4).WithMemberID("M001242"))
 	if err != nil || len(byID) != 1 || byID[0].Symbol != "CM" {
-		t.Fatalf("SenateTradesByMemberId = %+v, %v", byID, err)
+		t.Fatalf("SenateTradesByMemberID = %+v, %v", byID, err)
 	}
 	houseTrades, err := client.Congressional.HouseTrades(ctx, NewCongressionalTradesQuery("AAPL"))
 	if err != nil || len(houseTrades) != 1 || houseTrades[0].District != "TX02" {
@@ -86,9 +86,9 @@ func TestCongressionalTradeMethodsUseExactPathsAndWireParameterOrder(t *testing.
 	if err != nil || len(houseByName) != 1 || houseByName[0].Symbol != "BAC" {
 		t.Fatalf("HouseTradesByName = %+v, %v", houseByName, err)
 	}
-	houseByID, err := client.Congressional.HouseTradesByMemberId(ctx, NewCongressionalTradesByMemberIdQuery())
+	houseByID, err := client.Congressional.HouseTradesByMemberID(ctx, NewCongressionalTradesByMemberIDQuery())
 	if err != nil || len(houseByID) != 1 || houseByID[0].Symbol != "MNST" {
-		t.Fatalf("HouseTradesByMemberId = %+v, %v", houseByID, err)
+		t.Fatalf("HouseTradesByMemberID = %+v, %v", houseByID, err)
 	}
 	assertCongressionalRequests(t, rec, 8)
 }
@@ -100,20 +100,20 @@ func TestCongressionalMemberAndNetWorthMethodsUseExactPathsAndWireParameterOrder
 	ctx := context.Background()
 
 	profiles, err := client.Congressional.Profiles(ctx, NewCongressionalProfilesQuery())
-	if err != nil || len(profiles) != 1 || profiles[0].MemberId != "L000397" || !profiles[0].Active {
+	if err != nil || len(profiles) != 1 || profiles[0].MemberID != "L000397" || !profiles[0].Active {
 		t.Fatalf("Profiles = %+v, %v", profiles, err)
 	}
 	filtered, err := client.Congressional.Profiles(ctx, NewCongressionalProfilesQuery().WithActive(false).
-		WithMemberId("P000197").WithLatestParty("Independent / Other").WithLatestPosition("Representative At-Large").
+		WithMemberID("P000197").WithLatestParty("Independent / Other").WithLatestPosition("Representative At-Large").
 		WithPage(0).WithLimit(500))
 	if err != nil || len(filtered) != 1 {
 		t.Fatalf("Profiles filtered = %+v, %v", filtered, err)
 	}
 	positions, err := client.Congressional.Positions(ctx, NewCongressionalPositionsQuery())
-	if err != nil || len(positions) != 1 || positions[0].MemberId != "Z000018" || positions[0].EndDate != nil {
+	if err != nil || len(positions) != 1 || positions[0].MemberID != "Z000018" || positions[0].EndDate != nil {
 		t.Fatalf("Positions = %+v, %v", positions, err)
 	}
-	held, err := client.Congressional.Positions(ctx, NewCongressionalPositionsQuery().WithMemberId("P000197").
+	held, err := client.Congressional.Positions(ctx, NewCongressionalPositionsQuery().WithMemberID("P000197").
 		WithParty("Republican / Other").WithPosition("Representative At-Large").WithPage(0).WithLimit(300))
 	if err != nil || len(held) != 1 {
 		t.Fatalf("Positions filtered = %+v, %v", held, err)
@@ -174,12 +174,12 @@ func TestCongressionalQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 			return err
 		}, "senateID", ErrEmptyValue},
 		{"whitespace optional member id", func() error {
-			_, err := client.Congressional.Profiles(ctx, NewCongressionalProfilesQuery().WithMemberId(" \t"))
+			_, err := client.Congressional.Profiles(ctx, NewCongressionalProfilesQuery().WithMemberID(" \t"))
 			return err
 		}, "senateID", ErrEmptyValue},
 		{"control character member id", func() error {
-			_, err := client.Congressional.HouseTradesByMemberId(ctx,
-				NewCongressionalTradesByMemberIdQuery().WithMemberId("M00\n1242"))
+			_, err := client.Congressional.HouseTradesByMemberID(ctx,
+				NewCongressionalTradesByMemberIDQuery().WithMemberID("M00\n1242"))
 			return err
 		}, "senateID", ErrControlCharacterValue},
 		{"empty search name", func() error {
@@ -206,10 +206,10 @@ func TestCongressionalQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 		t.Fatalf("validation failures sent %d requests", rec.count())
 	}
 
-	base := NewCongressionalTradesByMemberIdQuery()
-	withID := base.WithMemberId("P000197")
-	if base.MemberId() != nil || withID.MemberId() == nil || *withID.MemberId() != "P000197" || withID.Page() != nil {
-		t.Fatalf("WithMemberId mutated the receiver or dropped the value: base=%+v withID=%+v", base, withID)
+	base := NewCongressionalTradesByMemberIDQuery()
+	withID := base.WithMemberID("P000197")
+	if base.MemberID() != nil || withID.MemberID() == nil || *withID.MemberID() != "P000197" || withID.Page() != nil {
+		t.Fatalf("WithMemberID mutated the receiver or dropped the value: base=%+v withID=%+v", base, withID)
 	}
 	if q := NewCongressionalTradesByNameQuery("  James A.  "); q.Name() != "  James A.  " {
 		t.Fatalf("Name() normalized the value: %q", q.Name())

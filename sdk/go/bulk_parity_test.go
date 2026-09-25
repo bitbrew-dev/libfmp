@@ -42,7 +42,7 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 func TestDocumentedBulkSnapshotsDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	profiles := assertFixtureParity[CompanyProfile](t, "bulk_company_profiles.json")
-	if len(profiles) != 1 || profiles[0].Symbol != "AAPL" || profiles[0].Cik != "0000320193" {
+	if len(profiles) != 1 || profiles[0].Symbol != "AAPL" || profiles[0].CIK != "0000320193" {
 		t.Fatalf("bulk_company_profiles = %+v", profiles)
 	}
 	ratings := assertFixtureParity[BulkStockRating](t, "bulk_stock_ratings.json")
@@ -207,7 +207,7 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 	t.Parallel()
 	income := assertFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.json")
 	if len(income) != 1 || income[0].Symbol != "000001.SZ" || income[0].ReportedCurrency != "CNY" ||
-		income[0].Cik != "0000000000" || income[0].Date != mustParseDate(t, "2025-03-31") ||
+		income[0].CIK != "0000000000" || income[0].Date != mustParseDate(t, "2025-03-31") ||
 		income[0].FilingDate != mustParseDate(t, "2025-03-31") ||
 		income[0].AcceptedDate != mustParseDateTime(t, "2025-03-31 00:00:00") || income[0].FiscalYear != "2025" ||
 		income[0].Period != "Q1" || income[0].Revenue != "33644000000" || income[0].CostOfRevenue != "0" ||
@@ -228,7 +228,7 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 
 	balance := assertFixtureParity[BulkBalanceSheetStatement](t, "bulk_balance_sheet_statements.json")
 	if len(balance) != 1 || balance[0].Symbol != "MTLRP.ME" || balance[0].ReportedCurrency != "RUB" ||
-		balance[0].Cik != "0000000000" || balance[0].FilingDate != mustParseDate(t, "2025-05-31") ||
+		balance[0].CIK != "0000000000" || balance[0].FilingDate != mustParseDate(t, "2025-05-31") ||
 		balance[0].AcceptedDate != mustParseDateTime(t, "2025-03-31 07:00:00") || balance[0].Period != "Q1" ||
 		balance[0].TotalAssets != "247871857000" || balance[0].RetainedEarnings != "-5066509000" ||
 		balance[0].OtherAssets != "0" || balance[0].NetDebt != "183764862000" {
@@ -246,7 +246,7 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 	}
 
 	cashFlow := assertFixtureParity[BulkCashFlowStatement](t, "bulk_cash_flow_statements.json")
-	if len(cashFlow) != 1 || cashFlow[0].Symbol != "000001.SZ" || cashFlow[0].Cik != "0000000000" ||
+	if len(cashFlow) != 1 || cashFlow[0].Symbol != "000001.SZ" || cashFlow[0].CIK != "0000000000" ||
 		cashFlow[0].AcceptedDate != mustParseDateTime(t, "2025-03-31 00:00:00") || cashFlow[0].Period != "Q1" ||
 		cashFlow[0].OtherNonCashItems != "162946000000" || cashFlow[0].PurchasesOfInvestments != "-227916000000" ||
 		cashFlow[0].NetIncome != "0" {

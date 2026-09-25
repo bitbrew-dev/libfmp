@@ -17,9 +17,11 @@ const DOC_WIDTH: usize = 79;
 /// ADR (`IposCalendar` -> `IPOCalendar`).
 const WORDS: &[(&str, &str)] = &[
     ("api", "API"),
+    ("cik", "CIK"),
     ("ciks", "CIKs"),
     ("fmp", "FMP"),
     ("http", "HTTP"),
+    ("id", "ID"),
     ("ids", "IDs"),
     ("json", "JSON"),
     ("url", "URL"),

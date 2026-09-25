@@ -12,7 +12,7 @@ import (
 
 // InstitutionalOwnershipFiling is one recent institutional-ownership filing.
 type InstitutionalOwnershipFiling struct {
-	Cik          string   `json:"cik"`
+	CIK          string   `json:"cik"`
 	Name         string   `json:"name"`
 	Date         Date     `json:"date"`
 	FilingDate   DateTime `json:"filingDate"`
@@ -26,7 +26,7 @@ type InstitutionalOwnershipFiling struct {
 // a pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type institutionalOwnershipFilingShadow struct {
-	Cik          *string   `json:"cik"`
+	CIK          *string   `json:"cik"`
 	Name         *string   `json:"name"`
 	Date         *Date     `json:"date"`
 	FilingDate   *DateTime `json:"filingDate"`
@@ -45,7 +45,7 @@ func (m *InstitutionalOwnershipFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("InstitutionalOwnershipFiling", "cik")
 	case shadow.Name == nil:
 		return missingMemberError("InstitutionalOwnershipFiling", "name")
@@ -63,7 +63,7 @@ func (m *InstitutionalOwnershipFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		return missingMemberError("InstitutionalOwnershipFiling", "finalLink")
 	}
 	*m = InstitutionalOwnershipFiling{
-		Cik:          *shadow.Cik,
+		CIK:          *shadow.CIK,
 		Name:         *shadow.Name,
 		Date:         *shadow.Date,
 		FilingDate:   *shadow.FilingDate,
@@ -81,7 +81,7 @@ type InstitutionalHolding struct {
 	Date          Date    `json:"date"`
 	FilingDate    Date    `json:"filingDate"`
 	AcceptedDate  Date    `json:"acceptedDate"`
-	Cik           string  `json:"cik"`
+	CIK           string  `json:"cik"`
 	SecurityCusip string  `json:"securityCusip"`
 	Symbol        string  `json:"symbol"`
 	NameOfIssuer  string  `json:"nameOfIssuer"`
@@ -101,7 +101,7 @@ type institutionalHoldingShadow struct {
 	Date          *Date    `json:"date"`
 	FilingDate    *Date    `json:"filingDate"`
 	AcceptedDate  *Date    `json:"acceptedDate"`
-	Cik           *string  `json:"cik"`
+	CIK           *string  `json:"cik"`
 	SecurityCusip *string  `json:"securityCusip"`
 	Symbol        *string  `json:"symbol"`
 	NameOfIssuer  *string  `json:"nameOfIssuer"`
@@ -129,7 +129,7 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("InstitutionalHolding", "filingDate")
 	case shadow.AcceptedDate == nil:
 		return missingMemberError("InstitutionalHolding", "acceptedDate")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("InstitutionalHolding", "cik")
 	case shadow.SecurityCusip == nil:
 		return missingMemberError("InstitutionalHolding", "securityCusip")
@@ -156,7 +156,7 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Date:          *shadow.Date,
 		FilingDate:    *shadow.FilingDate,
 		AcceptedDate:  *shadow.AcceptedDate,
-		Cik:           *shadow.Cik,
+		CIK:           *shadow.CIK,
 		SecurityCusip: *shadow.SecurityCusip,
 		Symbol:        *shadow.Symbol,
 		NameOfIssuer:  *shadow.NameOfIssuer,
@@ -216,7 +216,7 @@ func (m *Form13fFilingDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // security for a filing period.
 type InstitutionalHolderAnalytics struct {
 	Date                           Date    `json:"date"`
-	Cik                            string  `json:"cik"`
+	CIK                            string  `json:"cik"`
 	FilingDate                     Date    `json:"filingDate"`
 	InvestorName                   string  `json:"investorName"`
 	Symbol                         string  `json:"symbol"`
@@ -261,7 +261,7 @@ type InstitutionalHolderAnalytics struct {
 // is observable after decoding.
 type institutionalHolderAnalyticsShadow struct {
 	Date                           *Date    `json:"date"`
-	Cik                            *string  `json:"cik"`
+	CIK                            *string  `json:"cik"`
 	FilingDate                     *Date    `json:"filingDate"`
 	InvestorName                   *string  `json:"investorName"`
 	Symbol                         *string  `json:"symbol"`
@@ -312,7 +312,7 @@ func (m *InstitutionalHolderAnalytics) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 	switch {
 	case shadow.Date == nil:
 		return missingMemberError("InstitutionalHolderAnalytics", "date")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("InstitutionalHolderAnalytics", "cik")
 	case shadow.FilingDate == nil:
 		return missingMemberError("InstitutionalHolderAnalytics", "filingDate")
@@ -391,7 +391,7 @@ func (m *InstitutionalHolderAnalytics) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 	}
 	*m = InstitutionalHolderAnalytics{
 		Date:                           *shadow.Date,
-		Cik:                            *shadow.Cik,
+		CIK:                            *shadow.CIK,
 		FilingDate:                     *shadow.FilingDate,
 		InvestorName:                   *shadow.InvestorName,
 		Symbol:                         *shadow.Symbol,
@@ -437,7 +437,7 @@ func (m *InstitutionalHolderAnalytics) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 // benchmark performance summary.
 type HolderPerformanceSummary struct {
 	Date                                               Date    `json:"date"`
-	Cik                                                string  `json:"cik"`
+	CIK                                                string  `json:"cik"`
 	InvestorName                                       string  `json:"investorName"`
 	PortfolioSize                                      uint64  `json:"portfolioSize"`
 	SecuritiesAdded                                    uint64  `json:"securitiesAdded"`
@@ -476,7 +476,7 @@ type HolderPerformanceSummary struct {
 // is observable after decoding.
 type holderPerformanceSummaryShadow struct {
 	Date                                               *Date    `json:"date"`
-	Cik                                                *string  `json:"cik"`
+	CIK                                                *string  `json:"cik"`
 	InvestorName                                       *string  `json:"investorName"`
 	PortfolioSize                                      *uint64  `json:"portfolioSize"`
 	SecuritiesAdded                                    *uint64  `json:"securitiesAdded"`
@@ -521,7 +521,7 @@ func (m *HolderPerformanceSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 	switch {
 	case shadow.Date == nil:
 		return missingMemberError("HolderPerformanceSummary", "date")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("HolderPerformanceSummary", "cik")
 	case shadow.InvestorName == nil:
 		return missingMemberError("HolderPerformanceSummary", "investorName")
@@ -588,7 +588,7 @@ func (m *HolderPerformanceSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 	}
 	*m = HolderPerformanceSummary{
 		Date:                                 *shadow.Date,
-		Cik:                                  *shadow.Cik,
+		CIK:                                  *shadow.CIK,
 		InvestorName:                         *shadow.InvestorName,
 		PortfolioSize:                        *shadow.PortfolioSize,
 		SecuritiesAdded:                      *shadow.SecuritiesAdded,
@@ -628,7 +628,7 @@ func (m *HolderPerformanceSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 // an institutional holder.
 type HolderIndustryBreakdown struct {
 	Date                     Date    `json:"date"`
-	Cik                      string  `json:"cik"`
+	CIK                      string  `json:"cik"`
 	InvestorName             string  `json:"investorName"`
 	IndustryTitle            string  `json:"industryTitle"`
 	Weight                   float64 `json:"weight"`
@@ -646,7 +646,7 @@ type HolderIndustryBreakdown struct {
 // observable after decoding.
 type holderIndustryBreakdownShadow struct {
 	Date                     *Date    `json:"date"`
-	Cik                      *string  `json:"cik"`
+	CIK                      *string  `json:"cik"`
 	InvestorName             *string  `json:"investorName"`
 	IndustryTitle            *string  `json:"industryTitle"`
 	Weight                   *float64 `json:"weight"`
@@ -670,7 +670,7 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 	switch {
 	case shadow.Date == nil:
 		return missingMemberError("HolderIndustryBreakdown", "date")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("HolderIndustryBreakdown", "cik")
 	case shadow.InvestorName == nil:
 		return missingMemberError("HolderIndustryBreakdown", "investorName")
@@ -695,7 +695,7 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 	}
 	*m = HolderIndustryBreakdown{
 		Date:                     *shadow.Date,
-		Cik:                      *shadow.Cik,
+		CIK:                      *shadow.CIK,
 		InvestorName:             *shadow.InvestorName,
 		IndustryTitle:            *shadow.IndustryTitle,
 		Weight:                   *shadow.Weight,
@@ -714,7 +714,7 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 // one security and filing period.
 type InstitutionalPositionSummary struct {
 	Symbol                   string  `json:"symbol"`
-	Cik                      string  `json:"cik"`
+	CIK                      string  `json:"cik"`
 	Date                     Date    `json:"date"`
 	InvestorsHolding         uint64  `json:"investorsHolding"`
 	LastInvestorsHolding     uint64  `json:"lastInvestorsHolding"`
@@ -756,7 +756,7 @@ type InstitutionalPositionSummary struct {
 // is observable after decoding.
 type institutionalPositionSummaryShadow struct {
 	Symbol                   *string  `json:"symbol"`
-	Cik                      *string  `json:"cik"`
+	CIK                      *string  `json:"cik"`
 	Date                     *Date    `json:"date"`
 	InvestorsHolding         *uint64  `json:"investorsHolding"`
 	LastInvestorsHolding     *uint64  `json:"lastInvestorsHolding"`
@@ -804,7 +804,7 @@ func (m *InstitutionalPositionSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("InstitutionalPositionSummary", "symbol")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("InstitutionalPositionSummary", "cik")
 	case shadow.Date == nil:
 		return missingMemberError("InstitutionalPositionSummary", "date")
@@ -877,7 +877,7 @@ func (m *InstitutionalPositionSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 	}
 	*m = InstitutionalPositionSummary{
 		Symbol:                   *shadow.Symbol,
-		Cik:                      *shadow.Cik,
+		CIK:                      *shadow.CIK,
 		Date:                     *shadow.Date,
 		InvestorsHolding:         *shadow.InvestorsHolding,
 		LastInvestorsHolding:     *shadow.LastInvestorsHolding,

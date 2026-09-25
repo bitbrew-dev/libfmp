@@ -115,14 +115,14 @@ func (q LatestRegulationDOfferingsQuery) Limit() *uint32 {
 	return q.limit
 }
 
-// WithCik sets the optional cik parameter and returns the updated query.
-func (q LatestRegulationDOfferingsQuery) WithCik(cik string) LatestRegulationDOfferingsQuery {
+// WithCIK sets the optional cik parameter and returns the updated query.
+func (q LatestRegulationDOfferingsQuery) WithCIK(cik string) LatestRegulationDOfferingsQuery {
 	q.cik = &cik
 	return q
 }
 
-// Cik returns the optional cik parameter, or nil when it is unset.
-func (q LatestRegulationDOfferingsQuery) Cik() *string {
+// CIK returns the optional cik parameter, or nil when it is unset.
+func (q LatestRegulationDOfferingsQuery) CIK() *string {
 	return q.cik
 }
 
@@ -152,24 +152,24 @@ func (q LatestRegulationDOfferingsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// OfferingByCikQuery holds the query parameters of the endpoints that take it:
-// NewOfferingByCikQuery takes the required arguments and each With method sets
+// OfferingByCIKQuery holds the query parameters of the endpoints that take it:
+// NewOfferingByCIKQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
-type OfferingByCikQuery struct {
+type OfferingByCIKQuery struct {
 	cik string
 }
 
-// NewOfferingByCikQuery creates the query from its required arguments.
-func NewOfferingByCikQuery(cik string) OfferingByCikQuery {
-	return OfferingByCikQuery{cik: cik}
+// NewOfferingByCIKQuery creates the query from its required arguments.
+func NewOfferingByCIKQuery(cik string) OfferingByCIKQuery {
+	return OfferingByCIKQuery{cik: cik}
 }
 
-// Cik returns the cik argument as given.
-func (q OfferingByCikQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q OfferingByCIKQuery) CIK() string {
 	return q.cik
 }
 
-func (q OfferingByCikQuery) params() ([]queryParam, error) {
+func (q OfferingByCIKQuery) params() ([]queryParam, error) {
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
 		return nil, err
@@ -217,11 +217,11 @@ func (n *FundraisingNamespace) LatestCrowdfundingOfferings(ctx context.Context, 
 	return out, nil
 }
 
-// CrowdfundingOfferingsByCik retrieves US crowdfunding offerings for one
+// CrowdfundingOfferingsByCIK retrieves US crowdfunding offerings for one
 // issuer CIK.
 //
 // GET crowdfunding-offerings?cik=
-func (n *FundraisingNamespace) CrowdfundingOfferingsByCik(ctx context.Context, q OfferingByCikQuery) ([]CrowdfundingOffering, error) {
+func (n *FundraisingNamespace) CrowdfundingOfferingsByCIK(ctx context.Context, q OfferingByCIKQuery) ([]CrowdfundingOffering, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
@@ -280,11 +280,11 @@ func (n *FundraisingNamespace) LatestRegulationDOfferings(ctx context.Context, q
 	return out, nil
 }
 
-// RegulationDOfferingsByCik retrieves US Regulation D offerings for one issuer
+// RegulationDOfferingsByCIK retrieves US Regulation D offerings for one issuer
 // CIK.
 //
 // GET fundraising?cik=
-func (n *FundraisingNamespace) RegulationDOfferingsByCik(ctx context.Context, q OfferingByCikQuery) ([]RegulationDOffering, error) {
+func (n *FundraisingNamespace) RegulationDOfferingsByCIK(ctx context.Context, q OfferingByCIKQuery) ([]RegulationDOffering, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err

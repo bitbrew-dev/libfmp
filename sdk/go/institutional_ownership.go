@@ -34,8 +34,8 @@ func NewForm13fFilingDatesQuery(cik string) Form13fFilingDatesQuery {
 	return Form13fFilingDatesQuery{cik: cik}
 }
 
-// Cik returns the cik argument as given.
-func (q Form13fFilingDatesQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q Form13fFilingDatesQuery) CIK() string {
 	return q.cik
 }
 
@@ -63,8 +63,8 @@ func NewHolderIndustryBreakdownQuery(cik string, year uint32, quarter Quarter) H
 	return HolderIndustryBreakdownQuery{cik: cik, year: year, quarter: quarter}
 }
 
-// Cik returns the cik argument as given.
-func (q HolderIndustryBreakdownQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q HolderIndustryBreakdownQuery) CIK() string {
 	return q.cik
 }
 
@@ -109,8 +109,8 @@ func NewHolderPerformanceSummaryQuery(cik string) HolderPerformanceSummaryQuery 
 	return HolderPerformanceSummaryQuery{cik: cik}
 }
 
-// Cik returns the cik argument as given.
-func (q HolderPerformanceSummaryQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q HolderPerformanceSummaryQuery) CIK() string {
 	return q.cik
 }
 
@@ -284,8 +284,8 @@ func NewInstitutionalOwnershipExtractQuery(cik string, year uint32, quarter Quar
 	return InstitutionalOwnershipExtractQuery{cik: cik, year: year, quarter: quarter}
 }
 
-// Cik returns the cik argument as given.
-func (q InstitutionalOwnershipExtractQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q InstitutionalOwnershipExtractQuery) CIK() string {
 	return q.cik
 }
 

@@ -14,7 +14,7 @@ import (
 // searches.
 type SecFiling struct {
 	Symbol        string   `json:"symbol"`
-	Cik           string   `json:"cik"`
+	CIK           string   `json:"cik"`
 	FilingDate    DateTime `json:"filingDate"`
 	AcceptedDate  DateTime `json:"acceptedDate"`
 	FormType      string   `json:"formType"`
@@ -27,7 +27,7 @@ type SecFiling struct {
 // required member so a missing or null member is observable after decoding.
 type secFilingShadow struct {
 	Symbol        *string   `json:"symbol"`
-	Cik           *string   `json:"cik"`
+	CIK           *string   `json:"cik"`
 	FilingDate    *DateTime `json:"filingDate"`
 	AcceptedDate  *DateTime `json:"acceptedDate"`
 	FormType      *string   `json:"formType"`
@@ -47,7 +47,7 @@ func (m *SecFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("SecFiling", "symbol")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("SecFiling", "cik")
 	case shadow.FilingDate == nil:
 		return missingMemberError("SecFiling", "filingDate")
@@ -62,7 +62,7 @@ func (m *SecFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	*m = SecFiling{
 		Symbol:        *shadow.Symbol,
-		Cik:           *shadow.Cik,
+		CIK:           *shadow.CIK,
 		FilingDate:    *shadow.FilingDate,
 		AcceptedDate:  *shadow.AcceptedDate,
 		FormType:      *shadow.FormType,
@@ -78,7 +78,7 @@ func (m *SecFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type SecCompanySearchResult struct {
 	Symbol          string `json:"symbol"`
 	Name            string `json:"name"`
-	Cik             string `json:"cik"`
+	CIK             string `json:"cik"`
 	SicCode         string `json:"sicCode"`
 	IndustryTitle   string `json:"industryTitle"`
 	BusinessAddress string `json:"businessAddress"`
@@ -91,7 +91,7 @@ type SecCompanySearchResult struct {
 type secCompanySearchResultShadow struct {
 	Symbol          *string `json:"symbol"`
 	Name            *string `json:"name"`
-	Cik             *string `json:"cik"`
+	CIK             *string `json:"cik"`
 	SicCode         *string `json:"sicCode"`
 	IndustryTitle   *string `json:"industryTitle"`
 	BusinessAddress *string `json:"businessAddress"`
@@ -111,7 +111,7 @@ func (m *SecCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return missingMemberError("SecCompanySearchResult", "symbol")
 	case shadow.Name == nil:
 		return missingMemberError("SecCompanySearchResult", "name")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("SecCompanySearchResult", "cik")
 	case shadow.SicCode == nil:
 		return missingMemberError("SecCompanySearchResult", "sicCode")
@@ -125,7 +125,7 @@ func (m *SecCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	*m = SecCompanySearchResult{
 		Symbol:          *shadow.Symbol,
 		Name:            *shadow.Name,
-		Cik:             *shadow.Cik,
+		CIK:             *shadow.CIK,
 		SicCode:         *shadow.SicCode,
 		IndustryTitle:   *shadow.IndustryTitle,
 		BusinessAddress: *shadow.BusinessAddress,
@@ -137,7 +137,7 @@ func (m *SecCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 // SecCompanyProfile is one full SEC company profile.
 type SecCompanyProfile struct {
 	Symbol                  string          `json:"symbol"`
-	Cik                     string          `json:"cik"`
+	CIK                     string          `json:"cik"`
 	RegistrantName          string          `json:"registrantName"`
 	SicCode                 string          `json:"sicCode"`
 	SicDescription          string          `json:"sicDescription"`
@@ -178,7 +178,7 @@ type SecCompanyProfile struct {
 // after decoding.
 type secCompanyProfileShadow struct {
 	Symbol                  *string        `json:"symbol"`
-	Cik                     *string        `json:"cik"`
+	CIK                     *string        `json:"cik"`
 	RegistrantName          *string        `json:"registrantName"`
 	SicCode                 *string        `json:"sicCode"`
 	SicDescription          *string        `json:"sicDescription"`
@@ -225,7 +225,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("SecCompanyProfile", "symbol")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("SecCompanyProfile", "cik")
 	case shadow.RegistrantName == nil:
 		return missingMemberError("SecCompanyProfile", "registrantName")
@@ -304,7 +304,7 @@ func (m *SecCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	*m = SecCompanyProfile{
 		Symbol:                  *shadow.Symbol,
-		Cik:                     *shadow.Cik,
+		CIK:                     *shadow.CIK,
 		RegistrantName:          *shadow.RegistrantName,
 		SicCode:                 *shadow.SicCode,
 		SicDescription:          *shadow.SicDescription,

@@ -81,7 +81,7 @@ func TestCalendarMethodsUseExactPathsAndWireQueryOrder(t *testing.T) {
 		t.Fatalf("IposCalendar (from only): %v", err)
 	}
 	disclosures, err := client.Calendar.IposDisclosure(ctx, NewIposDisclosureQuery().WithTo(jun6))
-	if err != nil || len(disclosures) != 1 || disclosures[0].Cik != "0001415726" {
+	if err != nil || len(disclosures) != 1 || disclosures[0].CIK != "0001415726" {
 		t.Fatalf("IposDisclosure = %+v, %v", disclosures, err)
 	}
 	prospectuses, err := client.Calendar.IposProspectus(ctx, NewIposProspectusQuery().WithFrom(mar6).WithTo(jun6))

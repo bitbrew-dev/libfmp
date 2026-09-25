@@ -103,7 +103,7 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 	t.Parallel()
 	holders := assertFixtureParity[FundDisclosureHolder](t, "latest_fund_disclosure_holders.json")
 	wantHolder := FundDisclosureHolder{
-		Cik: "0000866256", Holder: "PARNASSUS INCOME FUNDS", SecurityCusip: "037833100", Shares: 3_638_451,
+		CIK: "0000866256", Holder: "PARNASSUS INCOME FUNDS", SecurityCusip: "037833100", Shares: 3_638_451,
 		DateReported: mustParseDate(t, "2026-06-30"), Change: -316_881, WeightPercent: 4.06607721,
 	}
 	if len(holders) != 1 || holders[0] != wantHolder {
@@ -115,7 +115,7 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 
 	disclosures := assertFixtureParity[FundDisclosure](t, "fund_disclosures.json")
 	wantDisclosure := FundDisclosure{
-		Cik: "0000857489", Date: mustParseDate(t, "2023-10-31"), AcceptedDate: mustParseDateTime(t, "2023-12-28 09:26:13"),
+		CIK: "0000857489", Date: mustParseDate(t, "2023-10-31"), AcceptedDate: mustParseDateTime(t, "2023-12-28 09:26:13"),
 		Symbol: "000089.SZ", Name: "Shenzhen Airport Co Ltd", Lei: "3003009W045RIKRBZI44", Title: "SHENZ AIRPORT-A",
 		Cusip: "N/A", Isin: "CNE000000VK1", Balance: 2_438_784, Units: "NS", CurrencyCode: "CNY",
 		ValUsd: 2_255_873.6, PctVal: 0.0023838966190458206, PayoffProfile: "Long", AssetCat: "EC", IssuerCat: "CORP",
@@ -132,7 +132,7 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 
 	results := assertFixtureParity[FundDisclosureSearchResult](t, "fund_disclosure_holder_search.json")
 	wantResult := FundDisclosureSearchResult{
-		Symbol: "FGOAX", Cik: "0000355691", ClassId: "C000024574", SeriesId: "S000009042",
+		Symbol: "FGOAX", CIK: "0000355691", ClassID: "C000024574", SeriesID: "S000009042",
 		EntityName: "Federated Hermes Government Income Securities, Inc.", EntityOrgType: "30",
 		SeriesName: "Federated Hermes Government Income Securities, Inc.", ClassName: "Class A Shares",
 		ReportingFileNumber: "811-03266", Address: "4000 ERICSSON DRIVE", City: "WARRENDALE", ZipCode: "15086-7561",

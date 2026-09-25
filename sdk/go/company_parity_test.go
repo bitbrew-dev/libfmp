@@ -52,7 +52,7 @@ func TestDocumentedCompanyProfileNoteAndPeerDecodeExactValues(t *testing.T) {
 	want := CompanyProfile{
 		Symbol: "AAPL", Price: 331.85501, MarketCap: 4_874_072_686_740, Beta: 1.097, LastDividend: 1.05,
 		Range: "201.5-344.57", Change: -6.33498, ChangePercentage: -1.8732, Volume: 28_718_014,
-		AverageVolume: 55_309_000, CompanyName: "Apple Inc.", Currency: "USD", Cik: "0000320193",
+		AverageVolume: 55_309_000, CompanyName: "Apple Inc.", Currency: "USD", CIK: "0000320193",
 		Isin: "US0378331005", Cusip: "037833100", ExchangeFullName: "NASDAQ Global Select", Exchange: "NASDAQ",
 		Industry: "Consumer Electronics", Website: "https://www.apple.com", Description: profile.Description,
 		Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US", FullTimeEmployees: "166000",
@@ -87,7 +87,7 @@ func TestDocumentedCompanyProfileNoteAndPeerDecodeExactValues(t *testing.T) {
 	}
 
 	notes := assertFixtureParity[CompanyNote](t, "company_note.json")
-	if want := (CompanyNote{Cik: "0000320193", Symbol: "AAPL", Title: "0.000% Notes due 2025", Exchange: "NASDAQ"}); len(notes) != 1 ||
+	if want := (CompanyNote{CIK: "0000320193", Symbol: "AAPL", Title: "0.000% Notes due 2025", Exchange: "NASDAQ"}); len(notes) != 1 ||
 		notes[0] != want {
 		t.Fatalf("company_note = %+v", notes)
 	}
@@ -111,7 +111,7 @@ func TestDocumentedWorkforceAndMarketDataFixturesDecodeExactValues(t *testing.T)
 		t.Fatalf("company_delisted = %+v", delisted)
 	}
 	employees := assertFixtureParity[EmployeeCount](t, "company_employee_count.json")
-	if want := (EmployeeCount{Symbol: "AAPL", Cik: "0000320193", AcceptanceTime: mustParseDateTime(t, "2025-10-31 06:01:26"),
+	if want := (EmployeeCount{Symbol: "AAPL", CIK: "0000320193", AcceptanceTime: mustParseDateTime(t, "2025-10-31 06:01:26"),
 		PeriodOfReport: mustParseDate(t, "2025-09-27"), CompanyName: "Apple Inc.", FormType: "10-K",
 		FilingDate: mustParseDate(t, "2025-10-31"), EmployeeCount: 166_000,
 		Source: "https://www.sec.gov/Archives/edgar/data/320193/000032019325000079/0000320193-25-000079-index.htm"}); len(employees) != 1 ||
@@ -147,15 +147,15 @@ func TestDocumentedWorkforceAndMarketDataFixturesDecodeExactValues(t *testing.T)
 func TestDocumentedMergerAndGovernanceFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	latest := assertFixtureParity[MergerAcquisition](t, "company_mergers_acquisitions_latest.json")
-	if want := (MergerAcquisition{Symbol: "AGH", CompanyName: "Aureus Greenway Holdings Inc", Cik: "0002009312",
-		TargetedCompanyName: "Aureus Greenway Holdings, Inc.", TargetedCik: "0002009312", TargetedSymbol: "PUSA",
+	if want := (MergerAcquisition{Symbol: "AGH", CompanyName: "Aureus Greenway Holdings Inc", CIK: "0002009312",
+		TargetedCompanyName: "Aureus Greenway Holdings, Inc.", TargetedCIK: "0002009312", TargetedSymbol: "PUSA",
 		TransactionDate: mustParseDate(t, "2026-07-29"), AcceptedDate: mustParseDateTime(t, "2026-07-29 16:00:46"),
 		Link: "https://www.sec.gov/Archives/edgar/data/2009312/000149315226035181/forms-4.htm"}); len(latest) != 1 ||
 		latest[0] != want {
 		t.Fatalf("company_latest_mergers_acquisitions = %+v", latest)
 	}
 	search := assertFixtureParity[MergerAcquisition](t, "company_mergers_acquisitions_search.json")
-	if len(search) != 1 || search[0].Symbol != "PEGY" || search[0].Cik != "0000022701" || search[0].TargetedSymbol != "JCS" ||
+	if len(search) != 1 || search[0].Symbol != "PEGY" || search[0].CIK != "0000022701" || search[0].TargetedSymbol != "JCS" ||
 		search[0].TransactionDate != mustParseDate(t, "2021-11-12") {
 		t.Fatalf("company_search_mergers_acquisitions = %+v", search)
 	}
@@ -182,7 +182,7 @@ func TestDocumentedMergerAndGovernanceFixturesDecodeExactValues(t *testing.T) {
 	assertCanonicalJSON(t, dynamic[1].TitleSince, `1704067200`)
 
 	compensation := assertFixtureParity[ExecutiveCompensation](t, "company_executive_compensation.json")
-	if want := (ExecutiveCompensation{Cik: "0000320193", Symbol: "AAPL", CompanyName: "Apple Inc.",
+	if want := (ExecutiveCompensation{CIK: "0000320193", Symbol: "AAPL", CompanyName: "Apple Inc.",
 		FilingDate: mustParseDate(t, "2026-01-08"), AcceptedDate: mustParseDateTime(t, "2026-01-08 16:31:36"),
 		NameAndPosition: "Luca Maestri Former Senior Vice President, Chief Financial Officer", Year: 2025, Salary: 819_231,
 		Bonus: 0, StockAward: 13_003_031, OptionAward: 0, IncentivePlanCompensation: 1_638_462,

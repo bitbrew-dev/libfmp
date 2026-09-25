@@ -15,8 +15,8 @@ type InsiderTrade struct {
 	Symbol                   string  `json:"symbol"`
 	FilingDate               Date    `json:"filingDate"`
 	TransactionDate          Date    `json:"transactionDate"`
-	ReportingCik             string  `json:"reportingCik"`
-	CompanyCik               string  `json:"companyCik"`
+	ReportingCIK             string  `json:"reportingCik"`
+	CompanyCIK               string  `json:"companyCik"`
 	TransactionType          string  `json:"transactionType"`
 	SecuritiesOwned          float64 `json:"securitiesOwned"`
 	ReportingName            string  `json:"reportingName"`
@@ -37,8 +37,8 @@ type insiderTradeShadow struct {
 	Symbol                   *string  `json:"symbol"`
 	FilingDate               *Date    `json:"filingDate"`
 	TransactionDate          *Date    `json:"transactionDate"`
-	ReportingCik             *string  `json:"reportingCik"`
-	CompanyCik               *string  `json:"companyCik"`
+	ReportingCIK             *string  `json:"reportingCik"`
+	CompanyCIK               *string  `json:"companyCik"`
 	TransactionType          *string  `json:"transactionType"`
 	SecuritiesOwned          *float64 `json:"securitiesOwned"`
 	ReportingName            *string  `json:"reportingName"`
@@ -67,9 +67,9 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("InsiderTrade", "filingDate")
 	case shadow.TransactionDate == nil:
 		return missingMemberError("InsiderTrade", "transactionDate")
-	case shadow.ReportingCik == nil:
+	case shadow.ReportingCIK == nil:
 		return missingMemberError("InsiderTrade", "reportingCik")
-	case shadow.CompanyCik == nil:
+	case shadow.CompanyCIK == nil:
 		return missingMemberError("InsiderTrade", "companyCik")
 	case shadow.TransactionType == nil:
 		return missingMemberError("InsiderTrade", "transactionType")
@@ -98,8 +98,8 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Symbol:                   *shadow.Symbol,
 		FilingDate:               *shadow.FilingDate,
 		TransactionDate:          *shadow.TransactionDate,
-		ReportingCik:             *shadow.ReportingCik,
-		CompanyCik:               *shadow.CompanyCik,
+		ReportingCIK:             *shadow.ReportingCIK,
+		CompanyCIK:               *shadow.CompanyCIK,
 		TransactionType:          *shadow.TransactionType,
 		SecuritiesOwned:          *shadow.SecuritiesOwned,
 		ReportingName:            *shadow.ReportingName,
@@ -118,7 +118,7 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // InsiderReportingName is one reporting-person identity returned by
 // reporting-name search.
 type InsiderReportingName struct {
-	ReportingCik  string `json:"reportingCik"`
+	ReportingCIK  string `json:"reportingCik"`
 	ReportingName string `json:"reportingName"`
 }
 
@@ -126,7 +126,7 @@ type InsiderReportingName struct {
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type insiderReportingNameShadow struct {
-	ReportingCik  *string `json:"reportingCik"`
+	ReportingCIK  *string `json:"reportingCik"`
 	ReportingName *string `json:"reportingName"`
 }
 
@@ -139,13 +139,13 @@ func (m *InsiderReportingName) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return err
 	}
 	switch {
-	case shadow.ReportingCik == nil:
+	case shadow.ReportingCIK == nil:
 		return missingMemberError("InsiderReportingName", "reportingCik")
 	case shadow.ReportingName == nil:
 		return missingMemberError("InsiderReportingName", "reportingName")
 	}
 	*m = InsiderReportingName{
-		ReportingCik:  *shadow.ReportingCik,
+		ReportingCIK:  *shadow.ReportingCIK,
 		ReportingName: *shadow.ReportingName,
 	}
 	return nil
@@ -184,7 +184,7 @@ func (m *InsiderTransactionType) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 // InsiderTradeStatistics is one quarterly aggregate of insider-trade activity.
 type InsiderTradeStatistics struct {
 	Symbol                string  `json:"symbol"`
-	Cik                   string  `json:"cik"`
+	CIK                   string  `json:"cik"`
 	Year                  uint32  `json:"year"`
 	Quarter               uint8   `json:"quarter"`
 	AcquiredTransactions  uint64  `json:"acquiredTransactions"`
@@ -203,7 +203,7 @@ type InsiderTradeStatistics struct {
 // observable after decoding.
 type insiderTradeStatisticsShadow struct {
 	Symbol                *string  `json:"symbol"`
-	Cik                   *string  `json:"cik"`
+	CIK                   *string  `json:"cik"`
 	Year                  *uint32  `json:"year"`
 	Quarter               *uint8   `json:"quarter"`
 	AcquiredTransactions  *uint64  `json:"acquiredTransactions"`
@@ -228,7 +228,7 @@ func (m *InsiderTradeStatistics) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("InsiderTradeStatistics", "symbol")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("InsiderTradeStatistics", "cik")
 	case shadow.Year == nil:
 		return missingMemberError("InsiderTradeStatistics", "year")
@@ -255,7 +255,7 @@ func (m *InsiderTradeStatistics) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	}
 	*m = InsiderTradeStatistics{
 		Symbol:                *shadow.Symbol,
-		Cik:                   *shadow.Cik,
+		CIK:                   *shadow.CIK,
 		Year:                  *shadow.Year,
 		Quarter:               *shadow.Quarter,
 		AcquiredTransactions:  *shadow.AcquiredTransactions,
@@ -274,7 +274,7 @@ func (m *InsiderTradeStatistics) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 // BeneficialOwnershipAcquisition is one beneficial-ownership acquisition
 // filing row.
 type BeneficialOwnershipAcquisition struct {
-	Cik                              string `json:"cik"`
+	CIK                              string `json:"cik"`
 	Symbol                           string `json:"symbol"`
 	FilingDate                       Date   `json:"filingDate"`
 	AcceptedDate                     Date   `json:"acceptedDate"`
@@ -295,7 +295,7 @@ type BeneficialOwnershipAcquisition struct {
 // with a pointer or raw value for every required member so a missing or null
 // member is observable after decoding.
 type beneficialOwnershipAcquisitionShadow struct {
-	Cik                              *string `json:"cik"`
+	CIK                              *string `json:"cik"`
 	Symbol                           *string `json:"symbol"`
 	FilingDate                       *Date   `json:"filingDate"`
 	AcceptedDate                     *Date   `json:"acceptedDate"`
@@ -321,7 +321,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 		return err
 	}
 	switch {
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "cik")
 	case shadow.Symbol == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "symbol")
@@ -353,7 +353,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 		return missingMemberError("BeneficialOwnershipAcquisition", "url")
 	}
 	*m = BeneficialOwnershipAcquisition{
-		Cik:                              *shadow.Cik,
+		CIK:                              *shadow.CIK,
 		Symbol:                           *shadow.Symbol,
 		FilingDate:                       *shadow.FilingDate,
 		AcceptedDate:                     *shadow.AcceptedDate,

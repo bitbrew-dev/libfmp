@@ -15,7 +15,7 @@ type EsgDisclosure struct {
 	Date               Date    `json:"date"`
 	AcceptedDate       Date    `json:"acceptedDate"`
 	Symbol             string  `json:"symbol"`
-	Cik                string  `json:"cik"`
+	CIK                string  `json:"cik"`
 	CompanyName        string  `json:"companyName"`
 	FormType           string  `json:"formType"`
 	EnvironmentalScore float64 `json:"environmentalScore"`
@@ -32,7 +32,7 @@ type esgDisclosureShadow struct {
 	Date               *Date    `json:"date"`
 	AcceptedDate       *Date    `json:"acceptedDate"`
 	Symbol             *string  `json:"symbol"`
-	Cik                *string  `json:"cik"`
+	CIK                *string  `json:"cik"`
 	CompanyName        *string  `json:"companyName"`
 	FormType           *string  `json:"formType"`
 	EnvironmentalScore *float64 `json:"environmentalScore"`
@@ -57,7 +57,7 @@ func (m *EsgDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("EsgDisclosure", "acceptedDate")
 	case shadow.Symbol == nil:
 		return missingMemberError("EsgDisclosure", "symbol")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("EsgDisclosure", "cik")
 	case shadow.CompanyName == nil:
 		return missingMemberError("EsgDisclosure", "companyName")
@@ -78,7 +78,7 @@ func (m *EsgDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Date:               *shadow.Date,
 		AcceptedDate:       *shadow.AcceptedDate,
 		Symbol:             *shadow.Symbol,
-		Cik:                *shadow.Cik,
+		CIK:                *shadow.CIK,
 		CompanyName:        *shadow.CompanyName,
 		FormType:           *shadow.FormType,
 		EnvironmentalScore: *shadow.EnvironmentalScore,
@@ -93,7 +93,7 @@ func (m *EsgDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // EsgRating is one company's ESG risk rating for a fiscal year.
 type EsgRating struct {
 	Symbol        string `json:"symbol"`
-	Cik           string `json:"cik"`
+	CIK           string `json:"cik"`
 	CompanyName   string `json:"companyName"`
 	Industry      string `json:"industry"`
 	FiscalYear    uint32 `json:"fiscalYear"`
@@ -105,7 +105,7 @@ type EsgRating struct {
 // required member so a missing or null member is observable after decoding.
 type esgRatingShadow struct {
 	Symbol        *string `json:"symbol"`
-	Cik           *string `json:"cik"`
+	CIK           *string `json:"cik"`
 	CompanyName   *string `json:"companyName"`
 	Industry      *string `json:"industry"`
 	FiscalYear    *uint32 `json:"fiscalYear"`
@@ -124,7 +124,7 @@ func (m *EsgRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("EsgRating", "symbol")
-	case shadow.Cik == nil:
+	case shadow.CIK == nil:
 		return missingMemberError("EsgRating", "cik")
 	case shadow.CompanyName == nil:
 		return missingMemberError("EsgRating", "companyName")
@@ -139,7 +139,7 @@ func (m *EsgRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	*m = EsgRating{
 		Symbol:        *shadow.Symbol,
-		Cik:           *shadow.Cik,
+		CIK:           *shadow.CIK,
 		CompanyName:   *shadow.CompanyName,
 		Industry:      *shadow.Industry,
 		FiscalYear:    *shadow.FiscalYear,

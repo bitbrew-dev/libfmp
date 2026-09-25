@@ -13,7 +13,7 @@ import (
 // CongressionalTrade is one financial trade disclosed by a member of Congress.
 type CongressionalTrade struct {
 	Symbol                 string  `json:"symbol"`
-	MemberId               string  `json:"senateID"`
+	MemberID               string  `json:"senateID"`
 	DisclosureDate         Date    `json:"disclosureDate"`
 	TransactionDate        Date    `json:"transactionDate"`
 	FirstName              string  `json:"firstName"`
@@ -35,7 +35,7 @@ type CongressionalTrade struct {
 // after decoding.
 type congressionalTradeShadow struct {
 	Symbol                 *string `json:"symbol"`
-	MemberId               *string `json:"senateID"`
+	MemberID               *string `json:"senateID"`
 	DisclosureDate         *Date   `json:"disclosureDate"`
 	TransactionDate        *Date   `json:"transactionDate"`
 	FirstName              *string `json:"firstName"`
@@ -63,7 +63,7 @@ func (m *CongressionalTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("CongressionalTrade", "symbol")
-	case shadow.MemberId == nil:
+	case shadow.MemberID == nil:
 		return missingMemberError("CongressionalTrade", "senateID")
 	case shadow.DisclosureDate == nil:
 		return missingMemberError("CongressionalTrade", "disclosureDate")
@@ -94,7 +94,7 @@ func (m *CongressionalTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	*m = CongressionalTrade{
 		Symbol:                 *shadow.Symbol,
-		MemberId:               *shadow.MemberId,
+		MemberID:               *shadow.MemberID,
 		DisclosureDate:         *shadow.DisclosureDate,
 		TransactionDate:        *shadow.TransactionDate,
 		FirstName:              *shadow.FirstName,
@@ -116,7 +116,7 @@ func (m *CongressionalTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // CongressionalMemberProfile is one current or historical profile for a member
 // of Congress.
 type CongressionalMemberProfile struct {
-	MemberId       string  `json:"senateID"`
+	MemberID       string  `json:"senateID"`
 	FirstName      string  `json:"firstName"`
 	LastName       string  `json:"lastName"`
 	BirthDate      Date    `json:"birthDate"`
@@ -132,7 +132,7 @@ type CongressionalMemberProfile struct {
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type congressionalMemberProfileShadow struct {
-	MemberId       *string  `json:"senateID"`
+	MemberID       *string  `json:"senateID"`
 	FirstName      *string  `json:"firstName"`
 	LastName       *string  `json:"lastName"`
 	BirthDate      *Date    `json:"birthDate"`
@@ -153,7 +153,7 @@ func (m *CongressionalMemberProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return err
 	}
 	switch {
-	case shadow.MemberId == nil:
+	case shadow.MemberID == nil:
 		return missingMemberError("CongressionalMemberProfile", "senateID")
 	case shadow.FirstName == nil:
 		return missingMemberError("CongressionalMemberProfile", "firstName")
@@ -175,7 +175,7 @@ func (m *CongressionalMemberProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("CongressionalMemberProfile", "yearsActive")
 	}
 	*m = CongressionalMemberProfile{
-		MemberId:       *shadow.MemberId,
+		MemberID:       *shadow.MemberID,
 		FirstName:      *shadow.FirstName,
 		LastName:       *shadow.LastName,
 		BirthDate:      *shadow.BirthDate,
@@ -191,7 +191,7 @@ func (m *CongressionalMemberProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 
 // CongressionalMemberPosition is one congressional position held by a member.
 type CongressionalMemberPosition struct {
-	MemberId       string  `json:"senateID"`
+	MemberID       string  `json:"senateID"`
 	CongressNumber uint32  `json:"congressNumber"`
 	StartDate      Date    `json:"startDate"`
 	EndDate        *Date   `json:"endDate"`
@@ -205,7 +205,7 @@ type CongressionalMemberPosition struct {
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type congressionalMemberPositionShadow struct {
-	MemberId       *string        `json:"senateID"`
+	MemberID       *string        `json:"senateID"`
 	CongressNumber *uint32        `json:"congressNumber"`
 	StartDate      *Date          `json:"startDate"`
 	EndDate        jsontext.Value `json:"endDate"`
@@ -224,7 +224,7 @@ func (m *CongressionalMemberPosition) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		return err
 	}
 	switch {
-	case shadow.MemberId == nil:
+	case shadow.MemberID == nil:
 		return missingMemberError("CongressionalMemberPosition", "senateID")
 	case shadow.CongressNumber == nil:
 		return missingMemberError("CongressionalMemberPosition", "congressNumber")
@@ -250,7 +250,7 @@ func (m *CongressionalMemberPosition) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		endDate = &value
 	}
 	*m = CongressionalMemberPosition{
-		MemberId:       *shadow.MemberId,
+		MemberID:       *shadow.MemberID,
 		CongressNumber: *shadow.CongressNumber,
 		StartDate:      *shadow.StartDate,
 		EndDate:        endDate,
@@ -331,7 +331,7 @@ func (m *CongressionalDebtDetails) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 // CongressionalMemberNetWorth is one itemized congressional net-worth
 // disclosure.
 type CongressionalMemberNetWorth struct {
-	MemberId    string                      `json:"senateID"`
+	MemberID    string                      `json:"senateID"`
 	FormType    string                      `json:"formType"`
 	Year        uint32                      `json:"year"`
 	FilingDate  Date                        `json:"filingDate"`
@@ -354,7 +354,7 @@ type CongressionalMemberNetWorth struct {
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type congressionalMemberNetWorthShadow struct {
-	MemberId    *string        `json:"senateID"`
+	MemberID    *string        `json:"senateID"`
 	FormType    *string        `json:"formType"`
 	Year        *uint32        `json:"year"`
 	FilingDate  *Date          `json:"filingDate"`
@@ -382,7 +382,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		return err
 	}
 	switch {
-	case shadow.MemberId == nil:
+	case shadow.MemberID == nil:
 		return missingMemberError("CongressionalMemberNetWorth", "senateID")
 	case shadow.FormType == nil:
 		return missingMemberError("CongressionalMemberNetWorth", "formType")
@@ -466,7 +466,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		income = &value
 	}
 	*m = CongressionalMemberNetWorth{
-		MemberId:    *shadow.MemberId,
+		MemberID:    *shadow.MemberID,
 		FormType:    *shadow.FormType,
 		Year:        *shadow.Year,
 		FilingDate:  *shadow.FilingDate,
@@ -490,7 +490,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 // CongressionalMemberNetWorthAggregate is aggregated congressional net-worth
 // totals for one filing year.
 type CongressionalMemberNetWorthAggregate struct {
-	MemberId                  string `json:"senateID"`
+	MemberID                  string `json:"senateID"`
 	Year                      uint32 `json:"year"`
 	Total                     int64  `json:"total"`
 	RealEstateLiabilities     int64  `json:"realEstateLiabilities"`
@@ -510,7 +510,7 @@ type CongressionalMemberNetWorthAggregate struct {
 // CongressionalMemberNetWorthAggregate with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type congressionalMemberNetWorthAggregateShadow struct {
-	MemberId                  *string `json:"senateID"`
+	MemberID                  *string `json:"senateID"`
 	Year                      *uint32 `json:"year"`
 	Total                     *int64  `json:"total"`
 	RealEstateLiabilities     *int64  `json:"realEstateLiabilities"`
@@ -535,7 +535,7 @@ func (m *CongressionalMemberNetWorthAggregate) UnmarshalJSONFrom(dec *jsontext.D
 		return err
 	}
 	switch {
-	case shadow.MemberId == nil:
+	case shadow.MemberID == nil:
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "senateID")
 	case shadow.Year == nil:
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "year")
@@ -565,7 +565,7 @@ func (m *CongressionalMemberNetWorthAggregate) UnmarshalJSONFrom(dec *jsontext.D
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "mutualFundsAndETFs")
 	}
 	*m = CongressionalMemberNetWorthAggregate{
-		MemberId:                  *shadow.MemberId,
+		MemberID:                  *shadow.MemberID,
 		Year:                      *shadow.Year,
 		Total:                     *shadow.Total,
 		RealEstateLiabilities:     *shadow.RealEstateLiabilities,

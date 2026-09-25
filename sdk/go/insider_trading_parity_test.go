@@ -34,8 +34,8 @@ func TestDocumentedInsiderTradeRowsDecodeExactValues(t *testing.T) {
 		Symbol:                   "TRMK",
 		FilingDate:               mustParseDate(t, "2026-07-30"),
 		TransactionDate:          mustParseDate(t, "2026-07-28"),
-		ReportingCik:             "0001661867",
-		CompanyCik:               "0000036146",
+		ReportingCIK:             "0001661867",
+		CompanyCIK:               "0000036146",
 		TransactionType:          "A-Award",
 		SecuritiesOwned:          62_959,
 		ReportingName:            "Tate Granville Jr",
@@ -72,7 +72,7 @@ func TestDocumentedInsiderTradeRowsDecodeExactValues(t *testing.T) {
 func TestDocumentedInsiderReferenceRowsDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	names := assertFixtureParity[InsiderReportingName](t, "insider_reporting_names.json")
-	if want := (InsiderReportingName{ReportingCik: "0001548760", ReportingName: "Zuckerberg Mark"}); len(names) != 1 ||
+	if want := (InsiderReportingName{ReportingCIK: "0001548760", ReportingName: "Zuckerberg Mark"}); len(names) != 1 ||
 		names[0] != want {
 		t.Fatalf("insider_reporting_names = %+v, want %+v", names, want)
 	}
@@ -83,7 +83,7 @@ func TestDocumentedInsiderReferenceRowsDecodeExactValues(t *testing.T) {
 
 	statistics := assertFixtureParity[InsiderTradeStatistics](t, "insider_trade_statistics.json")
 	wantStatistics := InsiderTradeStatistics{
-		Symbol: "AAPL", Cik: "0000320193", Year: 2026, Quarter: 2,
+		Symbol: "AAPL", CIK: "0000320193", Year: 2026, Quarter: 2,
 		AcquiredTransactions: 7, DisposedTransactions: 40, AcquiredDisposedRatio: 0.175,
 		TotalAcquired: 303_199, TotalDisposed: 927_380,
 		AverageAcquired: 43_314.1429, AverageDisposed: 23_184.5,
@@ -102,7 +102,7 @@ func TestDocumentedInsiderReferenceRowsDecodeExactValues(t *testing.T) {
 
 	ownership := assertFixtureParity[BeneficialOwnershipAcquisition](t, "beneficial_ownership_acquisitions.json")
 	wantOwnership := BeneficialOwnershipAcquisition{
-		Cik: "0000320193", Symbol: "AAPL",
+		CIK: "0000320193", Symbol: "AAPL",
 		FilingDate: mustParseDate(t, "2026-04-29"), AcceptedDate: mustParseDate(t, "2026-04-29"),
 		Cusip: "037833100", NameOfReportingPerson: "Vanguard Capital Management",
 		CitizenshipOrPlaceOfOrganization: "PENNSYLVANIA",

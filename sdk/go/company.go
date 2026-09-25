@@ -534,24 +534,24 @@ func (q MarketCapitalizationQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// ProfileByCikQuery holds the query parameters of the endpoints that take it:
-// NewProfileByCikQuery takes the required arguments and each With method sets
+// ProfileByCIKQuery holds the query parameters of the endpoints that take it:
+// NewProfileByCIKQuery takes the required arguments and each With method sets
 // an optional one. Values are validated when the request is built.
-type ProfileByCikQuery struct {
+type ProfileByCIKQuery struct {
 	cik string
 }
 
-// NewProfileByCikQuery creates the query from its required arguments.
-func NewProfileByCikQuery(cik string) ProfileByCikQuery {
-	return ProfileByCikQuery{cik: cik}
+// NewProfileByCIKQuery creates the query from its required arguments.
+func NewProfileByCIKQuery(cik string) ProfileByCIKQuery {
+	return ProfileByCIKQuery{cik: cik}
 }
 
-// Cik returns the cik argument as given.
-func (q ProfileByCikQuery) Cik() string {
+// CIK returns the cik argument as given.
+func (q ProfileByCIKQuery) CIK() string {
 	return q.cik
 }
 
-func (q ProfileByCikQuery) params() ([]queryParam, error) {
+func (q ProfileByCIKQuery) params() ([]queryParam, error) {
 	cik, err := stringParam("cik", q.cik)
 	if err != nil {
 		return nil, err
@@ -676,10 +676,10 @@ func (n *CompanyNamespace) Profile(ctx context.Context, q ProfileQuery) ([]Compa
 	return out, nil
 }
 
-// ProfileByCik retrieves US company profiles by representation-preserving CIK.
+// ProfileByCIK retrieves US company profiles by representation-preserving CIK.
 //
 // GET profile-cik?cik=
-func (n *CompanyNamespace) ProfileByCik(ctx context.Context, q ProfileByCikQuery) ([]CompanyProfile, error) {
+func (n *CompanyNamespace) ProfileByCIK(ctx context.Context, q ProfileByCIKQuery) ([]CompanyProfile, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
