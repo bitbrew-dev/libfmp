@@ -148,6 +148,26 @@ fn income_statement_share_quantities_decode_fractional_and_integral_float_forms(
 }
 
 #[test]
+fn statement_amounts_decode_fractional_integral_float_and_exponent_forms() {
+    let rows: Vec<IncomeStatement> = serde_json::from_slice(INCOME).unwrap();
+
+    assert_eq!(rows[0].revenue, 416_161_000_000.5);
+    assert_eq!(rows[0].ebitda, 144_427_000_000.0);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["revenue"], json!(416_161_000_000.5));
+    assert_eq!(wire[0]["ebitda"], json!(144_427_000_000_u64));
+
+    let mut source: serde_json::Value = serde_json::from_slice(INCOME).unwrap();
+    source[0]["revenue"] = serde_json::from_str("4.161610000005e11").unwrap();
+    source[0]["ebitda"] = serde_json::from_str("-1.44427E11").unwrap();
+    let rows: Vec<IncomeStatement> = serde_json::from_value(source).unwrap();
+    assert_eq!(rows[0].revenue, 416_161_000_000.5);
+    assert_eq!(rows[0].ebitda, -144_427_000_000.0);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert_eq!(wire[0]["ebitda"], json!(-144_427_000_000_i64));
+}
+
+#[test]
 fn aftermarket_trade_size_decodes_a_fractional_quantity() {
     let rows: Vec<AftermarketTrade> = serde_json::from_slice(TRADES).unwrap();
 

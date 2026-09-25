@@ -223,3 +223,14 @@ def test_income_statement_decodes_fractional_share_quantities(client: Any, fixtu
     assert isinstance(rows[0].weighted_average_shs_out, float)
     assert rows[0].weighted_average_shs_out == 14_948_500_000.5
     assert rows[0].weighted_average_shs_out_dil == 15_004_697_000.0
+
+
+def test_income_statement_decodes_fractional_statement_amounts(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #341: fractional and integral-float statement amounts decode as ``float``."""
+    fixture_server.route("/income-statement", load_fixture("income_statement_fractional_synthetic.json"))
+    rows = client.statements.income.statement("AAPL")
+
+    assert isinstance(rows[0].revenue, float)
+    assert rows[0].revenue == 416_161_000_000.5
+    assert isinstance(rows[0].ebitda, float)
+    assert rows[0].ebitda == 144_427_000_000.0
