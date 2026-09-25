@@ -34,7 +34,9 @@ network connection.
   `earnings_calendar`, `custom_discounted_cash_flow`, `income_statement`,
   `aftermarket_trade`, `institutional_ownership_extract`) do the same for the
   `Quantity` and `MarketValue` fields, including a negative fractional fund
-  `balance`, in the same three test suites.
+  `balance`, in the same three test suites. Issue #341 gave
+  `income_statement_fractional_synthetic.json` a fractional `revenue` and an
+  integral-float `ebitda` to prove `StatementAmount` decoding the same way.
 - **Observed-shape reproductions.** `quote_short_fractional_volume.json`
   reproduces the one live `quote-short` row that motivated issue #337 (seen
   2026-09-23: a fractional `volume`, `20201922.82733`); the four values are

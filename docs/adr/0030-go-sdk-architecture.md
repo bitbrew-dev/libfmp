@@ -126,7 +126,7 @@ that no wire information is invented or lost:
 | `Volume` (`f64`) | `float64` | the provider intermittently sends a fractional volume (#337); Rust re-encodes an integral value as a JSON integer through `codecs::integral_f64`, json/v2 already formats an integral `float64` without a fraction; the screener volume filters stay `uint64` |
 | `MarketCapitalization`, `TokenSupply`, `SplitTerm` (`f64`) | `float64` | documented as integers but decoded from any JSON number (#339); Rust re-encodes an integral value as a JSON integer through `codecs::integral_f64`; the screener market-cap filters stay `uint64` |
 | `Count` (`u64`) | `uint64` | true counts only (transactions, analysts, holders, positions, employees, scores) |
-| `StatementAmount` (`i64`) | `int64` | |
+| `StatementAmount` (`f64`) | `float64` | statement lines, estimates, DCF outputs and filing amounts, documented as integers but decoded from any JSON number, fractional or negative (#341); values above `2^53` round; Rust re-encodes an integral value as a JSON integer through `codecs::integral_f64` |
 | `Option<T>` | `*T` | `nil` for absent and for JSON `null` |
 | `NumericString`, `PercentString` | `string` | exact wire text, never scaled |
 | `NumberOrNumericString`, `PercentageValue` | `fmp.NumberOrString` | holds `jsontext.Value`; accessors report which form arrived |
