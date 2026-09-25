@@ -501,7 +501,7 @@ def check_fundraising_contract(client: FmpClient) -> None:
     first_sale: datetime.date | None = offerings[0].date_of_first_sale
     recent: bool | None = offerings[0].incorporated_within_five_years
     issuer_rows: list[RegulationDOffering] = client.fundraising.regulation_d_offerings_by_cik("0001547416")
-    sold: int = issuer_rows[0].total_amount_sold
+    sold: float = issuer_rows[0].total_amount_sold
     _ = (deadline, accepted, price, other_description, campaign_name, matched_at, first_sale, recent, sold)
 
 
