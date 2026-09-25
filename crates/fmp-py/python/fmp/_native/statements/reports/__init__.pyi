@@ -2,6 +2,7 @@
 
 import builtins
 from fmp import _native
+import fmp._native
 import typing
 
 __all__ = [
@@ -92,7 +93,7 @@ class StatementsReportsNamespace:
 
     def xlsx(
         self, symbol: builtins.str, year: builtins.int, period: builtins.str
-    ) -> _native.BinaryPayload:
+    ) -> fmp._native.BinaryPayload:
         r"""
         Downloads one financial report using the endpoint's XLSX MIME policy.
         """

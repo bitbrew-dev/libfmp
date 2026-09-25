@@ -3,13 +3,20 @@
 import builtins
 import datetime
 from fmp._native import company
+import fmp._native.company
 import typing
 from fmp._native.bulk import balance
+import fmp._native.bulk.balance
 from fmp._native.bulk import cash_flow
+import fmp._native.bulk.cash_flow
 from fmp._native.bulk import eod
+import fmp._native.bulk.eod
 from fmp._native.bulk import income
+import fmp._native.bulk.income
 from fmp._native.bulk import metrics
+import fmp._native.bulk.metrics
 from fmp._native.bulk import snapshots
+import fmp._native.bulk.snapshots
 
 __all__ = [
     "BulkNamespace",
@@ -30,110 +37,124 @@ class BulkNamespace:
 
     def company_profiles(
         self, part: builtins.str
-    ) -> builtins.list[company.CompanyProfile]:
+    ) -> builtins.list[fmp._native.company.CompanyProfile]:
         r"""
         Retrieves one provider partition of worldwide company profiles.
         """
 
-    def stock_ratings(self) -> builtins.list[snapshots.BulkStockRating]:
+    def stock_ratings(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkStockRating]:
         r"""
         Retrieves worldwide stock ratings in one provider bulk response.
         """
 
-    def dcf_valuations(self) -> builtins.list[snapshots.BulkDcfValuation]:
+    def dcf_valuations(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkDcfValuation]:
         r"""
         Retrieves worldwide discounted-cash-flow valuations in one provider bulk response.
         """
 
-    def financial_scores(self) -> builtins.list[snapshots.BulkFinancialScore]:
+    def financial_scores(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkFinancialScore]:
         r"""
         Retrieves worldwide financial scores in one provider bulk response.
         """
 
-    def price_target_summaries(self) -> builtins.list[snapshots.BulkPriceTargetSummary]:
+    def price_target_summaries(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkPriceTargetSummary]:
         r"""
         Retrieves US price-target summaries in one provider bulk response.
         """
 
     def etf_holdings(
         self, part: builtins.str
-    ) -> builtins.list[snapshots.BulkEtfHolding]:
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkEtfHolding]:
         r"""
         Retrieves one provider partition of worldwide ETF holdings.
         """
 
     def upgrades_downgrades_consensus(
         self,
-    ) -> builtins.list[snapshots.BulkUpgradesDowngradesConsensus]:
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkUpgradesDowngradesConsensus]:
         r"""
         Retrieves worldwide upgrades/downgrades consensus in one provider bulk response.
         """
 
-    def key_metrics_ttm(self) -> builtins.list[metrics.BulkKeyMetricsTtm]:
+    def key_metrics_ttm(
+        self,
+    ) -> builtins.list[fmp._native.bulk.metrics.BulkKeyMetricsTtm]:
         r"""
         Retrieves worldwide trailing-twelve-month key metrics in one bulk response.
         """
 
-    def financial_ratios_ttm(self) -> builtins.list[metrics.BulkFinancialRatiosTtm]:
+    def financial_ratios_ttm(
+        self,
+    ) -> builtins.list[fmp._native.bulk.metrics.BulkFinancialRatiosTtm]:
         r"""
         Retrieves worldwide trailing-twelve-month financial ratios in one bulk response.
         """
 
-    def stock_peers(self) -> builtins.list[metrics.BulkStockPeer]:
+    def stock_peers(self) -> builtins.list[fmp._native.bulk.metrics.BulkStockPeer]:
         r"""
         Retrieves worldwide stock peers in one provider bulk response.
         """
 
     def earnings_surprises(
         self, year: builtins.int
-    ) -> builtins.list[metrics.BulkEarningsSurprise]:
+    ) -> builtins.list[fmp._native.bulk.metrics.BulkEarningsSurprise]:
         r"""
         Retrieves worldwide annual earnings surprises for one required provider year.
         """
 
     def income_statements(
         self, year: builtins.int, period: builtins.str
-    ) -> builtins.list[income.BulkIncomeStatement]:
+    ) -> builtins.list[fmp._native.bulk.income.BulkIncomeStatement]:
         r"""
         Retrieves worldwide bulk income statements for one year and fiscal period.
         """
 
     def income_statement_growth(
         self, year: builtins.int, period: builtins.str
-    ) -> builtins.list[income.BulkIncomeStatementGrowth]:
+    ) -> builtins.list[fmp._native.bulk.income.BulkIncomeStatementGrowth]:
         r"""
         Retrieves worldwide bulk income-statement growth for one year and fiscal period.
         """
 
     def balance_sheet_statements(
         self, year: builtins.int, period: builtins.str
-    ) -> builtins.list[balance.BulkBalanceSheetStatement]:
+    ) -> builtins.list[fmp._native.bulk.balance.BulkBalanceSheetStatement]:
         r"""
         Retrieves worldwide bulk balance sheets for one year and fiscal period.
         """
 
     def balance_sheet_statement_growth(
         self, year: builtins.int, period: builtins.str
-    ) -> builtins.list[balance.BulkBalanceSheetStatementGrowth]:
+    ) -> builtins.list[fmp._native.bulk.balance.BulkBalanceSheetStatementGrowth]:
         r"""
         Retrieves worldwide bulk balance-sheet growth for one year and fiscal period.
         """
 
     def cash_flow_statements(
         self, year: builtins.int, period: builtins.str
-    ) -> builtins.list[cash_flow.BulkCashFlowStatement]:
+    ) -> builtins.list[fmp._native.bulk.cash_flow.BulkCashFlowStatement]:
         r"""
         Retrieves worldwide bulk cash-flow statements for one year and fiscal period.
         """
 
     def cash_flow_statement_growth(
         self, year: builtins.int, period: builtins.str
-    ) -> builtins.list[cash_flow.BulkCashFlowStatementGrowth]:
+    ) -> builtins.list[fmp._native.bulk.cash_flow.BulkCashFlowStatementGrowth]:
         r"""
         Retrieves worldwide bulk cash-flow growth for one year and fiscal period.
         """
 
-    def eod(self, date: datetime.date | builtins.str) -> builtins.list[eod.BulkEodBar]:
+    def eod(
+        self, date: datetime.date | builtins.str
+    ) -> builtins.list[fmp._native.bulk.eod.BulkEodBar]:
         r"""
         Retrieves worldwide bulk end-of-day prices for one required date.
         """

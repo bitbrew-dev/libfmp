@@ -22,7 +22,7 @@ mod _native {
 
     #[pymodule_init]
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
-        module.add("__version__", libfmp::VERSION)?;
+        module.setattr("__version__", libfmp::VERSION)?;
         module.add_class::<super::client::FmpClient>()?;
         module.add_class::<super::binary::BinaryPayload>()?;
         super::errors::register(module)?;

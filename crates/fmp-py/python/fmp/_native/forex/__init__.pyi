@@ -3,7 +3,9 @@
 import builtins
 import datetime
 from fmp._native import chart
+import fmp._native.chart
 from fmp._native import quote
+import fmp._native.quote
 import typing
 
 __all__ = [
@@ -23,12 +25,14 @@ class ForexNamespace:
         Lists the provider's documented forex pairs.
         """
 
-    def quote(self, symbol: builtins.str) -> builtins.list[quote.Quote]:
+    def quote(self, symbol: builtins.str) -> builtins.list[fmp._native.quote.Quote]:
         r"""
         Retrieves a detailed US-only quote for one forex pair.
         """
 
-    def quote_short(self, symbol: builtins.str) -> builtins.list[quote.QuoteShort]:
+    def quote_short(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.QuoteShort]:
         r"""
         Retrieves a compact US-only quote for one forex pair.
         """
@@ -39,7 +43,7 @@ class ForexNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartLightBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartLightBar]:
         r"""
         Retrieves compact end-of-day forex history.
         """
@@ -50,7 +54,7 @@ class ForexNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartFullBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartFullBar]:
         r"""
         Retrieves detailed end-of-day forex history.
         """
@@ -61,7 +65,7 @@ class ForexNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartIntradayBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
         r"""
         Retrieves one-minute forex history.
         """
@@ -72,7 +76,7 @@ class ForexNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartIntradayBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
         r"""
         Retrieves five-minute forex history.
         """
@@ -83,7 +87,7 @@ class ForexNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartIntradayBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
         r"""
         Retrieves one-hour forex history.
         """

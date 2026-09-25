@@ -3,7 +3,9 @@
 import builtins
 import datetime
 from fmp._native import chart
+import fmp._native.chart
 from fmp._native import quote
+import fmp._native.quote
 import typing
 
 __all__ = [
@@ -23,12 +25,14 @@ class CommoditiesNamespace:
         Lists the provider's documented commodity catalog.
         """
 
-    def quote(self, symbol: builtins.str) -> builtins.list[quote.Quote]:
+    def quote(self, symbol: builtins.str) -> builtins.list[fmp._native.quote.Quote]:
         r"""
         Retrieves a detailed US-only quote for one commodity.
         """
 
-    def quote_short(self, symbol: builtins.str) -> builtins.list[quote.QuoteShort]:
+    def quote_short(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.QuoteShort]:
         r"""
         Retrieves a compact US-only quote for one commodity.
         """
@@ -39,7 +43,7 @@ class CommoditiesNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartLightBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartLightBar]:
         r"""
         Retrieves compact end-of-day commodity history.
         """
@@ -50,7 +54,7 @@ class CommoditiesNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartFullBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartFullBar]:
         r"""
         Retrieves detailed end-of-day commodity history.
         """
@@ -61,7 +65,7 @@ class CommoditiesNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartIntradayBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
         r"""
         Retrieves one-minute commodity history.
         """
@@ -72,7 +76,7 @@ class CommoditiesNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartIntradayBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
         r"""
         Retrieves five-minute commodity history.
         """
@@ -83,7 +87,7 @@ class CommoditiesNamespace:
         *,
         from_: typing.Optional[datetime.date | builtins.str] = None,
         to: typing.Optional[datetime.date | builtins.str] = None,
-    ) -> builtins.list[chart.StockChartIntradayBar]:
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
         r"""
         Retrieves one-hour commodity history.
         """
