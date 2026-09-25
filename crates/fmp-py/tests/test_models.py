@@ -25,6 +25,7 @@ from typing import Any
 import pytest
 
 NATIVE_ROOT = Path(str(files("fmp"))) / "_native"
+NUMBER = "builtins.int | builtins.float"
 
 
 @dataclass(frozen=True)
@@ -81,6 +82,8 @@ def _sample(annotation: str, module: str) -> Any:
         "builtins.int": 7,
         "builtins.float": 1.5,
         "builtins.bool": True,
+        NUMBER: 2.5,
+        f"{NUMBER} | None": 3,
         "datetime.date": datetime.date(2024, 1, 2),
         "datetime.datetime": datetime.datetime(2024, 1, 2, 3, 4, 5),
     }
@@ -204,3 +207,40 @@ def test_to_dict_maps_attributes_to_plain_values(model: ModelStub) -> None:
     assert list(as_dict) == list(model.attributes)
     for name in model.attributes:
         assert as_dict[name] == _plain(getattr(row, name))
+
+
+NUMBER_FIELDS = sorted(
+    (path, name) for path, model in MODELS.items() for name, annotation in model.params if annotation == NUMBER
+)
+
+
+def test_number_fields_are_typed_int_or_float() -> None:
+    """The former ``Any`` JSON-number fields are stubbed ``int | float``."""
+    assert len(NUMBER_FIELDS) > 40
+
+
+@pytest.mark.parametrize(
+    "value", [0, -7, 10**30, -(10**30), 0.25, 2.0, 1e300], ids=["zero", "neg", "big", "big-neg", "frac", "whole", "huge"]
+)
+def test_number_field_round_trips_ints_and_floats(value: float) -> None:
+    """An ``int`` keeps its exact digits and type; a ``float`` stays a float."""
+    path, name = NUMBER_FIELDS[0]
+    model = MODELS[path]
+    row = model.cls(**{**kwargs_for(model), name: value})
+    assert getattr(row, name) == value
+    assert type(getattr(row, name)) is type(value)
+    assert pickle.loads(pickle.dumps(row)) == row
+    assert row.to_dict()[name] == value
+
+
+@pytest.mark.parametrize(
+    ("value", "error"),
+    [(True, TypeError), ("1", TypeError), (None, TypeError), (float("nan"), ValueError), (float("inf"), ValueError)],
+    ids=["bool", "str", "none", "nan", "inf"],
+)
+def test_number_field_rejects_other_values(value: object, error: type[Exception]) -> None:
+    """``bool``, text, ``None`` for a required field, and non-finite floats fail."""
+    path, name = NUMBER_FIELDS[0]
+    model = MODELS[path]
+    with pytest.raises(error):
+        model.cls(**{**kwargs_for(model), name: value})

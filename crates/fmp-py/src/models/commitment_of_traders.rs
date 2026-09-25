@@ -726,36 +726,66 @@ impl CotReport {
         change_in_tot_rept_short_all: i64,
         change_in_nonrept_long_all: i64,
         change_in_nonrept_short_all: i64,
-        pct_of_open_interest_all: String,
-        pct_of_oi_noncomm_long_all: String,
-        pct_of_oi_noncomm_short_all: String,
-        pct_of_oi_noncomm_spread_all: String,
-        pct_of_oi_comm_long_all: String,
-        pct_of_oi_comm_short_all: String,
-        pct_of_oi_tot_rept_long_all: String,
-        pct_of_oi_tot_rept_short_all: String,
-        pct_of_oi_nonrept_long_all: String,
-        pct_of_oi_nonrept_short_all: String,
-        pct_of_open_interest_old: String,
-        pct_of_oi_noncomm_long_old: String,
-        pct_of_oi_noncomm_short_old: String,
-        pct_of_oi_noncomm_spread_old: String,
-        pct_of_oi_comm_long_old: String,
-        pct_of_oi_comm_short_old: String,
-        pct_of_oi_tot_rept_long_old: String,
-        pct_of_oi_tot_rept_short_old: String,
-        pct_of_oi_nonrept_long_old: String,
-        pct_of_oi_nonrept_short_old: String,
-        pct_of_open_interest_other: String,
-        pct_of_oi_noncomm_long_other: String,
-        pct_of_oi_noncomm_short_other: String,
-        pct_of_oi_noncomm_spread_other: String,
-        pct_of_oi_comm_long_other: String,
-        pct_of_oi_comm_short_other: String,
-        pct_of_oi_tot_rept_long_other: String,
-        pct_of_oi_tot_rept_short_other: String,
-        pct_of_oi_nonrept_long_other: String,
-        pct_of_oi_nonrept_short_other: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_open_interest_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_spread_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_comm_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_comm_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_tot_rept_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_tot_rept_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_nonrept_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_nonrept_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_open_interest_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_spread_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_comm_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_comm_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_tot_rept_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_tot_rept_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_nonrept_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_nonrept_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_open_interest_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_short_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_noncomm_spread_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_comm_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_comm_short_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_tot_rept_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_tot_rept_short_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_nonrept_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        pct_of_oi_nonrept_short_other: Bound<'_, PyAny>,
         traders_tot_all: u64,
         traders_noncomm_long_all: u64,
         traders_noncomm_short_all: u64,
@@ -780,455 +810,164 @@ impl CotReport {
         traders_comm_short_other: u64,
         traders_tot_rept_long_other: u64,
         traders_tot_rept_short_other: u64,
-        conc_gross_le4_tdr_long_all: String,
-        conc_gross_le4_tdr_short_all: String,
-        conc_gross_le8_tdr_long_all: String,
-        conc_gross_le8_tdr_short_all: String,
-        conc_net_le4_tdr_long_all: String,
-        conc_net_le4_tdr_short_all: String,
-        conc_net_le8_tdr_long_all: String,
-        conc_net_le8_tdr_short_all: String,
-        conc_gross_le4_tdr_long_old: String,
-        conc_gross_le4_tdr_short_old: String,
-        conc_gross_le8_tdr_long_old: String,
-        conc_gross_le8_tdr_short_old: String,
-        conc_net_le4_tdr_long_old: String,
-        conc_net_le4_tdr_short_old: String,
-        conc_net_le8_tdr_long_old: String,
-        conc_net_le8_tdr_short_old: String,
-        conc_gross_le4_tdr_long_other: String,
-        conc_gross_le4_tdr_short_other: String,
-        conc_gross_le8_tdr_long_other: String,
-        conc_gross_le8_tdr_short_other: String,
-        conc_net_le4_tdr_long_other: String,
-        conc_net_le4_tdr_short_other: String,
-        conc_net_le8_tdr_long_other: String,
-        conc_net_le8_tdr_short_other: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le4_tdr_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le4_tdr_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le8_tdr_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le8_tdr_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le4_tdr_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le4_tdr_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le8_tdr_long_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le8_tdr_short_all: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le4_tdr_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le4_tdr_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le8_tdr_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le8_tdr_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le4_tdr_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le4_tdr_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le8_tdr_long_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le8_tdr_short_old: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le4_tdr_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le4_tdr_short_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le8_tdr_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_gross_le8_tdr_short_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le4_tdr_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le4_tdr_short_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le8_tdr_long_other: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        conc_net_le8_tdr_short_other: Bound<'_, PyAny>,
         contract_units: String,
     ) -> PyResult<Self> {
-        let pct_of_open_interest_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_open_interest_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_open_interest_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_noncomm_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_noncomm_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_noncomm_long_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_noncomm_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_noncomm_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_noncomm_short_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_noncomm_spread_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_noncomm_spread_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_noncomm_spread_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_comm_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_comm_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_comm_long_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_comm_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_comm_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_comm_short_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_tot_rept_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_tot_rept_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_tot_rept_long_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_tot_rept_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_tot_rept_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_tot_rept_short_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_nonrept_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_nonrept_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_nonrept_long_all`: {error}"
-            ))
-        })?;
-        let pct_of_oi_nonrept_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_nonrept_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_nonrept_short_all`: {error}"
-            ))
-        })?;
-        let pct_of_open_interest_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_open_interest_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_open_interest_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_noncomm_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_noncomm_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_noncomm_long_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_noncomm_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_noncomm_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_noncomm_short_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_noncomm_spread_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_noncomm_spread_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_noncomm_spread_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_comm_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_comm_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_comm_long_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_comm_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_comm_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_comm_short_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_tot_rept_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_tot_rept_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_tot_rept_long_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_tot_rept_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_tot_rept_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_tot_rept_short_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_nonrept_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_nonrept_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_nonrept_long_old`: {error}"
-            ))
-        })?;
-        let pct_of_oi_nonrept_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_nonrept_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_nonrept_short_old`: {error}"
-            ))
-        })?;
-        let pct_of_open_interest_other = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_open_interest_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_open_interest_other`: {error}"
-            ))
-        })?;
-        let pct_of_oi_noncomm_long_other = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_noncomm_long_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_noncomm_long_other`: {error}"
-            ))
-        })?;
+        let pct_of_open_interest_all =
+            crate::models::convert::py_to_number(&pct_of_open_interest_all)?;
+        let pct_of_oi_noncomm_long_all =
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_long_all)?;
+        let pct_of_oi_noncomm_short_all =
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_short_all)?;
+        let pct_of_oi_noncomm_spread_all =
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_spread_all)?;
+        let pct_of_oi_comm_long_all =
+            crate::models::convert::py_to_number(&pct_of_oi_comm_long_all)?;
+        let pct_of_oi_comm_short_all =
+            crate::models::convert::py_to_number(&pct_of_oi_comm_short_all)?;
+        let pct_of_oi_tot_rept_long_all =
+            crate::models::convert::py_to_number(&pct_of_oi_tot_rept_long_all)?;
+        let pct_of_oi_tot_rept_short_all =
+            crate::models::convert::py_to_number(&pct_of_oi_tot_rept_short_all)?;
+        let pct_of_oi_nonrept_long_all =
+            crate::models::convert::py_to_number(&pct_of_oi_nonrept_long_all)?;
+        let pct_of_oi_nonrept_short_all =
+            crate::models::convert::py_to_number(&pct_of_oi_nonrept_short_all)?;
+        let pct_of_open_interest_old =
+            crate::models::convert::py_to_number(&pct_of_open_interest_old)?;
+        let pct_of_oi_noncomm_long_old =
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_long_old)?;
+        let pct_of_oi_noncomm_short_old =
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_short_old)?;
+        let pct_of_oi_noncomm_spread_old =
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_spread_old)?;
+        let pct_of_oi_comm_long_old =
+            crate::models::convert::py_to_number(&pct_of_oi_comm_long_old)?;
+        let pct_of_oi_comm_short_old =
+            crate::models::convert::py_to_number(&pct_of_oi_comm_short_old)?;
+        let pct_of_oi_tot_rept_long_old =
+            crate::models::convert::py_to_number(&pct_of_oi_tot_rept_long_old)?;
+        let pct_of_oi_tot_rept_short_old =
+            crate::models::convert::py_to_number(&pct_of_oi_tot_rept_short_old)?;
+        let pct_of_oi_nonrept_long_old =
+            crate::models::convert::py_to_number(&pct_of_oi_nonrept_long_old)?;
+        let pct_of_oi_nonrept_short_old =
+            crate::models::convert::py_to_number(&pct_of_oi_nonrept_short_old)?;
+        let pct_of_open_interest_other =
+            crate::models::convert::py_to_number(&pct_of_open_interest_other)?;
+        let pct_of_oi_noncomm_long_other =
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_long_other)?;
         let pct_of_oi_noncomm_short_other =
-            ::serde_json::from_str::<::serde_json::Number>(&pct_of_oi_noncomm_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `pct_of_oi_noncomm_short_other`: {error}"
-                    ))
-                })?;
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_short_other)?;
         let pct_of_oi_noncomm_spread_other =
-            ::serde_json::from_str::<::serde_json::Number>(&pct_of_oi_noncomm_spread_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `pct_of_oi_noncomm_spread_other`: {error}"
-                    ))
-                })?;
-        let pct_of_oi_comm_long_other = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_comm_long_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_comm_long_other`: {error}"
-            ))
-        })?;
-        let pct_of_oi_comm_short_other = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_comm_short_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_comm_short_other`: {error}"
-            ))
-        })?;
+            crate::models::convert::py_to_number(&pct_of_oi_noncomm_spread_other)?;
+        let pct_of_oi_comm_long_other =
+            crate::models::convert::py_to_number(&pct_of_oi_comm_long_other)?;
+        let pct_of_oi_comm_short_other =
+            crate::models::convert::py_to_number(&pct_of_oi_comm_short_other)?;
         let pct_of_oi_tot_rept_long_other =
-            ::serde_json::from_str::<::serde_json::Number>(&pct_of_oi_tot_rept_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `pct_of_oi_tot_rept_long_other`: {error}"
-                    ))
-                })?;
+            crate::models::convert::py_to_number(&pct_of_oi_tot_rept_long_other)?;
         let pct_of_oi_tot_rept_short_other =
-            ::serde_json::from_str::<::serde_json::Number>(&pct_of_oi_tot_rept_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `pct_of_oi_tot_rept_short_other`: {error}"
-                    ))
-                })?;
-        let pct_of_oi_nonrept_long_other = ::serde_json::from_str::<::serde_json::Number>(
-            &pct_of_oi_nonrept_long_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `pct_of_oi_nonrept_long_other`: {error}"
-            ))
-        })?;
+            crate::models::convert::py_to_number(&pct_of_oi_tot_rept_short_other)?;
+        let pct_of_oi_nonrept_long_other =
+            crate::models::convert::py_to_number(&pct_of_oi_nonrept_long_other)?;
         let pct_of_oi_nonrept_short_other =
-            ::serde_json::from_str::<::serde_json::Number>(&pct_of_oi_nonrept_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `pct_of_oi_nonrept_short_other`: {error}"
-                    ))
-                })?;
-        let conc_gross_le4_tdr_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le4_tdr_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le4_tdr_long_all`: {error}"
-            ))
-        })?;
-        let conc_gross_le4_tdr_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le4_tdr_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le4_tdr_short_all`: {error}"
-            ))
-        })?;
-        let conc_gross_le8_tdr_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le8_tdr_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le8_tdr_long_all`: {error}"
-            ))
-        })?;
-        let conc_gross_le8_tdr_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le8_tdr_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le8_tdr_short_all`: {error}"
-            ))
-        })?;
-        let conc_net_le4_tdr_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le4_tdr_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le4_tdr_long_all`: {error}"
-            ))
-        })?;
-        let conc_net_le4_tdr_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le4_tdr_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le4_tdr_short_all`: {error}"
-            ))
-        })?;
-        let conc_net_le8_tdr_long_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le8_tdr_long_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le8_tdr_long_all`: {error}"
-            ))
-        })?;
-        let conc_net_le8_tdr_short_all = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le8_tdr_short_all,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le8_tdr_short_all`: {error}"
-            ))
-        })?;
-        let conc_gross_le4_tdr_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le4_tdr_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le4_tdr_long_old`: {error}"
-            ))
-        })?;
-        let conc_gross_le4_tdr_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le4_tdr_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le4_tdr_short_old`: {error}"
-            ))
-        })?;
-        let conc_gross_le8_tdr_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le8_tdr_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le8_tdr_long_old`: {error}"
-            ))
-        })?;
-        let conc_gross_le8_tdr_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_gross_le8_tdr_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_gross_le8_tdr_short_old`: {error}"
-            ))
-        })?;
-        let conc_net_le4_tdr_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le4_tdr_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le4_tdr_long_old`: {error}"
-            ))
-        })?;
-        let conc_net_le4_tdr_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le4_tdr_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le4_tdr_short_old`: {error}"
-            ))
-        })?;
-        let conc_net_le8_tdr_long_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le8_tdr_long_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le8_tdr_long_old`: {error}"
-            ))
-        })?;
-        let conc_net_le8_tdr_short_old = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le8_tdr_short_old,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le8_tdr_short_old`: {error}"
-            ))
-        })?;
+            crate::models::convert::py_to_number(&pct_of_oi_nonrept_short_other)?;
+        let conc_gross_le4_tdr_long_all =
+            crate::models::convert::py_to_number(&conc_gross_le4_tdr_long_all)?;
+        let conc_gross_le4_tdr_short_all =
+            crate::models::convert::py_to_number(&conc_gross_le4_tdr_short_all)?;
+        let conc_gross_le8_tdr_long_all =
+            crate::models::convert::py_to_number(&conc_gross_le8_tdr_long_all)?;
+        let conc_gross_le8_tdr_short_all =
+            crate::models::convert::py_to_number(&conc_gross_le8_tdr_short_all)?;
+        let conc_net_le4_tdr_long_all =
+            crate::models::convert::py_to_number(&conc_net_le4_tdr_long_all)?;
+        let conc_net_le4_tdr_short_all =
+            crate::models::convert::py_to_number(&conc_net_le4_tdr_short_all)?;
+        let conc_net_le8_tdr_long_all =
+            crate::models::convert::py_to_number(&conc_net_le8_tdr_long_all)?;
+        let conc_net_le8_tdr_short_all =
+            crate::models::convert::py_to_number(&conc_net_le8_tdr_short_all)?;
+        let conc_gross_le4_tdr_long_old =
+            crate::models::convert::py_to_number(&conc_gross_le4_tdr_long_old)?;
+        let conc_gross_le4_tdr_short_old =
+            crate::models::convert::py_to_number(&conc_gross_le4_tdr_short_old)?;
+        let conc_gross_le8_tdr_long_old =
+            crate::models::convert::py_to_number(&conc_gross_le8_tdr_long_old)?;
+        let conc_gross_le8_tdr_short_old =
+            crate::models::convert::py_to_number(&conc_gross_le8_tdr_short_old)?;
+        let conc_net_le4_tdr_long_old =
+            crate::models::convert::py_to_number(&conc_net_le4_tdr_long_old)?;
+        let conc_net_le4_tdr_short_old =
+            crate::models::convert::py_to_number(&conc_net_le4_tdr_short_old)?;
+        let conc_net_le8_tdr_long_old =
+            crate::models::convert::py_to_number(&conc_net_le8_tdr_long_old)?;
+        let conc_net_le8_tdr_short_old =
+            crate::models::convert::py_to_number(&conc_net_le8_tdr_short_old)?;
         let conc_gross_le4_tdr_long_other =
-            ::serde_json::from_str::<::serde_json::Number>(&conc_gross_le4_tdr_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `conc_gross_le4_tdr_long_other`: {error}"
-                    ))
-                })?;
+            crate::models::convert::py_to_number(&conc_gross_le4_tdr_long_other)?;
         let conc_gross_le4_tdr_short_other =
-            ::serde_json::from_str::<::serde_json::Number>(&conc_gross_le4_tdr_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `conc_gross_le4_tdr_short_other`: {error}"
-                    ))
-                })?;
+            crate::models::convert::py_to_number(&conc_gross_le4_tdr_short_other)?;
         let conc_gross_le8_tdr_long_other =
-            ::serde_json::from_str::<::serde_json::Number>(&conc_gross_le8_tdr_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `conc_gross_le8_tdr_long_other`: {error}"
-                    ))
-                })?;
+            crate::models::convert::py_to_number(&conc_gross_le8_tdr_long_other)?;
         let conc_gross_le8_tdr_short_other =
-            ::serde_json::from_str::<::serde_json::Number>(&conc_gross_le8_tdr_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `conc_gross_le8_tdr_short_other`: {error}"
-                    ))
-                })?;
-        let conc_net_le4_tdr_long_other = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le4_tdr_long_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le4_tdr_long_other`: {error}"
-            ))
-        })?;
-        let conc_net_le4_tdr_short_other = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le4_tdr_short_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le4_tdr_short_other`: {error}"
-            ))
-        })?;
-        let conc_net_le8_tdr_long_other = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le8_tdr_long_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le8_tdr_long_other`: {error}"
-            ))
-        })?;
-        let conc_net_le8_tdr_short_other = ::serde_json::from_str::<::serde_json::Number>(
-            &conc_net_le8_tdr_short_other,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `conc_net_le8_tdr_short_other`: {error}"
-            ))
-        })?;
+            crate::models::convert::py_to_number(&conc_gross_le8_tdr_short_other)?;
+        let conc_net_le4_tdr_long_other =
+            crate::models::convert::py_to_number(&conc_net_le4_tdr_long_other)?;
+        let conc_net_le4_tdr_short_other =
+            crate::models::convert::py_to_number(&conc_net_le4_tdr_short_other)?;
+        let conc_net_le8_tdr_long_other =
+            crate::models::convert::py_to_number(&conc_net_le8_tdr_long_other)?;
+        let conc_net_le8_tdr_short_other =
+            crate::models::convert::py_to_number(&conc_net_le8_tdr_short_other)?;
         Ok(Self {
             symbol,
             date,
@@ -1766,303 +1505,117 @@ impl CotReport {
         )?;
         kwargs.set_item(
             "pct_of_open_interest_all",
-            ::serde_json::to_string(&self.pct_of_open_interest_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_open_interest_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_open_interest_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_long_all",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_long_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_short_all",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_short_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_spread_all",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_spread_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_spread_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_spread_all(py)?,
         )?;
-        kwargs.set_item(
-            "pct_of_oi_comm_long_all",
-            ::serde_json::to_string(&self.pct_of_oi_comm_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_comm_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("pct_of_oi_comm_long_all", self.pct_of_oi_comm_long_all(py)?)?;
         kwargs.set_item(
             "pct_of_oi_comm_short_all",
-            ::serde_json::to_string(&self.pct_of_oi_comm_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_comm_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_comm_short_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_tot_rept_long_all",
-            ::serde_json::to_string(&self.pct_of_oi_tot_rept_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_tot_rept_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_tot_rept_long_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_tot_rept_short_all",
-            ::serde_json::to_string(&self.pct_of_oi_tot_rept_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_tot_rept_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_tot_rept_short_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_nonrept_long_all",
-            ::serde_json::to_string(&self.pct_of_oi_nonrept_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_nonrept_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_nonrept_long_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_nonrept_short_all",
-            ::serde_json::to_string(&self.pct_of_oi_nonrept_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_nonrept_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_nonrept_short_all(py)?,
         )?;
         kwargs.set_item(
             "pct_of_open_interest_old",
-            ::serde_json::to_string(&self.pct_of_open_interest_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_open_interest_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_open_interest_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_long_old",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_long_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_short_old",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_short_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_spread_old",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_spread_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_spread_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_spread_old(py)?,
         )?;
-        kwargs.set_item(
-            "pct_of_oi_comm_long_old",
-            ::serde_json::to_string(&self.pct_of_oi_comm_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_comm_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("pct_of_oi_comm_long_old", self.pct_of_oi_comm_long_old(py)?)?;
         kwargs.set_item(
             "pct_of_oi_comm_short_old",
-            ::serde_json::to_string(&self.pct_of_oi_comm_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_comm_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_comm_short_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_tot_rept_long_old",
-            ::serde_json::to_string(&self.pct_of_oi_tot_rept_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_tot_rept_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_tot_rept_long_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_tot_rept_short_old",
-            ::serde_json::to_string(&self.pct_of_oi_tot_rept_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_tot_rept_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_tot_rept_short_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_nonrept_long_old",
-            ::serde_json::to_string(&self.pct_of_oi_nonrept_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_nonrept_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_nonrept_long_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_nonrept_short_old",
-            ::serde_json::to_string(&self.pct_of_oi_nonrept_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_nonrept_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_nonrept_short_old(py)?,
         )?;
         kwargs.set_item(
             "pct_of_open_interest_other",
-            ::serde_json::to_string(&self.pct_of_open_interest_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_open_interest_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_open_interest_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_long_other",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_long_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_short_other",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_short_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_noncomm_spread_other",
-            ::serde_json::to_string(&self.pct_of_oi_noncomm_spread_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_noncomm_spread_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_noncomm_spread_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_comm_long_other",
-            ::serde_json::to_string(&self.pct_of_oi_comm_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_comm_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_comm_long_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_comm_short_other",
-            ::serde_json::to_string(&self.pct_of_oi_comm_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_comm_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_comm_short_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_tot_rept_long_other",
-            ::serde_json::to_string(&self.pct_of_oi_tot_rept_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_tot_rept_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_tot_rept_long_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_tot_rept_short_other",
-            ::serde_json::to_string(&self.pct_of_oi_tot_rept_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_tot_rept_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_tot_rept_short_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_nonrept_long_other",
-            ::serde_json::to_string(&self.pct_of_oi_nonrept_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_nonrept_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_nonrept_long_other(py)?,
         )?;
         kwargs.set_item(
             "pct_of_oi_nonrept_short_other",
-            ::serde_json::to_string(&self.pct_of_oi_nonrept_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `pct_of_oi_nonrept_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.pct_of_oi_nonrept_short_other(py)?,
         )?;
         kwargs.set_item(
             "traders_tot_all",
@@ -2194,243 +1747,99 @@ impl CotReport {
         )?;
         kwargs.set_item(
             "conc_gross_le4_tdr_long_all",
-            ::serde_json::to_string(&self.conc_gross_le4_tdr_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le4_tdr_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le4_tdr_long_all(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le4_tdr_short_all",
-            ::serde_json::to_string(&self.conc_gross_le4_tdr_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le4_tdr_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le4_tdr_short_all(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le8_tdr_long_all",
-            ::serde_json::to_string(&self.conc_gross_le8_tdr_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le8_tdr_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le8_tdr_long_all(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le8_tdr_short_all",
-            ::serde_json::to_string(&self.conc_gross_le8_tdr_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le8_tdr_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le8_tdr_short_all(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le4_tdr_long_all",
-            ::serde_json::to_string(&self.conc_net_le4_tdr_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le4_tdr_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le4_tdr_long_all(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le4_tdr_short_all",
-            ::serde_json::to_string(&self.conc_net_le4_tdr_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le4_tdr_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le4_tdr_short_all(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le8_tdr_long_all",
-            ::serde_json::to_string(&self.conc_net_le8_tdr_long_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le8_tdr_long_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le8_tdr_long_all(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le8_tdr_short_all",
-            ::serde_json::to_string(&self.conc_net_le8_tdr_short_all)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le8_tdr_short_all`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le8_tdr_short_all(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le4_tdr_long_old",
-            ::serde_json::to_string(&self.conc_gross_le4_tdr_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le4_tdr_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le4_tdr_long_old(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le4_tdr_short_old",
-            ::serde_json::to_string(&self.conc_gross_le4_tdr_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le4_tdr_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le4_tdr_short_old(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le8_tdr_long_old",
-            ::serde_json::to_string(&self.conc_gross_le8_tdr_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le8_tdr_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le8_tdr_long_old(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le8_tdr_short_old",
-            ::serde_json::to_string(&self.conc_gross_le8_tdr_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le8_tdr_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le8_tdr_short_old(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le4_tdr_long_old",
-            ::serde_json::to_string(&self.conc_net_le4_tdr_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le4_tdr_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le4_tdr_long_old(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le4_tdr_short_old",
-            ::serde_json::to_string(&self.conc_net_le4_tdr_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le4_tdr_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le4_tdr_short_old(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le8_tdr_long_old",
-            ::serde_json::to_string(&self.conc_net_le8_tdr_long_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le8_tdr_long_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le8_tdr_long_old(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le8_tdr_short_old",
-            ::serde_json::to_string(&self.conc_net_le8_tdr_short_old)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le8_tdr_short_old`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le8_tdr_short_old(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le4_tdr_long_other",
-            ::serde_json::to_string(&self.conc_gross_le4_tdr_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le4_tdr_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le4_tdr_long_other(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le4_tdr_short_other",
-            ::serde_json::to_string(&self.conc_gross_le4_tdr_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le4_tdr_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le4_tdr_short_other(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le8_tdr_long_other",
-            ::serde_json::to_string(&self.conc_gross_le8_tdr_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le8_tdr_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le8_tdr_long_other(py)?,
         )?;
         kwargs.set_item(
             "conc_gross_le8_tdr_short_other",
-            ::serde_json::to_string(&self.conc_gross_le8_tdr_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_gross_le8_tdr_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_gross_le8_tdr_short_other(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le4_tdr_long_other",
-            ::serde_json::to_string(&self.conc_net_le4_tdr_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le4_tdr_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le4_tdr_long_other(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le4_tdr_short_other",
-            ::serde_json::to_string(&self.conc_net_le4_tdr_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le4_tdr_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le4_tdr_short_other(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le8_tdr_long_other",
-            ::serde_json::to_string(&self.conc_net_le8_tdr_long_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le8_tdr_long_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le8_tdr_long_other(py)?,
         )?;
         kwargs.set_item(
             "conc_net_le8_tdr_short_other",
-            ::serde_json::to_string(&self.conc_net_le8_tdr_short_other)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `conc_net_le8_tdr_short_other`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
+            self.conc_net_le8_tdr_short_other(py)?,
         )?;
         kwargs.set_item(
             "contract_units",
@@ -3566,271 +2975,325 @@ impl CotReport {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_open_interest_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_open_interest_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_spread_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_spread_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_comm_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_comm_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_comm_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_comm_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_tot_rept_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_tot_rept_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_tot_rept_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_tot_rept_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_nonrept_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_nonrept_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_nonrept_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_nonrept_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_open_interest_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_open_interest_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_spread_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_spread_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_comm_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_comm_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_comm_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_comm_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_tot_rept_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_tot_rept_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_tot_rept_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_tot_rept_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_nonrept_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_nonrept_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_nonrept_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_nonrept_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_open_interest_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_open_interest_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_short_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_noncomm_spread_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_noncomm_spread_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_comm_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_comm_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_comm_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_comm_short_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_tot_rept_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_tot_rept_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_tot_rept_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_tot_rept_short_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_nonrept_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_nonrept_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn pct_of_oi_nonrept_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.pct_of_oi_nonrept_short_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le4_tdr_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le4_tdr_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le4_tdr_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le4_tdr_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le8_tdr_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le8_tdr_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le8_tdr_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le8_tdr_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le4_tdr_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le4_tdr_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le4_tdr_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le4_tdr_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le8_tdr_long_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le8_tdr_long_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le8_tdr_short_all<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le8_tdr_short_all)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le4_tdr_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le4_tdr_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le4_tdr_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le4_tdr_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le8_tdr_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le8_tdr_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le8_tdr_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le8_tdr_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le4_tdr_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le4_tdr_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le4_tdr_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le4_tdr_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le8_tdr_long_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le8_tdr_long_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le8_tdr_short_old<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le8_tdr_short_old)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le4_tdr_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le4_tdr_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le4_tdr_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le4_tdr_short_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le8_tdr_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le8_tdr_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_gross_le8_tdr_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_gross_le8_tdr_short_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le4_tdr_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le4_tdr_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le4_tdr_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le4_tdr_short_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le8_tdr_long_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le8_tdr_long_other)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn conc_net_le8_tdr_short_other<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.conc_net_le8_tdr_short_other)
     }

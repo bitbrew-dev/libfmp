@@ -10,12 +10,37 @@
 //! `to_dict()` methods.
 
 use pyo3::IntoPyObjectExt;
+use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::*;
-use pyo3::types::PyList;
+use pyo3::types::{PyBool, PyFloat, PyInt, PyList};
 
 pub(crate) use crate::convert::{
     dynamic_json_to_py as json_to_py, dynamic_object_to_py as object_to_py, number_to_py,
 };
+
+/// Converts the `int` or `float` passed for a `serde_json::Number` field.
+///
+/// An `int` keeps its exact digits at any magnitude; a `float` must be finite.
+/// `bool` is rejected even though it subclasses `int`.
+pub(crate) fn py_to_number(value: &Bound<'_, PyAny>) -> PyResult<serde_json::Number> {
+    if value.is_instance_of::<PyBool>() {
+        return Err(PyTypeError::new_err("expected int or float, got bool"));
+    }
+    if value.is_instance_of::<PyInt>() {
+        let text = value.py().get_type::<PyInt>().call1((value,))?.str()?;
+        return serde_json::from_str(text.to_cow()?.as_ref())
+            .map_err(|error| PyValueError::new_err(format!("invalid integer: {error}")));
+    }
+    if value.is_instance_of::<PyFloat>() {
+        let float = value.extract::<f64>()?;
+        return serde_json::Number::from_f64(float)
+            .ok_or_else(|| PyValueError::new_err("expected a finite float"));
+    }
+    Err(PyTypeError::new_err(format!(
+        "expected int or float, got {}",
+        value.get_type().name()?
+    )))
+}
 
 /// A model field as `to_dict()` stores it: native values as-is, nested models
 /// as their own `to_dict()`, recursively through `Option` and `Vec`.

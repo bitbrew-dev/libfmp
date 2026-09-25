@@ -162,7 +162,7 @@ class CrowdfundingOffering:
     @property
     def net_income_prior_fiscal_year(self) -> builtins.float: ...
     @property
-    def offering_price(self) -> typing.Any: ...
+    def offering_price(self) -> builtins.int | builtins.float: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -190,7 +190,7 @@ class CrowdfundingOffering:
         security_offered_type: builtins.str,
         security_offered_other_description: typing.Optional[builtins.str],
         number_of_security_offered: builtins.float,
-        offering_price: builtins.str,
+        offering_price: builtins.int | builtins.float,
         offering_amount: builtins.float,
         over_subscription_accepted: builtins.str,
         over_subscription_allocation_type: builtins.str,
