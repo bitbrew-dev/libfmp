@@ -57,13 +57,13 @@ func TestNewsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	from, to := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-28")
 	symbols := []string{"AAPL", "MSFT"}
 
-	articles, err := client.News.FmpArticles(ctx, NewFmpArticlesQuery())
+	articles, err := client.News.Articles(ctx, NewArticlesQuery())
 	if err != nil || len(articles) != 1 || articles[0].Author != "Andrew Wynn" {
-		t.Fatalf("FmpArticles = %+v, %v", articles, err)
+		t.Fatalf("Articles = %+v, %v", articles, err)
 	}
-	if articles, err = client.News.FmpArticles(ctx, NewFmpArticlesQuery().WithPage(0).WithLimit(20)); err != nil ||
+	if articles, err = client.News.Articles(ctx, NewArticlesQuery().WithPage(0).WithLimit(20)); err != nil ||
 		len(articles) != 1 {
-		t.Fatalf("FmpArticles with page and limit = %+v, %v", articles, err)
+		t.Fatalf("Articles with page and limit = %+v, %v", articles, err)
 	}
 	general, err := client.News.LatestGeneralNews(ctx, NewLatestGeneralNewsQuery())
 	if err != nil || len(general) != 1 || general[0].Symbol != nil || general[0].Publisher != "Seeking Alpha" {
@@ -188,9 +188,9 @@ func TestNewsQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	if page, limit := latest.Page(), latest.Limit(); page == nil || *page != 0 || limit == nil || *limit != 20 {
 		t.Fatalf("latest getters = %v %v", page, limit)
 	}
-	params, err := NewFmpArticlesQuery().params()
+	params, err := NewArticlesQuery().params()
 	if err != nil || len(params) != 0 {
-		t.Fatalf("NewFmpArticlesQuery().params() = %v, %v, want no parameters", params, err)
+		t.Fatalf("NewArticlesQuery().params() = %v, %v, want no parameters", params, err)
 	}
 }
 

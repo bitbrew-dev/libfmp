@@ -23,42 +23,42 @@ func newNewsNamespace(client *Client) NewsNamespace {
 	}
 }
 
-// FmpArticlesQuery holds the query parameters of the endpoints that take it:
-// NewFmpArticlesQuery takes the required arguments and each With method sets
-// an optional one. Values are validated when the request is built.
-type FmpArticlesQuery struct {
+// ArticlesQuery holds the query parameters of the endpoints that take it:
+// NewArticlesQuery takes the required arguments and each With method sets an
+// optional one. Values are validated when the request is built.
+type ArticlesQuery struct {
 	page  *uint32
 	limit *uint32
 }
 
-// NewFmpArticlesQuery creates the query from its required arguments.
-func NewFmpArticlesQuery() FmpArticlesQuery {
-	return FmpArticlesQuery{}
+// NewArticlesQuery creates the query from its required arguments.
+func NewArticlesQuery() ArticlesQuery {
+	return ArticlesQuery{}
 }
 
 // WithPage sets the optional page parameter and returns the updated query.
-func (q FmpArticlesQuery) WithPage(page uint32) FmpArticlesQuery {
+func (q ArticlesQuery) WithPage(page uint32) ArticlesQuery {
 	q.page = &page
 	return q
 }
 
 // Page returns the optional page parameter, or nil when it is unset.
-func (q FmpArticlesQuery) Page() *uint32 {
+func (q ArticlesQuery) Page() *uint32 {
 	return q.page
 }
 
 // WithLimit sets the optional limit parameter and returns the updated query.
-func (q FmpArticlesQuery) WithLimit(limit uint32) FmpArticlesQuery {
+func (q ArticlesQuery) WithLimit(limit uint32) ArticlesQuery {
 	q.limit = &limit
 	return q
 }
 
 // Limit returns the optional limit parameter, or nil when it is unset.
-func (q FmpArticlesQuery) Limit() *uint32 {
+func (q ArticlesQuery) Limit() *uint32 {
 	return q.limit
 }
 
-func (q FmpArticlesQuery) params() ([]queryParam, error) {
+func (q ArticlesQuery) params() ([]queryParam, error) {
 	params := make([]queryParam, 0, 2)
 	if q.page != nil {
 		page, err := uint32Param("page", *q.page)
@@ -951,15 +951,15 @@ func (q SearchStockNewsQuery) params() ([]queryParam, error) {
 	return params, nil
 }
 
-// FmpArticles retrieves US-authored Financial Modeling Prep articles.
+// Articles retrieves US-authored Financial Modeling Prep articles.
 //
 // GET fmp-articles?page=&limit=
-func (n *NewsNamespace) FmpArticles(ctx context.Context, q FmpArticlesQuery) ([]FmpArticle, error) {
+func (n *NewsNamespace) Articles(ctx context.Context, q ArticlesQuery) ([]Article, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []FmpArticle
+	var out []Article
 	if err := n.client.getJSON(ctx, "fmp-articles", "fmp-articles", params, &out); err != nil {
 		return nil, err
 	}

@@ -16,7 +16,7 @@ where
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
-pub struct FmpArticle {
+pub struct Article {
     pub title: String,
     pub date: ApiDateTime,
     pub content: String,

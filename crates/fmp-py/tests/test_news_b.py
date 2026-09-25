@@ -193,7 +193,7 @@ def test_invalid_symbols_name_the_argument(
             "latest_general_news", "from_", "27/01/2026", "from_: value must be a valid YYYY-MM-DD date", id="from"
         ),
         pytest.param("search_crypto_news", "to", "2026-13-01", "to: value must be a valid YYYY-MM-DD date", id="to"),
-        pytest.param("fmp_articles", "page", -1, "page: must be an integer from 0 through 4294967295", id="page"),
+        pytest.param("articles", "page", -1, "page: must be an integer from 0 through 4294967295", id="page"),
         pytest.param("latest_forex_news", "limit", -1, "limit: ", id="limit"),
         pytest.param("search_press_releases", "page", 4_294_967_296, "page: ", id="page-overflow"),
     ],
@@ -236,4 +236,4 @@ def test_non_json_body_is_a_decode_error(client: Any, fixture_server: FixtureSer
     """A non-JSON body on the authored feed maps to ``FmpDecodeError``."""
     fixture_server.route("/fmp-articles", b"not-json")
     with pytest.raises(errors.FmpDecodeError):
-        client.news.fmp_articles()
+        client.news.articles()

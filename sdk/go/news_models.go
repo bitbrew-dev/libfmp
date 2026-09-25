@@ -10,8 +10,8 @@ import (
 	"encoding/json/v2"
 )
 
-// FmpArticle is one Financial Modeling Prep editorial article.
-type FmpArticle struct {
+// Article is one Financial Modeling Prep editorial article.
+type Article struct {
 	Title   string   `json:"title"`
 	Date    DateTime `json:"date"`
 	Content string   `json:"content"`
@@ -22,9 +22,9 @@ type FmpArticle struct {
 	Site    string   `json:"site"`
 }
 
-// fmpArticleShadow mirrors FmpArticle with a pointer or raw value for every
-// required member so a missing or null member is observable after decoding.
-type fmpArticleShadow struct {
+// articleShadow mirrors Article with a pointer or raw value for every required
+// member so a missing or null member is observable after decoding.
+type articleShadow struct {
 	Title   *string   `json:"title"`
 	Date    *DateTime `json:"date"`
 	Content *string   `json:"content"`
@@ -38,30 +38,30 @@ type fmpArticleShadow struct {
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
-func (m *FmpArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
-	var shadow fmpArticleShadow
+func (m *Article) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	var shadow articleShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
 	switch {
 	case shadow.Title == nil:
-		return missingMemberError("FmpArticle", "title")
+		return missingMemberError("Article", "title")
 	case shadow.Date == nil:
-		return missingMemberError("FmpArticle", "date")
+		return missingMemberError("Article", "date")
 	case shadow.Content == nil:
-		return missingMemberError("FmpArticle", "content")
+		return missingMemberError("Article", "content")
 	case shadow.Tickers == nil:
-		return missingMemberError("FmpArticle", "tickers")
+		return missingMemberError("Article", "tickers")
 	case shadow.Image == nil:
-		return missingMemberError("FmpArticle", "image")
+		return missingMemberError("Article", "image")
 	case shadow.Link == nil:
-		return missingMemberError("FmpArticle", "link")
+		return missingMemberError("Article", "link")
 	case shadow.Author == nil:
-		return missingMemberError("FmpArticle", "author")
+		return missingMemberError("Article", "author")
 	case shadow.Site == nil:
-		return missingMemberError("FmpArticle", "site")
+		return missingMemberError("Article", "site")
 	}
-	*m = FmpArticle{
+	*m = Article{
 		Title:   *shadow.Title,
 		Date:    *shadow.Date,
 		Content: *shadow.Content,

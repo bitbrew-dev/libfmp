@@ -3,7 +3,7 @@
 mod assert_row;
 
 use libfmp::{
-    responses::news::{FmpArticle, NewsArticle},
+    responses::news::{Article, NewsArticle},
     types::{ApiDateTime, Ticker},
 };
 use serde::de::DeserializeOwned;
@@ -26,10 +26,10 @@ const APPLE_TEXT: &str = "CUPERTINO, Calif.--(BUSINESS WIRE)--Apple® today anno
 #[test]
 fn exact_fmp_fixture_preserves_all_eight_required_opaque_fields() {
     assert_field_count(FMP_ARTICLES, 8);
-    let rows: Vec<FmpArticle> = serde_json::from_slice(FMP_ARTICLES).unwrap();
+    let rows: Vec<Article> = serde_json::from_slice(FMP_ARTICLES).unwrap();
     assert_rows!(
         rows,
-        [FmpArticle {
+        [Article {
             title: "Centerra Gold (NYSE:CGAU) Drives Growth with North American Investments and Strong Financials".to_owned(),
             date: ApiDateTime::parse("2026-07-30 16:11:45").unwrap(),
             content: FMP_CONTENT.to_owned(),
@@ -110,7 +110,7 @@ fn symbol_key_is_required_but_explicit_null_is_preserved() {
 
 #[test]
 fn documented_fields_are_required_nullability_is_exact_and_unknowns_are_accepted() {
-    assert_contract::<FmpArticle>(FMP_ARTICLES, &[]);
+    assert_contract::<Article>(FMP_ARTICLES, &[]);
     for fixture in [
         LATEST_GENERAL,
         LATEST_PRESS_RELEASES,
@@ -130,7 +130,7 @@ fn documented_fields_are_required_nullability_is_exact_and_unknowns_are_accepted
 fn response_string_and_datetime_kinds_are_strict() {
     let mut article: serde_json::Value = serde_json::from_slice(FMP_ARTICLES).unwrap();
     article[0]["date"] = serde_json::json!(20260730161145_u64);
-    assert!(serde_json::from_value::<Vec<FmpArticle>>(article).is_err());
+    assert!(serde_json::from_value::<Vec<Article>>(article).is_err());
 
     for replacement in [serde_json::json!(0), serde_json::json!(1.5)] {
         let mut news: serde_json::Value = serde_json::from_slice(LATEST_STOCK).unwrap();
@@ -156,7 +156,7 @@ fn response_string_and_datetime_kinds_are_strict() {
 #[test]
 fn both_rows_are_bare_arrays_preserving_empty_multiple_and_large_opaque_strings() {
     assert!(
-        serde_json::from_slice::<Vec<FmpArticle>>(b"[]")
+        serde_json::from_slice::<Vec<Article>>(b"[]")
             .unwrap()
             .is_empty()
     );
@@ -173,7 +173,7 @@ fn both_rows_are_bare_arrays_preserving_empty_multiple_and_large_opaque_strings(
     let duplicate_fmp = multiple_fmp[0].clone();
     multiple_fmp.as_array_mut().unwrap().push(duplicate_fmp);
     assert_eq!(
-        serde_json::from_value::<Vec<FmpArticle>>(multiple_fmp)
+        serde_json::from_value::<Vec<Article>>(multiple_fmp)
             .unwrap()
             .len(),
         2
@@ -192,7 +192,7 @@ fn both_rows_are_bare_arrays_preserving_empty_multiple_and_large_opaque_strings(
     let payload = "<p>café 中文 📈 &amp; exact</p>".repeat(40_000);
     let mut article: serde_json::Value = serde_json::from_slice(FMP_ARTICLES).unwrap();
     article[0]["content"] = serde_json::json!(payload);
-    let rows: Vec<FmpArticle> = serde_json::from_value(article).unwrap();
+    let rows: Vec<Article> = serde_json::from_value(article).unwrap();
     assert_eq!(rows[0].content, payload);
 }
 

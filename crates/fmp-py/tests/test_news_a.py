@@ -1,6 +1,6 @@
 """Runtime contract of ``client.news`` for the authored feed and the five latest feeds.
 
-Covers ``fmp_articles``, ``latest_general_news``, ``latest_press_releases``,
+Covers ``articles``, ``latest_general_news``, ``latest_press_releases``,
 ``latest_stock_news``, ``latest_crypto_news``, and ``latest_forex_news``: one
 test per method routes the documented fixture body, calls the method with one
 argument shape, and asserts the exact request target plus a few typed fields
@@ -15,7 +15,7 @@ from typing import Any
 
 import pytest
 from conftest import FixtureServer, load_fixture
-from fmp.news import FmpArticle, NewsArticle, NewsNamespace
+from fmp.news import Article, NewsArticle, NewsNamespace
 
 FROM_2026_01_27 = datetime.date(2026, 1, 27)
 TO_2026_04_28 = datetime.date(2026, 4, 28)
@@ -26,15 +26,15 @@ def test_news_namespace_is_the_generated_type(client: Any) -> None:
     assert isinstance(client.news, NewsNamespace)
 
 
-def test_fmp_articles_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
-    """``fmp_articles`` encodes ``page`` then ``limit`` and decodes the editorial row."""
+def test_articles_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
+    """``articles`` encodes ``page`` then ``limit`` and decodes the editorial row."""
     fixture_server.route("/fmp-articles", load_fixture("fmp_articles.json"))
-    rows = client.news.fmp_articles(page=0, limit=20)
+    rows = client.news.articles(page=0, limit=20)
 
     assert fixture_server.requests[0].target == "/fmp-articles?page=0&limit=20"
     assert len(rows) == 1
     row = rows[0]
-    assert isinstance(row, FmpArticle)
+    assert isinstance(row, Article)
     assert row.title.startswith("Centerra Gold (NYSE:CGAU)")
     assert row.date == datetime.datetime(2026, 7, 30, 16, 11, 45)
     assert row.tickers == "NYSE:CGAU"
@@ -44,24 +44,24 @@ def test_fmp_articles_with_every_option(client: Any, fixture_server: FixtureServ
     assert row.link.startswith("https://financialmodelingprep.com/market-news/")
 
 
-def test_fmp_articles_without_options(client: Any, fixture_server: FixtureServer) -> None:
-    """``fmp_articles`` sends a bare path when neither page nor limit is given."""
+def test_articles_without_options(client: Any, fixture_server: FixtureServer) -> None:
+    """``articles`` sends a bare path when neither page nor limit is given."""
     fixture_server.route("/fmp-articles", load_fixture("fmp_articles.json"))
-    rows = client.news.fmp_articles()
+    rows = client.news.articles()
 
     assert fixture_server.requests[0].target == "/fmp-articles"
     assert len(rows) == 1
-    assert isinstance(rows[0], FmpArticle)
+    assert isinstance(rows[0], Article)
 
 
-def test_fmp_articles_with_page_only(client: Any, fixture_server: FixtureServer) -> None:
-    """``fmp_articles`` sends ``page`` without ``limit`` and rejects a positional page."""
+def test_articles_with_page_only(client: Any, fixture_server: FixtureServer) -> None:
+    """``articles`` sends ``page`` without ``limit`` and rejects a positional page."""
     fixture_server.route("/fmp-articles", load_fixture("fmp_articles.json"))
-    client.news.fmp_articles(page=0)
+    client.news.articles(page=0)
 
     assert fixture_server.requests[0].target == "/fmp-articles?page=0"
     with pytest.raises(TypeError):
-        client.news.fmp_articles(0)
+        client.news.articles(0)
 
 
 def test_latest_general_news_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
@@ -208,7 +208,7 @@ def test_latest_feeds_decode_an_empty_array(client: Any, fixture_server: Fixture
     fixture_server.route("/news/general-latest", [])
     fixture_server.route("/news/stock-latest", [])
 
-    assert client.news.fmp_articles() == []
+    assert client.news.articles() == []
     assert client.news.latest_general_news() == []
     assert client.news.latest_stock_news(limit=0) == []
     assert [request.target for request in fixture_server.requests] == [

@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use libfmp::ClientBuilder;
 use libfmp::endpoints::news::{
-    FmpArticlesQuery, LatestCryptoNewsQuery, LatestForexNewsQuery, LatestGeneralNewsQuery,
+    ArticlesQuery, LatestCryptoNewsQuery, LatestForexNewsQuery, LatestGeneralNewsQuery,
     LatestPressReleasesQuery, LatestStockNewsQuery, SearchCryptoNewsQuery, SearchForexNewsQuery,
     SearchPressReleasesQuery, SearchStockNewsQuery,
 };
@@ -13,7 +13,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::args;
 use crate::errors::to_py_error;
-use crate::models::news::{FmpArticle, NewsArticle};
+use crate::models::news::{Article, NewsArticle};
 use crate::runtime::block_on;
 
 /// News endpoints for a single client, exposed as `client.news`.
@@ -34,21 +34,21 @@ impl NewsNamespace {
 impl NewsNamespace {
     /// Retrieves US-authored Financial Modeling Prep articles.
     #[pyo3(signature = (*, page=None, limit=None))]
-    fn fmp_articles(
+    fn articles(
         &self,
         py: Python<'_>,
         page: Option<i64>,
         limit: Option<i64>,
-    ) -> PyResult<Vec<FmpArticle>> {
-        let query = fmp_articles_query(page, limit)?;
+    ) -> PyResult<Vec<Article>> {
+        let query = articles_query(page, limit)?;
         let builder = self.builder.clone();
         let rows = py.detach(move || {
             block_on(
                 builder,
-                |client| async move { client.fmp_articles(query).await },
+                |client| async move { client.articles(query).await },
             )
         })?;
-        rows.map(|items| items.into_iter().map(FmpArticle::from).collect())
+        rows.map(|items| items.into_iter().map(Article::from).collect())
             .map_err(to_py_error)
     }
 
@@ -246,11 +246,11 @@ impl NewsNamespace {
     }
 }
 
-/// Builds the `FmpArticlesQuery` for `NewsNamespace::fmp_articles` from validated Python arguments.
-fn fmp_articles_query(page: Option<i64>, limit: Option<i64>) -> PyResult<FmpArticlesQuery> {
+/// Builds the `ArticlesQuery` for `NewsNamespace::articles` from validated Python arguments.
+fn articles_query(page: Option<i64>, limit: Option<i64>) -> PyResult<ArticlesQuery> {
     let page = args::optional("page", page, args::page)?;
     let limit = args::optional("limit", limit, args::limit)?;
-    let mut query = FmpArticlesQuery::new();
+    let mut query = ArticlesQuery::new();
     if let Some(page) = page {
         query = query.with_page(page);
     }

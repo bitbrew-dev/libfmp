@@ -2,10 +2,10 @@
 # `client.news`. Validate with `cargo run -p fmp-py-gen --bin registry_check`.
 
 [[endpoint]]
-name = "fmp_articles"
-method = "fmp_articles"
-query = "FmpArticlesQuery"
-response = "news::FmpArticle"
+name = "articles"
+method = "articles"
+query = "ArticlesQuery"
+response = "news::Article"
 doc = "Retrieves US-authored Financial Modeling Prep articles."
 args = [
     { name = "page", kind = "page", required = false },

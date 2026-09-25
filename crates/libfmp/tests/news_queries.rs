@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use libfmp::{
     endpoints::news::{
-        FmpArticlesQuery, LatestCryptoNewsQuery, LatestForexNewsQuery, LatestGeneralNewsQuery,
+        ArticlesQuery, LatestCryptoNewsQuery, LatestForexNewsQuery, LatestGeneralNewsQuery,
         LatestPressReleasesQuery, LatestStockNewsQuery, SearchCryptoNewsQuery,
         SearchForexNewsQuery, SearchPressReleasesQuery, SearchStockNewsQuery,
     },
@@ -10,8 +10,8 @@ use libfmp::{
 };
 
 #[test]
-fn fmp_articles_preserves_omission_page_zero_and_unbounded_limit_units() {
-    let empty = FmpArticlesQuery::new();
+fn articles_preserves_omission_page_zero_and_unbounded_limit_units() {
+    let empty = ArticlesQuery::new();
     assert_eq!(empty.page(), None);
     assert_eq!(empty.limit(), None);
 
