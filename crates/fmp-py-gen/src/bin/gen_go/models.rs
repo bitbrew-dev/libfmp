@@ -6,7 +6,7 @@ use std::fmt::Write;
 
 use fmp_py_gen::responses::StructDef;
 
-use crate::emit::{GENERATED_HEADER, doc_comment, local_ident, lower_first, lower_lead};
+use crate::emit::{GENERATED_HEADER, doc_comment, go_name, local_ident, lower_first, lower_lead};
 use crate::types::{Codec, GoField, TypeTable};
 
 /// The shadow and emit member that collects the members json/v2 cannot spell
@@ -40,12 +40,13 @@ pub(crate) fn plan_models(
                 check_custom_deserialize_shape(&def.name, &fields)?;
             }
             check_raw_key_fallback(&def.name, &fields)?;
+            let name = go_name(&def.name);
             let doc = match &def.doc {
-                Some(doc) => format!("{} is {}", def.name, lower_lead(doc)),
-                None => format!("{} is a response model of the {domain} domain.", def.name),
+                Some(doc) => format!("{name} is {}", lower_lead(doc)),
+                None => format!("{name} is a response model of the {domain} domain."),
             };
             Ok(ModelPlan {
-                name: def.name.clone(),
+                name,
                 doc,
                 rust_names: def.fields.iter().map(|f| f.name.clone()).collect(),
                 fields,

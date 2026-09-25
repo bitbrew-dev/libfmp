@@ -39,7 +39,7 @@ func TestDocumentedCrowdfundingOfferingsDecodeExactValuesAndKeepWireHazards(t *t
 		t.Fatalf("crowdfunding_offerings_latest = %+v", row)
 	}
 	if row.Date.Date().String() != "2011-11-22" {
-		t.Fatalf("UsDate.Date() = %s, want the same civil date", row.Date.Date())
+		t.Fatalf("USDate.Date() = %s, want the same civil date", row.Date.Date())
 	}
 	members := memberSet(t, row)
 	if len(members) != 48 {

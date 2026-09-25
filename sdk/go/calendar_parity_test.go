@@ -150,7 +150,7 @@ func TestDocumentedIpoFilingAndStockSplitFixturesDecodeExactValues(t *testing.T)
 	wantDisclosure := IpoDisclosure{
 		Symbol: "QTJA", FilingDate: mustParseDate(t, "2026-07-30"), AcceptedDate: mustParseDate(t, "2026-07-30"),
 		EffectivenessDate: mustParseDate(t, "2026-07-30"), Cik: "0001415726", Form: "CERT",
-		Url: "https://www.sec.gov/Archives/edgar/data/1415726/000141783526000235/8A_Cert_DDTG_DDFG.pdf",
+		URL: "https://www.sec.gov/Archives/edgar/data/1415726/000141783526000235/8A_Cert_DDTG_DDFG.pdf",
 	}
 	if len(disclosure) != 1 || disclosure[0] != wantDisclosure {
 		t.Fatalf("ipos_disclosure = %+v", disclosure)
@@ -162,7 +162,7 @@ func TestDocumentedIpoFilingAndStockSplitFixturesDecodeExactValues(t *testing.T)
 		IpoDate: mustParseDate(t, "2026-07-28"), Cik: "0002083125", PricePublicPerShare: 1, PricePublicTotal: 434,
 		DiscountsAndCommissionsPerShare: 0, DiscountsAndCommissionsTotal: 82_251, ProceedsBeforeExpensesPerShare: 1,
 		ProceedsBeforeExpensesTotal: 82_251, Form: "S-1",
-		Url: "https://www.sec.gov/Archives/edgar/data/2083125/000121390026082963/ea0298363-s1_presidio.htm",
+		URL: "https://www.sec.gov/Archives/edgar/data/2083125/000121390026082963/ea0298363-s1_presidio.htm",
 	}
 	if len(prospectus) != 1 || prospectus[0] != wantProspectus {
 		t.Fatalf("ipos_prospectus = %+v", prospectus)

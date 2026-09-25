@@ -7,7 +7,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use fmp_py_gen::registry::ArgKind;
 use fmp_py_gen::responses::{FieldDef, StructDef, Wrap, peel};
 
-use crate::emit::exported;
+use crate::emit::{exported, go_name};
 
 /// How a member is decoded through the shadow struct.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -268,7 +268,7 @@ impl<'a> TypeTable<'a> {
             _ => {}
         }
         if self.structs.contains(ident) {
-            return Ok(Base::scalar(ident));
+            return Ok(Base::scalar(&go_name(ident)));
         }
         if let Some(target) = self.aliases.get(ident) {
             return self.base(target, depth + 1);
@@ -341,7 +341,7 @@ fn scalar(ident: &str) -> Option<&'static str> {
         | "ChartTimeframe" | "EconomicIndicator" => "string",
         "NumberOrNumericString" | "PercentageValue" => "NumberOrString",
         "Date" => "Date",
-        "UsDate" => "UsDate",
+        "UsDate" => "USDate",
         "ApiDateTime" => "DateTime",
         "UnixSeconds" => "UnixSeconds",
         "UnixMilliseconds" => "UnixMilliseconds",

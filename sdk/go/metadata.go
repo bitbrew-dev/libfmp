@@ -15,8 +15,8 @@ const (
 	GeographyUnspecified GeographicAvailability = iota
 	// GeographyWorldwide: the endpoint covers every supported market.
 	GeographyWorldwide
-	// GeographyUsOnly: the endpoint covers US listings only.
-	GeographyUsOnly
+	// GeographyUSOnly: the endpoint covers US listings only.
+	GeographyUSOnly
 )
 
 // String returns a short stable label that is safe to log.
@@ -26,7 +26,7 @@ func (g GeographicAvailability) String() string {
 		return "unspecified"
 	case GeographyWorldwide:
 		return "worldwide"
-	case GeographyUsOnly:
+	case GeographyUSOnly:
 		return "us-only"
 	default:
 		return fmt.Sprintf("GeographicAvailability(%d)", int(g))

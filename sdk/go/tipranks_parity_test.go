@@ -34,7 +34,7 @@ func TestDocumentedTipranksRatingSearchDecodesAllThirteenFields(t *testing.T) {
 		row.ExpertUid != "9d6962cbd29862b8d70de0a2ddb3eb0bdfedc2b7" || row.AnalystName != "Ross Law" ||
 		row.FirmName != "Morgan Stanley" || row.Recommendation != "buy" || row.AnalystAction != "maintained" ||
 		row.ArticleSite != "TipRanks Contributor" || string(row.PriceTarget) != "1500" ||
-		row.PriceTargetCurrency != "GBX" || !strings.HasPrefix(row.Url, "https://www.tipranks.com/news/blurbs/") {
+		row.PriceTargetCurrency != "GBX" || !strings.HasPrefix(row.URL, "https://www.tipranks.com/news/blurbs/") {
 		t.Fatalf("search_tipranks_ratings = %+v", row)
 	}
 	members := memberSet(t, row)

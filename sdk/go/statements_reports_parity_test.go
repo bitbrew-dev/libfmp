@@ -123,14 +123,14 @@ func TestDocumentedFinancialReportFixturesKeepHeadersAndDynamicSections(t *testi
 	dates := assertFixtureParity[FinancialReportDate](t, "financial_reports_dates.json")
 	want := FinancialReportDate{
 		Symbol: "AAPL", FiscalYear: 2026, Period: "Q2",
-		LinkJson: "https://financialmodelingprep.com/stable/financial-reports-json?symbol=AAPL&year=2026&period=Q2&apikey=[REDACTED]",
+		LinkJSON: "https://financialmodelingprep.com/stable/financial-reports-json?symbol=AAPL&year=2026&period=Q2&apikey=[REDACTED]",
 		LinkXlsx: "https://financialmodelingprep.com/stable/financial-reports-xlsx?symbol=AAPL&year=2026&period=Q2&apikey=[REDACTED]",
 	}
 	if len(dates) != 1 || dates[0] != want {
 		t.Fatalf("financial_reports_dates = %+v, want %+v", dates, want)
 	}
 
-	reports := assertFixtureParity[FinancialReportJson](t, "financial_reports_json.json")
+	reports := assertFixtureParity[FinancialReportJSON](t, "financial_reports_json.json")
 	if len(reports) != 1 || reports[0].Symbol != "AAPL" || reports[0].Period != "FY" || reports[0].Year != "2022" {
 		t.Fatalf("financial_reports_json headers = %+v", reports[0])
 	}
@@ -178,7 +178,7 @@ func TestDocumentedFinancialReportFixturesKeepHeadersAndDynamicSections(t *testi
 			t.Fatalf("reserved key %q: marshal error = %v", reserved, err)
 		}
 	}
-	var rows []FinancialReportJson
+	var rows []FinancialReportJSON
 	if err := json.Unmarshal([]byte(`[{"symbol":"AAPL","period":"FY","Cover Page":[]}]`), &rows); err == nil ||
 		!strings.Contains(err.Error(), `"year"`) {
 		t.Fatalf("missing year: error = %v", err)

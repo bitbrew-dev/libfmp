@@ -333,7 +333,7 @@ const (
 	EconomicIndicatorNewPrivatelyOwnedHousingUnitsStartedTotalUnits           EconomicIndicator = "newPrivatelyOwnedHousingUnitsStartedTotalUnits"
 	EconomicIndicatorTotalVehicleSales                                        EconomicIndicator = "totalVehicleSales"
 	EconomicIndicatorRetailMoneyFunds                                         EconomicIndicator = "retailMoneyFunds"
-	EconomicIndicatorSmoothedUsRecessionProbabilities                         EconomicIndicator = "smoothedUSRecessionProbabilities"
+	EconomicIndicatorSmoothedUSRecessionProbabilities                         EconomicIndicator = "smoothedUSRecessionProbabilities"
 	EconomicIndicatorThreeMonthOrNinetyDayRatesAndYieldsCertificatesOfDeposit EconomicIndicator = "3MonthOr90DayRatesAndYieldsCertificatesOfDeposit"
 	EconomicIndicatorCommercialBankInterestRateOnCreditCardPlansAllAccounts   EconomicIndicator = "commercialBankInterestRateOnCreditCardPlansAllAccounts"
 	EconomicIndicatorThirtyYearFixedRateMortgageAverage                       EconomicIndicator = "30YearFixedRateMortgageAverage"
@@ -367,7 +367,7 @@ var documentedEconomicIndicators = [...]EconomicIndicator{
 	EconomicIndicatorNewPrivatelyOwnedHousingUnitsStartedTotalUnits,
 	EconomicIndicatorTotalVehicleSales,
 	EconomicIndicatorRetailMoneyFunds,
-	EconomicIndicatorSmoothedUsRecessionProbabilities,
+	EconomicIndicatorSmoothedUSRecessionProbabilities,
 	EconomicIndicatorThreeMonthOrNinetyDayRatesAndYieldsCertificatesOfDeposit,
 	EconomicIndicatorCommercialBankInterestRateOnCreditCardPlansAllAccounts,
 	EconomicIndicatorThirtyYearFixedRateMortgageAverage,

@@ -857,37 +857,37 @@ func (q FinancialReportsDatesQuery) params() ([]queryParam, error) {
 	return []queryParam{symbol}, nil
 }
 
-// FinancialReportsJsonQuery holds the query parameters of the endpoints that
-// take it: NewFinancialReportsJsonQuery takes the required arguments and each
+// FinancialReportsJSONQuery holds the query parameters of the endpoints that
+// take it: NewFinancialReportsJSONQuery takes the required arguments and each
 // With method sets an optional one. Values are validated when the request is
 // built.
-type FinancialReportsJsonQuery struct {
+type FinancialReportsJSONQuery struct {
 	symbol string
 	year   uint32
 	period FiscalPeriod
 }
 
-// NewFinancialReportsJsonQuery creates the query from its required arguments.
-func NewFinancialReportsJsonQuery(symbol string, year uint32, period FiscalPeriod) FinancialReportsJsonQuery {
-	return FinancialReportsJsonQuery{symbol: symbol, year: year, period: period}
+// NewFinancialReportsJSONQuery creates the query from its required arguments.
+func NewFinancialReportsJSONQuery(symbol string, year uint32, period FiscalPeriod) FinancialReportsJSONQuery {
+	return FinancialReportsJSONQuery{symbol: symbol, year: year, period: period}
 }
 
 // Symbol returns the symbol argument as given.
-func (q FinancialReportsJsonQuery) Symbol() string {
+func (q FinancialReportsJSONQuery) Symbol() string {
 	return q.symbol
 }
 
 // Year returns the year argument as given.
-func (q FinancialReportsJsonQuery) Year() uint32 {
+func (q FinancialReportsJSONQuery) Year() uint32 {
 	return q.year
 }
 
 // Period returns the period argument as given.
-func (q FinancialReportsJsonQuery) Period() FiscalPeriod {
+func (q FinancialReportsJSONQuery) Period() FiscalPeriod {
 	return q.period
 }
 
-func (q FinancialReportsJsonQuery) params() ([]queryParam, error) {
+func (q FinancialReportsJSONQuery) params() ([]queryParam, error) {
 	symbol, err := tickerParam("symbol", q.symbol)
 	if err != nil {
 		return nil, err
@@ -1976,15 +1976,15 @@ func (n *StatementsReportsNamespace) Dates(ctx context.Context, q FinancialRepor
 	return out, nil
 }
 
-// Json retrieves one dynamic JSON financial report as a bare array.
+// JSON retrieves one dynamic JSON financial report as a bare array.
 //
 // GET financial-reports-json?symbol=&year=&period=
-func (n *StatementsReportsNamespace) Json(ctx context.Context, q FinancialReportsJsonQuery) ([]FinancialReportJson, error) {
+func (n *StatementsReportsNamespace) JSON(ctx context.Context, q FinancialReportsJSONQuery) ([]FinancialReportJSON, error) {
 	params, err := q.params()
 	if err != nil {
 		return nil, err
 	}
-	var out []FinancialReportJson
+	var out []FinancialReportJSON
 	if err := n.client.getJSON(ctx, "financial-reports-json", "financial-reports-json", params, &out); err != nil {
 		return nil, err
 	}

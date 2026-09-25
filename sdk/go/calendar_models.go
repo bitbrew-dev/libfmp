@@ -262,7 +262,7 @@ type IpoDisclosure struct {
 	EffectivenessDate Date   `json:"effectivenessDate"`
 	Cik               string `json:"cik"`
 	Form              string `json:"form"`
-	Url               string `json:"url"`
+	URL               string `json:"url"`
 }
 
 // ipoDisclosureShadow mirrors IpoDisclosure with a pointer or raw value for
@@ -275,7 +275,7 @@ type ipoDisclosureShadow struct {
 	EffectivenessDate *Date   `json:"effectivenessDate"`
 	Cik               *string `json:"cik"`
 	Form              *string `json:"form"`
-	Url               *string `json:"url"`
+	URL               *string `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -299,7 +299,7 @@ func (m *IpoDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IpoDisclosure", "cik")
 	case shadow.Form == nil:
 		return missingMemberError("IpoDisclosure", "form")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("IpoDisclosure", "url")
 	}
 	*m = IpoDisclosure{
@@ -309,7 +309,7 @@ func (m *IpoDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		EffectivenessDate: *shadow.EffectivenessDate,
 		Cik:               *shadow.Cik,
 		Form:              *shadow.Form,
-		Url:               *shadow.Url,
+		URL:               *shadow.URL,
 	}
 	return nil
 }
@@ -329,7 +329,7 @@ type IpoProspectus struct {
 	ProceedsBeforeExpensesPerShare  float64 `json:"proceedsBeforeExpensesPerShare"`
 	ProceedsBeforeExpensesTotal     float64 `json:"proceedsBeforeExpensesTotal"`
 	Form                            string  `json:"form"`
-	Url                             string  `json:"url"`
+	URL                             string  `json:"url"`
 }
 
 // ipoProspectusShadow mirrors IpoProspectus with a pointer or raw value for
@@ -348,7 +348,7 @@ type ipoProspectusShadow struct {
 	ProceedsBeforeExpensesPerShare  *float64 `json:"proceedsBeforeExpensesPerShare"`
 	ProceedsBeforeExpensesTotal     *float64 `json:"proceedsBeforeExpensesTotal"`
 	Form                            *string  `json:"form"`
-	Url                             *string  `json:"url"`
+	URL                             *string  `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -384,7 +384,7 @@ func (m *IpoProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IpoProspectus", "proceedsBeforeExpensesTotal")
 	case shadow.Form == nil:
 		return missingMemberError("IpoProspectus", "form")
-	case shadow.Url == nil:
+	case shadow.URL == nil:
 		return missingMemberError("IpoProspectus", "url")
 	}
 	*m = IpoProspectus{
@@ -400,7 +400,7 @@ func (m *IpoProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		ProceedsBeforeExpensesPerShare:  *shadow.ProceedsBeforeExpensesPerShare,
 		ProceedsBeforeExpensesTotal:     *shadow.ProceedsBeforeExpensesTotal,
 		Form:                            *shadow.Form,
-		Url:                             *shadow.Url,
+		URL:                             *shadow.URL,
 	}
 	return nil
 }

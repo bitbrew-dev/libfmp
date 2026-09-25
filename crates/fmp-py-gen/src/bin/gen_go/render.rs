@@ -174,7 +174,7 @@ fn render_constant(query: &QueryPlan, out: &mut String) {
         "{} is the fixed query of the endpoints that encode {} in the Rust crate; it \
          exposes no choice.",
         query.var_name(),
-        query.name
+        query.rust_name
     )));
     let _ = writeln!(
         out,
