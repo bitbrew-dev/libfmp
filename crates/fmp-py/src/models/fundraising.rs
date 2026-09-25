@@ -351,7 +351,8 @@ impl CrowdfundingOffering {
         security_offered_type: String,
         security_offered_other_description: Option<String>,
         number_of_security_offered: f64,
-        offering_price: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        offering_price: Bound<'_, PyAny>,
         offering_amount: f64,
         over_subscription_accepted: String,
         over_subscription_allocation_type: String,
@@ -377,12 +378,7 @@ impl CrowdfundingOffering {
         net_income_most_recent_fiscal_year: f64,
         net_income_prior_fiscal_year: f64,
     ) -> PyResult<Self> {
-        let offering_price = ::serde_json::from_str::<::serde_json::Number>(&offering_price)
-            .map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `offering_price`: {error}"
-                ))
-            })?;
+        let offering_price = crate::models::convert::py_to_number(&offering_price)?;
         Ok(Self {
             cik,
             company_name,
@@ -597,16 +593,7 @@ impl CrowdfundingOffering {
                 .clone()
                 .into_bound_py_any(py)?,
         )?;
-        kwargs.set_item(
-            "offering_price",
-            ::serde_json::to_string(&self.offering_price)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `offering_price`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("offering_price", self.offering_price(py)?)?;
         kwargs.set_item(
             "offering_amount",
             self.offering_amount.clone().into_bound_py_any(py)?,
@@ -1239,6 +1226,7 @@ impl CrowdfundingOffering {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn offering_price<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.offering_price)
     }

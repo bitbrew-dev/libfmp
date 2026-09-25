@@ -54,16 +54,12 @@ impl TipRanksRatingSearchResult {
         analyst_action: String,
         article_title: String,
         article_site: String,
-        price_target: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        price_target: Bound<'_, PyAny>,
         price_target_currency: String,
         url: String,
     ) -> PyResult<Self> {
-        let price_target =
-            ::serde_json::from_str::<::serde_json::Number>(&price_target).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `price_target`: {error}"
-                ))
-            })?;
+        let price_target = crate::models::convert::py_to_number(&price_target)?;
         Ok(Self {
             symbol,
             date,
@@ -141,16 +137,7 @@ impl TipRanksRatingSearchResult {
             "article_site",
             self.article_site.clone().into_bound_py_any(py)?,
         )?;
-        kwargs.set_item(
-            "price_target",
-            ::serde_json::to_string(&self.price_target)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `price_target`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("price_target", self.price_target(py)?)?;
         kwargs.set_item(
             "price_target_currency",
             self.price_target_currency.clone().into_bound_py_any(py)?,
@@ -259,6 +246,7 @@ impl TipRanksRatingSearchResult {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn price_target<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.price_target)
     }
@@ -337,47 +325,31 @@ impl TipRanksPointInTimeRating {
         date: String,
         expert_uid: String,
         analyst_name: String,
-        stock_success_rate: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        stock_success_rate: Bound<'_, PyAny>,
         firm_name: String,
         last_recommendation: String,
         last_recommendation_date: ::chrono::NaiveDate,
         article_title: String,
         article_site: String,
-        price_target: Option<String>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float | None", imports = ("builtins",)))]
+        price_target: Option<Bound<'_, PyAny>>,
         price_target_currency: Option<String>,
         url: String,
         last_analyst_action: String,
-        stock_return: Option<String>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float | None", imports = ("builtins",)))]
+        stock_return: Option<Bound<'_, PyAny>>,
         beat_target: Option<bool>,
     ) -> PyResult<Self> {
-        let stock_success_rate = ::serde_json::from_str::<::serde_json::Number>(
-            &stock_success_rate,
-        )
-        .map_err(|error| {
-            ::pyo3::exceptions::PyValueError::new_err(format!(
-                "invalid JSON for field `stock_success_rate`: {error}"
-            ))
-        })?;
-        let price_target = match price_target {
-            Some(text) => Some(
-                ::serde_json::from_str::<::serde_json::Number>(&text).map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `price_target`: {error}"
-                    ))
-                })?,
-            ),
-            None => None,
-        };
-        let stock_return = match stock_return {
-            Some(text) => Some(
-                ::serde_json::from_str::<::serde_json::Number>(&text).map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "invalid JSON for field `stock_return`: {error}"
-                    ))
-                })?,
-            ),
-            None => None,
-        };
+        let stock_success_rate = crate::models::convert::py_to_number(&stock_success_rate)?;
+        let price_target = price_target
+            .as_ref()
+            .map(crate::models::convert::py_to_number)
+            .transpose()?;
+        let stock_return = stock_return
+            .as_ref()
+            .map(crate::models::convert::py_to_number)
+            .transpose()?;
         Ok(Self {
             symbol,
             date,
@@ -440,16 +412,7 @@ impl TipRanksPointInTimeRating {
             "analyst_name",
             self.analyst_name.clone().into_bound_py_any(py)?,
         )?;
-        kwargs.set_item(
-            "stock_success_rate",
-            ::serde_json::to_string(&self.stock_success_rate)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `stock_success_rate`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("stock_success_rate", self.stock_success_rate(py)?)?;
         kwargs.set_item("firm_name", self.firm_name.clone().into_bound_py_any(py)?)?;
         kwargs.set_item(
             "last_recommendation",
@@ -469,19 +432,7 @@ impl TipRanksPointInTimeRating {
             "article_site",
             self.article_site.clone().into_bound_py_any(py)?,
         )?;
-        kwargs.set_item(
-            "price_target",
-            self.price_target
-                .as_ref()
-                .map(::serde_json::to_string)
-                .transpose()
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `price_target`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("price_target", self.price_target(py)?)?;
         kwargs.set_item(
             "price_target_currency",
             self.price_target_currency.clone().into_bound_py_any(py)?,
@@ -491,19 +442,7 @@ impl TipRanksPointInTimeRating {
             "last_analyst_action",
             self.last_analyst_action.clone().into_bound_py_any(py)?,
         )?;
-        kwargs.set_item(
-            "stock_return",
-            self.stock_return
-                .as_ref()
-                .map(::serde_json::to_string)
-                .transpose()
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `stock_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("stock_return", self.stock_return(py)?)?;
         kwargs.set_item(
             "beat_target",
             self.beat_target.clone().into_bound_py_any(py)?,
@@ -625,11 +564,13 @@ impl TipRanksPointInTimeRating {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn stock_success_rate<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.stock_success_rate)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float | None", imports = ("builtins",)))]
     fn price_target<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         match &self.price_target {
             Some(value) => crate::models::convert::number_to_py(py, value),
@@ -638,6 +579,7 @@ impl TipRanksPointInTimeRating {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float | None", imports = ("builtins",)))]
     fn stock_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         match &self.stock_return {
             Some(value) => crate::models::convert::number_to_py(py, value),
@@ -967,28 +909,16 @@ impl TipRanksSymbolSummary {
         compared_price_targets: u64,
         beats: u64,
         misses: u64,
-        average_return: String,
-        top_return: String,
-        worst_return: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        average_return: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        top_return: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        worst_return: Bound<'_, PyAny>,
     ) -> PyResult<Self> {
-        let average_return = ::serde_json::from_str::<::serde_json::Number>(&average_return)
-            .map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `average_return`: {error}"
-                ))
-            })?;
-        let top_return =
-            ::serde_json::from_str::<::serde_json::Number>(&top_return).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `top_return`: {error}"
-                ))
-            })?;
-        let worst_return =
-            ::serde_json::from_str::<::serde_json::Number>(&worst_return).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `worst_return`: {error}"
-                ))
-            })?;
+        let average_return = crate::models::convert::py_to_number(&average_return)?;
+        let top_return = crate::models::convert::py_to_number(&top_return)?;
+        let worst_return = crate::models::convert::py_to_number(&worst_return)?;
         Ok(Self {
             symbol,
             from_,
@@ -1075,36 +1005,9 @@ impl TipRanksSymbolSummary {
         )?;
         kwargs.set_item("beats", self.beats.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("misses", self.misses.clone().into_bound_py_any(py)?)?;
-        kwargs.set_item(
-            "average_return",
-            ::serde_json::to_string(&self.average_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `average_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
-        kwargs.set_item(
-            "top_return",
-            ::serde_json::to_string(&self.top_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `top_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
-        kwargs.set_item(
-            "worst_return",
-            ::serde_json::to_string(&self.worst_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `worst_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("average_return", self.average_return(py)?)?;
+        kwargs.set_item("top_return", self.top_return(py)?)?;
+        kwargs.set_item("worst_return", self.worst_return(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
     #[allow(clippy::clone_on_copy)]
@@ -1212,16 +1115,19 @@ impl TipRanksSymbolSummary {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn average_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.average_return)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn top_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.top_return)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn worst_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.worst_return)
     }
@@ -1312,28 +1218,16 @@ impl TipRanksAnalystSummary {
         compared_price_targets: u64,
         beats: u64,
         misses: u64,
-        average_return: String,
-        top_return: String,
-        worst_return: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        average_return: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        top_return: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        worst_return: Bound<'_, PyAny>,
     ) -> PyResult<Self> {
-        let average_return = ::serde_json::from_str::<::serde_json::Number>(&average_return)
-            .map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `average_return`: {error}"
-                ))
-            })?;
-        let top_return =
-            ::serde_json::from_str::<::serde_json::Number>(&top_return).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `top_return`: {error}"
-                ))
-            })?;
-        let worst_return =
-            ::serde_json::from_str::<::serde_json::Number>(&worst_return).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `worst_return`: {error}"
-                ))
-            })?;
+        let average_return = crate::models::convert::py_to_number(&average_return)?;
+        let top_return = crate::models::convert::py_to_number(&top_return)?;
+        let worst_return = crate::models::convert::py_to_number(&worst_return)?;
         Ok(Self {
             expert_uid,
             from_,
@@ -1420,36 +1314,9 @@ impl TipRanksAnalystSummary {
         )?;
         kwargs.set_item("beats", self.beats.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("misses", self.misses.clone().into_bound_py_any(py)?)?;
-        kwargs.set_item(
-            "average_return",
-            ::serde_json::to_string(&self.average_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `average_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
-        kwargs.set_item(
-            "top_return",
-            ::serde_json::to_string(&self.top_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `top_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
-        kwargs.set_item(
-            "worst_return",
-            ::serde_json::to_string(&self.worst_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `worst_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("average_return", self.average_return(py)?)?;
+        kwargs.set_item("top_return", self.top_return(py)?)?;
+        kwargs.set_item("worst_return", self.worst_return(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
     #[allow(clippy::clone_on_copy)]
@@ -1557,16 +1424,19 @@ impl TipRanksAnalystSummary {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn average_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.average_return)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn top_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.top_return)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn worst_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.worst_return)
     }
@@ -1657,28 +1527,16 @@ impl TipRanksFirmSummary {
         compared_price_targets: u64,
         beats: u64,
         misses: u64,
-        average_return: String,
-        top_return: String,
-        worst_return: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        average_return: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        top_return: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        worst_return: Bound<'_, PyAny>,
     ) -> PyResult<Self> {
-        let average_return = ::serde_json::from_str::<::serde_json::Number>(&average_return)
-            .map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `average_return`: {error}"
-                ))
-            })?;
-        let top_return =
-            ::serde_json::from_str::<::serde_json::Number>(&top_return).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `top_return`: {error}"
-                ))
-            })?;
-        let worst_return =
-            ::serde_json::from_str::<::serde_json::Number>(&worst_return).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `worst_return`: {error}"
-                ))
-            })?;
+        let average_return = crate::models::convert::py_to_number(&average_return)?;
+        let top_return = crate::models::convert::py_to_number(&top_return)?;
+        let worst_return = crate::models::convert::py_to_number(&worst_return)?;
         Ok(Self {
             firm_name,
             from_,
@@ -1765,36 +1623,9 @@ impl TipRanksFirmSummary {
         )?;
         kwargs.set_item("beats", self.beats.clone().into_bound_py_any(py)?)?;
         kwargs.set_item("misses", self.misses.clone().into_bound_py_any(py)?)?;
-        kwargs.set_item(
-            "average_return",
-            ::serde_json::to_string(&self.average_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `average_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
-        kwargs.set_item(
-            "top_return",
-            ::serde_json::to_string(&self.top_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `top_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
-        kwargs.set_item(
-            "worst_return",
-            ::serde_json::to_string(&self.worst_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `worst_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("average_return", self.average_return(py)?)?;
+        kwargs.set_item("top_return", self.top_return(py)?)?;
+        kwargs.set_item("worst_return", self.worst_return(py)?)?;
         Ok((PyTuple::empty(py), kwargs))
     }
     #[allow(clippy::clone_on_copy)]
@@ -1902,16 +1733,19 @@ impl TipRanksFirmSummary {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn average_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.average_return)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn top_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.top_return)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn worst_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.worst_return)
     }
@@ -1982,25 +1816,17 @@ impl TipRanksAnalystProfile {
         expert_uid: String,
         analyst_name: String,
         firm_name: String,
-        success_rate: String,
-        excess_return: String,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        success_rate: Bound<'_, PyAny>,
+        #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
+        excess_return: Bound<'_, PyAny>,
         total_recommendations: u64,
         good_recommendations: u64,
         analyst_rank: u64,
         num_of_stars: u64,
     ) -> PyResult<Self> {
-        let success_rate =
-            ::serde_json::from_str::<::serde_json::Number>(&success_rate).map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `success_rate`: {error}"
-                ))
-            })?;
-        let excess_return = ::serde_json::from_str::<::serde_json::Number>(&excess_return)
-            .map_err(|error| {
-                ::pyo3::exceptions::PyValueError::new_err(format!(
-                    "invalid JSON for field `excess_return`: {error}"
-                ))
-            })?;
+        let success_rate = crate::models::convert::py_to_number(&success_rate)?;
+        let excess_return = crate::models::convert::py_to_number(&excess_return)?;
         Ok(Self {
             expert_uid,
             analyst_name,
@@ -2048,26 +1874,8 @@ impl TipRanksAnalystProfile {
             self.analyst_name.clone().into_bound_py_any(py)?,
         )?;
         kwargs.set_item("firm_name", self.firm_name.clone().into_bound_py_any(py)?)?;
-        kwargs.set_item(
-            "success_rate",
-            ::serde_json::to_string(&self.success_rate)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `success_rate`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
-        kwargs.set_item(
-            "excess_return",
-            ::serde_json::to_string(&self.excess_return)
-                .map_err(|error| {
-                    ::pyo3::exceptions::PyValueError::new_err(format!(
-                        "failed to serialize field `excess_return`: {error}"
-                    ))
-                })?
-                .into_bound_py_any(py)?,
-        )?;
+        kwargs.set_item("success_rate", self.success_rate(py)?)?;
+        kwargs.set_item("excess_return", self.excess_return(py)?)?;
         kwargs.set_item(
             "total_recommendations",
             self.total_recommendations.clone().into_bound_py_any(py)?,
@@ -2158,11 +1966,13 @@ impl TipRanksAnalystProfile {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn success_rate<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.success_rate)
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
     fn excess_return<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::number_to_py(py, &self.excess_return)
     }

@@ -7,6 +7,9 @@ use fmp_py_gen::responses::Wrap;
 
 use crate::emit::{convert_expr, wrap_type};
 
+/// The Python type a `serde_json::Number` field reads and accepts.
+const NUMBER_STUB: &str = "builtins.int | builtins.float";
+
 /// How a base (non-composed) field type maps into the Python model.
 pub(crate) enum Class {
     Scalar {
@@ -178,6 +181,20 @@ impl KeptField {
 
     pub(crate) fn new_param(&self) -> String {
         match &self.kind {
+            KeptKind::Passthrough {
+                pass: Pass::Number,
+                optional,
+            } => {
+                let (stub, ty) = if *optional {
+                    (format!("{NUMBER_STUB} | None"), "Option<Bound<'_, PyAny>>")
+                } else {
+                    (NUMBER_STUB.to_owned(), "Bound<'_, PyAny>")
+                };
+                format!(
+                    "#[gen_stub(override_type(type_repr = \"{stub}\", imports = (\"builtins\",)))] {}: {ty}",
+                    self.field_ident
+                )
+            }
             KeptKind::Passthrough { optional, .. } => {
                 let ty = if *optional {
                     "Option<String>"
@@ -196,6 +213,20 @@ impl KeptField {
         let KeptKind::Passthrough { pass, optional } = &self.kind else {
             return None;
         };
+        if matches!(pass, Pass::Number) {
+            let convert = "crate::models::convert::py_to_number";
+            return Some(if *optional {
+                format!(
+                    "let {ident} = {ident}.as_ref().map({convert}).transpose()?;",
+                    ident = self.field_ident
+                )
+            } else {
+                format!(
+                    "let {ident} = {convert}(&{ident})?;",
+                    ident = self.field_ident
+                )
+            });
+        }
         let inner = pass.raw_ty();
         let err = format!(
             ".map_err(|error| ::pyo3::exceptions::PyValueError::new_err(format!(\"invalid JSON for field `{}`: {{error}}\")))",
@@ -221,6 +252,9 @@ impl KeptField {
     /// The value `__getnewargs_ex__` passes back to `__new__` for this field.
     pub(crate) fn pickle_value(&self) -> String {
         match &self.kind {
+            KeptKind::Passthrough {
+                pass: Pass::Number, ..
+            } => format!("self.{}(py)?", self.field_ident),
             KeptKind::Passthrough { optional, .. } => {
                 let err = format!(
                     ".map_err(|error| ::pyo3::exceptions::PyValueError::new_err(format!(\"failed to serialize field `{}`: {{error}}\")))",
@@ -264,8 +298,17 @@ impl KeptField {
                 name = self.field_ident
             )
         };
+        let stub = match (pass, optional) {
+            (Pass::Number, false) => format!(
+                "    #[gen_stub(override_return_type(type_repr = \"{NUMBER_STUB}\", imports = (\"builtins\",)))]\n"
+            ),
+            (Pass::Number, true) => format!(
+                "    #[gen_stub(override_return_type(type_repr = \"{NUMBER_STUB} | None\", imports = (\"builtins\",)))]\n"
+            ),
+            _ => String::new(),
+        };
         Some(format!(
-            "    #[getter]\n    fn {ident}<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {{\n{body}    }}\n",
+            "    #[getter]\n{stub}    fn {ident}<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {{\n{body}    }}\n",
             ident = self.field_ident
         ))
     }
