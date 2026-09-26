@@ -17,8 +17,7 @@ concurrency:
 jobs:
   pre-commit:
     name: pre-commit checks
-    uses: bitbrew-dev/r-workflows/.github/workflows/prek.yml@main
-    # uses: bitbrew-dev/reusable-workflows/.github/workflows/prek.yml@main
+    uses: bitbrew-dev/reusable-workflows/.github/workflows/prek.yml@main
     permissions:
       contents: read
       packages: read
