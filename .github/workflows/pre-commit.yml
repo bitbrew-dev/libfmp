@@ -113,12 +113,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: create a venv with maturin and pytest
+      - name: create a venv with maturin, pytest and mypy
         run: |
           python -m venv "$GITHUB_WORKSPACE/.venv"
           echo "VIRTUAL_ENV=$GITHUB_WORKSPACE/.venv" >> "$GITHUB_ENV"
           echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
-          "$GITHUB_WORKSPACE/.venv/bin/pip" install --no-cache-dir "maturin>=1.9,<2" pytest
+          # mypy enables tests/test_stubs.py (stubtest + typecheck contract), which skips without it.
+          "$GITHUB_WORKSPACE/.venv/bin/pip" install --no-cache-dir "maturin>=1.9,<2" pytest "mypy>=2.3,<3"
 
       - name: build and install the fmp extension module
         working-directory: crates/fmp-py
