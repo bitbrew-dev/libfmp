@@ -190,3 +190,4 @@ coverage.xml
 # Remove the existed one or use anti pattern ! to allow some patterns if needed
 artifacts
 .worktrees
+requests
