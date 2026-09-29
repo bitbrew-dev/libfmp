@@ -145,3 +145,21 @@ func TestAnalystMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 		t.Fatalf("decode failure was retried: %d requests", rec.count())
 	}
 }
+
+func TestAnalystCountMembersAcceptIntegralFloatsAndRejectFractions(t *testing.T) {
+	t.Parallel()
+	const row = `[{"symbol":"AAPL","strongBuy":1,"buy":%s,"hold":32,"sell":8,"strongSell":0,"consensus":"Buy"}]`
+	ctx := context.Background()
+
+	server, _ := newServer(t, jsonHandler(fmt.Sprintf(row, "3.0")))
+	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
+	rows, err := client.Analyst.StockGradesSummary(ctx, NewStockGradesSummaryQuery("AAPL"))
+	if err != nil || len(rows) != 1 || rows[0].Buy != 3 {
+		t.Fatalf("StockGradesSummary = %+v, %v, want Buy 3", rows, err)
+	}
+
+	server, _ = newServer(t, jsonHandler(fmt.Sprintf(row, "2.9")))
+	client = newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
+	_, err = client.Analyst.StockGradesSummary(ctx, NewStockGradesSummaryQuery("AAPL"))
+	_ = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "grades-consensus")
+}

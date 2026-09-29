@@ -220,6 +220,25 @@ def test_stock_grades_summary_takes_one_symbol(client: Any, fixture_server: Fixt
     assert row.consensus == "Buy"
 
 
+def test_stock_grades_summary_accepts_an_integral_float_count(client: Any, fixture_server: FixtureServer) -> None:
+    """A count sent as an integral float such as ``3.0`` decodes to the ``int`` ``3``."""
+    fixture_server.route("/grades-consensus", [{**load_fixture("stock_grades_summary.json")[0], "buy": 3.0}])
+    rows = client.analyst.stock_grades_summary("AAPL")
+
+    assert rows[0].buy == 3
+    assert type(rows[0].buy) is int
+
+
+def test_stock_grades_summary_rejects_a_fractional_count(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """A fractional count such as ``2.9`` maps to ``FmpDecodeError`` with the endpoint id."""
+    fixture_server.route("/grades-consensus", [{**load_fixture("stock_grades_summary.json")[0], "buy": 2.9}])
+    with pytest.raises(errors.FmpDecodeError) as raised:
+        client.analyst.stock_grades_summary("AAPL")
+    assert raised.value.endpoint == "grades-consensus"
+
+
 def test_empty_array_decodes_to_an_empty_list(client: Any, fixture_server: FixtureServer) -> None:
     """A bare ``[]`` body is a valid, empty result."""
     fixture_server.route("/grades", [])
