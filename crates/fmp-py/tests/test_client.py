@@ -355,6 +355,7 @@ def test_close_is_idempotent_and_works_before_any_call(
     client = _proxy(fixture_server)
     assert client.close() is None
     assert client.close() is None
+    assert client.__exit__(None, None, None) is None
     with pytest.raises(errors.FmpConfigError, match="the client is closed"):
         client.quote.short("AAPL")
     assert fixture_server.requests == []
