@@ -72,8 +72,11 @@ pub struct TipRanksPointInTimeRating {
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksRecommendationCounts {
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub buy: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub hold: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub sell: Count,
 }
 
@@ -82,11 +85,17 @@ pub struct TipRanksRecommendationCounts {
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct TipRanksAnalystActionCounts {
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub initiated: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub maintained: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub upgraded: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub downgraded: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub reiterated: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub resumed: Count,
 }
 
@@ -98,15 +107,22 @@ pub struct TipRanksSymbolSummary {
     pub symbol: Ticker,
     pub from: Date,
     pub to: Date,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub total_recommendations: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub distinct_symbols: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub distinct_analysts: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub valid_price_targets: Count,
     pub recommendations: TipRanksRecommendationCounts,
     #[serde(rename = "analystAction")]
     pub analyst_action: TipRanksAnalystActionCounts,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub compared_price_targets: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub beats: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub misses: Count,
     pub average_return: Number,
     pub top_return: Number,
@@ -122,15 +138,22 @@ pub struct TipRanksAnalystSummary {
     pub expert_uid: TipRanksExpertUid,
     pub from: Date,
     pub to: Date,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub total_recommendations: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub distinct_symbols: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub distinct_analysts: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub valid_price_targets: Count,
     pub recommendations: TipRanksRecommendationCounts,
     #[serde(rename = "analystAction")]
     pub analyst_action: TipRanksAnalystActionCounts,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub compared_price_targets: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub beats: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub misses: Count,
     pub average_return: Number,
     pub top_return: Number,
@@ -145,15 +168,22 @@ pub struct TipRanksFirmSummary {
     pub firm_name: String,
     pub from: Date,
     pub to: Date,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub total_recommendations: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub distinct_symbols: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub distinct_analysts: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub valid_price_targets: Count,
     pub recommendations: TipRanksRecommendationCounts,
     #[serde(rename = "analystAction")]
     pub analyst_action: TipRanksAnalystActionCounts,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub compared_price_targets: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub beats: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub misses: Count,
     pub average_return: Number,
     pub top_return: Number,
@@ -171,8 +201,12 @@ pub struct TipRanksAnalystProfile {
     pub firm_name: String,
     pub success_rate: Number,
     pub excess_return: Number,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub total_recommendations: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub good_recommendations: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub analyst_rank: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub num_of_stars: Count,
 }

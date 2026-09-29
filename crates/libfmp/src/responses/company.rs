@@ -111,6 +111,7 @@ pub struct EmployeeCount {
     pub company_name: String,
     pub form_type: String,
     pub filing_date: Date,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub employee_count: Count,
     pub source: String,
 }

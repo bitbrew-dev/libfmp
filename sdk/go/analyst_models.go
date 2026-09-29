@@ -40,28 +40,28 @@ type FinancialEstimate struct {
 // value for every required member so a missing or null member is observable
 // after decoding.
 type financialEstimateShadow struct {
-	Symbol             *string  `json:"symbol"`
-	Date               *Date    `json:"date"`
-	RevenueLow         *float64 `json:"revenueLow"`
-	RevenueHigh        *float64 `json:"revenueHigh"`
-	RevenueAvg         *float64 `json:"revenueAvg"`
-	EbitdaLow          *float64 `json:"ebitdaLow"`
-	EbitdaHigh         *float64 `json:"ebitdaHigh"`
-	EbitdaAvg          *float64 `json:"ebitdaAvg"`
-	EbitLow            *float64 `json:"ebitLow"`
-	EbitHigh           *float64 `json:"ebitHigh"`
-	EbitAvg            *float64 `json:"ebitAvg"`
-	NetIncomeLow       *float64 `json:"netIncomeLow"`
-	NetIncomeHigh      *float64 `json:"netIncomeHigh"`
-	NetIncomeAvg       *float64 `json:"netIncomeAvg"`
-	SgaExpenseLow      *float64 `json:"sgaExpenseLow"`
-	SgaExpenseHigh     *float64 `json:"sgaExpenseHigh"`
-	SgaExpenseAvg      *float64 `json:"sgaExpenseAvg"`
-	EPSAvg             *float64 `json:"epsAvg"`
-	EPSHigh            *float64 `json:"epsHigh"`
-	EPSLow             *float64 `json:"epsLow"`
-	NumAnalystsRevenue *uint64  `json:"numAnalystsRevenue"`
-	NumAnalystsEPS     *uint64  `json:"numAnalystsEps"`
+	Symbol             *string        `json:"symbol"`
+	Date               *Date          `json:"date"`
+	RevenueLow         *float64       `json:"revenueLow"`
+	RevenueHigh        *float64       `json:"revenueHigh"`
+	RevenueAvg         *float64       `json:"revenueAvg"`
+	EbitdaLow          *float64       `json:"ebitdaLow"`
+	EbitdaHigh         *float64       `json:"ebitdaHigh"`
+	EbitdaAvg          *float64       `json:"ebitdaAvg"`
+	EbitLow            *float64       `json:"ebitLow"`
+	EbitHigh           *float64       `json:"ebitHigh"`
+	EbitAvg            *float64       `json:"ebitAvg"`
+	NetIncomeLow       *float64       `json:"netIncomeLow"`
+	NetIncomeHigh      *float64       `json:"netIncomeHigh"`
+	NetIncomeAvg       *float64       `json:"netIncomeAvg"`
+	SgaExpenseLow      *float64       `json:"sgaExpenseLow"`
+	SgaExpenseHigh     *float64       `json:"sgaExpenseHigh"`
+	SgaExpenseAvg      *float64       `json:"sgaExpenseAvg"`
+	EPSAvg             *float64       `json:"epsAvg"`
+	EPSHigh            *float64       `json:"epsHigh"`
+	EPSLow             *float64       `json:"epsLow"`
+	NumAnalystsRevenue jsontext.Value `json:"numAnalystsRevenue"`
+	NumAnalystsEPS     jsontext.Value `json:"numAnalystsEps"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -113,10 +113,18 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FinancialEstimate", "epsHigh")
 	case shadow.EPSLow == nil:
 		return missingMemberError("FinancialEstimate", "epsLow")
-	case shadow.NumAnalystsRevenue == nil:
+	case len(shadow.NumAnalystsRevenue) == 0:
 		return missingMemberError("FinancialEstimate", "numAnalystsRevenue")
-	case shadow.NumAnalystsEPS == nil:
+	case len(shadow.NumAnalystsEPS) == 0:
 		return missingMemberError("FinancialEstimate", "numAnalystsEps")
+	}
+	numAnalystsRevenue, err := decodeCount("FinancialEstimate", "numAnalystsRevenue", shadow.NumAnalystsRevenue)
+	if err != nil {
+		return err
+	}
+	numAnalystsEPS, err := decodeCount("FinancialEstimate", "numAnalystsEps", shadow.NumAnalystsEPS)
+	if err != nil {
+		return err
 	}
 	*m = FinancialEstimate{
 		Symbol:             *shadow.Symbol,
@@ -139,8 +147,8 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		EPSAvg:             *shadow.EPSAvg,
 		EPSHigh:            *shadow.EPSHigh,
 		EPSLow:             *shadow.EPSLow,
-		NumAnalystsRevenue: *shadow.NumAnalystsRevenue,
-		NumAnalystsEPS:     *shadow.NumAnalystsEPS,
+		NumAnalystsRevenue: numAnalystsRevenue,
+		NumAnalystsEPS:     numAnalystsEPS,
 	}
 	return nil
 }
@@ -162,15 +170,15 @@ type RatingSnapshot struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type ratingSnapshotShadow struct {
-	Symbol                  *string `json:"symbol"`
-	Rating                  *string `json:"rating"`
-	OverallScore            *uint64 `json:"overallScore"`
-	DiscountedCashFlowScore *uint64 `json:"discountedCashFlowScore"`
-	ReturnOnEquityScore     *uint64 `json:"returnOnEquityScore"`
-	ReturnOnAssetsScore     *uint64 `json:"returnOnAssetsScore"`
-	DebtToEquityScore       *uint64 `json:"debtToEquityScore"`
-	PriceToEarningsScore    *uint64 `json:"priceToEarningsScore"`
-	PriceToBookScore        *uint64 `json:"priceToBookScore"`
+	Symbol                  *string        `json:"symbol"`
+	Rating                  *string        `json:"rating"`
+	OverallScore            jsontext.Value `json:"overallScore"`
+	DiscountedCashFlowScore jsontext.Value `json:"discountedCashFlowScore"`
+	ReturnOnEquityScore     jsontext.Value `json:"returnOnEquityScore"`
+	ReturnOnAssetsScore     jsontext.Value `json:"returnOnAssetsScore"`
+	DebtToEquityScore       jsontext.Value `json:"debtToEquityScore"`
+	PriceToEarningsScore    jsontext.Value `json:"priceToEarningsScore"`
+	PriceToBookScore        jsontext.Value `json:"priceToBookScore"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -186,31 +194,59 @@ func (m *RatingSnapshot) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("RatingSnapshot", "symbol")
 	case shadow.Rating == nil:
 		return missingMemberError("RatingSnapshot", "rating")
-	case shadow.OverallScore == nil:
+	case len(shadow.OverallScore) == 0:
 		return missingMemberError("RatingSnapshot", "overallScore")
-	case shadow.DiscountedCashFlowScore == nil:
+	case len(shadow.DiscountedCashFlowScore) == 0:
 		return missingMemberError("RatingSnapshot", "discountedCashFlowScore")
-	case shadow.ReturnOnEquityScore == nil:
+	case len(shadow.ReturnOnEquityScore) == 0:
 		return missingMemberError("RatingSnapshot", "returnOnEquityScore")
-	case shadow.ReturnOnAssetsScore == nil:
+	case len(shadow.ReturnOnAssetsScore) == 0:
 		return missingMemberError("RatingSnapshot", "returnOnAssetsScore")
-	case shadow.DebtToEquityScore == nil:
+	case len(shadow.DebtToEquityScore) == 0:
 		return missingMemberError("RatingSnapshot", "debtToEquityScore")
-	case shadow.PriceToEarningsScore == nil:
+	case len(shadow.PriceToEarningsScore) == 0:
 		return missingMemberError("RatingSnapshot", "priceToEarningsScore")
-	case shadow.PriceToBookScore == nil:
+	case len(shadow.PriceToBookScore) == 0:
 		return missingMemberError("RatingSnapshot", "priceToBookScore")
+	}
+	overallScore, err := decodeCount("RatingSnapshot", "overallScore", shadow.OverallScore)
+	if err != nil {
+		return err
+	}
+	discountedCashFlowScore, err := decodeCount("RatingSnapshot", "discountedCashFlowScore", shadow.DiscountedCashFlowScore)
+	if err != nil {
+		return err
+	}
+	returnOnEquityScore, err := decodeCount("RatingSnapshot", "returnOnEquityScore", shadow.ReturnOnEquityScore)
+	if err != nil {
+		return err
+	}
+	returnOnAssetsScore, err := decodeCount("RatingSnapshot", "returnOnAssetsScore", shadow.ReturnOnAssetsScore)
+	if err != nil {
+		return err
+	}
+	debtToEquityScore, err := decodeCount("RatingSnapshot", "debtToEquityScore", shadow.DebtToEquityScore)
+	if err != nil {
+		return err
+	}
+	priceToEarningsScore, err := decodeCount("RatingSnapshot", "priceToEarningsScore", shadow.PriceToEarningsScore)
+	if err != nil {
+		return err
+	}
+	priceToBookScore, err := decodeCount("RatingSnapshot", "priceToBookScore", shadow.PriceToBookScore)
+	if err != nil {
+		return err
 	}
 	*m = RatingSnapshot{
 		Symbol:                  *shadow.Symbol,
 		Rating:                  *shadow.Rating,
-		OverallScore:            *shadow.OverallScore,
-		DiscountedCashFlowScore: *shadow.DiscountedCashFlowScore,
-		ReturnOnEquityScore:     *shadow.ReturnOnEquityScore,
-		ReturnOnAssetsScore:     *shadow.ReturnOnAssetsScore,
-		DebtToEquityScore:       *shadow.DebtToEquityScore,
-		PriceToEarningsScore:    *shadow.PriceToEarningsScore,
-		PriceToBookScore:        *shadow.PriceToBookScore,
+		OverallScore:            overallScore,
+		DiscountedCashFlowScore: discountedCashFlowScore,
+		ReturnOnEquityScore:     returnOnEquityScore,
+		ReturnOnAssetsScore:     returnOnAssetsScore,
+		DebtToEquityScore:       debtToEquityScore,
+		PriceToEarningsScore:    priceToEarningsScore,
+		PriceToBookScore:        priceToBookScore,
 	}
 	return nil
 }
@@ -233,16 +269,16 @@ type HistoricalRating struct {
 // for every required member so a missing or null member is observable after
 // decoding.
 type historicalRatingShadow struct {
-	Symbol                  *string `json:"symbol"`
-	Date                    *Date   `json:"date"`
-	Rating                  *string `json:"rating"`
-	OverallScore            *uint64 `json:"overallScore"`
-	DiscountedCashFlowScore *uint64 `json:"discountedCashFlowScore"`
-	ReturnOnEquityScore     *uint64 `json:"returnOnEquityScore"`
-	ReturnOnAssetsScore     *uint64 `json:"returnOnAssetsScore"`
-	DebtToEquityScore       *uint64 `json:"debtToEquityScore"`
-	PriceToEarningsScore    *uint64 `json:"priceToEarningsScore"`
-	PriceToBookScore        *uint64 `json:"priceToBookScore"`
+	Symbol                  *string        `json:"symbol"`
+	Date                    *Date          `json:"date"`
+	Rating                  *string        `json:"rating"`
+	OverallScore            jsontext.Value `json:"overallScore"`
+	DiscountedCashFlowScore jsontext.Value `json:"discountedCashFlowScore"`
+	ReturnOnEquityScore     jsontext.Value `json:"returnOnEquityScore"`
+	ReturnOnAssetsScore     jsontext.Value `json:"returnOnAssetsScore"`
+	DebtToEquityScore       jsontext.Value `json:"debtToEquityScore"`
+	PriceToEarningsScore    jsontext.Value `json:"priceToEarningsScore"`
+	PriceToBookScore        jsontext.Value `json:"priceToBookScore"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -260,32 +296,60 @@ func (m *HistoricalRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("HistoricalRating", "date")
 	case shadow.Rating == nil:
 		return missingMemberError("HistoricalRating", "rating")
-	case shadow.OverallScore == nil:
+	case len(shadow.OverallScore) == 0:
 		return missingMemberError("HistoricalRating", "overallScore")
-	case shadow.DiscountedCashFlowScore == nil:
+	case len(shadow.DiscountedCashFlowScore) == 0:
 		return missingMemberError("HistoricalRating", "discountedCashFlowScore")
-	case shadow.ReturnOnEquityScore == nil:
+	case len(shadow.ReturnOnEquityScore) == 0:
 		return missingMemberError("HistoricalRating", "returnOnEquityScore")
-	case shadow.ReturnOnAssetsScore == nil:
+	case len(shadow.ReturnOnAssetsScore) == 0:
 		return missingMemberError("HistoricalRating", "returnOnAssetsScore")
-	case shadow.DebtToEquityScore == nil:
+	case len(shadow.DebtToEquityScore) == 0:
 		return missingMemberError("HistoricalRating", "debtToEquityScore")
-	case shadow.PriceToEarningsScore == nil:
+	case len(shadow.PriceToEarningsScore) == 0:
 		return missingMemberError("HistoricalRating", "priceToEarningsScore")
-	case shadow.PriceToBookScore == nil:
+	case len(shadow.PriceToBookScore) == 0:
 		return missingMemberError("HistoricalRating", "priceToBookScore")
+	}
+	overallScore, err := decodeCount("HistoricalRating", "overallScore", shadow.OverallScore)
+	if err != nil {
+		return err
+	}
+	discountedCashFlowScore, err := decodeCount("HistoricalRating", "discountedCashFlowScore", shadow.DiscountedCashFlowScore)
+	if err != nil {
+		return err
+	}
+	returnOnEquityScore, err := decodeCount("HistoricalRating", "returnOnEquityScore", shadow.ReturnOnEquityScore)
+	if err != nil {
+		return err
+	}
+	returnOnAssetsScore, err := decodeCount("HistoricalRating", "returnOnAssetsScore", shadow.ReturnOnAssetsScore)
+	if err != nil {
+		return err
+	}
+	debtToEquityScore, err := decodeCount("HistoricalRating", "debtToEquityScore", shadow.DebtToEquityScore)
+	if err != nil {
+		return err
+	}
+	priceToEarningsScore, err := decodeCount("HistoricalRating", "priceToEarningsScore", shadow.PriceToEarningsScore)
+	if err != nil {
+		return err
+	}
+	priceToBookScore, err := decodeCount("HistoricalRating", "priceToBookScore", shadow.PriceToBookScore)
+	if err != nil {
+		return err
 	}
 	*m = HistoricalRating{
 		Symbol:                  *shadow.Symbol,
 		Date:                    *shadow.Date,
 		Rating:                  *shadow.Rating,
-		OverallScore:            *shadow.OverallScore,
-		DiscountedCashFlowScore: *shadow.DiscountedCashFlowScore,
-		ReturnOnEquityScore:     *shadow.ReturnOnEquityScore,
-		ReturnOnAssetsScore:     *shadow.ReturnOnAssetsScore,
-		DebtToEquityScore:       *shadow.DebtToEquityScore,
-		PriceToEarningsScore:    *shadow.PriceToEarningsScore,
-		PriceToBookScore:        *shadow.PriceToBookScore,
+		OverallScore:            overallScore,
+		DiscountedCashFlowScore: discountedCashFlowScore,
+		ReturnOnEquityScore:     returnOnEquityScore,
+		ReturnOnAssetsScore:     returnOnAssetsScore,
+		DebtToEquityScore:       debtToEquityScore,
+		PriceToEarningsScore:    priceToEarningsScore,
+		PriceToBookScore:        priceToBookScore,
 	}
 	return nil
 }
@@ -309,16 +373,16 @@ type PriceTargetSummary struct {
 // value for every required member so a missing or null member is observable
 // after decoding.
 type priceTargetSummaryShadow struct {
-	Symbol                    *string  `json:"symbol"`
-	LastMonthCount            *uint64  `json:"lastMonthCount"`
-	LastMonthAvgPriceTarget   *float64 `json:"lastMonthAvgPriceTarget"`
-	LastQuarterCount          *uint64  `json:"lastQuarterCount"`
-	LastQuarterAvgPriceTarget *float64 `json:"lastQuarterAvgPriceTarget"`
-	LastYearCount             *uint64  `json:"lastYearCount"`
-	LastYearAvgPriceTarget    *float64 `json:"lastYearAvgPriceTarget"`
-	AllTimeCount              *uint64  `json:"allTimeCount"`
-	AllTimeAvgPriceTarget     *float64 `json:"allTimeAvgPriceTarget"`
-	Publishers                *string  `json:"publishers"`
+	Symbol                    *string        `json:"symbol"`
+	LastMonthCount            jsontext.Value `json:"lastMonthCount"`
+	LastMonthAvgPriceTarget   *float64       `json:"lastMonthAvgPriceTarget"`
+	LastQuarterCount          jsontext.Value `json:"lastQuarterCount"`
+	LastQuarterAvgPriceTarget *float64       `json:"lastQuarterAvgPriceTarget"`
+	LastYearCount             jsontext.Value `json:"lastYearCount"`
+	LastYearAvgPriceTarget    *float64       `json:"lastYearAvgPriceTarget"`
+	AllTimeCount              jsontext.Value `json:"allTimeCount"`
+	AllTimeAvgPriceTarget     *float64       `json:"allTimeAvgPriceTarget"`
+	Publishers                *string        `json:"publishers"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -332,34 +396,50 @@ func (m *PriceTargetSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("PriceTargetSummary", "symbol")
-	case shadow.LastMonthCount == nil:
+	case len(shadow.LastMonthCount) == 0:
 		return missingMemberError("PriceTargetSummary", "lastMonthCount")
 	case shadow.LastMonthAvgPriceTarget == nil:
 		return missingMemberError("PriceTargetSummary", "lastMonthAvgPriceTarget")
-	case shadow.LastQuarterCount == nil:
+	case len(shadow.LastQuarterCount) == 0:
 		return missingMemberError("PriceTargetSummary", "lastQuarterCount")
 	case shadow.LastQuarterAvgPriceTarget == nil:
 		return missingMemberError("PriceTargetSummary", "lastQuarterAvgPriceTarget")
-	case shadow.LastYearCount == nil:
+	case len(shadow.LastYearCount) == 0:
 		return missingMemberError("PriceTargetSummary", "lastYearCount")
 	case shadow.LastYearAvgPriceTarget == nil:
 		return missingMemberError("PriceTargetSummary", "lastYearAvgPriceTarget")
-	case shadow.AllTimeCount == nil:
+	case len(shadow.AllTimeCount) == 0:
 		return missingMemberError("PriceTargetSummary", "allTimeCount")
 	case shadow.AllTimeAvgPriceTarget == nil:
 		return missingMemberError("PriceTargetSummary", "allTimeAvgPriceTarget")
 	case shadow.Publishers == nil:
 		return missingMemberError("PriceTargetSummary", "publishers")
 	}
+	lastMonthCount, err := decodeCount("PriceTargetSummary", "lastMonthCount", shadow.LastMonthCount)
+	if err != nil {
+		return err
+	}
+	lastQuarterCount, err := decodeCount("PriceTargetSummary", "lastQuarterCount", shadow.LastQuarterCount)
+	if err != nil {
+		return err
+	}
+	lastYearCount, err := decodeCount("PriceTargetSummary", "lastYearCount", shadow.LastYearCount)
+	if err != nil {
+		return err
+	}
+	allTimeCount, err := decodeCount("PriceTargetSummary", "allTimeCount", shadow.AllTimeCount)
+	if err != nil {
+		return err
+	}
 	*m = PriceTargetSummary{
 		Symbol:                    *shadow.Symbol,
-		LastMonthCount:            *shadow.LastMonthCount,
+		LastMonthCount:            lastMonthCount,
 		LastMonthAvgPriceTarget:   *shadow.LastMonthAvgPriceTarget,
-		LastQuarterCount:          *shadow.LastQuarterCount,
+		LastQuarterCount:          lastQuarterCount,
 		LastQuarterAvgPriceTarget: *shadow.LastQuarterAvgPriceTarget,
-		LastYearCount:             *shadow.LastYearCount,
+		LastYearCount:             lastYearCount,
 		LastYearAvgPriceTarget:    *shadow.LastYearAvgPriceTarget,
-		AllTimeCount:              *shadow.AllTimeCount,
+		AllTimeCount:              allTimeCount,
 		AllTimeAvgPriceTarget:     *shadow.AllTimeAvgPriceTarget,
 		Publishers:                *shadow.Publishers,
 	}
@@ -487,13 +567,13 @@ type HistoricalStockGrade struct {
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type historicalStockGradeShadow struct {
-	Symbol                   *string `json:"symbol"`
-	Date                     *Date   `json:"date"`
-	AnalystRatingsStrongBuy  *uint64 `json:"analystRatingsStrongBuy"`
-	AnalystRatingsBuy        *uint64 `json:"analystRatingsBuy"`
-	AnalystRatingsHold       *uint64 `json:"analystRatingsHold"`
-	AnalystRatingsSell       *uint64 `json:"analystRatingsSell"`
-	AnalystRatingsStrongSell *uint64 `json:"analystRatingsStrongSell"`
+	Symbol                   *string        `json:"symbol"`
+	Date                     *Date          `json:"date"`
+	AnalystRatingsStrongBuy  jsontext.Value `json:"analystRatingsStrongBuy"`
+	AnalystRatingsBuy        jsontext.Value `json:"analystRatingsBuy"`
+	AnalystRatingsHold       jsontext.Value `json:"analystRatingsHold"`
+	AnalystRatingsSell       jsontext.Value `json:"analystRatingsSell"`
+	AnalystRatingsStrongSell jsontext.Value `json:"analystRatingsStrongSell"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -509,25 +589,45 @@ func (m *HistoricalStockGrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("HistoricalStockGrade", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("HistoricalStockGrade", "date")
-	case shadow.AnalystRatingsStrongBuy == nil:
+	case len(shadow.AnalystRatingsStrongBuy) == 0:
 		return missingMemberError("HistoricalStockGrade", "analystRatingsStrongBuy")
-	case shadow.AnalystRatingsBuy == nil:
+	case len(shadow.AnalystRatingsBuy) == 0:
 		return missingMemberError("HistoricalStockGrade", "analystRatingsBuy")
-	case shadow.AnalystRatingsHold == nil:
+	case len(shadow.AnalystRatingsHold) == 0:
 		return missingMemberError("HistoricalStockGrade", "analystRatingsHold")
-	case shadow.AnalystRatingsSell == nil:
+	case len(shadow.AnalystRatingsSell) == 0:
 		return missingMemberError("HistoricalStockGrade", "analystRatingsSell")
-	case shadow.AnalystRatingsStrongSell == nil:
+	case len(shadow.AnalystRatingsStrongSell) == 0:
 		return missingMemberError("HistoricalStockGrade", "analystRatingsStrongSell")
+	}
+	analystRatingsStrongBuy, err := decodeCount("HistoricalStockGrade", "analystRatingsStrongBuy", shadow.AnalystRatingsStrongBuy)
+	if err != nil {
+		return err
+	}
+	analystRatingsBuy, err := decodeCount("HistoricalStockGrade", "analystRatingsBuy", shadow.AnalystRatingsBuy)
+	if err != nil {
+		return err
+	}
+	analystRatingsHold, err := decodeCount("HistoricalStockGrade", "analystRatingsHold", shadow.AnalystRatingsHold)
+	if err != nil {
+		return err
+	}
+	analystRatingsSell, err := decodeCount("HistoricalStockGrade", "analystRatingsSell", shadow.AnalystRatingsSell)
+	if err != nil {
+		return err
+	}
+	analystRatingsStrongSell, err := decodeCount("HistoricalStockGrade", "analystRatingsStrongSell", shadow.AnalystRatingsStrongSell)
+	if err != nil {
+		return err
 	}
 	*m = HistoricalStockGrade{
 		Symbol:                   *shadow.Symbol,
 		Date:                     *shadow.Date,
-		AnalystRatingsStrongBuy:  *shadow.AnalystRatingsStrongBuy,
-		AnalystRatingsBuy:        *shadow.AnalystRatingsBuy,
-		AnalystRatingsHold:       *shadow.AnalystRatingsHold,
-		AnalystRatingsSell:       *shadow.AnalystRatingsSell,
-		AnalystRatingsStrongSell: *shadow.AnalystRatingsStrongSell,
+		AnalystRatingsStrongBuy:  analystRatingsStrongBuy,
+		AnalystRatingsBuy:        analystRatingsBuy,
+		AnalystRatingsHold:       analystRatingsHold,
+		AnalystRatingsSell:       analystRatingsSell,
+		AnalystRatingsStrongSell: analystRatingsStrongSell,
 	}
 	return nil
 }
@@ -548,13 +648,13 @@ type StockGradesSummary struct {
 // value for every required member so a missing or null member is observable
 // after decoding.
 type stockGradesSummaryShadow struct {
-	Symbol     *string `json:"symbol"`
-	StrongBuy  *uint64 `json:"strongBuy"`
-	Buy        *uint64 `json:"buy"`
-	Hold       *uint64 `json:"hold"`
-	Sell       *uint64 `json:"sell"`
-	StrongSell *uint64 `json:"strongSell"`
-	Consensus  *string `json:"consensus"`
+	Symbol     *string        `json:"symbol"`
+	StrongBuy  jsontext.Value `json:"strongBuy"`
+	Buy        jsontext.Value `json:"buy"`
+	Hold       jsontext.Value `json:"hold"`
+	Sell       jsontext.Value `json:"sell"`
+	StrongSell jsontext.Value `json:"strongSell"`
+	Consensus  *string        `json:"consensus"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -568,26 +668,46 @@ func (m *StockGradesSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("StockGradesSummary", "symbol")
-	case shadow.StrongBuy == nil:
+	case len(shadow.StrongBuy) == 0:
 		return missingMemberError("StockGradesSummary", "strongBuy")
-	case shadow.Buy == nil:
+	case len(shadow.Buy) == 0:
 		return missingMemberError("StockGradesSummary", "buy")
-	case shadow.Hold == nil:
+	case len(shadow.Hold) == 0:
 		return missingMemberError("StockGradesSummary", "hold")
-	case shadow.Sell == nil:
+	case len(shadow.Sell) == 0:
 		return missingMemberError("StockGradesSummary", "sell")
-	case shadow.StrongSell == nil:
+	case len(shadow.StrongSell) == 0:
 		return missingMemberError("StockGradesSummary", "strongSell")
 	case shadow.Consensus == nil:
 		return missingMemberError("StockGradesSummary", "consensus")
 	}
+	strongBuy, err := decodeCount("StockGradesSummary", "strongBuy", shadow.StrongBuy)
+	if err != nil {
+		return err
+	}
+	buy, err := decodeCount("StockGradesSummary", "buy", shadow.Buy)
+	if err != nil {
+		return err
+	}
+	hold, err := decodeCount("StockGradesSummary", "hold", shadow.Hold)
+	if err != nil {
+		return err
+	}
+	sell, err := decodeCount("StockGradesSummary", "sell", shadow.Sell)
+	if err != nil {
+		return err
+	}
+	strongSell, err := decodeCount("StockGradesSummary", "strongSell", shadow.StrongSell)
+	if err != nil {
+		return err
+	}
 	*m = StockGradesSummary{
 		Symbol:     *shadow.Symbol,
-		StrongBuy:  *shadow.StrongBuy,
-		Buy:        *shadow.Buy,
-		Hold:       *shadow.Hold,
-		Sell:       *shadow.Sell,
-		StrongSell: *shadow.StrongSell,
+		StrongBuy:  strongBuy,
+		Buy:        buy,
+		Hold:       hold,
+		Sell:       sell,
+		StrongSell: strongSell,
 		Consensus:  *shadow.Consensus,
 	}
 	return nil

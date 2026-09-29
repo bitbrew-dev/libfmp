@@ -185,7 +185,7 @@ type crowdfundingOfferingShadow struct {
 	OverSubscriptionAllocationType            *string         `json:"overSubscriptionAllocationType"`
 	MaximumOfferingAmount                     *float64        `json:"maximumOfferingAmount"`
 	OfferingDeadlineDate                      *USDate         `json:"offeringDeadlineDate"`
-	CurrentNumberOfEmployees                  *uint64         `json:"currentNumberOfEmployees"`
+	CurrentNumberOfEmployees                  jsontext.Value  `json:"currentNumberOfEmployees"`
 	TotalAssetMostRecentFiscalYear            *float64        `json:"totalAssetMostRecentFiscalYear"`
 	TotalAssetPriorFiscalYear                 *float64        `json:"totalAssetPriorFiscalYear"`
 	CashAndCashEquivalentMostRecentFiscalYear *float64        `json:"cashAndCashEquiValentMostRecentFiscalYear"`
@@ -273,7 +273,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CrowdfundingOffering", "maximumOfferingAmount")
 	case shadow.OfferingDeadlineDate == nil:
 		return missingMemberError("CrowdfundingOffering", "offeringDeadlineDate")
-	case shadow.CurrentNumberOfEmployees == nil:
+	case len(shadow.CurrentNumberOfEmployees) == 0:
 		return missingMemberError("CrowdfundingOffering", "currentNumberOfEmployees")
 	case shadow.TotalAssetMostRecentFiscalYear == nil:
 		return missingMemberError("CrowdfundingOffering", "totalAssetMostRecentFiscalYear")
@@ -323,6 +323,10 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.OfferingPrice.Kind() != '0' {
 		return invalidMemberError("CrowdfundingOffering", "offeringPrice", "number")
 	}
+	currentNumberOfEmployees, err := decodeCount("CrowdfundingOffering", "currentNumberOfEmployees", shadow.CurrentNumberOfEmployees)
+	if err != nil {
+		return err
+	}
 	*m = CrowdfundingOffering{
 		CIK:                              *shadow.CIK,
 		CompanyName:                      *shadow.CompanyName,
@@ -353,7 +357,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		OverSubscriptionAllocationType:   *shadow.OverSubscriptionAllocationType,
 		MaximumOfferingAmount:            *shadow.MaximumOfferingAmount,
 		OfferingDeadlineDate:             *shadow.OfferingDeadlineDate,
-		CurrentNumberOfEmployees:         *shadow.CurrentNumberOfEmployees,
+		CurrentNumberOfEmployees:         currentNumberOfEmployees,
 		TotalAssetMostRecentFiscalYear:   *shadow.TotalAssetMostRecentFiscalYear,
 		TotalAssetPriorFiscalYear:        *shadow.TotalAssetPriorFiscalYear,
 		CashAndCashEquivalentMostRecentFiscalYear: *shadow.CashAndCashEquivalentMostRecentFiscalYear,
@@ -466,7 +470,7 @@ type regulationDOfferingShadow struct {
 	TotalAmountSold                        *float64       `json:"totalAmountSold"`
 	TotalAmountRemaining                   *float64       `json:"totalAmountRemaining"`
 	HasNonAccreditedInvestors              *bool          `json:"hasNonAccreditedInvestors"`
-	TotalNumberAlreadyInvested             *uint64        `json:"totalNumberAlreadyInvested"`
+	TotalNumberAlreadyInvested             jsontext.Value `json:"totalNumberAlreadyInvested"`
 	SalesCommissions                       *float64       `json:"salesCommissions"`
 	FindersFees                            *float64       `json:"findersFees"`
 	GrossProceedsUsed                      *float64       `json:"grossProceedsUsed"`
@@ -559,7 +563,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("RegulationDOffering", "totalAmountRemaining")
 	case shadow.HasNonAccreditedInvestors == nil:
 		return missingMemberError("RegulationDOffering", "hasNonAccreditedInvestors")
-	case shadow.TotalNumberAlreadyInvested == nil:
+	case len(shadow.TotalNumberAlreadyInvested) == 0:
 		return missingMemberError("RegulationDOffering", "totalNumberAlreadyInvested")
 	case shadow.SalesCommissions == nil:
 		return missingMemberError("RegulationDOffering", "salesCommissions")
@@ -577,6 +581,10 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		incorporatedWithinFiveYears = &value
 	}
 	dateOfFirstSale, err := decodeEmptyDate("RegulationDOffering", "dateOfFirstSale", shadow.DateOfFirstSale, false)
+	if err != nil {
+		return err
+	}
+	totalNumberAlreadyInvested, err := decodeCount("RegulationDOffering", "totalNumberAlreadyInvested", shadow.TotalNumberAlreadyInvested)
 	if err != nil {
 		return err
 	}
@@ -620,7 +628,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		TotalAmountSold:                        *shadow.TotalAmountSold,
 		TotalAmountRemaining:                   *shadow.TotalAmountRemaining,
 		HasNonAccreditedInvestors:              *shadow.HasNonAccreditedInvestors,
-		TotalNumberAlreadyInvested:             *shadow.TotalNumberAlreadyInvested,
+		TotalNumberAlreadyInvested:             totalNumberAlreadyInvested,
 		SalesCommissions:                       *shadow.SalesCommissions,
 		FindersFees:                            *shadow.FindersFees,
 		GrossProceedsUsed:                      *shadow.GrossProceedsUsed,

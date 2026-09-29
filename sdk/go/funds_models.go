@@ -158,7 +158,7 @@ type etfFundInfoShadow struct {
 	InceptionDate         *Date                `json:"inceptionDate"`
 	Nav                   *float64             `json:"nav"`
 	NavCurrency           *string              `json:"navCurrency"`
-	HoldingsCount         *uint64              `json:"holdingsCount"`
+	HoldingsCount         jsontext.Value       `json:"holdingsCount"`
 	IsActivelyTrading     *bool                `json:"isActivelyTrading"`
 	UpdatedAt             *string              `json:"updatedAt"`
 	SectorsList           *[]ETFSectorExposure `json:"sectorsList"`
@@ -203,7 +203,7 @@ func (m *ETFFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ETFFundInfo", "nav")
 	case shadow.NavCurrency == nil:
 		return missingMemberError("ETFFundInfo", "navCurrency")
-	case shadow.HoldingsCount == nil:
+	case len(shadow.HoldingsCount) == 0:
 		return missingMemberError("ETFFundInfo", "holdingsCount")
 	case shadow.IsActivelyTrading == nil:
 		return missingMemberError("ETFFundInfo", "isActivelyTrading")
@@ -211,6 +211,10 @@ func (m *ETFFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ETFFundInfo", "updatedAt")
 	case shadow.SectorsList == nil:
 		return missingMemberError("ETFFundInfo", "sectorsList")
+	}
+	holdingsCount, err := decodeCount("ETFFundInfo", "holdingsCount", shadow.HoldingsCount)
+	if err != nil {
+		return err
 	}
 	*m = ETFFundInfo{
 		Symbol:                *shadow.Symbol,
@@ -228,7 +232,7 @@ func (m *ETFFundInfo) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		InceptionDate:         *shadow.InceptionDate,
 		Nav:                   *shadow.Nav,
 		NavCurrency:           *shadow.NavCurrency,
-		HoldingsCount:         *shadow.HoldingsCount,
+		HoldingsCount:         holdingsCount,
 		IsActivelyTrading:     *shadow.IsActivelyTrading,
 		UpdatedAt:             *shadow.UpdatedAt,
 		SectorsList:           *shadow.SectorsList,

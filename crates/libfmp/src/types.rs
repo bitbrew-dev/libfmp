@@ -720,6 +720,10 @@ pub type TokenSupply = f64;
 /// integer through `crate::codecs::integral_f64`.
 pub type SplitTerm = f64;
 /// A non-negative count represented by the provider as a JSON integer.
+///
+/// The provider has also sent integral floats such as `3.0`, so response
+/// fields decode through `crate::codecs::count`, which accepts a finite
+/// integral number and rejects a fractional, negative or non-finite one.
 pub type Count = u64;
 /// A signed currency amount reported in a financial statement.
 ///

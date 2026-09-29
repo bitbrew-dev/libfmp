@@ -59,6 +59,7 @@ pub struct EtfFundInfo {
     pub inception_date: Date,
     pub nav: f64,
     pub nav_currency: CurrencyCode,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub holdings_count: Count,
     pub is_actively_trading: bool,
     pub updated_at: IsoTimestamp,

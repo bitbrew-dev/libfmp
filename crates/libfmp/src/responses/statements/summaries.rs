@@ -31,6 +31,7 @@ pub struct FinancialScore {
     pub symbol: Ticker,
     pub reported_currency: CurrencyCode,
     pub altman_z_score: f64,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub piotroski_score: Count,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub working_capital: StatementAmount,

@@ -748,11 +748,137 @@ pub(crate) mod integral_f64 {
     }
 }
 
+/// Deserializers for response fields typed with [`Count`](crate::types::Count).
+///
+/// The provider documents counts as JSON integers but has sent an integral
+/// float such as `3.0`, so a count decodes from a non-negative JSON integer
+/// or from a finite integral JSON float below `2^64`. A fractional, negative,
+/// non-finite or out-of-range number, and any non-number, is a decode error
+/// whose message never includes the value. Apply [`deserialize`] with
+/// `deserialize_with` on a bare `Count` field and [`deserialize_option`] on an
+/// `Option<Count>` (with `default` when the key may be missing);
+/// serialization is serde's default `u64` path.
+pub(crate) mod count {
+    use super::*;
+
+    const EXPECTED: &str = "a count must be a non-negative integral JSON number below 2^64";
+
+    fn from_number<E: de::Error>(number: &Number) -> Result<u64, E> {
+        if let Some(value) = number.as_u64() {
+            return Ok(value);
+        }
+        match number.as_f64() {
+            Some(value)
+                if value.is_finite()
+                    && value.fract() == 0.0
+                    && value >= 0.0
+                    && value < u64::MAX as f64 =>
+            {
+                Ok(value as u64)
+            }
+            _ => Err(E::custom(EXPECTED)),
+        }
+    }
+
+    pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<u64, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        from_number(&Number::deserialize(deserializer)?)
+    }
+
+    #[cfg_attr(not(test), allow(dead_code))]
+    pub(crate) fn deserialize_option<'de, D>(deserializer: D) -> Result<Option<u64>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Option::<Number>::deserialize(deserializer)?
+            .map(|number| from_number(&number))
+            .transpose()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use serde::{Deserialize, Serialize};
 
-    use crate::types::Volume;
+    use crate::types::{Count, Volume};
+
+    #[test]
+    fn count_accepts_integers_and_integral_floats_on_both_decode_paths() {
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Row {
+            #[serde(deserialize_with = "super::count::deserialize")]
+            buy: Count,
+        }
+        let from_text = |text: &str| {
+            serde_json::from_str::<Row>(&format!(r#"{{"buy":{text}}}"#)).map(|row| row.buy)
+        };
+        let from_value = |text: &str| {
+            let value: serde_json::Value =
+                serde_json::from_str(&format!(r#"{{"buy":{text}}}"#)).unwrap();
+            serde_json::from_value::<Row>(value).map(|row| row.buy)
+        };
+
+        for (text, expected) in [
+            ("3", 3),
+            ("3.0", 3),
+            ("0", 0),
+            ("0.0", 0),
+            ("-0.0", 0),
+            ("1e2", 100),
+            ("18446744073709551615", u64::MAX),
+            ("18446744073709549568.0", 18_446_744_073_709_549_568),
+        ] {
+            assert_eq!(from_text(text).unwrap(), expected, "from_str {text}");
+            assert_eq!(from_value(text).unwrap(), expected, "from_value {text}");
+        }
+        for text in [
+            "2.9",
+            "-1",
+            "-1.0",
+            "18446744073709551616",
+            "18446744073709551616.0",
+            "1e20",
+            "null",
+            r#""3""#,
+            "true",
+        ] {
+            let error = from_text(text).unwrap_err();
+            assert!(from_value(text).is_err(), "from_value {text}");
+            if text.len() > 2 && text.starts_with(['1', '2', '-']) {
+                assert!(
+                    !error.to_string().contains(text.trim_start_matches('-')),
+                    "the error must not echo the value: {error}"
+                );
+            }
+        }
+        assert_eq!(
+            serde_json::to_string(&Row { buy: 3 }).unwrap(),
+            r#"{"buy":3}"#
+        );
+    }
+
+    #[test]
+    fn count_option_accepts_null_and_integral_floats() {
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Row {
+            #[serde(default, deserialize_with = "super::count::deserialize_option")]
+            buy: Option<Count>,
+        }
+        let decode = |text: &str| serde_json::from_str::<Row>(text).map(|row| row.buy);
+
+        assert_eq!(decode(r#"{"buy":3.0}"#).unwrap(), Some(3));
+        assert_eq!(decode(r#"{"buy":7}"#).unwrap(), Some(7));
+        assert_eq!(decode(r#"{"buy":null}"#).unwrap(), None);
+        assert_eq!(decode("{}").unwrap(), None);
+        assert!(decode(r#"{"buy":2.9}"#).is_err());
+        assert!(decode(r#"{"buy":-1}"#).is_err());
+        assert_eq!(
+            serde_json::to_string(&Row { buy: Some(3) }).unwrap(),
+            r#"{"buy":3}"#
+        );
+    }
 
     #[test]
     fn integral_f64_accepts_any_json_number_and_re_encodes_integral_values_as_integers() {

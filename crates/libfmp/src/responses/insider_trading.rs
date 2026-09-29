@@ -65,7 +65,9 @@ pub struct InsiderTradeStatistics {
     pub cik: Cik,
     pub year: CalendarYear,
     pub quarter: CalendarQuarter,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub acquired_transactions: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub disposed_transactions: Count,
     pub acquired_disposed_ratio: f64,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
@@ -74,7 +76,9 @@ pub struct InsiderTradeStatistics {
     pub total_disposed: Quantity,
     pub average_acquired: f64,
     pub average_disposed: f64,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub total_purchases: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub total_sales: Count,
 }
 
