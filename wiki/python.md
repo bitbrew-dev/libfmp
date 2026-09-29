@@ -107,8 +107,9 @@ close; calls already in flight finish normally. Closing twice is a no-op, and
 `__exit__` never swallows an exception from the block. The process-wide
 runtime is shared by every client and stays up.
 
-A client that is never closed releases its pooled connections lazily, some
-time after the client and its namespaces are garbage-collected.
+A client that is never closed keeps its pooled connections until the next
+request made through any client after it and its namespaces are
+garbage-collected, or until the process exits.
 
 ## Custom routers and proxies
 
