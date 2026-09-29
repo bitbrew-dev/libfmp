@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"math"
 	"strconv"
 )
 
@@ -37,6 +38,32 @@ func decodeEmptyDate(model, member string, raw jsontext.Value, allowNull bool) (
 	default:
 		return nil, invalidMemberError(model, member, "string")
 	}
+}
+
+// decodeCount decodes the count codec of the Rust crate: a Count member
+// accepts a non-negative JSON integer or a finite integral JSON number below
+// 2^64, since the provider has sent 3.0 for 3. A JSON null is reported as a
+// missing member, as a pointer shadow member would be; a fractional,
+// negative, or out-of-range number and any other kind is a Decode error that
+// never echoes the value. raw is never empty: the generated caller has
+// already reported a missing member.
+func decodeCount(model, member string, raw jsontext.Value) (uint64, error) {
+	switch raw.Kind() {
+	case 'n':
+		return 0, missingMemberError(model, member)
+	case '0':
+	default:
+		return 0, invalidMemberError(model, member, "non-negative integral number")
+	}
+	text := string(raw)
+	if value, err := strconv.ParseUint(text, 10, 64); err == nil {
+		return value, nil
+	}
+	value, err := strconv.ParseFloat(text, 64)
+	if err != nil || value < 0 || value >= 0x1p64 || value != math.Trunc(value) {
+		return 0, invalidMemberError(model, member, "non-negative integral number")
+	}
+	return uint64(value), nil
 }
 
 // rawMember returns the value of a member that the shadow struct's embedded

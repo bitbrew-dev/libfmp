@@ -32,6 +32,10 @@ pub(crate) enum Codec {
     /// `deserialize_with = "required_option"` on `Option<Number>`: the key
     /// must be present, null is allowed, a present value must be a number.
     RequiredNumber,
+    /// `deserialize_with = "crate::codecs::count::deserialize"` on a bare
+    /// `Count`: the key is required, null is rejected, and an integral float
+    /// such as `3.0` decodes as the integer. The shadow keeps the raw value.
+    Count,
     /// A `DynamicObject` that holds every member the named fields do not
     /// claim, as serde `flatten` on a map does: `#[serde(flatten)]`, or the
     /// single `DynamicObject` field of a struct with a hand-written
@@ -39,6 +43,9 @@ pub(crate) enum Codec {
     /// and re-emits the remaining members.
     Embedded,
 }
+
+/// The `deserialize_with` path of the Rust count codec.
+const COUNT_CODEC: &str = "crate::codecs::count::deserialize";
 
 /// One Go struct member derived from a Rust field.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -72,6 +79,7 @@ impl GoField {
             Codec::Embedded => false,
             Codec::RequiredOption
             | Codec::RequiredNumber
+            | Codec::Count
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate
             | Codec::DynamicJson
@@ -170,6 +178,16 @@ impl<'a> TypeTable<'a> {
             ) => (Codec::RequiredOption, "jsontext.Value".to_string()),
             (Some("required_option"), BaseKind::Number, [Wrap::Option]) => {
                 (Codec::RequiredNumber, "jsontext.Value".to_string())
+            }
+            (Some(COUNT_CODEC), BaseKind::Scalar, []) if base.go == "uint64" => {
+                (Codec::Count, "jsontext.Value".to_string())
+            }
+            (Some(COUNT_CODEC), _, _) => {
+                return Err(fail(
+                    "the count codec needs a bare Count (u64) field; Option<Count> has no Go \
+                     shape yet"
+                        .to_string(),
+                ));
             }
             (Some("required_option"), _, _) => {
                 return Err(fail(
