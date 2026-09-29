@@ -262,6 +262,34 @@ async fn malformed_non_array_responses_keep_each_endpoint_identity() {
     assert_decode_error(&summary_error, "grades-consensus");
 }
 
+#[tokio::test]
+async fn count_members_accept_integral_floats_and_reject_fractions() {
+    let executor = Arc::new(FixtureExecutor::new([
+        json_fixture(
+            br#"[{"symbol":"AAPL","strongBuy":1,"buy":3.0,"hold":32,"sell":8,"strongSell":0,"consensus":"Buy"}]"#,
+        ),
+        json_fixture(
+            br#"[{"symbol":"AAPL","strongBuy":1,"buy":2.9,"hold":32,"sell":8,"strongSell":0,"consensus":"Buy"}]"#,
+        ),
+    ]));
+    let client = Client::builder()
+        .authentication(Authentication::fmp_header("secret"))
+        .executor(executor)
+        .build()
+        .unwrap();
+    let query = || StockGradesSummaryQuery::new(Ticker::new("AAPL").unwrap());
+
+    let rows = client.stock_grades_summary(query()).await.unwrap();
+    assert_eq!(rows[0].buy, 3);
+    assert_eq!(
+        serde_json::to_value(&rows).unwrap()[0]["buy"],
+        serde_json::json!(3)
+    );
+
+    let error = client.stock_grades_summary(query()).await.unwrap_err();
+    assert_decode_error(&error, "grades-consensus");
+}
+
 fn assert_decode_error(error: &libfmp::Error, endpoint: &'static str) {
     assert_eq!(error.category(), ErrorCategory::Decode);
     assert_eq!(error.endpoint(), Some(endpoint));
