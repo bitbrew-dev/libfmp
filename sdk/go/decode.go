@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"errors"
 	"math"
 	"strconv"
 )
@@ -84,8 +85,79 @@ func rawMember(members map[string]jsontext.Value, name string) jsontext.Value {
 func requireObjectRows(endpointID string, rows []jsontext.Value) error {
 	for index, row := range rows {
 		if row.Kind() != '{' {
-			return decodeError(endpointID, 0, nil, "row "+strconv.Itoa(index)+" is not a JSON object", nil)
+			rowErr := decodeError(endpointID, 0, nil, "row "+strconv.Itoa(index)+" is not a JSON object", nil)
+			rowErr.Path, rowErr.DecodeKind = "/"+strconv.Itoa(index), DecodeKindWrongType
+			return rowErr
 		}
 	}
 	return nil
+}
+
+// decodeLocation turns a json.Unmarshal failure into the JSON pointer of the
+// offending member and a coarse DecodeKind. It reads only the structured
+// fields of the json/v2 error, never its text, so no member value survives.
+// A generated model reports a missing or null required member against the
+// enclosing object; the member name is appended and body is consulted to
+// tell a JSON null from an absent member.
+func decodeLocation(body []byte, err error) (string, DecodeKind) {
+	var syntactic *jsontext.SyntacticError
+	if errors.As(err, &syntactic) {
+		return string(syntactic.JSONPointer), DecodeKindSyntax
+	}
+	var semantic *json.SemanticError
+	if !errors.As(err, &semantic) {
+		return "", DecodeKindInvalidValue
+	}
+	pointer := semantic.JSONPointer
+	var member *Error
+	if errors.As(semantic.Err, &member) && member.member != "" {
+		pointer = pointer.AppendToken(member.member)
+		value, found := valueAt(body, pointer)
+		switch {
+		case !found:
+			return string(pointer), DecodeKindMissingMember
+		case value.Kind() == 'n':
+			return string(pointer), DecodeKindNull
+		default:
+			return string(pointer), DecodeKindWrongType
+		}
+	}
+	switch {
+	case semantic.JSONKind == 'n':
+		return string(pointer), DecodeKindNull
+	case semantic.Err == nil:
+		return string(pointer), DecodeKindWrongType
+	default:
+		return string(pointer), DecodeKindInvalidValue
+	}
+}
+
+// valueAt walks body along pointer one level at a time and reports the value
+// it names, or false when a token does not resolve.
+func valueAt(body []byte, pointer jsontext.Pointer) (jsontext.Value, bool) {
+	value := jsontext.Value(body)
+	for token := range pointer.Tokens() {
+		switch value.Kind() {
+		case '[':
+			var items []jsontext.Value
+			index, err := strconv.Atoi(token)
+			if json.Unmarshal(value, &items) != nil || err != nil || index < 0 || index >= len(items) {
+				return nil, false
+			}
+			value = items[index]
+		case '{':
+			var members map[string]jsontext.Value
+			if json.Unmarshal(value, &members) != nil {
+				return nil, false
+			}
+			member, ok := members[token]
+			if !ok {
+				return nil, false
+			}
+			value = member
+		default:
+			return nil, false
+		}
+	}
+	return value, true
 }

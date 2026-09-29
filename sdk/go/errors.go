@@ -86,11 +86,72 @@ const (
 	ConfigurationKindHTTPClient
 )
 
+// DecodeKind is the coarse reason a successful JSON response failed to
+// decode. It mirrors DecodeErrorKind in the Rust crate and never carries the
+// offending member value.
+type DecodeKind int
+
+const (
+	// DecodeKindNone marks an error that carries no decode location.
+	DecodeKindNone DecodeKind = iota
+	// DecodeKindSyntax: the body is not well-formed JSON.
+	DecodeKindSyntax
+	// DecodeKindNull: a member that requires a value was JSON null.
+	DecodeKindNull
+	// DecodeKindMissingMember: a required object member was absent.
+	DecodeKindMissingMember
+	// DecodeKindWrongType: a member had a JSON type the model does not accept.
+	DecodeKindWrongType
+	// DecodeKindInvalidValue: a member had the right JSON type but an unacceptable value.
+	DecodeKindInvalidValue
+)
+
+// String returns the stable lowercase value shared with the Rust and Python
+// SDKs, or "" for DecodeKindNone.
+func (k DecodeKind) String() string {
+	switch k {
+	case DecodeKindNone:
+		return ""
+	case DecodeKindSyntax:
+		return "syntax"
+	case DecodeKindNull:
+		return "null"
+	case DecodeKindMissingMember:
+		return "missing_member"
+	case DecodeKindWrongType:
+		return "wrong_type"
+	case DecodeKindInvalidValue:
+		return "invalid_value"
+	default:
+		return fmt.Sprintf("DecodeKind(%d)", int(k))
+	}
+}
+
+func (k DecodeKind) description() string {
+	switch k {
+	case DecodeKindSyntax:
+		return "malformed JSON"
+	case DecodeKindNull:
+		return "null value"
+	case DecodeKindMissingMember:
+		return "missing member"
+	case DecodeKindWrongType:
+		return "wrong type"
+	default:
+		return "invalid value"
+	}
+}
+
 // Error is the stable error value returned by every client operation.
 //
 // Endpoint is a logical endpoint id such as "quote-short", never a URL.
 // Status is zero when no provider status applies. Body is nil unless a
 // provider body was retained; it is always redacted and capped.
+//
+// Path and DecodeKind locate a JSON decode failure. Path is the RFC 6901 JSON
+// pointer of the offending member, such as "/37/beta", and names array
+// indexes and member names only, never a member value. Path is "" for a
+// failure at the document root and on every non-decode error.
 type Error struct {
 	Category          ErrorCategory
 	Message           string
@@ -98,13 +159,25 @@ type Error struct {
 	Status            int
 	Body              *SafeBody
 	ConfigurationKind ConfigurationKind
+	Path              string
+	DecodeKind        DecodeKind
+	member            string
 	cause             error
 }
 
-// Error formats the message, the endpoint id, and the safe body, in that order.
+// Error formats the message, the decode kind and path, the endpoint id, and
+// the safe body, in that order.
 func (e *Error) Error() string {
 	var b strings.Builder
 	b.WriteString(e.Message)
+	if e.DecodeKind != DecodeKindNone {
+		b.WriteString(": ")
+		b.WriteString(e.DecodeKind.description())
+	}
+	if e.Path != "" {
+		b.WriteString(" at ")
+		b.WriteString(e.Path)
+	}
 	if e.Endpoint != "" {
 		b.WriteString(" (endpoint: ")
 		b.WriteString(e.Endpoint)
@@ -141,6 +214,7 @@ func missingMemberError(model, member string) *Error {
 	return &Error{
 		Category: CategoryDecode,
 		Message:  fmt.Sprintf("required member %q of %s is missing or null", member, model),
+		member:   member,
 	}
 }
 
@@ -150,6 +224,7 @@ func invalidMemberError(model, member, expected string) *Error {
 	return &Error{
 		Category: CategoryDecode,
 		Message:  fmt.Sprintf("member %q of %s must be a JSON %s", member, model, expected),
+		member:   member,
 	}
 }
 
