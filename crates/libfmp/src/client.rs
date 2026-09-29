@@ -489,12 +489,16 @@ impl Client {
                     response.body_bytes(),
                     ResponseMetadata::new(content_type, content_disposition),
                 )
-                .map_err(|_| {
+                .map_err(|failure| {
                     Error::decode(
                         Some(endpoint.id()),
                         Some(response.status()),
                         Some(safe_body(response.body(), redactor)),
                         "successful response could not be decoded",
+                    )
+                    .with_decode_location(
+                        failure.path.map(|path| redactor.redact(&path)),
+                        failure.kind,
                     )
                 });
         }

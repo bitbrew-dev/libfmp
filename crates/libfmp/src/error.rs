@@ -81,6 +81,54 @@ pub enum ConfigurationErrorKind {
     HttpClient,
 }
 
+/// Coarse reasons a successful JSON response failed to decode.
+///
+/// The kind never carries the offending member value: it is derived from the
+/// decoder failure and the decoder's own text is discarded.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum DecodeErrorKind {
+    /// The body is not well-formed JSON.
+    Syntax,
+    /// A member that requires a value was JSON `null`.
+    Null,
+    /// A required object member was absent.
+    MissingMember,
+    /// A member had a JSON type the documented shape does not accept.
+    WrongType,
+    /// A member had the right JSON type but an unacceptable value.
+    InvalidValue,
+}
+
+impl DecodeErrorKind {
+    /// Returns the stable lowercase value exposed to language bindings.
+    pub const fn as_str(self) -> &'static str {
+        match self {
+            Self::Syntax => "syntax",
+            Self::Null => "null",
+            Self::MissingMember => "missing_member",
+            Self::WrongType => "wrong_type",
+            Self::InvalidValue => "invalid_value",
+        }
+    }
+
+    const fn description(self) -> &'static str {
+        match self {
+            Self::Syntax => "malformed JSON",
+            Self::Null => "null value",
+            Self::MissingMember => "missing member",
+            Self::WrongType => "wrong type",
+            Self::InvalidValue => "invalid value",
+        }
+    }
+}
+
+impl fmt::Display for DecodeErrorKind {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(self.as_str())
+    }
+}
+
 impl ErrorCategory {
     /// Returns the stable lowercase value exposed to language bindings.
     pub const fn as_str(self) -> &'static str {
@@ -461,6 +509,8 @@ pub struct Error {
     status: Option<u16>,
     body: Option<SafeBody>,
     configuration_kind: Option<ConfigurationErrorKind>,
+    decode_path: Option<Box<str>>,
+    decode_kind: Option<DecodeErrorKind>,
 }
 
 impl Error {
@@ -528,7 +578,22 @@ impl Error {
             status: None,
             body: None,
             configuration_kind: None,
+            decode_path: None,
+            decode_kind: None,
         }
+    }
+
+    /// Attaches where and why a JSON response failed to decode.
+    ///
+    /// `path` names members and array indexes only, never a member value.
+    pub(crate) fn with_decode_location(
+        mut self,
+        path: Option<String>,
+        kind: DecodeErrorKind,
+    ) -> Self {
+        self.decode_path = path.map(String::into_boxed_str);
+        self.decode_kind = Some(kind);
+        self
     }
 
     fn with_endpoint(mut self, endpoint: Option<&'static str>) -> Self {
@@ -565,11 +630,32 @@ impl Error {
     pub fn configuration_kind(&self) -> Option<ConfigurationErrorKind> {
         self.configuration_kind
     }
+
+    /// Returns the location of the member that failed to decode, when known.
+    ///
+    /// The path uses array indexes and member names, for example
+    /// `[37].beta`, and never includes the member value. It is `None` for
+    /// failures at the document root and for response kinds that are not
+    /// decoded from JSON, such as binary bodies.
+    pub fn decode_path(&self) -> Option<&str> {
+        self.decode_path.as_deref()
+    }
+
+    /// Returns the coarse reason a JSON response failed to decode, when known.
+    pub fn decode_kind(&self) -> Option<DecodeErrorKind> {
+        self.decode_kind
+    }
 }
 
 impl fmt::Display for Error {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter.write_str(&self.message)?;
+        if let Some(kind) = self.decode_kind {
+            write!(formatter, ": {}", kind.description())?;
+        }
+        if let Some(path) = &self.decode_path {
+            write!(formatter, " at {path}")?;
+        }
         if let Some(endpoint) = &self.endpoint {
             write!(formatter, " (endpoint: {endpoint})")?;
         }

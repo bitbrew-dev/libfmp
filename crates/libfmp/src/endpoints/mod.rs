@@ -38,7 +38,7 @@ use std::{fmt, marker::PhantomData};
 use bytes::Bytes;
 use serde::de::DeserializeOwned;
 
-use crate::transport::HttpMethod;
+use crate::{error::DecodeErrorKind, transport::HttpMethod};
 use metadata::EndpointMetadata;
 
 /// The JSON media type requested by FMP's structured-data endpoints.
@@ -335,7 +335,17 @@ impl<'a> ResponseMetadata<'a> {
     }
 }
 
-type Decoder<R> = for<'a> fn(Bytes, ResponseMetadata<'a>) -> std::result::Result<R, ()>;
+/// Where and why a response body failed to decode.
+///
+/// Only the member path and a coarse kind survive: the decoder's own message
+/// can quote the offending value, so it is classified and then dropped.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub(crate) struct DecodeFailure {
+    pub(crate) path: Option<String>,
+    pub(crate) kind: DecodeErrorKind,
+}
+
+type Decoder<R> = for<'a> fn(Bytes, ResponseMetadata<'a>) -> std::result::Result<R, DecodeFailure>;
 
 /// Decoding and media-type expectations associated with one endpoint.
 pub struct ResponseContract<R> {
@@ -354,7 +364,7 @@ impl<R> ResponseContract<R> {
         &self,
         body: Bytes,
         metadata: ResponseMetadata<'_>,
-    ) -> std::result::Result<R, ()> {
+    ) -> std::result::Result<R, DecodeFailure> {
         (self.decoder)(body, metadata)
     }
 }
@@ -394,11 +404,56 @@ impl<R> fmt::Debug for ResponseContract<R> {
     }
 }
 
-fn decode_json<R>(body: Bytes, _metadata: ResponseMetadata<'_>) -> std::result::Result<R, ()>
+fn decode_json<R>(
+    body: Bytes,
+    _metadata: ResponseMetadata<'_>,
+) -> std::result::Result<R, DecodeFailure>
 where
     R: DeserializeOwned,
 {
-    serde_json::from_slice(&body).map_err(|_| ())
+    let mut deserializer = serde_json::Deserializer::from_slice(&body);
+    let value = serde_path_to_error::deserialize(&mut deserializer)
+        .map_err(|error| decode_failure(error.path(), error.inner()))?;
+    deserializer.end().map_err(|_| DecodeFailure {
+        path: None,
+        kind: DecodeErrorKind::Syntax,
+    })?;
+    Ok(value)
+}
+
+fn decode_failure(path: &serde_path_to_error::Path, error: &serde_json::Error) -> DecodeFailure {
+    let message = error.to_string();
+    let kind = match error.classify() {
+        serde_json::error::Category::Data => data_error_kind(&message),
+        _ => DecodeErrorKind::Syntax,
+    };
+    let mut path = (path.iter().next().is_some()).then(|| path.to_string());
+    if kind == DecodeErrorKind::MissingMember
+        && let Some(member) = missing_member_name(&message)
+    {
+        path = Some(match path {
+            Some(parent) => format!("{parent}.{member}"),
+            None => member.to_owned(),
+        });
+    }
+    DecodeFailure { path, kind }
+}
+
+fn data_error_kind(message: &str) -> DecodeErrorKind {
+    if message.starts_with("invalid type: null") {
+        DecodeErrorKind::Null
+    } else if message.starts_with("invalid type: ") {
+        DecodeErrorKind::WrongType
+    } else if message.starts_with("missing field ") {
+        DecodeErrorKind::MissingMember
+    } else {
+        DecodeErrorKind::InvalidValue
+    }
+}
+
+fn missing_member_name(message: &str) -> Option<&str> {
+    let name = message.strip_prefix("missing field `")?;
+    name.split_once('`').map(|(name, _)| name)
 }
 
 /// An owned binary response with validated media metadata.
@@ -466,7 +521,7 @@ pub type BinaryBody = BinaryResponse;
 fn decode_binary(
     body: Bytes,
     metadata: ResponseMetadata<'_>,
-) -> std::result::Result<BinaryResponse, ()> {
+) -> std::result::Result<BinaryResponse, DecodeFailure> {
     Ok(BinaryResponse {
         bytes: body,
         content_type: metadata.content_type.into(),
