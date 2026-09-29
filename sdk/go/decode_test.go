@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"errors"
+	"math"
 	"strings"
 	"testing"
 )
@@ -45,6 +46,52 @@ func TestDecodeEmptyDateMirrorsTheRustSentinelCodecs(t *testing.T) {
 				t.Fatalf("got = %s, want %s", got, tc.want)
 			}
 		})
+	}
+}
+
+func TestDecodeCountAcceptsIntegralNumbersOnly(t *testing.T) {
+	t.Parallel()
+	accepted := []struct {
+		raw  string
+		want uint64
+	}{
+		{`3`, 3},
+		{`3.0`, 3},
+		{`0`, 0},
+		{`-0.0`, 0},
+		{`1e2`, 100},
+		{`18446744073709551615`, math.MaxUint64},
+		{`18446744073709549568.0`, 18446744073709549568},
+	}
+	for _, tc := range accepted {
+		got, err := decodeCount("Row", "buy", jsontext.Value(tc.raw))
+		if err != nil || got != tc.want {
+			t.Fatalf("decodeCount(%s) = %d, %v, want %d", tc.raw, got, err, tc.want)
+		}
+	}
+	rejected := []struct {
+		raw     string
+		wantErr string
+	}{
+		{`2.9`, `member "buy" of Row must be a JSON non-negative integral number`},
+		{`-1`, "non-negative integral number"},
+		{`-1.0`, "non-negative integral number"},
+		{`18446744073709551616`, "non-negative integral number"},
+		{`1e20`, "non-negative integral number"},
+		{`1e400`, "non-negative integral number"},
+		{`"3"`, "non-negative integral number"},
+		{`true`, "non-negative integral number"},
+		{`null`, `required member "buy" of Row is missing or null`},
+	}
+	for _, tc := range rejected {
+		_, err := decodeCount("Row", "buy", jsontext.Value(tc.raw))
+		var typed *Error
+		if !errors.As(err, &typed) || typed.Category != CategoryDecode {
+			t.Fatalf("decodeCount(%s) error = %v, want a Decode *Error", tc.raw, err)
+		}
+		if !strings.Contains(err.Error(), tc.wantErr) || (tc.raw != `null` && strings.Contains(err.Error(), tc.raw)) {
+			t.Fatalf("decodeCount(%s) error = %q, want %q without the value", tc.raw, err, tc.wantErr)
+		}
 	}
 }
 

@@ -220,6 +220,7 @@ fn render_model(model: &ModelPlan, out: &mut String) {
             }
             Codec::RequiredOption
             | Codec::RequiredNumber
+            | Codec::Count
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate => local_name(rust_name),
         };
@@ -310,6 +311,7 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
             _ if field.raw_key => format!("{} == nil", wire_local(rust_name)),
             Codec::RequiredOption
             | Codec::RequiredNumber
+            | Codec::Count
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate
             | Codec::DynamicJson => format!("len(shadow.{}) == 0", field.name),
@@ -357,6 +359,14 @@ fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut Strin
             let _ = writeln!(
                 out,
                 "\t{local}, err := decodeEmptyDate({model:?}, {:?}, shadow.{}, {allow_null})\n\
+                 \tif err != nil {{\n\t\treturn err\n\t}}",
+                field.wire, field.name
+            );
+        }
+        Codec::Count => {
+            let _ = writeln!(
+                out,
+                "\t{local}, err := decodeCount({model:?}, {:?}, shadow.{})\n\
                  \tif err != nil {{\n\t\treturn err\n\t}}",
                 field.wire, field.name
             );

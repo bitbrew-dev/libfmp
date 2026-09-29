@@ -601,6 +601,54 @@ fn codec_fields_map_to_the_shadow_shapes_of_the_adr() {
 }
 
 #[test]
+fn count_codec_decodes_through_the_raw_shadow_and_keeps_the_public_uint64() {
+    let aliases: BTreeMap<String, String> = [("Count".to_string(), "u64".to_string())].into();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let codec = "crate::codecs::count::deserialize";
+    let def = row(vec![
+        field("strong_buy", "Count", deserialize_with(codec)),
+        field("hold", "Count", FieldAttrs::default()),
+    ]);
+    let mapped = table.go_field(&def, &def.fields[0]).expect("maps");
+    assert_eq!(
+        (
+            mapped.public_ty.as_str(),
+            mapped.shadow_ty.as_str(),
+            mapped.codec,
+            mapped.required_key(),
+        ),
+        ("uint64", "jsontext.Value", Codec::Count, true)
+    );
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    for expected in [
+        "StrongBuy uint64 `json:\"strongBuy\"`",
+        "StrongBuy jsontext.Value `json:\"strongBuy\"`",
+        "case len(shadow.StrongBuy) == 0:",
+        "strongBuy, err := decodeCount(\"Row\", \"strongBuy\", shadow.StrongBuy)",
+        "StrongBuy: strongBuy,",
+        "Hold *uint64 `json:\"hold\"`",
+        "Hold: *shadow.Hold,",
+    ] {
+        assert!(
+            rendered.contains(expected),
+            "missing {expected:?} in\n{rendered}"
+        );
+    }
+
+    for (name, ty) in [
+        ("maybe", "Option<Count>"),
+        ("price", "f64"),
+        ("many", "Vec<Count>"),
+    ] {
+        let def = row(vec![field(name, ty, deserialize_with(codec))]);
+        let error = table.go_field(&def, &def.fields[0]).expect_err(name);
+        assert!(error.contains("bare Count"), "{name}: {error}");
+    }
+}
+
+#[test]
 fn skip_serializing_if_none_marks_only_the_public_tag_omitzero() {
     let aliases = BTreeMap::new();
     let structs = Vec::new();
