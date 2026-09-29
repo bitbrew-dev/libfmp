@@ -6,6 +6,8 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer, de};
 
 use crate::types::StringValueError;
 
+/// Every wire enum is deliberately `#[non_exhaustive]`, closed-looking sets included,
+/// so the provider can add values without a breaking release.
 macro_rules! wire_enum {
     (
         $(#[$meta:meta])*

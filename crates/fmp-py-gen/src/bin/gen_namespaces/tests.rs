@@ -65,7 +65,8 @@ fn quote_registry_renders_the_drop_in_namespace() {
     for needle in [
         "#[pyclass(module = \"fmp._native.quote\", frozen)]",
         "pub(crate) struct QuoteNamespace {",
-        "pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self",
+        "pub(crate) fn new(builder: Arc<ClientHandle>) -> Self",
+        "use crate::runtime::{ClientHandle, block_on};",
         "use libfmp::endpoints::quote::{",
         "QuoteQuery, QuoteShortQuery",
         "use crate::models::quote::{",
@@ -178,7 +179,7 @@ fn nested_fixture_renders_parent_getters_and_children() {
     let reports = source(&files, "statements/reports.rs");
     for needle in [
         "use libfmp::endpoints::statements::reports::FinancialReportsXlsxQuery;",
-        "use crate::args;\nuse crate::binary::BinaryPayload;\nuse crate::errors::to_py_error;\nuse crate::runtime::block_on;\n",
+        "use crate::args;\nuse crate::binary::BinaryPayload;\nuse crate::errors::to_py_error;\nuse crate::runtime::{ClientHandle, block_on};\n",
         "pub(crate) struct StatementsReportsNamespace {",
         "    /// Downloads one financial report as an XLSX workbook.\n    #[pyo3(signature = (symbol, year, period))]\n    fn financial_reports_xlsx(&self, py: Python<'_>, symbol: &str, year: i64, #[gen_stub(override_type(type_repr = \"typing.Literal[\\\"Q1\\\", \\\"Q2\\\", \\\"Q3\\\", \\\"Q4\\\", \\\"FY\\\"]\", imports = (\"typing\",)))] period: &str) -> PyResult<BinaryPayload> {",
         "let query = financial_reports_xlsx_query(symbol, year, period)?;",
@@ -219,7 +220,7 @@ fn dynamic_fixture_renders_dict_rows_with_the_stub_override() {
     let files = render_all(&manifest().join("tests/fixtures/dynamic_rows"));
     let sec = source(&files, "sec_filings.rs");
     for needle in [
-        "use crate::args;\nuse crate::convert;\nuse crate::errors::to_py_error;\nuse crate::runtime::block_on;\n",
+        "use crate::args;\nuse crate::convert;\nuse crate::errors::to_py_error;\nuse crate::runtime::{ClientHandle, block_on};\n",
         "#[pyo3(signature = (*, symbol=None, cik=None, sic_code=None))]\n    #[gen_stub(override_return_type(type_repr = \"list[dict[str, typing.Any]]\", imports = (\"typing\")))]\n    fn search_industry_classifications(",
         "sic_code: Option<&str>) -> PyResult<Vec<Py<PyAny>>> {",
         "let query = search_industry_classifications_query(symbol, cik, sic_code)?;",

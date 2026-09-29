@@ -94,7 +94,6 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     }
 
     out.push_str("use std::sync::Arc;\n\n");
-    out.push_str("use libfmp::ClientBuilder;\n");
     for (module, names) in &query_uses {
         let _ = writeln!(out, "use {};", use_line("libfmp::endpoints", module, names));
     }
@@ -115,8 +114,10 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     for (module, names) in &model_uses {
         let _ = writeln!(out, "use {};", use_line("crate::models", module, names));
     }
-    if !methods.is_empty() {
-        out.push_str("use crate::runtime::block_on;\n");
+    if methods.is_empty() {
+        out.push_str("use crate::runtime::ClientHandle;\n");
+    } else {
+        out.push_str("use crate::runtime::{ClientHandle, block_on};\n");
     }
     if !node.children.is_empty() {
         out.push('\n');
@@ -136,11 +137,11 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     let _ = writeln!(out, "#[pyclass(module = \"fmp._native.{dotted}\", frozen)]");
     let _ = writeln!(
         out,
-        "pub(crate) struct {struct_name} {{\n    builder: Arc<ClientBuilder>,\n}}\n"
+        "pub(crate) struct {struct_name} {{\n    builder: Arc<ClientHandle>,\n}}\n"
     );
     let _ = writeln!(
         out,
-        "impl {struct_name} {{\n    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {{\n        Self {{ builder }}\n    }}\n}}\n"
+        "impl {struct_name} {{\n    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {{\n        Self {{ builder }}\n    }}\n}}\n"
     );
 
     out.push_str("#[gen_stub_pymethods]\n#[pymethods]\n");
