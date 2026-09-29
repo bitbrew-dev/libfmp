@@ -273,9 +273,8 @@ impl FmpClient {
         exc_value: Option<Bound<'_, PyAny>>,
         #[gen_stub(override_type(type_repr = "typing.Optional[types.TracebackType]", imports = ("types", "typing")))]
         traceback: Option<Bound<'_, PyAny>>,
-    ) -> PyResult<bool> {
+    ) -> PyResult<()> {
         let _ = (exc_type, exc_value, traceback);
-        self.close()?;
-        Ok(false)
+        self.close()
     }
 }

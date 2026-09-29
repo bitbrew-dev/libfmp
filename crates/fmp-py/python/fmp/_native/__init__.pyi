@@ -409,7 +409,7 @@ class FmpClient:
         exc_type: typing.Optional[type[builtins.BaseException]],
         exc_value: typing.Optional[builtins.BaseException],
         traceback: typing.Optional[types.TracebackType],
-    ) -> builtins.bool:
+    ) -> None:
         r"""
         Closes the client and lets any exception from the block propagate.
         """
