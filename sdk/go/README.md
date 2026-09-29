@@ -158,7 +158,10 @@ if errors.As(err, &fmpErr) {
 
 `Category` is one of `Validation`, `Configuration`, `Transport`, `Status`, or
 `Decode`. `Endpoint` is a logical endpoint id, never a URL. `Body` is the
-provider body, redacted and capped. The client never retries, wraps every
+provider body, redacted and capped. A `Decode` error also carries `Path`, the
+JSON pointer of the failing member (`/37/beta`), and `DecodeKind`, the coarse
+reason (`DecodeKindNull`, `DecodeKindWrongType`, ...); neither ever includes
+the member value. The client never retries, wraps every
 transport failure before it escapes, and formats `Authentication`, `Client`,
 and `Error` without any secret value, so an error is safe to log.
 

@@ -306,8 +306,11 @@ func (c *Client) getJSON(ctx context.Context, endpointID, relativePath string, q
 			"successful response used an unexpected content type", nil)
 	}
 	if err := json.Unmarshal(resp.body, out); err != nil {
-		return decodeError(endpointID, resp.status, c.safeBody(resp.body),
+		decoded := decodeError(endpointID, resp.status, c.safeBody(resp.body),
 			"successful response could not be decoded", c.redactCause(err))
+		path, kind := decodeLocation(resp.body, err)
+		decoded.Path, decoded.DecodeKind = c.redactor.Redact(path), kind
+		return decoded
 	}
 	return nil
 }
