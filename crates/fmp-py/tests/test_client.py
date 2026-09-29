@@ -311,3 +311,69 @@ def test_quote_short_decodes_the_fractional_volume_observed_live(
     assert rows[0].volume == pytest.approx(20_201_922.82733)
     assert rows[0].price == pytest.approx(342.395)
     assert rows[0].change == pytest.approx(3.415)
+
+
+def _proxy(fixture_server: FixtureServer) -> FmpClient:
+    fixture_server.route(QUOTE_SHORT_PATH, load_fixture("quote_short.json"))
+    return FmpClient(base_url=fixture_server.base_url, path_prefix="", auth_mode="none")
+
+
+def test_with_block_returns_the_client_and_closes_it(
+    fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """``with`` yields the client itself and closes it on exit."""
+    client = _proxy(fixture_server)
+    with client as entered:
+        assert entered is client
+        assert entered.quote.short("AAPL")[0].symbol == "AAPL"
+
+    with pytest.raises(errors.FmpConfigError) as raised:
+        client.quote.short("AAPL")
+    error = raised.value
+    assert str(error) == "the client is closed"
+    assert error.category == "configuration"
+    assert (error.endpoint, error.status, error.body) == (None, None, None)
+    assert len(fixture_server.requests) == 1
+
+
+def test_close_rejects_namespaces_fetched_before_it(fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
+    """A namespace captured before ``close()`` shares the closed state."""
+    client = _proxy(fixture_server)
+    quote = client.quote
+    assert quote.short("AAPL")[0].symbol == "AAPL"
+    client.close()
+
+    with pytest.raises(errors.FmpConfigError, match="the client is closed"):
+        quote.short("AAPL")
+    assert len(fixture_server.requests) == 1
+
+
+def test_close_is_idempotent_and_works_before_any_call(
+    fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """Closing an unused client twice is a no-op; calls still raise."""
+    client = _proxy(fixture_server)
+    assert client.close() is None
+    assert client.close() is None
+    with pytest.raises(errors.FmpConfigError, match="the client is closed"):
+        client.quote.short("AAPL")
+    assert fixture_server.requests == []
+
+
+def test_with_block_propagates_exceptions_and_still_closes(
+    fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """``__exit__`` never swallows the block's exception."""
+    client = _proxy(fixture_server)
+    with pytest.raises(LookupError), client:
+        raise LookupError("from the block")
+    with pytest.raises(errors.FmpConfigError, match="the client is closed"):
+        client.quote.short("AAPL")
+
+
+def test_closing_one_client_leaves_others_usable(fixture_server: FixtureServer) -> None:
+    """Close is per client: the shared runtime keeps serving other clients."""
+    closed = _proxy(fixture_server)
+    other = FmpClient(base_url=fixture_server.base_url, path_prefix="", auth_mode="none")
+    closed.close()
+    assert other.quote.short("AAPL")[0].symbol == "AAPL"

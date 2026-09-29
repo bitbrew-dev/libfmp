@@ -163,6 +163,27 @@ except FmpStatusError as error:
 Bodies attached to errors are redacted before they reach Python: an echoed
 `apikey` query value shows as `[REDACTED]`.
 
+## Closing a client
+
+`close()` releases the client's pooled HTTP connections. Use the client as a
+context manager to close it deterministically:
+
+```python
+from fmp import FmpClient
+
+with FmpClient() as client:
+    rows = client.quote.short("AAPL")
+```
+
+After `close()`, every call raises `FmpConfigError("the client is closed")`,
+including calls through a namespace such as `client.quote` fetched before the
+close; calls already in flight finish normally. Closing twice is a no-op, and
+`__exit__` never swallows an exception from the block. The process-wide
+runtime is shared by every client and stays up.
+
+A client that is never closed releases its pooled connections lazily, some
+time after the client and its namespaces are garbage-collected.
+
 ## Custom router or proxy
 
 ```python
