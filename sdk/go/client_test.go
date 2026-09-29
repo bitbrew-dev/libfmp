@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"sync"
 	"testing"
+	"time"
 )
 
 const probeEndpoint = "endpoint-contract-test"
@@ -325,5 +327,67 @@ func TestClientFormattingNeverPrintsConfiguration(t *testing.T) {
 				t.Fatalf("%s did not describe the client: %s", verb, text)
 			}
 		}
+	}
+}
+
+func TestCloseIdleConnectionsClosesTheOwnedPool(t *testing.T) {
+	t.Parallel()
+	closed := make(chan struct{}, 1)
+	server := httptest.NewUnstartedServer(jsonHandler(`[{"symbol":"AAPL"}]`))
+	server.Config.ConnState = func(_ net.Conn, state http.ConnState) {
+		if state == http.StateClosed {
+			select {
+			case closed <- struct{}{}:
+			default:
+			}
+		}
+	}
+	server.Start()
+	t.Cleanup(server.Close)
+	client, err := NewClient(WithBaseURL(server.URL+"/router"), WithPathPrefix("stable"))
+	if err != nil {
+		t.Fatalf("NewClient: %v", err)
+	}
+
+	if _, err := probe(t, client); err != nil {
+		t.Fatal(err)
+	}
+	client.CloseIdleConnections()
+	select {
+	case <-closed:
+	case <-time.After(5 * time.Second):
+		t.Fatal("the idle connection was not closed")
+	}
+	if _, err := probe(t, client); err != nil {
+		t.Fatalf("client unusable after CloseIdleConnections: %v", err)
+	}
+}
+
+type idleCountingTransport struct {
+	http.RoundTripper
+	mu    sync.Mutex
+	calls int
+}
+
+func (t *idleCountingTransport) CloseIdleConnections() {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.calls++
+}
+
+func TestCloseIdleConnectionsLeavesACallerTransportAlone(t *testing.T) {
+	t.Parallel()
+	server, _ := newServer(t, jsonHandler(`[{"symbol":"AAPL"}]`))
+	transport := &idleCountingTransport{RoundTripper: server.Client().Transport}
+	client := newClient(t, server, WithHTTPClient(&http.Client{Transport: transport}))
+
+	if _, err := probe(t, client); err != nil {
+		t.Fatal(err)
+	}
+	client.CloseIdleConnections()
+	transport.mu.Lock()
+	defer transport.mu.Unlock()
+	if transport.calls != 0 {
+		t.Fatalf("caller transport CloseIdleConnections called %d times", transport.calls)
 	}
 }

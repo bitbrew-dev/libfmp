@@ -162,6 +162,7 @@ type Client struct {
 	redactor             *Redactor
 	topology             []string
 	httpClient           *http.Client
+	ownsTransport        bool
 	timeout              time.Duration
 	maxResponseBodyBytes int64
 	redirectPolicy       RedirectPolicy
@@ -235,7 +236,8 @@ func NewClient(opts ...Option) (*Client, error) {
 	}
 
 	httpClient := cfg.httpClient
-	if httpClient == nil {
+	ownsTransport := httpClient == nil
+	if ownsTransport {
 		httpClient = newHTTPClient(cfg.connectTimeout)
 	} else {
 		httpClient = installRedirectPolicy(httpClient)
@@ -249,12 +251,25 @@ func NewClient(opts ...Option) (*Client, error) {
 		redactor:             redactor,
 		topology:             networkTopology(baseURL, transportProxy(httpClient)),
 		httpClient:           httpClient,
+		ownsTransport:        ownsTransport,
 		timeout:              cfg.timeout,
 		maxResponseBodyBytes: cfg.maxResponseBodyBytes,
 		redirectPolicy:       cfg.redirectPolicy,
 	}
 	client.bindNamespaces()
 	return client, nil
+}
+
+// CloseIdleConnections closes the idle keep-alive connections of the
+// transport NewClient built for this client. It is a no-op when WithHTTPClient
+// supplied the *http.Client, whose transport and lifecycle stay with the
+// caller. The client remains usable: a later request dials a new connection.
+// There is no Close: a Client owns no resources beyond that connection pool,
+// which net/http also reclaims after its idle timeout.
+func (c *Client) CloseIdleConnections() {
+	if c.ownsTransport {
+		c.httpClient.CloseIdleConnections()
+	}
 }
 
 // Format prints the configuration shape without URLs, header values, or secrets.

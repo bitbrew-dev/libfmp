@@ -29,6 +29,11 @@ append the secret as the last query pair. See
 [Building a client](../sdk/go/README.md#building-a-client) for the option
 list and the environment variables the live tests read.
 
+`client.CloseIdleConnections()` releases the idle connections of the
+SDK-built transport and leaves the client usable; with `WithHTTPClient` it is
+a no-op, because the caller owns that transport. A `Client` owns no other
+resources, so there is no `Close`.
+
 ## Custom routers and proxies
 
 `WithBaseURL` and `WithPathPrefix` route the client through a proxy, and
