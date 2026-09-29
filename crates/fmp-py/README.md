@@ -142,12 +142,12 @@ package root):
 
 | Exception | Raised when |
 |-----------|-------------|
-| `FmpError` | base class; carries `category`, `endpoint`, `status`, `body`, `body_truncated` |
+| `FmpError` | base class; carries `category`, `endpoint`, `status`, `body`, `body_truncated`, `decode_path`, `decode_kind` |
 | `FmpConfigError` | the client cannot be built (missing key, bad URL, insecure auth) |
 | `FmpValidationError` | an argument is rejected before the request |
 | `FmpTransportError` | the request never produced a response |
 | `FmpStatusError` | the provider answered with a non-success status |
-| `FmpDecodeError` | the body could not be decoded into the documented shape |
+| `FmpDecodeError` | the body could not be decoded into the documented shape; `decode_path` names the member (for example `[37].beta`) and `decode_kind` the reason, never the value |
 
 ```python
 from fmp import FmpClient

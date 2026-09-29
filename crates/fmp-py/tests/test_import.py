@@ -245,3 +245,4 @@ def test_exception_attributes_default_to_none(errors: SimpleNamespace, name: str
     assert exception.args == ("message",)
     assert exception.category == category
     assert (exception.endpoint, exception.status, exception.body, exception.body_truncated) == (None, None, None, None)
+    assert (exception.decode_path, exception.decode_kind) == (None, None)

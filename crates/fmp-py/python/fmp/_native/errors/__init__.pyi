@@ -64,6 +64,18 @@ class FmpError(builtins.Exception):
         Whether `body` was cut short to stay within the excerpt bound.
         """
 
+    @property
+    def decode_path(self) -> typing.Optional[builtins.str]:
+        r"""
+        Where a JSON response failed to decode, for example `"[37].beta"`; never the member value.
+        """
+
+    @property
+    def decode_kind(self) -> typing.Optional[builtins.str]:
+        r"""
+        Why a JSON response failed to decode: `"syntax"`, `"null"`, `"missing_member"`, `"wrong_type"`, or `"invalid_value"`.
+        """
+
 
 class FmpStatusError(FmpError):
     r"""
