@@ -133,6 +133,16 @@ async fn malformed_and_trailing_json_are_syntax_failures() {
     assert_eq!(trailing.decode_path(), None);
 }
 
+#[tokio::test]
+async fn non_json_and_empty_bodies_are_root_syntax_failures() {
+    for body in ["not-json", ""] {
+        let error = decode_error(json_body(body.to_owned())).await;
+
+        assert_eq!(error.decode_kind(), Some(DecodeErrorKind::Syntax));
+        assert_eq!(error.decode_path(), None);
+    }
+}
+
 #[test]
 fn decode_kind_exposes_stable_binding_values() {
     let kinds = [

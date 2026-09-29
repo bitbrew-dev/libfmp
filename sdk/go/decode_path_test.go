@@ -71,6 +71,7 @@ func TestDecodeErrorLocatesMissingWrongAndMalformedMembers(t *testing.T) {
 		{"wrong type", strings.Replace(row, `"AAPL"`, "5", 1), "/0/symbol", DecodeKindWrongType},
 		{"root shape", "{}", "", DecodeKindWrongType},
 		{"malformed", `[{"beta": nope}]`, "/0/beta", DecodeKindSyntax},
+		{"not json", "not-json", "", DecodeKindSyntax},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
