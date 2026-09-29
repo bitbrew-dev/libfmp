@@ -162,6 +162,7 @@ type Error struct {
 	Path              string
 	DecodeKind        DecodeKind
 	member            string
+	memberKind        DecodeKind
 	cause             error
 }
 
@@ -226,6 +227,14 @@ func invalidMemberError(model, member, expected string) *Error {
 		Message:  fmt.Sprintf("member %q of %s must be a JSON %s", member, model, expected),
 		member:   member,
 	}
+}
+
+// invalidMemberValueError reports a member whose JSON kind is right but
+// whose value the Rust decoder would reject, such as a fractional count.
+func invalidMemberValueError(model, member, expected string) *Error {
+	err := invalidMemberError(model, member, expected)
+	err.memberKind = DecodeKindInvalidValue
+	return err
 }
 
 func transportError(endpoint, message string, cause error) *Error {

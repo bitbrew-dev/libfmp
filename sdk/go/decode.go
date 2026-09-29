@@ -62,7 +62,7 @@ func decodeCount(model, member string, raw jsontext.Value) (uint64, error) {
 	}
 	value, err := strconv.ParseFloat(text, 64)
 	if err != nil || value < 0 || value >= 0x1p64 || value != math.Trunc(value) {
-		return 0, invalidMemberError(model, member, "non-negative integral number")
+		return 0, invalidMemberValueError(model, member, "non-negative integral number")
 	}
 	return uint64(value), nil
 }
@@ -118,6 +118,8 @@ func decodeLocation(body []byte, err error) (string, DecodeKind) {
 			return string(pointer), DecodeKindMissingMember
 		case value.Kind() == 'n':
 			return string(pointer), DecodeKindNull
+		case member.memberKind != DecodeKindNone:
+			return string(pointer), member.memberKind
 		default:
 			return string(pointer), DecodeKindWrongType
 		}

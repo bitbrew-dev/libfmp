@@ -13,7 +13,7 @@ use libfmp::{
         },
         metadata::{AccessRequirement, EndpointBounds, GeographicAvailability},
     },
-    error::ErrorCategory,
+    error::{DecodeErrorKind, ErrorCategory},
     responses::analyst::{HistoricalStockGrade, StockGrade, StockGradesSummary},
     transport::HttpMethod,
     types::{Limit, Ticker},
@@ -288,6 +288,9 @@ async fn count_members_accept_integral_floats_and_reject_fractions() {
 
     let error = client.stock_grades_summary(query()).await.unwrap_err();
     assert_decode_error(&error, "grades-consensus");
+    assert_eq!(error.decode_path(), Some("[0].buy"));
+    assert_eq!(error.decode_kind(), Some(DecodeErrorKind::InvalidValue));
+    assert!(!error.message().contains("2.9"));
 }
 
 fn assert_decode_error(error: &libfmp::Error, endpoint: &'static str) {
