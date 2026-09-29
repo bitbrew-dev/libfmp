@@ -332,10 +332,17 @@ func TestClientFormattingNeverPrintsConfiguration(t *testing.T) {
 
 func TestCloseIdleConnectionsClosesTheOwnedPool(t *testing.T) {
 	t.Parallel()
+	var mu sync.Mutex
+	dials := 0
 	closed := make(chan struct{}, 1)
 	server := httptest.NewUnstartedServer(jsonHandler(`[{"symbol":"AAPL"}]`))
 	server.Config.ConnState = func(_ net.Conn, state http.ConnState) {
-		if state == http.StateClosed {
+		switch state {
+		case http.StateNew:
+			mu.Lock()
+			dials++
+			mu.Unlock()
+		case http.StateClosed:
 			select {
 			case closed <- struct{}{}:
 			default:
@@ -348,9 +355,19 @@ func TestCloseIdleConnectionsClosesTheOwnedPool(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewClient: %v", err)
 	}
+	dialCount := func() int {
+		mu.Lock()
+		defer mu.Unlock()
+		return dials
+	}
 
-	if _, err := probe(t, client); err != nil {
-		t.Fatal(err)
+	for range 2 {
+		if _, err := probe(t, client); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if got := dialCount(); got != 1 {
+		t.Fatalf("dials before CloseIdleConnections = %d, want 1 reused connection", got)
 	}
 	client.CloseIdleConnections()
 	select {
@@ -360,6 +377,9 @@ func TestCloseIdleConnectionsClosesTheOwnedPool(t *testing.T) {
 	}
 	if _, err := probe(t, client); err != nil {
 		t.Fatalf("client unusable after CloseIdleConnections: %v", err)
+	}
+	if got := dialCount(); got != 2 {
+		t.Fatalf("dials after CloseIdleConnections = %d, want a fresh connection", got)
 	}
 }
 
