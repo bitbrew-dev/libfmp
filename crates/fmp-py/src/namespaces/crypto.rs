@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::asset_chart::AssetChartQuery;
 use libfmp::endpoints::quote::{QuoteQuery, QuoteShortQuery};
 use pyo3::prelude::*;
@@ -13,17 +12,17 @@ use crate::errors::to_py_error;
 use crate::models::chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar};
 use crate::models::crypto::CryptocurrencyListing;
 use crate::models::quote::{Quote, QuoteShort};
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Crypto endpoints for a single client, exposed as `client.crypto`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.crypto", frozen)]
 pub(crate) struct CryptoNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl CryptoNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

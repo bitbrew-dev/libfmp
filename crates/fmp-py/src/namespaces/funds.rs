@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::funds::{
     EtfAssetExposureQuery, EtfCountryWeightingsQuery, EtfHoldingsQuery, EtfInfoQuery,
     EtfSectorWeightingsQuery, FundDisclosureDatesQuery, FundDisclosureHolderSearchQuery,
@@ -18,17 +17,17 @@ use crate::models::funds::{
     FundDisclosure, FundDisclosureHolder, FundDisclosureSearchResult,
 };
 use crate::models::institutional_ownership::Form13fFilingDate;
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Funds endpoints for a single client, exposed as `client.funds`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.funds", frozen)]
 pub(crate) struct FundsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl FundsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

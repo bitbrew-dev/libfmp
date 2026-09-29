@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::dcf::{CustomDcfQuery, DcfAssumptions, DcfQuery};
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -10,17 +9,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::dcf::{CustomDcfValuation, CustomLeveredDcfValuation, DcfValuation};
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Dcf endpoints for a single client, exposed as `client.dcf`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.dcf", frozen)]
 pub(crate) struct DcfNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl DcfNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

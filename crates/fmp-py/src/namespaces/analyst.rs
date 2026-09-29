@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::analyst::{
     FinancialEstimatesQuery, HistoricalRatingsQuery, HistoricalStockGradesQuery,
     PriceTargetConsensusQuery, PriceTargetSummaryQuery, RatingsSnapshotQuery, StockGradesQuery,
@@ -17,17 +16,17 @@ use crate::models::analyst::{
     FinancialEstimate, HistoricalRating, HistoricalStockGrade, PriceTargetConsensus,
     PriceTargetSummary, RatingSnapshot, StockGrade, StockGradesSummary,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Analyst endpoints for a single client, exposed as `client.analyst`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.analyst", frozen)]
 pub(crate) struct AnalystNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl AnalystNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::statements::growth::{
     BalanceSheetStatementGrowthQuery, CashFlowStatementGrowthQuery, FinancialStatementGrowthQuery,
     IncomeStatementGrowthQuery,
@@ -16,17 +15,17 @@ use crate::models::statements::growth::balance::BalanceSheetStatementGrowth;
 use crate::models::statements::growth::cash_flow::CashFlowStatementGrowth;
 use crate::models::statements::growth::combined::FinancialStatementGrowth;
 use crate::models::statements::growth::income::IncomeStatementGrowth;
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Statements growth endpoints for a single client, exposed as `client.statements.growth`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.growth", frozen)]
 pub(crate) struct StatementsGrowthNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl StatementsGrowthNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

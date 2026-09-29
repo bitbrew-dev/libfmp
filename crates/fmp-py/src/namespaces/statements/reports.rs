@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::statements::reports::{
     FinancialReportsDatesQuery, FinancialReportsJsonQuery, FinancialReportsXlsxQuery,
 };
@@ -13,17 +12,17 @@ use crate::args;
 use crate::binary::BinaryPayload;
 use crate::errors::to_py_error;
 use crate::models::statements::reports::{FinancialReportDate, FinancialReportJson};
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Statements reports endpoints for a single client, exposed as `client.statements.reports`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.reports", frozen)]
 pub(crate) struct StatementsReportsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl StatementsReportsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

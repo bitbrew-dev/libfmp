@@ -13,9 +13,10 @@ pub(crate) mod summaries;
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
+
+use crate::runtime::ClientHandle;
 
 use self::as_reported::StatementsAsReportedNamespace;
 use self::balance::StatementsBalanceNamespace;
@@ -32,11 +33,11 @@ use self::summaries::StatementsSummariesNamespace;
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements", frozen)]
 pub(crate) struct StatementsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl StatementsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

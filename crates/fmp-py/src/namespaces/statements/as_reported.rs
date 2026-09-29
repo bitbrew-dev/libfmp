@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::statements::as_reported::{
     BalanceSheetStatementAsReportedQuery, CashFlowStatementAsReportedQuery,
     FinancialStatementFullAsReportedQuery, IncomeStatementAsReportedQuery,
@@ -13,17 +12,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::as_reported::AsReportedFinancialStatement;
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Statements as reported endpoints for a single client, exposed as `client.statements.as_reported`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.as_reported", frozen)]
 pub(crate) struct StatementsAsReportedNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl StatementsAsReportedNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::statements::{
     EnterpriseValuesQuery, FinancialScoresQuery, LatestFinancialStatementsQuery, OwnerEarningsQuery,
 };
@@ -14,17 +13,17 @@ use crate::errors::to_py_error;
 use crate::models::statements::summaries::{
     EnterpriseValue, FinancialScore, LatestFinancialStatement, OwnerEarnings,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Statements summaries endpoints for a single client, exposed as `client.statements.summaries`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.summaries", frozen)]
 pub(crate) struct StatementsSummariesNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl StatementsSummariesNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

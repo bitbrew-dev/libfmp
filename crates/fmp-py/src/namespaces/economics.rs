@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::economics::{
     EconomicCalendarQuery, EconomicIndicatorsQuery, TreasuryRatesQuery,
 };
@@ -14,17 +13,17 @@ use crate::errors::to_py_error;
 use crate::models::economics::{
     EconomicCalendarEvent, EconomicIndicatorObservation, MarketRiskPremium, TreasuryRate,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Economics endpoints for a single client, exposed as `client.economics`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.economics", frozen)]
 pub(crate) struct EconomicsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl EconomicsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

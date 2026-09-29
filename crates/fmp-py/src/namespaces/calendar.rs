@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::calendar::{
     DividendsCalendarQuery, DividendsQuery, EarningsCalendarQuery, EarningsQuery,
     IposCalendarQuery, IposDisclosureQuery, IposProspectusQuery, StockSplitsCalendarQuery,
@@ -16,17 +15,17 @@ use crate::errors::to_py_error;
 use crate::models::calendar::{
     DividendEvent, EarningsEvent, IpoCalendarEvent, IpoDisclosure, IpoProspectus, StockSplitEvent,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Calendar endpoints for a single client, exposed as `client.calendar`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.calendar", frozen)]
 pub(crate) struct CalendarNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl CalendarNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

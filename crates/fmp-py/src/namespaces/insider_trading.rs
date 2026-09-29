@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::insider_trading::{
     BeneficialOwnershipAcquisitionsQuery, InsiderReportingNameSearchQuery,
     InsiderTradeStatisticsQuery, InsiderTradesSearchQuery, LatestInsiderTradesQuery,
@@ -16,17 +15,17 @@ use crate::models::insider_trading::{
     BeneficialOwnershipAcquisition, InsiderReportingName, InsiderTrade, InsiderTradeStatistics,
     InsiderTransactionType,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Insider trading endpoints for a single client, exposed as `client.insider_trading`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.insider_trading", frozen)]
 pub(crate) struct InsiderTradingNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl InsiderTradingNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

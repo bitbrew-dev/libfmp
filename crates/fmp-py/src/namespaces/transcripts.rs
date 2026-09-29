@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::transcripts::{
     EarningsTranscriptDatesQuery, EarningsTranscriptQuery, LatestEarningsTranscriptsQuery,
 };
@@ -14,17 +13,17 @@ use crate::errors::to_py_error;
 use crate::models::transcripts::{
     EarningsTranscript, EarningsTranscriptDate, LatestEarningsTranscript,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Transcripts endpoints for a single client, exposed as `client.transcripts`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.transcripts", frozen)]
 pub(crate) struct TranscriptsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl TranscriptsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

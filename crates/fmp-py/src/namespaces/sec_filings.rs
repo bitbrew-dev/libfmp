@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::sec_filings::{
     AllIndustryClassificationsQuery, IndustryClassificationSearchQuery,
     IndustryClassificationsQuery, Latest8kSecFilingsQuery, LatestSecFilingsQuery,
@@ -19,17 +18,17 @@ use crate::errors::to_py_error;
 use crate::models::sec_filings::{
     SecCompanyProfile, SecCompanySearchResult, SecFiling, SicClassification,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Sec filings endpoints for a single client, exposed as `client.sec_filings`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.sec_filings", frozen)]
 pub(crate) struct SecFilingsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl SecFilingsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

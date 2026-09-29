@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::directory::{AvailableExchangesQuery, CikListQuery, SymbolChangesQuery};
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -14,17 +13,17 @@ use crate::models::directory::{
     CikListing, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol, FinancialStatementSymbol,
     SymbolChange,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Directory endpoints for a single client, exposed as `client.directory`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.directory", frozen)]
 pub(crate) struct DirectoryNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl DirectoryNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::market_hours::{
     AllExchangeMarketHoursQuery, ExchangeMarketHoursQuery, HolidaysByExchangeQuery,
 };
@@ -12,17 +11,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::market_hours::{ExchangeHoliday, ExchangeMarketHours};
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Market hours endpoints for a single client, exposed as `client.market_hours`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.market_hours", frozen)]
 pub(crate) struct MarketHoursNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl MarketHoursNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }
