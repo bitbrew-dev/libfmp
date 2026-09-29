@@ -255,9 +255,9 @@ type TipRanksRecommendationCounts struct {
 // a pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type tipRanksRecommendationCountsShadow struct {
-	Buy  *uint64 `json:"buy"`
-	Hold *uint64 `json:"hold"`
-	Sell *uint64 `json:"sell"`
+	Buy  jsontext.Value `json:"buy"`
+	Hold jsontext.Value `json:"hold"`
+	Sell jsontext.Value `json:"sell"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -269,17 +269,29 @@ func (m *TipRanksRecommendationCounts) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		return err
 	}
 	switch {
-	case shadow.Buy == nil:
+	case len(shadow.Buy) == 0:
 		return missingMemberError("TipRanksRecommendationCounts", "buy")
-	case shadow.Hold == nil:
+	case len(shadow.Hold) == 0:
 		return missingMemberError("TipRanksRecommendationCounts", "hold")
-	case shadow.Sell == nil:
+	case len(shadow.Sell) == 0:
 		return missingMemberError("TipRanksRecommendationCounts", "sell")
 	}
+	buy, err := decodeCount("TipRanksRecommendationCounts", "buy", shadow.Buy)
+	if err != nil {
+		return err
+	}
+	hold, err := decodeCount("TipRanksRecommendationCounts", "hold", shadow.Hold)
+	if err != nil {
+		return err
+	}
+	sell, err := decodeCount("TipRanksRecommendationCounts", "sell", shadow.Sell)
+	if err != nil {
+		return err
+	}
 	*m = TipRanksRecommendationCounts{
-		Buy:  *shadow.Buy,
-		Hold: *shadow.Hold,
-		Sell: *shadow.Sell,
+		Buy:  buy,
+		Hold: hold,
+		Sell: sell,
 	}
 	return nil
 }
@@ -299,12 +311,12 @@ type TipRanksAnalystActionCounts struct {
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type tipRanksAnalystActionCountsShadow struct {
-	Initiated  *uint64 `json:"initiated"`
-	Maintained *uint64 `json:"maintained"`
-	Upgraded   *uint64 `json:"upgraded"`
-	Downgraded *uint64 `json:"downgraded"`
-	Reiterated *uint64 `json:"reiterated"`
-	Resumed    *uint64 `json:"resumed"`
+	Initiated  jsontext.Value `json:"initiated"`
+	Maintained jsontext.Value `json:"maintained"`
+	Upgraded   jsontext.Value `json:"upgraded"`
+	Downgraded jsontext.Value `json:"downgraded"`
+	Reiterated jsontext.Value `json:"reiterated"`
+	Resumed    jsontext.Value `json:"resumed"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -316,26 +328,50 @@ func (m *TipRanksAnalystActionCounts) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		return err
 	}
 	switch {
-	case shadow.Initiated == nil:
+	case len(shadow.Initiated) == 0:
 		return missingMemberError("TipRanksAnalystActionCounts", "initiated")
-	case shadow.Maintained == nil:
+	case len(shadow.Maintained) == 0:
 		return missingMemberError("TipRanksAnalystActionCounts", "maintained")
-	case shadow.Upgraded == nil:
+	case len(shadow.Upgraded) == 0:
 		return missingMemberError("TipRanksAnalystActionCounts", "upgraded")
-	case shadow.Downgraded == nil:
+	case len(shadow.Downgraded) == 0:
 		return missingMemberError("TipRanksAnalystActionCounts", "downgraded")
-	case shadow.Reiterated == nil:
+	case len(shadow.Reiterated) == 0:
 		return missingMemberError("TipRanksAnalystActionCounts", "reiterated")
-	case shadow.Resumed == nil:
+	case len(shadow.Resumed) == 0:
 		return missingMemberError("TipRanksAnalystActionCounts", "resumed")
 	}
+	initiated, err := decodeCount("TipRanksAnalystActionCounts", "initiated", shadow.Initiated)
+	if err != nil {
+		return err
+	}
+	maintained, err := decodeCount("TipRanksAnalystActionCounts", "maintained", shadow.Maintained)
+	if err != nil {
+		return err
+	}
+	upgraded, err := decodeCount("TipRanksAnalystActionCounts", "upgraded", shadow.Upgraded)
+	if err != nil {
+		return err
+	}
+	downgraded, err := decodeCount("TipRanksAnalystActionCounts", "downgraded", shadow.Downgraded)
+	if err != nil {
+		return err
+	}
+	reiterated, err := decodeCount("TipRanksAnalystActionCounts", "reiterated", shadow.Reiterated)
+	if err != nil {
+		return err
+	}
+	resumed, err := decodeCount("TipRanksAnalystActionCounts", "resumed", shadow.Resumed)
+	if err != nil {
+		return err
+	}
 	*m = TipRanksAnalystActionCounts{
-		Initiated:  *shadow.Initiated,
-		Maintained: *shadow.Maintained,
-		Upgraded:   *shadow.Upgraded,
-		Downgraded: *shadow.Downgraded,
-		Reiterated: *shadow.Reiterated,
-		Resumed:    *shadow.Resumed,
+		Initiated:  initiated,
+		Maintained: maintained,
+		Upgraded:   upgraded,
+		Downgraded: downgraded,
+		Reiterated: reiterated,
+		Resumed:    resumed,
 	}
 	return nil
 }
@@ -367,15 +403,15 @@ type tipRanksSymbolSummaryShadow struct {
 	Symbol               *string                       `json:"symbol"`
 	From                 *Date                         `json:"from"`
 	To                   *Date                         `json:"to"`
-	TotalRecommendations *uint64                       `json:"totalRecommendations"`
-	DistinctSymbols      *uint64                       `json:"distinctSymbols"`
-	DistinctAnalysts     *uint64                       `json:"distinctAnalysts"`
-	ValidPriceTargets    *uint64                       `json:"validPriceTargets"`
+	TotalRecommendations jsontext.Value                `json:"totalRecommendations"`
+	DistinctSymbols      jsontext.Value                `json:"distinctSymbols"`
+	DistinctAnalysts     jsontext.Value                `json:"distinctAnalysts"`
+	ValidPriceTargets    jsontext.Value                `json:"validPriceTargets"`
 	Recommendations      *TipRanksRecommendationCounts `json:"recommendations"`
 	AnalystAction        *TipRanksAnalystActionCounts  `json:"analystAction"`
-	ComparedPriceTargets *uint64                       `json:"comparedPriceTargets"`
-	Beats                *uint64                       `json:"beats"`
-	Misses               *uint64                       `json:"misses"`
+	ComparedPriceTargets jsontext.Value                `json:"comparedPriceTargets"`
+	Beats                jsontext.Value                `json:"beats"`
+	Misses               jsontext.Value                `json:"misses"`
 	AverageReturn        *jsontext.Value               `json:"averageReturn"`
 	TopReturn            *jsontext.Value               `json:"topReturn"`
 	WorstReturn          *jsontext.Value               `json:"worstReturn"`
@@ -396,23 +432,23 @@ func (m *TipRanksSymbolSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("TipRanksSymbolSummary", "from")
 	case shadow.To == nil:
 		return missingMemberError("TipRanksSymbolSummary", "to")
-	case shadow.TotalRecommendations == nil:
+	case len(shadow.TotalRecommendations) == 0:
 		return missingMemberError("TipRanksSymbolSummary", "totalRecommendations")
-	case shadow.DistinctSymbols == nil:
+	case len(shadow.DistinctSymbols) == 0:
 		return missingMemberError("TipRanksSymbolSummary", "distinctSymbols")
-	case shadow.DistinctAnalysts == nil:
+	case len(shadow.DistinctAnalysts) == 0:
 		return missingMemberError("TipRanksSymbolSummary", "distinctAnalysts")
-	case shadow.ValidPriceTargets == nil:
+	case len(shadow.ValidPriceTargets) == 0:
 		return missingMemberError("TipRanksSymbolSummary", "validPriceTargets")
 	case shadow.Recommendations == nil:
 		return missingMemberError("TipRanksSymbolSummary", "recommendations")
 	case shadow.AnalystAction == nil:
 		return missingMemberError("TipRanksSymbolSummary", "analystAction")
-	case shadow.ComparedPriceTargets == nil:
+	case len(shadow.ComparedPriceTargets) == 0:
 		return missingMemberError("TipRanksSymbolSummary", "comparedPriceTargets")
-	case shadow.Beats == nil:
+	case len(shadow.Beats) == 0:
 		return missingMemberError("TipRanksSymbolSummary", "beats")
-	case shadow.Misses == nil:
+	case len(shadow.Misses) == 0:
 		return missingMemberError("TipRanksSymbolSummary", "misses")
 	case shadow.AverageReturn == nil:
 		return missingMemberError("TipRanksSymbolSummary", "averageReturn")
@@ -420,6 +456,34 @@ func (m *TipRanksSymbolSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("TipRanksSymbolSummary", "topReturn")
 	case shadow.WorstReturn == nil:
 		return missingMemberError("TipRanksSymbolSummary", "worstReturn")
+	}
+	totalRecommendations, err := decodeCount("TipRanksSymbolSummary", "totalRecommendations", shadow.TotalRecommendations)
+	if err != nil {
+		return err
+	}
+	distinctSymbols, err := decodeCount("TipRanksSymbolSummary", "distinctSymbols", shadow.DistinctSymbols)
+	if err != nil {
+		return err
+	}
+	distinctAnalysts, err := decodeCount("TipRanksSymbolSummary", "distinctAnalysts", shadow.DistinctAnalysts)
+	if err != nil {
+		return err
+	}
+	validPriceTargets, err := decodeCount("TipRanksSymbolSummary", "validPriceTargets", shadow.ValidPriceTargets)
+	if err != nil {
+		return err
+	}
+	comparedPriceTargets, err := decodeCount("TipRanksSymbolSummary", "comparedPriceTargets", shadow.ComparedPriceTargets)
+	if err != nil {
+		return err
+	}
+	beats, err := decodeCount("TipRanksSymbolSummary", "beats", shadow.Beats)
+	if err != nil {
+		return err
+	}
+	misses, err := decodeCount("TipRanksSymbolSummary", "misses", shadow.Misses)
+	if err != nil {
+		return err
 	}
 	if shadow.AverageReturn.Kind() != '0' {
 		return invalidMemberError("TipRanksSymbolSummary", "averageReturn", "number")
@@ -434,15 +498,15 @@ func (m *TipRanksSymbolSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Symbol:               *shadow.Symbol,
 		From:                 *shadow.From,
 		To:                   *shadow.To,
-		TotalRecommendations: *shadow.TotalRecommendations,
-		DistinctSymbols:      *shadow.DistinctSymbols,
-		DistinctAnalysts:     *shadow.DistinctAnalysts,
-		ValidPriceTargets:    *shadow.ValidPriceTargets,
+		TotalRecommendations: totalRecommendations,
+		DistinctSymbols:      distinctSymbols,
+		DistinctAnalysts:     distinctAnalysts,
+		ValidPriceTargets:    validPriceTargets,
 		Recommendations:      *shadow.Recommendations,
 		AnalystAction:        *shadow.AnalystAction,
-		ComparedPriceTargets: *shadow.ComparedPriceTargets,
-		Beats:                *shadow.Beats,
-		Misses:               *shadow.Misses,
+		ComparedPriceTargets: comparedPriceTargets,
+		Beats:                beats,
+		Misses:               misses,
 		AverageReturn:        *shadow.AverageReturn,
 		TopReturn:            *shadow.TopReturn,
 		WorstReturn:          *shadow.WorstReturn,
@@ -477,15 +541,15 @@ type tipRanksAnalystSummaryShadow struct {
 	ExpertUID            *string                       `json:"expertUID"`
 	From                 *Date                         `json:"from"`
 	To                   *Date                         `json:"to"`
-	TotalRecommendations *uint64                       `json:"totalRecommendations"`
-	DistinctSymbols      *uint64                       `json:"distinctSymbols"`
-	DistinctAnalysts     *uint64                       `json:"distinctAnalysts"`
-	ValidPriceTargets    *uint64                       `json:"validPriceTargets"`
+	TotalRecommendations jsontext.Value                `json:"totalRecommendations"`
+	DistinctSymbols      jsontext.Value                `json:"distinctSymbols"`
+	DistinctAnalysts     jsontext.Value                `json:"distinctAnalysts"`
+	ValidPriceTargets    jsontext.Value                `json:"validPriceTargets"`
 	Recommendations      *TipRanksRecommendationCounts `json:"recommendations"`
 	AnalystAction        *TipRanksAnalystActionCounts  `json:"analystAction"`
-	ComparedPriceTargets *uint64                       `json:"comparedPriceTargets"`
-	Beats                *uint64                       `json:"beats"`
-	Misses               *uint64                       `json:"misses"`
+	ComparedPriceTargets jsontext.Value                `json:"comparedPriceTargets"`
+	Beats                jsontext.Value                `json:"beats"`
+	Misses               jsontext.Value                `json:"misses"`
 	AverageReturn        *jsontext.Value               `json:"averageReturn"`
 	TopReturn            *jsontext.Value               `json:"topReturn"`
 	WorstReturn          *jsontext.Value               `json:"worstReturn"`
@@ -506,23 +570,23 @@ func (m *TipRanksAnalystSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return missingMemberError("TipRanksAnalystSummary", "from")
 	case shadow.To == nil:
 		return missingMemberError("TipRanksAnalystSummary", "to")
-	case shadow.TotalRecommendations == nil:
+	case len(shadow.TotalRecommendations) == 0:
 		return missingMemberError("TipRanksAnalystSummary", "totalRecommendations")
-	case shadow.DistinctSymbols == nil:
+	case len(shadow.DistinctSymbols) == 0:
 		return missingMemberError("TipRanksAnalystSummary", "distinctSymbols")
-	case shadow.DistinctAnalysts == nil:
+	case len(shadow.DistinctAnalysts) == 0:
 		return missingMemberError("TipRanksAnalystSummary", "distinctAnalysts")
-	case shadow.ValidPriceTargets == nil:
+	case len(shadow.ValidPriceTargets) == 0:
 		return missingMemberError("TipRanksAnalystSummary", "validPriceTargets")
 	case shadow.Recommendations == nil:
 		return missingMemberError("TipRanksAnalystSummary", "recommendations")
 	case shadow.AnalystAction == nil:
 		return missingMemberError("TipRanksAnalystSummary", "analystAction")
-	case shadow.ComparedPriceTargets == nil:
+	case len(shadow.ComparedPriceTargets) == 0:
 		return missingMemberError("TipRanksAnalystSummary", "comparedPriceTargets")
-	case shadow.Beats == nil:
+	case len(shadow.Beats) == 0:
 		return missingMemberError("TipRanksAnalystSummary", "beats")
-	case shadow.Misses == nil:
+	case len(shadow.Misses) == 0:
 		return missingMemberError("TipRanksAnalystSummary", "misses")
 	case shadow.AverageReturn == nil:
 		return missingMemberError("TipRanksAnalystSummary", "averageReturn")
@@ -530,6 +594,34 @@ func (m *TipRanksAnalystSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return missingMemberError("TipRanksAnalystSummary", "topReturn")
 	case shadow.WorstReturn == nil:
 		return missingMemberError("TipRanksAnalystSummary", "worstReturn")
+	}
+	totalRecommendations, err := decodeCount("TipRanksAnalystSummary", "totalRecommendations", shadow.TotalRecommendations)
+	if err != nil {
+		return err
+	}
+	distinctSymbols, err := decodeCount("TipRanksAnalystSummary", "distinctSymbols", shadow.DistinctSymbols)
+	if err != nil {
+		return err
+	}
+	distinctAnalysts, err := decodeCount("TipRanksAnalystSummary", "distinctAnalysts", shadow.DistinctAnalysts)
+	if err != nil {
+		return err
+	}
+	validPriceTargets, err := decodeCount("TipRanksAnalystSummary", "validPriceTargets", shadow.ValidPriceTargets)
+	if err != nil {
+		return err
+	}
+	comparedPriceTargets, err := decodeCount("TipRanksAnalystSummary", "comparedPriceTargets", shadow.ComparedPriceTargets)
+	if err != nil {
+		return err
+	}
+	beats, err := decodeCount("TipRanksAnalystSummary", "beats", shadow.Beats)
+	if err != nil {
+		return err
+	}
+	misses, err := decodeCount("TipRanksAnalystSummary", "misses", shadow.Misses)
+	if err != nil {
+		return err
 	}
 	if shadow.AverageReturn.Kind() != '0' {
 		return invalidMemberError("TipRanksAnalystSummary", "averageReturn", "number")
@@ -544,15 +636,15 @@ func (m *TipRanksAnalystSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		ExpertUID:            *shadow.ExpertUID,
 		From:                 *shadow.From,
 		To:                   *shadow.To,
-		TotalRecommendations: *shadow.TotalRecommendations,
-		DistinctSymbols:      *shadow.DistinctSymbols,
-		DistinctAnalysts:     *shadow.DistinctAnalysts,
-		ValidPriceTargets:    *shadow.ValidPriceTargets,
+		TotalRecommendations: totalRecommendations,
+		DistinctSymbols:      distinctSymbols,
+		DistinctAnalysts:     distinctAnalysts,
+		ValidPriceTargets:    validPriceTargets,
 		Recommendations:      *shadow.Recommendations,
 		AnalystAction:        *shadow.AnalystAction,
-		ComparedPriceTargets: *shadow.ComparedPriceTargets,
-		Beats:                *shadow.Beats,
-		Misses:               *shadow.Misses,
+		ComparedPriceTargets: comparedPriceTargets,
+		Beats:                beats,
+		Misses:               misses,
 		AverageReturn:        *shadow.AverageReturn,
 		TopReturn:            *shadow.TopReturn,
 		WorstReturn:          *shadow.WorstReturn,
@@ -587,15 +679,15 @@ type tipRanksFirmSummaryShadow struct {
 	FirmName             *string                       `json:"firmName"`
 	From                 *Date                         `json:"from"`
 	To                   *Date                         `json:"to"`
-	TotalRecommendations *uint64                       `json:"totalRecommendations"`
-	DistinctSymbols      *uint64                       `json:"distinctSymbols"`
-	DistinctAnalysts     *uint64                       `json:"distinctAnalysts"`
-	ValidPriceTargets    *uint64                       `json:"validPriceTargets"`
+	TotalRecommendations jsontext.Value                `json:"totalRecommendations"`
+	DistinctSymbols      jsontext.Value                `json:"distinctSymbols"`
+	DistinctAnalysts     jsontext.Value                `json:"distinctAnalysts"`
+	ValidPriceTargets    jsontext.Value                `json:"validPriceTargets"`
 	Recommendations      *TipRanksRecommendationCounts `json:"recommendations"`
 	AnalystAction        *TipRanksAnalystActionCounts  `json:"analystAction"`
-	ComparedPriceTargets *uint64                       `json:"comparedPriceTargets"`
-	Beats                *uint64                       `json:"beats"`
-	Misses               *uint64                       `json:"misses"`
+	ComparedPriceTargets jsontext.Value                `json:"comparedPriceTargets"`
+	Beats                jsontext.Value                `json:"beats"`
+	Misses               jsontext.Value                `json:"misses"`
 	AverageReturn        *jsontext.Value               `json:"averageReturn"`
 	TopReturn            *jsontext.Value               `json:"topReturn"`
 	WorstReturn          *jsontext.Value               `json:"worstReturn"`
@@ -616,23 +708,23 @@ func (m *TipRanksFirmSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("TipRanksFirmSummary", "from")
 	case shadow.To == nil:
 		return missingMemberError("TipRanksFirmSummary", "to")
-	case shadow.TotalRecommendations == nil:
+	case len(shadow.TotalRecommendations) == 0:
 		return missingMemberError("TipRanksFirmSummary", "totalRecommendations")
-	case shadow.DistinctSymbols == nil:
+	case len(shadow.DistinctSymbols) == 0:
 		return missingMemberError("TipRanksFirmSummary", "distinctSymbols")
-	case shadow.DistinctAnalysts == nil:
+	case len(shadow.DistinctAnalysts) == 0:
 		return missingMemberError("TipRanksFirmSummary", "distinctAnalysts")
-	case shadow.ValidPriceTargets == nil:
+	case len(shadow.ValidPriceTargets) == 0:
 		return missingMemberError("TipRanksFirmSummary", "validPriceTargets")
 	case shadow.Recommendations == nil:
 		return missingMemberError("TipRanksFirmSummary", "recommendations")
 	case shadow.AnalystAction == nil:
 		return missingMemberError("TipRanksFirmSummary", "analystAction")
-	case shadow.ComparedPriceTargets == nil:
+	case len(shadow.ComparedPriceTargets) == 0:
 		return missingMemberError("TipRanksFirmSummary", "comparedPriceTargets")
-	case shadow.Beats == nil:
+	case len(shadow.Beats) == 0:
 		return missingMemberError("TipRanksFirmSummary", "beats")
-	case shadow.Misses == nil:
+	case len(shadow.Misses) == 0:
 		return missingMemberError("TipRanksFirmSummary", "misses")
 	case shadow.AverageReturn == nil:
 		return missingMemberError("TipRanksFirmSummary", "averageReturn")
@@ -640,6 +732,34 @@ func (m *TipRanksFirmSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("TipRanksFirmSummary", "topReturn")
 	case shadow.WorstReturn == nil:
 		return missingMemberError("TipRanksFirmSummary", "worstReturn")
+	}
+	totalRecommendations, err := decodeCount("TipRanksFirmSummary", "totalRecommendations", shadow.TotalRecommendations)
+	if err != nil {
+		return err
+	}
+	distinctSymbols, err := decodeCount("TipRanksFirmSummary", "distinctSymbols", shadow.DistinctSymbols)
+	if err != nil {
+		return err
+	}
+	distinctAnalysts, err := decodeCount("TipRanksFirmSummary", "distinctAnalysts", shadow.DistinctAnalysts)
+	if err != nil {
+		return err
+	}
+	validPriceTargets, err := decodeCount("TipRanksFirmSummary", "validPriceTargets", shadow.ValidPriceTargets)
+	if err != nil {
+		return err
+	}
+	comparedPriceTargets, err := decodeCount("TipRanksFirmSummary", "comparedPriceTargets", shadow.ComparedPriceTargets)
+	if err != nil {
+		return err
+	}
+	beats, err := decodeCount("TipRanksFirmSummary", "beats", shadow.Beats)
+	if err != nil {
+		return err
+	}
+	misses, err := decodeCount("TipRanksFirmSummary", "misses", shadow.Misses)
+	if err != nil {
+		return err
 	}
 	if shadow.AverageReturn.Kind() != '0' {
 		return invalidMemberError("TipRanksFirmSummary", "averageReturn", "number")
@@ -654,15 +774,15 @@ func (m *TipRanksFirmSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		FirmName:             *shadow.FirmName,
 		From:                 *shadow.From,
 		To:                   *shadow.To,
-		TotalRecommendations: *shadow.TotalRecommendations,
-		DistinctSymbols:      *shadow.DistinctSymbols,
-		DistinctAnalysts:     *shadow.DistinctAnalysts,
-		ValidPriceTargets:    *shadow.ValidPriceTargets,
+		TotalRecommendations: totalRecommendations,
+		DistinctSymbols:      distinctSymbols,
+		DistinctAnalysts:     distinctAnalysts,
+		ValidPriceTargets:    validPriceTargets,
 		Recommendations:      *shadow.Recommendations,
 		AnalystAction:        *shadow.AnalystAction,
-		ComparedPriceTargets: *shadow.ComparedPriceTargets,
-		Beats:                *shadow.Beats,
-		Misses:               *shadow.Misses,
+		ComparedPriceTargets: comparedPriceTargets,
+		Beats:                beats,
+		Misses:               misses,
 		AverageReturn:        *shadow.AverageReturn,
 		TopReturn:            *shadow.TopReturn,
 		WorstReturn:          *shadow.WorstReturn,
@@ -693,10 +813,10 @@ type tipRanksAnalystProfileShadow struct {
 	FirmName             *string         `json:"firmName"`
 	SuccessRate          *jsontext.Value `json:"successRate"`
 	ExcessReturn         *jsontext.Value `json:"excessReturn"`
-	TotalRecommendations *uint64         `json:"totalRecommendations"`
-	GoodRecommendations  *uint64         `json:"goodRecommendations"`
-	AnalystRank          *uint64         `json:"analystRank"`
-	NumOfStars           *uint64         `json:"numOfStars"`
+	TotalRecommendations jsontext.Value  `json:"totalRecommendations"`
+	GoodRecommendations  jsontext.Value  `json:"goodRecommendations"`
+	AnalystRank          jsontext.Value  `json:"analystRank"`
+	NumOfStars           jsontext.Value  `json:"numOfStars"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -718,13 +838,13 @@ func (m *TipRanksAnalystProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return missingMemberError("TipRanksAnalystProfile", "successRate")
 	case shadow.ExcessReturn == nil:
 		return missingMemberError("TipRanksAnalystProfile", "excessReturn")
-	case shadow.TotalRecommendations == nil:
+	case len(shadow.TotalRecommendations) == 0:
 		return missingMemberError("TipRanksAnalystProfile", "totalRecommendations")
-	case shadow.GoodRecommendations == nil:
+	case len(shadow.GoodRecommendations) == 0:
 		return missingMemberError("TipRanksAnalystProfile", "goodRecommendations")
-	case shadow.AnalystRank == nil:
+	case len(shadow.AnalystRank) == 0:
 		return missingMemberError("TipRanksAnalystProfile", "analystRank")
-	case shadow.NumOfStars == nil:
+	case len(shadow.NumOfStars) == 0:
 		return missingMemberError("TipRanksAnalystProfile", "numOfStars")
 	}
 	if shadow.SuccessRate.Kind() != '0' {
@@ -733,16 +853,32 @@ func (m *TipRanksAnalystProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	if shadow.ExcessReturn.Kind() != '0' {
 		return invalidMemberError("TipRanksAnalystProfile", "excessReturn", "number")
 	}
+	totalRecommendations, err := decodeCount("TipRanksAnalystProfile", "totalRecommendations", shadow.TotalRecommendations)
+	if err != nil {
+		return err
+	}
+	goodRecommendations, err := decodeCount("TipRanksAnalystProfile", "goodRecommendations", shadow.GoodRecommendations)
+	if err != nil {
+		return err
+	}
+	analystRank, err := decodeCount("TipRanksAnalystProfile", "analystRank", shadow.AnalystRank)
+	if err != nil {
+		return err
+	}
+	numOfStars, err := decodeCount("TipRanksAnalystProfile", "numOfStars", shadow.NumOfStars)
+	if err != nil {
+		return err
+	}
 	*m = TipRanksAnalystProfile{
 		ExpertUID:            *shadow.ExpertUID,
 		AnalystName:          *shadow.AnalystName,
 		FirmName:             *shadow.FirmName,
 		SuccessRate:          *shadow.SuccessRate,
 		ExcessReturn:         *shadow.ExcessReturn,
-		TotalRecommendations: *shadow.TotalRecommendations,
-		GoodRecommendations:  *shadow.GoodRecommendations,
-		AnalystRank:          *shadow.AnalystRank,
-		NumOfStars:           *shadow.NumOfStars,
+		TotalRecommendations: totalRecommendations,
+		GoodRecommendations:  goodRecommendations,
+		AnalystRank:          analystRank,
+		NumOfStars:           numOfStars,
 	}
 	return nil
 }

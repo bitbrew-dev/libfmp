@@ -44,7 +44,9 @@ pub struct FinancialEstimate {
     pub eps_avg: f64,
     pub eps_high: f64,
     pub eps_low: f64,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub num_analysts_revenue: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub num_analysts_eps: Count,
 }
 
@@ -55,12 +57,19 @@ pub struct FinancialEstimate {
 pub struct RatingSnapshot {
     pub symbol: Ticker,
     pub rating: String,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub overall_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub discounted_cash_flow_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub return_on_equity_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub return_on_assets_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub debt_to_equity_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub price_to_earnings_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub price_to_book_score: Count,
 }
 
@@ -72,12 +81,19 @@ pub struct HistoricalRating {
     pub symbol: Ticker,
     pub date: Date,
     pub rating: String,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub overall_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub discounted_cash_flow_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub return_on_equity_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub return_on_assets_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub debt_to_equity_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub price_to_earnings_score: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub price_to_book_score: Count,
 }
 
@@ -87,12 +103,16 @@ pub struct HistoricalRating {
 #[serde(rename_all = "camelCase")]
 pub struct PriceTargetSummary {
     pub symbol: Ticker,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub last_month_count: Count,
     pub last_month_avg_price_target: Price,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub last_quarter_count: Count,
     pub last_quarter_avg_price_target: Price,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub last_year_count: Count,
     pub last_year_avg_price_target: Price,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub all_time_count: Count,
     pub all_time_avg_price_target: Price,
     /// The exact provider string, whose contents happen to be JSON-array text.
@@ -131,10 +151,15 @@ pub struct StockGrade {
 pub struct HistoricalStockGrade {
     pub symbol: Ticker,
     pub date: Date,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub analyst_ratings_strong_buy: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub analyst_ratings_buy: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub analyst_ratings_hold: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub analyst_ratings_sell: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub analyst_ratings_strong_sell: Count,
 }
 
@@ -144,10 +169,15 @@ pub struct HistoricalStockGrade {
 #[serde(rename_all = "camelCase")]
 pub struct StockGradesSummary {
     pub symbol: Ticker,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub strong_buy: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub buy: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub hold: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub sell: Count,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub strong_sell: Count,
     pub consensus: String,
 }

@@ -202,19 +202,19 @@ type InsiderTradeStatistics struct {
 // or raw value for every required member so a missing or null member is
 // observable after decoding.
 type insiderTradeStatisticsShadow struct {
-	Symbol                *string  `json:"symbol"`
-	CIK                   *string  `json:"cik"`
-	Year                  *uint32  `json:"year"`
-	Quarter               *uint8   `json:"quarter"`
-	AcquiredTransactions  *uint64  `json:"acquiredTransactions"`
-	DisposedTransactions  *uint64  `json:"disposedTransactions"`
-	AcquiredDisposedRatio *float64 `json:"acquiredDisposedRatio"`
-	TotalAcquired         *float64 `json:"totalAcquired"`
-	TotalDisposed         *float64 `json:"totalDisposed"`
-	AverageAcquired       *float64 `json:"averageAcquired"`
-	AverageDisposed       *float64 `json:"averageDisposed"`
-	TotalPurchases        *uint64  `json:"totalPurchases"`
-	TotalSales            *uint64  `json:"totalSales"`
+	Symbol                *string        `json:"symbol"`
+	CIK                   *string        `json:"cik"`
+	Year                  *uint32        `json:"year"`
+	Quarter               *uint8         `json:"quarter"`
+	AcquiredTransactions  jsontext.Value `json:"acquiredTransactions"`
+	DisposedTransactions  jsontext.Value `json:"disposedTransactions"`
+	AcquiredDisposedRatio *float64       `json:"acquiredDisposedRatio"`
+	TotalAcquired         *float64       `json:"totalAcquired"`
+	TotalDisposed         *float64       `json:"totalDisposed"`
+	AverageAcquired       *float64       `json:"averageAcquired"`
+	AverageDisposed       *float64       `json:"averageDisposed"`
+	TotalPurchases        jsontext.Value `json:"totalPurchases"`
+	TotalSales            jsontext.Value `json:"totalSales"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -234,9 +234,9 @@ func (m *InsiderTradeStatistics) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return missingMemberError("InsiderTradeStatistics", "year")
 	case shadow.Quarter == nil:
 		return missingMemberError("InsiderTradeStatistics", "quarter")
-	case shadow.AcquiredTransactions == nil:
+	case len(shadow.AcquiredTransactions) == 0:
 		return missingMemberError("InsiderTradeStatistics", "acquiredTransactions")
-	case shadow.DisposedTransactions == nil:
+	case len(shadow.DisposedTransactions) == 0:
 		return missingMemberError("InsiderTradeStatistics", "disposedTransactions")
 	case shadow.AcquiredDisposedRatio == nil:
 		return missingMemberError("InsiderTradeStatistics", "acquiredDisposedRatio")
@@ -248,25 +248,41 @@ func (m *InsiderTradeStatistics) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return missingMemberError("InsiderTradeStatistics", "averageAcquired")
 	case shadow.AverageDisposed == nil:
 		return missingMemberError("InsiderTradeStatistics", "averageDisposed")
-	case shadow.TotalPurchases == nil:
+	case len(shadow.TotalPurchases) == 0:
 		return missingMemberError("InsiderTradeStatistics", "totalPurchases")
-	case shadow.TotalSales == nil:
+	case len(shadow.TotalSales) == 0:
 		return missingMemberError("InsiderTradeStatistics", "totalSales")
+	}
+	acquiredTransactions, err := decodeCount("InsiderTradeStatistics", "acquiredTransactions", shadow.AcquiredTransactions)
+	if err != nil {
+		return err
+	}
+	disposedTransactions, err := decodeCount("InsiderTradeStatistics", "disposedTransactions", shadow.DisposedTransactions)
+	if err != nil {
+		return err
+	}
+	totalPurchases, err := decodeCount("InsiderTradeStatistics", "totalPurchases", shadow.TotalPurchases)
+	if err != nil {
+		return err
+	}
+	totalSales, err := decodeCount("InsiderTradeStatistics", "totalSales", shadow.TotalSales)
+	if err != nil {
+		return err
 	}
 	*m = InsiderTradeStatistics{
 		Symbol:                *shadow.Symbol,
 		CIK:                   *shadow.CIK,
 		Year:                  *shadow.Year,
 		Quarter:               *shadow.Quarter,
-		AcquiredTransactions:  *shadow.AcquiredTransactions,
-		DisposedTransactions:  *shadow.DisposedTransactions,
+		AcquiredTransactions:  acquiredTransactions,
+		DisposedTransactions:  disposedTransactions,
 		AcquiredDisposedRatio: *shadow.AcquiredDisposedRatio,
 		TotalAcquired:         *shadow.TotalAcquired,
 		TotalDisposed:         *shadow.TotalDisposed,
 		AverageAcquired:       *shadow.AverageAcquired,
 		AverageDisposed:       *shadow.AverageDisposed,
-		TotalPurchases:        *shadow.TotalPurchases,
-		TotalSales:            *shadow.TotalSales,
+		TotalPurchases:        totalPurchases,
+		TotalSales:            totalSales,
 	}
 	return nil
 }

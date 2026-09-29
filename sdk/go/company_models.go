@@ -371,15 +371,15 @@ type EmployeeCount struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type employeeCountShadow struct {
-	Symbol         *string   `json:"symbol"`
-	CIK            *string   `json:"cik"`
-	AcceptanceTime *DateTime `json:"acceptanceTime"`
-	PeriodOfReport *Date     `json:"periodOfReport"`
-	CompanyName    *string   `json:"companyName"`
-	FormType       *string   `json:"formType"`
-	FilingDate     *Date     `json:"filingDate"`
-	EmployeeCount  *uint64   `json:"employeeCount"`
-	Source         *string   `json:"source"`
+	Symbol         *string        `json:"symbol"`
+	CIK            *string        `json:"cik"`
+	AcceptanceTime *DateTime      `json:"acceptanceTime"`
+	PeriodOfReport *Date          `json:"periodOfReport"`
+	CompanyName    *string        `json:"companyName"`
+	FormType       *string        `json:"formType"`
+	FilingDate     *Date          `json:"filingDate"`
+	EmployeeCount  jsontext.Value `json:"employeeCount"`
+	Source         *string        `json:"source"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -405,10 +405,14 @@ func (m *EmployeeCount) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("EmployeeCount", "formType")
 	case shadow.FilingDate == nil:
 		return missingMemberError("EmployeeCount", "filingDate")
-	case shadow.EmployeeCount == nil:
+	case len(shadow.EmployeeCount) == 0:
 		return missingMemberError("EmployeeCount", "employeeCount")
 	case shadow.Source == nil:
 		return missingMemberError("EmployeeCount", "source")
+	}
+	employeeCount, err := decodeCount("EmployeeCount", "employeeCount", shadow.EmployeeCount)
+	if err != nil {
+		return err
 	}
 	*m = EmployeeCount{
 		Symbol:         *shadow.Symbol,
@@ -418,7 +422,7 @@ func (m *EmployeeCount) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		CompanyName:    *shadow.CompanyName,
 		FormType:       *shadow.FormType,
 		FilingDate:     *shadow.FilingDate,
-		EmployeeCount:  *shadow.EmployeeCount,
+		EmployeeCount:  employeeCount,
 		Source:         *shadow.Source,
 	}
 	return nil

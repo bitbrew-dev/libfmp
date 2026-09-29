@@ -86,6 +86,7 @@ pub struct CrowdfundingOffering {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub maximum_offering_amount: StatementAmount,
     pub offering_deadline_date: UsDate,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub current_number_of_employees: Count,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub total_asset_most_recent_fiscal_year: StatementAmount,
@@ -182,6 +183,7 @@ pub struct RegulationDOffering {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub total_amount_remaining: MarketValue,
     pub has_non_accredited_investors: bool,
+    #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub total_number_already_invested: Count,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub sales_commissions: MarketValue,

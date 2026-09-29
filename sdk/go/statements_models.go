@@ -3605,17 +3605,17 @@ type FinancialScore struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type financialScoreShadow struct {
-	Symbol           *string  `json:"symbol"`
-	ReportedCurrency *string  `json:"reportedCurrency"`
-	AltmanZScore     *float64 `json:"altmanZScore"`
-	PiotroskiScore   *uint64  `json:"piotroskiScore"`
-	WorkingCapital   *float64 `json:"workingCapital"`
-	TotalAssets      *float64 `json:"totalAssets"`
-	RetainedEarnings *float64 `json:"retainedEarnings"`
-	Ebit             *float64 `json:"ebit"`
-	MarketCap        *float64 `json:"marketCap"`
-	TotalLiabilities *float64 `json:"totalLiabilities"`
-	Revenue          *float64 `json:"revenue"`
+	Symbol           *string        `json:"symbol"`
+	ReportedCurrency *string        `json:"reportedCurrency"`
+	AltmanZScore     *float64       `json:"altmanZScore"`
+	PiotroskiScore   jsontext.Value `json:"piotroskiScore"`
+	WorkingCapital   *float64       `json:"workingCapital"`
+	TotalAssets      *float64       `json:"totalAssets"`
+	RetainedEarnings *float64       `json:"retainedEarnings"`
+	Ebit             *float64       `json:"ebit"`
+	MarketCap        *float64       `json:"marketCap"`
+	TotalLiabilities *float64       `json:"totalLiabilities"`
+	Revenue          *float64       `json:"revenue"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -3633,7 +3633,7 @@ func (m *FinancialScore) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FinancialScore", "reportedCurrency")
 	case shadow.AltmanZScore == nil:
 		return missingMemberError("FinancialScore", "altmanZScore")
-	case shadow.PiotroskiScore == nil:
+	case len(shadow.PiotroskiScore) == 0:
 		return missingMemberError("FinancialScore", "piotroskiScore")
 	case shadow.WorkingCapital == nil:
 		return missingMemberError("FinancialScore", "workingCapital")
@@ -3650,11 +3650,15 @@ func (m *FinancialScore) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.Revenue == nil:
 		return missingMemberError("FinancialScore", "revenue")
 	}
+	piotroskiScore, err := decodeCount("FinancialScore", "piotroskiScore", shadow.PiotroskiScore)
+	if err != nil {
+		return err
+	}
 	*m = FinancialScore{
 		Symbol:           *shadow.Symbol,
 		ReportedCurrency: *shadow.ReportedCurrency,
 		AltmanZScore:     *shadow.AltmanZScore,
-		PiotroskiScore:   *shadow.PiotroskiScore,
+		PiotroskiScore:   piotroskiScore,
 		WorkingCapital:   *shadow.WorkingCapital,
 		TotalAssets:      *shadow.TotalAssets,
 		RetainedEarnings: *shadow.RetainedEarnings,
