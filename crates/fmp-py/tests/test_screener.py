@@ -217,6 +217,41 @@ def test_decode_error_for_a_non_json_body(client: Any, fixture_server: FixtureSe
         client.screener.companies()
 
 
+def test_decode_error_names_the_null_member_row_and_member(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """Issue #366: a ``null`` required member names its row index and member."""
+    fixture_server.route("/company-screener", load_fixture("company_screener_null_beta_synthetic.json"))
+    with pytest.raises(errors.FmpDecodeError) as caught:
+        client.screener.companies()
+
+    assert caught.value.decode_path == "[37].beta"
+    assert caught.value.decode_kind == "null"
+    assert str(caught.value).startswith(
+        "successful response could not be decoded: null value at [37].beta (endpoint: company-screener): "
+    )
+
+
+def test_decode_error_never_carries_a_string_member_value(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """Issue #366: the offending string value reaches neither the message nor an attribute."""
+    sentinel = "SENTINEL-beta-text"
+    rows = load_fixture("company_screener_null_beta_synthetic.json")
+    rows[37]["beta"] = sentinel
+    fixture_server.route("/company-screener", rows)
+    with pytest.raises(errors.FmpDecodeError) as caught:
+        client.screener.companies()
+
+    error = caught.value
+    assert error.decode_path == "[37].beta"
+    assert error.decode_kind == "wrong_type"
+    assert error.body_truncated is True
+    assert sentinel not in str(error)
+    assert sentinel not in repr(error)
+    assert all(sentinel not in str(value) for value in vars(error).values())
+
+
 def test_companies_decodes_integral_float_and_fractional_market_caps(client: Any, fixture_server: FixtureServer) -> None:
     """Issue #339: an integral-float or fractional ``marketCap`` decodes as a ``float``."""
     fixture_server.route("/company-screener", load_fixture("company_screener_fractional_synthetic.json"))

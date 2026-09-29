@@ -64,6 +64,20 @@ static ERROR_ATTRIBUTES: &[MemberInfo] = &[
         default: None,
         deprecated: None,
     },
+    MemberInfo {
+        name: "decode_path",
+        r#type: <Option<String> as PyStubType>::type_output,
+        doc: "Where a JSON response failed to decode, for example `\"[37].beta\"`; never the member value.",
+        default: None,
+        deprecated: None,
+    },
+    MemberInfo {
+        name: "decode_kind",
+        r#type: <Option<String> as PyStubType>::type_output,
+        doc: "Why a JSON response failed to decode: `\"syntax\"`, `\"null\"`, `\"missing_member\"`, `\"wrong_type\"`, or `\"invalid_value\"`.",
+        default: None,
+        deprecated: None,
+    },
 ];
 
 /// Declares one exception type: the pyo3 type object under `fmp.errors` plus
@@ -188,6 +202,8 @@ fn set_validation_attributes(exception: &Bound<'_, PyBaseException>) -> PyResult
     exception.setattr("status", py.None())?;
     exception.setattr("body", py.None())?;
     exception.setattr("body_truncated", py.None())?;
+    exception.setattr("decode_path", py.None())?;
+    exception.setattr("decode_kind", py.None())?;
     Ok(())
 }
 
@@ -202,6 +218,13 @@ fn set_error_attributes(
     exception.setattr(
         "body_truncated",
         error.body().map(libfmp::error::SafeBody::is_truncated),
+    )?;
+    exception.setattr("decode_path", error.decode_path())?;
+    exception.setattr(
+        "decode_kind",
+        error
+            .decode_kind()
+            .map(libfmp::error::DecodeErrorKind::as_str),
     )?;
     Ok(())
 }
@@ -219,6 +242,8 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     base.setattr("status", py.None())?;
     base.setattr("body", py.None())?;
     base.setattr("body_truncated", py.None())?;
+    base.setattr("decode_path", py.None())?;
+    base.setattr("decode_kind", py.None())?;
 
     py.get_type::<FmpValidationError>()
         .setattr("category", "validation")?;
