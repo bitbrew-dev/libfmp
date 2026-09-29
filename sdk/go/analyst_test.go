@@ -161,5 +161,11 @@ func TestAnalystCountMembersAcceptIntegralFloatsAndRejectFractions(t *testing.T)
 	server, _ = newServer(t, jsonHandler(fmt.Sprintf(row, "2.9")))
 	client = newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 	_, err = client.Analyst.StockGradesSummary(ctx, NewStockGradesSummaryQuery("AAPL"))
-	_ = assertQuoteError(t, err, CategoryDecode, http.StatusOK, "grades-consensus")
+	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "grades-consensus")
+	if typed.Path != "/0/buy" || typed.DecodeKind != DecodeKindInvalidValue {
+		t.Fatalf("Path, DecodeKind = %q, %v, want /0/buy, invalid_value", typed.Path, typed.DecodeKind)
+	}
+	if strings.Contains(typed.Message, "2.9") {
+		t.Fatalf("Message = %q, must not contain the member value", typed.Message)
+	}
 }

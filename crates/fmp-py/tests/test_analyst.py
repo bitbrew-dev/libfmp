@@ -232,11 +232,13 @@ def test_stock_grades_summary_accepts_an_integral_float_count(client: Any, fixtu
 def test_stock_grades_summary_rejects_a_fractional_count(
     client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
 ) -> None:
-    """A fractional count such as ``2.9`` maps to ``FmpDecodeError`` with the endpoint id."""
+    """A fractional count such as ``2.9`` maps to ``FmpDecodeError`` naming the endpoint and member."""
     fixture_server.route("/grades-consensus", [{**load_fixture("stock_grades_summary.json")[0], "buy": 2.9}])
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.analyst.stock_grades_summary("AAPL")
     assert raised.value.endpoint == "grades-consensus"
+    assert raised.value.decode_path == "[0].buy"
+    assert raised.value.decode_kind == "invalid_value"
 
 
 def test_empty_array_decodes_to_an_empty_list(client: Any, fixture_server: FixtureServer) -> None:
