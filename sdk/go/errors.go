@@ -88,7 +88,7 @@ const (
 
 // DecodeKind is the coarse reason a successful JSON response failed to
 // decode. It mirrors DecodeErrorKind in the Rust crate and never carries the
-// offending member value.
+// offending member value. The values are stable: new kinds are only appended.
 type DecodeKind int
 
 const (
