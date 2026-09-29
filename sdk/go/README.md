@@ -75,6 +75,11 @@ append the secret as the last query pair of every request. `WithBaseURL` and
 `WithPathPrefix` route the client through a proxy; `WithHTTPClient` injects a
 caller-owned `*http.Client` for tests and custom transports.
 
+`client.CloseIdleConnections()` closes the idle keep-alive connections of the
+transport `NewClient` built; the client stays usable. It is a no-op with
+`WithHTTPClient`, whose transport stays with the caller. There is no `Close`:
+a `Client` owns nothing beyond that pool.
+
 `CustomHeaderWithPrefix(name, prefix, secret)` places non-secret text
 immediately before the secret, byte for byte: no separator is inserted, so a
 `"Bearer "` prefix carries its own trailing space. It mirrors the Rust
