@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::company::{
     AllSharesFloatQuery, BatchMarketCapitalizationQuery, CompanyNotesQuery, DelistedCompaniesQuery,
     EmployeeCountQuery, ExecutiveCompensationBenchmarkQuery, ExecutiveCompensationQuery,
@@ -20,17 +19,17 @@ use crate::models::company::{
     DelistedCompany, EmployeeCount, ExecutiveCompensation, ExecutiveCompensationBenchmark,
     MergerAcquisition, ShareFloat, StockPeer,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Company endpoints for a single client, exposed as `client.company`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.company", frozen)]
 pub(crate) struct CompanyNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl CompanyNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::statements::{IncomeStatementQuery, IncomeStatementTtmQuery};
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -10,17 +9,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::income::IncomeStatement;
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Statements income endpoints for a single client, exposed as `client.statements.income`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.income", frozen)]
 pub(crate) struct StatementsIncomeNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl StatementsIncomeNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

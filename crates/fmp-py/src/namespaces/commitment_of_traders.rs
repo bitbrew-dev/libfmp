@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::commitment_of_traders::CotQuery;
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -10,17 +9,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::commitment_of_traders::{CotAnalysis, CotReport, CotReportListing};
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Commitment of traders endpoints for a single client, exposed as `client.commitment_of_traders`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.commitment_of_traders", frozen)]
 pub(crate) struct CommitmentOfTradersNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl CommitmentOfTradersNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

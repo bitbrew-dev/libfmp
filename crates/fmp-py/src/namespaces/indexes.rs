@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::indexes::IndexChartQuery;
 use libfmp::endpoints::quote::{QuoteQuery, QuoteShortQuery};
 use pyo3::prelude::*;
@@ -13,17 +12,17 @@ use crate::errors::to_py_error;
 use crate::models::chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar};
 use crate::models::indexes::{HistoricalIndexConstituent, IndexConstituent, IndexListing};
 use crate::models::quote::{Quote, QuoteShort};
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Indexes endpoints for a single client, exposed as `client.indexes`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.indexes", frozen)]
 pub(crate) struct IndexesNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl IndexesNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

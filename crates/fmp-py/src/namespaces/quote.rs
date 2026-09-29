@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::quote::{
     AftermarketQuoteQuery, AftermarketTradeQuery, BatchAftermarketQuoteQuery,
     BatchAftermarketTradeQuery, BatchQuoteQuery, BatchQuoteShortQuery, ExchangeQuotesQuery,
@@ -16,17 +15,17 @@ use crate::errors::to_py_error;
 use crate::models::quote::{
     AftermarketQuote, AftermarketTrade, Quote, QuoteShort, StockPriceChange,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Quote endpoints for a single client, exposed as `client.quote`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.quote", frozen)]
 pub(crate) struct QuoteNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl QuoteNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

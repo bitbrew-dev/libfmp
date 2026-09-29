@@ -13,7 +13,10 @@ use std::{
     collections::HashMap,
     future::Future,
     mem, process,
-    sync::{Arc, Mutex, OnceLock, RwLock, Weak},
+    sync::{
+        Arc, Mutex, OnceLock, RwLock, Weak,
+        atomic::{AtomicBool, Ordering},
+    },
 };
 
 use libfmp::{Client, ClientBuilder};
@@ -37,9 +40,32 @@ fn poisoned() -> pyo3::PyErr {
     internal_error("the fmp runtime lock was poisoned by a panicking thread")
 }
 
-/// A client built for one `ClientBuilder`, retained while that builder lives.
+/// The message raised by every call on a closed `FmpClient`.
+const CLOSED_MESSAGE: &str = "the client is closed";
+
+/// The configuration shared by one `FmpClient` and every namespace it hands
+/// out, plus the flag `close()` sets so that all of them stop issuing requests.
+pub(crate) struct ClientHandle {
+    builder: ClientBuilder,
+    closed: AtomicBool,
+}
+
+impl ClientHandle {
+    pub(crate) fn new(builder: ClientBuilder) -> Arc<Self> {
+        Arc::new(Self {
+            builder,
+            closed: AtomicBool::new(false),
+        })
+    }
+
+    fn is_closed(&self) -> bool {
+        self.closed.load(Ordering::SeqCst)
+    }
+}
+
+/// A client built for one `ClientHandle`, retained while that handle lives.
 struct CachedClient {
-    owner: Weak<ClientBuilder>,
+    owner: Weak<ClientHandle>,
     client: Client,
 }
 
@@ -67,27 +93,40 @@ impl Inner {
         }))
     }
 
-    /// Return a cached client for `builder`, building and caching one on miss.
+    /// Return a cached client for `handle`, building and caching one on miss.
     ///
     /// The cache mutex is held only for the lookup and insert, never across the
     /// `block_on` that follows, so concurrent callers on other threads are not
-    /// serialised by their network work.
-    fn client(&self, builder: &Arc<ClientBuilder>) -> PyResult<Client> {
+    /// serialised by their network work. The closed flag is read under the same
+    /// mutex [`close`] takes to evict, so a closed handle is never re-cached.
+    fn client(&self, handle: &Arc<ClientHandle>) -> PyResult<Client> {
         let mut clients = self.clients.lock().map_err(|_| poisoned())?;
+        if handle.is_closed() {
+            return Err(configuration_error(CLOSED_MESSAGE));
+        }
         clients.retain(|_, cached| cached.owner.upgrade().is_some());
-        let id = Arc::as_ptr(builder) as usize;
+        let id = Arc::as_ptr(handle) as usize;
         if let Some(cached) = clients.get(&id) {
             return Ok(cached.client.clone());
         }
-        let client = builder.as_ref().clone().build().map_err(to_py_error)?;
+        let client = handle.builder.clone().build().map_err(to_py_error)?;
         clients.insert(
             id,
             CachedClient {
-                owner: Arc::downgrade(builder),
+                owner: Arc::downgrade(handle),
                 client: client.clone(),
             },
         );
         Ok(client)
+    }
+
+    fn evict(&self, handle: &Arc<ClientHandle>) -> PyResult<()> {
+        let evicted = {
+            let mut clients = self.clients.lock().map_err(|_| poisoned())?;
+            clients.remove(&(Arc::as_ptr(handle) as usize))
+        };
+        drop(evicted);
+        Ok(())
     }
 
     /// Drive `future` to completion on the shared runtime.
@@ -163,22 +202,48 @@ fn current() -> PyResult<Arc<Inner>> {
 
 /// Run `operation` against a cached client on the shared runtime.
 ///
-/// Returns a configuration error when called from inside a runtime worker
-/// thread, where `Runtime::block_on` would panic. Callers release the GIL (via
-/// `Python::detach`) around this so other Python threads make progress.
-pub(crate) fn block_on<F, Fut, T>(builder: Arc<ClientBuilder>, operation: F) -> PyResult<T>
+/// Returns a configuration error when `handle` is closed, or when called from
+/// inside a runtime worker thread, where `Runtime::block_on` would panic.
+/// Callers release the GIL (via `Python::detach`) around this so other Python
+/// threads make progress.
+pub(crate) fn block_on<F, Fut, T>(handle: Arc<ClientHandle>, operation: F) -> PyResult<T>
 where
     F: FnOnce(Client) -> Fut,
     Fut: Future<Output = T>,
 {
+    if handle.is_closed() {
+        return Err(configuration_error(CLOSED_MESSAGE));
+    }
     if Handle::try_current().is_ok() {
         return Err(configuration_error(
             "cannot call a synchronous fmp method from inside the fmp runtime",
         ));
     }
     let inner = current()?;
-    let client = inner.client(&builder)?;
+    let client = inner.client(&handle)?;
     Ok(inner.block_on(operation(client)))
+}
+
+/// Mark `handle` closed and drop its pooled client, releasing its idle
+/// connections. Idempotent. Calls already in flight keep their own client
+/// clone and finish; the process-wide runtime is shared by every client and
+/// stays up. Only this process generation's pool is touched: a forked child
+/// rebuilds its pool lazily and sees the closed flag before any request.
+pub(crate) fn close(handle: &Arc<ClientHandle>) -> PyResult<()> {
+    if handle.closed.swap(true, Ordering::SeqCst) {
+        return Ok(());
+    }
+    let inner = {
+        let guard = slot().read().map_err(|_| poisoned())?;
+        guard
+            .as_ref()
+            .filter(|inner| inner.owner_pid == process::id())
+            .cloned()
+    };
+    match inner {
+        Some(inner) => inner.evict(handle),
+        None => Ok(()),
+    }
 }
 
 #[cfg(all(test, unix))]

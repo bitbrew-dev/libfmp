@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::news::{
     ArticlesQuery, LatestCryptoNewsQuery, LatestForexNewsQuery, LatestGeneralNewsQuery,
     LatestPressReleasesQuery, LatestStockNewsQuery, SearchCryptoNewsQuery, SearchForexNewsQuery,
@@ -14,17 +13,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::news::{Article, NewsArticle};
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// News endpoints for a single client, exposed as `client.news`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.news", frozen)]
 pub(crate) struct NewsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl NewsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

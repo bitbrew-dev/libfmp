@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::chart::{StockChartEodQuery, StockChartIntradayQuery};
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -12,17 +11,17 @@ use crate::errors::to_py_error;
 use crate::models::chart::{
     StockChartAdjustedBar, StockChartFullBar, StockChartIntradayBar, StockChartLightBar,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Chart endpoints for a single client, exposed as `client.chart`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.chart", frozen)]
 pub(crate) struct ChartNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl ChartNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

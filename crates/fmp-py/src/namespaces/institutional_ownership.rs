@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::institutional_ownership::{
     Form13fFilingDatesQuery, HolderIndustryBreakdownQuery, HolderPerformanceSummaryQuery,
     InstitutionalHolderAnalyticsQuery, InstitutionalIndustrySummaryQuery,
@@ -19,17 +18,17 @@ use crate::models::institutional_ownership::{
     InstitutionalHolderAnalytics, InstitutionalHolding, InstitutionalIndustrySummary,
     InstitutionalOwnershipFiling, InstitutionalPositionSummary,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Institutional ownership endpoints for a single client, exposed as `client.institutional_ownership`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.institutional_ownership", frozen)]
 pub(crate) struct InstitutionalOwnershipNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl InstitutionalOwnershipNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

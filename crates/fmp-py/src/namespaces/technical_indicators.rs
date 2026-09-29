@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::technical_indicators::TechnicalIndicatorQuery;
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -14,17 +13,17 @@ use crate::models::technical_indicators::{
     RelativeStrengthIndexBar, SimpleMovingAverageBar, StandardDeviationBar,
     TripleExponentialMovingAverageBar, WeightedMovingAverageBar, WilliamsBar,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Technical indicators endpoints for a single client, exposed as `client.technical_indicators`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.technical_indicators", frozen)]
 pub(crate) struct TechnicalIndicatorsNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl TechnicalIndicatorsNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

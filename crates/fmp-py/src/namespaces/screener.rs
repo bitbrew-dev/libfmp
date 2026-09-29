@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::screener::CompanyScreenerQuery;
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -10,17 +9,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::screener::CompanyScreenerResult;
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Screener endpoints for a single client, exposed as `client.screener`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.screener", frozen)]
 pub(crate) struct ScreenerNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl ScreenerNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

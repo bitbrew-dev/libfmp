@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::fundraising::{
     LatestCrowdfundingOfferingsQuery, LatestRegulationDOfferingsQuery, OfferingByCikQuery,
     OfferingSearchQuery,
@@ -16,17 +15,17 @@ use crate::models::fundraising::{
     CrowdfundingOffering, CrowdfundingOfferingSearchResult, RegulationDOffering,
     RegulationDOfferingSearchResult,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Fundraising endpoints for a single client, exposed as `client.fundraising`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.fundraising", frozen)]
 pub(crate) struct FundraisingNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl FundraisingNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

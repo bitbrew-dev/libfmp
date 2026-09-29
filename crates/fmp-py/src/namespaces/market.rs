@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::market::{
     HistoricalIndustryPeQuery, HistoricalIndustryPerformanceQuery, HistoricalSectorPeQuery,
     HistoricalSectorPerformanceQuery, IndustryPeSnapshotQuery, IndustryPerformanceSnapshotQuery,
@@ -16,17 +15,17 @@ use crate::errors::to_py_error;
 use crate::models::market::{
     IndustryPe, IndustryPerformance, MarketMover, SectorPe, SectorPerformance,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Market endpoints for a single client, exposed as `client.market`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.market", frozen)]
 pub(crate) struct MarketNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl MarketNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

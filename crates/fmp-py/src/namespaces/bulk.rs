@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::bulk::{BulkEodQuery, BulkPartQuery, BulkStatementQuery, BulkYearQuery};
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
@@ -21,17 +20,17 @@ use crate::models::bulk::snapshots::{
     BulkUpgradesDowngradesConsensus,
 };
 use crate::models::company::CompanyProfile;
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Bulk endpoints for a single client, exposed as `client.bulk`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.bulk", frozen)]
 pub(crate) struct BulkNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl BulkNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

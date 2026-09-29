@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::statements::segmentation::{
     RevenueGeographicSegmentationQuery, RevenueProductSegmentationQuery,
 };
@@ -12,17 +11,17 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::segmentation::RevenueSegmentation;
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Statements segmentation endpoints for a single client, exposed as `client.statements.segmentation`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.statements.segmentation", frozen)]
 pub(crate) struct StatementsSegmentationNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl StatementsSegmentationNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

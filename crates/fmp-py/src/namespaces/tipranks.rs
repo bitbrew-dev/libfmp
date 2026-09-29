@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::tipranks::{
     PointInTimeRatingsByAnalystQuery, PointInTimeRatingsBySymbolQuery, TipRanksAnalystSummaryQuery,
     TipRanksAnalystsQuery, TipRanksFirmSummaryQuery, TipRanksSearchQuery,
@@ -17,17 +16,17 @@ use crate::models::tipranks::{
     TipRanksAnalystProfile, TipRanksAnalystSummary, TipRanksFirmSummary, TipRanksPointInTimeRating,
     TipRanksRatingSearchResult, TipRanksSymbolSummary,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Tipranks endpoints for a single client, exposed as `client.tipranks`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.tipranks", frozen)]
 pub(crate) struct TipranksNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl TipranksNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

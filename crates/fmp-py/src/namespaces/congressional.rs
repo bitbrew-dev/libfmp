@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::congressional::{
     CongressionalNetWorthAggregatedQuery, CongressionalNetWorthQuery, CongressionalPositionsQuery,
     CongressionalProfilesQuery, CongressionalTradesByMemberIdQuery, CongressionalTradesByNameQuery,
@@ -17,17 +16,17 @@ use crate::models::congressional::{
     CongressionalMemberNetWorth, CongressionalMemberNetWorthAggregate, CongressionalMemberPosition,
     CongressionalMemberProfile, CongressionalTrade,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Congressional endpoints for a single client, exposed as `client.congressional`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.congressional", frozen)]
 pub(crate) struct CongressionalNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl CongressionalNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }

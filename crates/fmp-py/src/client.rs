@@ -11,11 +11,14 @@ use libfmp::{
 };
 use pyo3::{
     prelude::*,
-    types::{PyInt, PyMapping},
+    types::{PyAny, PyInt, PyMapping},
 };
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
-use crate::errors::to_py_error;
+use crate::{
+    errors::to_py_error,
+    runtime::{self, ClientHandle},
+};
 
 fn invalid_configuration(message: &'static str) -> PyErr {
     to_py_error(libfmp::Error::configuration(message))
@@ -171,10 +174,15 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// `max_response_body_bytes` bounds each buffered response. Authenticated
 /// non-loopback HTTP requires `danger_allow_insecure_authentication=True`.
 /// Redirects are either disabled or restricted to the same origin.
+///
+/// `close()` releases the client's pooled connections; afterwards every call,
+/// including through a namespace fetched before the close, raises
+/// `FmpConfigError`. Closing twice is a no-op, and `with FmpClient(...) as
+/// client:` closes the client when the block exits.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native", frozen)]
 pub(crate) struct FmpClient {
-    pub(crate) builder: Arc<ClientBuilder>,
+    pub(crate) builder: Arc<ClientHandle>,
 }
 
 #[gen_stub_pymethods]
@@ -240,7 +248,34 @@ impl FmpClient {
             .build()
             .map_err(|error| build_error(auth_mode, error))?;
         Ok(Self {
-            builder: Arc::new(builder),
+            builder: ClientHandle::new(builder),
         })
+    }
+
+    /// Releases the pooled HTTP connections and rejects every later call with
+    /// `FmpConfigError`. Calls already in flight finish normally. Idempotent.
+    fn close(&self) -> PyResult<()> {
+        runtime::close(&self.builder)
+    }
+
+    /// Returns the client itself for use in a `with` block.
+    fn __enter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
+        slf
+    }
+
+    /// Closes the client and lets any exception from the block propagate.
+    #[pyo3(signature = (exc_type, exc_value, traceback))]
+    fn __exit__(
+        &self,
+        #[gen_stub(override_type(type_repr = "typing.Optional[type[builtins.BaseException]]", imports = ("builtins", "typing")))]
+        exc_type: Option<Bound<'_, PyAny>>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[builtins.BaseException]", imports = ("builtins", "typing")))]
+        exc_value: Option<Bound<'_, PyAny>>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[types.TracebackType]", imports = ("types", "typing")))]
+        traceback: Option<Bound<'_, PyAny>>,
+    ) -> PyResult<bool> {
+        let _ = (exc_type, exc_value, traceback);
+        self.close()?;
+        Ok(false)
     }
 }

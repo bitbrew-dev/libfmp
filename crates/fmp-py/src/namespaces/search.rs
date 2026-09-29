@@ -2,7 +2,6 @@
 
 use std::sync::Arc;
 
-use libfmp::ClientBuilder;
 use libfmp::endpoints::search::{
     CikSearchQuery, CusipSearchQuery, ExchangeVariantsQuery, IsinSearchQuery, NameSearchQuery,
     SymbolSearchQuery,
@@ -16,17 +15,17 @@ use crate::models::search::{
     CikSearchResult, CusipSearchResult, ExchangeVariant, IsinSearchResult, NameSearchResult,
     SymbolSearchResult,
 };
-use crate::runtime::block_on;
+use crate::runtime::{ClientHandle, block_on};
 
 /// Search endpoints for a single client, exposed as `client.search`.
 #[gen_stub_pyclass]
 #[pyclass(module = "fmp._native.search", frozen)]
 pub(crate) struct SearchNamespace {
-    builder: Arc<ClientBuilder>,
+    builder: Arc<ClientHandle>,
 }
 
 impl SearchNamespace {
-    pub(crate) fn new(builder: Arc<ClientBuilder>) -> Self {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
         Self { builder }
     }
 }
