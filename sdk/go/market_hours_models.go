@@ -70,7 +70,7 @@ type ExchangeHoliday struct {
 	Exchange     string          `json:"exchange"`
 	Date         Date            `json:"date"`
 	Name         string          `json:"name"`
-	IsClosed     bool            `json:"isClosed"`
+	IsClosed     *bool           `json:"isClosed"`
 	AdjOpenTime  *jsontext.Value `json:"adjOpenTime"`
 	AdjCloseTime *jsontext.Value `json:"adjCloseTime"`
 }
@@ -82,7 +82,7 @@ type exchangeHolidayShadow struct {
 	Exchange     *string        `json:"exchange"`
 	Date         *Date          `json:"date"`
 	Name         *string        `json:"name"`
-	IsClosed     *bool          `json:"isClosed"`
+	IsClosed     jsontext.Value `json:"isClosed"`
 	AdjOpenTime  jsontext.Value `json:"adjOpenTime"`
 	AdjCloseTime jsontext.Value `json:"adjCloseTime"`
 }
@@ -102,12 +102,20 @@ func (m *ExchangeHoliday) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeHoliday", "date")
 	case shadow.Name == nil:
 		return missingMemberError("ExchangeHoliday", "name")
-	case shadow.IsClosed == nil:
+	case len(shadow.IsClosed) == 0:
 		return missingMemberError("ExchangeHoliday", "isClosed")
 	case len(shadow.AdjOpenTime) == 0:
 		return missingMemberError("ExchangeHoliday", "adjOpenTime")
 	case len(shadow.AdjCloseTime) == 0:
 		return missingMemberError("ExchangeHoliday", "adjCloseTime")
+	}
+	var isClosed *bool
+	if shadow.IsClosed.Kind() != 'n' {
+		var value bool
+		if err := json.Unmarshal(shadow.IsClosed, &value); err != nil {
+			return err
+		}
+		isClosed = &value
 	}
 	var adjOpenTime *jsontext.Value
 	if shadow.AdjOpenTime.Kind() != 'n' {
@@ -129,7 +137,7 @@ func (m *ExchangeHoliday) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Exchange:     *shadow.Exchange,
 		Date:         *shadow.Date,
 		Name:         *shadow.Name,
-		IsClosed:     *shadow.IsClosed,
+		IsClosed:     isClosed,
 		AdjOpenTime:  adjOpenTime,
 		AdjCloseTime: adjCloseTime,
 	}

@@ -1,7 +1,9 @@
 package fmp
 
 import (
+	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -92,8 +94,8 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 	profiles := assertFixtureParity[CongressionalMemberProfile](t, "congress_senate_profile.json")
 	if want := (CongressionalMemberProfile{MemberID: "L000397", FirstName: "Zoe", LastName: "Lofgren",
 		BirthDate: mustParseDate(t, "1947-12-20"), LatestParty: "Democrat", LatestState: "CA", LatestPosition: "Representative",
-		Image: "https://images.financialmodelingprep.com/senate/L000397.jpg", Active: true,
-		YearsActive: 31.6}); len(profiles) != 1 || profiles[0] != want {
+		Image: new("https://images.financialmodelingprep.com/senate/L000397.jpg"), Active: true,
+		YearsActive: 31.6}); len(profiles) != 1 || !reflect.DeepEqual(profiles[0], want) {
 		t.Fatalf("congress_senate_profile = %+v", profiles)
 	}
 
@@ -222,5 +224,33 @@ func TestCongressionalRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		if err := json.Unmarshal([]byte(wire), &trades); err != nil || len(trades) != 1 || trades[0].CapitalGainsOver200Usd != nil {
 			t.Fatalf("trade with capital gains %q = %+v, %v", replacement, trades, err)
 		}
+	}
+}
+
+// Mirrors documented_fields_have_strict_types_and_only_image_and_end_date_are_nullable in
+// crates/libfmp/tests/congressional_member_endpoints.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestCongressionalMemberProfileImageDecodesNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "congress_senate_profile.json"
+	cases := []struct {
+		member string
+		isNil  func(CongressionalMemberProfile) bool
+	}{
+		{"image", func(row CongressionalMemberProfile) bool { return row.Image == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []CongressionalMemberProfile
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []CongressionalMemberProfile
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
 	}
 }

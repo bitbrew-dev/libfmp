@@ -281,7 +281,7 @@ class CongressionalMemberProfile:
     @property
     def latest_position(self) -> builtins.str: ...
     @property
-    def image(self) -> builtins.str: ...
+    def image(self) -> typing.Optional[builtins.str]: ...
     @property
     def active(self) -> builtins.bool: ...
     @property
@@ -297,7 +297,7 @@ class CongressionalMemberProfile:
         latest_party: builtins.str,
         latest_state: builtins.str,
         latest_position: builtins.str,
-        image: builtins.str,
+        image: typing.Optional[builtins.str],
         active: builtins.bool,
         years_active: builtins.float,
     ) -> CongressionalMemberProfile: ...

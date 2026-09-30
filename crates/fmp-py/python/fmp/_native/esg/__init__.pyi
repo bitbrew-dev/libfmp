@@ -82,9 +82,9 @@ class EsgDisclosure:
     @property
     def cik(self) -> builtins.str: ...
     @property
-    def company_name(self) -> builtins.str: ...
+    def company_name(self) -> typing.Optional[builtins.str]: ...
     @property
-    def form_type(self) -> builtins.str: ...
+    def form_type(self) -> typing.Optional[builtins.str]: ...
     @property
     def environmental_score(self) -> builtins.float: ...
     @property
@@ -103,8 +103,8 @@ class EsgDisclosure:
         accepted_date: datetime.date,
         symbol: builtins.str,
         cik: builtins.str,
-        company_name: builtins.str,
-        form_type: builtins.str,
+        company_name: typing.Optional[builtins.str],
+        form_type: typing.Optional[builtins.str],
         environmental_score: builtins.float,
         social_score: builtins.float,
         governance_score: builtins.float,
@@ -162,7 +162,7 @@ class EsgRating:
     @property
     def cik(self) -> builtins.str: ...
     @property
-    def company_name(self) -> builtins.str: ...
+    def company_name(self) -> typing.Optional[builtins.str]: ...
     @property
     def industry(self) -> builtins.str: ...
     @property
@@ -177,7 +177,7 @@ class EsgRating:
         *,
         symbol: builtins.str,
         cik: builtins.str,
-        company_name: builtins.str,
+        company_name: typing.Optional[builtins.str],
         industry: builtins.str,
         fiscal_year: builtins.int,
         esg_risk_rating: builtins.str,

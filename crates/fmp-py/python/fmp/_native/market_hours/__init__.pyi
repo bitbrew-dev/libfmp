@@ -30,7 +30,7 @@ class ExchangeHoliday:
     @property
     def name(self) -> builtins.str: ...
     @property
-    def is_closed(self) -> builtins.bool: ...
+    def is_closed(self) -> typing.Optional[builtins.bool]: ...
     @property
     def adj_open_time(self) -> typing.Any: ...
     @property
@@ -42,7 +42,7 @@ class ExchangeHoliday:
         exchange: builtins.str,
         date: datetime.date,
         name: builtins.str,
-        is_closed: builtins.bool,
+        is_closed: typing.Optional[builtins.bool],
         adj_open_time: typing.Optional[builtins.str],
         adj_close_time: typing.Optional[builtins.str],
     ) -> ExchangeHoliday: ...

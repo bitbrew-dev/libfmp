@@ -18,7 +18,10 @@ fn all_documented_esg_fixtures_round_trip_exactly_with_exact_acronym_keys() {
     assert_eq!(disclosure.accepted_date.to_string(), "2026-04-30");
     assert_eq!(disclosure.symbol.as_str(), "AAPL");
     assert_eq!(disclosure.cik.as_str(), "0000320193");
-    assert_eq!(disclosure.form_type.as_str(), "8-K");
+    assert_eq!(
+        disclosure.form_type.as_ref().map(|form| form.as_str()),
+        Some("8-K")
+    );
     assert_eq!(disclosure.esg_score, 56.79);
 
     let rating = rows::<EsgRating>(RATINGS).remove(0);
@@ -42,9 +45,9 @@ fn all_documented_esg_fixtures_round_trip_exactly_with_exact_acronym_keys() {
 
 #[test]
 fn documented_field_counts_required_non_null_contracts_and_unknown_tolerance_hold() {
-    assert_required_contract::<EsgDisclosure>(DISCLOSURES, 11);
-    assert_required_contract::<EsgRating>(RATINGS, 7);
-    assert_required_contract::<EsgBenchmark>(BENCHMARK, 6);
+    assert_required_contract::<EsgDisclosure>(DISCLOSURES, 11, &["companyName", "formType"]);
+    assert_required_contract::<EsgRating>(RATINGS, 7, &["companyName"]);
+    assert_required_contract::<EsgBenchmark>(BENCHMARK, 6, &[]);
 }
 
 #[test]
@@ -81,9 +84,9 @@ where
     assert_eq!(serde_json::to_value(rows::<T>(fixture)).unwrap(), source);
 }
 
-fn assert_required_contract<T>(fixture: &[u8], field_count: usize)
+fn assert_required_contract<T>(fixture: &[u8], field_count: usize, nullable: &[&str])
 where
-    T: DeserializeOwned,
+    T: DeserializeOwned + Serialize,
 {
     let source: Value = serde_json::from_slice(fixture).unwrap();
     let row = source[0].as_object().unwrap();
@@ -96,7 +99,12 @@ where
 
         let mut null = row.clone();
         null.insert(field.clone(), Value::Null);
-        assert!(serde_json::from_value::<T>(Value::Object(null)).is_err());
+        let decoded = serde_json::from_value::<T>(Value::Object(null));
+        if nullable.contains(&field.as_str()) {
+            assert!(serde_json::to_value(decoded.unwrap()).unwrap()[field].is_null());
+        } else {
+            assert!(decoded.is_err(), "field {field} must reject null");
+        }
     }
 
     let mut future: Map<String, Value> = row.clone();

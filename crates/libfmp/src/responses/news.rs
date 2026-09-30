@@ -37,8 +37,10 @@ pub struct NewsArticle {
     pub published_date: ApiDateTime,
     pub publisher: String,
     pub title: String,
-    pub image: String,
-    pub site: String,
+    #[serde(deserialize_with = "required_option")]
+    pub image: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub site: Option<String>,
     pub text: String,
     pub url: String,
 }

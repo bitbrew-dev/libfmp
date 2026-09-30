@@ -1,6 +1,7 @@
 package fmp
 
 import (
+	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
 	"strings"
@@ -88,8 +89,8 @@ func TestAllNineProviderNewsFixturesShareTheSameEightFieldRow(t *testing.T) {
 		if row.Publisher != tc.publisher {
 			t.Fatalf("%s: publisher = %q, want %q", tc.fixture, row.Publisher, tc.publisher)
 		}
-		if !strings.HasPrefix(row.Image, "https://") || !strings.HasPrefix(row.URL, "https://") {
-			t.Fatalf("%s: image %q or url %q is not https", tc.fixture, row.Image, row.URL)
+		if row.Image == nil || !strings.HasPrefix(*row.Image, "https://") || !strings.HasPrefix(row.URL, "https://") {
+			t.Fatalf("%s: image %v or url %q is not https", tc.fixture, row.Image, row.URL)
 		}
 		if got := memberSet(t, row); len(got) != 8 {
 			t.Fatalf("%s: re-encoded members = %d, want 8", tc.fixture, len(got))
@@ -242,5 +243,34 @@ func TestNewsRowsAreBareArraysPreservingEmptyMultipleAndLargeOpaqueStrings(t *te
 	}
 	if err := json.Unmarshal(large, &articles); err != nil || len(articles) != 1 || articles[0].Content != payload {
 		t.Fatalf("large content: len %d, %v", len(articles), err)
+	}
+}
+
+// Mirrors image_and_site_are_required_but_null_decodes_to_none in
+// crates/libfmp/tests/news_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestNewsImageAndSiteDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "latest_crypto_news.json"
+	cases := []struct {
+		member string
+		isNil  func(NewsArticle) bool
+	}{
+		{"image", func(row NewsArticle) bool { return row.Image == nil }},
+		{"site", func(row NewsArticle) bool { return row.Site == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []NewsArticle
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []NewsArticle
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
 	}
 }

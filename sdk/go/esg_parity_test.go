@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
+	"reflect"
 	"slices"
 	"testing"
 )
@@ -27,8 +28,8 @@ func TestDocumentedEsgDisclosureDecodesExactValuesAndKeepsAcronymKey(t *testing.
 	}
 	disclosure := disclosures[0]
 	if disclosure.Date.String() != "2026-03-28" || disclosure.AcceptedDate.String() != "2026-04-30" ||
-		disclosure.Symbol != "AAPL" || disclosure.CIK != "0000320193" || disclosure.CompanyName != "Apple Inc." ||
-		disclosure.FormType != "8-K" || disclosure.EnvironmentalScore != 66.29 || disclosure.SocialScore != 45.21 ||
+		disclosure.Symbol != "AAPL" || disclosure.CIK != "0000320193" || !reflect.DeepEqual(disclosure.CompanyName, new("Apple Inc.")) ||
+		!reflect.DeepEqual(disclosure.FormType, new("8-K")) || disclosure.EnvironmentalScore != 66.29 || disclosure.SocialScore != 45.21 ||
 		disclosure.GovernanceScore != 58.87 || disclosure.ESGScore != 56.79 ||
 		disclosure.URL != "https://www.sec.gov/Archives/edgar/data/320193/000032019326000011/0000320193-26-000011-index.htm" {
 		t.Fatalf("esg_disclosures = %+v", disclosure)
@@ -47,7 +48,7 @@ func TestDocumentedEsgRatingAndBenchmarkDecodeExactValues(t *testing.T) {
 		t.Fatalf("rows = %d, want 1", len(ratings))
 	}
 	rating := ratings[0]
-	if rating.Symbol != "AAPL" || rating.CIK != "0000320193" || rating.CompanyName != "Apple Inc." ||
+	if rating.Symbol != "AAPL" || rating.CIK != "0000320193" || !reflect.DeepEqual(rating.CompanyName, new("Apple Inc.")) ||
 		rating.Industry != "CONSUMER ELECTRONICS" || rating.FiscalYear != 2025 || rating.ESGRiskRating != "B" ||
 		rating.IndustryRank != "17 out of 20" {
 		t.Fatalf("esg_ratings = %+v", rating)
@@ -127,5 +128,62 @@ func TestEsgRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	var benchmarks []ESGBenchmark
 	if err := json.Unmarshal([]byte(`[{"fiscalYear":2023,"sector":"APPAREL RETAIL"}]`), &benchmarks); err == nil {
 		t.Fatal("a benchmark without scores decoded into ESGBenchmark")
+	}
+}
+
+// Mirrors assert_required_contract in
+// crates/libfmp/tests/esg_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestEsgDisclosureNullableMembersDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "esg_disclosures.json"
+	cases := []struct {
+		member string
+		isNil  func(ESGDisclosure) bool
+	}{
+		{"companyName", func(row ESGDisclosure) bool { return row.CompanyName == nil }},
+		{"formType", func(row ESGDisclosure) bool { return row.FormType == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []ESGDisclosure
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []ESGDisclosure
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
+	}
+}
+
+// Mirrors assert_required_contract in
+// crates/libfmp/tests/esg_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestEsgRatingCompanyNameDecodesNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "esg_ratings.json"
+	cases := []struct {
+		member string
+		isNil  func(ESGRating) bool
+	}{
+		{"companyName", func(row ESGRating) bool { return row.CompanyName == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []ESGRating
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []ESGRating
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
 	}
 }

@@ -66,7 +66,7 @@ fn all_nine_exact_provider_fixtures_share_the_same_eight_field_row() {
         assert_eq!(rows.len(), 1);
         assert_eq!(rows[0].symbol.as_ref().map(Ticker::as_str), symbol);
         assert_eq!(rows[0].publisher, publisher);
-        assert!(rows[0].image.starts_with("https://"));
+        assert!(rows[0].image.as_deref().unwrap().starts_with("https://"));
         assert!(rows[0].url.starts_with("https://"));
     }
 }
@@ -109,6 +109,17 @@ fn symbol_key_is_required_but_explicit_null_is_preserved() {
 }
 
 #[test]
+fn image_and_site_are_required_but_null_decodes_to_none() {
+    let mut source: serde_json::Value = serde_json::from_slice(LATEST_CRYPTO).unwrap();
+    source[0]["image"] = serde_json::Value::Null;
+    source[0]["site"] = serde_json::Value::Null;
+    let rows: Vec<NewsArticle> = serde_json::from_value(source.clone()).unwrap();
+    assert_eq!(rows[0].image, None);
+    assert_eq!(rows[0].site, None);
+    assert_eq!(serde_json::to_value(&rows).unwrap(), source);
+}
+
+#[test]
 fn documented_fields_are_required_nullability_is_exact_and_unknowns_are_accepted() {
     assert_contract::<Article>(FMP_ARTICLES, &[]);
     for fixture in [
@@ -122,7 +133,7 @@ fn documented_fields_are_required_nullability_is_exact_and_unknowns_are_accepted
         SEARCH_CRYPTO,
         SEARCH_FOREX,
     ] {
-        assert_contract::<NewsArticle>(fixture, &["symbol"]);
+        assert_contract::<NewsArticle>(fixture, &["symbol", "image", "site"]);
     }
 }
 

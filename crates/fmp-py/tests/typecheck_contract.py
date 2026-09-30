@@ -549,7 +549,7 @@ def check_market_hours_contract(client: FmpClient) -> None:
         "NASDAQ", from_=datetime.date(2025, 4, 27), to="2026-04-27"
     )
     holiday_date: datetime.date = holidays[0].date
-    is_closed: bool = holidays[0].is_closed
+    is_closed: bool | None = holidays[0].is_closed
     adj_open_time: Any = holidays[0].adj_open_time
     everywhere: list[ExchangeMarketHours] = client.market_hours.all_exchanges()
     timezone: str = everywhere[0].timezone

@@ -177,7 +177,7 @@ pub(crate) struct ExchangeHoliday {
     #[pyo3(get)]
     pub name: String,
     #[pyo3(get)]
-    pub is_closed: bool,
+    pub is_closed: Option<bool>,
     adj_open_time: Option<::serde_json::Value>,
     adj_close_time: Option<::serde_json::Value>,
 }
@@ -193,7 +193,7 @@ impl ExchangeHoliday {
         exchange: String,
         date: ::chrono::NaiveDate,
         name: String,
-        is_closed: bool,
+        is_closed: Option<bool>,
         adj_open_time: Option<String>,
         adj_close_time: Option<String>,
     ) -> PyResult<Self> {
