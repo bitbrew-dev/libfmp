@@ -59,14 +59,12 @@ func TestDocumentedIndexDirectoryAndQuoteFixturesDecodeExactValues(t *testing.T)
 	}
 
 	short := assertFixtureParity[QuoteShort](t, "indexes_quote_short.json")
-	if want := (QuoteShort{Symbol: "^VIX", Price: 18.1, Change: -2.56, Volume: 0}); len(short) != 1 ||
-		short[0] != want {
-		t.Fatalf("indexes_quote_short = %+v, want %+v", short, want)
+	if len(short) != 1 || !quoteShortMatches(short[0], "^VIX", 18.1, -2.56, 0) {
+		t.Fatalf("indexes_quote_short = %+v", short)
 	}
 	batch := assertFixtureParity[QuoteShort](t, "indexes_quotes.json")
-	if want := (QuoteShort{Symbol: "^SPROME10", Price: 4520.37, Change: 44.67, Volume: 0}); len(batch) != 1 ||
-		batch[0] != want {
-		t.Fatalf("indexes_quotes = %+v, want %+v", batch, want)
+	if len(batch) != 1 || !quoteShortMatches(batch[0], "^SPROME10", 4520.37, 44.67, 0) {
+		t.Fatalf("indexes_quotes = %+v", batch)
 	}
 }
 

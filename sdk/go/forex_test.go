@@ -57,7 +57,7 @@ func TestForexMethodsUseExactPathsAndWireOrder(t *testing.T) {
 		t.Fatalf("Quote = %+v, %v", quotes, err)
 	}
 	short, err := client.Forex.QuoteShort(ctx, NewQuoteShortQuery("EURUSD"))
-	if err != nil || len(short) != 1 || short[0].Volume != 146_872 {
+	if err != nil || len(short) != 1 || short[0].Volume == nil || *short[0].Volume != 146_872 {
 		t.Fatalf("QuoteShort = %+v, %v", short, err)
 	}
 	light, err := client.Forex.ChartLight(ctx, NewAssetChartQuery("EURUSD").WithFrom(eodFrom).WithTo(eodTo))

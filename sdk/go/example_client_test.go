@@ -49,7 +49,11 @@ func printQuoteShort(quotes []fmp.QuoteShort) {
 		return
 	}
 	q := quotes[0]
-	fmt.Printf("%s price %.5f change %.5f volume %.0f\n", q.Symbol, q.Price, q.Change, q.Volume)
+	if q.Price == nil || q.Change == nil || q.Volume == nil {
+		fmt.Printf("%s has no price, change or volume\n", q.Symbol)
+		return
+	}
+	fmt.Printf("%s price %.5f change %.5f volume %.0f\n", q.Symbol, *q.Price, *q.Change, *q.Volume)
 }
 
 // ExampleNewClient builds a client against an in-process server. Drop

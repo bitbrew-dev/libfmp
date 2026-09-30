@@ -67,7 +67,7 @@ func TestIndexesMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 		t.Fatalf("Quote = %+v, %v", quote, err)
 	}
 	short, err := client.Indexes.QuoteShort(ctx, NewQuoteShortQuery("^VIX"))
-	if err != nil || len(short) != 1 || short[0].Symbol != "^VIX" || short[0].Price != 18.1 {
+	if err != nil || len(short) != 1 || short[0].Symbol != "^VIX" || short[0].Price == nil || *short[0].Price != 18.1 {
 		t.Fatalf("QuoteShort = %+v, %v", short, err)
 	}
 

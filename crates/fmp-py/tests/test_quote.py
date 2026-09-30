@@ -44,6 +44,15 @@ def test_aftermarket_trade_takes_one_symbol(client: Any, fixture_server: Fixture
     assert row.timestamp == AFTERMARKET_TIMESTAMP
 
 
+def test_aftermarket_trade_null_trade_size_is_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A ``null`` provider ``tradeSize`` surfaces as ``None``."""
+    fixture_server.route("/aftermarket-trade", load_fixture("aftermarket_trade_synthetic.json"))
+    rows = client.quote.aftermarket_trade("000001.SZ")
+
+    assert len(rows) == 3
+    assert rows[2].trade_size is None
+
+
 def test_aftermarket_quote_takes_one_symbol(client: Any, fixture_server: FixtureServer) -> None:
     """``aftermarket_quote`` decodes the bid-and-ask row for one symbol."""
     fixture_server.route("/aftermarket-quote", load_fixture("aftermarket_quote.json"))
@@ -106,6 +115,8 @@ def test_batch_quote_short_accepts_a_bare_string(client: Any, fixture_server: Fi
     assert [row.symbol for row in rows] == ["000001.SZ", "^VIX"]
     assert rows[0].volume == 4_294_967_296
     assert rows[1].price == pytest.approx(18.75)
+    assert rows[1].change is None
+    assert rows[1].volume is None
 
 
 def test_batch_aftermarket_trade_preserves_symbol_order(client: Any, fixture_server: FixtureServer) -> None:

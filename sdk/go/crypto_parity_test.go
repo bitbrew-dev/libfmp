@@ -53,14 +53,12 @@ func TestCryptoCatalogAndQuoteFixturesDecodeExactValues(t *testing.T) {
 	}
 
 	short := assertFixtureParity[QuoteShort](t, "cryptocurrency_quote_short.json")
-	if want := (QuoteShort{Symbol: "BTCUSD", Price: 64756.84, Change: 853.94, Volume: 32_030_003_200}); len(short) != 1 ||
-		short[0] != want {
-		t.Fatalf("cryptocurrency_quote_short = %+v, want %+v", short, want)
+	if len(short) != 1 || !quoteShortMatches(short[0], "BTCUSD", 64756.84, 853.94, 32_030_003_200) {
+		t.Fatalf("cryptocurrency_quote_short = %+v", short)
 	}
 	batch := assertFixtureParity[QuoteShort](t, "cryptocurrency_quotes.json")
-	if want := (QuoteShort{Symbol: "00USD", Price: 0.0102, Change: 0.000441090368, Volume: 329_571}); len(batch) != 1 ||
-		batch[0] != want {
-		t.Fatalf("cryptocurrency_quotes = %+v, want %+v", batch, want)
+	if len(batch) != 1 || !quoteShortMatches(batch[0], "00USD", 0.0102, 0.000441090368, 329_571) {
+		t.Fatalf("cryptocurrency_quotes = %+v", batch)
 	}
 }
 

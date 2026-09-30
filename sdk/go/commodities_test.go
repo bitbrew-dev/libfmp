@@ -59,7 +59,7 @@ func TestCommoditiesMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 		t.Fatalf("Quote = %+v, %v", quote, err)
 	}
 	short, err := client.Commodities.QuoteShort(ctx, NewQuoteShortQuery("GCUSD"))
-	if err != nil || len(short) != 1 || short[0].Symbol != "GCUSD" || short[0].Volume != 125_925 {
+	if err != nil || len(short) != 1 || short[0].Symbol != "GCUSD" || short[0].Volume == nil || *short[0].Volume != 125_925 {
 		t.Fatalf("QuoteShort = %+v, %v", short, err)
 	}
 

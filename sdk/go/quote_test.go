@@ -66,11 +66,11 @@ func TestQuoteMethodsUseExactPathsQueriesAndHeaderAuthentication(t *testing.T) {
 		t.Fatalf("Full = %+v, %v", full, err)
 	}
 	short, err := client.Quote.Short(ctx, NewQuoteShortQuery("^VIX"))
-	if err != nil || len(short) != 1 || short[0].Volume != 28_718_014 {
+	if err != nil || len(short) != 1 || short[0].Volume == nil || *short[0].Volume != 28_718_014 {
 		t.Fatalf("Short = %+v, %v", short, err)
 	}
 	etfs, err := client.Quote.ETFs(ctx)
-	if err != nil || len(etfs) != 1 || etfs[0].Symbol != "P60.SI" || etfs[0].Volume != 1 {
+	if err != nil || len(etfs) != 1 || etfs[0].Symbol != "P60.SI" || etfs[0].Volume == nil || *etfs[0].Volume != 1 {
 		t.Fatalf("ETFs = %+v, %v", etfs, err)
 	}
 
@@ -83,7 +83,7 @@ func TestQuoteMethodsUseExactPathsQueriesAndHeaderAuthentication(t *testing.T) {
 		t.Fatalf("Exchange = %+v, %v", exchange, err)
 	}
 	trades, err := client.Quote.AftermarketTrade(ctx, NewAftermarketTradeQuery("AAPL"))
-	if err != nil || len(trades) != 1 || trades[0].TradeSize != 16 {
+	if err != nil || len(trades) != 1 || trades[0].TradeSize == nil || *trades[0].TradeSize != 16 {
 		t.Fatalf("AftermarketTrade = %+v, %v", trades, err)
 	}
 	// The closed short-only universes always send short=true and decode the
@@ -215,7 +215,7 @@ func TestQuoteShortDecodesTheFractionalVolumeObservedLive(t *testing.T) {
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	short, err := client.Quote.Short(context.Background(), NewQuoteShortQuery("AAPL"))
-	if err != nil || len(short) != 1 || short[0].Volume != 20_201_922.82733 || short[0].Price != 342.395 {
+	if err != nil || len(short) != 1 || !quoteShortMatches(short[0], "AAPL", 342.395, 3.415, 20_201_922.82733) {
 		t.Fatalf("Short = %+v, %v, want the fractional volume decoded", short, err)
 	}
 }

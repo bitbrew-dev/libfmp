@@ -311,11 +311,11 @@ pub(crate) struct QuoteShort {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub price: f64,
+    pub price: Option<f64>,
     #[pyo3(get)]
-    pub change: f64,
+    pub change: Option<f64>,
     #[pyo3(get)]
-    pub volume: f64,
+    pub volume: Option<f64>,
 }
 
 #[gen_stub_pymethods]
@@ -325,7 +325,7 @@ impl QuoteShort {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, symbol, price, change, volume))]
-    fn new(symbol: String, price: f64, change: f64, volume: f64) -> Self {
+    fn new(symbol: String, price: Option<f64>, change: Option<f64>, volume: Option<f64>) -> Self {
         Self {
             symbol,
             price,
@@ -419,7 +419,7 @@ pub(crate) struct AftermarketTrade {
     #[pyo3(get)]
     pub price: f64,
     #[pyo3(get)]
-    pub trade_size: f64,
+    pub trade_size: Option<f64>,
     #[pyo3(get)]
     pub timestamp: i64,
 }
@@ -431,7 +431,7 @@ impl AftermarketTrade {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, symbol, price, trade_size, timestamp))]
-    fn new(symbol: String, price: f64, trade_size: f64, timestamp: i64) -> Self {
+    fn new(symbol: String, price: f64, trade_size: Option<f64>, timestamp: i64) -> Self {
         Self {
             symbol,
             price,

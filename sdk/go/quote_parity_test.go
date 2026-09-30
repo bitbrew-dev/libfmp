@@ -20,7 +20,10 @@ func TestQuoteFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[AftermarketQuote](t, "aftermarket_quote.json")
 	assertFixtureParity[AftermarketQuote](t, "aftermarket_quote_synthetic.json", "futureField")
 	assertFixtureParity[AftermarketTrade](t, "aftermarket_trade.json")
-	assertFixtureParity[AftermarketTrade](t, "aftermarket_trade_synthetic.json", "futureField")
+	if trades := assertFixtureParity[AftermarketTrade](t, "aftermarket_trade_synthetic.json", "futureField"); len(trades) != 3 ||
+		trades[2].TradeSize != nil {
+		t.Fatalf("aftermarket_trade_synthetic = %+v, want a nil tradeSize on the null row", trades)
+	}
 	assertFixtureParity[StockPriceChange](t, "stock_price_change.json")
 	assertFixtureParity[StockPriceChange](t, "stock_price_change_synthetic.json", "futureField")
 	assertFixtureParity[QuoteShort](t, "quote_exchange_short.json")
@@ -36,8 +39,8 @@ func TestQuoteFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 func TestDocumentedAftermarketAndPriceChangeFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	trades := assertFixtureParity[AftermarketTrade](t, "aftermarket_trade.json")
-	if want := (AftermarketTrade{Symbol: "AAPL", Price: 331.85999, TradeSize: 16,
-		Timestamp: UnixMilliseconds(1_785_430_813_000)}); len(trades) != 1 || trades[0] != want {
+	if len(trades) != 1 || trades[0].Symbol != "AAPL" || trades[0].Price != 331.85999 || trades[0].TradeSize == nil ||
+		*trades[0].TradeSize != 16 || trades[0].Timestamp != UnixMilliseconds(1_785_430_813_000) {
 		t.Fatalf("aftermarket_trade = %+v", trades)
 	}
 	if got := trades[0].Timestamp.Time().UnixMilli(); got != 1_785_430_813_000 {
@@ -94,29 +97,33 @@ func TestDocumentedCommodityQuoteAcceptsNullMarketCap(t *testing.T) {
 	}
 }
 
+func quoteShortMatches(got QuoteShort, symbol string, price, change, volume float64) bool {
+	return got.Symbol == symbol && got.Price != nil && *got.Price == price && got.Change != nil &&
+		*got.Change == change && got.Volume != nil && *got.Volume == volume
+}
+
 func TestShortQuoteFixturesPreserveDocumentedValues(t *testing.T) {
 	t.Parallel()
 	short := assertFixtureParity[QuoteShort](t, "quote_short.json")
-	if want := (QuoteShort{Symbol: "AAPL", Price: 331.85501, Change: -6.33498, Volume: 28_718_014}); len(short) != 1 ||
-		short[0] != want {
+	if len(short) != 1 || !quoteShortMatches(short[0], "AAPL", 331.85501, -6.33498, 28_718_014) {
 		t.Fatalf("quote_short = %+v", short)
 	}
 	if empty := assertFixtureParity[QuoteShort](t, "quote_short_empty.json"); empty == nil || len(empty) != 0 {
 		t.Fatalf("quote_short_empty = %#v, want a non-nil empty slice", empty)
 	}
 	multiple := assertFixtureParity[QuoteShort](t, "quote_short_multiple.json")
-	if len(multiple) != 2 || multiple[0].Symbol != "000001.SZ" || multiple[0].Volume != 4_294_967_296 ||
-		multiple[1].Symbol != "^VIX" || multiple[1].Volume != 0 {
+	if len(multiple) != 2 || !quoteShortMatches(multiple[0], "000001.SZ", 11.25, -0.15, 4_294_967_296) ||
+		multiple[1].Symbol != "^VIX" || multiple[1].Price == nil || *multiple[1].Price != 18.75 ||
+		multiple[1].Change != nil || multiple[1].Volume != nil {
 		t.Fatalf("quote_short_multiple = %+v", multiple)
 	}
 	unknown := assertFixtureParity[QuoteShort](t, "quote_short_unknown.json", "futureProviderField")
-	if len(unknown) != 1 || unknown[0] != short[0] {
-		t.Fatalf("quote_short_unknown = %+v, want %+v", unknown, short)
+	if len(unknown) != 1 || !quoteShortMatches(unknown[0], "AAPL", 331.85501, -6.33498, 28_718_014) {
+		t.Fatalf("quote_short_unknown = %+v", unknown)
 	}
 	fractional := assertFixtureParity[QuoteShort](t, "quote_short_fractional_volume.json")
-	if want := (QuoteShort{Symbol: "AAPL", Price: 342.395, Change: 3.415, Volume: 20_201_922.82733}); len(fractional) != 1 ||
-		fractional[0] != want {
-		t.Fatalf("quote_short_fractional_volume = %+v, want %+v", fractional, want)
+	if len(fractional) != 1 || !quoteShortMatches(fractional[0], "AAPL", 342.395, 3.415, 20_201_922.82733) {
+		t.Fatalf("quote_short_fractional_volume = %+v", fractional)
 	}
 }
 
@@ -128,7 +135,7 @@ func TestRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		member string
 	}{
 		{"missing member", `[{"symbol":"AAPL","price":1.5,"volume":1}]`, "change"},
-		{"null member", `[{"symbol":"AAPL","price":null,"change":0,"volume":1}]`, "price"},
+		{"null member", `[{"symbol":null,"price":1.5,"change":0,"volume":1}]`, "symbol"},
 		{"empty object", `[{}]`, "symbol"},
 		{"null element", `[null]`, "symbol"},
 	}

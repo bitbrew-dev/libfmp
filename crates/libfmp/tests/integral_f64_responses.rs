@@ -171,7 +171,7 @@ fn statement_amounts_decode_fractional_integral_float_and_exponent_forms() {
 fn aftermarket_trade_size_decodes_a_fractional_quantity() {
     let rows: Vec<AftermarketTrade> = serde_json::from_slice(TRADES).unwrap();
 
-    assert_eq!(rows[0].trade_size, 16.5);
+    assert_eq!(rows[0].trade_size, Some(16.5));
     let wire = serde_json::to_value(&rows).unwrap();
     assert_eq!(wire[0]["tradeSize"], json!(16.5));
 }
@@ -222,7 +222,7 @@ fn exponent_form_numbers_decode_into_every_integral_f64_alias() {
         r#"{"symbol":"AAPL","price":232.53,"tradeSize":1.6e1,"timestamp":1738715334311}"#,
     )
     .unwrap();
-    assert_eq!(trade.trade_size, 16.0);
+    assert_eq!(trade.trade_size, Some(16.0));
     assert_eq!(
         serde_json::to_value(&trade).unwrap()["tradeSize"],
         json!(16_u64)

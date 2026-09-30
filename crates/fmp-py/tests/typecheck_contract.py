@@ -245,7 +245,7 @@ def check_forex_contract(client: FmpClient) -> None:
     quotes: list[Quote] = client.forex.quote("EURUSD")
     market_cap: float | None = quotes[0].market_cap
     compact: list[QuoteShort] = client.forex.quote_short("EURUSD")
-    price: float = compact[0].price
+    price: float | None = compact[0].price
     bars: list[StockChartFullBar] = forex.chart_full("EURUSD", from_=datetime.date(2026, 1, 27), to="2026-04-27")
     bar_date: datetime.date = bars[0].date
     vwap: float = bars[0].vwap
@@ -629,11 +629,11 @@ def check_public_contract(client: FmpClient) -> None:
     trades: list[AftermarketTrade] = client.quote.batch_aftermarket_trade("AAPL")
     changes: list[StockPriceChange] = client.quote.stock_price_change("AAPL")
     exchange_rows: list[QuoteShort] = client.quote.exchange("NASDAQ")
-    trade_size: float = trades[0].trade_size
+    trade_size: float | None = trades[0].trade_size
     ten_years: float = changes[0].ten_years
     symbol: str = short_rows[0].symbol
     price: float = full_rows[0].price
-    volume: float = fund_rows[0].volume
+    volume: float | None = fund_rows[0].volume
     market_cap: float | None = full_rows[0].market_cap
     exports: list[str] = fmp.__all__
     version: str = fmp.__version__
@@ -689,7 +689,7 @@ def check_model_protocol_contract(quote: QuoteShort, report: CotReport) -> None:
     text: str = repr(quote)
     match quote:
         case QuoteShort(symbol, price):
-            matched: tuple[str, float] = (symbol, price)
+            matched: tuple[str, float | None] = (symbol, price)
             _ = matched
     share: int | float = report.pct_of_open_interest_all
     _ = (same, as_dict, names, text, share)
