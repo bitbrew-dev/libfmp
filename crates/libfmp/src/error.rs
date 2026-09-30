@@ -45,7 +45,8 @@ pub enum ErrorCategory {
     Configuration,
     /// A request could not be completed by the transport.
     Transport,
-    /// The provider returned a non-success HTTP status.
+    /// The provider returned a non-success HTTP status, or answered a success
+    /// status with its own error message instead of the documented payload.
     Status,
     /// A successful response could not be decoded.
     Decode,
@@ -547,6 +548,28 @@ impl Error {
         let mut error = Self::new(
             ErrorCategory::Status,
             format!("provider returned HTTP status {status}"),
+        )
+        .with_endpoint(Some(endpoint));
+        error.status = Some(status);
+        error.body = body;
+        error
+    }
+
+    /// Creates an error for a success status whose body is a provider error
+    /// message, such as FMP's plain-text `Invalid name` or a JSON object whose
+    /// only member is `"Error Message"`.
+    ///
+    /// The category is [`ErrorCategory::Status`] and the status is the
+    /// success code the provider sent. `endpoint` is a static logical identity
+    /// or relative path, never a URL.
+    pub(crate) fn provider_message(
+        endpoint: &'static str,
+        status: u16,
+        body: Option<SafeBody>,
+    ) -> Self {
+        let mut error = Self::new(
+            ErrorCategory::Status,
+            format!("provider returned an error message with HTTP status {status}"),
         )
         .with_endpoint(Some(endpoint));
         error.status = Some(status);

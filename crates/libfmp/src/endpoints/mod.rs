@@ -33,10 +33,10 @@ pub mod technical_indicators;
 pub mod tipranks;
 pub mod transcripts;
 
-use std::{fmt, marker::PhantomData};
+use std::{collections::BTreeMap, fmt, marker::PhantomData};
 
 use bytes::Bytes;
-use serde::de::DeserializeOwned;
+use serde::de::{DeserializeOwned, IgnoredAny};
 
 use crate::{error::DecodeErrorKind, transport::HttpMethod};
 use metadata::EndpointMetadata;
@@ -335,14 +335,20 @@ impl<'a> ResponseMetadata<'a> {
     }
 }
 
-/// Where and why a response body failed to decode.
-///
-/// Only the member path and a coarse kind survive: the decoder's own message
-/// can quote the offending value, so it is classified and then dropped.
+/// Why a successful response body did not yield the documented value.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub(crate) struct DecodeFailure {
-    pub(crate) path: Option<String>,
-    pub(crate) kind: DecodeErrorKind,
+pub(crate) enum DecodeFailure {
+    /// The body does not match the documented shape.
+    ///
+    /// Only the member path and a coarse kind survive: the decoder's own
+    /// message can quote the offending value, so it is classified and then
+    /// dropped.
+    Shape {
+        path: Option<String>,
+        kind: DecodeErrorKind,
+    },
+    /// The provider answered a success status with its own error message.
+    ProviderMessage,
 }
 
 type Decoder<R> = for<'a> fn(Bytes, ResponseMetadata<'a>) -> std::result::Result<R, DecodeFailure>;
@@ -411,14 +417,47 @@ fn decode_json<R>(
 where
     R: DeserializeOwned,
 {
+    if is_provider_message(&body) {
+        return Err(DecodeFailure::ProviderMessage);
+    }
     let mut deserializer = serde_json::Deserializer::from_slice(&body);
     let value = serde_path_to_error::deserialize(&mut deserializer)
         .map_err(|error| decode_failure(error.path(), error.inner()))?;
-    deserializer.end().map_err(|_| DecodeFailure {
+    deserializer.end().map_err(|_| DecodeFailure::Shape {
         path: None,
         kind: DecodeErrorKind::Syntax,
     })?;
     Ok(value)
+}
+
+const MAX_PLAIN_TEXT_MESSAGE_BYTES: usize = 256;
+const MAX_ERROR_MESSAGE_OBJECT_BYTES: usize = 1024;
+const ERROR_MESSAGE_MEMBER: &str = "Error Message";
+
+/// Recognizes the two error shapes FMP sends with HTTP 200.
+///
+/// One is a short plain-text line such as `Invalid name` that is not JSON at
+/// all; the other is a JSON object whose only member is `"Error Message"`.
+/// Both checks are bounded by size so ordinary payloads are not parsed twice.
+fn is_provider_message(body: &[u8]) -> bool {
+    let body = body.trim_ascii();
+    match body.first() {
+        None => false,
+        Some(b'{') => {
+            body.len() <= MAX_ERROR_MESSAGE_OBJECT_BYTES
+                && serde_json::from_slice::<BTreeMap<String, IgnoredAny>>(body).is_ok_and(
+                    |members| members.len() == 1 && members.contains_key(ERROR_MESSAGE_MEMBER),
+                )
+        }
+        Some(b'[') => false,
+        Some(_) => {
+            body.len() <= MAX_PLAIN_TEXT_MESSAGE_BYTES
+                && body
+                    .iter()
+                    .all(|byte| byte.is_ascii_graphic() || *byte == b' ')
+                && serde_json::from_slice::<IgnoredAny>(body).is_err()
+        }
+    }
 }
 
 fn decode_failure(path: &serde_path_to_error::Path, error: &serde_json::Error) -> DecodeFailure {
@@ -436,7 +475,7 @@ fn decode_failure(path: &serde_path_to_error::Path, error: &serde_json::Error) -
             None => member.to_owned(),
         });
     }
-    DecodeFailure { path, kind }
+    DecodeFailure::Shape { path, kind }
 }
 
 fn data_error_kind(message: &str) -> DecodeErrorKind {
