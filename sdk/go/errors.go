@@ -29,7 +29,8 @@ const (
 	CategoryConfiguration
 	// CategoryTransport reports a request the transport could not complete.
 	CategoryTransport
-	// CategoryStatus reports a non-success HTTP status from the provider.
+	// CategoryStatus reports a non-success HTTP status from the provider, or a
+	// success status whose body is the provider's own error message.
 	CategoryStatus
 	// CategoryDecode reports a successful response that could not be decoded.
 	CategoryDecode
@@ -245,6 +246,19 @@ func statusError(endpoint string, status int, body *SafeBody) *Error {
 	return &Error{
 		Category: CategoryStatus,
 		Message:  fmt.Sprintf("provider returned HTTP status %d", status),
+		Endpoint: endpoint,
+		Status:   status,
+		Body:     body,
+	}
+}
+
+// providerMessageError reports a success status whose body is a provider
+// error message rather than the documented payload (see isProviderMessage).
+// It is a CategoryStatus error carrying the success status the provider sent.
+func providerMessageError(endpoint string, status int, body *SafeBody) *Error {
+	return &Error{
+		Category: CategoryStatus,
+		Message:  fmt.Sprintf("provider returned an error message with HTTP status %d", status),
 		Endpoint: endpoint,
 		Status:   status,
 		Body:     body,

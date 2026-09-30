@@ -237,7 +237,7 @@ func TestRedirectLimitAndRedirectNone(t *testing.T) {
 
 func TestResponseBodyCapIsEnforced(t *testing.T) {
 	t.Parallel()
-	body := strings.Repeat("x", 64)
+	body := strings.Repeat("x", 300)
 	for _, chunked := range []bool{false, true} {
 		server, _ := newServer(t, func(w http.ResponseWriter, _ *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
