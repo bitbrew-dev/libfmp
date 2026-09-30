@@ -6,10 +6,10 @@
     "country": "SG",
     "currency": "SGD",
     "date": "2026-07-29 03:30:00",
-    "estimate": 21,
+    "estimate": null,
     "event": "Import Prices YoY (Jun)",
     "impact": "Low",
     "previous": 18.5,
-    "unit": "%"
+    "unit": null
   }
 ]

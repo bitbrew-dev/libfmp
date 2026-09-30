@@ -19,7 +19,7 @@ const CALENDAR: &[u8] = include_bytes!("fixtures/economic_calendar.json");
 const RISK_PREMIUM: &[u8] = include_bytes!("fixtures/market_risk_premium.json");
 
 #[test]
-fn treasury_fixture_decodes_all_13_exact_fields_without_scaling() {
+fn treasury_fixture_decodes_all_13_exact_fields_with_a_null_tenor() {
     let value: serde_json::Value = serde_json::from_slice(TREASURY).unwrap();
     assert_eq!(value[0].as_object().unwrap().len(), 13);
 
@@ -28,18 +28,18 @@ fn treasury_fixture_decodes_all_13_exact_fields_without_scaling() {
         rows,
         [TreasuryRate {
             date: Date::from_str("2026-07-29").unwrap(),
-            month_1: 3.73,
-            month_2: 3.83,
-            month_3: 3.83,
-            month_6: 3.97,
-            year_1: 4.04,
-            year_2: 4.22,
-            year_3: 4.29,
-            year_5: 4.37,
-            year_7: 4.51,
-            year_10: 4.67,
-            year_20: 5.21,
-            year_30: 5.2,
+            month_1: Some(3.73),
+            month_2: None,
+            month_3: Some(3.83),
+            month_6: Some(3.97),
+            year_1: Some(4.04),
+            year_2: Some(4.22),
+            year_3: Some(4.29),
+            year_5: Some(4.37),
+            year_7: Some(4.51),
+            year_10: Some(4.67),
+            year_20: Some(5.21),
+            year_30: Some(5.2),
         }]
     );
 }
@@ -55,7 +55,7 @@ fn indicator_fixture_decodes_exact_three_field_contract() {
         [EconomicIndicatorObservation {
             name: EconomicIndicator::Gdp,
             date: Date::from_str("2025-10-01").unwrap(),
-            value: 31_422.526,
+            value: Some(31_422.526),
         }]
     );
 
@@ -63,10 +63,15 @@ fn indicator_fixture_decodes_exact_three_field_contract() {
     open[0]["name"] = serde_json::json!("futureProviderIndicator");
     let rows: Vec<EconomicIndicatorObservation> = serde_json::from_value(open).unwrap();
     assert_eq!(rows[0].name.as_str(), "futureProviderIndicator");
+
+    let mut null: serde_json::Value = serde_json::from_slice(INDICATORS).unwrap();
+    null[0]["value"] = serde_json::Value::Null;
+    let rows: Vec<EconomicIndicatorObservation> = serde_json::from_value(null).unwrap();
+    assert_eq!(rows[0].value, None);
 }
 
 #[test]
-fn calendar_fixture_decodes_all_11_fields_with_required_numeric_values() {
+fn calendar_fixture_decodes_all_11_fields_with_null_values_as_none() {
     let value: serde_json::Value = serde_json::from_slice(CALENDAR).unwrap();
     assert_eq!(value[0].as_object().unwrap().len(), 11);
 
@@ -78,13 +83,13 @@ fn calendar_fixture_decodes_all_11_fields_with_required_numeric_values() {
             country: CountryCode::new("SG").unwrap(),
             event: "Import Prices YoY (Jun)".to_owned(),
             currency: CurrencyCode::new("SGD").unwrap(),
-            previous: 18.5,
-            estimate: 21.0,
-            actual: 13.6,
-            change: -4.9,
+            previous: Some(18.5),
+            estimate: None,
+            actual: Some(13.6),
+            change: Some(-4.9),
             impact: "Low".to_owned(),
-            change_percentage: -26.486,
-            unit: "%".to_owned(),
+            change_percentage: Some(-26.486),
+            unit: None,
         }]
     );
 }
@@ -117,13 +122,29 @@ fn market_risk_fixture_uses_full_country_name_and_raw_percentage_values() {
 
 #[test]
 fn every_economics_row_requires_documented_fields_and_accepts_unknown_fields() {
-    assert_contract::<TreasuryRate>(TREASURY);
-    assert_contract::<EconomicIndicatorObservation>(INDICATORS);
-    assert_contract::<EconomicCalendarEvent>(CALENDAR);
-    assert_contract::<MarketRiskPremium>(RISK_PREMIUM);
+    assert_contract::<TreasuryRate>(
+        TREASURY,
+        &[
+            "month1", "month2", "month3", "month6", "year1", "year2", "year3", "year5", "year7",
+            "year10", "year20", "year30",
+        ],
+    );
+    assert_contract::<EconomicIndicatorObservation>(INDICATORS, &["value"]);
+    assert_contract::<EconomicCalendarEvent>(
+        CALENDAR,
+        &[
+            "previous",
+            "estimate",
+            "actual",
+            "change",
+            "changePercentage",
+            "unit",
+        ],
+    );
+    assert_contract::<MarketRiskPremium>(RISK_PREMIUM, &[]);
 }
 
-fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
+fn assert_contract<T: DeserializeOwned>(fixture: &[u8], nullable: &[&str]) {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let keys = source[0]
         .as_object()
@@ -142,9 +163,10 @@ fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
 
         let mut null = source.clone();
         null[0][&key] = serde_json::Value::Null;
-        assert!(
-            serde_json::from_value::<Vec<T>>(null).is_err(),
-            "accepted null {key}"
+        assert_eq!(
+            serde_json::from_value::<Vec<T>>(null).is_ok(),
+            nullable.contains(&key.as_str()),
+            "null {key}"
         );
     }
 

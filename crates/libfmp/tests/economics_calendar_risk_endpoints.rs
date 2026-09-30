@@ -97,7 +97,7 @@ async fn proxy_routing_preserves_calendar_query_order_custom_auth_and_bare_array
     let premiums = client.market_risk_premium().await.unwrap();
 
     assert_eq!(events.len(), 1);
-    assert_eq!(events[0].actual, 13.6);
+    assert_eq!(events[0].actual, Some(13.6));
     assert_eq!(premiums.len(), 1);
     assert_eq!(premiums[0].country, "Zimbabwe");
 

@@ -518,10 +518,10 @@ def check_economics_contract(client: FmpClient) -> None:
     economics: EconomicsNamespace = client.economics
     rates: list[TreasuryRate] = economics.treasury_rates(from_=datetime.date(2026, 1, 27), to="2026-04-27")
     observed_on: datetime.date = rates[0].date
-    year_30: float = rates[0].year_30
+    year_30: float | None = rates[0].year_30
     observations: list[EconomicIndicatorObservation] = client.economics.indicators("GDP", from_="2025-04-27")
     name: str = observations[0].name
-    value: float = observations[0].value
+    value: float | None = observations[0].value
     events: list[EconomicCalendarEvent] = client.economics.calendar(
         country="US", from_="2026-01-27", to=datetime.date(2026, 4, 27)
     )

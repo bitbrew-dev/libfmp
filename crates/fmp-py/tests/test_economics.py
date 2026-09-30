@@ -35,7 +35,7 @@ def test_economics_namespace_is_the_generated_type(client: Any) -> None:
 
 
 def test_treasury_rates_with_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
-    """``treasury_rates`` maps to ``/treasury-rates`` with no query string and decodes the curve row."""
+    """``treasury_rates`` maps to ``/treasury-rates`` with no query string and decodes a null tenor as ``None``."""
     fixture_server.route("/treasury-rates", load_fixture("treasury_rates.json"))
     rows = client.economics.treasury_rates()
 
@@ -45,6 +45,8 @@ def test_treasury_rates_with_no_arguments(client: Any, fixture_server: FixtureSe
     assert isinstance(row, TreasuryRate)
     assert row.date == datetime.date(2026, 7, 29)
     assert row.month_1 == pytest.approx(3.73)
+    assert row.month_2 is None
+    assert row.month_3 == pytest.approx(3.83)
     assert row.year_10 == pytest.approx(4.67)
     assert row.year_30 == pytest.approx(5.2)
 
@@ -89,6 +91,15 @@ def test_indicators_with_a_documented_name(client: Any, fixture_server: FixtureS
     assert row.name == "GDP"
     assert row.date == datetime.date(2025, 10, 1)
     assert row.value == pytest.approx(31_422.526)
+
+
+def test_indicators_decode_a_null_value_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A ``null`` indicator ``value`` decodes as ``None`` instead of failing the call."""
+    body = load_fixture("economic_indicators.json")
+    body[0]["value"] = None
+    fixture_server.route("/economic-indicators", body)
+
+    assert client.economics.indicators("GDP")[0].value is None
 
 
 def test_indicators_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
@@ -147,11 +158,11 @@ def test_calendar_with_no_arguments(client: Any, fixture_server: FixtureServer) 
     assert row.currency == "SGD"
     assert row.event == "Import Prices YoY (Jun)"
     assert row.actual == pytest.approx(13.6)
-    assert row.estimate == pytest.approx(21.0)
+    assert row.estimate is None
     assert row.change == pytest.approx(-4.9)
     assert row.change_percentage == pytest.approx(-26.486)
     assert row.impact == "Low"
-    assert row.unit == "%"
+    assert row.unit is None
 
 
 def test_calendar_with_every_option(client: Any, fixture_server: FixtureServer) -> None:

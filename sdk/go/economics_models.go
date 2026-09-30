@@ -13,26 +13,7 @@ import (
 // TreasuryRate is treasury rates across all twelve documented maturities for
 // one date.
 type TreasuryRate struct {
-	Date   Date    `json:"date"`
-	Month1 float64 `json:"month1"`
-	Month2 float64 `json:"month2"`
-	Month3 float64 `json:"month3"`
-	Month6 float64 `json:"month6"`
-	Year1  float64 `json:"year1"`
-	Year2  float64 `json:"year2"`
-	Year3  float64 `json:"year3"`
-	Year5  float64 `json:"year5"`
-	Year7  float64 `json:"year7"`
-	Year10 float64 `json:"year10"`
-	Year20 float64 `json:"year20"`
-	Year30 float64 `json:"year30"`
-}
-
-// treasuryRateShadow mirrors TreasuryRate with a pointer or raw value for
-// every required member so a missing or null member is observable after
-// decoding.
-type treasuryRateShadow struct {
-	Date   *Date    `json:"date"`
+	Date   Date     `json:"date"`
 	Month1 *float64 `json:"month1"`
 	Month2 *float64 `json:"month2"`
 	Month3 *float64 `json:"month3"`
@@ -47,6 +28,25 @@ type treasuryRateShadow struct {
 	Year30 *float64 `json:"year30"`
 }
 
+// treasuryRateShadow mirrors TreasuryRate with a pointer or raw value for
+// every required member so a missing or null member is observable after
+// decoding.
+type treasuryRateShadow struct {
+	Date   *Date          `json:"date"`
+	Month1 jsontext.Value `json:"month1"`
+	Month2 jsontext.Value `json:"month2"`
+	Month3 jsontext.Value `json:"month3"`
+	Month6 jsontext.Value `json:"month6"`
+	Year1  jsontext.Value `json:"year1"`
+	Year2  jsontext.Value `json:"year2"`
+	Year3  jsontext.Value `json:"year3"`
+	Year5  jsontext.Value `json:"year5"`
+	Year7  jsontext.Value `json:"year7"`
+	Year10 jsontext.Value `json:"year10"`
+	Year20 jsontext.Value `json:"year20"`
+	Year30 jsontext.Value `json:"year30"`
+}
+
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
 // Rust decoder does. Unknown members are ignored.
@@ -58,45 +58,141 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Date == nil:
 		return missingMemberError("TreasuryRate", "date")
-	case shadow.Month1 == nil:
+	case len(shadow.Month1) == 0:
 		return missingMemberError("TreasuryRate", "month1")
-	case shadow.Month2 == nil:
+	case len(shadow.Month2) == 0:
 		return missingMemberError("TreasuryRate", "month2")
-	case shadow.Month3 == nil:
+	case len(shadow.Month3) == 0:
 		return missingMemberError("TreasuryRate", "month3")
-	case shadow.Month6 == nil:
+	case len(shadow.Month6) == 0:
 		return missingMemberError("TreasuryRate", "month6")
-	case shadow.Year1 == nil:
+	case len(shadow.Year1) == 0:
 		return missingMemberError("TreasuryRate", "year1")
-	case shadow.Year2 == nil:
+	case len(shadow.Year2) == 0:
 		return missingMemberError("TreasuryRate", "year2")
-	case shadow.Year3 == nil:
+	case len(shadow.Year3) == 0:
 		return missingMemberError("TreasuryRate", "year3")
-	case shadow.Year5 == nil:
+	case len(shadow.Year5) == 0:
 		return missingMemberError("TreasuryRate", "year5")
-	case shadow.Year7 == nil:
+	case len(shadow.Year7) == 0:
 		return missingMemberError("TreasuryRate", "year7")
-	case shadow.Year10 == nil:
+	case len(shadow.Year10) == 0:
 		return missingMemberError("TreasuryRate", "year10")
-	case shadow.Year20 == nil:
+	case len(shadow.Year20) == 0:
 		return missingMemberError("TreasuryRate", "year20")
-	case shadow.Year30 == nil:
+	case len(shadow.Year30) == 0:
 		return missingMemberError("TreasuryRate", "year30")
+	}
+	var month1 *float64
+	if shadow.Month1.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Month1, &value); err != nil {
+			return err
+		}
+		month1 = &value
+	}
+	var month2 *float64
+	if shadow.Month2.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Month2, &value); err != nil {
+			return err
+		}
+		month2 = &value
+	}
+	var month3 *float64
+	if shadow.Month3.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Month3, &value); err != nil {
+			return err
+		}
+		month3 = &value
+	}
+	var month6 *float64
+	if shadow.Month6.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Month6, &value); err != nil {
+			return err
+		}
+		month6 = &value
+	}
+	var year1 *float64
+	if shadow.Year1.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year1, &value); err != nil {
+			return err
+		}
+		year1 = &value
+	}
+	var year2 *float64
+	if shadow.Year2.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year2, &value); err != nil {
+			return err
+		}
+		year2 = &value
+	}
+	var year3 *float64
+	if shadow.Year3.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year3, &value); err != nil {
+			return err
+		}
+		year3 = &value
+	}
+	var year5 *float64
+	if shadow.Year5.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year5, &value); err != nil {
+			return err
+		}
+		year5 = &value
+	}
+	var year7 *float64
+	if shadow.Year7.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year7, &value); err != nil {
+			return err
+		}
+		year7 = &value
+	}
+	var year10 *float64
+	if shadow.Year10.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year10, &value); err != nil {
+			return err
+		}
+		year10 = &value
+	}
+	var year20 *float64
+	if shadow.Year20.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year20, &value); err != nil {
+			return err
+		}
+		year20 = &value
+	}
+	var year30 *float64
+	if shadow.Year30.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Year30, &value); err != nil {
+			return err
+		}
+		year30 = &value
 	}
 	*m = TreasuryRate{
 		Date:   *shadow.Date,
-		Month1: *shadow.Month1,
-		Month2: *shadow.Month2,
-		Month3: *shadow.Month3,
-		Month6: *shadow.Month6,
-		Year1:  *shadow.Year1,
-		Year2:  *shadow.Year2,
-		Year3:  *shadow.Year3,
-		Year5:  *shadow.Year5,
-		Year7:  *shadow.Year7,
-		Year10: *shadow.Year10,
-		Year20: *shadow.Year20,
-		Year30: *shadow.Year30,
+		Month1: month1,
+		Month2: month2,
+		Month3: month3,
+		Month6: month6,
+		Year1:  year1,
+		Year2:  year2,
+		Year3:  year3,
+		Year5:  year5,
+		Year7:  year7,
+		Year10: year10,
+		Year20: year20,
+		Year30: year30,
 	}
 	return nil
 }
@@ -104,18 +200,18 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // EconomicIndicatorObservation is one observation of a documented or validated
 // open economic indicator.
 type EconomicIndicatorObservation struct {
-	Name  string  `json:"name"`
-	Date  Date    `json:"date"`
-	Value float64 `json:"value"`
+	Name  string   `json:"name"`
+	Date  Date     `json:"date"`
+	Value *float64 `json:"value"`
 }
 
 // economicIndicatorObservationShadow mirrors EconomicIndicatorObservation with
 // a pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type economicIndicatorObservationShadow struct {
-	Name  *string  `json:"name"`
-	Date  *Date    `json:"date"`
-	Value *float64 `json:"value"`
+	Name  *string        `json:"name"`
+	Date  *Date          `json:"date"`
+	Value jsontext.Value `json:"value"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -131,13 +227,21 @@ func (m *EconomicIndicatorObservation) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		return missingMemberError("EconomicIndicatorObservation", "name")
 	case shadow.Date == nil:
 		return missingMemberError("EconomicIndicatorObservation", "date")
-	case shadow.Value == nil:
+	case len(shadow.Value) == 0:
 		return missingMemberError("EconomicIndicatorObservation", "value")
+	}
+	var valueMember *float64
+	if shadow.Value.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Value, &value); err != nil {
+			return err
+		}
+		valueMember = &value
 	}
 	*m = EconomicIndicatorObservation{
 		Name:  *shadow.Name,
 		Date:  *shadow.Date,
-		Value: *shadow.Value,
+		Value: valueMember,
 	}
 	return nil
 }
@@ -148,30 +252,30 @@ type EconomicCalendarEvent struct {
 	Country          string   `json:"country"`
 	Event            string   `json:"event"`
 	Currency         string   `json:"currency"`
-	Previous         float64  `json:"previous"`
-	Estimate         float64  `json:"estimate"`
-	Actual           float64  `json:"actual"`
-	Change           float64  `json:"change"`
+	Previous         *float64 `json:"previous"`
+	Estimate         *float64 `json:"estimate"`
+	Actual           *float64 `json:"actual"`
+	Change           *float64 `json:"change"`
 	Impact           string   `json:"impact"`
-	ChangePercentage float64  `json:"changePercentage"`
-	Unit             string   `json:"unit"`
+	ChangePercentage *float64 `json:"changePercentage"`
+	Unit             *string  `json:"unit"`
 }
 
 // economicCalendarEventShadow mirrors EconomicCalendarEvent with a pointer or
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type economicCalendarEventShadow struct {
-	Date             *DateTime `json:"date"`
-	Country          *string   `json:"country"`
-	Event            *string   `json:"event"`
-	Currency         *string   `json:"currency"`
-	Previous         *float64  `json:"previous"`
-	Estimate         *float64  `json:"estimate"`
-	Actual           *float64  `json:"actual"`
-	Change           *float64  `json:"change"`
-	Impact           *string   `json:"impact"`
-	ChangePercentage *float64  `json:"changePercentage"`
-	Unit             *string   `json:"unit"`
+	Date             *DateTime      `json:"date"`
+	Country          *string        `json:"country"`
+	Event            *string        `json:"event"`
+	Currency         *string        `json:"currency"`
+	Previous         jsontext.Value `json:"previous"`
+	Estimate         jsontext.Value `json:"estimate"`
+	Actual           jsontext.Value `json:"actual"`
+	Change           jsontext.Value `json:"change"`
+	Impact           *string        `json:"impact"`
+	ChangePercentage jsontext.Value `json:"changePercentage"`
+	Unit             jsontext.Value `json:"unit"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -191,33 +295,81 @@ func (m *EconomicCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("EconomicCalendarEvent", "event")
 	case shadow.Currency == nil:
 		return missingMemberError("EconomicCalendarEvent", "currency")
-	case shadow.Previous == nil:
+	case len(shadow.Previous) == 0:
 		return missingMemberError("EconomicCalendarEvent", "previous")
-	case shadow.Estimate == nil:
+	case len(shadow.Estimate) == 0:
 		return missingMemberError("EconomicCalendarEvent", "estimate")
-	case shadow.Actual == nil:
+	case len(shadow.Actual) == 0:
 		return missingMemberError("EconomicCalendarEvent", "actual")
-	case shadow.Change == nil:
+	case len(shadow.Change) == 0:
 		return missingMemberError("EconomicCalendarEvent", "change")
 	case shadow.Impact == nil:
 		return missingMemberError("EconomicCalendarEvent", "impact")
-	case shadow.ChangePercentage == nil:
+	case len(shadow.ChangePercentage) == 0:
 		return missingMemberError("EconomicCalendarEvent", "changePercentage")
-	case shadow.Unit == nil:
+	case len(shadow.Unit) == 0:
 		return missingMemberError("EconomicCalendarEvent", "unit")
+	}
+	var previous *float64
+	if shadow.Previous.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Previous, &value); err != nil {
+			return err
+		}
+		previous = &value
+	}
+	var estimate *float64
+	if shadow.Estimate.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Estimate, &value); err != nil {
+			return err
+		}
+		estimate = &value
+	}
+	var actual *float64
+	if shadow.Actual.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Actual, &value); err != nil {
+			return err
+		}
+		actual = &value
+	}
+	var change *float64
+	if shadow.Change.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Change, &value); err != nil {
+			return err
+		}
+		change = &value
+	}
+	var changePercentage *float64
+	if shadow.ChangePercentage.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.ChangePercentage, &value); err != nil {
+			return err
+		}
+		changePercentage = &value
+	}
+	var unit *string
+	if shadow.Unit.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Unit, &value); err != nil {
+			return err
+		}
+		unit = &value
 	}
 	*m = EconomicCalendarEvent{
 		Date:             *shadow.Date,
 		Country:          *shadow.Country,
 		Event:            *shadow.Event,
 		Currency:         *shadow.Currency,
-		Previous:         *shadow.Previous,
-		Estimate:         *shadow.Estimate,
-		Actual:           *shadow.Actual,
-		Change:           *shadow.Change,
+		Previous:         previous,
+		Estimate:         estimate,
+		Actual:           actual,
+		Change:           change,
 		Impact:           *shadow.Impact,
-		ChangePercentage: *shadow.ChangePercentage,
-		Unit:             *shadow.Unit,
+		ChangePercentage: changePercentage,
+		Unit:             unit,
 	}
 	return nil
 }
