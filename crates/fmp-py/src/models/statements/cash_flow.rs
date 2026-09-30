@@ -34,17 +34,17 @@ pub(crate) struct CashFlowStatement {
     #[pyo3(get)]
     pub depreciation_and_amortization: f64,
     #[pyo3(get)]
-    pub deferred_income_tax: f64,
+    pub deferred_income_tax: Option<f64>,
     #[pyo3(get)]
-    pub stock_based_compensation: f64,
+    pub stock_based_compensation: Option<f64>,
     #[pyo3(get)]
     pub change_in_working_capital: f64,
     #[pyo3(get)]
-    pub accounts_receivables: f64,
+    pub accounts_receivables: Option<f64>,
     #[pyo3(get)]
-    pub inventory: f64,
+    pub inventory: Option<f64>,
     #[pyo3(get)]
-    pub accounts_payables: f64,
+    pub accounts_payables: Option<f64>,
     #[pyo3(get)]
     pub other_working_capital: f64,
     #[pyo3(get)]
@@ -56,9 +56,9 @@ pub(crate) struct CashFlowStatement {
     #[pyo3(get)]
     pub acquisitions_net: f64,
     #[pyo3(get)]
-    pub purchases_of_investments: f64,
+    pub purchases_of_investments: Option<f64>,
     #[pyo3(get)]
-    pub sales_maturities_of_investments: f64,
+    pub sales_maturities_of_investments: Option<f64>,
     #[pyo3(get)]
     pub other_investing_activities: f64,
     #[pyo3(get)]
@@ -66,29 +66,29 @@ pub(crate) struct CashFlowStatement {
     #[pyo3(get)]
     pub net_debt_issuance: f64,
     #[pyo3(get)]
-    pub long_term_net_debt_issuance: f64,
+    pub long_term_net_debt_issuance: Option<f64>,
     #[pyo3(get)]
     pub short_term_net_debt_issuance: f64,
     #[pyo3(get)]
-    pub net_stock_issuance: f64,
+    pub net_stock_issuance: Option<f64>,
     #[pyo3(get)]
-    pub net_common_stock_issuance: f64,
+    pub net_common_stock_issuance: Option<f64>,
     #[pyo3(get)]
     pub common_stock_issuance: f64,
     #[pyo3(get)]
-    pub common_stock_repurchased: f64,
+    pub common_stock_repurchased: Option<f64>,
     #[pyo3(get)]
-    pub net_preferred_stock_issuance: f64,
+    pub net_preferred_stock_issuance: Option<f64>,
     #[pyo3(get)]
-    pub net_dividends_paid: f64,
+    pub net_dividends_paid: Option<f64>,
     #[pyo3(get)]
-    pub common_dividends_paid: f64,
+    pub common_dividends_paid: Option<f64>,
     #[pyo3(get)]
-    pub preferred_dividends_paid: f64,
+    pub preferred_dividends_paid: Option<f64>,
     #[pyo3(get)]
     pub other_financing_activities: f64,
     #[pyo3(get)]
-    pub net_cash_provided_by_financing_activities: f64,
+    pub net_cash_provided_by_financing_activities: Option<f64>,
     #[pyo3(get)]
     pub effect_of_forex_changes_on_cash: f64,
     #[pyo3(get)]
@@ -96,7 +96,7 @@ pub(crate) struct CashFlowStatement {
     #[pyo3(get)]
     pub cash_at_end_of_period: f64,
     #[pyo3(get)]
-    pub cash_at_beginning_of_period: f64,
+    pub cash_at_beginning_of_period: Option<f64>,
     #[pyo3(get)]
     pub operating_cash_flow: f64,
     #[pyo3(get)]
@@ -104,9 +104,9 @@ pub(crate) struct CashFlowStatement {
     #[pyo3(get)]
     pub free_cash_flow: f64,
     #[pyo3(get)]
-    pub income_taxes_paid: f64,
+    pub income_taxes_paid: Option<f64>,
     #[pyo3(get)]
-    pub interest_paid: f64,
+    pub interest_paid: Option<f64>,
 }
 
 #[gen_stub_pymethods]
@@ -128,43 +128,43 @@ impl CashFlowStatement {
         period: String,
         net_income: f64,
         depreciation_and_amortization: f64,
-        deferred_income_tax: f64,
-        stock_based_compensation: f64,
+        deferred_income_tax: Option<f64>,
+        stock_based_compensation: Option<f64>,
         change_in_working_capital: f64,
-        accounts_receivables: f64,
-        inventory: f64,
-        accounts_payables: f64,
+        accounts_receivables: Option<f64>,
+        inventory: Option<f64>,
+        accounts_payables: Option<f64>,
         other_working_capital: f64,
         other_non_cash_items: f64,
         net_cash_provided_by_operating_activities: f64,
         investments_in_property_plant_and_equipment: f64,
         acquisitions_net: f64,
-        purchases_of_investments: f64,
-        sales_maturities_of_investments: f64,
+        purchases_of_investments: Option<f64>,
+        sales_maturities_of_investments: Option<f64>,
         other_investing_activities: f64,
         net_cash_provided_by_investing_activities: f64,
         net_debt_issuance: f64,
-        long_term_net_debt_issuance: f64,
+        long_term_net_debt_issuance: Option<f64>,
         short_term_net_debt_issuance: f64,
-        net_stock_issuance: f64,
-        net_common_stock_issuance: f64,
+        net_stock_issuance: Option<f64>,
+        net_common_stock_issuance: Option<f64>,
         common_stock_issuance: f64,
-        common_stock_repurchased: f64,
-        net_preferred_stock_issuance: f64,
-        net_dividends_paid: f64,
-        common_dividends_paid: f64,
-        preferred_dividends_paid: f64,
+        common_stock_repurchased: Option<f64>,
+        net_preferred_stock_issuance: Option<f64>,
+        net_dividends_paid: Option<f64>,
+        common_dividends_paid: Option<f64>,
+        preferred_dividends_paid: Option<f64>,
         other_financing_activities: f64,
-        net_cash_provided_by_financing_activities: f64,
+        net_cash_provided_by_financing_activities: Option<f64>,
         effect_of_forex_changes_on_cash: f64,
         net_change_in_cash: f64,
         cash_at_end_of_period: f64,
-        cash_at_beginning_of_period: f64,
+        cash_at_beginning_of_period: Option<f64>,
         operating_cash_flow: f64,
         capital_expenditure: f64,
         free_cash_flow: f64,
-        income_taxes_paid: f64,
-        interest_paid: f64,
+        income_taxes_paid: Option<f64>,
+        interest_paid: Option<f64>,
     ) -> Self {
         Self {
             date,

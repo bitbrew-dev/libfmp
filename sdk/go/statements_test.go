@@ -94,7 +94,7 @@ func TestStatementsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	incomeTTM, err := s.Income.StatementTTM(ctx, NewIncomeStatementTTMQuery(statementsTicker).WithLimit(7))
 	statementsCheck(t, "Income.StatementTTM", incomeTTM, err, func(r IncomeStatement) bool { return r.Period == "Q2" })
 	balance, err := s.Balance.Statement(ctx, NewBalanceSheetStatementQuery(statementsTicker).WithLimit(5).WithPeriod(StatementPeriodQ1))
-	statementsCheck(t, "Balance.Statement", balance, err, func(r BalanceSheetStatement) bool { return r.TotalAssets == 359_241_000_000 })
+	statementsCheck(t, "Balance.Statement", balance, err, func(r BalanceSheetStatement) bool { return amountIs(r.TotalAssets, 359_241_000_000) })
 	balanceTTM, err := s.Balance.StatementTTM(ctx, NewBalanceSheetStatementTTMQuery(statementsTicker).WithLimit(7))
 	statementsCheck(t, "Balance.StatementTTM", balanceTTM, err, func(r BalanceSheetStatementTTM) bool { return r.TotalAssets == 371_082_000_000 })
 	cash, err := s.CashFlow.Statement(ctx, NewCashFlowStatementQuery(statementsTicker).WithLimit(5).WithPeriod(StatementPeriodQ1))

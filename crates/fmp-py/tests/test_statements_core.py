@@ -121,6 +121,28 @@ def test_cash_flow_statement_ttm_with_limit(client: Any, fixture_server: Fixture
     assert rows[0].net_income == 122_575_000_000
 
 
+def test_pre_ipo_stub_rows_decode_null_amounts_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: null stub-quarter amounts decode as ``None``; other amounts stay floats."""
+    balance = load_fixture("balance_sheet_statement.json")
+    balance[0]["totalAssets"] = None
+    balance[0]["retainedEarnings"] = None
+    cash = load_fixture("cash_flow_statement.json")
+    cash[0]["stockBasedCompensation"] = None
+    cash[0]["interestPaid"] = None
+    fixture_server.route("/balance-sheet-statement", balance)
+    fixture_server.route("/cash-flow-statement", cash)
+
+    balance_row = client.statements.balance.statement("AAPL")[0]
+    cash_row = client.statements.cash_flow.statement("AAPL")[0]
+
+    assert balance_row.total_assets is None
+    assert balance_row.retained_earnings is None
+    assert isinstance(balance_row.other_receivables, float)
+    assert cash_row.stock_based_compensation is None
+    assert cash_row.interest_paid is None
+    assert cash_row.net_income == 112_010_000_000
+
+
 def test_key_metrics_with_fiscal_quarter(client: Any, fixture_server: FixtureServer) -> None:
     """``metrics.key_metrics`` accepts a ``Q3`` fiscal quarter as the period."""
     fixture_server.route("/key-metrics", load_fixture("key_metrics.json"))

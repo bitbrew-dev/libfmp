@@ -79,56 +79,56 @@ type BalanceSheetStatement struct {
 	AcceptedDate                            DateTime `json:"acceptedDate"`
 	FiscalYear                              string   `json:"fiscalYear"`
 	Period                                  string   `json:"period"`
-	CashAndCashEquivalents                  float64  `json:"cashAndCashEquivalents"`
-	ShortTermInvestments                    float64  `json:"shortTermInvestments"`
-	CashAndShortTermInvestments             float64  `json:"cashAndShortTermInvestments"`
-	NetReceivables                          float64  `json:"netReceivables"`
-	AccountsReceivables                     float64  `json:"accountsReceivables"`
+	CashAndCashEquivalents                  *float64 `json:"cashAndCashEquivalents"`
+	ShortTermInvestments                    *float64 `json:"shortTermInvestments"`
+	CashAndShortTermInvestments             *float64 `json:"cashAndShortTermInvestments"`
+	NetReceivables                          *float64 `json:"netReceivables"`
+	AccountsReceivables                     *float64 `json:"accountsReceivables"`
 	OtherReceivables                        float64  `json:"otherReceivables"`
-	Inventory                               float64  `json:"inventory"`
-	Prepaids                                float64  `json:"prepaids"`
+	Inventory                               *float64 `json:"inventory"`
+	Prepaids                                *float64 `json:"prepaids"`
 	OtherCurrentAssets                      float64  `json:"otherCurrentAssets"`
-	TotalCurrentAssets                      float64  `json:"totalCurrentAssets"`
-	PropertyPlantEquipmentNet               float64  `json:"propertyPlantEquipmentNet"`
-	Goodwill                                float64  `json:"goodwill"`
-	IntangibleAssets                        float64  `json:"intangibleAssets"`
-	GoodwillAndIntangibleAssets             float64  `json:"goodwillAndIntangibleAssets"`
-	LongTermInvestments                     float64  `json:"longTermInvestments"`
-	TaxAssets                               float64  `json:"taxAssets"`
+	TotalCurrentAssets                      *float64 `json:"totalCurrentAssets"`
+	PropertyPlantEquipmentNet               *float64 `json:"propertyPlantEquipmentNet"`
+	Goodwill                                *float64 `json:"goodwill"`
+	IntangibleAssets                        *float64 `json:"intangibleAssets"`
+	GoodwillAndIntangibleAssets             *float64 `json:"goodwillAndIntangibleAssets"`
+	LongTermInvestments                     *float64 `json:"longTermInvestments"`
+	TaxAssets                               *float64 `json:"taxAssets"`
 	OtherNonCurrentAssets                   float64  `json:"otherNonCurrentAssets"`
-	TotalNonCurrentAssets                   float64  `json:"totalNonCurrentAssets"`
+	TotalNonCurrentAssets                   *float64 `json:"totalNonCurrentAssets"`
 	OtherAssets                             float64  `json:"otherAssets"`
-	TotalAssets                             float64  `json:"totalAssets"`
+	TotalAssets                             *float64 `json:"totalAssets"`
 	TotalPayables                           float64  `json:"totalPayables"`
-	AccountPayables                         float64  `json:"accountPayables"`
-	OtherPayables                           float64  `json:"otherPayables"`
-	AccruedExpenses                         float64  `json:"accruedExpenses"`
-	ShortTermDebt                           float64  `json:"shortTermDebt"`
-	CapitalLeaseObligationsCurrent          float64  `json:"capitalLeaseObligationsCurrent"`
-	TaxPayables                             float64  `json:"taxPayables"`
-	DeferredRevenue                         float64  `json:"deferredRevenue"`
+	AccountPayables                         *float64 `json:"accountPayables"`
+	OtherPayables                           *float64 `json:"otherPayables"`
+	AccruedExpenses                         *float64 `json:"accruedExpenses"`
+	ShortTermDebt                           *float64 `json:"shortTermDebt"`
+	CapitalLeaseObligationsCurrent          *float64 `json:"capitalLeaseObligationsCurrent"`
+	TaxPayables                             *float64 `json:"taxPayables"`
+	DeferredRevenue                         *float64 `json:"deferredRevenue"`
 	OtherCurrentLiabilities                 float64  `json:"otherCurrentLiabilities"`
-	TotalCurrentLiabilities                 float64  `json:"totalCurrentLiabilities"`
-	LongTermDebt                            float64  `json:"longTermDebt"`
-	CapitalLeaseObligationsNonCurrent       float64  `json:"capitalLeaseObligationsNonCurrent"`
-	DeferredRevenueNonCurrent               float64  `json:"deferredRevenueNonCurrent"`
-	DeferredTaxLiabilitiesNonCurrent        float64  `json:"deferredTaxLiabilitiesNonCurrent"`
+	TotalCurrentLiabilities                 *float64 `json:"totalCurrentLiabilities"`
+	LongTermDebt                            *float64 `json:"longTermDebt"`
+	CapitalLeaseObligationsNonCurrent       *float64 `json:"capitalLeaseObligationsNonCurrent"`
+	DeferredRevenueNonCurrent               *float64 `json:"deferredRevenueNonCurrent"`
+	DeferredTaxLiabilitiesNonCurrent        *float64 `json:"deferredTaxLiabilitiesNonCurrent"`
 	OtherNonCurrentLiabilities              float64  `json:"otherNonCurrentLiabilities"`
-	TotalNonCurrentLiabilities              float64  `json:"totalNonCurrentLiabilities"`
+	TotalNonCurrentLiabilities              *float64 `json:"totalNonCurrentLiabilities"`
 	OtherLiabilities                        float64  `json:"otherLiabilities"`
 	CapitalLeaseObligations                 float64  `json:"capitalLeaseObligations"`
-	TotalLiabilities                        float64  `json:"totalLiabilities"`
-	TreasuryStock                           float64  `json:"treasuryStock"`
+	TotalLiabilities                        *float64 `json:"totalLiabilities"`
+	TreasuryStock                           *float64 `json:"treasuryStock"`
 	PreferredStock                          float64  `json:"preferredStock"`
-	CommonStock                             float64  `json:"commonStock"`
-	RetainedEarnings                        float64  `json:"retainedEarnings"`
-	AdditionalPaidInCapital                 float64  `json:"additionalPaidInCapital"`
-	AccumulatedOtherComprehensiveIncomeLoss float64  `json:"accumulatedOtherComprehensiveIncomeLoss"`
+	CommonStock                             *float64 `json:"commonStock"`
+	RetainedEarnings                        *float64 `json:"retainedEarnings"`
+	AdditionalPaidInCapital                 *float64 `json:"additionalPaidInCapital"`
+	AccumulatedOtherComprehensiveIncomeLoss *float64 `json:"accumulatedOtherComprehensiveIncomeLoss"`
 	OtherTotalStockholdersEquity            float64  `json:"otherTotalStockholdersEquity"`
-	TotalStockholdersEquity                 float64  `json:"totalStockholdersEquity"`
-	TotalEquity                             float64  `json:"totalEquity"`
+	TotalStockholdersEquity                 *float64 `json:"totalStockholdersEquity"`
+	TotalEquity                             *float64 `json:"totalEquity"`
 	MinorityInterest                        float64  `json:"minorityInterest"`
-	TotalLiabilitiesAndTotalEquity          float64  `json:"totalLiabilitiesAndTotalEquity"`
+	TotalLiabilitiesAndTotalEquity          *float64 `json:"totalLiabilitiesAndTotalEquity"`
 	TotalInvestments                        float64  `json:"totalInvestments"`
 	TotalDebt                               float64  `json:"totalDebt"`
 	NetDebt                                 float64  `json:"netDebt"`
@@ -138,67 +138,67 @@ type BalanceSheetStatement struct {
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type balanceSheetStatementShadow struct {
-	Date                                    *Date     `json:"date"`
-	Symbol                                  *string   `json:"symbol"`
-	ReportedCurrency                        *string   `json:"reportedCurrency"`
-	CIK                                     *string   `json:"cik"`
-	FilingDate                              *Date     `json:"filingDate"`
-	AcceptedDate                            *DateTime `json:"acceptedDate"`
-	FiscalYear                              *string   `json:"fiscalYear"`
-	Period                                  *string   `json:"period"`
-	CashAndCashEquivalents                  *float64  `json:"cashAndCashEquivalents"`
-	ShortTermInvestments                    *float64  `json:"shortTermInvestments"`
-	CashAndShortTermInvestments             *float64  `json:"cashAndShortTermInvestments"`
-	NetReceivables                          *float64  `json:"netReceivables"`
-	AccountsReceivables                     *float64  `json:"accountsReceivables"`
-	OtherReceivables                        *float64  `json:"otherReceivables"`
-	Inventory                               *float64  `json:"inventory"`
-	Prepaids                                *float64  `json:"prepaids"`
-	OtherCurrentAssets                      *float64  `json:"otherCurrentAssets"`
-	TotalCurrentAssets                      *float64  `json:"totalCurrentAssets"`
-	PropertyPlantEquipmentNet               *float64  `json:"propertyPlantEquipmentNet"`
-	Goodwill                                *float64  `json:"goodwill"`
-	IntangibleAssets                        *float64  `json:"intangibleAssets"`
-	GoodwillAndIntangibleAssets             *float64  `json:"goodwillAndIntangibleAssets"`
-	LongTermInvestments                     *float64  `json:"longTermInvestments"`
-	TaxAssets                               *float64  `json:"taxAssets"`
-	OtherNonCurrentAssets                   *float64  `json:"otherNonCurrentAssets"`
-	TotalNonCurrentAssets                   *float64  `json:"totalNonCurrentAssets"`
-	OtherAssets                             *float64  `json:"otherAssets"`
-	TotalAssets                             *float64  `json:"totalAssets"`
-	TotalPayables                           *float64  `json:"totalPayables"`
-	AccountPayables                         *float64  `json:"accountPayables"`
-	OtherPayables                           *float64  `json:"otherPayables"`
-	AccruedExpenses                         *float64  `json:"accruedExpenses"`
-	ShortTermDebt                           *float64  `json:"shortTermDebt"`
-	CapitalLeaseObligationsCurrent          *float64  `json:"capitalLeaseObligationsCurrent"`
-	TaxPayables                             *float64  `json:"taxPayables"`
-	DeferredRevenue                         *float64  `json:"deferredRevenue"`
-	OtherCurrentLiabilities                 *float64  `json:"otherCurrentLiabilities"`
-	TotalCurrentLiabilities                 *float64  `json:"totalCurrentLiabilities"`
-	LongTermDebt                            *float64  `json:"longTermDebt"`
-	CapitalLeaseObligationsNonCurrent       *float64  `json:"capitalLeaseObligationsNonCurrent"`
-	DeferredRevenueNonCurrent               *float64  `json:"deferredRevenueNonCurrent"`
-	DeferredTaxLiabilitiesNonCurrent        *float64  `json:"deferredTaxLiabilitiesNonCurrent"`
-	OtherNonCurrentLiabilities              *float64  `json:"otherNonCurrentLiabilities"`
-	TotalNonCurrentLiabilities              *float64  `json:"totalNonCurrentLiabilities"`
-	OtherLiabilities                        *float64  `json:"otherLiabilities"`
-	CapitalLeaseObligations                 *float64  `json:"capitalLeaseObligations"`
-	TotalLiabilities                        *float64  `json:"totalLiabilities"`
-	TreasuryStock                           *float64  `json:"treasuryStock"`
-	PreferredStock                          *float64  `json:"preferredStock"`
-	CommonStock                             *float64  `json:"commonStock"`
-	RetainedEarnings                        *float64  `json:"retainedEarnings"`
-	AdditionalPaidInCapital                 *float64  `json:"additionalPaidInCapital"`
-	AccumulatedOtherComprehensiveIncomeLoss *float64  `json:"accumulatedOtherComprehensiveIncomeLoss"`
-	OtherTotalStockholdersEquity            *float64  `json:"otherTotalStockholdersEquity"`
-	TotalStockholdersEquity                 *float64  `json:"totalStockholdersEquity"`
-	TotalEquity                             *float64  `json:"totalEquity"`
-	MinorityInterest                        *float64  `json:"minorityInterest"`
-	TotalLiabilitiesAndTotalEquity          *float64  `json:"totalLiabilitiesAndTotalEquity"`
-	TotalInvestments                        *float64  `json:"totalInvestments"`
-	TotalDebt                               *float64  `json:"totalDebt"`
-	NetDebt                                 *float64  `json:"netDebt"`
+	Date                                    *Date          `json:"date"`
+	Symbol                                  *string        `json:"symbol"`
+	ReportedCurrency                        *string        `json:"reportedCurrency"`
+	CIK                                     *string        `json:"cik"`
+	FilingDate                              *Date          `json:"filingDate"`
+	AcceptedDate                            *DateTime      `json:"acceptedDate"`
+	FiscalYear                              *string        `json:"fiscalYear"`
+	Period                                  *string        `json:"period"`
+	CashAndCashEquivalents                  jsontext.Value `json:"cashAndCashEquivalents"`
+	ShortTermInvestments                    jsontext.Value `json:"shortTermInvestments"`
+	CashAndShortTermInvestments             jsontext.Value `json:"cashAndShortTermInvestments"`
+	NetReceivables                          jsontext.Value `json:"netReceivables"`
+	AccountsReceivables                     jsontext.Value `json:"accountsReceivables"`
+	OtherReceivables                        *float64       `json:"otherReceivables"`
+	Inventory                               jsontext.Value `json:"inventory"`
+	Prepaids                                jsontext.Value `json:"prepaids"`
+	OtherCurrentAssets                      *float64       `json:"otherCurrentAssets"`
+	TotalCurrentAssets                      jsontext.Value `json:"totalCurrentAssets"`
+	PropertyPlantEquipmentNet               jsontext.Value `json:"propertyPlantEquipmentNet"`
+	Goodwill                                jsontext.Value `json:"goodwill"`
+	IntangibleAssets                        jsontext.Value `json:"intangibleAssets"`
+	GoodwillAndIntangibleAssets             jsontext.Value `json:"goodwillAndIntangibleAssets"`
+	LongTermInvestments                     jsontext.Value `json:"longTermInvestments"`
+	TaxAssets                               jsontext.Value `json:"taxAssets"`
+	OtherNonCurrentAssets                   *float64       `json:"otherNonCurrentAssets"`
+	TotalNonCurrentAssets                   jsontext.Value `json:"totalNonCurrentAssets"`
+	OtherAssets                             *float64       `json:"otherAssets"`
+	TotalAssets                             jsontext.Value `json:"totalAssets"`
+	TotalPayables                           *float64       `json:"totalPayables"`
+	AccountPayables                         jsontext.Value `json:"accountPayables"`
+	OtherPayables                           jsontext.Value `json:"otherPayables"`
+	AccruedExpenses                         jsontext.Value `json:"accruedExpenses"`
+	ShortTermDebt                           jsontext.Value `json:"shortTermDebt"`
+	CapitalLeaseObligationsCurrent          jsontext.Value `json:"capitalLeaseObligationsCurrent"`
+	TaxPayables                             jsontext.Value `json:"taxPayables"`
+	DeferredRevenue                         jsontext.Value `json:"deferredRevenue"`
+	OtherCurrentLiabilities                 *float64       `json:"otherCurrentLiabilities"`
+	TotalCurrentLiabilities                 jsontext.Value `json:"totalCurrentLiabilities"`
+	LongTermDebt                            jsontext.Value `json:"longTermDebt"`
+	CapitalLeaseObligationsNonCurrent       jsontext.Value `json:"capitalLeaseObligationsNonCurrent"`
+	DeferredRevenueNonCurrent               jsontext.Value `json:"deferredRevenueNonCurrent"`
+	DeferredTaxLiabilitiesNonCurrent        jsontext.Value `json:"deferredTaxLiabilitiesNonCurrent"`
+	OtherNonCurrentLiabilities              *float64       `json:"otherNonCurrentLiabilities"`
+	TotalNonCurrentLiabilities              jsontext.Value `json:"totalNonCurrentLiabilities"`
+	OtherLiabilities                        *float64       `json:"otherLiabilities"`
+	CapitalLeaseObligations                 *float64       `json:"capitalLeaseObligations"`
+	TotalLiabilities                        jsontext.Value `json:"totalLiabilities"`
+	TreasuryStock                           jsontext.Value `json:"treasuryStock"`
+	PreferredStock                          *float64       `json:"preferredStock"`
+	CommonStock                             jsontext.Value `json:"commonStock"`
+	RetainedEarnings                        jsontext.Value `json:"retainedEarnings"`
+	AdditionalPaidInCapital                 jsontext.Value `json:"additionalPaidInCapital"`
+	AccumulatedOtherComprehensiveIncomeLoss jsontext.Value `json:"accumulatedOtherComprehensiveIncomeLoss"`
+	OtherTotalStockholdersEquity            *float64       `json:"otherTotalStockholdersEquity"`
+	TotalStockholdersEquity                 jsontext.Value `json:"totalStockholdersEquity"`
+	TotalEquity                             jsontext.Value `json:"totalEquity"`
+	MinorityInterest                        *float64       `json:"minorityInterest"`
+	TotalLiabilitiesAndTotalEquity          jsontext.Value `json:"totalLiabilitiesAndTotalEquity"`
+	TotalInvestments                        *float64       `json:"totalInvestments"`
+	TotalDebt                               *float64       `json:"totalDebt"`
+	NetDebt                                 *float64       `json:"netDebt"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -226,105 +226,105 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BalanceSheetStatement", "fiscalYear")
 	case shadow.Period == nil:
 		return missingMemberError("BalanceSheetStatement", "period")
-	case shadow.CashAndCashEquivalents == nil:
+	case len(shadow.CashAndCashEquivalents) == 0:
 		return missingMemberError("BalanceSheetStatement", "cashAndCashEquivalents")
-	case shadow.ShortTermInvestments == nil:
+	case len(shadow.ShortTermInvestments) == 0:
 		return missingMemberError("BalanceSheetStatement", "shortTermInvestments")
-	case shadow.CashAndShortTermInvestments == nil:
+	case len(shadow.CashAndShortTermInvestments) == 0:
 		return missingMemberError("BalanceSheetStatement", "cashAndShortTermInvestments")
-	case shadow.NetReceivables == nil:
+	case len(shadow.NetReceivables) == 0:
 		return missingMemberError("BalanceSheetStatement", "netReceivables")
-	case shadow.AccountsReceivables == nil:
+	case len(shadow.AccountsReceivables) == 0:
 		return missingMemberError("BalanceSheetStatement", "accountsReceivables")
 	case shadow.OtherReceivables == nil:
 		return missingMemberError("BalanceSheetStatement", "otherReceivables")
-	case shadow.Inventory == nil:
+	case len(shadow.Inventory) == 0:
 		return missingMemberError("BalanceSheetStatement", "inventory")
-	case shadow.Prepaids == nil:
+	case len(shadow.Prepaids) == 0:
 		return missingMemberError("BalanceSheetStatement", "prepaids")
 	case shadow.OtherCurrentAssets == nil:
 		return missingMemberError("BalanceSheetStatement", "otherCurrentAssets")
-	case shadow.TotalCurrentAssets == nil:
+	case len(shadow.TotalCurrentAssets) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalCurrentAssets")
-	case shadow.PropertyPlantEquipmentNet == nil:
+	case len(shadow.PropertyPlantEquipmentNet) == 0:
 		return missingMemberError("BalanceSheetStatement", "propertyPlantEquipmentNet")
-	case shadow.Goodwill == nil:
+	case len(shadow.Goodwill) == 0:
 		return missingMemberError("BalanceSheetStatement", "goodwill")
-	case shadow.IntangibleAssets == nil:
+	case len(shadow.IntangibleAssets) == 0:
 		return missingMemberError("BalanceSheetStatement", "intangibleAssets")
-	case shadow.GoodwillAndIntangibleAssets == nil:
+	case len(shadow.GoodwillAndIntangibleAssets) == 0:
 		return missingMemberError("BalanceSheetStatement", "goodwillAndIntangibleAssets")
-	case shadow.LongTermInvestments == nil:
+	case len(shadow.LongTermInvestments) == 0:
 		return missingMemberError("BalanceSheetStatement", "longTermInvestments")
-	case shadow.TaxAssets == nil:
+	case len(shadow.TaxAssets) == 0:
 		return missingMemberError("BalanceSheetStatement", "taxAssets")
 	case shadow.OtherNonCurrentAssets == nil:
 		return missingMemberError("BalanceSheetStatement", "otherNonCurrentAssets")
-	case shadow.TotalNonCurrentAssets == nil:
+	case len(shadow.TotalNonCurrentAssets) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalNonCurrentAssets")
 	case shadow.OtherAssets == nil:
 		return missingMemberError("BalanceSheetStatement", "otherAssets")
-	case shadow.TotalAssets == nil:
+	case len(shadow.TotalAssets) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalAssets")
 	case shadow.TotalPayables == nil:
 		return missingMemberError("BalanceSheetStatement", "totalPayables")
-	case shadow.AccountPayables == nil:
+	case len(shadow.AccountPayables) == 0:
 		return missingMemberError("BalanceSheetStatement", "accountPayables")
-	case shadow.OtherPayables == nil:
+	case len(shadow.OtherPayables) == 0:
 		return missingMemberError("BalanceSheetStatement", "otherPayables")
-	case shadow.AccruedExpenses == nil:
+	case len(shadow.AccruedExpenses) == 0:
 		return missingMemberError("BalanceSheetStatement", "accruedExpenses")
-	case shadow.ShortTermDebt == nil:
+	case len(shadow.ShortTermDebt) == 0:
 		return missingMemberError("BalanceSheetStatement", "shortTermDebt")
-	case shadow.CapitalLeaseObligationsCurrent == nil:
+	case len(shadow.CapitalLeaseObligationsCurrent) == 0:
 		return missingMemberError("BalanceSheetStatement", "capitalLeaseObligationsCurrent")
-	case shadow.TaxPayables == nil:
+	case len(shadow.TaxPayables) == 0:
 		return missingMemberError("BalanceSheetStatement", "taxPayables")
-	case shadow.DeferredRevenue == nil:
+	case len(shadow.DeferredRevenue) == 0:
 		return missingMemberError("BalanceSheetStatement", "deferredRevenue")
 	case shadow.OtherCurrentLiabilities == nil:
 		return missingMemberError("BalanceSheetStatement", "otherCurrentLiabilities")
-	case shadow.TotalCurrentLiabilities == nil:
+	case len(shadow.TotalCurrentLiabilities) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalCurrentLiabilities")
-	case shadow.LongTermDebt == nil:
+	case len(shadow.LongTermDebt) == 0:
 		return missingMemberError("BalanceSheetStatement", "longTermDebt")
-	case shadow.CapitalLeaseObligationsNonCurrent == nil:
+	case len(shadow.CapitalLeaseObligationsNonCurrent) == 0:
 		return missingMemberError("BalanceSheetStatement", "capitalLeaseObligationsNonCurrent")
-	case shadow.DeferredRevenueNonCurrent == nil:
+	case len(shadow.DeferredRevenueNonCurrent) == 0:
 		return missingMemberError("BalanceSheetStatement", "deferredRevenueNonCurrent")
-	case shadow.DeferredTaxLiabilitiesNonCurrent == nil:
+	case len(shadow.DeferredTaxLiabilitiesNonCurrent) == 0:
 		return missingMemberError("BalanceSheetStatement", "deferredTaxLiabilitiesNonCurrent")
 	case shadow.OtherNonCurrentLiabilities == nil:
 		return missingMemberError("BalanceSheetStatement", "otherNonCurrentLiabilities")
-	case shadow.TotalNonCurrentLiabilities == nil:
+	case len(shadow.TotalNonCurrentLiabilities) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalNonCurrentLiabilities")
 	case shadow.OtherLiabilities == nil:
 		return missingMemberError("BalanceSheetStatement", "otherLiabilities")
 	case shadow.CapitalLeaseObligations == nil:
 		return missingMemberError("BalanceSheetStatement", "capitalLeaseObligations")
-	case shadow.TotalLiabilities == nil:
+	case len(shadow.TotalLiabilities) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalLiabilities")
-	case shadow.TreasuryStock == nil:
+	case len(shadow.TreasuryStock) == 0:
 		return missingMemberError("BalanceSheetStatement", "treasuryStock")
 	case shadow.PreferredStock == nil:
 		return missingMemberError("BalanceSheetStatement", "preferredStock")
-	case shadow.CommonStock == nil:
+	case len(shadow.CommonStock) == 0:
 		return missingMemberError("BalanceSheetStatement", "commonStock")
-	case shadow.RetainedEarnings == nil:
+	case len(shadow.RetainedEarnings) == 0:
 		return missingMemberError("BalanceSheetStatement", "retainedEarnings")
-	case shadow.AdditionalPaidInCapital == nil:
+	case len(shadow.AdditionalPaidInCapital) == 0:
 		return missingMemberError("BalanceSheetStatement", "additionalPaidInCapital")
-	case shadow.AccumulatedOtherComprehensiveIncomeLoss == nil:
+	case len(shadow.AccumulatedOtherComprehensiveIncomeLoss) == 0:
 		return missingMemberError("BalanceSheetStatement", "accumulatedOtherComprehensiveIncomeLoss")
 	case shadow.OtherTotalStockholdersEquity == nil:
 		return missingMemberError("BalanceSheetStatement", "otherTotalStockholdersEquity")
-	case shadow.TotalStockholdersEquity == nil:
+	case len(shadow.TotalStockholdersEquity) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalStockholdersEquity")
-	case shadow.TotalEquity == nil:
+	case len(shadow.TotalEquity) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalEquity")
 	case shadow.MinorityInterest == nil:
 		return missingMemberError("BalanceSheetStatement", "minorityInterest")
-	case shadow.TotalLiabilitiesAndTotalEquity == nil:
+	case len(shadow.TotalLiabilitiesAndTotalEquity) == 0:
 		return missingMemberError("BalanceSheetStatement", "totalLiabilitiesAndTotalEquity")
 	case shadow.TotalInvestments == nil:
 		return missingMemberError("BalanceSheetStatement", "totalInvestments")
@@ -332,6 +332,310 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BalanceSheetStatement", "totalDebt")
 	case shadow.NetDebt == nil:
 		return missingMemberError("BalanceSheetStatement", "netDebt")
+	}
+	var cashAndCashEquivalents *float64
+	if shadow.CashAndCashEquivalents.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CashAndCashEquivalents, &value); err != nil {
+			return err
+		}
+		cashAndCashEquivalents = &value
+	}
+	var shortTermInvestments *float64
+	if shadow.ShortTermInvestments.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.ShortTermInvestments, &value); err != nil {
+			return err
+		}
+		shortTermInvestments = &value
+	}
+	var cashAndShortTermInvestments *float64
+	if shadow.CashAndShortTermInvestments.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CashAndShortTermInvestments, &value); err != nil {
+			return err
+		}
+		cashAndShortTermInvestments = &value
+	}
+	var netReceivables *float64
+	if shadow.NetReceivables.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.NetReceivables, &value); err != nil {
+			return err
+		}
+		netReceivables = &value
+	}
+	var accountsReceivables *float64
+	if shadow.AccountsReceivables.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AccountsReceivables, &value); err != nil {
+			return err
+		}
+		accountsReceivables = &value
+	}
+	var inventory *float64
+	if shadow.Inventory.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Inventory, &value); err != nil {
+			return err
+		}
+		inventory = &value
+	}
+	var prepaids *float64
+	if shadow.Prepaids.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Prepaids, &value); err != nil {
+			return err
+		}
+		prepaids = &value
+	}
+	var totalCurrentAssets *float64
+	if shadow.TotalCurrentAssets.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalCurrentAssets, &value); err != nil {
+			return err
+		}
+		totalCurrentAssets = &value
+	}
+	var propertyPlantEquipmentNet *float64
+	if shadow.PropertyPlantEquipmentNet.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.PropertyPlantEquipmentNet, &value); err != nil {
+			return err
+		}
+		propertyPlantEquipmentNet = &value
+	}
+	var goodwill *float64
+	if shadow.Goodwill.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Goodwill, &value); err != nil {
+			return err
+		}
+		goodwill = &value
+	}
+	var intangibleAssets *float64
+	if shadow.IntangibleAssets.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.IntangibleAssets, &value); err != nil {
+			return err
+		}
+		intangibleAssets = &value
+	}
+	var goodwillAndIntangibleAssets *float64
+	if shadow.GoodwillAndIntangibleAssets.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.GoodwillAndIntangibleAssets, &value); err != nil {
+			return err
+		}
+		goodwillAndIntangibleAssets = &value
+	}
+	var longTermInvestments *float64
+	if shadow.LongTermInvestments.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.LongTermInvestments, &value); err != nil {
+			return err
+		}
+		longTermInvestments = &value
+	}
+	var taxAssets *float64
+	if shadow.TaxAssets.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TaxAssets, &value); err != nil {
+			return err
+		}
+		taxAssets = &value
+	}
+	var totalNonCurrentAssets *float64
+	if shadow.TotalNonCurrentAssets.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalNonCurrentAssets, &value); err != nil {
+			return err
+		}
+		totalNonCurrentAssets = &value
+	}
+	var totalAssets *float64
+	if shadow.TotalAssets.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalAssets, &value); err != nil {
+			return err
+		}
+		totalAssets = &value
+	}
+	var accountPayables *float64
+	if shadow.AccountPayables.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AccountPayables, &value); err != nil {
+			return err
+		}
+		accountPayables = &value
+	}
+	var otherPayables *float64
+	if shadow.OtherPayables.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.OtherPayables, &value); err != nil {
+			return err
+		}
+		otherPayables = &value
+	}
+	var accruedExpenses *float64
+	if shadow.AccruedExpenses.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AccruedExpenses, &value); err != nil {
+			return err
+		}
+		accruedExpenses = &value
+	}
+	var shortTermDebt *float64
+	if shadow.ShortTermDebt.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.ShortTermDebt, &value); err != nil {
+			return err
+		}
+		shortTermDebt = &value
+	}
+	var capitalLeaseObligationsCurrent *float64
+	if shadow.CapitalLeaseObligationsCurrent.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CapitalLeaseObligationsCurrent, &value); err != nil {
+			return err
+		}
+		capitalLeaseObligationsCurrent = &value
+	}
+	var taxPayables *float64
+	if shadow.TaxPayables.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TaxPayables, &value); err != nil {
+			return err
+		}
+		taxPayables = &value
+	}
+	var deferredRevenue *float64
+	if shadow.DeferredRevenue.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.DeferredRevenue, &value); err != nil {
+			return err
+		}
+		deferredRevenue = &value
+	}
+	var totalCurrentLiabilities *float64
+	if shadow.TotalCurrentLiabilities.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalCurrentLiabilities, &value); err != nil {
+			return err
+		}
+		totalCurrentLiabilities = &value
+	}
+	var longTermDebt *float64
+	if shadow.LongTermDebt.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.LongTermDebt, &value); err != nil {
+			return err
+		}
+		longTermDebt = &value
+	}
+	var capitalLeaseObligationsNonCurrent *float64
+	if shadow.CapitalLeaseObligationsNonCurrent.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CapitalLeaseObligationsNonCurrent, &value); err != nil {
+			return err
+		}
+		capitalLeaseObligationsNonCurrent = &value
+	}
+	var deferredRevenueNonCurrent *float64
+	if shadow.DeferredRevenueNonCurrent.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.DeferredRevenueNonCurrent, &value); err != nil {
+			return err
+		}
+		deferredRevenueNonCurrent = &value
+	}
+	var deferredTaxLiabilitiesNonCurrent *float64
+	if shadow.DeferredTaxLiabilitiesNonCurrent.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.DeferredTaxLiabilitiesNonCurrent, &value); err != nil {
+			return err
+		}
+		deferredTaxLiabilitiesNonCurrent = &value
+	}
+	var totalNonCurrentLiabilities *float64
+	if shadow.TotalNonCurrentLiabilities.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalNonCurrentLiabilities, &value); err != nil {
+			return err
+		}
+		totalNonCurrentLiabilities = &value
+	}
+	var totalLiabilities *float64
+	if shadow.TotalLiabilities.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalLiabilities, &value); err != nil {
+			return err
+		}
+		totalLiabilities = &value
+	}
+	var treasuryStock *float64
+	if shadow.TreasuryStock.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TreasuryStock, &value); err != nil {
+			return err
+		}
+		treasuryStock = &value
+	}
+	var commonStock *float64
+	if shadow.CommonStock.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CommonStock, &value); err != nil {
+			return err
+		}
+		commonStock = &value
+	}
+	var retainedEarnings *float64
+	if shadow.RetainedEarnings.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.RetainedEarnings, &value); err != nil {
+			return err
+		}
+		retainedEarnings = &value
+	}
+	var additionalPaidInCapital *float64
+	if shadow.AdditionalPaidInCapital.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AdditionalPaidInCapital, &value); err != nil {
+			return err
+		}
+		additionalPaidInCapital = &value
+	}
+	var accumulatedOtherComprehensiveIncomeLoss *float64
+	if shadow.AccumulatedOtherComprehensiveIncomeLoss.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AccumulatedOtherComprehensiveIncomeLoss, &value); err != nil {
+			return err
+		}
+		accumulatedOtherComprehensiveIncomeLoss = &value
+	}
+	var totalStockholdersEquity *float64
+	if shadow.TotalStockholdersEquity.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalStockholdersEquity, &value); err != nil {
+			return err
+		}
+		totalStockholdersEquity = &value
+	}
+	var totalEquity *float64
+	if shadow.TotalEquity.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalEquity, &value); err != nil {
+			return err
+		}
+		totalEquity = &value
+	}
+	var totalLiabilitiesAndTotalEquity *float64
+	if shadow.TotalLiabilitiesAndTotalEquity.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalLiabilitiesAndTotalEquity, &value); err != nil {
+			return err
+		}
+		totalLiabilitiesAndTotalEquity = &value
 	}
 	*m = BalanceSheetStatement{
 		Date:                                    *shadow.Date,
@@ -342,56 +646,56 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		AcceptedDate:                            *shadow.AcceptedDate,
 		FiscalYear:                              *shadow.FiscalYear,
 		Period:                                  *shadow.Period,
-		CashAndCashEquivalents:                  *shadow.CashAndCashEquivalents,
-		ShortTermInvestments:                    *shadow.ShortTermInvestments,
-		CashAndShortTermInvestments:             *shadow.CashAndShortTermInvestments,
-		NetReceivables:                          *shadow.NetReceivables,
-		AccountsReceivables:                     *shadow.AccountsReceivables,
+		CashAndCashEquivalents:                  cashAndCashEquivalents,
+		ShortTermInvestments:                    shortTermInvestments,
+		CashAndShortTermInvestments:             cashAndShortTermInvestments,
+		NetReceivables:                          netReceivables,
+		AccountsReceivables:                     accountsReceivables,
 		OtherReceivables:                        *shadow.OtherReceivables,
-		Inventory:                               *shadow.Inventory,
-		Prepaids:                                *shadow.Prepaids,
+		Inventory:                               inventory,
+		Prepaids:                                prepaids,
 		OtherCurrentAssets:                      *shadow.OtherCurrentAssets,
-		TotalCurrentAssets:                      *shadow.TotalCurrentAssets,
-		PropertyPlantEquipmentNet:               *shadow.PropertyPlantEquipmentNet,
-		Goodwill:                                *shadow.Goodwill,
-		IntangibleAssets:                        *shadow.IntangibleAssets,
-		GoodwillAndIntangibleAssets:             *shadow.GoodwillAndIntangibleAssets,
-		LongTermInvestments:                     *shadow.LongTermInvestments,
-		TaxAssets:                               *shadow.TaxAssets,
+		TotalCurrentAssets:                      totalCurrentAssets,
+		PropertyPlantEquipmentNet:               propertyPlantEquipmentNet,
+		Goodwill:                                goodwill,
+		IntangibleAssets:                        intangibleAssets,
+		GoodwillAndIntangibleAssets:             goodwillAndIntangibleAssets,
+		LongTermInvestments:                     longTermInvestments,
+		TaxAssets:                               taxAssets,
 		OtherNonCurrentAssets:                   *shadow.OtherNonCurrentAssets,
-		TotalNonCurrentAssets:                   *shadow.TotalNonCurrentAssets,
+		TotalNonCurrentAssets:                   totalNonCurrentAssets,
 		OtherAssets:                             *shadow.OtherAssets,
-		TotalAssets:                             *shadow.TotalAssets,
+		TotalAssets:                             totalAssets,
 		TotalPayables:                           *shadow.TotalPayables,
-		AccountPayables:                         *shadow.AccountPayables,
-		OtherPayables:                           *shadow.OtherPayables,
-		AccruedExpenses:                         *shadow.AccruedExpenses,
-		ShortTermDebt:                           *shadow.ShortTermDebt,
-		CapitalLeaseObligationsCurrent:          *shadow.CapitalLeaseObligationsCurrent,
-		TaxPayables:                             *shadow.TaxPayables,
-		DeferredRevenue:                         *shadow.DeferredRevenue,
+		AccountPayables:                         accountPayables,
+		OtherPayables:                           otherPayables,
+		AccruedExpenses:                         accruedExpenses,
+		ShortTermDebt:                           shortTermDebt,
+		CapitalLeaseObligationsCurrent:          capitalLeaseObligationsCurrent,
+		TaxPayables:                             taxPayables,
+		DeferredRevenue:                         deferredRevenue,
 		OtherCurrentLiabilities:                 *shadow.OtherCurrentLiabilities,
-		TotalCurrentLiabilities:                 *shadow.TotalCurrentLiabilities,
-		LongTermDebt:                            *shadow.LongTermDebt,
-		CapitalLeaseObligationsNonCurrent:       *shadow.CapitalLeaseObligationsNonCurrent,
-		DeferredRevenueNonCurrent:               *shadow.DeferredRevenueNonCurrent,
-		DeferredTaxLiabilitiesNonCurrent:        *shadow.DeferredTaxLiabilitiesNonCurrent,
+		TotalCurrentLiabilities:                 totalCurrentLiabilities,
+		LongTermDebt:                            longTermDebt,
+		CapitalLeaseObligationsNonCurrent:       capitalLeaseObligationsNonCurrent,
+		DeferredRevenueNonCurrent:               deferredRevenueNonCurrent,
+		DeferredTaxLiabilitiesNonCurrent:        deferredTaxLiabilitiesNonCurrent,
 		OtherNonCurrentLiabilities:              *shadow.OtherNonCurrentLiabilities,
-		TotalNonCurrentLiabilities:              *shadow.TotalNonCurrentLiabilities,
+		TotalNonCurrentLiabilities:              totalNonCurrentLiabilities,
 		OtherLiabilities:                        *shadow.OtherLiabilities,
 		CapitalLeaseObligations:                 *shadow.CapitalLeaseObligations,
-		TotalLiabilities:                        *shadow.TotalLiabilities,
-		TreasuryStock:                           *shadow.TreasuryStock,
+		TotalLiabilities:                        totalLiabilities,
+		TreasuryStock:                           treasuryStock,
 		PreferredStock:                          *shadow.PreferredStock,
-		CommonStock:                             *shadow.CommonStock,
-		RetainedEarnings:                        *shadow.RetainedEarnings,
-		AdditionalPaidInCapital:                 *shadow.AdditionalPaidInCapital,
-		AccumulatedOtherComprehensiveIncomeLoss: *shadow.AccumulatedOtherComprehensiveIncomeLoss,
+		CommonStock:                             commonStock,
+		RetainedEarnings:                        retainedEarnings,
+		AdditionalPaidInCapital:                 additionalPaidInCapital,
+		AccumulatedOtherComprehensiveIncomeLoss: accumulatedOtherComprehensiveIncomeLoss,
 		OtherTotalStockholdersEquity:            *shadow.OtherTotalStockholdersEquity,
-		TotalStockholdersEquity:                 *shadow.TotalStockholdersEquity,
-		TotalEquity:                             *shadow.TotalEquity,
+		TotalStockholdersEquity:                 totalStockholdersEquity,
+		TotalEquity:                             totalEquity,
 		MinorityInterest:                        *shadow.MinorityInterest,
-		TotalLiabilitiesAndTotalEquity:          *shadow.TotalLiabilitiesAndTotalEquity,
+		TotalLiabilitiesAndTotalEquity:          totalLiabilitiesAndTotalEquity,
 		TotalInvestments:                        *shadow.TotalInvestments,
 		TotalDebt:                               *shadow.TotalDebt,
 		NetDebt:                                 *shadow.NetDebt,
@@ -738,96 +1042,96 @@ type CashFlowStatement struct {
 	Period                                 string   `json:"period"`
 	NetIncome                              float64  `json:"netIncome"`
 	DepreciationAndAmortization            float64  `json:"depreciationAndAmortization"`
-	DeferredIncomeTax                      float64  `json:"deferredIncomeTax"`
-	StockBasedCompensation                 float64  `json:"stockBasedCompensation"`
+	DeferredIncomeTax                      *float64 `json:"deferredIncomeTax"`
+	StockBasedCompensation                 *float64 `json:"stockBasedCompensation"`
 	ChangeInWorkingCapital                 float64  `json:"changeInWorkingCapital"`
-	AccountsReceivables                    float64  `json:"accountsReceivables"`
-	Inventory                              float64  `json:"inventory"`
-	AccountsPayables                       float64  `json:"accountsPayables"`
+	AccountsReceivables                    *float64 `json:"accountsReceivables"`
+	Inventory                              *float64 `json:"inventory"`
+	AccountsPayables                       *float64 `json:"accountsPayables"`
 	OtherWorkingCapital                    float64  `json:"otherWorkingCapital"`
 	OtherNonCashItems                      float64  `json:"otherNonCashItems"`
 	NetCashProvidedByOperatingActivities   float64  `json:"netCashProvidedByOperatingActivities"`
 	InvestmentsInPropertyPlantAndEquipment float64  `json:"investmentsInPropertyPlantAndEquipment"`
 	AcquisitionsNet                        float64  `json:"acquisitionsNet"`
-	PurchasesOfInvestments                 float64  `json:"purchasesOfInvestments"`
-	SalesMaturitiesOfInvestments           float64  `json:"salesMaturitiesOfInvestments"`
+	PurchasesOfInvestments                 *float64 `json:"purchasesOfInvestments"`
+	SalesMaturitiesOfInvestments           *float64 `json:"salesMaturitiesOfInvestments"`
 	OtherInvestingActivities               float64  `json:"otherInvestingActivities"`
 	NetCashProvidedByInvestingActivities   float64  `json:"netCashProvidedByInvestingActivities"`
 	NetDebtIssuance                        float64  `json:"netDebtIssuance"`
-	LongTermNetDebtIssuance                float64  `json:"longTermNetDebtIssuance"`
+	LongTermNetDebtIssuance                *float64 `json:"longTermNetDebtIssuance"`
 	ShortTermNetDebtIssuance               float64  `json:"shortTermNetDebtIssuance"`
-	NetStockIssuance                       float64  `json:"netStockIssuance"`
-	NetCommonStockIssuance                 float64  `json:"netCommonStockIssuance"`
+	NetStockIssuance                       *float64 `json:"netStockIssuance"`
+	NetCommonStockIssuance                 *float64 `json:"netCommonStockIssuance"`
 	CommonStockIssuance                    float64  `json:"commonStockIssuance"`
-	CommonStockRepurchased                 float64  `json:"commonStockRepurchased"`
-	NetPreferredStockIssuance              float64  `json:"netPreferredStockIssuance"`
-	NetDividendsPaid                       float64  `json:"netDividendsPaid"`
-	CommonDividendsPaid                    float64  `json:"commonDividendsPaid"`
-	PreferredDividendsPaid                 float64  `json:"preferredDividendsPaid"`
+	CommonStockRepurchased                 *float64 `json:"commonStockRepurchased"`
+	NetPreferredStockIssuance              *float64 `json:"netPreferredStockIssuance"`
+	NetDividendsPaid                       *float64 `json:"netDividendsPaid"`
+	CommonDividendsPaid                    *float64 `json:"commonDividendsPaid"`
+	PreferredDividendsPaid                 *float64 `json:"preferredDividendsPaid"`
 	OtherFinancingActivities               float64  `json:"otherFinancingActivities"`
-	NetCashProvidedByFinancingActivities   float64  `json:"netCashProvidedByFinancingActivities"`
+	NetCashProvidedByFinancingActivities   *float64 `json:"netCashProvidedByFinancingActivities"`
 	EffectOfForexChangesOnCash             float64  `json:"effectOfForexChangesOnCash"`
 	NetChangeInCash                        float64  `json:"netChangeInCash"`
 	CashAtEndOfPeriod                      float64  `json:"cashAtEndOfPeriod"`
-	CashAtBeginningOfPeriod                float64  `json:"cashAtBeginningOfPeriod"`
+	CashAtBeginningOfPeriod                *float64 `json:"cashAtBeginningOfPeriod"`
 	OperatingCashFlow                      float64  `json:"operatingCashFlow"`
 	CapitalExpenditure                     float64  `json:"capitalExpenditure"`
 	FreeCashFlow                           float64  `json:"freeCashFlow"`
-	IncomeTaxesPaid                        float64  `json:"incomeTaxesPaid"`
-	InterestPaid                           float64  `json:"interestPaid"`
+	IncomeTaxesPaid                        *float64 `json:"incomeTaxesPaid"`
+	InterestPaid                           *float64 `json:"interestPaid"`
 }
 
 // cashFlowStatementShadow mirrors CashFlowStatement with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type cashFlowStatementShadow struct {
-	Date                                   *Date     `json:"date"`
-	Symbol                                 *string   `json:"symbol"`
-	ReportedCurrency                       *string   `json:"reportedCurrency"`
-	CIK                                    *string   `json:"cik"`
-	FilingDate                             *Date     `json:"filingDate"`
-	AcceptedDate                           *DateTime `json:"acceptedDate"`
-	FiscalYear                             *string   `json:"fiscalYear"`
-	Period                                 *string   `json:"period"`
-	NetIncome                              *float64  `json:"netIncome"`
-	DepreciationAndAmortization            *float64  `json:"depreciationAndAmortization"`
-	DeferredIncomeTax                      *float64  `json:"deferredIncomeTax"`
-	StockBasedCompensation                 *float64  `json:"stockBasedCompensation"`
-	ChangeInWorkingCapital                 *float64  `json:"changeInWorkingCapital"`
-	AccountsReceivables                    *float64  `json:"accountsReceivables"`
-	Inventory                              *float64  `json:"inventory"`
-	AccountsPayables                       *float64  `json:"accountsPayables"`
-	OtherWorkingCapital                    *float64  `json:"otherWorkingCapital"`
-	OtherNonCashItems                      *float64  `json:"otherNonCashItems"`
-	NetCashProvidedByOperatingActivities   *float64  `json:"netCashProvidedByOperatingActivities"`
-	InvestmentsInPropertyPlantAndEquipment *float64  `json:"investmentsInPropertyPlantAndEquipment"`
-	AcquisitionsNet                        *float64  `json:"acquisitionsNet"`
-	PurchasesOfInvestments                 *float64  `json:"purchasesOfInvestments"`
-	SalesMaturitiesOfInvestments           *float64  `json:"salesMaturitiesOfInvestments"`
-	OtherInvestingActivities               *float64  `json:"otherInvestingActivities"`
-	NetCashProvidedByInvestingActivities   *float64  `json:"netCashProvidedByInvestingActivities"`
-	NetDebtIssuance                        *float64  `json:"netDebtIssuance"`
-	LongTermNetDebtIssuance                *float64  `json:"longTermNetDebtIssuance"`
-	ShortTermNetDebtIssuance               *float64  `json:"shortTermNetDebtIssuance"`
-	NetStockIssuance                       *float64  `json:"netStockIssuance"`
-	NetCommonStockIssuance                 *float64  `json:"netCommonStockIssuance"`
-	CommonStockIssuance                    *float64  `json:"commonStockIssuance"`
-	CommonStockRepurchased                 *float64  `json:"commonStockRepurchased"`
-	NetPreferredStockIssuance              *float64  `json:"netPreferredStockIssuance"`
-	NetDividendsPaid                       *float64  `json:"netDividendsPaid"`
-	CommonDividendsPaid                    *float64  `json:"commonDividendsPaid"`
-	PreferredDividendsPaid                 *float64  `json:"preferredDividendsPaid"`
-	OtherFinancingActivities               *float64  `json:"otherFinancingActivities"`
-	NetCashProvidedByFinancingActivities   *float64  `json:"netCashProvidedByFinancingActivities"`
-	EffectOfForexChangesOnCash             *float64  `json:"effectOfForexChangesOnCash"`
-	NetChangeInCash                        *float64  `json:"netChangeInCash"`
-	CashAtEndOfPeriod                      *float64  `json:"cashAtEndOfPeriod"`
-	CashAtBeginningOfPeriod                *float64  `json:"cashAtBeginningOfPeriod"`
-	OperatingCashFlow                      *float64  `json:"operatingCashFlow"`
-	CapitalExpenditure                     *float64  `json:"capitalExpenditure"`
-	FreeCashFlow                           *float64  `json:"freeCashFlow"`
-	IncomeTaxesPaid                        *float64  `json:"incomeTaxesPaid"`
-	InterestPaid                           *float64  `json:"interestPaid"`
+	Date                                   *Date          `json:"date"`
+	Symbol                                 *string        `json:"symbol"`
+	ReportedCurrency                       *string        `json:"reportedCurrency"`
+	CIK                                    *string        `json:"cik"`
+	FilingDate                             *Date          `json:"filingDate"`
+	AcceptedDate                           *DateTime      `json:"acceptedDate"`
+	FiscalYear                             *string        `json:"fiscalYear"`
+	Period                                 *string        `json:"period"`
+	NetIncome                              *float64       `json:"netIncome"`
+	DepreciationAndAmortization            *float64       `json:"depreciationAndAmortization"`
+	DeferredIncomeTax                      jsontext.Value `json:"deferredIncomeTax"`
+	StockBasedCompensation                 jsontext.Value `json:"stockBasedCompensation"`
+	ChangeInWorkingCapital                 *float64       `json:"changeInWorkingCapital"`
+	AccountsReceivables                    jsontext.Value `json:"accountsReceivables"`
+	Inventory                              jsontext.Value `json:"inventory"`
+	AccountsPayables                       jsontext.Value `json:"accountsPayables"`
+	OtherWorkingCapital                    *float64       `json:"otherWorkingCapital"`
+	OtherNonCashItems                      *float64       `json:"otherNonCashItems"`
+	NetCashProvidedByOperatingActivities   *float64       `json:"netCashProvidedByOperatingActivities"`
+	InvestmentsInPropertyPlantAndEquipment *float64       `json:"investmentsInPropertyPlantAndEquipment"`
+	AcquisitionsNet                        *float64       `json:"acquisitionsNet"`
+	PurchasesOfInvestments                 jsontext.Value `json:"purchasesOfInvestments"`
+	SalesMaturitiesOfInvestments           jsontext.Value `json:"salesMaturitiesOfInvestments"`
+	OtherInvestingActivities               *float64       `json:"otherInvestingActivities"`
+	NetCashProvidedByInvestingActivities   *float64       `json:"netCashProvidedByInvestingActivities"`
+	NetDebtIssuance                        *float64       `json:"netDebtIssuance"`
+	LongTermNetDebtIssuance                jsontext.Value `json:"longTermNetDebtIssuance"`
+	ShortTermNetDebtIssuance               *float64       `json:"shortTermNetDebtIssuance"`
+	NetStockIssuance                       jsontext.Value `json:"netStockIssuance"`
+	NetCommonStockIssuance                 jsontext.Value `json:"netCommonStockIssuance"`
+	CommonStockIssuance                    *float64       `json:"commonStockIssuance"`
+	CommonStockRepurchased                 jsontext.Value `json:"commonStockRepurchased"`
+	NetPreferredStockIssuance              jsontext.Value `json:"netPreferredStockIssuance"`
+	NetDividendsPaid                       jsontext.Value `json:"netDividendsPaid"`
+	CommonDividendsPaid                    jsontext.Value `json:"commonDividendsPaid"`
+	PreferredDividendsPaid                 jsontext.Value `json:"preferredDividendsPaid"`
+	OtherFinancingActivities               *float64       `json:"otherFinancingActivities"`
+	NetCashProvidedByFinancingActivities   jsontext.Value `json:"netCashProvidedByFinancingActivities"`
+	EffectOfForexChangesOnCash             *float64       `json:"effectOfForexChangesOnCash"`
+	NetChangeInCash                        *float64       `json:"netChangeInCash"`
+	CashAtEndOfPeriod                      *float64       `json:"cashAtEndOfPeriod"`
+	CashAtBeginningOfPeriod                jsontext.Value `json:"cashAtBeginningOfPeriod"`
+	OperatingCashFlow                      *float64       `json:"operatingCashFlow"`
+	CapitalExpenditure                     *float64       `json:"capitalExpenditure"`
+	FreeCashFlow                           *float64       `json:"freeCashFlow"`
+	IncomeTaxesPaid                        jsontext.Value `json:"incomeTaxesPaid"`
+	InterestPaid                           jsontext.Value `json:"interestPaid"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -859,17 +1163,17 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CashFlowStatement", "netIncome")
 	case shadow.DepreciationAndAmortization == nil:
 		return missingMemberError("CashFlowStatement", "depreciationAndAmortization")
-	case shadow.DeferredIncomeTax == nil:
+	case len(shadow.DeferredIncomeTax) == 0:
 		return missingMemberError("CashFlowStatement", "deferredIncomeTax")
-	case shadow.StockBasedCompensation == nil:
+	case len(shadow.StockBasedCompensation) == 0:
 		return missingMemberError("CashFlowStatement", "stockBasedCompensation")
 	case shadow.ChangeInWorkingCapital == nil:
 		return missingMemberError("CashFlowStatement", "changeInWorkingCapital")
-	case shadow.AccountsReceivables == nil:
+	case len(shadow.AccountsReceivables) == 0:
 		return missingMemberError("CashFlowStatement", "accountsReceivables")
-	case shadow.Inventory == nil:
+	case len(shadow.Inventory) == 0:
 		return missingMemberError("CashFlowStatement", "inventory")
-	case shadow.AccountsPayables == nil:
+	case len(shadow.AccountsPayables) == 0:
 		return missingMemberError("CashFlowStatement", "accountsPayables")
 	case shadow.OtherWorkingCapital == nil:
 		return missingMemberError("CashFlowStatement", "otherWorkingCapital")
@@ -881,9 +1185,9 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CashFlowStatement", "investmentsInPropertyPlantAndEquipment")
 	case shadow.AcquisitionsNet == nil:
 		return missingMemberError("CashFlowStatement", "acquisitionsNet")
-	case shadow.PurchasesOfInvestments == nil:
+	case len(shadow.PurchasesOfInvestments) == 0:
 		return missingMemberError("CashFlowStatement", "purchasesOfInvestments")
-	case shadow.SalesMaturitiesOfInvestments == nil:
+	case len(shadow.SalesMaturitiesOfInvestments) == 0:
 		return missingMemberError("CashFlowStatement", "salesMaturitiesOfInvestments")
 	case shadow.OtherInvestingActivities == nil:
 		return missingMemberError("CashFlowStatement", "otherInvestingActivities")
@@ -891,29 +1195,29 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CashFlowStatement", "netCashProvidedByInvestingActivities")
 	case shadow.NetDebtIssuance == nil:
 		return missingMemberError("CashFlowStatement", "netDebtIssuance")
-	case shadow.LongTermNetDebtIssuance == nil:
+	case len(shadow.LongTermNetDebtIssuance) == 0:
 		return missingMemberError("CashFlowStatement", "longTermNetDebtIssuance")
 	case shadow.ShortTermNetDebtIssuance == nil:
 		return missingMemberError("CashFlowStatement", "shortTermNetDebtIssuance")
-	case shadow.NetStockIssuance == nil:
+	case len(shadow.NetStockIssuance) == 0:
 		return missingMemberError("CashFlowStatement", "netStockIssuance")
-	case shadow.NetCommonStockIssuance == nil:
+	case len(shadow.NetCommonStockIssuance) == 0:
 		return missingMemberError("CashFlowStatement", "netCommonStockIssuance")
 	case shadow.CommonStockIssuance == nil:
 		return missingMemberError("CashFlowStatement", "commonStockIssuance")
-	case shadow.CommonStockRepurchased == nil:
+	case len(shadow.CommonStockRepurchased) == 0:
 		return missingMemberError("CashFlowStatement", "commonStockRepurchased")
-	case shadow.NetPreferredStockIssuance == nil:
+	case len(shadow.NetPreferredStockIssuance) == 0:
 		return missingMemberError("CashFlowStatement", "netPreferredStockIssuance")
-	case shadow.NetDividendsPaid == nil:
+	case len(shadow.NetDividendsPaid) == 0:
 		return missingMemberError("CashFlowStatement", "netDividendsPaid")
-	case shadow.CommonDividendsPaid == nil:
+	case len(shadow.CommonDividendsPaid) == 0:
 		return missingMemberError("CashFlowStatement", "commonDividendsPaid")
-	case shadow.PreferredDividendsPaid == nil:
+	case len(shadow.PreferredDividendsPaid) == 0:
 		return missingMemberError("CashFlowStatement", "preferredDividendsPaid")
 	case shadow.OtherFinancingActivities == nil:
 		return missingMemberError("CashFlowStatement", "otherFinancingActivities")
-	case shadow.NetCashProvidedByFinancingActivities == nil:
+	case len(shadow.NetCashProvidedByFinancingActivities) == 0:
 		return missingMemberError("CashFlowStatement", "netCashProvidedByFinancingActivities")
 	case shadow.EffectOfForexChangesOnCash == nil:
 		return missingMemberError("CashFlowStatement", "effectOfForexChangesOnCash")
@@ -921,7 +1225,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CashFlowStatement", "netChangeInCash")
 	case shadow.CashAtEndOfPeriod == nil:
 		return missingMemberError("CashFlowStatement", "cashAtEndOfPeriod")
-	case shadow.CashAtBeginningOfPeriod == nil:
+	case len(shadow.CashAtBeginningOfPeriod) == 0:
 		return missingMemberError("CashFlowStatement", "cashAtBeginningOfPeriod")
 	case shadow.OperatingCashFlow == nil:
 		return missingMemberError("CashFlowStatement", "operatingCashFlow")
@@ -929,10 +1233,162 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CashFlowStatement", "capitalExpenditure")
 	case shadow.FreeCashFlow == nil:
 		return missingMemberError("CashFlowStatement", "freeCashFlow")
-	case shadow.IncomeTaxesPaid == nil:
+	case len(shadow.IncomeTaxesPaid) == 0:
 		return missingMemberError("CashFlowStatement", "incomeTaxesPaid")
-	case shadow.InterestPaid == nil:
+	case len(shadow.InterestPaid) == 0:
 		return missingMemberError("CashFlowStatement", "interestPaid")
+	}
+	var deferredIncomeTax *float64
+	if shadow.DeferredIncomeTax.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.DeferredIncomeTax, &value); err != nil {
+			return err
+		}
+		deferredIncomeTax = &value
+	}
+	var stockBasedCompensation *float64
+	if shadow.StockBasedCompensation.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.StockBasedCompensation, &value); err != nil {
+			return err
+		}
+		stockBasedCompensation = &value
+	}
+	var accountsReceivables *float64
+	if shadow.AccountsReceivables.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AccountsReceivables, &value); err != nil {
+			return err
+		}
+		accountsReceivables = &value
+	}
+	var inventory *float64
+	if shadow.Inventory.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Inventory, &value); err != nil {
+			return err
+		}
+		inventory = &value
+	}
+	var accountsPayables *float64
+	if shadow.AccountsPayables.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AccountsPayables, &value); err != nil {
+			return err
+		}
+		accountsPayables = &value
+	}
+	var purchasesOfInvestments *float64
+	if shadow.PurchasesOfInvestments.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.PurchasesOfInvestments, &value); err != nil {
+			return err
+		}
+		purchasesOfInvestments = &value
+	}
+	var salesMaturitiesOfInvestments *float64
+	if shadow.SalesMaturitiesOfInvestments.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.SalesMaturitiesOfInvestments, &value); err != nil {
+			return err
+		}
+		salesMaturitiesOfInvestments = &value
+	}
+	var longTermNetDebtIssuance *float64
+	if shadow.LongTermNetDebtIssuance.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.LongTermNetDebtIssuance, &value); err != nil {
+			return err
+		}
+		longTermNetDebtIssuance = &value
+	}
+	var netStockIssuance *float64
+	if shadow.NetStockIssuance.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.NetStockIssuance, &value); err != nil {
+			return err
+		}
+		netStockIssuance = &value
+	}
+	var netCommonStockIssuance *float64
+	if shadow.NetCommonStockIssuance.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.NetCommonStockIssuance, &value); err != nil {
+			return err
+		}
+		netCommonStockIssuance = &value
+	}
+	var commonStockRepurchased *float64
+	if shadow.CommonStockRepurchased.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CommonStockRepurchased, &value); err != nil {
+			return err
+		}
+		commonStockRepurchased = &value
+	}
+	var netPreferredStockIssuance *float64
+	if shadow.NetPreferredStockIssuance.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.NetPreferredStockIssuance, &value); err != nil {
+			return err
+		}
+		netPreferredStockIssuance = &value
+	}
+	var netDividendsPaid *float64
+	if shadow.NetDividendsPaid.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.NetDividendsPaid, &value); err != nil {
+			return err
+		}
+		netDividendsPaid = &value
+	}
+	var commonDividendsPaid *float64
+	if shadow.CommonDividendsPaid.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CommonDividendsPaid, &value); err != nil {
+			return err
+		}
+		commonDividendsPaid = &value
+	}
+	var preferredDividendsPaid *float64
+	if shadow.PreferredDividendsPaid.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.PreferredDividendsPaid, &value); err != nil {
+			return err
+		}
+		preferredDividendsPaid = &value
+	}
+	var netCashProvidedByFinancingActivities *float64
+	if shadow.NetCashProvidedByFinancingActivities.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.NetCashProvidedByFinancingActivities, &value); err != nil {
+			return err
+		}
+		netCashProvidedByFinancingActivities = &value
+	}
+	var cashAtBeginningOfPeriod *float64
+	if shadow.CashAtBeginningOfPeriod.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CashAtBeginningOfPeriod, &value); err != nil {
+			return err
+		}
+		cashAtBeginningOfPeriod = &value
+	}
+	var incomeTaxesPaid *float64
+	if shadow.IncomeTaxesPaid.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.IncomeTaxesPaid, &value); err != nil {
+			return err
+		}
+		incomeTaxesPaid = &value
+	}
+	var interestPaid *float64
+	if shadow.InterestPaid.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.InterestPaid, &value); err != nil {
+			return err
+		}
+		interestPaid = &value
 	}
 	*m = CashFlowStatement{
 		Date:                                   *shadow.Date,
@@ -945,43 +1401,43 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Period:                                 *shadow.Period,
 		NetIncome:                              *shadow.NetIncome,
 		DepreciationAndAmortization:            *shadow.DepreciationAndAmortization,
-		DeferredIncomeTax:                      *shadow.DeferredIncomeTax,
-		StockBasedCompensation:                 *shadow.StockBasedCompensation,
+		DeferredIncomeTax:                      deferredIncomeTax,
+		StockBasedCompensation:                 stockBasedCompensation,
 		ChangeInWorkingCapital:                 *shadow.ChangeInWorkingCapital,
-		AccountsReceivables:                    *shadow.AccountsReceivables,
-		Inventory:                              *shadow.Inventory,
-		AccountsPayables:                       *shadow.AccountsPayables,
+		AccountsReceivables:                    accountsReceivables,
+		Inventory:                              inventory,
+		AccountsPayables:                       accountsPayables,
 		OtherWorkingCapital:                    *shadow.OtherWorkingCapital,
 		OtherNonCashItems:                      *shadow.OtherNonCashItems,
 		NetCashProvidedByOperatingActivities:   *shadow.NetCashProvidedByOperatingActivities,
 		InvestmentsInPropertyPlantAndEquipment: *shadow.InvestmentsInPropertyPlantAndEquipment,
 		AcquisitionsNet:                        *shadow.AcquisitionsNet,
-		PurchasesOfInvestments:                 *shadow.PurchasesOfInvestments,
-		SalesMaturitiesOfInvestments:           *shadow.SalesMaturitiesOfInvestments,
+		PurchasesOfInvestments:                 purchasesOfInvestments,
+		SalesMaturitiesOfInvestments:           salesMaturitiesOfInvestments,
 		OtherInvestingActivities:               *shadow.OtherInvestingActivities,
 		NetCashProvidedByInvestingActivities:   *shadow.NetCashProvidedByInvestingActivities,
 		NetDebtIssuance:                        *shadow.NetDebtIssuance,
-		LongTermNetDebtIssuance:                *shadow.LongTermNetDebtIssuance,
+		LongTermNetDebtIssuance:                longTermNetDebtIssuance,
 		ShortTermNetDebtIssuance:               *shadow.ShortTermNetDebtIssuance,
-		NetStockIssuance:                       *shadow.NetStockIssuance,
-		NetCommonStockIssuance:                 *shadow.NetCommonStockIssuance,
+		NetStockIssuance:                       netStockIssuance,
+		NetCommonStockIssuance:                 netCommonStockIssuance,
 		CommonStockIssuance:                    *shadow.CommonStockIssuance,
-		CommonStockRepurchased:                 *shadow.CommonStockRepurchased,
-		NetPreferredStockIssuance:              *shadow.NetPreferredStockIssuance,
-		NetDividendsPaid:                       *shadow.NetDividendsPaid,
-		CommonDividendsPaid:                    *shadow.CommonDividendsPaid,
-		PreferredDividendsPaid:                 *shadow.PreferredDividendsPaid,
+		CommonStockRepurchased:                 commonStockRepurchased,
+		NetPreferredStockIssuance:              netPreferredStockIssuance,
+		NetDividendsPaid:                       netDividendsPaid,
+		CommonDividendsPaid:                    commonDividendsPaid,
+		PreferredDividendsPaid:                 preferredDividendsPaid,
 		OtherFinancingActivities:               *shadow.OtherFinancingActivities,
-		NetCashProvidedByFinancingActivities:   *shadow.NetCashProvidedByFinancingActivities,
+		NetCashProvidedByFinancingActivities:   netCashProvidedByFinancingActivities,
 		EffectOfForexChangesOnCash:             *shadow.EffectOfForexChangesOnCash,
 		NetChangeInCash:                        *shadow.NetChangeInCash,
 		CashAtEndOfPeriod:                      *shadow.CashAtEndOfPeriod,
-		CashAtBeginningOfPeriod:                *shadow.CashAtBeginningOfPeriod,
+		CashAtBeginningOfPeriod:                cashAtBeginningOfPeriod,
 		OperatingCashFlow:                      *shadow.OperatingCashFlow,
 		CapitalExpenditure:                     *shadow.CapitalExpenditure,
 		FreeCashFlow:                           *shadow.FreeCashFlow,
-		IncomeTaxesPaid:                        *shadow.IncomeTaxesPaid,
-		InterestPaid:                           *shadow.InterestPaid,
+		IncomeTaxesPaid:                        incomeTaxesPaid,
+		InterestPaid:                           interestPaid,
 	}
 	return nil
 }

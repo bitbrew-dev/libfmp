@@ -80,8 +80,8 @@ func TestDocumentedBalanceSheetAndCashFlowFixturesDecodeExactAmounts(t *testing.
 	t.Parallel()
 	balance := assertFixtureParity[BalanceSheetStatement](t, "balance_sheet_statement.json")
 	if len(balance) != 1 || balance[0].CIK != "0000320193" || balance[0].FiscalYear != "2025" ||
-		balance[0].Period != "FY" || balance[0].TotalAssets != 359_241_000_000 ||
-		balance[0].RetainedEarnings != -14_264_000_000 || len(memberSet(t, balance[0])) != 61 {
+		balance[0].Period != "FY" || !amountIs(balance[0].TotalAssets, 359_241_000_000) ||
+		!amountIs(balance[0].RetainedEarnings, -14_264_000_000) || len(memberSet(t, balance[0])) != 61 {
 		t.Fatalf("balance_sheet_statement = %+v", balance)
 	}
 	ttm := assertFixtureParity[BalanceSheetStatementTTM](t, "balance_sheet_statement_ttm.json")
@@ -92,12 +92,12 @@ func TestDocumentedBalanceSheetAndCashFlowFixturesDecodeExactAmounts(t *testing.
 	}
 	cash := assertFixtureParity[CashFlowStatement](t, "cash_flow_statement.json")
 	if len(cash) != 1 || cash[0].NetIncome != 112_010_000_000 || cash[0].FreeCashFlow != 98_767_000_000 ||
-		cash[0].NetCashProvidedByFinancingActivities != -120_686_000_000 || len(memberSet(t, cash[0])) != 47 {
+		!amountIs(cash[0].NetCashProvidedByFinancingActivities, -120_686_000_000) || len(memberSet(t, cash[0])) != 47 {
 		t.Fatalf("cash_flow_statement = %+v", cash)
 	}
 	cashTTM := assertFixtureParity[CashFlowStatement](t, "cash_flow_statement_ttm.json")
 	if len(cashTTM) != 1 || cashTTM[0].Period != "Q2" || cashTTM[0].FreeCashFlow != 129_174_000_000 ||
-		cashTTM[0].NetCashProvidedByFinancingActivities != -114_244_000_000 {
+		!amountIs(cashTTM[0].NetCashProvidedByFinancingActivities, -114_244_000_000) {
 		t.Fatalf("cash_flow_statement_ttm = %+v", cashTTM)
 	}
 }
@@ -170,13 +170,13 @@ func TestStatementAmountsPreserveLargeIntegralValuesAndShareQuantitiesKeepFracti
 
 	balance := statementsRoundTripExtreme[BalanceSheetStatement](t, "balance_sheet_statement.json", "totalAssets", large)
 	balanceTTM := statementsRoundTripExtreme[BalanceSheetStatementTTM](t, "balance_sheet_statement_ttm.json", "retainedEarnings", negative)
-	if balance.TotalAssets != 9e18 || balanceTTM.RetainedEarnings != -9e18 {
+	if !amountIs(balance.TotalAssets, 9e18) || balanceTTM.RetainedEarnings != -9e18 {
 		t.Fatalf("balance extremes = %v %v", balance.TotalAssets, balanceTTM.RetainedEarnings)
 	}
 	for _, fixture := range []string{"cash_flow_statement.json", "cash_flow_statement_ttm.json"} {
 		cash := statementsRoundTripExtreme[CashFlowStatement](t, fixture, "freeCashFlow", large)
 		financing := statementsRoundTripExtreme[CashFlowStatement](t, fixture, "netCashProvidedByFinancingActivities", negative)
-		if cash.FreeCashFlow != 9e18 || financing.NetCashProvidedByFinancingActivities != -9e18 {
+		if cash.FreeCashFlow != 9e18 || !amountIs(financing.NetCashProvidedByFinancingActivities, -9e18) {
 			t.Fatalf("%s extremes = %v %v", fixture, cash.FreeCashFlow, financing.NetCashProvidedByFinancingActivities)
 		}
 	}
@@ -199,4 +199,91 @@ func TestStatementAmountsPreserveLargeIntegralValuesAndShareQuantitiesKeepFracti
 	if err := json.Unmarshal(statementsWithMember(t, "balance_sheet_statement_ttm.json", "fiscalYear", "2026"), &balances); err == nil {
 		t.Fatal("numeric fiscalYear decoded into a string on the TTM contract")
 	}
+}
+
+// amountIs reports whether an optional statement amount is present and equal
+// to want.
+func amountIs(got *float64, want float64) bool {
+	return got != nil && *got == want
+}
+
+// The pre-IPO stub-quarter members of statements_balance_responses.rs and
+// statements_cash_flow_responses.rs: FMP sends null for them, which decodes to
+// nil and re-encodes as null.
+var (
+	balanceStubQuarterNullMembers = []string{
+		"accountPayables", "accountsReceivables", "accruedExpenses", "accumulatedOtherComprehensiveIncomeLoss",
+		"additionalPaidInCapital", "capitalLeaseObligationsCurrent", "capitalLeaseObligationsNonCurrent",
+		"cashAndCashEquivalents", "cashAndShortTermInvestments", "commonStock", "deferredRevenue",
+		"deferredRevenueNonCurrent", "deferredTaxLiabilitiesNonCurrent", "goodwill", "goodwillAndIntangibleAssets",
+		"intangibleAssets", "inventory", "longTermDebt", "longTermInvestments", "netReceivables", "otherPayables",
+		"prepaids", "propertyPlantEquipmentNet", "retainedEarnings", "shortTermDebt", "shortTermInvestments",
+		"taxAssets", "taxPayables", "totalAssets", "totalCurrentAssets", "totalCurrentLiabilities", "totalEquity",
+		"totalLiabilities", "totalLiabilitiesAndTotalEquity", "totalNonCurrentAssets", "totalNonCurrentLiabilities",
+		"totalStockholdersEquity", "treasuryStock",
+	}
+	cashFlowStubQuarterNullMembers = []string{
+		"accountsPayables", "accountsReceivables", "cashAtBeginningOfPeriod", "commonDividendsPaid",
+		"commonStockRepurchased", "deferredIncomeTax", "incomeTaxesPaid", "interestPaid", "inventory",
+		"longTermNetDebtIssuance", "netCashProvidedByFinancingActivities", "netCommonStockIssuance",
+		"netDividendsPaid", "netPreferredStockIssuance", "netStockIssuance", "preferredDividendsPaid",
+		"purchasesOfInvestments", "salesMaturitiesOfInvestments", "stockBasedCompensation",
+	}
+)
+
+func statementsWithNullMembers(t *testing.T, fixture string, members []string) []byte {
+	t.Helper()
+	var rows []map[string]jsontext.Value
+	if err := json.Unmarshal(readFixture(t, fixture), &rows); err != nil {
+		t.Fatalf("%s: %v", fixture, err)
+	}
+	for _, member := range members {
+		if _, ok := rows[0][member]; !ok {
+			t.Fatalf("%s: member %q is absent from the first row", fixture, member)
+		}
+		rows[0][member] = jsontext.Value("null")
+	}
+	encoded, err := json.Marshal(rows[:1])
+	if err != nil {
+		t.Fatal(err)
+	}
+	return encoded
+}
+
+func assertStubMembersReencodeNull(t *testing.T, row any, members []string) {
+	t.Helper()
+	encoded, err := json.Marshal(row)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got map[string]jsontext.Value
+	if err := json.Unmarshal(encoded, &got); err != nil {
+		t.Fatal(err)
+	}
+	for _, member := range members {
+		if string(got[member]) != "null" {
+			t.Fatalf("%s re-encoded as %s, want null", member, got[member])
+		}
+	}
+}
+
+func TestPreIPOStubRowsDecodeNullAmountsAsNil(t *testing.T) {
+	t.Parallel()
+	var balance []BalanceSheetStatement
+	if err := json.Unmarshal(statementsWithNullMembers(t, "balance_sheet_statement.json", balanceStubQuarterNullMembers), &balance); err != nil {
+		t.Fatalf("balance stub row: %v", err)
+	}
+	if balance[0].TotalAssets != nil || balance[0].OtherReceivables == 0 {
+		t.Fatalf("balance stub row = %+v", balance[0])
+	}
+	assertStubMembersReencodeNull(t, balance[0], balanceStubQuarterNullMembers)
+
+	var cash []CashFlowStatement
+	if err := json.Unmarshal(statementsWithNullMembers(t, "cash_flow_statement.json", cashFlowStubQuarterNullMembers), &cash); err != nil {
+		t.Fatalf("cash flow stub row: %v", err)
+	}
+	if cash[0].StockBasedCompensation != nil || cash[0].NetIncome == 0 {
+		t.Fatalf("cash flow stub row = %+v", cash[0])
+	}
+	assertStubMembersReencodeNull(t, cash[0], cashFlowStubQuarterNullMembers)
 }
