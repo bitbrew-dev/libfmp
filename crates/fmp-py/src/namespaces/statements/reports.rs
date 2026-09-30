@@ -44,7 +44,7 @@ impl StatementsReportsNamespace {
             .map_err(to_py_error)
     }
 
-    /// Retrieves one dynamic JSON financial report as a bare array.
+    /// Retrieves one dynamic JSON financial report as a single object.
     #[pyo3(signature = (symbol, year, period))]
     fn json(
         &self,
@@ -53,16 +53,15 @@ impl StatementsReportsNamespace {
         year: i64,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
         period: &str,
-    ) -> PyResult<Vec<FinancialReportJson>> {
+    ) -> PyResult<FinancialReportJson> {
         let query = json_query(symbol, year, period)?;
         let builder = self.builder.clone();
-        let rows = py.detach(move || {
+        let row = py.detach(move || {
             block_on(builder, |client| async move {
                 client.financial_reports_json(query).await
             })
         })?;
-        rows.map(|items| items.into_iter().map(FinancialReportJson::from).collect())
-            .map_err(to_py_error)
+        row.map(FinancialReportJson::from).map_err(to_py_error)
     }
 
     /// Downloads one financial report using the endpoint's XLSX MIME policy.

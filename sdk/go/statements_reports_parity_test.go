@@ -130,15 +130,17 @@ func TestDocumentedFinancialReportFixturesKeepHeadersAndDynamicSections(t *testi
 		t.Fatalf("financial_reports_dates = %+v, want %+v", dates, want)
 	}
 
-	reports := assertFixtureParity[FinancialReportJSON](t, "financial_reports_json.json")
-	if len(reports) != 1 || reports[0].Symbol != "AAPL" || reports[0].Period != "FY" || reports[0].Year != "2022" {
-		t.Fatalf("financial_reports_json headers = %+v", reports[0])
+	// Trimmed from a live AAPL 2023 Q1 response captured on 2026-09-30: one
+	// bare object, not an array.
+	report := assertObjectFixtureParity[FinancialReportJSON](t, "financial_reports_json.json")
+	if report.Symbol != "AAPL" || report.Period != "Q1" || report.Year != "2023" {
+		t.Fatalf("financial_reports_json headers = %+v", report)
 	}
-	sections := statementsObjectMembers(t, reports[0].Sections)
-	if len(sections) != 67 || len(memberSet(t, reports[0])) != 70 {
-		t.Fatalf("sections = %d, re-encoded members = %d", len(sections), len(memberSet(t, reports[0])))
+	sections := statementsObjectMembers(t, report.Sections)
+	if len(sections) != 3 || len(memberSet(t, report)) != 6 {
+		t.Fatalf("sections = %d, re-encoded members = %d", len(sections), len(memberSet(t, report)))
 	}
-	for _, name := range []string{"Cover Page", "Shareholders' Equity", "CONSOLIDATED BALANCE SHEETS (Pa", "Segment Information and Geogr_6"} {
+	for _, name := range []string{"CONDENSED CONSOLIDATED BALANC_2", "Shareholders' Equity - Addition", "Revenue - Additional Informatio"} {
 		if _, ok := sections[name]; !ok {
 			t.Fatalf("section %q is missing", name)
 		}
@@ -148,23 +150,21 @@ func TestDocumentedFinancialReportFixturesKeepHeadersAndDynamicSections(t *testi
 			t.Fatalf("header %q leaked into the sections", reserved)
 		}
 	}
-	// Null, NBSP, heterogeneous arrays, and scientific notation survive as raw text.
-	var taxes []map[string][]jsontext.Value
-	if err := json.Unmarshal(sections["Income Taxes - Additional Infor"], &taxes); err != nil || string(taxes[0]["Income Taxes - Additional Information (Details) $ in Millions, € in Billions"][0]) != "null" {
-		t.Fatalf("income taxes section = %v, %v", taxes, err)
-	}
-	var cover []map[string][]string
-	if err := json.Unmarshal(sections["Cover Page"], &cover); err != nil || cover[2]["Entity Information [Line Items]"][0] != "\u00a0" {
-		t.Fatalf("cover page section = %v, %v", cover, err)
-	}
-	var leases []map[string][]jsontext.Value
+	// NBSP, fractional values, and scientific notation survive as raw text;
+	// null survives in the inline empty-report probe below.
+	var equity []map[string][]jsontext.Value
 	var nbsp string
-	if err := json.Unmarshal(sections["Leases - Lease Liability Maturi"], &leases); err != nil || len(leases[2]["2023"]) != 2 ||
-		string(leases[2]["2023"][0]) != "1758" || json.Unmarshal(leases[2]["2023"][1], &nbsp) != nil || nbsp != "\u00a0" {
-		t.Fatalf("leases section = %v, %v", leases, err)
+	if err := json.Unmarshal(sections["Shareholders' Equity - Addition"], &equity); err != nil ||
+		json.Unmarshal(equity[2]["Share Repurchase Program [Line Items]"][0], &nbsp) != nil || nbsp != "\u00a0" {
+		t.Fatalf("shareholders' equity section = %v, %v", equity, err)
+	}
+	var revenue []map[string][]jsontext.Value
+	if err := json.Unmarshal(sections["Revenue - Additional Informatio"], &revenue); err != nil || len(revenue[2]["Total deferred revenue"]) != 2 ||
+		string(revenue[2]["Total deferred revenue"][0]) != "12.6" {
+		t.Fatalf("revenue section = %v, %v", revenue, err)
 	}
 	var balance []map[string][]jsontext.Value
-	if err := json.Unmarshal(sections["CONSOLIDATED BALANCE SHEETS (Pa"], &balance); err != nil || string(balance[2]["Common stock, par value (in dollars per share)"][0]) != "1e-05" {
+	if err := json.Unmarshal(sections["CONDENSED CONSOLIDATED BALANC_2"], &balance); err != nil || string(balance[2]["Common stock, par value (in dollars per share)"][0]) != "1e-05" {
 		t.Fatalf("balance sheet section = %v, %v", balance, err)
 	}
 
@@ -172,23 +172,30 @@ func TestDocumentedFinancialReportFixturesKeepHeadersAndDynamicSections(t *testi
 	// serializer rejects reserved keys; a missing or numeric header is a
 	// decode error; a report with no sections holds an empty object.
 	for _, reserved := range []string{"symbol", "period", "year"} {
-		clash := reports[0]
+		clash := report
 		clash.Sections = jsontext.Value(`{"` + reserved + `":"attacker-controlled replacement"}`)
 		if _, err := json.Marshal(clash); err == nil || !strings.Contains(err.Error(), reserved) {
 			t.Fatalf("reserved key %q: marshal error = %v", reserved, err)
 		}
 	}
-	var rows []FinancialReportJSON
-	if err := json.Unmarshal([]byte(`[{"symbol":"AAPL","period":"FY","Cover Page":[]}]`), &rows); err == nil ||
+	var decoded FinancialReportJSON
+	if err := json.Unmarshal([]byte(`{"symbol":"AAPL","period":"FY","Cover Page":[]}`), &decoded); err == nil ||
 		!strings.Contains(err.Error(), `"year"`) {
 		t.Fatalf("missing year: error = %v", err)
 	}
-	if err := json.Unmarshal(statementsWithMember(t, "financial_reports_json.json", "year", "2022"), &rows); err == nil {
+	if err := json.Unmarshal([]byte(`{"symbol":"AAPL","period":"Q1","year":2023}`), &decoded); err == nil {
 		t.Fatal("numeric year decoded into a string")
 	}
-	if err := json.Unmarshal([]byte(`[{"symbol":"TEST","period":"Q1","year":"0007"}]`), &rows); err != nil ||
-		string(rows[0].Sections) != "{}" || len(memberSet(t, rows[0])) != 3 {
-		t.Fatalf("empty report = %+v, %v", rows, err)
+	if err := json.Unmarshal([]byte(`[{"symbol":"AAPL","period":"Q1","year":"2023"}]`), &decoded); err == nil {
+		t.Fatal("a bare array decoded into one report")
+	}
+	if err := json.Unmarshal([]byte(`{"symbol":"TEST","period":"Q1","year":"0007"}`), &decoded); err != nil ||
+		string(decoded.Sections) != "{}" || len(memberSet(t, decoded)) != 3 {
+		t.Fatalf("empty report = %+v, %v", decoded, err)
+	}
+	if err := json.Unmarshal([]byte(`{"symbol":"TEST","period":"Q1","year":"0007","S":[null]}`), &decoded); err != nil ||
+		string(decoded.Sections) != `{"S":[null]}` {
+		t.Fatalf("null in a section = %+v, %v", decoded, err)
 	}
 }
 

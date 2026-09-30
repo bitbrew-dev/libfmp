@@ -148,8 +148,8 @@ async fn custom_proxy_preserves_exact_queries_auth_headers_and_all_three_respons
         .unwrap();
 
     assert_eq!(dates[0].fiscal_year.get(), 2026);
-    assert_eq!(report[0].year.as_str(), "2022");
-    assert_eq!(report[0].sections.len(), 67);
+    assert_eq!(report.year.as_str(), "2023");
+    assert_eq!(report.sections.len(), 3);
     assert_eq!(xlsx.as_bytes(), XLSX_BYTES);
     assert_eq!(xlsx.content_type(), OFFICIAL_XLSX);
     assert_eq!(xlsx.content_disposition(), Some(DISPOSITION));

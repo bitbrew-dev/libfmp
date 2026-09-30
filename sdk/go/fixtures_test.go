@@ -126,6 +126,39 @@ func fixtureParity[T any](t *testing.T, name string, nullWhenOmitted, unknown []
 	return rows
 }
 
+// assertObjectFixtureParity is assertFixtureParity for a fixture whose body
+// is one bare object rather than an array: it decodes the object into T,
+// requires the re-encoded member set to equal the fixture's, and proves an
+// unknown member is ignored.
+func assertObjectFixtureParity[T any](t *testing.T, name string) T {
+	t.Helper()
+	raw := readFixture(t, name)
+
+	var value T
+	if err := json.Unmarshal(raw, &value); err != nil {
+		t.Fatalf("%s: decode into %T: %v", name, value, err)
+	}
+	var wire map[string]jsontext.Value
+	if err := json.Unmarshal(raw, &wire); err != nil {
+		t.Fatalf("%s: fixture is not a bare object: %v", name, err)
+	}
+	want := slices.Sorted(maps.Keys(wire))
+	if got := memberSet(t, value); !slices.Equal(got, want) {
+		t.Fatalf("%s: re-encoded members %v, fixture members %v", name, got, want)
+	}
+
+	wire["fmpUnknownMemberProbe"] = jsontext.Value(`"ignored"`)
+	encoded, err := json.Marshal(wire)
+	if err != nil {
+		t.Fatalf("%s: re-encode with an unknown member: %v", name, err)
+	}
+	var probe T
+	if err := json.Unmarshal(encoded, &probe); err != nil {
+		t.Fatalf("%s: unknown member was not ignored: %v", name, err)
+	}
+	return value
+}
+
 // memberValues re-encodes one model value and returns its members.
 func memberValues[T any](t *testing.T, row T) map[string]jsontext.Value {
 	t.Helper()

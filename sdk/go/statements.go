@@ -1976,17 +1976,17 @@ func (n *StatementsReportsNamespace) Dates(ctx context.Context, q FinancialRepor
 	return out, nil
 }
 
-// JSON retrieves one dynamic JSON financial report as a bare array.
+// JSON retrieves one dynamic JSON financial report as a single object.
 //
 // GET financial-reports-json?symbol=&year=&period=
-func (n *StatementsReportsNamespace) JSON(ctx context.Context, q FinancialReportsJSONQuery) ([]FinancialReportJSON, error) {
+func (n *StatementsReportsNamespace) JSON(ctx context.Context, q FinancialReportsJSONQuery) (FinancialReportJSON, error) {
 	params, err := q.params()
 	if err != nil {
-		return nil, err
+		return FinancialReportJSON{}, err
 	}
-	var out []FinancialReportJSON
+	var out FinancialReportJSON
 	if err := n.client.getJSON(ctx, "financial-reports-json", "financial-reports-json", params, &out); err != nil {
-		return nil, err
+		return FinancialReportJSON{}, err
 	}
 	return out, nil
 }

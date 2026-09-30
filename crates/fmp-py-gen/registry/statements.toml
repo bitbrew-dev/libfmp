@@ -260,7 +260,8 @@ name = "json"
 method = "financial_reports_json"
 query = "FinancialReportsJsonQuery"
 response = "statements::reports::FinancialReportJson"
-doc = "Retrieves one dynamic JSON financial report as a bare array."
+single = true
+doc = "Retrieves one dynamic JSON financial report as a single object."
 args = [
     { name = "symbol", kind = "ticker" },
     { name = "year", kind = "year" },
