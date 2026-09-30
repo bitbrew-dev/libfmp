@@ -297,7 +297,7 @@ pub(crate) struct HistoricalIndexConstituent {
     #[pyo3(get)]
     pub date_added: String,
     #[pyo3(get)]
-    pub added_security: String,
+    pub added_security: Option<String>,
     #[pyo3(get)]
     pub removed_ticker: Option<String>,
     #[pyo3(get)]
@@ -307,7 +307,7 @@ pub(crate) struct HistoricalIndexConstituent {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub reason: String,
+    pub reason: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -319,12 +319,12 @@ impl HistoricalIndexConstituent {
     #[pyo3(signature = (*, date_added, added_security, removed_ticker, removed_security, date, symbol, reason))]
     fn new(
         date_added: String,
-        added_security: String,
+        added_security: Option<String>,
         removed_ticker: Option<String>,
         removed_security: Option<String>,
         date: ::chrono::NaiveDate,
         symbol: String,
-        reason: String,
+        reason: Option<String>,
     ) -> Self {
         Self {
             date_added,

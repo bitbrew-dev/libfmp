@@ -2,6 +2,7 @@ use libfmp::responses::directory::{
     ActivelyTradingSymbol, CikListing, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol,
     FinancialStatementSymbol, SymbolChange,
 };
+use serde_json::{Value, json};
 
 #[test]
 fn documented_directory_rows_decode_exact_field_names_and_wire_types() {
@@ -30,7 +31,10 @@ fn documented_directory_rows_decode_exact_field_names_and_wire_types() {
     assert_eq!(financials[0].symbol.as_str(), "RMES.CN");
     assert_eq!(financials[0].company_name, "Red Metal Resources Ltd.");
     assert_eq!(financials[0].trading_currency.as_str(), "CAD");
-    assert_eq!(financials[0].reporting_currency.as_str(), "USD");
+    assert_eq!(
+        financials[0].reporting_currency.as_ref().unwrap().as_str(),
+        "USD"
+    );
 
     assert_eq!(ciks[0].cik.as_str(), "0002137358");
     assert_eq!(ciks[0].company_name, "Osotspa Public Co Limited/ADR");
@@ -67,6 +71,28 @@ fn documented_directory_rows_decode_exact_field_names_and_wire_types() {
     assert!(etf_wire.get("companyName").is_none());
     assert_eq!(transcript_wire["noOfTranscripts"], "6");
     assert!(transcript_wire["noOfTranscripts"].is_string());
+}
+
+#[test]
+fn financial_statement_symbol_reporting_currency_decodes_null_and_empty_as_none() {
+    for reporting_currency in [Value::Null, json!("")] {
+        let row = json!({
+            "symbol": "1609.HK",
+            "companyName": "Chong Kin Group Holdings Limited",
+            "tradingCurrency": "HKD",
+            "reportingCurrency": reporting_currency,
+        });
+        let decoded: FinancialStatementSymbol = serde_json::from_value(row).unwrap();
+        assert_eq!(decoded.reporting_currency, None);
+        assert!(serde_json::to_value(&decoded).unwrap()["reportingCurrency"].is_null());
+    }
+
+    let missing = json!({
+        "symbol": "1609.HK",
+        "companyName": "Chong Kin Group Holdings Limited",
+        "tradingCurrency": "HKD",
+    });
+    assert!(serde_json::from_value::<FinancialStatementSymbol>(missing).is_err());
 }
 
 #[test]

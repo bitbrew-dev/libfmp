@@ -51,12 +51,14 @@ pub struct IndexConstituent {
 #[serde(rename_all = "camelCase")]
 pub struct HistoricalIndexConstituent {
     pub date_added: OpaqueDateText,
-    pub added_security: String,
     #[serde(deserialize_with = "required_option")]
+    pub added_security: Option<String>,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
     pub removed_ticker: Option<Ticker>,
     #[serde(deserialize_with = "required_option")]
     pub removed_security: Option<String>,
     pub date: Date,
     pub symbol: Ticker,
-    pub reason: String,
+    #[serde(deserialize_with = "required_option")]
+    pub reason: Option<String>,
 }

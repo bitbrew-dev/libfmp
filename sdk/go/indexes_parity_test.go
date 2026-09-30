@@ -130,7 +130,7 @@ func TestDocumentedIndexConstituentFixturesDecodeExactValues(t *testing.T) {
 
 	history := assertFixtureParity[HistoricalIndexConstituent](t, "indexes_historical_nasdaq_constituents.json")
 	if len(history) != 1 || history[0].DateAdded != "July 7, 2026" || history[0].Symbol != "SPCX" ||
-		history[0].AddedSecurity != "Space Exploration Technologies Corp." ||
+		history[0].AddedSecurity == nil || *history[0].AddedSecurity != "Space Exploration Technologies Corp." ||
 		history[0].Date != mustParseDate(t, "2026-07-06") {
 		t.Fatalf("indexes_historical_nasdaq_constituents = %+v", history)
 	}
@@ -141,12 +141,12 @@ func TestDocumentedIndexConstituentFixturesDecodeExactValues(t *testing.T) {
 	removal := assertFixtureParity[HistoricalIndexConstituent](t, "indexes_historical_sp500_constituents.json")
 	if len(removal) != 1 || removal[0].RemovedTicker == nil || *removal[0].RemovedTicker != "CAG" ||
 		removal[0].RemovedSecurity == nil || *removal[0].RemovedSecurity != "Conagra Brands" ||
-		removal[0].Reason != "Market Capitalization Changes" {
+		removal[0].Reason == nil || *removal[0].Reason != "Market Capitalization Changes" {
 		t.Fatalf("indexes_historical_sp500_constituents = %+v", removal)
 	}
 	dowHistory := assertFixtureParity[HistoricalIndexConstituent](t, "indexes_historical_dow_jones_constituents.json")
 	if len(dowHistory) != 1 || dowHistory[0].DateAdded != "June 29, 2026" || dowHistory[0].RemovedTicker == nil ||
-		*dowHistory[0].RemovedTicker != "VZ" {
+		*dowHistory[0].RemovedTicker != "VZ" || dowHistory[0].Reason != nil {
 		t.Fatalf("indexes_historical_dow_jones_constituents = %+v", dowHistory)
 	}
 }
@@ -177,6 +177,13 @@ func TestIndexesRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		if err := json.Unmarshal([]byte(wire), &changes); err != nil || len(changes) != 1 ||
 			changes[0].RemovedTicker != nil || changes[0].RemovedSecurity != nil {
 			t.Fatalf("null removals with unknown member: %+v, %v", changes, err)
+		}
+		wire = `[{"addedSecurity":null,"date":"2026-07-06","dateAdded":"July 7, 2026","reason":null,` +
+			`"removedSecurity":"","removedTicker":"","symbol":"SPCX"}]`
+		if err := json.Unmarshal([]byte(wire), &changes); err != nil || len(changes) != 1 ||
+			changes[0].AddedSecurity != nil || changes[0].Reason != nil || changes[0].RemovedTicker != nil ||
+			changes[0].RemovedSecurity == nil || *changes[0].RemovedSecurity != "" {
+			t.Fatalf("null added/reason and empty removedTicker: %+v, %v", changes, err)
 		}
 	})
 

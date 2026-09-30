@@ -134,12 +134,12 @@ func (m *IndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // removal from a major US index.
 type HistoricalIndexConstituent struct {
 	DateAdded       string  `json:"dateAdded"`
-	AddedSecurity   string  `json:"addedSecurity"`
+	AddedSecurity   *string `json:"addedSecurity"`
 	RemovedTicker   *string `json:"removedTicker"`
 	RemovedSecurity *string `json:"removedSecurity"`
 	Date            Date    `json:"date"`
 	Symbol          string  `json:"symbol"`
-	Reason          string  `json:"reason"`
+	Reason          *string `json:"reason"`
 }
 
 // historicalIndexConstituentShadow mirrors HistoricalIndexConstituent with a
@@ -147,12 +147,12 @@ type HistoricalIndexConstituent struct {
 // is observable after decoding.
 type historicalIndexConstituentShadow struct {
 	DateAdded       *string        `json:"dateAdded"`
-	AddedSecurity   *string        `json:"addedSecurity"`
+	AddedSecurity   jsontext.Value `json:"addedSecurity"`
 	RemovedTicker   jsontext.Value `json:"removedTicker"`
 	RemovedSecurity jsontext.Value `json:"removedSecurity"`
 	Date            *Date          `json:"date"`
 	Symbol          *string        `json:"symbol"`
-	Reason          *string        `json:"reason"`
+	Reason          jsontext.Value `json:"reason"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -166,7 +166,7 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	switch {
 	case shadow.DateAdded == nil:
 		return missingMemberError("HistoricalIndexConstituent", "dateAdded")
-	case shadow.AddedSecurity == nil:
+	case len(shadow.AddedSecurity) == 0:
 		return missingMemberError("HistoricalIndexConstituent", "addedSecurity")
 	case len(shadow.RemovedTicker) == 0:
 		return missingMemberError("HistoricalIndexConstituent", "removedTicker")
@@ -176,8 +176,16 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("HistoricalIndexConstituent", "date")
 	case shadow.Symbol == nil:
 		return missingMemberError("HistoricalIndexConstituent", "symbol")
-	case shadow.Reason == nil:
+	case len(shadow.Reason) == 0:
 		return missingMemberError("HistoricalIndexConstituent", "reason")
+	}
+	var addedSecurity *string
+	if shadow.AddedSecurity.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.AddedSecurity, &value); err != nil {
+			return err
+		}
+		addedSecurity = &value
 	}
 	var removedTicker *string
 	if shadow.RemovedTicker.Kind() != 'n' {
@@ -185,7 +193,9 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		if err := json.Unmarshal(shadow.RemovedTicker, &value); err != nil {
 			return err
 		}
-		removedTicker = &value
+		if value != "" {
+			removedTicker = &value
+		}
 	}
 	var removedSecurity *string
 	if shadow.RemovedSecurity.Kind() != 'n' {
@@ -195,14 +205,22 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		}
 		removedSecurity = &value
 	}
+	var reason *string
+	if shadow.Reason.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Reason, &value); err != nil {
+			return err
+		}
+		reason = &value
+	}
 	*m = HistoricalIndexConstituent{
 		DateAdded:       *shadow.DateAdded,
-		AddedSecurity:   *shadow.AddedSecurity,
+		AddedSecurity:   addedSecurity,
 		RemovedTicker:   removedTicker,
 		RemovedSecurity: removedSecurity,
 		Date:            *shadow.Date,
 		Symbol:          *shadow.Symbol,
-		Reason:          *shadow.Reason,
+		Reason:          reason,
 	}
 	return nil
 }

@@ -49,20 +49,20 @@ func (m *CompanySymbol) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // FinancialStatementSymbol is one worldwide company with financial statements
 // available from FMP.
 type FinancialStatementSymbol struct {
-	Symbol            string `json:"symbol"`
-	CompanyName       string `json:"companyName"`
-	TradingCurrency   string `json:"tradingCurrency"`
-	ReportingCurrency string `json:"reportingCurrency"`
+	Symbol            string  `json:"symbol"`
+	CompanyName       string  `json:"companyName"`
+	TradingCurrency   string  `json:"tradingCurrency"`
+	ReportingCurrency *string `json:"reportingCurrency"`
 }
 
 // financialStatementSymbolShadow mirrors FinancialStatementSymbol with a
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type financialStatementSymbolShadow struct {
-	Symbol            *string `json:"symbol"`
-	CompanyName       *string `json:"companyName"`
-	TradingCurrency   *string `json:"tradingCurrency"`
-	ReportingCurrency *string `json:"reportingCurrency"`
+	Symbol            *string        `json:"symbol"`
+	CompanyName       *string        `json:"companyName"`
+	TradingCurrency   *string        `json:"tradingCurrency"`
+	ReportingCurrency jsontext.Value `json:"reportingCurrency"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -80,14 +80,24 @@ func (m *FinancialStatementSymbol) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 		return missingMemberError("FinancialStatementSymbol", "companyName")
 	case shadow.TradingCurrency == nil:
 		return missingMemberError("FinancialStatementSymbol", "tradingCurrency")
-	case shadow.ReportingCurrency == nil:
+	case len(shadow.ReportingCurrency) == 0:
 		return missingMemberError("FinancialStatementSymbol", "reportingCurrency")
+	}
+	var reportingCurrency *string
+	if shadow.ReportingCurrency.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ReportingCurrency, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			reportingCurrency = &value
+		}
 	}
 	*m = FinancialStatementSymbol{
 		Symbol:            *shadow.Symbol,
 		CompanyName:       *shadow.CompanyName,
 		TradingCurrency:   *shadow.TradingCurrency,
-		ReportingCurrency: *shadow.ReportingCurrency,
+		ReportingCurrency: reportingCurrency,
 	}
 	return nil
 }
@@ -284,24 +294,24 @@ func (m *EarningsTranscriptAvailability) UnmarshalJSONFrom(dec *jsontext.Decoder
 
 // AvailableExchange is one stock exchange supported by FMP.
 type AvailableExchange struct {
-	Exchange     string `json:"exchange"`
-	Name         string `json:"name"`
-	CountryName  string `json:"countryName"`
-	CountryCode  string `json:"countryCode"`
-	SymbolSuffix string `json:"symbolSuffix"`
-	Delay        string `json:"delay"`
+	Exchange     string  `json:"exchange"`
+	Name         string  `json:"name"`
+	CountryName  string  `json:"countryName"`
+	CountryCode  *string `json:"countryCode"`
+	SymbolSuffix string  `json:"symbolSuffix"`
+	Delay        *string `json:"delay"`
 }
 
 // availableExchangeShadow mirrors AvailableExchange with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type availableExchangeShadow struct {
-	Exchange     *string `json:"exchange"`
-	Name         *string `json:"name"`
-	CountryName  *string `json:"countryName"`
-	CountryCode  *string `json:"countryCode"`
-	SymbolSuffix *string `json:"symbolSuffix"`
-	Delay        *string `json:"delay"`
+	Exchange     *string        `json:"exchange"`
+	Name         *string        `json:"name"`
+	CountryName  *string        `json:"countryName"`
+	CountryCode  jsontext.Value `json:"countryCode"`
+	SymbolSuffix *string        `json:"symbolSuffix"`
+	Delay        jsontext.Value `json:"delay"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -319,20 +329,38 @@ func (m *AvailableExchange) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("AvailableExchange", "name")
 	case shadow.CountryName == nil:
 		return missingMemberError("AvailableExchange", "countryName")
-	case shadow.CountryCode == nil:
+	case len(shadow.CountryCode) == 0:
 		return missingMemberError("AvailableExchange", "countryCode")
 	case shadow.SymbolSuffix == nil:
 		return missingMemberError("AvailableExchange", "symbolSuffix")
-	case shadow.Delay == nil:
+	case len(shadow.Delay) == 0:
 		return missingMemberError("AvailableExchange", "delay")
+	}
+	var countryCode *string
+	if shadow.CountryCode.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CountryCode, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			countryCode = &value
+		}
+	}
+	var delay *string
+	if shadow.Delay.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Delay, &value); err != nil {
+			return err
+		}
+		delay = &value
 	}
 	*m = AvailableExchange{
 		Exchange:     *shadow.Exchange,
 		Name:         *shadow.Name,
 		CountryName:  *shadow.CountryName,
-		CountryCode:  *shadow.CountryCode,
+		CountryCode:  countryCode,
 		SymbolSuffix: *shadow.SymbolSuffix,
-		Delay:        *shadow.Delay,
+		Delay:        delay,
 	}
 	return nil
 }

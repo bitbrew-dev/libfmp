@@ -2,12 +2,20 @@
 //!
 //! The Python binding exposes these models under `fmp.directory`.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::NumericString,
     types::{Cik, CountryCode, CurrencyCode, Date, ExchangeCode, Industry, Sector, Ticker},
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One worldwide company or instrument in the company-symbol directory.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -26,7 +34,8 @@ pub struct FinancialStatementSymbol {
     pub symbol: Ticker,
     pub company_name: String,
     pub trading_currency: CurrencyCode,
-    pub reporting_currency: CurrencyCode,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub reporting_currency: Option<CurrencyCode>,
 }
 
 /// One US SEC entity in the CIK directory.
@@ -85,9 +94,11 @@ pub struct AvailableExchange {
     pub exchange: ExchangeCode,
     pub name: String,
     pub country_name: String,
-    pub country_code: CountryCode,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub country_code: Option<CountryCode>,
     pub symbol_suffix: String,
-    pub delay: String,
+    #[serde(deserialize_with = "required_option")]
+    pub delay: Option<String>,
 }
 
 /// One sector accepted by provider sector filters.

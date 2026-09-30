@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/v2"
 	"errors"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -60,7 +61,7 @@ func TestDocumentedDirectoryRowsDecodeExactFieldNamesAndWireTypes(t *testing.T) 
 	}
 	financials := assertFixtureParity[FinancialStatementSymbol](t, "directory_financial_statement_symbols.json")
 	if want := (FinancialStatementSymbol{Symbol: "RMES.CN", CompanyName: "Red Metal Resources Ltd.",
-		TradingCurrency: "CAD", ReportingCurrency: "USD"}); len(financials) != 1 || financials[0] != want {
+		TradingCurrency: "CAD", ReportingCurrency: new("USD")}); len(financials) != 1 || !reflect.DeepEqual(financials[0], want) {
 		t.Fatalf("directory_financial_statement_symbols = %+v, want %+v", financials, want)
 	}
 	ciks := assertFixtureParity[CIKListing](t, "directory_cik_list.json")
@@ -109,8 +110,8 @@ func TestDocumentedTaxonomyRowsDecodeExactFieldNamesAndOpenValues(t *testing.T) 
 	t.Parallel()
 	exchanges := assertFixtureParity[AvailableExchange](t, "directory_available_exchanges.json")
 	want := AvailableExchange{Exchange: "AMEX", Name: "New York Stock Exchange Arca",
-		CountryName: "United States of America", CountryCode: "US", SymbolSuffix: "N/A", Delay: "Real-time"}
-	if len(exchanges) != 1 || exchanges[0] != want {
+		CountryName: "United States of America", CountryCode: new("US"), SymbolSuffix: "N/A", Delay: new("Real-time")}
+	if len(exchanges) != 1 || !reflect.DeepEqual(exchanges[0], want) {
 		t.Fatalf("directory_available_exchanges = %+v, want %+v", exchanges, want)
 	}
 	sectors := assertFixtureParity[AvailableSector](t, "directory_available_sectors.json")
@@ -140,6 +141,30 @@ func TestDocumentedTaxonomyRowsDecodeExactFieldNamesAndOpenValues(t *testing.T) 
 // The missing-required-member path of the generated decoders, once for this
 // domain: serde rejects a missing and a null member alike, and a malformed
 // date never decodes into a Date member.
+func TestDirectoryOmittableMembersDecodeNullAndEmptyAsNil(t *testing.T) {
+	t.Parallel()
+	for _, code := range []string{`null`, `""`} {
+		var financials []FinancialStatementSymbol
+		wire := `[{"symbol":"1609.HK","companyName":"Chong Kin","tradingCurrency":"HKD","reportingCurrency":` + code + `}]`
+		if err := json.Unmarshal([]byte(wire), &financials); err != nil || len(financials) != 1 ||
+			financials[0].ReportingCurrency != nil {
+			t.Fatalf("reportingCurrency %s = %+v, %v, want nil", code, financials, err)
+		}
+		var exchanges []AvailableExchange
+		wire = `[{"exchange":"CRYPTO","name":"Cryptocurrency","countryName":"","countryCode":` + code +
+			`,"symbolSuffix":"N/A","delay":null}]`
+		want := AvailableExchange{Exchange: "CRYPTO", Name: "Cryptocurrency", SymbolSuffix: "N/A"}
+		if err := json.Unmarshal([]byte(wire), &exchanges); err != nil || len(exchanges) != 1 ||
+			!reflect.DeepEqual(exchanges[0], want) {
+			t.Fatalf("countryCode %s = %+v, %v, want %+v", code, exchanges, err, want)
+		}
+	}
+	if err := json.Unmarshal([]byte(`[{"symbol":"1609.HK","companyName":"Chong Kin","tradingCurrency":"HKD"}]`),
+		new([]FinancialStatementSymbol)); err == nil {
+		t.Fatal("a missing reportingCurrency decoded")
+	}
+}
+
 func TestDirectoryRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	t.Parallel()
 	cases := []struct {
