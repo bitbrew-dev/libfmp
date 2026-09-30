@@ -221,6 +221,7 @@ fn render_model(model: &ModelPlan, out: &mut String) {
             Codec::RequiredOption
             | Codec::RequiredNumber
             | Codec::Count
+            | Codec::EmptyOrNullString
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate => local_name(rust_name),
         };
@@ -312,6 +313,7 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
             Codec::RequiredOption
             | Codec::RequiredNumber
             | Codec::Count
+            | Codec::EmptyOrNullString
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate
             | Codec::DynamicJson => format!("len(shadow.{}) == 0", field.name),
@@ -351,6 +353,16 @@ fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut Strin
                 "\tvar {local} {}\n\tif shadow.{}.Kind() != 'n' {{\n\t\tvar value {inner}\n\
                  \t\tif err := json.Unmarshal(shadow.{}, &value); err != nil {{\n\
                  \t\t\treturn err\n\t\t}}\n\t\t{local} = &value\n\t}}",
+                field.public_ty, field.name, field.name
+            );
+        }
+        Codec::EmptyOrNullString => {
+            let inner = field.public_ty.trim_start_matches('*');
+            let _ = writeln!(
+                out,
+                "\tvar {local} {}\n\tif shadow.{}.Kind() != 'n' {{\n\t\tvar value {inner}\n\
+                 \t\tif err := json.Unmarshal(shadow.{}, &value); err != nil {{\n\
+                 \t\t\treturn err\n\t\t}}\n\t\tif value != \"\" {{\n\t\t\t{local} = &value\n\t\t}}\n\t}}",
                 field.public_ty, field.name, field.name
             );
         }

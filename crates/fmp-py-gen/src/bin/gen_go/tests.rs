@@ -649,6 +649,55 @@ fn count_codec_decodes_through_the_raw_shadow_and_keeps_the_public_uint64() {
 }
 
 #[test]
+fn empty_or_null_codec_decodes_empty_and_null_to_nil_through_the_raw_shadow() {
+    let aliases = BTreeMap::new();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let codec = "crate::codecs::empty_or_null::deserialize";
+    let def = row(vec![
+        field("removed_ticker", "Option<Ticker>", deserialize_with(codec)),
+        field("isin", "Option<Isin>", deserialize_with("required_option")),
+    ]);
+    let mapped = table.go_field(&def, &def.fields[0]).expect("maps");
+    assert_eq!(
+        (
+            mapped.public_ty.as_str(),
+            mapped.shadow_ty.as_str(),
+            mapped.codec,
+            mapped.required_key(),
+        ),
+        ("*string", "jsontext.Value", Codec::EmptyOrNullString, true)
+    );
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    for expected in [
+        "RemovedTicker *string `json:\"removedTicker\"`",
+        "RemovedTicker jsontext.Value `json:\"removedTicker\"`",
+        "case len(shadow.RemovedTicker) == 0:",
+        "var removedTicker *string\n\tif shadow.RemovedTicker.Kind() != 'n' {",
+        "if err := json.Unmarshal(shadow.RemovedTicker, &value); err != nil {",
+        "if value != \"\" {\n\t\t\tremovedTicker = &value\n\t\t}",
+        "RemovedTicker: removedTicker,",
+    ] {
+        assert!(
+            rendered.contains(expected),
+            "missing {expected:?} in\n{rendered}"
+        );
+    }
+
+    for (name, ty) in [
+        ("bare", "Ticker"),
+        ("price", "Option<f64>"),
+        ("many", "Option<Vec<Ticker>>"),
+        ("date", "Option<Date>"),
+    ] {
+        let def = row(vec![field(name, ty, deserialize_with(codec))]);
+        let error = table.go_field(&def, &def.fields[0]).expect_err(name);
+        assert!(error.contains("empty_or_null"), "{name}: {error}");
+    }
+}
+
+#[test]
 fn skip_serializing_if_none_marks_only_the_public_tag_omitzero() {
     let aliases = BTreeMap::new();
     let structs = Vec::new();

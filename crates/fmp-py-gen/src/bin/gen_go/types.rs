@@ -36,6 +36,10 @@ pub(crate) enum Codec {
     /// `Count`: the key is required, null is rejected, and an integral float
     /// such as `3.0` decodes as the integer. The shadow keeps the raw value.
     Count,
+    /// `deserialize_with = "crate::codecs::empty_or_null::deserialize"` on an
+    /// `Option` of a string-backed type: the key is required, and `""` and
+    /// null are both absent (ADR 0033). The shadow keeps the raw value.
+    EmptyOrNullString,
     /// A `DynamicObject` that holds every member the named fields do not
     /// claim, as serde `flatten` on a map does: `#[serde(flatten)]`, or the
     /// single `DynamicObject` field of a struct with a hand-written
@@ -46,6 +50,9 @@ pub(crate) enum Codec {
 
 /// The `deserialize_with` path of the Rust count codec.
 const COUNT_CODEC: &str = "crate::codecs::count::deserialize";
+
+/// The `deserialize_with` path of the Rust empty-or-null typed-code codec.
+const EMPTY_OR_NULL_CODEC: &str = "crate::codecs::empty_or_null::deserialize";
 
 /// One Go struct member derived from a Rust field.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -80,6 +87,7 @@ impl GoField {
             Codec::RequiredOption
             | Codec::RequiredNumber
             | Codec::Count
+            | Codec::EmptyOrNullString
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate
             | Codec::DynamicJson
@@ -187,6 +195,16 @@ impl<'a> TypeTable<'a> {
                     "the count codec needs a bare Count (u64) field; Option<Count> has no Go \
                      shape yet"
                         .to_string(),
+                ));
+            }
+            (Some(EMPTY_OR_NULL_CODEC), BaseKind::Scalar, [Wrap::Option])
+                if base.go == "string" =>
+            {
+                (Codec::EmptyOrNullString, "jsontext.Value".to_string())
+            }
+            (Some(EMPTY_OR_NULL_CODEC), _, _) => {
+                return Err(fail(
+                    "the empty_or_null codec needs an Option of a string-backed type".to_string(),
                 ));
             }
             (Some("required_option"), _, _) => {
