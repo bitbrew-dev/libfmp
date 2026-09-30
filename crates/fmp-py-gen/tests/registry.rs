@@ -324,6 +324,24 @@ fn dynamic_response_verifies_only_against_dynamic_object_rows() {
 }
 
 #[test]
+fn single_flag_must_match_the_client_return_shape() {
+    let errors = validate(&fixture("single_mismatch"));
+    assert_names(
+        &errors,
+        "single_mismatch/statements.toml",
+        "statements.reports.dates",
+        "returns rows, not one model; drop `single = true`",
+    );
+    assert_names(
+        &errors,
+        "single_mismatch/statements.toml",
+        "statements.reports.json",
+        "returns one `FinancialReportJson`, not rows; set `single = true`",
+    );
+    assert_eq!(errors.len(), 2);
+}
+
+#[test]
 fn unknown_method_is_a_hard_error() {
     let errors = validate(&fixture("unknown_method"));
     assert_names(
