@@ -4,6 +4,8 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
+	"reflect"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -37,8 +39,8 @@ func TestCryptoCatalogAndQuoteFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	listing := assertFixtureParity[CryptocurrencyListing](t, "cryptocurrency_list.json")
 	want := CryptocurrencyListing{Symbol: "MIOTAUSD", Name: "IOTA USD", Exchange: "CCC",
-		IcoDate: mustParseDate(t, "2017-11-09"), CirculatingSupply: 4_232_705_124, TotalSupply: 4_788_606_639}
-	if len(listing) != 1 || listing[0] != want {
+		IcoDate: new(mustParseDate(t, "2017-11-09")), CirculatingSupply: new(4_232_705_124.0), TotalSupply: new(4_788_606_639.0)}
+	if len(listing) != 1 || !reflect.DeepEqual(listing[0], want) {
 		t.Fatalf("cryptocurrency_list = %+v, want %+v", listing, want)
 	}
 
@@ -103,8 +105,8 @@ func TestCryptoChartFixturesDecodeExactValues(t *testing.T) {
 
 // Mirrors assert_required_non_null in
 // crates/libfmp/tests/asset_catalog_quote_responses.rs for the one model
-// the crypto domain owns: every member is required and non-null, and an
-// unknown member is accepted.
+// the crypto domain owns: every member is required, every member but the
+// nullable ones is non-null, and an unknown member is accepted.
 func TestCryptocurrencyListingRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	t.Parallel()
 	var rows []map[string]jsontext.Value
@@ -113,11 +115,15 @@ func TestCryptocurrencyListingRequiredMembersAreEnforcedLikeSerde(t *testing.T) 
 	}
 	row := rows[0]
 	members := []string{"symbol", "name", "exchange", "icoDate", "circulatingSupply", "totalSupply"}
+	nullable := []string{"icoDate", "circulatingSupply", "totalSupply"}
 	for _, member := range members {
 		for variant, mutate := range map[string]func(map[string]jsontext.Value){
 			"missing": func(m map[string]jsontext.Value) { delete(m, member) },
 			"null":    func(m map[string]jsontext.Value) { m[member] = jsontext.Value("null") },
 		} {
+			if variant == "null" && slices.Contains(nullable, member) {
+				continue
+			}
 			t.Run(member+" "+variant, func(t *testing.T) {
 				t.Parallel()
 				mutated := make(map[string]jsontext.Value, len(row))
@@ -158,5 +164,30 @@ func TestCryptocurrencyListingRequiredMembersAreEnforcedLikeSerde(t *testing.T) 
 	var empty []CryptocurrencyListing
 	if err := json.Unmarshal([]byte(`[]`), &empty); err != nil || empty == nil || len(empty) != 0 {
 		t.Fatalf("empty array: rows = %#v, err = %v, want a non-nil empty slice", empty, err)
+	}
+}
+
+// Mirrors crypto_listing_supplies_and_ico_date_are_required_but_nullable in
+// crates/libfmp/tests/asset_catalog_quote_responses.rs: a null supply or
+// ICO date decodes to nil, and an empty ICO date is absent too.
+func TestCryptocurrencyListingNullableMembersDecodeToNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "cryptocurrency_list.json"
+	cases := []struct {
+		member string
+		value  jsontext.Value
+		isNil  func(CryptocurrencyListing) bool
+	}{
+		{"icoDate", jsontext.Value(`null`), func(row CryptocurrencyListing) bool { return row.IcoDate == nil }},
+		{"icoDate", jsontext.Value(`""`), func(row CryptocurrencyListing) bool { return row.IcoDate == nil }},
+		{"circulatingSupply", jsontext.Value(`null`), func(row CryptocurrencyListing) bool { return row.CirculatingSupply == nil }},
+		{"totalSupply", jsontext.Value(`null`), func(row CryptocurrencyListing) bool { return row.TotalSupply == nil }},
+	}
+	for _, tc := range cases {
+		var rows []CryptocurrencyListing
+		if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, tc.value), &rows); err != nil ||
+			len(rows) != 1 || !tc.isNil(rows[0]) {
+			t.Fatalf("%s = %s: %+v, %v, want nil", tc.member, tc.value, rows, err)
+		}
 	}
 }

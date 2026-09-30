@@ -13,24 +13,24 @@ import (
 // CryptocurrencyListing is one cryptocurrency in the provider's documented
 // cryptocurrency catalog.
 type CryptocurrencyListing struct {
-	Symbol            string  `json:"symbol"`
-	Name              string  `json:"name"`
-	Exchange          string  `json:"exchange"`
-	IcoDate           Date    `json:"icoDate"`
-	CirculatingSupply float64 `json:"circulatingSupply"`
-	TotalSupply       float64 `json:"totalSupply"`
+	Symbol            string   `json:"symbol"`
+	Name              string   `json:"name"`
+	Exchange          string   `json:"exchange"`
+	IcoDate           *Date    `json:"icoDate"`
+	CirculatingSupply *float64 `json:"circulatingSupply"`
+	TotalSupply       *float64 `json:"totalSupply"`
 }
 
 // cryptocurrencyListingShadow mirrors CryptocurrencyListing with a pointer or
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type cryptocurrencyListingShadow struct {
-	Symbol            *string  `json:"symbol"`
-	Name              *string  `json:"name"`
-	Exchange          *string  `json:"exchange"`
-	IcoDate           *Date    `json:"icoDate"`
-	CirculatingSupply *float64 `json:"circulatingSupply"`
-	TotalSupply       *float64 `json:"totalSupply"`
+	Symbol            *string        `json:"symbol"`
+	Name              *string        `json:"name"`
+	Exchange          *string        `json:"exchange"`
+	IcoDate           jsontext.Value `json:"icoDate"`
+	CirculatingSupply jsontext.Value `json:"circulatingSupply"`
+	TotalSupply       jsontext.Value `json:"totalSupply"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -48,20 +48,40 @@ func (m *CryptocurrencyListing) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CryptocurrencyListing", "name")
 	case shadow.Exchange == nil:
 		return missingMemberError("CryptocurrencyListing", "exchange")
-	case shadow.IcoDate == nil:
+	case len(shadow.IcoDate) == 0:
 		return missingMemberError("CryptocurrencyListing", "icoDate")
-	case shadow.CirculatingSupply == nil:
+	case len(shadow.CirculatingSupply) == 0:
 		return missingMemberError("CryptocurrencyListing", "circulatingSupply")
-	case shadow.TotalSupply == nil:
+	case len(shadow.TotalSupply) == 0:
 		return missingMemberError("CryptocurrencyListing", "totalSupply")
+	}
+	icoDate, err := decodeEmptyDate("CryptocurrencyListing", "icoDate", shadow.IcoDate, true)
+	if err != nil {
+		return err
+	}
+	var circulatingSupply *float64
+	if shadow.CirculatingSupply.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.CirculatingSupply, &value); err != nil {
+			return err
+		}
+		circulatingSupply = &value
+	}
+	var totalSupply *float64
+	if shadow.TotalSupply.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TotalSupply, &value); err != nil {
+			return err
+		}
+		totalSupply = &value
 	}
 	*m = CryptocurrencyListing{
 		Symbol:            *shadow.Symbol,
 		Name:              *shadow.Name,
 		Exchange:          *shadow.Exchange,
-		IcoDate:           *shadow.IcoDate,
-		CirculatingSupply: *shadow.CirculatingSupply,
-		TotalSupply:       *shadow.TotalSupply,
+		IcoDate:           icoDate,
+		CirculatingSupply: circulatingSupply,
+		TotalSupply:       totalSupply,
 	}
 	return nil
 }

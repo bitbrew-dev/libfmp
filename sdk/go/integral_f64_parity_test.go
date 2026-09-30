@@ -2,6 +2,7 @@ package fmp
 
 import (
 	"encoding/json/v2"
+	"reflect"
 	"testing"
 )
 
@@ -20,8 +21,8 @@ func TestIntegralFloatFieldsDecodeFractionalAndExponentForms(t *testing.T) {
 	}
 
 	crypto := assertFixtureParity[CryptocurrencyListing](t, "cryptocurrency_list_fractional_synthetic.json")
-	if len(crypto) != 1 || crypto[0].CirculatingSupply != 4_232_705_124.5 ||
-		crypto[0].TotalSupply != 4_788_606_639 {
+	if len(crypto) != 1 || !reflect.DeepEqual(crypto[0].CirculatingSupply, new(4_232_705_124.5)) ||
+		!reflect.DeepEqual(crypto[0].TotalSupply, new(4_788_606_639.0)) {
 		t.Fatalf("cryptocurrency_list_fractional_synthetic = %+v", crypto)
 	}
 
@@ -37,7 +38,8 @@ func TestIntegralFloatFieldsDecodeExponentForms(t *testing.T) {
 	var crypto CryptocurrencyListing
 	err := json.Unmarshal([]byte(`{"symbol":"MIOTAUSD","name":"IOTA USD","exchange":"CCC","icoDate":"2017-11-09",`+
 		`"circulatingSupply":4.2327051245e9,"totalSupply":4.788606639e9}`), &crypto)
-	if err != nil || crypto.CirculatingSupply != 4_232_705_124.5 || crypto.TotalSupply != 4_788_606_639 {
+	if err != nil || !reflect.DeepEqual(crypto.CirculatingSupply, new(4_232_705_124.5)) ||
+		!reflect.DeepEqual(crypto.TotalSupply, new(4_788_606_639.0)) {
 		t.Fatalf("CryptocurrencyListing = %+v, %v", crypto, err)
 	}
 

@@ -52,7 +52,7 @@ func TestCryptoMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 	from, to := mustParseDate(t, "2024-01-01"), mustParseDate(t, "2024-03-01")
 
 	listing, err := client.Crypto.List(ctx)
-	if err != nil || len(listing) != 1 || listing[0].Symbol != "MIOTAUSD" || listing[0].TotalSupply != 4_788_606_639 {
+	if err != nil || len(listing) != 1 || listing[0].Symbol != "MIOTAUSD" || listing[0].TotalSupply == nil || *listing[0].TotalSupply != 4_788_606_639 {
 		t.Fatalf("List = %+v, %v", listing, err)
 	}
 	quote, err := client.Crypto.Quote(ctx, NewQuoteQuery("BTCUSD"))

@@ -16,11 +16,11 @@ pub(crate) struct CryptocurrencyListing {
     #[pyo3(get)]
     pub exchange: String,
     #[pyo3(get)]
-    pub ico_date: ::chrono::NaiveDate,
+    pub ico_date: Option<::chrono::NaiveDate>,
     #[pyo3(get)]
-    pub circulating_supply: f64,
+    pub circulating_supply: Option<f64>,
     #[pyo3(get)]
-    pub total_supply: f64,
+    pub total_supply: Option<f64>,
 }
 
 #[gen_stub_pymethods]
@@ -34,9 +34,9 @@ impl CryptocurrencyListing {
         symbol: String,
         name: String,
         exchange: String,
-        ico_date: ::chrono::NaiveDate,
-        circulating_supply: f64,
-        total_supply: f64,
+        ico_date: Option<::chrono::NaiveDate>,
+        circulating_supply: Option<f64>,
+        total_supply: Option<f64>,
     ) -> Self {
         Self {
             symbol,
@@ -147,7 +147,7 @@ impl From<libfmp::responses::crypto::CryptocurrencyListing> for CryptocurrencyLi
             symbol: value.symbol.into_inner(),
             name: value.name,
             exchange: value.exchange.into_inner(),
-            ico_date: value.ico_date.into_inner(),
+            ico_date: value.ico_date.map(|value| value.into_inner()),
             circulating_supply: value.circulating_supply,
             total_supply: value.total_supply,
         }

@@ -53,8 +53,8 @@ fn market_cap_decodes_integral_float_and_fractional_forms() {
 fn crypto_supply_decodes_integral_float_and_fractional_forms() {
     let rows: Vec<CryptocurrencyListing> = serde_json::from_slice(CRYPTO).unwrap();
 
-    assert_eq!(rows[0].circulating_supply, 4_232_705_124.5);
-    assert_eq!(rows[0].total_supply, 4_788_606_639.0);
+    assert_eq!(rows[0].circulating_supply, Some(4_232_705_124.5));
+    assert_eq!(rows[0].total_supply, Some(4_788_606_639.0));
     let wire = serde_json::to_value(&rows).unwrap();
     assert_eq!(wire[0]["circulatingSupply"], json!(4_232_705_124.5));
     assert_eq!(wire[0]["totalSupply"], json!(4_788_606_639_u64));
@@ -205,8 +205,8 @@ fn exponent_form_numbers_decode_into_every_integral_f64_alias() {
             "circulatingSupply":4.2327051245e9,"totalSupply":4.788606639e9}"#,
     )
     .unwrap();
-    assert_eq!(crypto.circulating_supply, 4_232_705_124.5);
-    assert_eq!(crypto.total_supply, 4_788_606_639.0);
+    assert_eq!(crypto.circulating_supply, Some(4_232_705_124.5));
+    assert_eq!(crypto.total_supply, Some(4_788_606_639.0));
     assert_eq!(
         serde_json::to_value(&crypto).unwrap()["totalSupply"],
         json!(4_788_606_639_u64)
