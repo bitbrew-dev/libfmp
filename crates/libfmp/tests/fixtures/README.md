@@ -40,9 +40,11 @@ network connection.
 - **Decode-path proof.** `company_screener_null_beta_synthetic.json` is the
   one null variant kept as a file: 40 documented rows with `"beta": null` in
   row 37, so the offending member lands past the `MAX_SAFE_BODY_BYTES` body
-  excerpt and the Go and Python suites can share it. It is the issue #366
-  decode-path proof in `decode_path.rs`, `sdk/go/decode_path_test.go`, and
-  the fmp-py screener tests, which also swap in a string value to prove it
+  excerpt and the Go and Python suites can share it. Since issue #368 made
+  `beta` optional, the file proves the null row decodes in all three
+  languages; the issue #366 decode-path proof in `decode_path.rs`,
+  `sdk/go/decode_path_test.go`, and the fmp-py screener tests now swaps a
+  null `companyName` into row 37, and a string `volume` to prove the value
   never reaches the error.
 - **Observed-shape reproductions.** `quote_short_fractional_volume.json`
   reproduces the one live `quote-short` row that motivated issue #337 (seen
