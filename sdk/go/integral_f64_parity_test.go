@@ -55,7 +55,7 @@ func TestQuantityAndAmountFieldsDecodeFractionalForms(t *testing.T) {
 	t.Parallel()
 
 	insider := assertFixtureParity[InsiderTrade](t, "latest_insider_trades_fractional_synthetic.json")
-	if len(insider) != 1 || insider[0].SecuritiesOwned != 62_959.5 || insider[0].SecuritiesTransacted != 1 {
+	if len(insider) != 1 || insider[0].SecuritiesOwned == nil || *insider[0].SecuritiesOwned != 62_959.5 || insider[0].SecuritiesTransacted != 1 {
 		t.Fatalf("latest_insider_trades_fractional_synthetic = %+v", insider)
 	}
 

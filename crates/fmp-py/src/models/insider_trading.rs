@@ -20,9 +20,9 @@ pub(crate) struct InsiderTrade {
     #[pyo3(get)]
     pub company_cik: String,
     #[pyo3(get)]
-    pub transaction_type: String,
+    pub transaction_type: Option<String>,
     #[pyo3(get)]
-    pub securities_owned: f64,
+    pub securities_owned: Option<f64>,
     #[pyo3(get)]
     pub reporting_name: String,
     #[pyo3(get)]
@@ -30,7 +30,7 @@ pub(crate) struct InsiderTrade {
     #[pyo3(get)]
     pub acquisition_or_disposition: String,
     #[pyo3(get)]
-    pub direct_or_indirect: String,
+    pub direct_or_indirect: Option<String>,
     #[pyo3(get)]
     pub form_type: String,
     #[pyo3(get)]
@@ -56,12 +56,12 @@ impl InsiderTrade {
         transaction_date: ::chrono::NaiveDate,
         reporting_cik: String,
         company_cik: String,
-        transaction_type: String,
-        securities_owned: f64,
+        transaction_type: Option<String>,
+        securities_owned: Option<f64>,
         reporting_name: String,
         type_of_owner: String,
         acquisition_or_disposition: String,
-        direct_or_indirect: String,
+        direct_or_indirect: Option<String>,
         form_type: String,
         securities_transacted: f64,
         price: f64,
@@ -323,7 +323,7 @@ impl From<libfmp::responses::insider_trading::InsiderTrade> for InsiderTrade {
             transaction_date: value.transaction_date.into_inner(),
             reporting_cik: value.reporting_cik.into_inner(),
             company_cik: value.company_cik.into_inner(),
-            transaction_type: value.transaction_type.into_inner(),
+            transaction_type: value.transaction_type.map(|value| value.into_inner()),
             securities_owned: value.securities_owned,
             reporting_name: value.reporting_name,
             type_of_owner: value.type_of_owner,
@@ -814,15 +814,15 @@ pub(crate) struct BeneficialOwnershipAcquisition {
     #[pyo3(get)]
     pub accepted_date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub cusip: String,
+    pub cusip: Option<String>,
     #[pyo3(get)]
     pub name_of_reporting_person: String,
     #[pyo3(get)]
-    pub citizenship_or_place_of_organization: String,
+    pub citizenship_or_place_of_organization: Option<String>,
     #[pyo3(get)]
     pub sole_voting_power: String,
     #[pyo3(get)]
-    pub shared_voting_power: String,
+    pub shared_voting_power: Option<String>,
     #[pyo3(get)]
     pub sole_dispositive_power: String,
     #[pyo3(get)]
@@ -849,11 +849,11 @@ impl BeneficialOwnershipAcquisition {
         symbol: String,
         filing_date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDate,
-        cusip: String,
+        cusip: Option<String>,
         name_of_reporting_person: String,
-        citizenship_or_place_of_organization: String,
+        citizenship_or_place_of_organization: Option<String>,
         sole_voting_power: String,
-        shared_voting_power: String,
+        shared_voting_power: Option<String>,
         sole_dispositive_power: String,
         shared_dispositive_power: String,
         amount_beneficially_owned: String,
@@ -1122,11 +1122,11 @@ impl From<libfmp::responses::insider_trading::BeneficialOwnershipAcquisition>
             symbol: value.symbol.into_inner(),
             filing_date: value.filing_date.into_inner(),
             accepted_date: value.accepted_date.into_inner(),
-            cusip: value.cusip.into_inner(),
+            cusip: value.cusip.map(|value| value.into_inner()),
             name_of_reporting_person: value.name_of_reporting_person,
             citizenship_or_place_of_organization: value.citizenship_or_place_of_organization,
             sole_voting_power: value.sole_voting_power.into_inner(),
-            shared_voting_power: value.shared_voting_power.into_inner(),
+            shared_voting_power: value.shared_voting_power.map(|value| value.into_inner()),
             sole_dispositive_power: value.sole_dispositive_power.into_inner(),
             shared_dispositive_power: value.shared_dispositive_power.into_inner(),
             amount_beneficially_owned: value.amount_beneficially_owned.into_inner(),

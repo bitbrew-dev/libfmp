@@ -130,6 +130,21 @@ def test_beneficial_ownership_acquisitions_with_limit(client: Any, fixture_serve
     assert row.url.startswith("https://www.sec.gov/Archives/edgar/data/320193/")
 
 
+def test_beneficial_ownership_acquisitions_decode_null_members_as_none(
+    client: Any, fixture_server: FixtureServer
+) -> None:
+    """Issue #368: a null ``cusip``, citizenship, or shared voting power decodes as ``None``."""
+    body = load_fixture("beneficial_ownership_acquisitions.json")
+    body[0].update(cusip=None, citizenshipOrPlaceOfOrganization=None, sharedVotingPower=None)
+    fixture_server.route("/acquisition-of-beneficial-ownership", body)
+    rows = client.insider_trading.beneficial_ownership_acquisitions("AAPL")
+
+    assert rows[0].cusip is None
+    assert rows[0].citizenship_or_place_of_organization is None
+    assert rows[0].shared_voting_power is None
+    assert rows[0].sole_voting_power == "0"
+
+
 def test_beneficial_ownership_acquisitions_with_a_spaced_symbol_and_the_u32_limit(
     client: Any, fixture_server: FixtureServer
 ) -> None:

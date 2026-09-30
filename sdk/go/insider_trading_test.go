@@ -81,7 +81,7 @@ func TestInsiderTradingMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("TradeStatistics = %+v, %v", statistics, err)
 	}
 	ownership, err := client.InsiderTrading.BeneficialOwnershipAcquisitions(ctx, NewBeneficialOwnershipAcquisitionsQuery("AAPL"))
-	if err != nil || len(ownership) != 1 || ownership[0].CUSIP != "037833100" {
+	if err != nil || len(ownership) != 1 || ownership[0].CUSIP == nil || *ownership[0].CUSIP != "037833100" {
 		t.Fatalf("BeneficialOwnershipAcquisitions = %+v, %v", ownership, err)
 	}
 	limited, err := client.InsiderTrading.BeneficialOwnershipAcquisitions(ctx,

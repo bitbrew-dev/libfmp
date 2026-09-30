@@ -4,7 +4,7 @@
 //! US-based companies only. The Python binding exposes these models under
 //! `fmp.insider_trading`.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::NumericString,
@@ -13,6 +13,14 @@ use crate::{
         TransactionTypeCode,
     },
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One insider trade shared by the latest and search feeds.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -24,13 +32,16 @@ pub struct InsiderTrade {
     pub transaction_date: Date,
     pub reporting_cik: Cik,
     pub company_cik: Cik,
-    pub transaction_type: TransactionTypeCode,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub securities_owned: Quantity,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub transaction_type: Option<TransactionTypeCode>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub securities_owned: Option<Quantity>,
     pub reporting_name: String,
     pub type_of_owner: String,
     pub acquisition_or_disposition: String,
-    pub direct_or_indirect: String,
+    #[serde(deserialize_with = "required_option")]
+    pub direct_or_indirect: Option<String>,
     pub form_type: FormType,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub securities_transacted: Quantity,
@@ -91,11 +102,14 @@ pub struct BeneficialOwnershipAcquisition {
     pub symbol: Ticker,
     pub filing_date: Date,
     pub accepted_date: Date,
-    pub cusip: Cusip,
+    #[serde(deserialize_with = "required_option")]
+    pub cusip: Option<Cusip>,
     pub name_of_reporting_person: String,
-    pub citizenship_or_place_of_organization: String,
+    #[serde(deserialize_with = "required_option")]
+    pub citizenship_or_place_of_organization: Option<String>,
     pub sole_voting_power: NumericString,
-    pub shared_voting_power: NumericString,
+    #[serde(deserialize_with = "required_option")]
+    pub shared_voting_power: Option<NumericString>,
     pub sole_dispositive_power: NumericString,
     pub shared_dispositive_power: NumericString,
     pub amount_beneficially_owned: NumericString,

@@ -75,11 +75,11 @@ async fn custom_proxy_preserves_order_encoding_headers_and_exact_fixture_identit
     assert_eq!(rows.len(), 1);
     let row = &rows[0];
     assert_eq!(row.cik.as_str(), "0000320193");
-    assert_eq!(row.cusip.as_str(), "037833100");
+    assert_eq!(row.cusip.as_ref().unwrap().as_str(), "037833100");
     assert_eq!(row.filing_date, Date::parse("2026-04-29").unwrap());
     assert_eq!(row.accepted_date, Date::parse("2026-04-29").unwrap());
     assert_eq!(row.sole_voting_power.as_str(), "0");
-    assert_eq!(row.shared_voting_power.as_str(), "0");
+    assert_eq!(row.shared_voting_power.as_ref().unwrap().as_str(), "0");
     assert_eq!(row.sole_dispositive_power.as_str(), "0");
     assert_eq!(row.shared_dispositive_power.as_str(), "0");
     assert_eq!(row.amount_beneficially_owned.as_str(), "1099168953");

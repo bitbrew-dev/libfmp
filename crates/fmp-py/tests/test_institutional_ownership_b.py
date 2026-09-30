@@ -93,6 +93,20 @@ def test_holder_industry_breakdown_encodes_cik_year_then_quarter(client: Any, fi
     assert row.performance_percentage == pytest.approx(-178.2938)
 
 
+def test_holder_industry_breakdown_decodes_null_members_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: null industry title and percentages decode as ``None``; an empty title stays ``""``."""
+    body = load_fixture("holder_industry_breakdown.json")
+    body[0].update(industryTitle=None, changeInWeightPercentage=None, performancePercentage=None)
+    body.append({**body[0], "industryTitle": ""})
+    fixture_server.route("/institutional-ownership/holder-industry-breakdown", body)
+    rows = client.institutional_ownership.holder_industry_breakdown(BERKSHIRE_CIK, YEAR_2023, Q3)
+
+    assert rows[0].industry_title is None
+    assert rows[0].change_in_weight_percentage is None
+    assert rows[0].performance_percentage is None
+    assert rows[1].industry_title == ""
+
+
 def test_positions_summary_encodes_a_spaced_symbol(client: Any, fixture_server: FixtureServer) -> None:
     """``positions_summary`` form-encodes the ticker before the year and quarter and decodes the row."""
     fixture_server.route(

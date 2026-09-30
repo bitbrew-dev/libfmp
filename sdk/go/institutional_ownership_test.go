@@ -72,7 +72,7 @@ func TestInstitutionalOwnershipMethodsUseExactPathsAndWireOrder(t *testing.T) {
 		t.Fatalf("HolderPerformanceSummary = %+v, %v", performance, err)
 	}
 	breakdown, err := ns.HolderIndustryBreakdown(ctx, NewHolderIndustryBreakdownQuery("0001067983", 2023, QuarterQ3))
-	if err != nil || len(breakdown) != 1 || breakdown[0].IndustryTitle != "ELECTRONIC COMPUTERS" {
+	if err != nil || len(breakdown) != 1 || breakdown[0].IndustryTitle == nil || *breakdown[0].IndustryTitle != "ELECTRONIC COMPUTERS" {
 		t.Fatalf("HolderIndustryBreakdown = %+v, %v", breakdown, err)
 	}
 	positions, err := ns.PositionsSummary(ctx, NewInstitutionalPositionsSummaryQuery("AAPL", 2023, QuarterQ3))

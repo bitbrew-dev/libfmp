@@ -105,7 +105,10 @@ async fn custom_proxy_preserves_exact_order_encoding_headers_and_fixture_identit
     assert_eq!(latest[0].symbol.as_str(), "TRMK");
     assert_eq!(latest[0].reporting_cik.as_str(), "0001661867");
     assert_eq!(latest[0].company_cik.as_str(), "0000036146");
-    assert_eq!(latest[0].transaction_type.as_str(), "A-Award");
+    assert_eq!(
+        latest[0].transaction_type.as_ref().unwrap().as_str(),
+        "A-Award"
+    );
     assert_eq!(latest[0].price, 0.0);
 
     let requests = executor.requests();

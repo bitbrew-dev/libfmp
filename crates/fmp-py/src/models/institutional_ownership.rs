@@ -213,7 +213,7 @@ pub(crate) struct InstitutionalHolding {
     #[pyo3(get)]
     pub security_cusip: String,
     #[pyo3(get)]
-    pub symbol: String,
+    pub symbol: Option<String>,
     #[pyo3(get)]
     pub name_of_issuer: String,
     #[pyo3(get)]
@@ -245,7 +245,7 @@ impl InstitutionalHolding {
         accepted_date: ::chrono::NaiveDate,
         cik: String,
         security_cusip: String,
-        symbol: String,
+        symbol: Option<String>,
         name_of_issuer: String,
         shares: f64,
         title_of_class: String,
@@ -462,7 +462,7 @@ impl From<libfmp::responses::institutional_ownership::InstitutionalHolding>
             accepted_date: value.accepted_date.into_inner(),
             cik: value.cik.into_inner(),
             security_cusip: value.security_cusip.into_inner(),
-            symbol: value.symbol.into_inner(),
+            symbol: value.symbol.map(|value| value.into_inner()),
             name_of_issuer: value.name_of_issuer,
             shares: value.shares,
             title_of_class: value.title_of_class,
@@ -2105,7 +2105,7 @@ pub(crate) struct HolderIndustryBreakdown {
     #[pyo3(get)]
     pub investor_name: String,
     #[pyo3(get)]
-    pub industry_title: String,
+    pub industry_title: Option<String>,
     #[pyo3(get)]
     pub weight: f64,
     #[pyo3(get)]
@@ -2113,11 +2113,11 @@ pub(crate) struct HolderIndustryBreakdown {
     #[pyo3(get)]
     pub change_in_weight: f64,
     #[pyo3(get)]
-    pub change_in_weight_percentage: f64,
+    pub change_in_weight_percentage: Option<f64>,
     #[pyo3(get)]
     pub performance: f64,
     #[pyo3(get)]
-    pub performance_percentage: f64,
+    pub performance_percentage: Option<f64>,
     #[pyo3(get)]
     pub last_performance: f64,
     #[pyo3(get)]
@@ -2135,13 +2135,13 @@ impl HolderIndustryBreakdown {
         date: ::chrono::NaiveDate,
         cik: String,
         investor_name: String,
-        industry_title: String,
+        industry_title: Option<String>,
         weight: f64,
         last_weight: f64,
         change_in_weight: f64,
-        change_in_weight_percentage: f64,
+        change_in_weight_percentage: Option<f64>,
         performance: f64,
-        performance_percentage: f64,
+        performance_percentage: Option<f64>,
         last_performance: f64,
         change_in_performance: f64,
     ) -> Self {

@@ -3,14 +3,15 @@ package fmp
 import (
 	"encoding/json/v2"
 	"errors"
+	"reflect"
 	"strings"
 	"testing"
 )
 
 // The 6 insider_trading fixtures over the 5 response models, decoded through
 // the shared parity helper (ADR 0030: identical bytes for the Rust and Go
-// decoders). Every member is required and non-null, so no fixture carries an
-// unknown or omitted member.
+// decoders). Every member is required (some may be null), so no fixture
+// carries an unknown or omitted member.
 func TestInsiderTradingFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
 	assertFixtureParity[InsiderTrade](t, "latest_insider_trades.json")
@@ -27,7 +28,7 @@ func TestDocumentedInsiderTradeRowsDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	latest := assertFixtureParity[InsiderTrade](t, "latest_insider_trades.json")
 	searched := assertFixtureParity[InsiderTrade](t, "searched_insider_trades.json")
-	if len(latest) != 1 || len(searched) != 1 || latest[0] != searched[0] {
+	if len(latest) != 1 || len(searched) != 1 || !reflect.DeepEqual(latest[0], searched[0]) {
 		t.Fatalf("latest = %+v, searched = %+v, want one identical row each", latest, searched)
 	}
 	want := InsiderTrade{
@@ -36,19 +37,19 @@ func TestDocumentedInsiderTradeRowsDecodeExactValues(t *testing.T) {
 		TransactionDate:          mustParseDate(t, "2026-07-28"),
 		ReportingCIK:             "0001661867",
 		CompanyCIK:               "0000036146",
-		TransactionType:          "A-Award",
-		SecuritiesOwned:          62_959,
+		TransactionType:          new("A-Award"),
+		SecuritiesOwned:          new(62_959.0),
 		ReportingName:            "Tate Granville Jr",
 		TypeOfOwner:              "officer: Secretary",
 		AcquisitionOrDisposition: "A",
-		DirectOrIndirect:         "D",
+		DirectOrIndirect:         new("D"),
 		FormType:                 "4",
 		SecuritiesTransacted:     1_608,
 		Price:                    0,
 		SecurityName:             "Common Stock",
 		URL:                      "https://www.sec.gov/Archives/edgar/data/36146/000003614626000087/0000036146-26-000087-index.htm",
 	}
-	if latest[0] != want {
+	if !reflect.DeepEqual(latest[0], want) {
 		t.Fatalf("latest_insider_trades[0] = %+v, want %+v", latest[0], want)
 	}
 
@@ -62,7 +63,7 @@ func TestDocumentedInsiderTradeRowsDecodeExactValues(t *testing.T) {
 		`"price":225,"securityName":"Common Stock","url":"https://example.invalid"}]`), &rows); err != nil {
 		t.Fatal(err)
 	}
-	if rows[0].SecuritiesOwned != 1500.5 || rows[0].SecuritiesTransacted != -3 || rows[0].Price != 225.0 {
+	if rows[0].SecuritiesOwned == nil || *rows[0].SecuritiesOwned != 1500.5 || rows[0].SecuritiesTransacted != -3 || rows[0].Price != 225.0 {
 		t.Fatalf("share quantities or integer price were not preserved: %+v", rows[0])
 	}
 }
@@ -104,13 +105,13 @@ func TestDocumentedInsiderReferenceRowsDecodeExactValues(t *testing.T) {
 	wantOwnership := BeneficialOwnershipAcquisition{
 		CIK: "0000320193", Symbol: "AAPL",
 		FilingDate: mustParseDate(t, "2026-04-29"), AcceptedDate: mustParseDate(t, "2026-04-29"),
-		CUSIP: "037833100", NameOfReportingPerson: "Vanguard Capital Management",
-		CitizenshipOrPlaceOfOrganization: "PENNSYLVANIA",
-		SoleVotingPower:                  "0", SharedVotingPower: "0", SoleDispositivePower: "0", SharedDispositivePower: "0",
+		CUSIP: new("037833100"), NameOfReportingPerson: "Vanguard Capital Management",
+		CitizenshipOrPlaceOfOrganization: new("PENNSYLVANIA"),
+		SoleVotingPower:                  "0", SharedVotingPower: new("0"), SoleDispositivePower: "0", SharedDispositivePower: "0",
 		AmountBeneficiallyOwned: "1099168953", PercentOfClass: "7.48", TypeOfReportingPerson: "IA",
 		URL: "https://www.sec.gov/Archives/edgar/data/320193/000210011926000139/xslSCHEDULE_13G_X02/primary_doc.xml",
 	}
-	if len(ownership) != 1 || ownership[0] != wantOwnership {
+	if len(ownership) != 1 || !reflect.DeepEqual(ownership[0], wantOwnership) {
 		t.Fatalf("beneficial_ownership_acquisitions = %+v, want %+v", ownership, wantOwnership)
 	}
 	// The quoted numeric members stay the exact wire text, never scaled or
@@ -126,6 +127,48 @@ func TestDocumentedInsiderReferenceRowsDecodeExactValues(t *testing.T) {
 	}
 }
 
+// Members FMP omits decode to nil and re-encode as null; an empty
+// transactionType is the absent code too
+// (nullable_trade_members_decode_null_and_empty_type_as_none,
+// nullable_ownership_members_decode_null_as_none).
+func TestInsiderNullableMembersDecodeNullAndEmptyAsNil(t *testing.T) {
+	t.Parallel()
+	trade := strings.NewReplacer(`"transactionType": "A-Award"`, `"transactionType": ""`,
+		`"securitiesOwned": 62959`, `"securitiesOwned": null`,
+		`"directOrIndirect": "D"`, `"directOrIndirect": null`).Replace(string(readFixture(t, "latest_insider_trades.json")))
+	var trades []InsiderTrade
+	if err := json.Unmarshal([]byte(trade), &trades); err != nil {
+		t.Fatal(err)
+	}
+	if trades[0].TransactionType != nil || trades[0].SecuritiesOwned != nil || trades[0].DirectOrIndirect != nil {
+		t.Fatalf("nullable trade members = %+v, want nil", trades[0])
+	}
+	encoded, err := json.Marshal(trades[0])
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, member := range []string{`"transactionType":null`, `"securitiesOwned":null`, `"directOrIndirect":null`} {
+		if !strings.Contains(string(encoded), member) {
+			t.Fatalf("InsiderTrade re-encoded = %s, want it to contain %s", encoded, member)
+		}
+	}
+	trade = strings.Replace(trade, `"transactionType": ""`, `"transactionType": null`, 1)
+	if err := json.Unmarshal([]byte(trade), &trades); err != nil || trades[0].TransactionType != nil {
+		t.Fatalf("null transactionType = %+v, %v, want nil", trades, err)
+	}
+
+	ownership := strings.NewReplacer(`"cusip": "037833100"`, `"cusip": null`,
+		`"citizenshipOrPlaceOfOrganization": "PENNSYLVANIA"`, `"citizenshipOrPlaceOfOrganization": null`,
+		`"sharedVotingPower": "0"`, `"sharedVotingPower": null`).Replace(string(readFixture(t, "beneficial_ownership_acquisitions.json")))
+	var rows []BeneficialOwnershipAcquisition
+	if err := json.Unmarshal([]byte(ownership), &rows); err != nil {
+		t.Fatal(err)
+	}
+	if rows[0].CUSIP != nil || rows[0].CitizenshipOrPlaceOfOrganization != nil || rows[0].SharedVotingPower != nil {
+		t.Fatalf("nullable ownership members = %+v, want nil", rows[0])
+	}
+}
+
 // Every contract is a bare array that preserves empty and multiple rows and
 // rejects an object envelope
 // (all_six_contracts_are_bare_arrays_preserving_empty_and_multiple_rows).
@@ -134,7 +177,7 @@ func TestInsiderTradingContractsAreBareArrays(t *testing.T) {
 	row := strings.TrimSpace(string(readFixture(t, "latest_insider_trades.json")))
 	row = strings.TrimSuffix(strings.TrimPrefix(row, "["), "]")
 	var two []InsiderTrade
-	if err := json.Unmarshal([]byte("["+row+","+row+"]"), &two); err != nil || len(two) != 2 || two[0] != two[1] {
+	if err := json.Unmarshal([]byte("["+row+","+row+"]"), &two); err != nil || len(two) != 2 || !reflect.DeepEqual(two[0], two[1]) {
 		t.Fatalf("two-row array = %+v, %v", two, err)
 	}
 	var empty []InsiderTrade

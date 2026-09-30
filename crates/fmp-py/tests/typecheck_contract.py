@@ -480,6 +480,7 @@ def check_insider_trading_contract(client: FmpClient) -> None:
     )
     filed_on: datetime.date = trades[0].filing_date
     price: float = trades[0].price
+    owned: float | None = trades[0].securities_owned
     latest: list[InsiderTrade] = client.insider_trading.latest_trades(date=datetime.date(2026, 1, 27), page=0)
     traded_on: datetime.date = latest[0].transaction_date
     types: list[InsiderTransactionType] = client.insider_trading.transaction_types()
@@ -491,7 +492,8 @@ def check_insider_trading_contract(client: FmpClient) -> None:
     )
     accepted_on: datetime.date = filings[0].accepted_date
     percent: str = filings[0].percent_of_class
-    _ = (filed_on, price, traded_on, code, ratio, accepted_on, percent)
+    cusip: str | None = filings[0].cusip
+    _ = (filed_on, price, owned, traded_on, code, ratio, accepted_on, percent, cusip)
 
 
 def check_fundraising_contract(client: FmpClient) -> None:

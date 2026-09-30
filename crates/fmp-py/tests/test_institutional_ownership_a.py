@@ -101,6 +101,17 @@ def test_extract_encodes_cik_year_then_quarter(client: Any, fixture_server: Fixt
     assert row.accepted_date == datetime.date(2023, 11, 13)
 
 
+def test_extract_decodes_a_null_symbol_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: a holding whose ``symbol`` is null decodes as ``None``."""
+    body = load_fixture("institutional_ownership_extract.json")
+    body[0]["symbol"] = None
+    fixture_server.route("/institutional-ownership/extract", body)
+    rows = client.institutional_ownership.extract(HOLDER_CIK, YEAR_2023, Q3)
+
+    assert rows[0].symbol is None
+    assert rows[0].security_cusip == "674215207"
+
+
 def test_extract_accepts_keyword_arguments(client: Any, fixture_server: FixtureServer) -> None:
     """``extract`` takes its required arguments by keyword as well as by position."""
     fixture_server.route("/institutional-ownership/extract", load_fixture("institutional_ownership_extract.json"))

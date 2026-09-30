@@ -5,13 +5,14 @@ import (
 	"encoding/json/v2"
 	"errors"
 	"math"
+	"reflect"
 	"strings"
 	"testing"
 )
 
 // The eight institutional_ownership fixtures, one per response model. Every
-// member is required and non-null in the Rust models, so no fixture carries
-// an intentionally unknown member.
+// member is required (some may be null) in the Rust models, so no fixture
+// carries an intentionally unknown member.
 func TestInstitutionalOwnershipFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
 	assertFixtureParity[InstitutionalOwnershipFiling](t, "latest_institutional_ownership_filings.json")
@@ -45,13 +46,13 @@ func TestDocumentedFilingExtractAndDatesFixturesDecodeExactly(t *testing.T) {
 	holdings := assertFixtureParity[InstitutionalHolding](t, "institutional_ownership_extract.json")
 	wantHolding := InstitutionalHolding{
 		Date: mustParseDate(t, "2023-09-30"), FilingDate: mustParseDate(t, "2023-11-13"),
-		AcceptedDate: mustParseDate(t, "2023-11-13"), CIK: "0001388838", SecurityCUSIP: "674215207", Symbol: "CHRD",
+		AcceptedDate: mustParseDate(t, "2023-11-13"), CIK: "0001388838", SecurityCUSIP: "674215207", Symbol: new("CHRD"),
 		NameOfIssuer: "CHORD ENERGY CORPORATION", Shares: 13_280, TitleOfClass: "COM NEW", SharesType: "SH",
 		PutCallShare: "", Value: 2_152_290,
 		Link:      "https://www.sec.gov/Archives/edgar/data/1388838/000117266123003760/0001172661-23-003760-index.htm",
 		FinalLink: "https://www.sec.gov/Archives/edgar/data/1388838/000117266123003760/infotable.xml",
 	}
-	if len(holdings) != 1 || holdings[0] != wantHolding {
+	if len(holdings) != 1 || !reflect.DeepEqual(holdings[0], wantHolding) {
 		t.Fatalf("institutional_ownership_extract = %+v, want %+v", holdings, wantHolding)
 	}
 	if got := memberSet(t, holdings[0]); len(got) != 14 {
@@ -98,12 +99,39 @@ func TestDocumentedHolderFixturesDecodeAnalyticsPerformanceAndIndustryRows(t *te
 	industry := assertFixtureParity[HolderIndustryBreakdown](t, "holder_industry_breakdown.json")
 	want := HolderIndustryBreakdown{
 		Date: mustParseDate(t, "2023-09-30"), CIK: "0001067983", InvestorName: "BERKSHIRE HATHAWAY INC",
-		IndustryTitle: "ELECTRONIC COMPUTERS", Weight: 49.7704, LastWeight: 51.0035, ChangeInWeight: -1.2332,
-		ChangeInWeightPercentage: -2.4178, Performance: -20_838_154_294, PerformancePercentage: -178.2938,
+		IndustryTitle: new("ELECTRONIC COMPUTERS"), Weight: 49.7704, LastWeight: 51.0035, ChangeInWeight: -1.2332,
+		ChangeInWeightPercentage: new(-2.4178), Performance: -20_838_154_294, PerformancePercentage: new(-178.2938),
 		LastPerformance: 26_615_340_304, ChangeInPerformance: -47_453_494_598,
 	}
-	if len(industry) != 1 || industry[0] != want {
+	if len(industry) != 1 || !reflect.DeepEqual(industry[0], want) {
 		t.Fatalf("holder_industry_breakdown = %+v, want %+v", industry, want)
+	}
+}
+
+// Members FMP omits decode to nil; an empty industryTitle stays ""
+// (nullable_industry_members_decode_null_as_none_and_keep_empty_titles).
+func TestInstitutionalNullableMembersDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	holding := strings.Replace(string(readFixture(t, "institutional_ownership_extract.json")),
+		`"symbol": "CHRD"`, `"symbol": null`, 1)
+	var holdings []InstitutionalHolding
+	if err := json.Unmarshal([]byte(holding), &holdings); err != nil || holdings[0].Symbol != nil {
+		t.Fatalf("null symbol = %+v, %v, want nil", holdings, err)
+	}
+
+	industry := strings.NewReplacer(`"industryTitle": "ELECTRONIC COMPUTERS"`, `"industryTitle": null`,
+		`"changeInWeightPercentage": -2.4178`, `"changeInWeightPercentage": null`,
+		`"performancePercentage": -178.2938`, `"performancePercentage": null`).Replace(string(readFixture(t, "holder_industry_breakdown.json")))
+	var rows []HolderIndustryBreakdown
+	if err := json.Unmarshal([]byte(industry), &rows); err != nil {
+		t.Fatal(err)
+	}
+	if rows[0].IndustryTitle != nil || rows[0].ChangeInWeightPercentage != nil || rows[0].PerformancePercentage != nil {
+		t.Fatalf("nullable industry members = %+v, want nil", rows[0])
+	}
+	industry = strings.Replace(industry, `"industryTitle": null`, `"industryTitle": ""`, 1)
+	if err := json.Unmarshal([]byte(industry), &rows); err != nil || rows[0].IndustryTitle == nil || *rows[0].IndustryTitle != "" {
+		t.Fatalf("empty industryTitle = %+v, %v, want an empty title", rows, err)
 	}
 }
 

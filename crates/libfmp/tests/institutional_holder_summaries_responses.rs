@@ -71,13 +71,13 @@ fn exact_industry_fixture_decodes_all_12_fields() {
             date: Date::from_str("2023-09-30").unwrap(),
             cik: Cik::new("0001067983").unwrap(),
             investor_name: "BERKSHIRE HATHAWAY INC".to_owned(),
-            industry_title: "ELECTRONIC COMPUTERS".to_owned(),
+            industry_title: Some("ELECTRONIC COMPUTERS".to_owned()),
             weight: 49.7704,
             last_weight: 51.0035,
             change_in_weight: -1.2332,
-            change_in_weight_percentage: -2.4178,
+            change_in_weight_percentage: Some(-2.4178),
             performance: -20_838_154_294.0,
-            performance_percentage: -178.2938,
+            performance_percentage: Some(-178.2938),
             last_performance: 26_615_340_304.0,
             change_in_performance: -47_453_494_598.0,
         }]
@@ -198,13 +198,41 @@ fn turnover_percentage_relative_and_weight_values_are_raw_f64() {
     let rows: Vec<HolderIndustryBreakdown> = serde_json::from_value(industry).unwrap();
     assert_eq!(rows[0].weight, 250.5);
     assert_eq!(rows[0].last_weight, -1.25);
-    assert_eq!(rows[0].performance_percentage, -500.5);
+    assert_eq!(rows[0].performance_percentage, Some(-500.5));
+}
+
+#[test]
+fn nullable_industry_members_decode_null_as_none_and_keep_empty_titles() {
+    let mut source: serde_json::Value = serde_json::from_slice(INDUSTRY).unwrap();
+    for field in [
+        "industryTitle",
+        "changeInWeightPercentage",
+        "performancePercentage",
+    ] {
+        source[0][field] = serde_json::Value::Null;
+    }
+    let rows: Vec<HolderIndustryBreakdown> = serde_json::from_value(source.clone()).unwrap();
+    assert_eq!(rows[0].industry_title, None);
+    assert_eq!(rows[0].change_in_weight_percentage, None);
+    assert_eq!(rows[0].performance_percentage, None);
+    assert_eq!(serde_json::to_value(rows).unwrap(), source);
+
+    source[0]["industryTitle"] = serde_json::json!("");
+    let rows: Vec<HolderIndustryBreakdown> = serde_json::from_value(source).unwrap();
+    assert_eq!(rows[0].industry_title.as_deref(), Some(""));
 }
 
 #[test]
 fn every_documented_field_is_required_non_null_and_unknowns_are_accepted() {
-    assert_contract::<HolderPerformanceSummary>(PERFORMANCE);
-    assert_contract::<HolderIndustryBreakdown>(INDUSTRY);
+    assert_contract::<HolderPerformanceSummary>(PERFORMANCE, &[]);
+    assert_contract::<HolderIndustryBreakdown>(
+        INDUSTRY,
+        &[
+            "industryTitle",
+            "changeInWeightPercentage",
+            "performancePercentage",
+        ],
+    );
 
     let mut performance_timestamp: serde_json::Value = serde_json::from_slice(PERFORMANCE).unwrap();
     performance_timestamp[0]["date"] = serde_json::json!("2026-03-31 00:00:00");
@@ -239,7 +267,7 @@ fn both_contracts_are_bare_vecs_preserving_empty_and_multiple_rows() {
     assert_multiple::<HolderIndustryBreakdown>(INDUSTRY);
 }
 
-fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
+fn assert_contract<T: DeserializeOwned>(fixture: &[u8], nullable: &[&str]) {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let keys = source[0]
         .as_object()
@@ -256,9 +284,10 @@ fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
         );
         let mut null = source.clone();
         null[0][&key] = serde_json::Value::Null;
-        assert!(
-            serde_json::from_value::<Vec<T>>(null).is_err(),
-            "accepted null {key}"
+        assert_eq!(
+            serde_json::from_value::<Vec<T>>(null).is_ok(),
+            nullable.contains(&key.as_str()),
+            "null {key} acceptance differs from the nullable list"
         );
     }
     let mut forward = source;

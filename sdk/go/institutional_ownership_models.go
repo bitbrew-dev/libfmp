@@ -83,7 +83,7 @@ type InstitutionalHolding struct {
 	AcceptedDate  Date    `json:"acceptedDate"`
 	CIK           string  `json:"cik"`
 	SecurityCUSIP string  `json:"securityCusip"`
-	Symbol        string  `json:"symbol"`
+	Symbol        *string `json:"symbol"`
 	NameOfIssuer  string  `json:"nameOfIssuer"`
 	Shares        float64 `json:"shares"`
 	TitleOfClass  string  `json:"titleOfClass"`
@@ -98,20 +98,20 @@ type InstitutionalHolding struct {
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type institutionalHoldingShadow struct {
-	Date          *Date    `json:"date"`
-	FilingDate    *Date    `json:"filingDate"`
-	AcceptedDate  *Date    `json:"acceptedDate"`
-	CIK           *string  `json:"cik"`
-	SecurityCUSIP *string  `json:"securityCusip"`
-	Symbol        *string  `json:"symbol"`
-	NameOfIssuer  *string  `json:"nameOfIssuer"`
-	Shares        *float64 `json:"shares"`
-	TitleOfClass  *string  `json:"titleOfClass"`
-	SharesType    *string  `json:"sharesType"`
-	PutCallShare  *string  `json:"putCallShare"`
-	Value         *float64 `json:"value"`
-	Link          *string  `json:"link"`
-	FinalLink     *string  `json:"finalLink"`
+	Date          *Date          `json:"date"`
+	FilingDate    *Date          `json:"filingDate"`
+	AcceptedDate  *Date          `json:"acceptedDate"`
+	CIK           *string        `json:"cik"`
+	SecurityCUSIP *string        `json:"securityCusip"`
+	Symbol        jsontext.Value `json:"symbol"`
+	NameOfIssuer  *string        `json:"nameOfIssuer"`
+	Shares        *float64       `json:"shares"`
+	TitleOfClass  *string        `json:"titleOfClass"`
+	SharesType    *string        `json:"sharesType"`
+	PutCallShare  *string        `json:"putCallShare"`
+	Value         *float64       `json:"value"`
+	Link          *string        `json:"link"`
+	FinalLink     *string        `json:"finalLink"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -133,7 +133,7 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("InstitutionalHolding", "cik")
 	case shadow.SecurityCUSIP == nil:
 		return missingMemberError("InstitutionalHolding", "securityCusip")
-	case shadow.Symbol == nil:
+	case len(shadow.Symbol) == 0:
 		return missingMemberError("InstitutionalHolding", "symbol")
 	case shadow.NameOfIssuer == nil:
 		return missingMemberError("InstitutionalHolding", "nameOfIssuer")
@@ -152,13 +152,21 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.FinalLink == nil:
 		return missingMemberError("InstitutionalHolding", "finalLink")
 	}
+	var symbol *string
+	if shadow.Symbol.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Symbol, &value); err != nil {
+			return err
+		}
+		symbol = &value
+	}
 	*m = InstitutionalHolding{
 		Date:          *shadow.Date,
 		FilingDate:    *shadow.FilingDate,
 		AcceptedDate:  *shadow.AcceptedDate,
 		CIK:           *shadow.CIK,
 		SecurityCUSIP: *shadow.SecurityCUSIP,
-		Symbol:        *shadow.Symbol,
+		Symbol:        symbol,
 		NameOfIssuer:  *shadow.NameOfIssuer,
 		Shares:        *shadow.Shares,
 		TitleOfClass:  *shadow.TitleOfClass,
@@ -627,36 +635,36 @@ func (m *HolderPerformanceSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 // HolderIndustryBreakdown is one industry allocation and performance row for
 // an institutional holder.
 type HolderIndustryBreakdown struct {
-	Date                     Date    `json:"date"`
-	CIK                      string  `json:"cik"`
-	InvestorName             string  `json:"investorName"`
-	IndustryTitle            string  `json:"industryTitle"`
-	Weight                   float64 `json:"weight"`
-	LastWeight               float64 `json:"lastWeight"`
-	ChangeInWeight           float64 `json:"changeInWeight"`
-	ChangeInWeightPercentage float64 `json:"changeInWeightPercentage"`
-	Performance              float64 `json:"performance"`
-	PerformancePercentage    float64 `json:"performancePercentage"`
-	LastPerformance          float64 `json:"lastPerformance"`
-	ChangeInPerformance      float64 `json:"changeInPerformance"`
+	Date                     Date     `json:"date"`
+	CIK                      string   `json:"cik"`
+	InvestorName             string   `json:"investorName"`
+	IndustryTitle            *string  `json:"industryTitle"`
+	Weight                   float64  `json:"weight"`
+	LastWeight               float64  `json:"lastWeight"`
+	ChangeInWeight           float64  `json:"changeInWeight"`
+	ChangeInWeightPercentage *float64 `json:"changeInWeightPercentage"`
+	Performance              float64  `json:"performance"`
+	PerformancePercentage    *float64 `json:"performancePercentage"`
+	LastPerformance          float64  `json:"lastPerformance"`
+	ChangeInPerformance      float64  `json:"changeInPerformance"`
 }
 
 // holderIndustryBreakdownShadow mirrors HolderIndustryBreakdown with a pointer
 // or raw value for every required member so a missing or null member is
 // observable after decoding.
 type holderIndustryBreakdownShadow struct {
-	Date                     *Date    `json:"date"`
-	CIK                      *string  `json:"cik"`
-	InvestorName             *string  `json:"investorName"`
-	IndustryTitle            *string  `json:"industryTitle"`
-	Weight                   *float64 `json:"weight"`
-	LastWeight               *float64 `json:"lastWeight"`
-	ChangeInWeight           *float64 `json:"changeInWeight"`
-	ChangeInWeightPercentage *float64 `json:"changeInWeightPercentage"`
-	Performance              *float64 `json:"performance"`
-	PerformancePercentage    *float64 `json:"performancePercentage"`
-	LastPerformance          *float64 `json:"lastPerformance"`
-	ChangeInPerformance      *float64 `json:"changeInPerformance"`
+	Date                     *Date          `json:"date"`
+	CIK                      *string        `json:"cik"`
+	InvestorName             *string        `json:"investorName"`
+	IndustryTitle            jsontext.Value `json:"industryTitle"`
+	Weight                   *float64       `json:"weight"`
+	LastWeight               *float64       `json:"lastWeight"`
+	ChangeInWeight           *float64       `json:"changeInWeight"`
+	ChangeInWeightPercentage jsontext.Value `json:"changeInWeightPercentage"`
+	Performance              *float64       `json:"performance"`
+	PerformancePercentage    jsontext.Value `json:"performancePercentage"`
+	LastPerformance          *float64       `json:"lastPerformance"`
+	ChangeInPerformance      *float64       `json:"changeInPerformance"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -674,7 +682,7 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 		return missingMemberError("HolderIndustryBreakdown", "cik")
 	case shadow.InvestorName == nil:
 		return missingMemberError("HolderIndustryBreakdown", "investorName")
-	case shadow.IndustryTitle == nil:
+	case len(shadow.IndustryTitle) == 0:
 		return missingMemberError("HolderIndustryBreakdown", "industryTitle")
 	case shadow.Weight == nil:
 		return missingMemberError("HolderIndustryBreakdown", "weight")
@@ -682,28 +690,52 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 		return missingMemberError("HolderIndustryBreakdown", "lastWeight")
 	case shadow.ChangeInWeight == nil:
 		return missingMemberError("HolderIndustryBreakdown", "changeInWeight")
-	case shadow.ChangeInWeightPercentage == nil:
+	case len(shadow.ChangeInWeightPercentage) == 0:
 		return missingMemberError("HolderIndustryBreakdown", "changeInWeightPercentage")
 	case shadow.Performance == nil:
 		return missingMemberError("HolderIndustryBreakdown", "performance")
-	case shadow.PerformancePercentage == nil:
+	case len(shadow.PerformancePercentage) == 0:
 		return missingMemberError("HolderIndustryBreakdown", "performancePercentage")
 	case shadow.LastPerformance == nil:
 		return missingMemberError("HolderIndustryBreakdown", "lastPerformance")
 	case shadow.ChangeInPerformance == nil:
 		return missingMemberError("HolderIndustryBreakdown", "changeInPerformance")
 	}
+	var industryTitle *string
+	if shadow.IndustryTitle.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.IndustryTitle, &value); err != nil {
+			return err
+		}
+		industryTitle = &value
+	}
+	var changeInWeightPercentage *float64
+	if shadow.ChangeInWeightPercentage.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.ChangeInWeightPercentage, &value); err != nil {
+			return err
+		}
+		changeInWeightPercentage = &value
+	}
+	var performancePercentage *float64
+	if shadow.PerformancePercentage.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.PerformancePercentage, &value); err != nil {
+			return err
+		}
+		performancePercentage = &value
+	}
 	*m = HolderIndustryBreakdown{
 		Date:                     *shadow.Date,
 		CIK:                      *shadow.CIK,
 		InvestorName:             *shadow.InvestorName,
-		IndustryTitle:            *shadow.IndustryTitle,
+		IndustryTitle:            industryTitle,
 		Weight:                   *shadow.Weight,
 		LastWeight:               *shadow.LastWeight,
 		ChangeInWeight:           *shadow.ChangeInWeight,
-		ChangeInWeightPercentage: *shadow.ChangeInWeightPercentage,
+		ChangeInWeightPercentage: changeInWeightPercentage,
 		Performance:              *shadow.Performance,
-		PerformancePercentage:    *shadow.PerformancePercentage,
+		PerformancePercentage:    performancePercentage,
 		LastPerformance:          *shadow.LastPerformance,
 		ChangeInPerformance:      *shadow.ChangeInPerformance,
 	}
