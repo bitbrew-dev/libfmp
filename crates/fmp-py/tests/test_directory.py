@@ -221,6 +221,44 @@ def test_available_exchanges_preserves_omitted_false_and_true(
     assert row.delay == "Real-time"
 
 
+def test_available_exchanges_decodes_blank_country_code_and_null_delay_as_none(
+    client: Any, fixture_server: FixtureServer
+) -> None:
+    """A blank ``countryCode`` and a null ``delay`` decode as ``None``; ``countryName`` stays ``""``."""
+    row = {
+        "exchange": "CRYPTO",
+        "name": "Cryptocurrency",
+        "countryName": "",
+        "countryCode": "",
+        "symbolSuffix": "N/A",
+        "delay": None,
+    }
+    fixture_server.route("/available-exchanges", [row])
+    decoded = client.directory.available_exchanges()[0]
+
+    assert decoded.country_name == ""
+    assert decoded.country_code is None
+    assert decoded.delay is None
+
+
+@pytest.mark.parametrize("reporting_currency", [None, ""], ids=["null", "empty"])
+def test_financial_statement_symbols_decode_missing_reporting_currency_as_none(
+    client: Any, fixture_server: FixtureServer, reporting_currency: str | None
+) -> None:
+    """A null or blank ``reportingCurrency`` decodes as ``None``."""
+    row = {
+        "symbol": "1609.HK",
+        "companyName": "Chong Kin Group Holdings Limited",
+        "tradingCurrency": "HKD",
+        "reportingCurrency": reporting_currency,
+    }
+    fixture_server.route("/financial-statement-symbol-list", [row])
+    decoded = client.directory.financial_statement_symbols()[0]
+
+    assert decoded.trading_currency == "HKD"
+    assert decoded.reporting_currency is None
+
+
 def test_available_sectors_decodes_the_open_sector_value(client: Any, fixture_server: FixtureServer) -> None:
     """``available_sectors`` maps to ``/available-sectors``."""
     fixture_server.route("/available-sectors", load_fixture("directory_available_sectors.json"))

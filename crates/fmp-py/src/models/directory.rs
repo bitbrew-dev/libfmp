@@ -108,7 +108,7 @@ pub(crate) struct FinancialStatementSymbol {
     #[pyo3(get)]
     pub trading_currency: String,
     #[pyo3(get)]
-    pub reporting_currency: String,
+    pub reporting_currency: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -122,7 +122,7 @@ impl FinancialStatementSymbol {
         symbol: String,
         company_name: String,
         trading_currency: String,
-        reporting_currency: String,
+        reporting_currency: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -223,7 +223,7 @@ impl From<libfmp::responses::directory::FinancialStatementSymbol> for FinancialS
             symbol: value.symbol.into_inner(),
             company_name: value.company_name,
             trading_currency: value.trading_currency.into_inner(),
-            reporting_currency: value.reporting_currency.into_inner(),
+            reporting_currency: value.reporting_currency.map(|value| value.into_inner()),
         }
     }
 }
@@ -727,11 +727,11 @@ pub(crate) struct AvailableExchange {
     #[pyo3(get)]
     pub country_name: String,
     #[pyo3(get)]
-    pub country_code: String,
+    pub country_code: Option<String>,
     #[pyo3(get)]
     pub symbol_suffix: String,
     #[pyo3(get)]
-    pub delay: String,
+    pub delay: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -745,9 +745,9 @@ impl AvailableExchange {
         exchange: String,
         name: String,
         country_name: String,
-        country_code: String,
+        country_code: Option<String>,
         symbol_suffix: String,
-        delay: String,
+        delay: Option<String>,
     ) -> Self {
         Self {
             exchange,
@@ -864,7 +864,7 @@ impl From<libfmp::responses::directory::AvailableExchange> for AvailableExchange
             exchange: value.exchange.into_inner(),
             name: value.name,
             country_name: value.country_name,
-            country_code: value.country_code.into_inner(),
+            country_code: value.country_code.map(|value| value.into_inner()),
             symbol_suffix: value.symbol_suffix,
             delay: value.delay,
         }

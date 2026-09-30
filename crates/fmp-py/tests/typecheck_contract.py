@@ -180,11 +180,12 @@ def check_directory_contract(client: FmpClient) -> None:
     changed_on: datetime.date = changes[0].date
     exchanges: list[AvailableExchange] = client.directory.available_exchanges(extended=True)
     suffix: str = exchanges[0].symbol_suffix
+    delay: str | None = exchanges[0].delay
     entries: list[CikListing] = client.directory.cik_list(page=0, limit=1000)
     cik: str = entries[0].cik
     transcripts: list[EarningsTranscriptAvailability] = client.directory.earnings_transcript_list()
     count: str = transcripts[0].no_of_transcripts
-    _ = (changed_on, suffix, cik, count)
+    _ = (changed_on, suffix, delay, cik, count)
 
 
 def check_congressional_contract(client: FmpClient) -> None:

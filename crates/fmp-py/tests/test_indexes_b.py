@@ -126,7 +126,29 @@ def test_historical_constituents_take_no_arguments(
     assert row.removed_ticker == removed_ticker
     assert row.date == date
     assert isinstance(row.date_added, str)
-    assert row.reason
+    assert (row.reason is None) == (symbol == "GOOGL")
+
+
+def test_historical_constituents_decode_null_members_and_blank_removed_ticker_as_none(
+    client: Any, fixture_server: FixtureServer
+) -> None:
+    """Null ``addedSecurity`` and ``reason`` and a blank ``removedTicker`` decode as ``None``."""
+    row = {
+        "addedSecurity": None,
+        "date": "2026-07-06",
+        "dateAdded": "July 7, 2026",
+        "reason": None,
+        "removedSecurity": "",
+        "removedTicker": "",
+        "symbol": "SPCX",
+    }
+    fixture_server.route("/historical-nasdaq-constituent", [row])
+    decoded = client.indexes.historical_nasdaq_constituents()[0]
+
+    assert decoded.added_security is None
+    assert decoded.reason is None
+    assert decoded.removed_ticker is None
+    assert decoded.removed_security == ""
 
 
 @pytest.mark.parametrize(

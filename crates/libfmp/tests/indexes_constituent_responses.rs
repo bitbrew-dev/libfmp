@@ -39,6 +39,14 @@ fn all_six_documented_constituent_fixtures_match_the_typed_wire_contract_exactly
     assert_eq!(history[0].date_added.0, "July 7, 2026");
     assert_eq!(history[0].removed_ticker, None);
     assert_eq!(history[0].removed_security, None);
+
+    let dow_history: Vec<HistoricalIndexConstituent> =
+        serde_json::from_slice(HISTORICAL_DOW_JONES).unwrap();
+    assert_eq!(dow_history[0].reason, None);
+    assert_eq!(
+        dow_history[0].added_security.as_deref(),
+        Some("Alphabet Inc.")
+    );
 }
 
 fn assert_exact<T>(fixture: &[u8])
@@ -91,7 +99,7 @@ fn current_constituent_fields_are_required_and_nullable_date_stays_required() {
 }
 
 #[test]
-fn historical_fields_are_required_while_documented_removals_accept_null() {
+fn historical_fields_are_required_while_omittable_members_accept_null_or_empty() {
     let source: Value = serde_json::from_slice(HISTORICAL_NASDAQ).unwrap();
     let row = source[0].clone();
 
@@ -109,11 +117,24 @@ fn historical_fields_are_required_while_documented_removals_accept_null() {
         assert!(serde_json::from_value::<HistoricalIndexConstituent>(missing).is_err());
     }
 
-    for field in ["dateAdded", "addedSecurity", "date", "symbol", "reason"] {
+    for field in ["dateAdded", "date", "symbol"] {
         let mut null = row.clone();
         null[field] = Value::Null;
         assert!(serde_json::from_value::<HistoricalIndexConstituent>(null).is_err());
     }
+
+    let mut omitted = row.clone();
+    omitted["addedSecurity"] = Value::Null;
+    omitted["reason"] = Value::Null;
+    omitted["removedTicker"] = json!("");
+    let decoded: HistoricalIndexConstituent = serde_json::from_value(omitted).unwrap();
+    assert_eq!(decoded.added_security, None);
+    assert_eq!(decoded.reason, None);
+    assert_eq!(decoded.removed_ticker, None);
+    let wire = serde_json::to_value(&decoded).unwrap();
+    assert!(wire["addedSecurity"].is_null());
+    assert!(wire["reason"].is_null());
+    assert!(wire["removedTicker"].is_null());
 
     let mut future = row;
     future["futureField"] = json!([1, 2, 3]);
