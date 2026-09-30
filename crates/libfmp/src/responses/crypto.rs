@@ -2,9 +2,20 @@
 //!
 //! Detailed and compact cryptocurrency quotes reuse the shared quote wire contracts.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
-use crate::types::{Date, ExchangeCode, Ticker, TokenSupply};
+use crate::{
+    codecs::empty_or_null_date,
+    types::{Date, ExchangeCode, Ticker, TokenSupply},
+};
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 pub use super::quote::{Quote, QuoteShort};
 
@@ -16,9 +27,12 @@ pub struct CryptocurrencyListing {
     pub symbol: Ticker,
     pub name: String,
     pub exchange: ExchangeCode,
-    pub ico_date: Date,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub circulating_supply: TokenSupply,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub total_supply: TokenSupply,
+    #[serde(with = "empty_or_null_date")]
+    pub ico_date: Option<Date>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub circulating_supply: Option<TokenSupply>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub total_supply: Option<TokenSupply>,
 }

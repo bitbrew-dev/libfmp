@@ -271,3 +271,17 @@ def test_decode_error_names_the_chart_endpoint(
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.crypto.chart_one_minute("BTCUSD")
     assert raised.value.endpoint == "historical-chart/1min"
+
+
+def test_list_decodes_null_supplies_and_empty_ico_date_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Null supplies and an empty ``icoDate`` decode to ``None``."""
+    body = load_fixture("cryptocurrency_list.json")
+    body[0]["icoDate"] = ""
+    body[0]["circulatingSupply"] = None
+    body[0]["totalSupply"] = None
+    fixture_server.route("/cryptocurrency-list", body)
+    rows = client.crypto.list()
+
+    assert rows[0].ico_date is None
+    assert rows[0].circulating_supply is None
+    assert rows[0].total_supply is None

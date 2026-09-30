@@ -156,10 +156,13 @@ fn catalog_rows_preserve_exact_identifiers_dates_and_large_unsigned_supplies() {
         serde_json::from_slice(CRYPTOCURRENCY_LIST).unwrap();
     assert_eq!(
         cryptocurrencies[0].ico_date,
-        "2017-11-09".parse::<Date>().unwrap()
+        Some("2017-11-09".parse::<Date>().unwrap())
     );
-    assert_eq!(cryptocurrencies[0].circulating_supply, 4_232_705_124.0);
-    assert_eq!(cryptocurrencies[0].total_supply, 4_788_606_639.0);
+    assert_eq!(
+        cryptocurrencies[0].circulating_supply,
+        Some(4_232_705_124.0)
+    );
+    assert_eq!(cryptocurrencies[0].total_supply, Some(4_788_606_639.0));
 }
 
 #[test]
@@ -193,15 +196,36 @@ fn catalog_non_nullable_fields_are_required_and_unknown_fields_are_accepted() {
     );
     assert_required_non_null::<CryptocurrencyListing>(
         CRYPTOCURRENCY_LIST,
-        &[
-            "symbol",
-            "name",
-            "exchange",
-            "icoDate",
-            "circulatingSupply",
-            "totalSupply",
-        ],
+        &["symbol", "name", "exchange"],
     );
+}
+
+#[test]
+fn crypto_listing_supplies_and_ico_date_are_required_but_nullable() {
+    let source: Value = serde_json::from_slice(CRYPTOCURRENCY_LIST).unwrap();
+    for field in ["icoDate", "circulatingSupply", "totalSupply"] {
+        let mut missing = source.clone();
+        missing[0].as_object_mut().unwrap().remove(field);
+        assert!(
+            serde_json::from_value::<Vec<CryptocurrencyListing>>(missing).is_err(),
+            "missing {field}"
+        );
+    }
+
+    let mut null = source.clone();
+    null[0]["icoDate"] = Value::Null;
+    null[0]["circulatingSupply"] = Value::Null;
+    null[0]["totalSupply"] = Value::Null;
+    let rows: Vec<CryptocurrencyListing> = serde_json::from_value(null.clone()).unwrap();
+    assert_eq!(rows[0].ico_date, None);
+    assert_eq!(rows[0].circulating_supply, None);
+    assert_eq!(rows[0].total_supply, None);
+    assert_eq!(serde_json::to_value(&rows).unwrap(), null);
+
+    let mut empty = source;
+    empty[0]["icoDate"] = json!("");
+    let rows: Vec<CryptocurrencyListing> = serde_json::from_value(empty).unwrap();
+    assert_eq!(rows[0].ico_date, None);
 }
 
 fn assert_required_non_null<T>(fixture: &[u8], fields: &[&str])

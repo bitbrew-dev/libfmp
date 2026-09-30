@@ -400,8 +400,8 @@ def check_crypto_contract(client: FmpClient) -> None:
     """Type-check the crypto namespace, its keyword-only date filters, and the cross-module rows."""
     crypto: CryptoNamespace = client.crypto
     listings: list[CryptocurrencyListing] = crypto.list()
-    ico_date: datetime.date = listings[0].ico_date
-    total_supply: float = listings[0].total_supply
+    ico_date: datetime.date | None = listings[0].ico_date
+    total_supply: float | None = listings[0].total_supply
     quotes: list[Quote] = client.crypto.quote("BTCUSD")
     market_cap: float | None = quotes[0].market_cap
     bars: list[StockChartFullBar] = client.crypto.chart_full(
