@@ -460,3 +460,87 @@ func (d *USDate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	return d.UnmarshalText([]byte(value))
 }
+
+const dateOrYearExpected = "YYYY-MM-DD date or YYYY year"
+
+// DateOrYear is a member documented as a "YYYY-MM-DD" date that the provider
+// sometimes sends as a bare "YYYY" year. It mirrors DateOrYear in the Rust
+// crate: a year stays a year and is never widened to a date. The zero value
+// is neither and cannot be encoded; IsZero reports it.
+type DateOrYear struct {
+	date     Date
+	year     int
+	yearOnly bool
+}
+
+// ParseDateOrYear accepts exactly a "YYYY-MM-DD" date or four ASCII digits,
+// the same two shapes the Rust crate accepts.
+func ParseDateOrYear(value string) (DateOrYear, error) {
+	switch len(value) {
+	case 10:
+		date, err := ParseDate(value)
+		if err != nil {
+			return DateOrYear{}, err
+		}
+		return DateOrYear{date: date}, nil
+	case 4:
+		if hasExactASCIIShape(value, 4, nil) {
+			return DateOrYear{year: asciiDigits(value), yearOnly: true}, nil
+		}
+	}
+	return DateOrYear{}, &InvalidTemporalValueError{Expected: dateOrYearExpected}
+}
+
+// Date returns the full date and true, or false when only a year arrived.
+func (v DateOrYear) Date() (Date, bool) {
+	return v.date, !v.yearOnly && !v.date.IsZero()
+}
+
+// Year returns the bare year and true, or false when a full date arrived.
+func (v DateOrYear) Year() (int, bool) {
+	return v.year, v.yearOnly
+}
+
+// IsZero reports whether v is the zero value, which holds neither form.
+func (v DateOrYear) IsZero() bool { return v == DateOrYear{} }
+
+// String returns the exact wire text, "YYYY-MM-DD" or "YYYY".
+func (v DateOrYear) String() string {
+	if v.yearOnly {
+		return fmt.Sprintf("%04d", v.year)
+	}
+	return v.date.String()
+}
+
+// MarshalText encodes the wire text; the zero value is rejected.
+func (v DateOrYear) MarshalText() ([]byte, error) {
+	if v.IsZero() {
+		return nil, ErrZeroTemporalValue
+	}
+	return []byte(v.String()), nil
+}
+
+// UnmarshalText parses the exact wire text.
+func (v *DateOrYear) UnmarshalText(text []byte) error {
+	parsed, err := ParseDateOrYear(string(text))
+	if err != nil {
+		return err
+	}
+	*v = parsed
+	return nil
+}
+
+// MarshalJSONTo writes the value as a JSON string; the zero value is rejected.
+func (v DateOrYear) MarshalJSONTo(enc *jsontext.Encoder) error {
+	return encodeTemporalString(enc, v.String(), v.IsZero())
+}
+
+// UnmarshalJSONFrom reads one JSON string. Any other JSON kind, including
+// null, is rejected, matching the Rust decoder for a required field.
+func (v *DateOrYear) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
+	value, err := decodeTemporalString(dec, dateOrYearExpected)
+	if err != nil {
+		return err
+	}
+	return v.UnmarshalText([]byte(value))
+}

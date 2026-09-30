@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/v2"
 	"errors"
+	"strings"
 	"testing"
 	"time"
 )
@@ -14,6 +15,15 @@ func mustParseDate(t *testing.T, value string) Date {
 		t.Fatalf("ParseDate(%q) error = %v", value, err)
 	}
 	return date
+}
+
+func mustParseDateOrYear(t *testing.T, value string) DateOrYear {
+	t.Helper()
+	parsed, err := ParseDateOrYear(value)
+	if err != nil {
+		t.Fatalf("ParseDateOrYear(%q) error = %v", value, err)
+	}
+	return parsed
 }
 
 func mustParseDateTime(t *testing.T, value string) DateTime {
@@ -296,5 +306,56 @@ func TestUnixTimestampsAcceptEveryInt64AndRejectOtherTokens(t *testing.T) {
 			t.Fatalf("UnixMilliseconds accepted %s", wire)
 		}
 		assertTemporalError(t, err, "integer Unix timestamp in milliseconds")
+	}
+}
+
+func TestParseDateOrYearKeepsTheFormThatArrived(t *testing.T) {
+	t.Parallel()
+	year := mustParseDateOrYear(t, "2020")
+	if got, ok := year.Year(); !ok || got != 2020 {
+		t.Fatalf("Year() = %d, %v", got, ok)
+	}
+	if _, ok := year.Date(); ok {
+		t.Fatal("a bare year reported a date")
+	}
+	date := mustParseDateOrYear(t, "2026-07-28")
+	if got, ok := date.Date(); !ok || got != mustParseDate(t, "2026-07-28") {
+		t.Fatalf("Date() = %v, %v", got, ok)
+	}
+	if _, ok := date.Year(); ok {
+		t.Fatal("a full date reported a bare year")
+	}
+	for _, value := range []string{"20x0", "20201", "202", " 2020", "", "2026-07-28 00:00:00", "２０２０"} {
+		_, err := ParseDateOrYear(value)
+		assertTemporalError(t, err, dateOrYearExpected)
+	}
+	_, err := ParseDateOrYear("2026-13-01")
+	assertTemporalError(t, err, dateExpected)
+}
+
+func TestDateOrYearJSONRoundTripByteIdentical(t *testing.T) {
+	t.Parallel()
+	for _, wire := range []string{`"2020"`, `"0999"`, `"2026-07-28"`} {
+		var value DateOrYear
+		if err := json.Unmarshal([]byte(wire), &value); err != nil {
+			t.Fatalf("Unmarshal(%s) error = %v", wire, err)
+		}
+		encoded, err := json.Marshal(value)
+		if err != nil || string(encoded) != wire {
+			t.Fatalf("Marshal = %s, %v, want %s", encoded, err, wire)
+		}
+	}
+	for _, wire := range []string{`2020`, `null`, `"20x0"`, `true`, `["2020"]`} {
+		var value DateOrYear
+		err := json.Unmarshal([]byte(wire), &value)
+		if err == nil {
+			t.Fatalf("Unmarshal(%s) accepted", wire)
+		}
+		if wire == `"20x0"` && strings.Contains(err.Error(), "20x0") {
+			t.Fatalf("error echoes the value: %v", err)
+		}
+	}
+	if _, err := json.Marshal(DateOrYear{}); !errors.Is(err, ErrZeroTemporalValue) {
+		t.Fatalf("Marshal(zero) error = %v, want ErrZeroTemporalValue", err)
 	}
 }
