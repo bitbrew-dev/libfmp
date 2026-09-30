@@ -13,42 +13,42 @@ import (
 // CompanyScreenerResult is one worldwide company returned by the stock
 // screener.
 type CompanyScreenerResult struct {
-	Symbol             string  `json:"symbol"`
-	CompanyName        string  `json:"companyName"`
-	MarketCap          float64 `json:"marketCap"`
-	Sector             string  `json:"sector"`
-	Industry           string  `json:"industry"`
-	Beta               float64 `json:"beta"`
-	Price              float64 `json:"price"`
-	LastAnnualDividend float64 `json:"lastAnnualDividend"`
-	Volume             float64 `json:"volume"`
-	Exchange           string  `json:"exchange"`
-	ExchangeShortName  string  `json:"exchangeShortName"`
-	Country            string  `json:"country"`
-	IsETF              bool    `json:"isEtf"`
-	IsFund             bool    `json:"isFund"`
-	IsActivelyTrading  bool    `json:"isActivelyTrading"`
+	Symbol             string   `json:"symbol"`
+	CompanyName        string   `json:"companyName"`
+	MarketCap          float64  `json:"marketCap"`
+	Sector             string   `json:"sector"`
+	Industry           string   `json:"industry"`
+	Beta               *float64 `json:"beta"`
+	Price              *float64 `json:"price"`
+	LastAnnualDividend *float64 `json:"lastAnnualDividend"`
+	Volume             float64  `json:"volume"`
+	Exchange           string   `json:"exchange"`
+	ExchangeShortName  string   `json:"exchangeShortName"`
+	Country            *string  `json:"country"`
+	IsETF              bool     `json:"isEtf"`
+	IsFund             *bool    `json:"isFund"`
+	IsActivelyTrading  bool     `json:"isActivelyTrading"`
 }
 
 // companyScreenerResultShadow mirrors CompanyScreenerResult with a pointer or
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type companyScreenerResultShadow struct {
-	Symbol             *string  `json:"symbol"`
-	CompanyName        *string  `json:"companyName"`
-	MarketCap          *float64 `json:"marketCap"`
-	Sector             *string  `json:"sector"`
-	Industry           *string  `json:"industry"`
-	Beta               *float64 `json:"beta"`
-	Price              *float64 `json:"price"`
-	LastAnnualDividend *float64 `json:"lastAnnualDividend"`
-	Volume             *float64 `json:"volume"`
-	Exchange           *string  `json:"exchange"`
-	ExchangeShortName  *string  `json:"exchangeShortName"`
-	Country            *string  `json:"country"`
-	IsETF              *bool    `json:"isEtf"`
-	IsFund             *bool    `json:"isFund"`
-	IsActivelyTrading  *bool    `json:"isActivelyTrading"`
+	Symbol             *string        `json:"symbol"`
+	CompanyName        *string        `json:"companyName"`
+	MarketCap          *float64       `json:"marketCap"`
+	Sector             *string        `json:"sector"`
+	Industry           *string        `json:"industry"`
+	Beta               jsontext.Value `json:"beta"`
+	Price              jsontext.Value `json:"price"`
+	LastAnnualDividend jsontext.Value `json:"lastAnnualDividend"`
+	Volume             *float64       `json:"volume"`
+	Exchange           *string        `json:"exchange"`
+	ExchangeShortName  *string        `json:"exchangeShortName"`
+	Country            jsontext.Value `json:"country"`
+	IsETF              *bool          `json:"isEtf"`
+	IsFund             jsontext.Value `json:"isFund"`
+	IsActivelyTrading  *bool          `json:"isActivelyTrading"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -70,11 +70,11 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyScreenerResult", "sector")
 	case shadow.Industry == nil:
 		return missingMemberError("CompanyScreenerResult", "industry")
-	case shadow.Beta == nil:
+	case len(shadow.Beta) == 0:
 		return missingMemberError("CompanyScreenerResult", "beta")
-	case shadow.Price == nil:
+	case len(shadow.Price) == 0:
 		return missingMemberError("CompanyScreenerResult", "price")
-	case shadow.LastAnnualDividend == nil:
+	case len(shadow.LastAnnualDividend) == 0:
 		return missingMemberError("CompanyScreenerResult", "lastAnnualDividend")
 	case shadow.Volume == nil:
 		return missingMemberError("CompanyScreenerResult", "volume")
@@ -82,14 +82,54 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyScreenerResult", "exchange")
 	case shadow.ExchangeShortName == nil:
 		return missingMemberError("CompanyScreenerResult", "exchangeShortName")
-	case shadow.Country == nil:
+	case len(shadow.Country) == 0:
 		return missingMemberError("CompanyScreenerResult", "country")
 	case shadow.IsETF == nil:
 		return missingMemberError("CompanyScreenerResult", "isEtf")
-	case shadow.IsFund == nil:
+	case len(shadow.IsFund) == 0:
 		return missingMemberError("CompanyScreenerResult", "isFund")
 	case shadow.IsActivelyTrading == nil:
 		return missingMemberError("CompanyScreenerResult", "isActivelyTrading")
+	}
+	var beta *float64
+	if shadow.Beta.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Beta, &value); err != nil {
+			return err
+		}
+		beta = &value
+	}
+	var price *float64
+	if shadow.Price.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Price, &value); err != nil {
+			return err
+		}
+		price = &value
+	}
+	var lastAnnualDividend *float64
+	if shadow.LastAnnualDividend.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.LastAnnualDividend, &value); err != nil {
+			return err
+		}
+		lastAnnualDividend = &value
+	}
+	var country *string
+	if shadow.Country.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Country, &value); err != nil {
+			return err
+		}
+		country = &value
+	}
+	var isFund *bool
+	if shadow.IsFund.Kind() != 'n' {
+		var value bool
+		if err := json.Unmarshal(shadow.IsFund, &value); err != nil {
+			return err
+		}
+		isFund = &value
 	}
 	*m = CompanyScreenerResult{
 		Symbol:             *shadow.Symbol,
@@ -97,15 +137,15 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		MarketCap:          *shadow.MarketCap,
 		Sector:             *shadow.Sector,
 		Industry:           *shadow.Industry,
-		Beta:               *shadow.Beta,
-		Price:              *shadow.Price,
-		LastAnnualDividend: *shadow.LastAnnualDividend,
+		Beta:               beta,
+		Price:              price,
+		LastAnnualDividend: lastAnnualDividend,
 		Volume:             *shadow.Volume,
 		Exchange:           *shadow.Exchange,
 		ExchangeShortName:  *shadow.ExchangeShortName,
-		Country:            *shadow.Country,
+		Country:            country,
 		IsETF:              *shadow.IsETF,
-		IsFund:             *shadow.IsFund,
+		IsFund:             isFund,
 		IsActivelyTrading:  *shadow.IsActivelyTrading,
 	}
 	return nil

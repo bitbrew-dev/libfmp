@@ -4,6 +4,7 @@ import (
 	"encoding/json/v2"
 	"errors"
 	"math"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -111,17 +112,17 @@ func TestDocumentedExchangeVariantDecodesExactValues(t *testing.T) {
 	}
 	row := rows[0]
 	want := ExchangeVariant{
-		Symbol: "AAPL", Price: 331.85501, Beta: 1.097, VolAvg: 55_309_000, MarketCap: 4_874_072_686_740,
-		LastDiv: 1.05, Range: "201.5-344.57", Changes: -6.33498, CompanyName: "Apple Inc.", Currency: "USD",
-		CIK: "0000320193", ISIN: "US0378331005", CUSIP: "037833100", Exchange: "NASDAQ Global Select",
-		ExchangeShortName: "NASDAQ", Industry: "Consumer Electronics", Website: "https://www.apple.com",
-		Description: row.Description, Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US",
-		FullTimeEmployees: "166000", Phone: "(408) 996-1010", Address: "One Apple Park Way", City: "Cupertino",
-		State: "CA", Zip: "95014", DCFDiff: 191.60731, DCF: 140.70269296445176,
+		Symbol: "AAPL", Price: new(331.85501), Beta: 1.097, VolAvg: 55_309_000, MarketCap: 4_874_072_686_740,
+		LastDiv: 1.05, Range: new("201.5-344.57"), Changes: new(-6.33498), CompanyName: "Apple Inc.", Currency: "USD",
+		CIK: new("0000320193"), ISIN: new("US0378331005"), CUSIP: new("037833100"), Exchange: "NASDAQ Global Select",
+		ExchangeShortName: "NASDAQ", Industry: "Consumer Electronics", Website: new("https://www.apple.com"),
+		Description: row.Description, Ceo: new("Timothy D. Cook"), Sector: "Technology", Country: "US",
+		FullTimeEmployees: new("166000"), Phone: new("(408) 996-1010"), Address: new("One Apple Park Way"),
+		City: new("Cupertino"), State: new("CA"), Zip: new("95014"), DCFDiff: new(191.60731), DCF: 140.70269296445176,
 		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IPODate: mustParseDate(t, "1980-12-12"),
 		DefaultImage: false, IsETF: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,
 	}
-	if row != want {
+	if !reflect.DeepEqual(row, want) {
 		t.Fatalf("search_exchange_variants[0] = %+v, want %+v", row, want)
 	}
 	if !strings.HasPrefix(row.Description, "Apple Inc. is a global") || row.MarketCap <= math.MaxUint32 {
@@ -141,6 +142,44 @@ func TestDocumentedExchangeVariantDecodesExactValues(t *testing.T) {
 	for _, absent := range []string{`"marketCap"`, `"change"`} {
 		if strings.Contains(string(encoded), absent) {
 			t.Fatalf("re-encoded ExchangeVariant = %s, must not contain %s", encoded, absent)
+		}
+	}
+}
+
+// Issue #368: FMP sends null for 15 ExchangeVariant members on some listings
+// and "" for cusip; both decode to nil, and nil re-encodes as null.
+func TestExchangeVariantNullableMembersDecodeNullAndEmptyCUSIPToNil(t *testing.T) {
+	t.Parallel()
+	var wire []map[string]any
+	if err := json.Unmarshal(readFixture(t, "search_exchange_variants.json"), &wire); err != nil {
+		t.Fatal(err)
+	}
+	for _, member := range []string{"price", "range", "changes", "cik", "isin", "website", "ceo", "fullTimeEmployees",
+		"phone", "address", "city", "state", "zip", "dcfDiff"} {
+		wire[0][member] = nil
+	}
+	for _, cusip := range []any{nil, ""} {
+		wire[0]["cusip"] = cusip
+		body, err := json.Marshal(wire)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var rows []ExchangeVariant
+		if err := json.Unmarshal(body, &rows); err != nil {
+			t.Fatalf("cusip %q: %v", cusip, err)
+		}
+		row := rows[0]
+		for name, member := range map[string]any{"price": row.Price, "range": row.Range, "changes": row.Changes,
+			"cik": row.CIK, "isin": row.ISIN, "cusip": row.CUSIP, "website": row.Website, "ceo": row.Ceo,
+			"fullTimeEmployees": row.FullTimeEmployees, "phone": row.Phone, "address": row.Address, "city": row.City,
+			"state": row.State, "zip": row.Zip, "dcfDiff": row.DCFDiff} {
+			if !reflect.ValueOf(member).IsNil() {
+				t.Fatalf("cusip %q: %s = %v, want nil", cusip, name, member)
+			}
+		}
+		encoded, err := json.Marshal(row)
+		if err != nil || !strings.Contains(string(encoded), `"cusip":null`) || !strings.Contains(string(encoded), `"dcfDiff":null`) {
+			t.Fatalf("re-encoded = %s, %v", encoded, err)
 		}
 	}
 }

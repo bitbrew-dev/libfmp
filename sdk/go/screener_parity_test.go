@@ -4,6 +4,7 @@ import (
 	"encoding/json/v2"
 	"errors"
 	"math"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -31,18 +32,18 @@ func TestDocumentedCompanyScreenerResultDecodesExactValues(t *testing.T) {
 		MarketCap:          4_885_602_246_714,
 		Sector:             "Technology",
 		Industry:           "Consumer Electronics",
-		Beta:               1.097,
-		Price:              332.64001,
-		LastAnnualDividend: 1.05,
+		Beta:               new(1.097),
+		Price:              new(332.64001),
+		LastAnnualDividend: new(1.05),
 		Volume:             29_909_012,
 		Exchange:           "NASDAQ Global Select",
 		ExchangeShortName:  "NASDAQ",
-		Country:            "US",
+		Country:            new("US"),
 		IsETF:              false,
-		IsFund:             false,
+		IsFund:             new(false),
 		IsActivelyTrading:  true,
 	}
-	if len(rows) != 1 || rows[0] != want {
+	if len(rows) != 1 || !reflect.DeepEqual(rows[0], want) {
 		t.Fatalf("company_screener = %+v, want %+v", rows, want)
 	}
 
@@ -80,20 +81,20 @@ func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T
 	}
 	first := CompanyScreenerResult{
 		Symbol: "BIG", CompanyName: "Beyond Float Precision Corp.", MarketCap: 9_007_199_254_740_992,
-		Sector: "Future Sector", Industry: "Future Industry", Beta: 0, Price: 0, LastAnnualDividend: 0,
-		Volume: math.MaxUint64, Exchange: "Future Exchange", ExchangeShortName: "NEXT", Country: "ZZ",
-		IsETF: false, IsFund: false, IsActivelyTrading: false,
+		Sector: "Future Sector", Industry: "Future Industry", Beta: new(0.0), Price: new(0.0),
+		LastAnnualDividend: new(0.0), Volume: math.MaxUint64, Exchange: "Future Exchange", ExchangeShortName: "NEXT",
+		Country: new("ZZ"), IsETF: false, IsFund: new(false), IsActivelyTrading: false,
 	}
-	if multiple[0] != first || multiple[0].MarketCap < 1<<53 {
+	if !reflect.DeepEqual(multiple[0], first) || multiple[0].MarketCap < 1<<53 {
 		t.Fatalf("company_screener_multiple[0] = %+v, want %+v", multiple[0], first)
 	}
 	second := CompanyScreenerResult{
 		Symbol: "FUND", CompanyName: "Example Fund", MarketCap: 4_294_967_296,
-		Sector: "Financial Services", Industry: "Asset Management", Beta: 1.25, Price: 42.5, LastAnnualDividend: 2.5,
-		Volume: 4_294_967_296, Exchange: "New York Stock Exchange", ExchangeShortName: "NYSE", Country: "US",
-		IsETF: false, IsFund: true, IsActivelyTrading: true,
+		Sector: "Financial Services", Industry: "Asset Management", Beta: new(1.25), Price: new(42.5),
+		LastAnnualDividend: new(2.5), Volume: 4_294_967_296, Exchange: "New York Stock Exchange", ExchangeShortName: "NYSE",
+		Country: new("US"), IsETF: false, IsFund: new(true), IsActivelyTrading: true,
 	}
-	if multiple[1] != second {
+	if !reflect.DeepEqual(multiple[1], second) {
 		t.Fatalf("company_screener_multiple[1] = %+v, want %+v", multiple[1], second)
 	}
 
@@ -106,6 +107,35 @@ func TestScreenerArraysPreserveEmptyMultipleUnknownAndLargeIntegers(t *testing.T
 	var enveloped []CompanyScreenerResult
 	if err := json.Unmarshal([]byte(`{"companies":[]}`), &enveloped); err == nil {
 		t.Fatal("an object envelope decoded into a bare-array contract")
+	}
+}
+
+// Issue #368: FMP sends null for beta, price, lastAnnualDividend, country, and
+// isFund on some rows; a page carrying one null beta row decodes whole, and
+// every nullable member decodes null to nil and re-encodes it as null.
+func TestScreenerNullableMembersDecodeNullToNil(t *testing.T) {
+	t.Parallel()
+	page := assertFixtureParity[CompanyScreenerResult](t, "company_screener_null_beta_synthetic.json")
+	if len(page) != 40 || page[37].Beta != nil || page[36].Beta == nil || *page[36].Beta != 1.097 {
+		t.Fatalf("null beta page: %d rows, row 37 beta = %v, row 36 beta = %v", len(page), page[37].Beta, page[36].Beta)
+	}
+
+	row := string(readFixture(t, "company_screener.json"))
+	for _, member := range []string{`"beta": 1.097`, `"price": 332.64001`, `"lastAnnualDividend": 1.05`, `"country": "US"`, `"isFund": false`} {
+		name, _, _ := strings.Cut(member, ":")
+		row = strings.Replace(row, member, name+": null", 1)
+	}
+	var rows []CompanyScreenerResult
+	if err := json.Unmarshal([]byte(row), &rows); err != nil {
+		t.Fatal(err)
+	}
+	got := rows[0]
+	if got.Beta != nil || got.Price != nil || got.LastAnnualDividend != nil || got.Country != nil || got.IsFund != nil {
+		t.Fatalf("null members = %+v, want nil pointers", got)
+	}
+	encoded, err := json.Marshal(got)
+	if err != nil || !strings.Contains(string(encoded), `"beta":null`) || !strings.Contains(string(encoded), `"isFund":null`) {
+		t.Fatalf("re-encoded = %s, %v", encoded, err)
 	}
 }
 

@@ -20,11 +20,11 @@ pub(crate) struct CompanyScreenerResult {
     #[pyo3(get)]
     pub industry: String,
     #[pyo3(get)]
-    pub beta: f64,
+    pub beta: Option<f64>,
     #[pyo3(get)]
-    pub price: f64,
+    pub price: Option<f64>,
     #[pyo3(get)]
-    pub last_annual_dividend: f64,
+    pub last_annual_dividend: Option<f64>,
     #[pyo3(get)]
     pub volume: f64,
     #[pyo3(get)]
@@ -32,11 +32,11 @@ pub(crate) struct CompanyScreenerResult {
     #[pyo3(get)]
     pub exchange_short_name: String,
     #[pyo3(get)]
-    pub country: String,
+    pub country: Option<String>,
     #[pyo3(get)]
     pub is_etf: bool,
     #[pyo3(get)]
-    pub is_fund: bool,
+    pub is_fund: Option<bool>,
     #[pyo3(get)]
     pub is_actively_trading: bool,
 }
@@ -54,15 +54,15 @@ impl CompanyScreenerResult {
         market_cap: f64,
         sector: String,
         industry: String,
-        beta: f64,
-        price: f64,
-        last_annual_dividend: f64,
+        beta: Option<f64>,
+        price: Option<f64>,
+        last_annual_dividend: Option<f64>,
         volume: f64,
         exchange: String,
         exchange_short_name: String,
-        country: String,
+        country: Option<String>,
         is_etf: bool,
-        is_fund: bool,
+        is_fund: Option<bool>,
         is_actively_trading: bool,
     ) -> Self {
         Self {
@@ -266,7 +266,7 @@ impl From<libfmp::responses::screener::CompanyScreenerResult> for CompanyScreene
             volume: value.volume,
             exchange: value.exchange,
             exchange_short_name: value.exchange_short_name.into_inner(),
-            country: value.country.into_inner(),
+            country: value.country.map(|value| value.into_inner()),
             is_etf: value.is_etf,
             is_fund: value.is_fund,
             is_actively_trading: value.is_actively_trading,

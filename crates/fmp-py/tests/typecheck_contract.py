@@ -318,8 +318,8 @@ def check_screener_contract(client: FmpClient) -> None:
         limit=100,
     )
     market_cap: float = filtered[0].market_cap
-    beta: float = everything[0].beta
-    is_fund: bool = filtered[0].is_fund
+    beta: float | None = everything[0].beta
+    is_fund: bool | None = filtered[0].is_fund
     _ = (market_cap, beta, is_fund)
 
 
@@ -460,7 +460,8 @@ def check_search_contract(client: FmpClient) -> None:
     ipo_date: datetime.date = variants[0].ipo_date
     market_cap: float = variants[0].market_cap
     is_etf: bool = variants[0].is_etf
-    _ = (exchange_full_name, cik, ipo_date, market_cap, is_etf)
+    cusip: str | None = variants[0].cusip
+    _ = (exchange_full_name, cik, ipo_date, market_cap, is_etf, cusip)
 
 
 def check_insider_trading_contract(client: FmpClient) -> None:

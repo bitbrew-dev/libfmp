@@ -2,12 +2,20 @@
 //!
 //! The Python binding exposes these models under `fmp.search`.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::types::{
     Change, Cik, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode, Isin, MarketCapitalization,
     PerShareAmount, Price, Ratio, Ticker, Volume,
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// A company or instrument returned by symbol search.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -76,7 +84,8 @@ pub struct IsinSearchResult {
 #[serde(rename_all = "camelCase")]
 pub struct ExchangeVariant {
     pub symbol: Ticker,
-    pub price: Price,
+    #[serde(deserialize_with = "required_option")]
+    pub price: Option<Price>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub beta: Ratio,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
@@ -86,31 +95,45 @@ pub struct ExchangeVariant {
     pub market_cap: MarketCapitalization,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub last_div: PerShareAmount,
-    pub range: String,
-    pub changes: Change,
+    #[serde(deserialize_with = "required_option")]
+    pub range: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub changes: Option<Change>,
     pub company_name: String,
     pub currency: CurrencyCode,
-    pub cik: Cik,
-    pub isin: Isin,
-    pub cusip: Cusip,
+    #[serde(deserialize_with = "required_option")]
+    pub cik: Option<Cik>,
+    #[serde(deserialize_with = "required_option")]
+    pub isin: Option<Isin>,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub cusip: Option<Cusip>,
     /// The provider's `exchange` field is the full exchange name here.
     pub exchange: String,
     /// The provider's `exchangeShortName` field is the exchange code here.
     pub exchange_short_name: ExchangeCode,
     pub industry: String,
-    pub website: String,
+    #[serde(deserialize_with = "required_option")]
+    pub website: Option<String>,
     pub description: String,
-    pub ceo: String,
+    #[serde(deserialize_with = "required_option")]
+    pub ceo: Option<String>,
     pub sector: String,
     pub country: CountryCode,
-    pub full_time_employees: String,
-    pub phone: String,
-    pub address: String,
-    pub city: String,
-    pub state: String,
-    pub zip: String,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub dcf_diff: PerShareAmount,
+    #[serde(deserialize_with = "required_option")]
+    pub full_time_employees: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub phone: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub address: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub city: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub state: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub zip: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub dcf_diff: Option<PerShareAmount>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub dcf: PerShareAmount,
     pub image: String,

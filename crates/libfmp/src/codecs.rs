@@ -723,7 +723,6 @@ pub(crate) mod empty_or_null {
 
     use crate::types::StringValueError;
 
-    #[cfg_attr(not(test), allow(dead_code))]
     pub(crate) fn deserialize<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
     where
         D: Deserializer<'de>,
