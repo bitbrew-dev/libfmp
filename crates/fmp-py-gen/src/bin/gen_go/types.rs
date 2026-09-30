@@ -377,6 +377,7 @@ fn scalar(ident: &str) -> Option<&'static str> {
         | "ChartTimeframe" | "EconomicIndicator" => "string",
         "NumberOrNumericString" | "PercentageValue" => "NumberOrString",
         "Date" => "Date",
+        "DateOrYear" => "DateOrYear",
         "UsDate" => "USDate",
         "ApiDateTime" => "DateTime",
         "UnixSeconds" => "UnixSeconds",

@@ -87,6 +87,7 @@ def _sample(annotation: str, module: str) -> Any:
         NUMBER: 2.5,
         f"{NUMBER} | None": 3,
         "datetime.date": datetime.date(2024, 1, 2),
+        "datetime.date | builtins.int": 2020,
         "datetime.datetime": datetime.datetime(2024, 1, 2, 3, 4, 5),
     }
     if annotation in simple:

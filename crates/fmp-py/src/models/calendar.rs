@@ -828,7 +828,7 @@ pub(crate) struct IpoProspectus {
     #[pyo3(get)]
     pub filing_date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub ipo_date: ::chrono::NaiveDate,
+    pub ipo_date: crate::models::convert::DateOrYear,
     #[pyo3(get)]
     pub cik: String,
     #[pyo3(get)]
@@ -860,7 +860,7 @@ impl IpoProspectus {
         symbol: String,
         accepted_date: ::chrono::NaiveDate,
         filing_date: ::chrono::NaiveDate,
-        ipo_date: ::chrono::NaiveDate,
+        ipo_date: crate::models::convert::DateOrYear,
         cik: String,
         price_public_per_share: f64,
         price_public_total: f64,
@@ -1100,7 +1100,7 @@ impl From<libfmp::responses::calendar::IpoProspectus> for IpoProspectus {
             symbol: value.symbol.into_inner(),
             accepted_date: value.accepted_date.into_inner(),
             filing_date: value.filing_date.into_inner(),
-            ipo_date: value.ipo_date.into_inner(),
+            ipo_date: crate::models::convert::DateOrYear::from(value.ipo_date),
             cik: value.cik.into_inner(),
             price_public_per_share: value.price_public_per_share,
             price_public_total: value.price_public_total,

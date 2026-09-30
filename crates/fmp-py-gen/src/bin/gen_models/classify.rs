@@ -41,6 +41,13 @@ pub(crate) fn classify(ident: &str, registry: &Registry, depth: usize) -> Class 
             transform: Transform::IntoInner,
         };
     }
+    if ident == "DateOrYear" {
+        let path = "crate::models::convert::DateOrYear".to_string();
+        return Class::Scalar {
+            model_ty: path.clone(),
+            transform: Transform::Nested(path),
+        };
+    }
     if ident == "ApiDateTime" {
         return Class::Scalar {
             model_ty: "::chrono::NaiveDateTime".to_string(),

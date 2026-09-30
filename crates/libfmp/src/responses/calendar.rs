@@ -3,7 +3,7 @@
 use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
-    codecs::{DynamicJson, IsoTimestamp, empty_or_null_date},
+    codecs::{DateOrYear, DynamicJson, IsoTimestamp, empty_or_null_date},
     types::{Cik, Date, ExchangeCode, MarketValue, Percentage, Price, SplitTerm, Ticker},
 };
 
@@ -96,7 +96,7 @@ pub struct IpoProspectus {
     pub symbol: Ticker,
     pub accepted_date: Date,
     pub filing_date: Date,
-    pub ipo_date: Date,
+    pub ipo_date: DateOrYear,
     pub cik: Cik,
     pub price_public_per_share: Price,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
