@@ -708,6 +708,35 @@ pub mod empty_date {
     }
 }
 
+/// Deserializer for a required wire key holding a typed code whose absent
+/// value the provider sends as `""` or JSON null (ADR 0033, #368).
+///
+/// Both spellings decode to `None`; any other string is parsed with the
+/// type's `FromStr`, so a whitespace-only or control-bearing value is still a
+/// decode error, and that error never includes the value. The key stays
+/// required, as with `required_option`: do not add `default` at call sites.
+/// Apply with `deserialize_with = "crate::codecs::empty_or_null::deserialize"`
+/// (the exact path gen_go matches); serialization is serde's default, so
+/// `None` re-encodes as null.
+pub(crate) mod empty_or_null {
+    use super::*;
+
+    use crate::types::StringValueError;
+
+    #[cfg_attr(not(test), allow(dead_code))]
+    pub(crate) fn deserialize<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+    where
+        D: Deserializer<'de>,
+        T: FromStr<Err = StringValueError>,
+    {
+        match Option::<String>::deserialize(deserializer)? {
+            None => Ok(None),
+            Some(value) if value.is_empty() => Ok(None),
+            Some(value) => value.parse().map(Some).map_err(de::Error::custom),
+        }
+    }
+}
+
 /// Serializers for response fields typed with an integral-`f64` alias.
 ///
 /// The provider documents fields such as [`Volume`](crate::types::Volume)
@@ -802,7 +831,71 @@ pub(crate) mod count {
 mod tests {
     use serde::{Deserialize, Serialize};
 
-    use crate::types::{Count, Volume};
+    use crate::types::{Count, CountryCode, Ticker, Volume};
+
+    #[test]
+    fn empty_or_null_maps_empty_and_null_to_none_and_parses_the_rest() {
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Row {
+            #[serde(deserialize_with = "super::empty_or_null::deserialize")]
+            removed_ticker: Option<Ticker>,
+            #[serde(deserialize_with = "super::empty_or_null::deserialize")]
+            country_code: Option<CountryCode>,
+        }
+        let decode = |text: &str| serde_json::from_str::<Row>(text);
+        let from_value =
+            |text: &str| serde_json::from_value::<Row>(serde_json::from_str(text).unwrap());
+
+        for text in [
+            r#"{"removed_ticker":"","country_code":null}"#,
+            r#"{"removed_ticker":null,"country_code":""}"#,
+        ] {
+            let row = decode(text).unwrap();
+            assert_eq!(row.removed_ticker, None);
+            assert_eq!(row.country_code, None);
+            assert_eq!(from_value(text).unwrap(), row);
+        }
+        let row = decode(r#"{"removed_ticker":"BRK.B","country_code":"US"}"#).unwrap();
+        assert_eq!(row.removed_ticker, Some(Ticker::new("BRK.B").unwrap()));
+        assert_eq!(row.country_code, Some(CountryCode::new("US").unwrap()));
+        assert_eq!(
+            serde_json::to_string(&row).unwrap(),
+            r#"{"removed_ticker":"BRK.B","country_code":"US"}"#
+        );
+        assert_eq!(
+            serde_json::to_string(&Row {
+                removed_ticker: None,
+                country_code: None,
+            })
+            .unwrap(),
+            r#"{"removed_ticker":null,"country_code":null}"#
+        );
+
+        for (text, secret) in [
+            (
+                r#"{"removed_ticker":"SECRET,X","country_code":"US"}"#,
+                "SECRET",
+            ),
+            (r#"{"removed_ticker":"   ","country_code":"US"}"#, "   "),
+            (
+                r#"{"removed_ticker":"A","country_code":"SECRET\u0007"}"#,
+                "SECRET",
+            ),
+        ] {
+            let error = decode(text).unwrap_err().to_string();
+            assert!(from_value(text).is_err(), "from_value {text}");
+            assert!(
+                !error.contains(secret),
+                "the error must not echo the value: {error}"
+            );
+        }
+        assert!(decode(r#"{"removed_ticker":"A","country_code":3}"#).is_err());
+        let missing = decode(r#"{"removed_ticker":"A"}"#).unwrap_err().to_string();
+        assert!(
+            missing.contains("missing field `country_code`"),
+            "{missing}"
+        );
+    }
 
     #[test]
     fn count_accepts_integers_and_integral_floats_on_both_decode_paths() {
