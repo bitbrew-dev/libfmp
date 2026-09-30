@@ -27,7 +27,7 @@ class AsReportedFinancialStatement:
     @property
     def fiscal_year(self) -> builtins.int: ...
     @property
-    def reported_currency(self) -> builtins.str: ...
+    def reported_currency(self) -> typing.Optional[builtins.str]: ...
     @property
     def date(self) -> datetime.date: ...
     @property
@@ -41,7 +41,7 @@ class AsReportedFinancialStatement:
         symbol: builtins.str,
         fiscal_year: builtins.int,
         period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
-        reported_currency: builtins.str,
+        reported_currency: typing.Optional[builtins.str],
         date: datetime.date,
         data: builtins.str,
     ) -> AsReportedFinancialStatement: ...

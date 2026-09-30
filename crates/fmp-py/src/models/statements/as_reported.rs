@@ -20,7 +20,7 @@ pub(crate) struct AsReportedFinancialStatement {
     pub fiscal_year: u32,
     pub period: String,
     #[pyo3(get)]
-    pub reported_currency: String,
+    pub reported_currency: Option<String>,
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     data: ::serde_json::Map<String, ::serde_json::Value>,
@@ -38,7 +38,7 @@ impl AsReportedFinancialStatement {
         fiscal_year: u32,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
-        reported_currency: String,
+        reported_currency: Option<String>,
         date: ::chrono::NaiveDate,
         data: String,
     ) -> PyResult<Self> {
@@ -178,7 +178,7 @@ impl From<libfmp::responses::statements::as_reported::AsReportedFinancialStateme
             symbol: value.symbol.into_inner(),
             fiscal_year: value.fiscal_year.get(),
             period: value.period.to_string(),
-            reported_currency: value.reported_currency.into_inner(),
+            reported_currency: value.reported_currency.map(|value| value.into_inner()),
             date: value.date.into_inner(),
             data: value.data,
         }

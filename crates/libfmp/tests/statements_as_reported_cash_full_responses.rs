@@ -192,6 +192,6 @@ fn assert_envelope(row: &AsReportedFinancialStatement) {
     assert_eq!(row.symbol.as_str(), "AAPL");
     assert_eq!(row.fiscal_year.get(), 2025);
     assert_eq!(row.period.to_string(), "FY");
-    assert_eq!(row.reported_currency.as_str(), "USD");
+    assert_eq!(row.reported_currency.as_ref().unwrap().as_str(), "USD");
     assert_eq!(row.date.to_string(), "2025-09-26");
 }

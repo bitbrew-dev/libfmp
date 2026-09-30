@@ -91,7 +91,7 @@ class KeyMetrics:
     @property
     def income_quality(self) -> builtins.float: ...
     @property
-    def graham_number(self) -> builtins.float: ...
+    def graham_number(self) -> typing.Optional[builtins.float]: ...
     @property
     def graham_net_net(self) -> builtins.float: ...
     @property
@@ -176,7 +176,7 @@ class KeyMetrics:
         net_debt_to_ebitda: builtins.float,
         current_ratio: builtins.float,
         income_quality: builtins.float,
-        graham_number: builtins.float,
+        graham_number: typing.Optional[builtins.float],
         graham_net_net: builtins.float,
         tax_burden: builtins.float,
         interest_burden: builtins.float,
@@ -289,7 +289,7 @@ class KeyMetricsTtm:
     @property
     def income_quality_ttm(self) -> builtins.float: ...
     @property
-    def graham_number_ttm(self) -> builtins.float: ...
+    def graham_number_ttm(self) -> typing.Optional[builtins.float]: ...
     @property
     def graham_net_net_ttm(self) -> builtins.float: ...
     @property
@@ -368,7 +368,7 @@ class KeyMetricsTtm:
         net_debt_to_ebitda_ttm: builtins.float,
         current_ratio_ttm: builtins.float,
         income_quality_ttm: builtins.float,
-        graham_number_ttm: builtins.float,
+        graham_number_ttm: typing.Optional[builtins.float],
         graham_net_net_ttm: builtins.float,
         tax_burden_ttm: builtins.float,
         interest_burden_ttm: builtins.float,

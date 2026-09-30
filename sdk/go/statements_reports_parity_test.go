@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -86,7 +87,7 @@ func TestDocumentedAsReportedAndSegmentationFixturesKeepDynamicData(t *testing.T
 	} {
 		rows := assertFixtureParity[AsReportedFinancialStatement](t, fixture)
 		if len(rows) != 1 || rows[0].Symbol != "AAPL" || rows[0].FiscalYear != 2025 || rows[0].Period != "FY" ||
-			rows[0].ReportedCurrency != "USD" || rows[0].Date != mustParseDate(t, "2025-09-26") {
+			rows[0].ReportedCurrency == nil || *rows[0].ReportedCurrency != "USD" || rows[0].Date != mustParseDate(t, "2025-09-26") {
 			t.Fatalf("%s = %+v", fixture, rows)
 		}
 		if data := statementsObjectMembers(t, rows[0].Data); len(data) != keys {
@@ -212,11 +213,11 @@ func TestDocumentedSummaryFixturesDecodeEveryFieldExactly(t *testing.T) {
 	}
 	scores := assertFixtureParity[FinancialScore](t, "financial_scores.json")
 	wantScore := FinancialScore{
-		Symbol: "AAPL", ReportedCurrency: "USD", AltmanZScore: 14.041374927993303, PiotroskiScore: 9,
+		Symbol: "AAPL", ReportedCurrency: "USD", AltmanZScore: new(14.041374927993303), PiotroskiScore: 9,
 		WorkingCapital: 9_473_000_000, TotalAssets: 371_082_000_000, RetainedEarnings: 12_359_000_000,
 		Ebit: 147_722_000_000, MarketCap: 5_042_169_135_511, TotalLiabilities: 264_591_000_000, Revenue: 451_442_000_000,
 	}
-	if len(scores) != 1 || scores[0] != wantScore {
+	if len(scores) != 1 || !reflect.DeepEqual(scores[0], wantScore) {
 		t.Fatalf("financial_scores = %+v, want %+v", scores, wantScore)
 	}
 	owner := assertFixtureParity[OwnerEarnings](t, "owner_earnings.json")

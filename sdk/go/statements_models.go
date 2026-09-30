@@ -16,7 +16,7 @@ type AsReportedFinancialStatement struct {
 	Symbol           string         `json:"symbol"`
 	FiscalYear       uint32         `json:"fiscalYear"`
 	Period           string         `json:"period"`
-	ReportedCurrency string         `json:"reportedCurrency"`
+	ReportedCurrency *string        `json:"reportedCurrency"`
 	Date             Date           `json:"date"`
 	Data             jsontext.Value `json:"data"`
 }
@@ -28,7 +28,7 @@ type asReportedFinancialStatementShadow struct {
 	Symbol           *string         `json:"symbol"`
 	FiscalYear       *uint32         `json:"fiscalYear"`
 	Period           *string         `json:"period"`
-	ReportedCurrency *string         `json:"reportedCurrency"`
+	ReportedCurrency jsontext.Value  `json:"reportedCurrency"`
 	Date             *Date           `json:"date"`
 	Data             *jsontext.Value `json:"data"`
 }
@@ -48,12 +48,20 @@ func (m *AsReportedFinancialStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		return missingMemberError("AsReportedFinancialStatement", "fiscalYear")
 	case shadow.Period == nil:
 		return missingMemberError("AsReportedFinancialStatement", "period")
-	case shadow.ReportedCurrency == nil:
+	case len(shadow.ReportedCurrency) == 0:
 		return missingMemberError("AsReportedFinancialStatement", "reportedCurrency")
 	case shadow.Date == nil:
 		return missingMemberError("AsReportedFinancialStatement", "date")
 	case shadow.Data == nil:
 		return missingMemberError("AsReportedFinancialStatement", "data")
+	}
+	var reportedCurrency *string
+	if shadow.ReportedCurrency.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ReportedCurrency, &value); err != nil {
+			return err
+		}
+		reportedCurrency = &value
 	}
 	if shadow.Data.Kind() != '{' {
 		return invalidMemberError("AsReportedFinancialStatement", "data", "object")
@@ -62,7 +70,7 @@ func (m *AsReportedFinancialStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 		Symbol:           *shadow.Symbol,
 		FiscalYear:       *shadow.FiscalYear,
 		Period:           *shadow.Period,
-		ReportedCurrency: *shadow.ReportedCurrency,
+		ReportedCurrency: reportedCurrency,
 		Date:             *shadow.Date,
 		Data:             *shadow.Data,
 	}
@@ -2426,90 +2434,90 @@ func (m *IncomeStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // IncomeStatement is one historical or trailing-twelve-month worldwide income
 // statement.
 type IncomeStatement struct {
-	Date                                    Date     `json:"date"`
-	Symbol                                  string   `json:"symbol"`
-	ReportedCurrency                        string   `json:"reportedCurrency"`
-	CIK                                     string   `json:"cik"`
-	FilingDate                              Date     `json:"filingDate"`
-	AcceptedDate                            DateTime `json:"acceptedDate"`
-	FiscalYear                              string   `json:"fiscalYear"`
-	Period                                  string   `json:"period"`
-	Revenue                                 float64  `json:"revenue"`
-	CostOfRevenue                           float64  `json:"costOfRevenue"`
-	GrossProfit                             float64  `json:"grossProfit"`
-	ResearchAndDevelopmentExpenses          float64  `json:"researchAndDevelopmentExpenses"`
-	GeneralAndAdministrativeExpenses        float64  `json:"generalAndAdministrativeExpenses"`
-	SellingAndMarketingExpenses             float64  `json:"sellingAndMarketingExpenses"`
-	SellingGeneralAndAdministrativeExpenses float64  `json:"sellingGeneralAndAdministrativeExpenses"`
-	OtherExpenses                           float64  `json:"otherExpenses"`
-	OperatingExpenses                       float64  `json:"operatingExpenses"`
-	CostAndExpenses                         float64  `json:"costAndExpenses"`
-	NetInterestIncome                       float64  `json:"netInterestIncome"`
-	InterestIncome                          float64  `json:"interestIncome"`
-	InterestExpense                         float64  `json:"interestExpense"`
-	DepreciationAndAmortization             float64  `json:"depreciationAndAmortization"`
-	Ebitda                                  float64  `json:"ebitda"`
-	Ebit                                    float64  `json:"ebit"`
-	NonOperatingIncomeExcludingInterest     float64  `json:"nonOperatingIncomeExcludingInterest"`
-	OperatingIncome                         float64  `json:"operatingIncome"`
-	TotalOtherIncomeExpensesNet             float64  `json:"totalOtherIncomeExpensesNet"`
-	IncomeBeforeTax                         float64  `json:"incomeBeforeTax"`
-	IncomeTaxExpense                        float64  `json:"incomeTaxExpense"`
-	NetIncomeFromContinuingOperations       float64  `json:"netIncomeFromContinuingOperations"`
-	NetIncomeFromDiscontinuedOperations     float64  `json:"netIncomeFromDiscontinuedOperations"`
-	OtherAdjustmentsToNetIncome             float64  `json:"otherAdjustmentsToNetIncome"`
-	NetIncome                               float64  `json:"netIncome"`
-	NetIncomeDeductions                     float64  `json:"netIncomeDeductions"`
-	BottomLineNetIncome                     float64  `json:"bottomLineNetIncome"`
-	EPS                                     float64  `json:"eps"`
-	EPSDiluted                              float64  `json:"epsDiluted"`
-	WeightedAverageShsOut                   float64  `json:"weightedAverageShsOut"`
-	WeightedAverageShsOutDil                float64  `json:"weightedAverageShsOutDil"`
+	Date                                    Date      `json:"date"`
+	Symbol                                  string    `json:"symbol"`
+	ReportedCurrency                        string    `json:"reportedCurrency"`
+	CIK                                     string    `json:"cik"`
+	FilingDate                              *Date     `json:"filingDate"`
+	AcceptedDate                            *DateTime `json:"acceptedDate"`
+	FiscalYear                              string    `json:"fiscalYear"`
+	Period                                  string    `json:"period"`
+	Revenue                                 float64   `json:"revenue"`
+	CostOfRevenue                           float64   `json:"costOfRevenue"`
+	GrossProfit                             float64   `json:"grossProfit"`
+	ResearchAndDevelopmentExpenses          float64   `json:"researchAndDevelopmentExpenses"`
+	GeneralAndAdministrativeExpenses        float64   `json:"generalAndAdministrativeExpenses"`
+	SellingAndMarketingExpenses             float64   `json:"sellingAndMarketingExpenses"`
+	SellingGeneralAndAdministrativeExpenses float64   `json:"sellingGeneralAndAdministrativeExpenses"`
+	OtherExpenses                           float64   `json:"otherExpenses"`
+	OperatingExpenses                       float64   `json:"operatingExpenses"`
+	CostAndExpenses                         float64   `json:"costAndExpenses"`
+	NetInterestIncome                       float64   `json:"netInterestIncome"`
+	InterestIncome                          *float64  `json:"interestIncome"`
+	InterestExpense                         float64   `json:"interestExpense"`
+	DepreciationAndAmortization             float64   `json:"depreciationAndAmortization"`
+	Ebitda                                  float64   `json:"ebitda"`
+	Ebit                                    float64   `json:"ebit"`
+	NonOperatingIncomeExcludingInterest     float64   `json:"nonOperatingIncomeExcludingInterest"`
+	OperatingIncome                         float64   `json:"operatingIncome"`
+	TotalOtherIncomeExpensesNet             float64   `json:"totalOtherIncomeExpensesNet"`
+	IncomeBeforeTax                         float64   `json:"incomeBeforeTax"`
+	IncomeTaxExpense                        float64   `json:"incomeTaxExpense"`
+	NetIncomeFromContinuingOperations       float64   `json:"netIncomeFromContinuingOperations"`
+	NetIncomeFromDiscontinuedOperations     float64   `json:"netIncomeFromDiscontinuedOperations"`
+	OtherAdjustmentsToNetIncome             float64   `json:"otherAdjustmentsToNetIncome"`
+	NetIncome                               float64   `json:"netIncome"`
+	NetIncomeDeductions                     float64   `json:"netIncomeDeductions"`
+	BottomLineNetIncome                     float64   `json:"bottomLineNetIncome"`
+	EPS                                     float64   `json:"eps"`
+	EPSDiluted                              float64   `json:"epsDiluted"`
+	WeightedAverageShsOut                   float64   `json:"weightedAverageShsOut"`
+	WeightedAverageShsOutDil                float64   `json:"weightedAverageShsOutDil"`
 }
 
 // incomeStatementShadow mirrors IncomeStatement with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type incomeStatementShadow struct {
-	Date                                    *Date     `json:"date"`
-	Symbol                                  *string   `json:"symbol"`
-	ReportedCurrency                        *string   `json:"reportedCurrency"`
-	CIK                                     *string   `json:"cik"`
-	FilingDate                              *Date     `json:"filingDate"`
-	AcceptedDate                            *DateTime `json:"acceptedDate"`
-	FiscalYear                              *string   `json:"fiscalYear"`
-	Period                                  *string   `json:"period"`
-	Revenue                                 *float64  `json:"revenue"`
-	CostOfRevenue                           *float64  `json:"costOfRevenue"`
-	GrossProfit                             *float64  `json:"grossProfit"`
-	ResearchAndDevelopmentExpenses          *float64  `json:"researchAndDevelopmentExpenses"`
-	GeneralAndAdministrativeExpenses        *float64  `json:"generalAndAdministrativeExpenses"`
-	SellingAndMarketingExpenses             *float64  `json:"sellingAndMarketingExpenses"`
-	SellingGeneralAndAdministrativeExpenses *float64  `json:"sellingGeneralAndAdministrativeExpenses"`
-	OtherExpenses                           *float64  `json:"otherExpenses"`
-	OperatingExpenses                       *float64  `json:"operatingExpenses"`
-	CostAndExpenses                         *float64  `json:"costAndExpenses"`
-	NetInterestIncome                       *float64  `json:"netInterestIncome"`
-	InterestIncome                          *float64  `json:"interestIncome"`
-	InterestExpense                         *float64  `json:"interestExpense"`
-	DepreciationAndAmortization             *float64  `json:"depreciationAndAmortization"`
-	Ebitda                                  *float64  `json:"ebitda"`
-	Ebit                                    *float64  `json:"ebit"`
-	NonOperatingIncomeExcludingInterest     *float64  `json:"nonOperatingIncomeExcludingInterest"`
-	OperatingIncome                         *float64  `json:"operatingIncome"`
-	TotalOtherIncomeExpensesNet             *float64  `json:"totalOtherIncomeExpensesNet"`
-	IncomeBeforeTax                         *float64  `json:"incomeBeforeTax"`
-	IncomeTaxExpense                        *float64  `json:"incomeTaxExpense"`
-	NetIncomeFromContinuingOperations       *float64  `json:"netIncomeFromContinuingOperations"`
-	NetIncomeFromDiscontinuedOperations     *float64  `json:"netIncomeFromDiscontinuedOperations"`
-	OtherAdjustmentsToNetIncome             *float64  `json:"otherAdjustmentsToNetIncome"`
-	NetIncome                               *float64  `json:"netIncome"`
-	NetIncomeDeductions                     *float64  `json:"netIncomeDeductions"`
-	BottomLineNetIncome                     *float64  `json:"bottomLineNetIncome"`
-	EPS                                     *float64  `json:"eps"`
-	EPSDiluted                              *float64  `json:"epsDiluted"`
-	WeightedAverageShsOut                   *float64  `json:"weightedAverageShsOut"`
-	WeightedAverageShsOutDil                *float64  `json:"weightedAverageShsOutDil"`
+	Date                                    *Date          `json:"date"`
+	Symbol                                  *string        `json:"symbol"`
+	ReportedCurrency                        *string        `json:"reportedCurrency"`
+	CIK                                     *string        `json:"cik"`
+	FilingDate                              jsontext.Value `json:"filingDate"`
+	AcceptedDate                            jsontext.Value `json:"acceptedDate"`
+	FiscalYear                              *string        `json:"fiscalYear"`
+	Period                                  *string        `json:"period"`
+	Revenue                                 *float64       `json:"revenue"`
+	CostOfRevenue                           *float64       `json:"costOfRevenue"`
+	GrossProfit                             *float64       `json:"grossProfit"`
+	ResearchAndDevelopmentExpenses          *float64       `json:"researchAndDevelopmentExpenses"`
+	GeneralAndAdministrativeExpenses        *float64       `json:"generalAndAdministrativeExpenses"`
+	SellingAndMarketingExpenses             *float64       `json:"sellingAndMarketingExpenses"`
+	SellingGeneralAndAdministrativeExpenses *float64       `json:"sellingGeneralAndAdministrativeExpenses"`
+	OtherExpenses                           *float64       `json:"otherExpenses"`
+	OperatingExpenses                       *float64       `json:"operatingExpenses"`
+	CostAndExpenses                         *float64       `json:"costAndExpenses"`
+	NetInterestIncome                       *float64       `json:"netInterestIncome"`
+	InterestIncome                          jsontext.Value `json:"interestIncome"`
+	InterestExpense                         *float64       `json:"interestExpense"`
+	DepreciationAndAmortization             *float64       `json:"depreciationAndAmortization"`
+	Ebitda                                  *float64       `json:"ebitda"`
+	Ebit                                    *float64       `json:"ebit"`
+	NonOperatingIncomeExcludingInterest     *float64       `json:"nonOperatingIncomeExcludingInterest"`
+	OperatingIncome                         *float64       `json:"operatingIncome"`
+	TotalOtherIncomeExpensesNet             *float64       `json:"totalOtherIncomeExpensesNet"`
+	IncomeBeforeTax                         *float64       `json:"incomeBeforeTax"`
+	IncomeTaxExpense                        *float64       `json:"incomeTaxExpense"`
+	NetIncomeFromContinuingOperations       *float64       `json:"netIncomeFromContinuingOperations"`
+	NetIncomeFromDiscontinuedOperations     *float64       `json:"netIncomeFromDiscontinuedOperations"`
+	OtherAdjustmentsToNetIncome             *float64       `json:"otherAdjustmentsToNetIncome"`
+	NetIncome                               *float64       `json:"netIncome"`
+	NetIncomeDeductions                     *float64       `json:"netIncomeDeductions"`
+	BottomLineNetIncome                     *float64       `json:"bottomLineNetIncome"`
+	EPS                                     *float64       `json:"eps"`
+	EPSDiluted                              *float64       `json:"epsDiluted"`
+	WeightedAverageShsOut                   *float64       `json:"weightedAverageShsOut"`
+	WeightedAverageShsOutDil                *float64       `json:"weightedAverageShsOutDil"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -2529,9 +2537,9 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IncomeStatement", "reportedCurrency")
 	case shadow.CIK == nil:
 		return missingMemberError("IncomeStatement", "cik")
-	case shadow.FilingDate == nil:
+	case len(shadow.FilingDate) == 0:
 		return missingMemberError("IncomeStatement", "filingDate")
-	case shadow.AcceptedDate == nil:
+	case len(shadow.AcceptedDate) == 0:
 		return missingMemberError("IncomeStatement", "acceptedDate")
 	case shadow.FiscalYear == nil:
 		return missingMemberError("IncomeStatement", "fiscalYear")
@@ -2559,7 +2567,7 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IncomeStatement", "costAndExpenses")
 	case shadow.NetInterestIncome == nil:
 		return missingMemberError("IncomeStatement", "netInterestIncome")
-	case shadow.InterestIncome == nil:
+	case len(shadow.InterestIncome) == 0:
 		return missingMemberError("IncomeStatement", "interestIncome")
 	case shadow.InterestExpense == nil:
 		return missingMemberError("IncomeStatement", "interestExpense")
@@ -2600,13 +2608,37 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.WeightedAverageShsOutDil == nil:
 		return missingMemberError("IncomeStatement", "weightedAverageShsOutDil")
 	}
+	var filingDate *Date
+	if shadow.FilingDate.Kind() != 'n' {
+		var value Date
+		if err := json.Unmarshal(shadow.FilingDate, &value); err != nil {
+			return err
+		}
+		filingDate = &value
+	}
+	var acceptedDate *DateTime
+	if shadow.AcceptedDate.Kind() != 'n' {
+		var value DateTime
+		if err := json.Unmarshal(shadow.AcceptedDate, &value); err != nil {
+			return err
+		}
+		acceptedDate = &value
+	}
+	var interestIncome *float64
+	if shadow.InterestIncome.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.InterestIncome, &value); err != nil {
+			return err
+		}
+		interestIncome = &value
+	}
 	*m = IncomeStatement{
 		Date:                                    *shadow.Date,
 		Symbol:                                  *shadow.Symbol,
 		ReportedCurrency:                        *shadow.ReportedCurrency,
 		CIK:                                     *shadow.CIK,
-		FilingDate:                              *shadow.FilingDate,
-		AcceptedDate:                            *shadow.AcceptedDate,
+		FilingDate:                              filingDate,
+		AcceptedDate:                            acceptedDate,
 		FiscalYear:                              *shadow.FiscalYear,
 		Period:                                  *shadow.Period,
 		Revenue:                                 *shadow.Revenue,
@@ -2620,7 +2652,7 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		OperatingExpenses:                       *shadow.OperatingExpenses,
 		CostAndExpenses:                         *shadow.CostAndExpenses,
 		NetInterestIncome:                       *shadow.NetInterestIncome,
-		InterestIncome:                          *shadow.InterestIncome,
+		InterestIncome:                          interestIncome,
 		InterestExpense:                         *shadow.InterestExpense,
 		DepreciationAndAmortization:             *shadow.DepreciationAndAmortization,
 		Ebitda:                                  *shadow.Ebitda,
@@ -2646,105 +2678,105 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // KeyMetrics is one historical worldwide key-metrics row.
 type KeyMetrics struct {
-	Symbol                                 string  `json:"symbol"`
-	Date                                   Date    `json:"date"`
-	FiscalYear                             string  `json:"fiscalYear"`
-	Period                                 string  `json:"period"`
-	ReportedCurrency                       string  `json:"reportedCurrency"`
-	MarketCap                              float64 `json:"marketCap"`
-	EnterpriseValue                        float64 `json:"enterpriseValue"`
-	EvToSales                              float64 `json:"evToSales"`
-	EvToOperatingCashFlow                  float64 `json:"evToOperatingCashFlow"`
-	EvToFreeCashFlow                       float64 `json:"evToFreeCashFlow"`
-	EvToEbitda                             float64 `json:"evToEBITDA"`
-	NetDebtToEbitda                        float64 `json:"netDebtToEBITDA"`
-	CurrentRatio                           float64 `json:"currentRatio"`
-	IncomeQuality                          float64 `json:"incomeQuality"`
-	GrahamNumber                           float64 `json:"grahamNumber"`
-	GrahamNetNet                           float64 `json:"grahamNetNet"`
-	TaxBurden                              float64 `json:"taxBurden"`
-	InterestBurden                         float64 `json:"interestBurden"`
-	WorkingCapital                         float64 `json:"workingCapital"`
-	InvestedCapital                        float64 `json:"investedCapital"`
-	ReturnOnAssets                         float64 `json:"returnOnAssets"`
-	OperatingReturnOnAssets                float64 `json:"operatingReturnOnAssets"`
-	ReturnOnTangibleAssets                 float64 `json:"returnOnTangibleAssets"`
-	ReturnOnEquity                         float64 `json:"returnOnEquity"`
-	ReturnOnInvestedCapital                float64 `json:"returnOnInvestedCapital"`
-	ReturnOnCapitalEmployed                float64 `json:"returnOnCapitalEmployed"`
-	EarningsYield                          float64 `json:"earningsYield"`
-	FreeCashFlowYield                      float64 `json:"freeCashFlowYield"`
-	CapexToOperatingCashFlow               float64 `json:"capexToOperatingCashFlow"`
-	CapexToDepreciation                    float64 `json:"capexToDepreciation"`
-	CapexToRevenue                         float64 `json:"capexToRevenue"`
-	SalesGeneralAndAdministrativeToRevenue float64 `json:"salesGeneralAndAdministrativeToRevenue"`
-	ResearchAndDevelopementToRevenue       float64 `json:"researchAndDevelopementToRevenue"`
-	StockBasedCompensationToRevenue        float64 `json:"stockBasedCompensationToRevenue"`
-	IntangiblesToTotalAssets               float64 `json:"intangiblesToTotalAssets"`
-	AverageReceivables                     float64 `json:"averageReceivables"`
-	AveragePayables                        float64 `json:"averagePayables"`
-	AverageInventory                       float64 `json:"averageInventory"`
-	DaysOfSalesOutstanding                 float64 `json:"daysOfSalesOutstanding"`
-	DaysOfPayablesOutstanding              float64 `json:"daysOfPayablesOutstanding"`
-	DaysOfInventoryOutstanding             float64 `json:"daysOfInventoryOutstanding"`
-	OperatingCycle                         float64 `json:"operatingCycle"`
-	CashConversionCycle                    float64 `json:"cashConversionCycle"`
-	FreeCashFlowToEquity                   float64 `json:"freeCashFlowToEquity"`
-	FreeCashFlowToFirm                     float64 `json:"freeCashFlowToFirm"`
-	TangibleAssetValue                     float64 `json:"tangibleAssetValue"`
-	NetCurrentAssetValue                   float64 `json:"netCurrentAssetValue"`
+	Symbol                                 string   `json:"symbol"`
+	Date                                   Date     `json:"date"`
+	FiscalYear                             string   `json:"fiscalYear"`
+	Period                                 string   `json:"period"`
+	ReportedCurrency                       string   `json:"reportedCurrency"`
+	MarketCap                              float64  `json:"marketCap"`
+	EnterpriseValue                        float64  `json:"enterpriseValue"`
+	EvToSales                              float64  `json:"evToSales"`
+	EvToOperatingCashFlow                  float64  `json:"evToOperatingCashFlow"`
+	EvToFreeCashFlow                       float64  `json:"evToFreeCashFlow"`
+	EvToEbitda                             float64  `json:"evToEBITDA"`
+	NetDebtToEbitda                        float64  `json:"netDebtToEBITDA"`
+	CurrentRatio                           float64  `json:"currentRatio"`
+	IncomeQuality                          float64  `json:"incomeQuality"`
+	GrahamNumber                           *float64 `json:"grahamNumber"`
+	GrahamNetNet                           float64  `json:"grahamNetNet"`
+	TaxBurden                              float64  `json:"taxBurden"`
+	InterestBurden                         float64  `json:"interestBurden"`
+	WorkingCapital                         float64  `json:"workingCapital"`
+	InvestedCapital                        float64  `json:"investedCapital"`
+	ReturnOnAssets                         float64  `json:"returnOnAssets"`
+	OperatingReturnOnAssets                float64  `json:"operatingReturnOnAssets"`
+	ReturnOnTangibleAssets                 float64  `json:"returnOnTangibleAssets"`
+	ReturnOnEquity                         float64  `json:"returnOnEquity"`
+	ReturnOnInvestedCapital                float64  `json:"returnOnInvestedCapital"`
+	ReturnOnCapitalEmployed                float64  `json:"returnOnCapitalEmployed"`
+	EarningsYield                          float64  `json:"earningsYield"`
+	FreeCashFlowYield                      float64  `json:"freeCashFlowYield"`
+	CapexToOperatingCashFlow               float64  `json:"capexToOperatingCashFlow"`
+	CapexToDepreciation                    float64  `json:"capexToDepreciation"`
+	CapexToRevenue                         float64  `json:"capexToRevenue"`
+	SalesGeneralAndAdministrativeToRevenue float64  `json:"salesGeneralAndAdministrativeToRevenue"`
+	ResearchAndDevelopementToRevenue       float64  `json:"researchAndDevelopementToRevenue"`
+	StockBasedCompensationToRevenue        float64  `json:"stockBasedCompensationToRevenue"`
+	IntangiblesToTotalAssets               float64  `json:"intangiblesToTotalAssets"`
+	AverageReceivables                     float64  `json:"averageReceivables"`
+	AveragePayables                        float64  `json:"averagePayables"`
+	AverageInventory                       float64  `json:"averageInventory"`
+	DaysOfSalesOutstanding                 float64  `json:"daysOfSalesOutstanding"`
+	DaysOfPayablesOutstanding              float64  `json:"daysOfPayablesOutstanding"`
+	DaysOfInventoryOutstanding             float64  `json:"daysOfInventoryOutstanding"`
+	OperatingCycle                         float64  `json:"operatingCycle"`
+	CashConversionCycle                    float64  `json:"cashConversionCycle"`
+	FreeCashFlowToEquity                   float64  `json:"freeCashFlowToEquity"`
+	FreeCashFlowToFirm                     float64  `json:"freeCashFlowToFirm"`
+	TangibleAssetValue                     float64  `json:"tangibleAssetValue"`
+	NetCurrentAssetValue                   float64  `json:"netCurrentAssetValue"`
 }
 
 // keyMetricsShadow mirrors KeyMetrics with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type keyMetricsShadow struct {
-	Symbol                                 *string  `json:"symbol"`
-	Date                                   *Date    `json:"date"`
-	FiscalYear                             *string  `json:"fiscalYear"`
-	Period                                 *string  `json:"period"`
-	ReportedCurrency                       *string  `json:"reportedCurrency"`
-	MarketCap                              *float64 `json:"marketCap"`
-	EnterpriseValue                        *float64 `json:"enterpriseValue"`
-	EvToSales                              *float64 `json:"evToSales"`
-	EvToOperatingCashFlow                  *float64 `json:"evToOperatingCashFlow"`
-	EvToFreeCashFlow                       *float64 `json:"evToFreeCashFlow"`
-	EvToEbitda                             *float64 `json:"evToEBITDA"`
-	NetDebtToEbitda                        *float64 `json:"netDebtToEBITDA"`
-	CurrentRatio                           *float64 `json:"currentRatio"`
-	IncomeQuality                          *float64 `json:"incomeQuality"`
-	GrahamNumber                           *float64 `json:"grahamNumber"`
-	GrahamNetNet                           *float64 `json:"grahamNetNet"`
-	TaxBurden                              *float64 `json:"taxBurden"`
-	InterestBurden                         *float64 `json:"interestBurden"`
-	WorkingCapital                         *float64 `json:"workingCapital"`
-	InvestedCapital                        *float64 `json:"investedCapital"`
-	ReturnOnAssets                         *float64 `json:"returnOnAssets"`
-	OperatingReturnOnAssets                *float64 `json:"operatingReturnOnAssets"`
-	ReturnOnTangibleAssets                 *float64 `json:"returnOnTangibleAssets"`
-	ReturnOnEquity                         *float64 `json:"returnOnEquity"`
-	ReturnOnInvestedCapital                *float64 `json:"returnOnInvestedCapital"`
-	ReturnOnCapitalEmployed                *float64 `json:"returnOnCapitalEmployed"`
-	EarningsYield                          *float64 `json:"earningsYield"`
-	FreeCashFlowYield                      *float64 `json:"freeCashFlowYield"`
-	CapexToOperatingCashFlow               *float64 `json:"capexToOperatingCashFlow"`
-	CapexToDepreciation                    *float64 `json:"capexToDepreciation"`
-	CapexToRevenue                         *float64 `json:"capexToRevenue"`
-	SalesGeneralAndAdministrativeToRevenue *float64 `json:"salesGeneralAndAdministrativeToRevenue"`
-	ResearchAndDevelopementToRevenue       *float64 `json:"researchAndDevelopementToRevenue"`
-	StockBasedCompensationToRevenue        *float64 `json:"stockBasedCompensationToRevenue"`
-	IntangiblesToTotalAssets               *float64 `json:"intangiblesToTotalAssets"`
-	AverageReceivables                     *float64 `json:"averageReceivables"`
-	AveragePayables                        *float64 `json:"averagePayables"`
-	AverageInventory                       *float64 `json:"averageInventory"`
-	DaysOfSalesOutstanding                 *float64 `json:"daysOfSalesOutstanding"`
-	DaysOfPayablesOutstanding              *float64 `json:"daysOfPayablesOutstanding"`
-	DaysOfInventoryOutstanding             *float64 `json:"daysOfInventoryOutstanding"`
-	OperatingCycle                         *float64 `json:"operatingCycle"`
-	CashConversionCycle                    *float64 `json:"cashConversionCycle"`
-	FreeCashFlowToEquity                   *float64 `json:"freeCashFlowToEquity"`
-	FreeCashFlowToFirm                     *float64 `json:"freeCashFlowToFirm"`
-	TangibleAssetValue                     *float64 `json:"tangibleAssetValue"`
-	NetCurrentAssetValue                   *float64 `json:"netCurrentAssetValue"`
+	Symbol                                 *string        `json:"symbol"`
+	Date                                   *Date          `json:"date"`
+	FiscalYear                             *string        `json:"fiscalYear"`
+	Period                                 *string        `json:"period"`
+	ReportedCurrency                       *string        `json:"reportedCurrency"`
+	MarketCap                              *float64       `json:"marketCap"`
+	EnterpriseValue                        *float64       `json:"enterpriseValue"`
+	EvToSales                              *float64       `json:"evToSales"`
+	EvToOperatingCashFlow                  *float64       `json:"evToOperatingCashFlow"`
+	EvToFreeCashFlow                       *float64       `json:"evToFreeCashFlow"`
+	EvToEbitda                             *float64       `json:"evToEBITDA"`
+	NetDebtToEbitda                        *float64       `json:"netDebtToEBITDA"`
+	CurrentRatio                           *float64       `json:"currentRatio"`
+	IncomeQuality                          *float64       `json:"incomeQuality"`
+	GrahamNumber                           jsontext.Value `json:"grahamNumber"`
+	GrahamNetNet                           *float64       `json:"grahamNetNet"`
+	TaxBurden                              *float64       `json:"taxBurden"`
+	InterestBurden                         *float64       `json:"interestBurden"`
+	WorkingCapital                         *float64       `json:"workingCapital"`
+	InvestedCapital                        *float64       `json:"investedCapital"`
+	ReturnOnAssets                         *float64       `json:"returnOnAssets"`
+	OperatingReturnOnAssets                *float64       `json:"operatingReturnOnAssets"`
+	ReturnOnTangibleAssets                 *float64       `json:"returnOnTangibleAssets"`
+	ReturnOnEquity                         *float64       `json:"returnOnEquity"`
+	ReturnOnInvestedCapital                *float64       `json:"returnOnInvestedCapital"`
+	ReturnOnCapitalEmployed                *float64       `json:"returnOnCapitalEmployed"`
+	EarningsYield                          *float64       `json:"earningsYield"`
+	FreeCashFlowYield                      *float64       `json:"freeCashFlowYield"`
+	CapexToOperatingCashFlow               *float64       `json:"capexToOperatingCashFlow"`
+	CapexToDepreciation                    *float64       `json:"capexToDepreciation"`
+	CapexToRevenue                         *float64       `json:"capexToRevenue"`
+	SalesGeneralAndAdministrativeToRevenue *float64       `json:"salesGeneralAndAdministrativeToRevenue"`
+	ResearchAndDevelopementToRevenue       *float64       `json:"researchAndDevelopementToRevenue"`
+	StockBasedCompensationToRevenue        *float64       `json:"stockBasedCompensationToRevenue"`
+	IntangiblesToTotalAssets               *float64       `json:"intangiblesToTotalAssets"`
+	AverageReceivables                     *float64       `json:"averageReceivables"`
+	AveragePayables                        *float64       `json:"averagePayables"`
+	AverageInventory                       *float64       `json:"averageInventory"`
+	DaysOfSalesOutstanding                 *float64       `json:"daysOfSalesOutstanding"`
+	DaysOfPayablesOutstanding              *float64       `json:"daysOfPayablesOutstanding"`
+	DaysOfInventoryOutstanding             *float64       `json:"daysOfInventoryOutstanding"`
+	OperatingCycle                         *float64       `json:"operatingCycle"`
+	CashConversionCycle                    *float64       `json:"cashConversionCycle"`
+	FreeCashFlowToEquity                   *float64       `json:"freeCashFlowToEquity"`
+	FreeCashFlowToFirm                     *float64       `json:"freeCashFlowToFirm"`
+	TangibleAssetValue                     *float64       `json:"tangibleAssetValue"`
+	NetCurrentAssetValue                   *float64       `json:"netCurrentAssetValue"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -2784,7 +2816,7 @@ func (m *KeyMetrics) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("KeyMetrics", "currentRatio")
 	case shadow.IncomeQuality == nil:
 		return missingMemberError("KeyMetrics", "incomeQuality")
-	case shadow.GrahamNumber == nil:
+	case len(shadow.GrahamNumber) == 0:
 		return missingMemberError("KeyMetrics", "grahamNumber")
 	case shadow.GrahamNetNet == nil:
 		return missingMemberError("KeyMetrics", "grahamNetNet")
@@ -2851,6 +2883,14 @@ func (m *KeyMetrics) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.NetCurrentAssetValue == nil:
 		return missingMemberError("KeyMetrics", "netCurrentAssetValue")
 	}
+	var grahamNumber *float64
+	if shadow.GrahamNumber.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.GrahamNumber, &value); err != nil {
+			return err
+		}
+		grahamNumber = &value
+	}
 	*m = KeyMetrics{
 		Symbol:                                 *shadow.Symbol,
 		Date:                                   *shadow.Date,
@@ -2866,7 +2906,7 @@ func (m *KeyMetrics) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		NetDebtToEbitda:                        *shadow.NetDebtToEbitda,
 		CurrentRatio:                           *shadow.CurrentRatio,
 		IncomeQuality:                          *shadow.IncomeQuality,
-		GrahamNumber:                           *shadow.GrahamNumber,
+		GrahamNumber:                           grahamNumber,
 		GrahamNetNet:                           *shadow.GrahamNetNet,
 		TaxBurden:                              *shadow.TaxBurden,
 		InterestBurden:                         *shadow.InterestBurden,
@@ -2905,98 +2945,98 @@ func (m *KeyMetrics) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // KeyMetricsTTM is one worldwide trailing-twelve-month key-metrics row.
 type KeyMetricsTTM struct {
-	Symbol                                    string  `json:"symbol"`
-	MarketCap                                 float64 `json:"marketCap"`
-	EnterpriseValueTTM                        float64 `json:"enterpriseValueTTM"`
-	EvToSalesTTM                              float64 `json:"evToSalesTTM"`
-	EvToOperatingCashFlowTTM                  float64 `json:"evToOperatingCashFlowTTM"`
-	EvToFreeCashFlowTTM                       float64 `json:"evToFreeCashFlowTTM"`
-	EvToEbitdaTTM                             float64 `json:"evToEBITDATTM"`
-	NetDebtToEbitdaTTM                        float64 `json:"netDebtToEBITDATTM"`
-	CurrentRatioTTM                           float64 `json:"currentRatioTTM"`
-	IncomeQualityTTM                          float64 `json:"incomeQualityTTM"`
-	GrahamNumberTTM                           float64 `json:"grahamNumberTTM"`
-	GrahamNetNetTTM                           float64 `json:"grahamNetNetTTM"`
-	TaxBurdenTTM                              float64 `json:"taxBurdenTTM"`
-	InterestBurdenTTM                         float64 `json:"interestBurdenTTM"`
-	WorkingCapitalTTM                         float64 `json:"workingCapitalTTM"`
-	InvestedCapitalTTM                        float64 `json:"investedCapitalTTM"`
-	ReturnOnAssetsTTM                         float64 `json:"returnOnAssetsTTM"`
-	OperatingReturnOnAssetsTTM                float64 `json:"operatingReturnOnAssetsTTM"`
-	ReturnOnTangibleAssetsTTM                 float64 `json:"returnOnTangibleAssetsTTM"`
-	ReturnOnEquityTTM                         float64 `json:"returnOnEquityTTM"`
-	ReturnOnInvestedCapitalTTM                float64 `json:"returnOnInvestedCapitalTTM"`
-	ReturnOnCapitalEmployedTTM                float64 `json:"returnOnCapitalEmployedTTM"`
-	EarningsYieldTTM                          float64 `json:"earningsYieldTTM"`
-	FreeCashFlowYieldTTM                      float64 `json:"freeCashFlowYieldTTM"`
-	CapexToOperatingCashFlowTTM               float64 `json:"capexToOperatingCashFlowTTM"`
-	CapexToDepreciationTTM                    float64 `json:"capexToDepreciationTTM"`
-	CapexToRevenueTTM                         float64 `json:"capexToRevenueTTM"`
-	SalesGeneralAndAdministrativeToRevenueTTM float64 `json:"salesGeneralAndAdministrativeToRevenueTTM"`
-	ResearchAndDevelopementToRevenueTTM       float64 `json:"researchAndDevelopementToRevenueTTM"`
-	StockBasedCompensationToRevenueTTM        float64 `json:"stockBasedCompensationToRevenueTTM"`
-	IntangiblesToTotalAssetsTTM               float64 `json:"intangiblesToTotalAssetsTTM"`
-	AverageReceivablesTTM                     float64 `json:"averageReceivablesTTM"`
-	AveragePayablesTTM                        float64 `json:"averagePayablesTTM"`
-	AverageInventoryTTM                       float64 `json:"averageInventoryTTM"`
-	DaysOfSalesOutstandingTTM                 float64 `json:"daysOfSalesOutstandingTTM"`
-	DaysOfPayablesOutstandingTTM              float64 `json:"daysOfPayablesOutstandingTTM"`
-	DaysOfInventoryOutstandingTTM             float64 `json:"daysOfInventoryOutstandingTTM"`
-	OperatingCycleTTM                         float64 `json:"operatingCycleTTM"`
-	CashConversionCycleTTM                    float64 `json:"cashConversionCycleTTM"`
-	FreeCashFlowToEquityTTM                   float64 `json:"freeCashFlowToEquityTTM"`
-	FreeCashFlowToFirmTTM                     float64 `json:"freeCashFlowToFirmTTM"`
-	TangibleAssetValueTTM                     float64 `json:"tangibleAssetValueTTM"`
-	NetCurrentAssetValueTTM                   float64 `json:"netCurrentAssetValueTTM"`
+	Symbol                                    string   `json:"symbol"`
+	MarketCap                                 float64  `json:"marketCap"`
+	EnterpriseValueTTM                        float64  `json:"enterpriseValueTTM"`
+	EvToSalesTTM                              float64  `json:"evToSalesTTM"`
+	EvToOperatingCashFlowTTM                  float64  `json:"evToOperatingCashFlowTTM"`
+	EvToFreeCashFlowTTM                       float64  `json:"evToFreeCashFlowTTM"`
+	EvToEbitdaTTM                             float64  `json:"evToEBITDATTM"`
+	NetDebtToEbitdaTTM                        float64  `json:"netDebtToEBITDATTM"`
+	CurrentRatioTTM                           float64  `json:"currentRatioTTM"`
+	IncomeQualityTTM                          float64  `json:"incomeQualityTTM"`
+	GrahamNumberTTM                           *float64 `json:"grahamNumberTTM"`
+	GrahamNetNetTTM                           float64  `json:"grahamNetNetTTM"`
+	TaxBurdenTTM                              float64  `json:"taxBurdenTTM"`
+	InterestBurdenTTM                         float64  `json:"interestBurdenTTM"`
+	WorkingCapitalTTM                         float64  `json:"workingCapitalTTM"`
+	InvestedCapitalTTM                        float64  `json:"investedCapitalTTM"`
+	ReturnOnAssetsTTM                         float64  `json:"returnOnAssetsTTM"`
+	OperatingReturnOnAssetsTTM                float64  `json:"operatingReturnOnAssetsTTM"`
+	ReturnOnTangibleAssetsTTM                 float64  `json:"returnOnTangibleAssetsTTM"`
+	ReturnOnEquityTTM                         float64  `json:"returnOnEquityTTM"`
+	ReturnOnInvestedCapitalTTM                float64  `json:"returnOnInvestedCapitalTTM"`
+	ReturnOnCapitalEmployedTTM                float64  `json:"returnOnCapitalEmployedTTM"`
+	EarningsYieldTTM                          float64  `json:"earningsYieldTTM"`
+	FreeCashFlowYieldTTM                      float64  `json:"freeCashFlowYieldTTM"`
+	CapexToOperatingCashFlowTTM               float64  `json:"capexToOperatingCashFlowTTM"`
+	CapexToDepreciationTTM                    float64  `json:"capexToDepreciationTTM"`
+	CapexToRevenueTTM                         float64  `json:"capexToRevenueTTM"`
+	SalesGeneralAndAdministrativeToRevenueTTM float64  `json:"salesGeneralAndAdministrativeToRevenueTTM"`
+	ResearchAndDevelopementToRevenueTTM       float64  `json:"researchAndDevelopementToRevenueTTM"`
+	StockBasedCompensationToRevenueTTM        float64  `json:"stockBasedCompensationToRevenueTTM"`
+	IntangiblesToTotalAssetsTTM               float64  `json:"intangiblesToTotalAssetsTTM"`
+	AverageReceivablesTTM                     float64  `json:"averageReceivablesTTM"`
+	AveragePayablesTTM                        float64  `json:"averagePayablesTTM"`
+	AverageInventoryTTM                       float64  `json:"averageInventoryTTM"`
+	DaysOfSalesOutstandingTTM                 float64  `json:"daysOfSalesOutstandingTTM"`
+	DaysOfPayablesOutstandingTTM              float64  `json:"daysOfPayablesOutstandingTTM"`
+	DaysOfInventoryOutstandingTTM             float64  `json:"daysOfInventoryOutstandingTTM"`
+	OperatingCycleTTM                         float64  `json:"operatingCycleTTM"`
+	CashConversionCycleTTM                    float64  `json:"cashConversionCycleTTM"`
+	FreeCashFlowToEquityTTM                   float64  `json:"freeCashFlowToEquityTTM"`
+	FreeCashFlowToFirmTTM                     float64  `json:"freeCashFlowToFirmTTM"`
+	TangibleAssetValueTTM                     float64  `json:"tangibleAssetValueTTM"`
+	NetCurrentAssetValueTTM                   float64  `json:"netCurrentAssetValueTTM"`
 }
 
 // keyMetricsTTMShadow mirrors KeyMetricsTTM with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type keyMetricsTTMShadow struct {
-	Symbol                                    *string  `json:"symbol"`
-	MarketCap                                 *float64 `json:"marketCap"`
-	EnterpriseValueTTM                        *float64 `json:"enterpriseValueTTM"`
-	EvToSalesTTM                              *float64 `json:"evToSalesTTM"`
-	EvToOperatingCashFlowTTM                  *float64 `json:"evToOperatingCashFlowTTM"`
-	EvToFreeCashFlowTTM                       *float64 `json:"evToFreeCashFlowTTM"`
-	EvToEbitdaTTM                             *float64 `json:"evToEBITDATTM"`
-	NetDebtToEbitdaTTM                        *float64 `json:"netDebtToEBITDATTM"`
-	CurrentRatioTTM                           *float64 `json:"currentRatioTTM"`
-	IncomeQualityTTM                          *float64 `json:"incomeQualityTTM"`
-	GrahamNumberTTM                           *float64 `json:"grahamNumberTTM"`
-	GrahamNetNetTTM                           *float64 `json:"grahamNetNetTTM"`
-	TaxBurdenTTM                              *float64 `json:"taxBurdenTTM"`
-	InterestBurdenTTM                         *float64 `json:"interestBurdenTTM"`
-	WorkingCapitalTTM                         *float64 `json:"workingCapitalTTM"`
-	InvestedCapitalTTM                        *float64 `json:"investedCapitalTTM"`
-	ReturnOnAssetsTTM                         *float64 `json:"returnOnAssetsTTM"`
-	OperatingReturnOnAssetsTTM                *float64 `json:"operatingReturnOnAssetsTTM"`
-	ReturnOnTangibleAssetsTTM                 *float64 `json:"returnOnTangibleAssetsTTM"`
-	ReturnOnEquityTTM                         *float64 `json:"returnOnEquityTTM"`
-	ReturnOnInvestedCapitalTTM                *float64 `json:"returnOnInvestedCapitalTTM"`
-	ReturnOnCapitalEmployedTTM                *float64 `json:"returnOnCapitalEmployedTTM"`
-	EarningsYieldTTM                          *float64 `json:"earningsYieldTTM"`
-	FreeCashFlowYieldTTM                      *float64 `json:"freeCashFlowYieldTTM"`
-	CapexToOperatingCashFlowTTM               *float64 `json:"capexToOperatingCashFlowTTM"`
-	CapexToDepreciationTTM                    *float64 `json:"capexToDepreciationTTM"`
-	CapexToRevenueTTM                         *float64 `json:"capexToRevenueTTM"`
-	SalesGeneralAndAdministrativeToRevenueTTM *float64 `json:"salesGeneralAndAdministrativeToRevenueTTM"`
-	ResearchAndDevelopementToRevenueTTM       *float64 `json:"researchAndDevelopementToRevenueTTM"`
-	StockBasedCompensationToRevenueTTM        *float64 `json:"stockBasedCompensationToRevenueTTM"`
-	IntangiblesToTotalAssetsTTM               *float64 `json:"intangiblesToTotalAssetsTTM"`
-	AverageReceivablesTTM                     *float64 `json:"averageReceivablesTTM"`
-	AveragePayablesTTM                        *float64 `json:"averagePayablesTTM"`
-	AverageInventoryTTM                       *float64 `json:"averageInventoryTTM"`
-	DaysOfSalesOutstandingTTM                 *float64 `json:"daysOfSalesOutstandingTTM"`
-	DaysOfPayablesOutstandingTTM              *float64 `json:"daysOfPayablesOutstandingTTM"`
-	DaysOfInventoryOutstandingTTM             *float64 `json:"daysOfInventoryOutstandingTTM"`
-	OperatingCycleTTM                         *float64 `json:"operatingCycleTTM"`
-	CashConversionCycleTTM                    *float64 `json:"cashConversionCycleTTM"`
-	FreeCashFlowToEquityTTM                   *float64 `json:"freeCashFlowToEquityTTM"`
-	FreeCashFlowToFirmTTM                     *float64 `json:"freeCashFlowToFirmTTM"`
-	TangibleAssetValueTTM                     *float64 `json:"tangibleAssetValueTTM"`
-	NetCurrentAssetValueTTM                   *float64 `json:"netCurrentAssetValueTTM"`
+	Symbol                                    *string        `json:"symbol"`
+	MarketCap                                 *float64       `json:"marketCap"`
+	EnterpriseValueTTM                        *float64       `json:"enterpriseValueTTM"`
+	EvToSalesTTM                              *float64       `json:"evToSalesTTM"`
+	EvToOperatingCashFlowTTM                  *float64       `json:"evToOperatingCashFlowTTM"`
+	EvToFreeCashFlowTTM                       *float64       `json:"evToFreeCashFlowTTM"`
+	EvToEbitdaTTM                             *float64       `json:"evToEBITDATTM"`
+	NetDebtToEbitdaTTM                        *float64       `json:"netDebtToEBITDATTM"`
+	CurrentRatioTTM                           *float64       `json:"currentRatioTTM"`
+	IncomeQualityTTM                          *float64       `json:"incomeQualityTTM"`
+	GrahamNumberTTM                           jsontext.Value `json:"grahamNumberTTM"`
+	GrahamNetNetTTM                           *float64       `json:"grahamNetNetTTM"`
+	TaxBurdenTTM                              *float64       `json:"taxBurdenTTM"`
+	InterestBurdenTTM                         *float64       `json:"interestBurdenTTM"`
+	WorkingCapitalTTM                         *float64       `json:"workingCapitalTTM"`
+	InvestedCapitalTTM                        *float64       `json:"investedCapitalTTM"`
+	ReturnOnAssetsTTM                         *float64       `json:"returnOnAssetsTTM"`
+	OperatingReturnOnAssetsTTM                *float64       `json:"operatingReturnOnAssetsTTM"`
+	ReturnOnTangibleAssetsTTM                 *float64       `json:"returnOnTangibleAssetsTTM"`
+	ReturnOnEquityTTM                         *float64       `json:"returnOnEquityTTM"`
+	ReturnOnInvestedCapitalTTM                *float64       `json:"returnOnInvestedCapitalTTM"`
+	ReturnOnCapitalEmployedTTM                *float64       `json:"returnOnCapitalEmployedTTM"`
+	EarningsYieldTTM                          *float64       `json:"earningsYieldTTM"`
+	FreeCashFlowYieldTTM                      *float64       `json:"freeCashFlowYieldTTM"`
+	CapexToOperatingCashFlowTTM               *float64       `json:"capexToOperatingCashFlowTTM"`
+	CapexToDepreciationTTM                    *float64       `json:"capexToDepreciationTTM"`
+	CapexToRevenueTTM                         *float64       `json:"capexToRevenueTTM"`
+	SalesGeneralAndAdministrativeToRevenueTTM *float64       `json:"salesGeneralAndAdministrativeToRevenueTTM"`
+	ResearchAndDevelopementToRevenueTTM       *float64       `json:"researchAndDevelopementToRevenueTTM"`
+	StockBasedCompensationToRevenueTTM        *float64       `json:"stockBasedCompensationToRevenueTTM"`
+	IntangiblesToTotalAssetsTTM               *float64       `json:"intangiblesToTotalAssetsTTM"`
+	AverageReceivablesTTM                     *float64       `json:"averageReceivablesTTM"`
+	AveragePayablesTTM                        *float64       `json:"averagePayablesTTM"`
+	AverageInventoryTTM                       *float64       `json:"averageInventoryTTM"`
+	DaysOfSalesOutstandingTTM                 *float64       `json:"daysOfSalesOutstandingTTM"`
+	DaysOfPayablesOutstandingTTM              *float64       `json:"daysOfPayablesOutstandingTTM"`
+	DaysOfInventoryOutstandingTTM             *float64       `json:"daysOfInventoryOutstandingTTM"`
+	OperatingCycleTTM                         *float64       `json:"operatingCycleTTM"`
+	CashConversionCycleTTM                    *float64       `json:"cashConversionCycleTTM"`
+	FreeCashFlowToEquityTTM                   *float64       `json:"freeCashFlowToEquityTTM"`
+	FreeCashFlowToFirmTTM                     *float64       `json:"freeCashFlowToFirmTTM"`
+	TangibleAssetValueTTM                     *float64       `json:"tangibleAssetValueTTM"`
+	NetCurrentAssetValueTTM                   *float64       `json:"netCurrentAssetValueTTM"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -3028,7 +3068,7 @@ func (m *KeyMetricsTTM) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("KeyMetricsTTM", "currentRatioTTM")
 	case shadow.IncomeQualityTTM == nil:
 		return missingMemberError("KeyMetricsTTM", "incomeQualityTTM")
-	case shadow.GrahamNumberTTM == nil:
+	case len(shadow.GrahamNumberTTM) == 0:
 		return missingMemberError("KeyMetricsTTM", "grahamNumberTTM")
 	case shadow.GrahamNetNetTTM == nil:
 		return missingMemberError("KeyMetricsTTM", "grahamNetNetTTM")
@@ -3095,6 +3135,14 @@ func (m *KeyMetricsTTM) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.NetCurrentAssetValueTTM == nil:
 		return missingMemberError("KeyMetricsTTM", "netCurrentAssetValueTTM")
 	}
+	var grahamNumberTTM *float64
+	if shadow.GrahamNumberTTM.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.GrahamNumberTTM, &value); err != nil {
+			return err
+		}
+		grahamNumberTTM = &value
+	}
 	*m = KeyMetricsTTM{
 		Symbol:                                    *shadow.Symbol,
 		MarketCap:                                 *shadow.MarketCap,
@@ -3106,7 +3154,7 @@ func (m *KeyMetricsTTM) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		NetDebtToEbitdaTTM:                        *shadow.NetDebtToEbitdaTTM,
 		CurrentRatioTTM:                           *shadow.CurrentRatioTTM,
 		IncomeQualityTTM:                          *shadow.IncomeQualityTTM,
-		GrahamNumberTTM:                           *shadow.GrahamNumberTTM,
+		GrahamNumberTTM:                           grahamNumberTTM,
 		GrahamNetNetTTM:                           *shadow.GrahamNetNetTTM,
 		TaxBurdenTTM:                              *shadow.TaxBurdenTTM,
 		InterestBurdenTTM:                         *shadow.InterestBurdenTTM,
@@ -4044,17 +4092,17 @@ func (m *LatestFinancialStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 // FinancialScore is one company's documented financial-health scores and
 // source values.
 type FinancialScore struct {
-	Symbol           string  `json:"symbol"`
-	ReportedCurrency string  `json:"reportedCurrency"`
-	AltmanZScore     float64 `json:"altmanZScore"`
-	PiotroskiScore   uint64  `json:"piotroskiScore"`
-	WorkingCapital   float64 `json:"workingCapital"`
-	TotalAssets      float64 `json:"totalAssets"`
-	RetainedEarnings float64 `json:"retainedEarnings"`
-	Ebit             float64 `json:"ebit"`
-	MarketCap        float64 `json:"marketCap"`
-	TotalLiabilities float64 `json:"totalLiabilities"`
-	Revenue          float64 `json:"revenue"`
+	Symbol           string   `json:"symbol"`
+	ReportedCurrency string   `json:"reportedCurrency"`
+	AltmanZScore     *float64 `json:"altmanZScore"`
+	PiotroskiScore   uint64   `json:"piotroskiScore"`
+	WorkingCapital   float64  `json:"workingCapital"`
+	TotalAssets      float64  `json:"totalAssets"`
+	RetainedEarnings float64  `json:"retainedEarnings"`
+	Ebit             float64  `json:"ebit"`
+	MarketCap        float64  `json:"marketCap"`
+	TotalLiabilities float64  `json:"totalLiabilities"`
+	Revenue          float64  `json:"revenue"`
 }
 
 // financialScoreShadow mirrors FinancialScore with a pointer or raw value for
@@ -4063,7 +4111,7 @@ type FinancialScore struct {
 type financialScoreShadow struct {
 	Symbol           *string        `json:"symbol"`
 	ReportedCurrency *string        `json:"reportedCurrency"`
-	AltmanZScore     *float64       `json:"altmanZScore"`
+	AltmanZScore     jsontext.Value `json:"altmanZScore"`
 	PiotroskiScore   jsontext.Value `json:"piotroskiScore"`
 	WorkingCapital   *float64       `json:"workingCapital"`
 	TotalAssets      *float64       `json:"totalAssets"`
@@ -4087,7 +4135,7 @@ func (m *FinancialScore) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FinancialScore", "symbol")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("FinancialScore", "reportedCurrency")
-	case shadow.AltmanZScore == nil:
+	case len(shadow.AltmanZScore) == 0:
 		return missingMemberError("FinancialScore", "altmanZScore")
 	case len(shadow.PiotroskiScore) == 0:
 		return missingMemberError("FinancialScore", "piotroskiScore")
@@ -4106,6 +4154,14 @@ func (m *FinancialScore) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.Revenue == nil:
 		return missingMemberError("FinancialScore", "revenue")
 	}
+	var altmanZScore *float64
+	if shadow.AltmanZScore.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.AltmanZScore, &value); err != nil {
+			return err
+		}
+		altmanZScore = &value
+	}
 	piotroskiScore, err := decodeCount("FinancialScore", "piotroskiScore", shadow.PiotroskiScore)
 	if err != nil {
 		return err
@@ -4113,7 +4169,7 @@ func (m *FinancialScore) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	*m = FinancialScore{
 		Symbol:           *shadow.Symbol,
 		ReportedCurrency: *shadow.ReportedCurrency,
-		AltmanZScore:     *shadow.AltmanZScore,
+		AltmanZScore:     altmanZScore,
 		PiotroskiScore:   piotroskiScore,
 		WorkingCapital:   *shadow.WorkingCapital,
 		TotalAssets:      *shadow.TotalAssets,

@@ -37,7 +37,7 @@ pub(crate) struct KeyMetrics {
     #[pyo3(get)]
     pub income_quality: f64,
     #[pyo3(get)]
-    pub graham_number: f64,
+    pub graham_number: Option<f64>,
     #[pyo3(get)]
     pub graham_net_net: f64,
     #[pyo3(get)]
@@ -127,7 +127,7 @@ impl KeyMetrics {
         net_debt_to_ebitda: f64,
         current_ratio: f64,
         income_quality: f64,
-        graham_number: f64,
+        graham_number: Option<f64>,
         graham_net_net: f64,
         tax_burden: f64,
         interest_burden: f64,
@@ -989,7 +989,7 @@ pub(crate) struct KeyMetricsTtm {
     #[pyo3(get)]
     pub income_quality_ttm: f64,
     #[pyo3(get)]
-    pub graham_number_ttm: f64,
+    pub graham_number_ttm: Option<f64>,
     #[pyo3(get)]
     pub graham_net_net_ttm: f64,
     #[pyo3(get)]
@@ -1074,7 +1074,7 @@ impl KeyMetricsTtm {
         net_debt_to_ebitda_ttm: f64,
         current_ratio_ttm: f64,
         income_quality_ttm: f64,
-        graham_number_ttm: f64,
+        graham_number_ttm: Option<f64>,
         graham_net_net_ttm: f64,
         tax_burden_ttm: f64,
         interest_burden_ttm: f64,

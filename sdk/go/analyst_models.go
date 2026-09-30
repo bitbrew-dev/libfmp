@@ -12,28 +12,28 @@ import (
 
 // FinancialEstimate is one dated set of analyst financial estimates.
 type FinancialEstimate struct {
-	Symbol             string  `json:"symbol"`
-	Date               Date    `json:"date"`
-	RevenueLow         float64 `json:"revenueLow"`
-	RevenueHigh        float64 `json:"revenueHigh"`
-	RevenueAvg         float64 `json:"revenueAvg"`
-	EbitdaLow          float64 `json:"ebitdaLow"`
-	EbitdaHigh         float64 `json:"ebitdaHigh"`
-	EbitdaAvg          float64 `json:"ebitdaAvg"`
-	EbitLow            float64 `json:"ebitLow"`
-	EbitHigh           float64 `json:"ebitHigh"`
-	EbitAvg            float64 `json:"ebitAvg"`
-	NetIncomeLow       float64 `json:"netIncomeLow"`
-	NetIncomeHigh      float64 `json:"netIncomeHigh"`
-	NetIncomeAvg       float64 `json:"netIncomeAvg"`
-	SgaExpenseLow      float64 `json:"sgaExpenseLow"`
-	SgaExpenseHigh     float64 `json:"sgaExpenseHigh"`
-	SgaExpenseAvg      float64 `json:"sgaExpenseAvg"`
-	EPSAvg             float64 `json:"epsAvg"`
-	EPSHigh            float64 `json:"epsHigh"`
-	EPSLow             float64 `json:"epsLow"`
-	NumAnalystsRevenue uint64  `json:"numAnalystsRevenue"`
-	NumAnalystsEPS     uint64  `json:"numAnalystsEps"`
+	Symbol             string   `json:"symbol"`
+	Date               Date     `json:"date"`
+	RevenueLow         float64  `json:"revenueLow"`
+	RevenueHigh        float64  `json:"revenueHigh"`
+	RevenueAvg         float64  `json:"revenueAvg"`
+	EbitdaLow          *float64 `json:"ebitdaLow"`
+	EbitdaHigh         *float64 `json:"ebitdaHigh"`
+	EbitdaAvg          *float64 `json:"ebitdaAvg"`
+	EbitLow            *float64 `json:"ebitLow"`
+	EbitHigh           *float64 `json:"ebitHigh"`
+	EbitAvg            *float64 `json:"ebitAvg"`
+	NetIncomeLow       float64  `json:"netIncomeLow"`
+	NetIncomeHigh      float64  `json:"netIncomeHigh"`
+	NetIncomeAvg       float64  `json:"netIncomeAvg"`
+	SgaExpenseLow      float64  `json:"sgaExpenseLow"`
+	SgaExpenseHigh     float64  `json:"sgaExpenseHigh"`
+	SgaExpenseAvg      float64  `json:"sgaExpenseAvg"`
+	EPSAvg             float64  `json:"epsAvg"`
+	EPSHigh            float64  `json:"epsHigh"`
+	EPSLow             float64  `json:"epsLow"`
+	NumAnalystsRevenue uint64   `json:"numAnalystsRevenue"`
+	NumAnalystsEPS     uint64   `json:"numAnalystsEps"`
 }
 
 // financialEstimateShadow mirrors FinancialEstimate with a pointer or raw
@@ -45,12 +45,12 @@ type financialEstimateShadow struct {
 	RevenueLow         *float64       `json:"revenueLow"`
 	RevenueHigh        *float64       `json:"revenueHigh"`
 	RevenueAvg         *float64       `json:"revenueAvg"`
-	EbitdaLow          *float64       `json:"ebitdaLow"`
-	EbitdaHigh         *float64       `json:"ebitdaHigh"`
-	EbitdaAvg          *float64       `json:"ebitdaAvg"`
-	EbitLow            *float64       `json:"ebitLow"`
-	EbitHigh           *float64       `json:"ebitHigh"`
-	EbitAvg            *float64       `json:"ebitAvg"`
+	EbitdaLow          jsontext.Value `json:"ebitdaLow"`
+	EbitdaHigh         jsontext.Value `json:"ebitdaHigh"`
+	EbitdaAvg          jsontext.Value `json:"ebitdaAvg"`
+	EbitLow            jsontext.Value `json:"ebitLow"`
+	EbitHigh           jsontext.Value `json:"ebitHigh"`
+	EbitAvg            jsontext.Value `json:"ebitAvg"`
 	NetIncomeLow       *float64       `json:"netIncomeLow"`
 	NetIncomeHigh      *float64       `json:"netIncomeHigh"`
 	NetIncomeAvg       *float64       `json:"netIncomeAvg"`
@@ -83,17 +83,17 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FinancialEstimate", "revenueHigh")
 	case shadow.RevenueAvg == nil:
 		return missingMemberError("FinancialEstimate", "revenueAvg")
-	case shadow.EbitdaLow == nil:
+	case len(shadow.EbitdaLow) == 0:
 		return missingMemberError("FinancialEstimate", "ebitdaLow")
-	case shadow.EbitdaHigh == nil:
+	case len(shadow.EbitdaHigh) == 0:
 		return missingMemberError("FinancialEstimate", "ebitdaHigh")
-	case shadow.EbitdaAvg == nil:
+	case len(shadow.EbitdaAvg) == 0:
 		return missingMemberError("FinancialEstimate", "ebitdaAvg")
-	case shadow.EbitLow == nil:
+	case len(shadow.EbitLow) == 0:
 		return missingMemberError("FinancialEstimate", "ebitLow")
-	case shadow.EbitHigh == nil:
+	case len(shadow.EbitHigh) == 0:
 		return missingMemberError("FinancialEstimate", "ebitHigh")
-	case shadow.EbitAvg == nil:
+	case len(shadow.EbitAvg) == 0:
 		return missingMemberError("FinancialEstimate", "ebitAvg")
 	case shadow.NetIncomeLow == nil:
 		return missingMemberError("FinancialEstimate", "netIncomeLow")
@@ -118,6 +118,54 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case len(shadow.NumAnalystsEPS) == 0:
 		return missingMemberError("FinancialEstimate", "numAnalystsEps")
 	}
+	var ebitdaLow *float64
+	if shadow.EbitdaLow.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.EbitdaLow, &value); err != nil {
+			return err
+		}
+		ebitdaLow = &value
+	}
+	var ebitdaHigh *float64
+	if shadow.EbitdaHigh.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.EbitdaHigh, &value); err != nil {
+			return err
+		}
+		ebitdaHigh = &value
+	}
+	var ebitdaAvg *float64
+	if shadow.EbitdaAvg.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.EbitdaAvg, &value); err != nil {
+			return err
+		}
+		ebitdaAvg = &value
+	}
+	var ebitLow *float64
+	if shadow.EbitLow.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.EbitLow, &value); err != nil {
+			return err
+		}
+		ebitLow = &value
+	}
+	var ebitHigh *float64
+	if shadow.EbitHigh.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.EbitHigh, &value); err != nil {
+			return err
+		}
+		ebitHigh = &value
+	}
+	var ebitAvg *float64
+	if shadow.EbitAvg.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.EbitAvg, &value); err != nil {
+			return err
+		}
+		ebitAvg = &value
+	}
 	numAnalystsRevenue, err := decodeCount("FinancialEstimate", "numAnalystsRevenue", shadow.NumAnalystsRevenue)
 	if err != nil {
 		return err
@@ -132,12 +180,12 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		RevenueLow:         *shadow.RevenueLow,
 		RevenueHigh:        *shadow.RevenueHigh,
 		RevenueAvg:         *shadow.RevenueAvg,
-		EbitdaLow:          *shadow.EbitdaLow,
-		EbitdaHigh:         *shadow.EbitdaHigh,
-		EbitdaAvg:          *shadow.EbitdaAvg,
-		EbitLow:            *shadow.EbitLow,
-		EbitHigh:           *shadow.EbitHigh,
-		EbitAvg:            *shadow.EbitAvg,
+		EbitdaLow:          ebitdaLow,
+		EbitdaHigh:         ebitdaHigh,
+		EbitdaAvg:          ebitdaAvg,
+		EbitLow:            ebitLow,
+		EbitHigh:           ebitHigh,
+		EbitAvg:            ebitAvg,
 		NetIncomeLow:       *shadow.NetIncomeLow,
 		NetIncomeHigh:      *shadow.NetIncomeHigh,
 		NetIncomeAvg:       *shadow.NetIncomeAvg,

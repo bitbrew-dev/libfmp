@@ -24,6 +24,15 @@ const GRADES_SUMMARY: &[u8] = include_bytes!("fixtures/stock_grades_summary.json
 
 const PUBLISHERS: &str = "[\"StreetInsider\",\"TheFly\",\"Benzinga\",\"Pulse 2.0\",\"TipRanks Contributor\",\"MarketWatch\",\"Investing\",\"Barrons\",\"Investor's Business Daily\"]";
 
+const ESTIMATE_NULLABLE: [&str; 6] = [
+    "ebitdaLow",
+    "ebitdaHigh",
+    "ebitdaAvg",
+    "ebitLow",
+    "ebitHigh",
+    "ebitAvg",
+];
+
 #[test]
 fn exact_financial_estimate_decodes_all_22_fields() {
     assert_field_count(ESTIMATES, 22);
@@ -37,12 +46,12 @@ fn exact_financial_estimate_decodes_all_22_fields() {
             revenue_low: 648_228_509_004.0,
             revenue_high: 735_022_980_353.0,
             revenue_avg: 679_000_000_000.0,
-            ebitda_low: 233_968_328_102.0,
-            ebitda_high: 265_295_486_763.0,
-            ebitda_avg: 245_074_834_838.0,
-            ebit_low: 217_109_092_822.0,
-            ebit_high: 246_178_886_382.0,
-            ebit_avg: 227_415_289_483.0,
+            ebitda_low: Some(233_968_328_102.0),
+            ebitda_high: Some(265_295_486_763.0),
+            ebitda_avg: Some(245_074_834_838.0),
+            ebit_low: Some(217_109_092_822.0),
+            ebit_high: Some(246_178_886_382.0),
+            ebit_avg: Some(227_415_289_483.0),
             net_income_low: 191_547_261_069.0,
             net_income_high: 225_370_398_908.0,
             net_income_avg: 203_538_714_818.0,
@@ -193,15 +202,32 @@ fn estimate_amounts_are_signed_and_counts_preserve_the_full_u64_domain() {
 }
 
 #[test]
-fn all_fields_are_required_non_null_and_unknowns_are_accepted() {
-    assert_contract::<FinancialEstimate>(ESTIMATES);
-    assert_contract::<RatingSnapshot>(SNAPSHOT);
-    assert_contract::<HistoricalRating>(HISTORICAL_RATINGS);
-    assert_contract::<PriceTargetSummary>(TARGET_SUMMARY);
-    assert_contract::<PriceTargetConsensus>(TARGET_CONSENSUS);
-    assert_contract::<StockGrade>(GRADES);
-    assert_contract::<HistoricalStockGrade>(HISTORICAL_GRADES);
-    assert_contract::<StockGradesSummary>(GRADES_SUMMARY);
+fn all_fields_are_required_only_estimate_ebit_members_are_nullable_and_unknowns_are_accepted() {
+    assert_contract::<FinancialEstimate>(ESTIMATES, &ESTIMATE_NULLABLE);
+    assert_contract::<RatingSnapshot>(SNAPSHOT, &[]);
+    assert_contract::<HistoricalRating>(HISTORICAL_RATINGS, &[]);
+    assert_contract::<PriceTargetSummary>(TARGET_SUMMARY, &[]);
+    assert_contract::<PriceTargetConsensus>(TARGET_CONSENSUS, &[]);
+    assert_contract::<StockGrade>(GRADES, &[]);
+    assert_contract::<HistoricalStockGrade>(HISTORICAL_GRADES, &[]);
+    assert_contract::<StockGradesSummary>(GRADES_SUMMARY, &[]);
+}
+
+#[test]
+fn null_estimate_ebit_members_decode_as_none_and_reencode_as_null() {
+    let mut value: serde_json::Value = serde_json::from_slice(ESTIMATES).unwrap();
+    for member in ESTIMATE_NULLABLE {
+        value[0][member] = serde_json::Value::Null;
+    }
+
+    let rows: Vec<FinancialEstimate> = serde_json::from_value(value).unwrap();
+    assert_eq!(rows[0].ebit_avg, None);
+    assert_eq!(rows[0].ebitda_low, None);
+
+    let encoded = serde_json::to_value(&rows).unwrap();
+    for member in ESTIMATE_NULLABLE {
+        assert!(encoded[0][member].is_null(), "{member}");
+    }
 }
 
 #[test]
@@ -220,7 +246,7 @@ fn all_eight_contracts_are_bare_arrays_preserving_empty_and_multiple_rows() {
     );
 }
 
-fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
+fn assert_contract<T: DeserializeOwned>(fixture: &[u8], nullable: &[&str]) {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let keys = source[0]
         .as_object()
@@ -237,9 +263,10 @@ fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
         );
         let mut null = source.clone();
         null[0][&key] = serde_json::Value::Null;
-        assert!(
+        assert_eq!(
             serde_json::from_value::<Vec<T>>(null).is_err(),
-            "accepted null {key}"
+            !nullable.contains(&key.as_str()),
+            "null {key}"
         );
     }
     let mut forward = source;

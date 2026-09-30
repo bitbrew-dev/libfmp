@@ -1,12 +1,20 @@
 //! Income-statement response models.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::FiscalYearString,
     query::FiscalPeriod,
     types::{ApiDateTime, Cik, CurrencyCode, Date, Quantity, StatementAmount, Ticker},
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One historical or trailing-twelve-month worldwide income statement.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -17,8 +25,10 @@ pub struct IncomeStatement {
     pub symbol: Ticker,
     pub reported_currency: CurrencyCode,
     pub cik: Cik,
-    pub filing_date: Date,
-    pub accepted_date: ApiDateTime,
+    #[serde(deserialize_with = "required_option")]
+    pub filing_date: Option<Date>,
+    #[serde(deserialize_with = "required_option")]
+    pub accepted_date: Option<ApiDateTime>,
     pub fiscal_year: FiscalYearString,
     pub period: FiscalPeriod,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
@@ -43,8 +53,9 @@ pub struct IncomeStatement {
     pub cost_and_expenses: StatementAmount,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_interest_income: StatementAmount,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub interest_income: StatementAmount,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub interest_income: Option<StatementAmount>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub interest_expense: StatementAmount,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]

@@ -119,6 +119,17 @@ def test_latest_financial_statements_with_page_and_limit(client: Any, fixture_se
         client.statements.summaries.latest_financial_statements(0)
 
 
+def test_null_altman_z_score_decodes_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: a null ``altmanZScore`` decodes as ``None``."""
+    scores = load_fixture("financial_scores.json")
+    scores[0]["altmanZScore"] = None
+    fixture_server.route("/financial-scores", scores)
+
+    row = client.statements.summaries.financial_scores("AAPL")[0]
+    assert row.altman_z_score is None
+    assert row.piotroski_score == 9
+
+
 def test_financial_scores_takes_only_a_symbol(client: Any, fixture_server: FixtureServer) -> None:
     """``summaries.financial_scores`` sends the symbol alone."""
     fixture_server.route("/financial-scores", load_fixture("financial_scores.json"))

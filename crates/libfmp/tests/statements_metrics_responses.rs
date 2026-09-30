@@ -38,7 +38,7 @@ fn documented_key_metrics_decodes_all_47_exact_fields() {
             net_debt_to_ebitda: 0.5292846905357032,
             current_ratio: 0.8932929222186667,
             income_quality: 0.995286135166503,
-            graham_number: 28.8371936709443,
+            graham_number: Some(28.8371936709443),
             graham_net_net: -11.588738000468274,
             tax_burden: 0.8438999766441395,
             interest_burden: 1.0,
@@ -94,7 +94,7 @@ fn documented_key_metrics_ttm_decodes_all_43_exact_fields() {
             net_debt_to_ebitda_ttm: 0.3017675822667964,
             current_ratio_ttm: 1.07035746912159,
             income_quality_ttm: 1.1439689985723027,
-            graham_number_ttm: 36.83959035988331,
+            graham_number_ttm: Some(36.83959035988331),
             graham_net_net_ttm: -10.37184248926531,
             tax_burden_ttm: 0.8300602695198754,
             interest_burden_ttm: 1.0,
@@ -132,12 +132,27 @@ fn documented_key_metrics_ttm_decodes_all_43_exact_fields() {
 }
 
 #[test]
-fn every_documented_field_is_required_and_non_nullable() {
-    assert_every_field_required_and_non_null::<KeyMetrics>(HISTORICAL);
-    assert_every_field_required_and_non_null::<KeyMetricsTtm>(TTM);
+fn every_documented_field_is_required_and_only_graham_number_is_nullable() {
+    assert_every_field_required_and_non_null::<KeyMetrics>(HISTORICAL, "grahamNumber");
+    assert_every_field_required_and_non_null::<KeyMetricsTtm>(TTM, "grahamNumberTTM");
 }
 
-fn assert_every_field_required_and_non_null<T: DeserializeOwned>(fixture: &[u8]) {
+#[test]
+fn null_graham_number_decodes_as_none_and_reencodes_as_null() {
+    let mut historical: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+    historical[0]["grahamNumber"] = serde_json::Value::Null;
+    let rows: Vec<KeyMetrics> = serde_json::from_value(historical).unwrap();
+    assert_eq!(rows[0].graham_number, None);
+    assert!(serde_json::to_value(&rows).unwrap()[0]["grahamNumber"].is_null());
+
+    let mut ttm: serde_json::Value = serde_json::from_slice(TTM).unwrap();
+    ttm[0]["grahamNumberTTM"] = serde_json::Value::Null;
+    let rows: Vec<KeyMetricsTtm> = serde_json::from_value(ttm).unwrap();
+    assert_eq!(rows[0].graham_number_ttm, None);
+    assert!(serde_json::to_value(&rows).unwrap()[0]["grahamNumberTTM"].is_null());
+}
+
+fn assert_every_field_required_and_non_null<T: DeserializeOwned>(fixture: &[u8], nullable: &str) {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let keys = source[0]
         .as_object()
@@ -156,8 +171,9 @@ fn assert_every_field_required_and_non_null<T: DeserializeOwned>(fixture: &[u8])
 
         let mut null = source.clone();
         null[0][&key] = serde_json::Value::Null;
-        assert!(
+        assert_eq!(
             serde_json::from_value::<Vec<T>>(null).is_err(),
+            key != nullable,
             "accepted null required field {key}"
         );
     }

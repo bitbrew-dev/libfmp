@@ -5,6 +5,7 @@ import (
 	"encoding/json/v2"
 	"errors"
 	"math"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -44,14 +45,14 @@ func TestDocumentedFinancialEstimateDecodesAll22Fields(t *testing.T) {
 	want := FinancialEstimate{
 		Symbol: "AAPL", Date: mustNewDate(t, 2030, time.September, 27),
 		RevenueLow: 648_228_509_004, RevenueHigh: 735_022_980_353, RevenueAvg: 679_000_000_000,
-		EbitdaLow: 233_968_328_102, EbitdaHigh: 265_295_486_763, EbitdaAvg: 245_074_834_838,
-		EbitLow: 217_109_092_822, EbitHigh: 246_178_886_382, EbitAvg: 227_415_289_483,
+		EbitdaLow: new(233_968_328_102.0), EbitdaHigh: new(265_295_486_763.0), EbitdaAvg: new(245_074_834_838.0),
+		EbitLow: new(217_109_092_822.0), EbitHigh: new(246_178_886_382.0), EbitAvg: new(227_415_289_483.0),
 		NetIncomeLow: 191_547_261_069, NetIncomeHigh: 225_370_398_908, NetIncomeAvg: 203_538_714_818,
 		SgaExpenseLow: 41_721_580_524, SgaExpenseHigh: 47_307_886_087, SgaExpenseAvg: 43_702_109_337,
 		EPSAvg: 13.565, EPSHigh: 15.01999, EPSLow: 12.76582,
 		NumAnalystsRevenue: 16, NumAnalystsEPS: 7,
 	}
-	if len(rows) != 1 || rows[0] != want {
+	if len(rows) != 1 || !reflect.DeepEqual(rows[0], want) {
 		t.Fatalf("financial_estimates = %+v, want %+v", rows, want)
 	}
 	if got := memberSet(t, rows[0]); len(got) != 22 {
@@ -178,4 +179,19 @@ func TestAnalystRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	if err := json.Unmarshal([]byte(`[{"symbol":"AAPL","date":"2030/09/27"}]`), &estimates); err == nil {
 		t.Fatal("a malformed date decoded into a Date member")
 	}
+}
+
+// The EBIT and EBITDA estimate members FMP sends as null (issue #368 audit),
+// mirroring null_estimate_ebit_members_decode_as_none_and_reencode_as_null.
+func TestNullableFinancialEstimateMembersDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	members := []string{"ebitdaLow", "ebitdaHigh", "ebitdaAvg", "ebitLow", "ebitHigh", "ebitAvg"}
+	var rows []FinancialEstimate
+	if err := json.Unmarshal(statementsWithNullMembers(t, "financial_estimates.json", members), &rows); err != nil {
+		t.Fatalf("financial estimate: %v", err)
+	}
+	if rows[0].EbitAvg != nil || rows[0].EbitdaLow != nil || rows[0].RevenueAvg == 0 {
+		t.Fatalf("financial estimate = %+v", rows[0])
+	}
+	assertStubMembersReencodeNull(t, rows[0], members)
 }
