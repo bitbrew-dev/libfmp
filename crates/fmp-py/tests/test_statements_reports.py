@@ -68,17 +68,25 @@ def test_report_dates_redact_links_until_exposed(client: Any, fixture_server: Fi
 
 
 def test_report_json_with_year_and_fiscal_period(client: Any, fixture_server: FixtureServer) -> None:
-    """``reports.json`` takes ``symbol``, ``year``, ``period`` positionally, in wire order."""
+    """``reports.json`` takes ``symbol``, ``year``, ``period`` positionally and returns one report."""
     fixture_server.route("/financial-reports-json", load_fixture("financial_reports_json.json"))
-    rows = client.statements.reports.json("AAPL", 2022, "Q3")
+    report = client.statements.reports.json("AAPL", 2023, "Q1")
 
-    assert fixture_server.requests[0].target == "/financial-reports-json?symbol=AAPL&year=2022&period=Q3"
-    assert len(rows) == 1
-    row = rows[0]
-    assert isinstance(row, FinancialReportJson)
-    assert (row.symbol, row.period, row.year) == ("AAPL", "FY", "2022")
-    assert isinstance(row.sections, dict)
-    assert row.sections["Auditor Information"][0] == {"Auditor Information": ["12 Months Ended"]}
+    assert fixture_server.requests[0].target == "/financial-reports-json?symbol=AAPL&year=2023&period=Q1"
+    assert isinstance(report, FinancialReportJson)
+    assert (report.symbol, report.period, report.year) == ("AAPL", "Q1", "2023")
+    assert isinstance(report.sections, dict)
+    assert len(report.sections) == 3
+    assert report.sections["Revenue - Additional Informatio"][2] == {"Total deferred revenue": [12.6, 12.4]}
+
+
+def test_report_json_rejects_a_list_body(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """A bare array is not a report: the single-object decode fails instead of taking the first row."""
+    fixture_server.route("/financial-reports-json", [load_fixture("financial_reports_json.json")])
+    with pytest.raises(errors.FmpDecodeError):
+        client.statements.reports.json("AAPL", 2023, "Q1")
 
 
 def test_report_xlsx_returns_a_binary_payload(client: Any, fixture_server: FixtureServer) -> None:
