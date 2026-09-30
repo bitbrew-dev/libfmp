@@ -41,7 +41,8 @@ pub struct SecCompanySearchResult {
     pub sic_code: String,
     pub industry_title: String,
     pub business_address: String,
-    pub phone_number: String,
+    #[serde(deserialize_with = "required_option")]
+    pub phone_number: Option<String>,
 }
 
 /// One full SEC company profile.
@@ -69,9 +70,11 @@ pub struct SecCompanyProfile {
     pub exchange: ExchangeCode,
     pub state_location: String,
     pub state_of_incorporation: String,
-    pub fiscal_year_end: String,
+    #[serde(deserialize_with = "required_option")]
+    pub fiscal_year_end: Option<String>,
     pub ipo_date: Date,
-    pub employees: NumericString,
+    #[serde(deserialize_with = "required_option")]
+    pub employees: Option<NumericString>,
     pub sec_filings_url: String,
     pub tax_identification_number: String,
     pub fifty_two_week_range: String,

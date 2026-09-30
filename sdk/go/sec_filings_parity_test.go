@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -89,15 +90,15 @@ func TestDocumentedSecCompanySearchRowsDecodeExactValues(t *testing.T) {
 		SicCode:         "",
 		IndustryTitle:   "",
 		BusinessAddress: "c/o Berkshire Property Advisors LLC, Boston MA 02108",
-		PhoneNumber:     "(617) 646-2300",
+		PhoneNumber:     new("(617) 646-2300"),
 	}
-	if len(names) != 1 || names[0] != wantName {
+	if len(names) != 1 || !reflect.DeepEqual(names[0], wantName) {
 		t.Fatalf("sec_companies_by_name = %+v, want %+v", names, wantName)
 	}
 
 	bySymbol := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_symbol.json")
 	byCIK := assertFixtureParity[SECCompanySearchResult](t, "sec_companies_by_cik.json")
-	if len(bySymbol) != 1 || len(byCIK) != 1 || bySymbol[0] != byCIK[0] ||
+	if len(bySymbol) != 1 || len(byCIK) != 1 || !reflect.DeepEqual(bySymbol[0], byCIK[0]) ||
 		bySymbol[0].Symbol != "AAPL" || bySymbol[0].Name != "APPLE INC." || byCIK[0].CIK != "0000320193" {
 		t.Fatalf("by_symbol = %+v, by_cik = %+v, want the same AAPL row", bySymbol, byCIK)
 	}
@@ -122,7 +123,7 @@ func TestDocumentedSecCompanyProfileDecodesExactValues(t *testing.T) {
 	}
 	row := rows[0]
 	if row.Symbol != "AAPL" || row.CIK != "0000320193" || row.ISIN != "US0378331005" || row.Country != "US" ||
-		row.Exchange != "NASDAQ" || row.IPODate != mustParseDate(t, "1980-12-12") || row.Employees != "166000" ||
+		row.Exchange != "NASDAQ" || row.IPODate != mustParseDate(t, "1980-12-12") || !reflect.DeepEqual(row.Employees, new("166000")) ||
 		row.PriceCurrency != "USD" || row.MarketSector != "Technology" || row.SecurityType != nil ||
 		!row.IsActive || row.IsETF || row.IsAdr || row.IsFund {
 		t.Fatalf("sec_company_profile[0] = %+v", row)
@@ -244,5 +245,62 @@ func TestSecFilingsRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	var typed *Error
 	if !errors.As(err, &typed) || !strings.Contains(typed.Message, `"link"`) {
 		t.Fatalf("SECFiling error = %v, want it to name the null member link", err)
+	}
+}
+
+// Mirrors nullable_profile_and_search_members_are_required_and_null_decodes_to_none in
+// crates/libfmp/tests/sec_filings_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestSecCompanyProfileNullableMembersDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "sec_company_profile.json"
+	cases := []struct {
+		member string
+		isNil  func(SECCompanyProfile) bool
+	}{
+		{"employees", func(row SECCompanyProfile) bool { return row.Employees == nil }},
+		{"fiscalYearEnd", func(row SECCompanyProfile) bool { return row.FiscalYearEnd == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []SECCompanyProfile
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []SECCompanyProfile
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
+	}
+}
+
+// Mirrors nullable_profile_and_search_members_are_required_and_null_decodes_to_none in
+// crates/libfmp/tests/sec_filings_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestSecCompanySearchPhoneNumberDecodesNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "sec_companies_by_name.json"
+	cases := []struct {
+		member string
+		isNil  func(SECCompanySearchResult) bool
+	}{
+		{"phoneNumber", func(row SECCompanySearchResult) bool { return row.PhoneNumber == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []SECCompanySearchResult
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []SECCompanySearchResult
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
 	}
 }

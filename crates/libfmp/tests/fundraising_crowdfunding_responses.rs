@@ -5,6 +5,17 @@ use libfmp::{codecs::YnFlag, responses::fundraising::CrowdfundingOffering};
 
 const LATEST: &[u8] = include_bytes!("fixtures/crowdfunding_offerings_latest.json");
 const BY_CIK: &[u8] = include_bytes!("fixtures/crowdfunding_offerings_by_cik.json");
+const NULLABLE: [&str; 9] = [
+    "securityOfferedOtherDescription",
+    "compensationAmount",
+    "financialInterest",
+    "intermediaryCommissionFileNumber",
+    "intermediaryCompanyName",
+    "issuerWebsite",
+    "offeringDeadlineDate",
+    "overSubscriptionAllocationType",
+    "securityOfferedType",
+];
 
 #[test]
 fn both_exact_outer_md_fixtures_round_trip_as_the_shared_48_key_row() {
@@ -33,7 +44,13 @@ fn typed_fields_preserve_dates_ciks_flags_prices_counts_and_signed_financials() 
     assert_eq!(latest.date.to_string(), "11-22-2011");
     assert_eq!(latest.filing_date.to_string(), "2026-07-30 00:00:00");
     assert_eq!(latest.accepted_date.to_string(), "2026-07-30 12:54:38");
-    assert_eq!(latest.offering_deadline_date.to_string(), "10-31-2026");
+    assert_eq!(
+        latest
+            .offering_deadline_date
+            .map(|date| date.to_string())
+            .as_deref(),
+        Some("10-31-2026")
+    );
     assert_eq!(latest.form_type.as_str(), "C/A");
     assert_eq!(latest.over_subscription_accepted, YnFlag::True);
     assert_eq!(latest.number_of_security_offered, 100_000.0);
@@ -56,7 +73,7 @@ fn typed_fields_preserve_dates_ciks_flags_prices_counts_and_signed_financials() 
 }
 
 #[test]
-fn security_description_is_required_present_nullable_and_all_other_keys_are_non_null() {
+fn nullable_members_are_required_present_and_all_other_keys_are_non_null() {
     for fixture in [LATEST, BY_CIK] {
         let source: Value = serde_json::from_slice(fixture).unwrap();
         let row = source[0].as_object().unwrap();
@@ -71,10 +88,10 @@ fn security_description_is_required_present_nullable_and_all_other_keys_are_non_
 
             let mut null = row.clone();
             null.insert(field.clone(), Value::Null);
-            if field == "securityOfferedOtherDescription" {
-                assert!(
-                    serde_json::from_value::<CrowdfundingOffering>(Value::Object(null)).is_ok()
-                );
+            if NULLABLE.contains(&field.as_str()) {
+                let decoded =
+                    serde_json::from_value::<CrowdfundingOffering>(Value::Object(null)).unwrap();
+                assert!(serde_json::to_value(decoded).unwrap()[field].is_null());
             } else {
                 assert!(
                     serde_json::from_value::<CrowdfundingOffering>(Value::Object(null)).is_err(),

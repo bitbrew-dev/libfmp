@@ -116,21 +116,21 @@ type CrowdfundingOffering struct {
 	IssuerCity                                string         `json:"issuerCity"`
 	IssuerStateOrCountry                      string         `json:"issuerStateOrCountry"`
 	IssuerZipCode                             string         `json:"issuerZipCode"`
-	IssuerWebsite                             string         `json:"issuerWebsite"`
-	IntermediaryCompanyName                   string         `json:"intermediaryCompanyName"`
+	IssuerWebsite                             *string        `json:"issuerWebsite"`
+	IntermediaryCompanyName                   *string        `json:"intermediaryCompanyName"`
 	IntermediaryCommissionCIK                 string         `json:"intermediaryCommissionCik"`
-	IntermediaryCommissionFileNumber          string         `json:"intermediaryCommissionFileNumber"`
-	CompensationAmount                        string         `json:"compensationAmount"`
-	FinancialInterest                         string         `json:"financialInterest"`
-	SecurityOfferedType                       string         `json:"securityOfferedType"`
+	IntermediaryCommissionFileNumber          *string        `json:"intermediaryCommissionFileNumber"`
+	CompensationAmount                        *string        `json:"compensationAmount"`
+	FinancialInterest                         *string        `json:"financialInterest"`
+	SecurityOfferedType                       *string        `json:"securityOfferedType"`
 	SecurityOfferedOtherDescription           *string        `json:"securityOfferedOtherDescription"`
 	NumberOfSecurityOffered                   float64        `json:"numberOfSecurityOffered"`
 	OfferingPrice                             jsontext.Value `json:"offeringPrice"`
 	OfferingAmount                            float64        `json:"offeringAmount"`
 	OverSubscriptionAccepted                  string         `json:"overSubscriptionAccepted"`
-	OverSubscriptionAllocationType            string         `json:"overSubscriptionAllocationType"`
+	OverSubscriptionAllocationType            *string        `json:"overSubscriptionAllocationType"`
 	MaximumOfferingAmount                     float64        `json:"maximumOfferingAmount"`
-	OfferingDeadlineDate                      USDate         `json:"offeringDeadlineDate"`
+	OfferingDeadlineDate                      *USDate        `json:"offeringDeadlineDate"`
 	CurrentNumberOfEmployees                  uint64         `json:"currentNumberOfEmployees"`
 	TotalAssetMostRecentFiscalYear            float64        `json:"totalAssetMostRecentFiscalYear"`
 	TotalAssetPriorFiscalYear                 float64        `json:"totalAssetPriorFiscalYear"`
@@ -170,21 +170,21 @@ type crowdfundingOfferingShadow struct {
 	IssuerCity                                *string         `json:"issuerCity"`
 	IssuerStateOrCountry                      *string         `json:"issuerStateOrCountry"`
 	IssuerZipCode                             *string         `json:"issuerZipCode"`
-	IssuerWebsite                             *string         `json:"issuerWebsite"`
-	IntermediaryCompanyName                   *string         `json:"intermediaryCompanyName"`
+	IssuerWebsite                             jsontext.Value  `json:"issuerWebsite"`
+	IntermediaryCompanyName                   jsontext.Value  `json:"intermediaryCompanyName"`
 	IntermediaryCommissionCIK                 *string         `json:"intermediaryCommissionCik"`
-	IntermediaryCommissionFileNumber          *string         `json:"intermediaryCommissionFileNumber"`
-	CompensationAmount                        *string         `json:"compensationAmount"`
-	FinancialInterest                         *string         `json:"financialInterest"`
-	SecurityOfferedType                       *string         `json:"securityOfferedType"`
+	IntermediaryCommissionFileNumber          jsontext.Value  `json:"intermediaryCommissionFileNumber"`
+	CompensationAmount                        jsontext.Value  `json:"compensationAmount"`
+	FinancialInterest                         jsontext.Value  `json:"financialInterest"`
+	SecurityOfferedType                       jsontext.Value  `json:"securityOfferedType"`
 	SecurityOfferedOtherDescription           jsontext.Value  `json:"securityOfferedOtherDescription"`
 	NumberOfSecurityOffered                   *float64        `json:"numberOfSecurityOffered"`
 	OfferingPrice                             *jsontext.Value `json:"offeringPrice"`
 	OfferingAmount                            *float64        `json:"offeringAmount"`
 	OverSubscriptionAccepted                  *string         `json:"overSubscriptionAccepted"`
-	OverSubscriptionAllocationType            *string         `json:"overSubscriptionAllocationType"`
+	OverSubscriptionAllocationType            jsontext.Value  `json:"overSubscriptionAllocationType"`
 	MaximumOfferingAmount                     *float64        `json:"maximumOfferingAmount"`
-	OfferingDeadlineDate                      *USDate         `json:"offeringDeadlineDate"`
+	OfferingDeadlineDate                      jsontext.Value  `json:"offeringDeadlineDate"`
 	CurrentNumberOfEmployees                  jsontext.Value  `json:"currentNumberOfEmployees"`
 	TotalAssetMostRecentFiscalYear            *float64        `json:"totalAssetMostRecentFiscalYear"`
 	TotalAssetPriorFiscalYear                 *float64        `json:"totalAssetPriorFiscalYear"`
@@ -243,19 +243,19 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CrowdfundingOffering", "issuerStateOrCountry")
 	case shadow.IssuerZipCode == nil:
 		return missingMemberError("CrowdfundingOffering", "issuerZipCode")
-	case shadow.IssuerWebsite == nil:
+	case len(shadow.IssuerWebsite) == 0:
 		return missingMemberError("CrowdfundingOffering", "issuerWebsite")
-	case shadow.IntermediaryCompanyName == nil:
+	case len(shadow.IntermediaryCompanyName) == 0:
 		return missingMemberError("CrowdfundingOffering", "intermediaryCompanyName")
 	case shadow.IntermediaryCommissionCIK == nil:
 		return missingMemberError("CrowdfundingOffering", "intermediaryCommissionCik")
-	case shadow.IntermediaryCommissionFileNumber == nil:
+	case len(shadow.IntermediaryCommissionFileNumber) == 0:
 		return missingMemberError("CrowdfundingOffering", "intermediaryCommissionFileNumber")
-	case shadow.CompensationAmount == nil:
+	case len(shadow.CompensationAmount) == 0:
 		return missingMemberError("CrowdfundingOffering", "compensationAmount")
-	case shadow.FinancialInterest == nil:
+	case len(shadow.FinancialInterest) == 0:
 		return missingMemberError("CrowdfundingOffering", "financialInterest")
-	case shadow.SecurityOfferedType == nil:
+	case len(shadow.SecurityOfferedType) == 0:
 		return missingMemberError("CrowdfundingOffering", "securityOfferedType")
 	case len(shadow.SecurityOfferedOtherDescription) == 0:
 		return missingMemberError("CrowdfundingOffering", "securityOfferedOtherDescription")
@@ -267,11 +267,11 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CrowdfundingOffering", "offeringAmount")
 	case shadow.OverSubscriptionAccepted == nil:
 		return missingMemberError("CrowdfundingOffering", "overSubscriptionAccepted")
-	case shadow.OverSubscriptionAllocationType == nil:
+	case len(shadow.OverSubscriptionAllocationType) == 0:
 		return missingMemberError("CrowdfundingOffering", "overSubscriptionAllocationType")
 	case shadow.MaximumOfferingAmount == nil:
 		return missingMemberError("CrowdfundingOffering", "maximumOfferingAmount")
-	case shadow.OfferingDeadlineDate == nil:
+	case len(shadow.OfferingDeadlineDate) == 0:
 		return missingMemberError("CrowdfundingOffering", "offeringDeadlineDate")
 	case len(shadow.CurrentNumberOfEmployees) == 0:
 		return missingMemberError("CrowdfundingOffering", "currentNumberOfEmployees")
@@ -312,6 +312,54 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.NetIncomePriorFiscalYear == nil:
 		return missingMemberError("CrowdfundingOffering", "netIncomePriorFiscalYear")
 	}
+	var issuerWebsite *string
+	if shadow.IssuerWebsite.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.IssuerWebsite, &value); err != nil {
+			return err
+		}
+		issuerWebsite = &value
+	}
+	var intermediaryCompanyName *string
+	if shadow.IntermediaryCompanyName.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.IntermediaryCompanyName, &value); err != nil {
+			return err
+		}
+		intermediaryCompanyName = &value
+	}
+	var intermediaryCommissionFileNumber *string
+	if shadow.IntermediaryCommissionFileNumber.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.IntermediaryCommissionFileNumber, &value); err != nil {
+			return err
+		}
+		intermediaryCommissionFileNumber = &value
+	}
+	var compensationAmount *string
+	if shadow.CompensationAmount.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CompensationAmount, &value); err != nil {
+			return err
+		}
+		compensationAmount = &value
+	}
+	var financialInterest *string
+	if shadow.FinancialInterest.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.FinancialInterest, &value); err != nil {
+			return err
+		}
+		financialInterest = &value
+	}
+	var securityOfferedType *string
+	if shadow.SecurityOfferedType.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.SecurityOfferedType, &value); err != nil {
+			return err
+		}
+		securityOfferedType = &value
+	}
 	var securityOfferedOtherDescription *string
 	if shadow.SecurityOfferedOtherDescription.Kind() != 'n' {
 		var value string
@@ -322,6 +370,22 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	if shadow.OfferingPrice.Kind() != '0' {
 		return invalidMemberError("CrowdfundingOffering", "offeringPrice", "number")
+	}
+	var overSubscriptionAllocationType *string
+	if shadow.OverSubscriptionAllocationType.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.OverSubscriptionAllocationType, &value); err != nil {
+			return err
+		}
+		overSubscriptionAllocationType = &value
+	}
+	var offeringDeadlineDate *USDate
+	if shadow.OfferingDeadlineDate.Kind() != 'n' {
+		var value USDate
+		if err := json.Unmarshal(shadow.OfferingDeadlineDate, &value); err != nil {
+			return err
+		}
+		offeringDeadlineDate = &value
 	}
 	currentNumberOfEmployees, err := decodeCount("CrowdfundingOffering", "currentNumberOfEmployees", shadow.CurrentNumberOfEmployees)
 	if err != nil {
@@ -342,21 +406,21 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		IssuerCity:                       *shadow.IssuerCity,
 		IssuerStateOrCountry:             *shadow.IssuerStateOrCountry,
 		IssuerZipCode:                    *shadow.IssuerZipCode,
-		IssuerWebsite:                    *shadow.IssuerWebsite,
-		IntermediaryCompanyName:          *shadow.IntermediaryCompanyName,
+		IssuerWebsite:                    issuerWebsite,
+		IntermediaryCompanyName:          intermediaryCompanyName,
 		IntermediaryCommissionCIK:        *shadow.IntermediaryCommissionCIK,
-		IntermediaryCommissionFileNumber: *shadow.IntermediaryCommissionFileNumber,
-		CompensationAmount:               *shadow.CompensationAmount,
-		FinancialInterest:                *shadow.FinancialInterest,
-		SecurityOfferedType:              *shadow.SecurityOfferedType,
+		IntermediaryCommissionFileNumber: intermediaryCommissionFileNumber,
+		CompensationAmount:               compensationAmount,
+		FinancialInterest:                financialInterest,
+		SecurityOfferedType:              securityOfferedType,
 		SecurityOfferedOtherDescription:  securityOfferedOtherDescription,
 		NumberOfSecurityOffered:          *shadow.NumberOfSecurityOffered,
 		OfferingPrice:                    *shadow.OfferingPrice,
 		OfferingAmount:                   *shadow.OfferingAmount,
 		OverSubscriptionAccepted:         *shadow.OverSubscriptionAccepted,
-		OverSubscriptionAllocationType:   *shadow.OverSubscriptionAllocationType,
+		OverSubscriptionAllocationType:   overSubscriptionAllocationType,
 		MaximumOfferingAmount:            *shadow.MaximumOfferingAmount,
-		OfferingDeadlineDate:             *shadow.OfferingDeadlineDate,
+		OfferingDeadlineDate:             offeringDeadlineDate,
 		CurrentNumberOfEmployees:         currentNumberOfEmployees,
 		TotalAssetMostRecentFiscalYear:   *shadow.TotalAssetMostRecentFiscalYear,
 		TotalAssetPriorFiscalYear:        *shadow.TotalAssetPriorFiscalYear,
@@ -409,12 +473,12 @@ type RegulationDOffering struct {
 	RelatedPersonZipCode                   string   `json:"relatedPersonZipCode"`
 	RelatedPersonRelationship              string   `json:"relatedPersonRelationship"`
 	IndustryGroupType                      string   `json:"industryGroupType"`
-	RevenueRange                           string   `json:"revenueRange"`
+	RevenueRange                           *string  `json:"revenueRange"`
 	FederalExemptionsExclusions            string   `json:"federalExemptionsExclusions"`
 	IsAmendment                            bool     `json:"isAmendment"`
 	DateOfFirstSale                        *Date    `json:"dateOfFirstSale"`
 	DurationOfOfferingIsMoreThanYear       bool     `json:"durationOfOfferingIsMoreThanYear"`
-	SecuritiesOfferedAreOfEquityType       bool     `json:"securitiesOfferedAreOfEquityType"`
+	SecuritiesOfferedAreOfEquityType       *bool    `json:"securitiesOfferedAreOfEquityType"`
 	IsBusinessCombinationTransaction       bool     `json:"isBusinessCombinationTransaction"`
 	MinimumInvestmentAccepted              float64  `json:"minimumInvestmentAccepted"`
 	TotalOfferingAmount                    float64  `json:"totalOfferingAmount"`
@@ -458,12 +522,12 @@ type regulationDOfferingShadow struct {
 	RelatedPersonZipCode                   *string        `json:"relatedPersonZipCode"`
 	RelatedPersonRelationship              *string        `json:"relatedPersonRelationship"`
 	IndustryGroupType                      *string        `json:"industryGroupType"`
-	RevenueRange                           *string        `json:"revenueRange"`
+	RevenueRange                           jsontext.Value `json:"revenueRange"`
 	FederalExemptionsExclusions            *string        `json:"federalExemptionsExclusions"`
 	IsAmendment                            *bool          `json:"isAmendment"`
 	DateOfFirstSale                        jsontext.Value `json:"dateOfFirstSale"`
 	DurationOfOfferingIsMoreThanYear       *bool          `json:"durationOfOfferingIsMoreThanYear"`
-	SecuritiesOfferedAreOfEquityType       *bool          `json:"securitiesOfferedAreOfEquityType"`
+	SecuritiesOfferedAreOfEquityType       jsontext.Value `json:"securitiesOfferedAreOfEquityType"`
 	IsBusinessCombinationTransaction       *bool          `json:"isBusinessCombinationTransaction"`
 	MinimumInvestmentAccepted              *float64       `json:"minimumInvestmentAccepted"`
 	TotalOfferingAmount                    *float64       `json:"totalOfferingAmount"`
@@ -539,7 +603,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("RegulationDOffering", "relatedPersonRelationship")
 	case shadow.IndustryGroupType == nil:
 		return missingMemberError("RegulationDOffering", "industryGroupType")
-	case shadow.RevenueRange == nil:
+	case len(shadow.RevenueRange) == 0:
 		return missingMemberError("RegulationDOffering", "revenueRange")
 	case shadow.FederalExemptionsExclusions == nil:
 		return missingMemberError("RegulationDOffering", "federalExemptionsExclusions")
@@ -549,7 +613,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("RegulationDOffering", "dateOfFirstSale")
 	case shadow.DurationOfOfferingIsMoreThanYear == nil:
 		return missingMemberError("RegulationDOffering", "durationOfOfferingIsMoreThanYear")
-	case shadow.SecuritiesOfferedAreOfEquityType == nil:
+	case len(shadow.SecuritiesOfferedAreOfEquityType) == 0:
 		return missingMemberError("RegulationDOffering", "securitiesOfferedAreOfEquityType")
 	case shadow.IsBusinessCombinationTransaction == nil:
 		return missingMemberError("RegulationDOffering", "isBusinessCombinationTransaction")
@@ -580,9 +644,25 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		incorporatedWithinFiveYears = &value
 	}
+	var revenueRange *string
+	if shadow.RevenueRange.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.RevenueRange, &value); err != nil {
+			return err
+		}
+		revenueRange = &value
+	}
 	dateOfFirstSale, err := decodeEmptyDate("RegulationDOffering", "dateOfFirstSale", shadow.DateOfFirstSale, false)
 	if err != nil {
 		return err
+	}
+	var securitiesOfferedAreOfEquityType *bool
+	if shadow.SecuritiesOfferedAreOfEquityType.Kind() != 'n' {
+		var value bool
+		if err := json.Unmarshal(shadow.SecuritiesOfferedAreOfEquityType, &value); err != nil {
+			return err
+		}
+		securitiesOfferedAreOfEquityType = &value
 	}
 	totalNumberAlreadyInvested, err := decodeCount("RegulationDOffering", "totalNumberAlreadyInvested", shadow.TotalNumberAlreadyInvested)
 	if err != nil {
@@ -616,12 +696,12 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		RelatedPersonZipCode:                   *shadow.RelatedPersonZipCode,
 		RelatedPersonRelationship:              *shadow.RelatedPersonRelationship,
 		IndustryGroupType:                      *shadow.IndustryGroupType,
-		RevenueRange:                           *shadow.RevenueRange,
+		RevenueRange:                           revenueRange,
 		FederalExemptionsExclusions:            *shadow.FederalExemptionsExclusions,
 		IsAmendment:                            *shadow.IsAmendment,
 		DateOfFirstSale:                        dateOfFirstSale,
 		DurationOfOfferingIsMoreThanYear:       *shadow.DurationOfOfferingIsMoreThanYear,
-		SecuritiesOfferedAreOfEquityType:       *shadow.SecuritiesOfferedAreOfEquityType,
+		SecuritiesOfferedAreOfEquityType:       securitiesOfferedAreOfEquityType,
 		IsBusinessCombinationTransaction:       *shadow.IsBusinessCombinationTransaction,
 		MinimumInvestmentAccepted:              *shadow.MinimumInvestmentAccepted,
 		TotalOfferingAmount:                    *shadow.TotalOfferingAmount,

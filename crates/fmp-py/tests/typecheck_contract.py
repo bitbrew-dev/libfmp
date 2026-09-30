@@ -501,7 +501,7 @@ def check_fundraising_contract(client: FmpClient) -> None:
     """Type-check the flat fundraising namespace, its keyword-only filters, and the nullable date rows."""
     fundraising: FundraisingNamespace = client.fundraising
     crowdfunding: list[CrowdfundingOffering] = fundraising.latest_crowdfunding_offerings(page=0, limit=100)
-    deadline: datetime.date = crowdfunding[0].offering_deadline_date
+    deadline: datetime.date | None = crowdfunding[0].offering_deadline_date
     accepted: datetime.datetime = crowdfunding[0].accepted_date
     price: Any = crowdfunding[0].offering_price
     by_cik: list[CrowdfundingOffering] = client.fundraising.crowdfunding_offerings_by_cik("0001916078")

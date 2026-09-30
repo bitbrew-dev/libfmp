@@ -103,7 +103,7 @@ fn full_profile_decodes_exactly_thirty_five_fields_and_documented_types() {
     assert_eq!(row.country, CountryCode::new("US").unwrap());
     assert_eq!(row.exchange, ExchangeCode::new("NASDAQ").unwrap());
     assert_eq!(row.ipo_date, Date::parse("1980-12-12").unwrap());
-    assert_eq!(row.employees, NumericString::new("166000").unwrap());
+    assert_eq!(row.employees, Some(NumericString::new("166000").unwrap()));
     assert_eq!(row.price_currency, CurrencyCode::new("USD").unwrap());
     assert_eq!(row.market_sector, Sector::new("Technology").unwrap());
     assert_eq!(row.security_type, None);
@@ -164,9 +164,12 @@ fn typed_contracts_require_documented_non_null_fields_and_accept_unknown_fields(
         COMPANIES_CIK,
         ALL_CLASSIFICATIONS,
     ] {
-        assert_contract_except::<SecCompanySearchResult>(fixture, &[]);
+        assert_contract_except::<SecCompanySearchResult>(fixture, &["phoneNumber"]);
     }
-    assert_contract_except::<SecCompanyProfile>(PROFILE, &["securityType"]);
+    assert_contract_except::<SecCompanyProfile>(
+        PROFILE,
+        &["securityType", "employees", "fiscalYearEnd"],
+    );
     assert_contract_except::<SicClassification>(CLASSIFICATIONS, &[]);
 
     let mut profile: serde_json::Value = serde_json::from_slice(PROFILE).unwrap();
@@ -191,6 +194,31 @@ fn every_contract_is_a_bare_array_accepting_empty_and_multiple_rows() {
     assert_bare_array::<SicClassification>(CLASSIFICATIONS);
     assert_bare_array::<DynamicObject>(CLASSIFICATION_SEARCH);
     assert!(serde_json::from_value::<Vec<SecFiling>>(serde_json::json!({"data": []})).is_err());
+}
+
+#[test]
+fn nullable_profile_and_search_members_are_required_and_null_decodes_to_none() {
+    for field in ["employees", "fiscalYearEnd", "securityType"] {
+        let mut missing: serde_json::Value = serde_json::from_slice(PROFILE).unwrap();
+        missing[0].as_object_mut().unwrap().remove(field);
+        assert!(serde_json::from_value::<Vec<SecCompanyProfile>>(missing).is_err());
+    }
+    let mut profile: serde_json::Value = serde_json::from_slice(PROFILE).unwrap();
+    profile[0]["employees"] = serde_json::Value::Null;
+    profile[0]["fiscalYearEnd"] = serde_json::Value::Null;
+    let rows: Vec<SecCompanyProfile> = serde_json::from_value(profile.clone()).unwrap();
+    assert_eq!(rows[0].employees, None);
+    assert_eq!(rows[0].fiscal_year_end, None);
+    assert_eq!(serde_json::to_value(&rows).unwrap(), profile);
+
+    let mut missing: serde_json::Value = serde_json::from_slice(COMPANIES_NAME).unwrap();
+    missing[0].as_object_mut().unwrap().remove("phoneNumber");
+    assert!(serde_json::from_value::<Vec<SecCompanySearchResult>>(missing).is_err());
+    let mut search: serde_json::Value = serde_json::from_slice(COMPANIES_NAME).unwrap();
+    search[0]["phoneNumber"] = serde_json::Value::Null;
+    let rows: Vec<SecCompanySearchResult> = serde_json::from_value(search.clone()).unwrap();
+    assert_eq!(rows[0].phone_number, None);
+    assert_eq!(serde_json::to_value(&rows).unwrap(), search);
 }
 
 fn source_row(fixture: &[u8]) -> serde_json::Value {

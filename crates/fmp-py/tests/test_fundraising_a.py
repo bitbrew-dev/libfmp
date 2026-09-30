@@ -272,3 +272,39 @@ def test_regulation_d_offerings_decode_fractional_amounts(client: Any, fixture_s
     assert isinstance(rows[0].total_offering_amount, float)
     assert rows[0].total_offering_amount == 71_999_990.5
     assert rows[0].total_amount_sold == 1.0
+
+
+def test_latest_crowdfunding_offerings_decode_null_members_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """The members FMP sends as null on older filings decode to ``None``."""
+    body = load_fixture("crowdfunding_offerings_latest.json")
+    body[0]["compensationAmount"] = None
+    body[0]["financialInterest"] = None
+    body[0]["intermediaryCommissionFileNumber"] = None
+    body[0]["intermediaryCompanyName"] = None
+    body[0]["issuerWebsite"] = None
+    body[0]["offeringDeadlineDate"] = None
+    body[0]["overSubscriptionAllocationType"] = None
+    body[0]["securityOfferedType"] = None
+    fixture_server.route("/crowdfunding-offerings-latest", body)
+    rows = client.fundraising.latest_crowdfunding_offerings()
+
+    assert rows[0].compensation_amount is None
+    assert rows[0].financial_interest is None
+    assert rows[0].intermediary_commission_file_number is None
+    assert rows[0].intermediary_company_name is None
+    assert rows[0].issuer_website is None
+    assert rows[0].offering_deadline_date is None
+    assert rows[0].over_subscription_allocation_type is None
+    assert rows[0].security_offered_type is None
+
+
+def test_latest_regulation_d_offerings_decode_null_members_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A null ``revenueRange`` or ``securitiesOfferedAreOfEquityType`` decodes to ``None``."""
+    body = load_fixture("fundraising_latest.json")
+    body[0]["revenueRange"] = None
+    body[0]["securitiesOfferedAreOfEquityType"] = None
+    fixture_server.route("/fundraising-latest", body)
+    rows = client.fundraising.latest_regulation_d_offerings()
+
+    assert rows[0].revenue_range is None
+    assert rows[0].securities_offered_are_of_equity_type is None
