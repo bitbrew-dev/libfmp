@@ -22,8 +22,8 @@ fn historical_fixture_decodes_all_61_documented_fields_exactly() {
     let rows: Vec<BalanceSheetStatement> = serde_json::from_value(value).unwrap();
     assert_eq!(rows.len(), 1);
     assert_historical(&rows[0]);
-    assert_eq!(rows[0].total_assets, 359_241_000_000.0);
-    assert_eq!(rows[0].retained_earnings, -14_264_000_000.0);
+    assert_eq!(rows[0].total_assets, Some(359_241_000_000.0));
+    assert_eq!(rows[0].retained_earnings, Some(-14_264_000_000.0));
     assert_eq!(rows[0].cik.as_str(), "0000320193");
     assert_eq!(rows[0].accepted_date.to_string(), "2025-10-31 06:01:26");
 }
@@ -132,6 +132,71 @@ fn statement_amounts_preserve_large_integral_values_in_both_contracts() {
     }
 }
 
+const STUB_QUARTER_NULL_MEMBERS: [&str; 38] = [
+    "accountPayables",
+    "accountsReceivables",
+    "accruedExpenses",
+    "accumulatedOtherComprehensiveIncomeLoss",
+    "additionalPaidInCapital",
+    "capitalLeaseObligationsCurrent",
+    "capitalLeaseObligationsNonCurrent",
+    "cashAndCashEquivalents",
+    "cashAndShortTermInvestments",
+    "commonStock",
+    "deferredRevenue",
+    "deferredRevenueNonCurrent",
+    "deferredTaxLiabilitiesNonCurrent",
+    "goodwill",
+    "goodwillAndIntangibleAssets",
+    "intangibleAssets",
+    "inventory",
+    "longTermDebt",
+    "longTermInvestments",
+    "netReceivables",
+    "otherPayables",
+    "prepaids",
+    "propertyPlantEquipmentNet",
+    "retainedEarnings",
+    "shortTermDebt",
+    "shortTermInvestments",
+    "taxAssets",
+    "taxPayables",
+    "totalAssets",
+    "totalCurrentAssets",
+    "totalCurrentLiabilities",
+    "totalEquity",
+    "totalLiabilities",
+    "totalLiabilitiesAndTotalEquity",
+    "totalNonCurrentAssets",
+    "totalNonCurrentLiabilities",
+    "totalStockholdersEquity",
+    "treasuryStock",
+];
+
+#[test]
+fn pre_ipo_stub_row_decodes_its_null_amounts_as_none() {
+    let mut value: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+    for member in STUB_QUARTER_NULL_MEMBERS {
+        value[0][member] = serde_json::Value::Null;
+    }
+
+    let rows: Vec<BalanceSheetStatement> = serde_json::from_value(value).unwrap();
+    assert_eq!(rows[0].total_assets, None);
+    assert!(rows[0].other_receivables.is_finite());
+
+    let encoded = serde_json::to_value(&rows).unwrap();
+    for member in STUB_QUARTER_NULL_MEMBERS {
+        assert!(encoded[0][member].is_null(), "{member}");
+    }
+}
+
+#[test]
+fn null_on_an_amount_outside_the_stub_set_is_still_rejected() {
+    let mut value: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+    value[0]["otherReceivables"] = serde_json::Value::Null;
+    assert!(serde_json::from_value::<Vec<BalanceSheetStatement>>(value).is_err());
+}
+
 fn assert_historical(row: &BalanceSheetStatement) {
     assert_row!(
         row,
@@ -144,56 +209,56 @@ fn assert_historical(row: &BalanceSheetStatement) {
             accepted_date: ApiDateTime::from_str("2025-10-31 06:01:26").unwrap(),
             fiscal_year: FiscalYearString::new("2025").unwrap(),
             period: FiscalPeriod::FullYear,
-            cash_and_cash_equivalents: 35_934_000_000.0,
-            short_term_investments: 18_763_000_000.0,
-            cash_and_short_term_investments: 54_697_000_000.0,
-            net_receivables: 72_957_000_000.0,
-            accounts_receivables: 39_777_000_000.0,
+            cash_and_cash_equivalents: Some(35_934_000_000.0),
+            short_term_investments: Some(18_763_000_000.0),
+            cash_and_short_term_investments: Some(54_697_000_000.0),
+            net_receivables: Some(72_957_000_000.0),
+            accounts_receivables: Some(39_777_000_000.0),
             other_receivables: 33_180_000_000.0,
-            inventory: 5_718_000_000.0,
-            prepaids: 0.0,
+            inventory: Some(5_718_000_000.0),
+            prepaids: Some(0.0),
             other_current_assets: 14_585_000_000.0,
-            total_current_assets: 147_957_000_000.0,
-            property_plant_equipment_net: 49_834_000_000.0,
-            goodwill: 0.0,
-            intangible_assets: 0.0,
-            goodwill_and_intangible_assets: 0.0,
-            long_term_investments: 77_723_000_000.0,
-            tax_assets: 20_777_000_000.0,
+            total_current_assets: Some(147_957_000_000.0),
+            property_plant_equipment_net: Some(49_834_000_000.0),
+            goodwill: Some(0.0),
+            intangible_assets: Some(0.0),
+            goodwill_and_intangible_assets: Some(0.0),
+            long_term_investments: Some(77_723_000_000.0),
+            tax_assets: Some(20_777_000_000.0),
             other_non_current_assets: 62_950_000_000.0,
-            total_non_current_assets: 211_284_000_000.0,
+            total_non_current_assets: Some(211_284_000_000.0),
             other_assets: 0.0,
-            total_assets: 359_241_000_000.0,
+            total_assets: Some(359_241_000_000.0),
             total_payables: 82_876_000_000.0,
-            account_payables: 69_860_000_000.0,
-            other_payables: 13_016_000_000.0,
-            accrued_expenses: 8_919_000_000.0,
-            short_term_debt: 20_329_000_000.0,
-            capital_lease_obligations_current: 2_117_000_000.0,
-            tax_payables: 0.0,
-            deferred_revenue: 9_055_000_000.0,
+            account_payables: Some(69_860_000_000.0),
+            other_payables: Some(13_016_000_000.0),
+            accrued_expenses: Some(8_919_000_000.0),
+            short_term_debt: Some(20_329_000_000.0),
+            capital_lease_obligations_current: Some(2_117_000_000.0),
+            tax_payables: Some(0.0),
+            deferred_revenue: Some(9_055_000_000.0),
             other_current_liabilities: 42_335_000_000.0,
-            total_current_liabilities: 165_631_000_000.0,
-            long_term_debt: 78_328_000_000.0,
-            capital_lease_obligations_non_current: 11_603_000_000.0,
-            deferred_revenue_non_current: 0.0,
-            deferred_tax_liabilities_non_current: 0.0,
+            total_current_liabilities: Some(165_631_000_000.0),
+            long_term_debt: Some(78_328_000_000.0),
+            capital_lease_obligations_non_current: Some(11_603_000_000.0),
+            deferred_revenue_non_current: Some(0.0),
+            deferred_tax_liabilities_non_current: Some(0.0),
             other_non_current_liabilities: 29_946_000_000.0,
-            total_non_current_liabilities: 119_877_000_000.0,
+            total_non_current_liabilities: Some(119_877_000_000.0),
             other_liabilities: 0.0,
             capital_lease_obligations: 13_720_000_000.0,
-            total_liabilities: 285_508_000_000.0,
-            treasury_stock: 0.0,
+            total_liabilities: Some(285_508_000_000.0),
+            treasury_stock: Some(0.0),
             preferred_stock: 0.0,
-            common_stock: 93_568_000_000.0,
-            retained_earnings: -14_264_000_000.0,
-            additional_paid_in_capital: 0.0,
-            accumulated_other_comprehensive_income_loss: -5_571_000_000.0,
+            common_stock: Some(93_568_000_000.0),
+            retained_earnings: Some(-14_264_000_000.0),
+            additional_paid_in_capital: Some(0.0),
+            accumulated_other_comprehensive_income_loss: Some(-5_571_000_000.0),
             other_total_stockholders_equity: 0.0,
-            total_stockholders_equity: 73_733_000_000.0,
-            total_equity: 73_733_000_000.0,
+            total_stockholders_equity: Some(73_733_000_000.0),
+            total_equity: Some(73_733_000_000.0),
             minority_interest: 0.0,
-            total_liabilities_and_total_equity: 359_241_000_000.0,
+            total_liabilities_and_total_equity: Some(359_241_000_000.0),
             total_investments: 96_486_000_000.0,
             total_debt: 112_377_000_000.0,
             net_debt: 76_443_000_000.0,

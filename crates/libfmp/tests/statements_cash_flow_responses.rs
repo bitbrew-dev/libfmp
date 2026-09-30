@@ -28,7 +28,7 @@ fn historical_fixture_decodes_all_47_documented_fields_exactly() {
     );
     assert_eq!(
         rows[0].net_cash_provided_by_financing_activities,
-        -120_686_000_000.0
+        Some(-120_686_000_000.0)
     );
     assert_eq!(rows[0].cik.as_str(), "0000320193");
     assert_eq!(rows[0].accepted_date.to_string(), "2025-10-31 06:01:26");
@@ -104,6 +104,52 @@ fn statement_amounts_preserve_large_integral_values_for_both_endpoints() {
     }
 }
 
+const STUB_QUARTER_NULL_MEMBERS: [&str; 19] = [
+    "accountsPayables",
+    "accountsReceivables",
+    "cashAtBeginningOfPeriod",
+    "commonDividendsPaid",
+    "commonStockRepurchased",
+    "deferredIncomeTax",
+    "incomeTaxesPaid",
+    "interestPaid",
+    "inventory",
+    "longTermNetDebtIssuance",
+    "netCashProvidedByFinancingActivities",
+    "netCommonStockIssuance",
+    "netDividendsPaid",
+    "netPreferredStockIssuance",
+    "netStockIssuance",
+    "preferredDividendsPaid",
+    "purchasesOfInvestments",
+    "salesMaturitiesOfInvestments",
+    "stockBasedCompensation",
+];
+
+#[test]
+fn pre_ipo_stub_row_decodes_its_null_amounts_as_none() {
+    let mut value: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+    for member in STUB_QUARTER_NULL_MEMBERS {
+        value[0][member] = serde_json::Value::Null;
+    }
+
+    let rows: Vec<CashFlowStatement> = serde_json::from_value(value).unwrap();
+    assert_eq!(rows[0].stock_based_compensation, None);
+    assert!(rows[0].net_income.is_finite());
+
+    let encoded = serde_json::to_value(&rows).unwrap();
+    for member in STUB_QUARTER_NULL_MEMBERS {
+        assert!(encoded[0][member].is_null(), "{member}");
+    }
+}
+
+#[test]
+fn null_on_an_amount_outside_the_stub_set_is_still_rejected() {
+    let mut value: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+    value[0]["netIncome"] = serde_json::Value::Null;
+    assert!(serde_json::from_value::<Vec<CashFlowStatement>>(value).is_err());
+}
+
 fn assert_historical(row: &CashFlowStatement) {
     assert_row!(
         row,
@@ -118,43 +164,43 @@ fn assert_historical(row: &CashFlowStatement) {
             period: FiscalPeriod::FullYear,
             net_income: 112_010_000_000.0,
             depreciation_and_amortization: 11_698_000_000.0,
-            deferred_income_tax: 0.0,
-            stock_based_compensation: 12_863_000_000.0,
+            deferred_income_tax: Some(0.0),
+            stock_based_compensation: Some(12_863_000_000.0),
             change_in_working_capital: -25_000_000_000.0,
-            accounts_receivables: -7_029_000_000.0,
-            inventory: 1_400_000_000.0,
-            accounts_payables: 902_000_000.0,
+            accounts_receivables: Some(-7_029_000_000.0),
+            inventory: Some(1_400_000_000.0),
+            accounts_payables: Some(902_000_000.0),
             other_working_capital: -20_273_000_000.0,
             other_non_cash_items: -89_000_000.0,
             net_cash_provided_by_operating_activities: 111_482_000_000.0,
             investments_in_property_plant_and_equipment: -12_715_000_000.0,
             acquisitions_net: 0.0,
-            purchases_of_investments: -24_407_000_000.0,
-            sales_maturities_of_investments: 53_797_000_000.0,
+            purchases_of_investments: Some(-24_407_000_000.0),
+            sales_maturities_of_investments: Some(53_797_000_000.0),
             other_investing_activities: -1_480_000_000.0,
             net_cash_provided_by_investing_activities: 15_195_000_000.0,
             net_debt_issuance: -8_483_000_000.0,
-            long_term_net_debt_issuance: -6_451_000_000.0,
+            long_term_net_debt_issuance: Some(-6_451_000_000.0),
             short_term_net_debt_issuance: -2_032_000_000.0,
-            net_stock_issuance: -90_711_000_000.0,
-            net_common_stock_issuance: -90_711_000_000.0,
+            net_stock_issuance: Some(-90_711_000_000.0),
+            net_common_stock_issuance: Some(-90_711_000_000.0),
             common_stock_issuance: 0.0,
-            common_stock_repurchased: -90_711_000_000.0,
-            net_preferred_stock_issuance: 0.0,
-            net_dividends_paid: -15_421_000_000.0,
-            common_dividends_paid: -15_421_000_000.0,
-            preferred_dividends_paid: 0.0,
+            common_stock_repurchased: Some(-90_711_000_000.0),
+            net_preferred_stock_issuance: Some(0.0),
+            net_dividends_paid: Some(-15_421_000_000.0),
+            common_dividends_paid: Some(-15_421_000_000.0),
+            preferred_dividends_paid: Some(0.0),
             other_financing_activities: -6_071_000_000.0,
-            net_cash_provided_by_financing_activities: -120_686_000_000.0,
+            net_cash_provided_by_financing_activities: Some(-120_686_000_000.0),
             effect_of_forex_changes_on_cash: 0.0,
             net_change_in_cash: 5_991_000_000.0,
             cash_at_end_of_period: 35_934_000_000.0,
-            cash_at_beginning_of_period: 29_943_000_000.0,
+            cash_at_beginning_of_period: Some(29_943_000_000.0),
             operating_cash_flow: 111_482_000_000.0,
             capital_expenditure: -12_715_000_000.0,
             free_cash_flow: 98_767_000_000.0,
-            income_taxes_paid: 43_369_000_000.0,
-            interest_paid: 0.0,
+            income_taxes_paid: Some(43_369_000_000.0),
+            interest_paid: Some(0.0),
         }
     );
 }
@@ -173,43 +219,43 @@ fn assert_ttm(row: &CashFlowStatement) {
             period: FiscalPeriod::Q2,
             net_income: 122_575_000_000.0,
             depreciation_and_amortization: 12_610_000_000.0,
-            deferred_income_tax: 0.0,
-            stock_based_compensation: 13_473_000_000.0,
+            deferred_income_tax: Some(0.0),
+            stock_based_compensation: Some(13_473_000_000.0),
             change_in_working_capital: -8_847_000_000.0,
-            accounts_receivables: -4_163_000_000.0,
-            inventory: -542_000_000.0,
-            accounts_payables: 3_209_000_000.0,
+            accounts_receivables: Some(-4_163_000_000.0),
+            inventory: Some(-542_000_000.0),
+            accounts_payables: Some(3_209_000_000.0),
             other_working_capital: -7_351_000_000.0,
             other_non_cash_items: 411_000_000.0,
             net_cash_provided_by_operating_activities: 140_222_000_000.0,
             investments_in_property_plant_and_equipment: -11_048_000_000.0,
             acquisitions_net: 0.0,
-            purchases_of_investments: -44_397_000_000.0,
-            sales_maturities_of_investments: 49_306_000_000.0,
+            purchases_of_investments: Some(-44_397_000_000.0),
+            sales_maturities_of_investments: Some(49_306_000_000.0),
             other_investing_activities: -2_429_000_000.0,
             net_cash_provided_by_investing_activities: -8_568_000_000.0,
             net_debt_issuance: -14_331_000_000.0,
-            long_term_net_debt_issuance: -10_356_000_000.0,
+            long_term_net_debt_issuance: Some(-10_356_000_000.0),
             short_term_net_debt_issuance: -3_975_000_000.0,
-            net_stock_issuance: -78_196_000_000.0,
-            net_common_stock_issuance: -78_196_000_000.0,
+            net_stock_issuance: Some(-78_196_000_000.0),
+            net_common_stock_issuance: Some(-78_196_000_000.0),
             common_stock_issuance: 0.0,
-            common_stock_repurchased: -78_196_000_000.0,
-            net_preferred_stock_issuance: 0.0,
-            net_dividends_paid: -15_550_000_000.0,
-            common_dividends_paid: -15_550_000_000.0,
-            preferred_dividends_paid: 0.0,
+            common_stock_repurchased: Some(-78_196_000_000.0),
+            net_preferred_stock_issuance: Some(0.0),
+            net_dividends_paid: Some(-15_550_000_000.0),
+            common_dividends_paid: Some(-15_550_000_000.0),
+            preferred_dividends_paid: Some(0.0),
             other_financing_activities: -6_167_000_000.0,
-            net_cash_provided_by_financing_activities: -114_244_000_000.0,
+            net_cash_provided_by_financing_activities: Some(-114_244_000_000.0),
             effect_of_forex_changes_on_cash: 0.0,
             net_change_in_cash: 17_410_000_000.0,
             cash_at_end_of_period: 45_572_000_000.0,
-            cash_at_beginning_of_period: 28_162_000_000.0,
+            cash_at_beginning_of_period: Some(28_162_000_000.0),
             operating_cash_flow: 140_222_000_000.0,
             capital_expenditure: -11_048_000_000.0,
             free_cash_flow: 129_174_000_000.0,
-            income_taxes_paid: -11_286_000_000.0,
-            interest_paid: 0.0,
+            income_taxes_paid: Some(-11_286_000_000.0),
+            interest_paid: Some(0.0),
         }
     );
 }

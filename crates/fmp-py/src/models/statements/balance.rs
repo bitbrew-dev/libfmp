@@ -25,105 +25,105 @@ pub(crate) struct BalanceSheetStatement {
     pub fiscal_year: String,
     pub period: String,
     #[pyo3(get)]
-    pub cash_and_cash_equivalents: f64,
+    pub cash_and_cash_equivalents: Option<f64>,
     #[pyo3(get)]
-    pub short_term_investments: f64,
+    pub short_term_investments: Option<f64>,
     #[pyo3(get)]
-    pub cash_and_short_term_investments: f64,
+    pub cash_and_short_term_investments: Option<f64>,
     #[pyo3(get)]
-    pub net_receivables: f64,
+    pub net_receivables: Option<f64>,
     #[pyo3(get)]
-    pub accounts_receivables: f64,
+    pub accounts_receivables: Option<f64>,
     #[pyo3(get)]
     pub other_receivables: f64,
     #[pyo3(get)]
-    pub inventory: f64,
+    pub inventory: Option<f64>,
     #[pyo3(get)]
-    pub prepaids: f64,
+    pub prepaids: Option<f64>,
     #[pyo3(get)]
     pub other_current_assets: f64,
     #[pyo3(get)]
-    pub total_current_assets: f64,
+    pub total_current_assets: Option<f64>,
     #[pyo3(get)]
-    pub property_plant_equipment_net: f64,
+    pub property_plant_equipment_net: Option<f64>,
     #[pyo3(get)]
-    pub goodwill: f64,
+    pub goodwill: Option<f64>,
     #[pyo3(get)]
-    pub intangible_assets: f64,
+    pub intangible_assets: Option<f64>,
     #[pyo3(get)]
-    pub goodwill_and_intangible_assets: f64,
+    pub goodwill_and_intangible_assets: Option<f64>,
     #[pyo3(get)]
-    pub long_term_investments: f64,
+    pub long_term_investments: Option<f64>,
     #[pyo3(get)]
-    pub tax_assets: f64,
+    pub tax_assets: Option<f64>,
     #[pyo3(get)]
     pub other_non_current_assets: f64,
     #[pyo3(get)]
-    pub total_non_current_assets: f64,
+    pub total_non_current_assets: Option<f64>,
     #[pyo3(get)]
     pub other_assets: f64,
     #[pyo3(get)]
-    pub total_assets: f64,
+    pub total_assets: Option<f64>,
     #[pyo3(get)]
     pub total_payables: f64,
     #[pyo3(get)]
-    pub account_payables: f64,
+    pub account_payables: Option<f64>,
     #[pyo3(get)]
-    pub other_payables: f64,
+    pub other_payables: Option<f64>,
     #[pyo3(get)]
-    pub accrued_expenses: f64,
+    pub accrued_expenses: Option<f64>,
     #[pyo3(get)]
-    pub short_term_debt: f64,
+    pub short_term_debt: Option<f64>,
     #[pyo3(get)]
-    pub capital_lease_obligations_current: f64,
+    pub capital_lease_obligations_current: Option<f64>,
     #[pyo3(get)]
-    pub tax_payables: f64,
+    pub tax_payables: Option<f64>,
     #[pyo3(get)]
-    pub deferred_revenue: f64,
+    pub deferred_revenue: Option<f64>,
     #[pyo3(get)]
     pub other_current_liabilities: f64,
     #[pyo3(get)]
-    pub total_current_liabilities: f64,
+    pub total_current_liabilities: Option<f64>,
     #[pyo3(get)]
-    pub long_term_debt: f64,
+    pub long_term_debt: Option<f64>,
     #[pyo3(get)]
-    pub capital_lease_obligations_non_current: f64,
+    pub capital_lease_obligations_non_current: Option<f64>,
     #[pyo3(get)]
-    pub deferred_revenue_non_current: f64,
+    pub deferred_revenue_non_current: Option<f64>,
     #[pyo3(get)]
-    pub deferred_tax_liabilities_non_current: f64,
+    pub deferred_tax_liabilities_non_current: Option<f64>,
     #[pyo3(get)]
     pub other_non_current_liabilities: f64,
     #[pyo3(get)]
-    pub total_non_current_liabilities: f64,
+    pub total_non_current_liabilities: Option<f64>,
     #[pyo3(get)]
     pub other_liabilities: f64,
     #[pyo3(get)]
     pub capital_lease_obligations: f64,
     #[pyo3(get)]
-    pub total_liabilities: f64,
+    pub total_liabilities: Option<f64>,
     #[pyo3(get)]
-    pub treasury_stock: f64,
+    pub treasury_stock: Option<f64>,
     #[pyo3(get)]
     pub preferred_stock: f64,
     #[pyo3(get)]
-    pub common_stock: f64,
+    pub common_stock: Option<f64>,
     #[pyo3(get)]
-    pub retained_earnings: f64,
+    pub retained_earnings: Option<f64>,
     #[pyo3(get)]
-    pub additional_paid_in_capital: f64,
+    pub additional_paid_in_capital: Option<f64>,
     #[pyo3(get)]
-    pub accumulated_other_comprehensive_income_loss: f64,
+    pub accumulated_other_comprehensive_income_loss: Option<f64>,
     #[pyo3(get)]
     pub other_total_stockholders_equity: f64,
     #[pyo3(get)]
-    pub total_stockholders_equity: f64,
+    pub total_stockholders_equity: Option<f64>,
     #[pyo3(get)]
-    pub total_equity: f64,
+    pub total_equity: Option<f64>,
     #[pyo3(get)]
     pub minority_interest: f64,
     #[pyo3(get)]
-    pub total_liabilities_and_total_equity: f64,
+    pub total_liabilities_and_total_equity: Option<f64>,
     #[pyo3(get)]
     pub total_investments: f64,
     #[pyo3(get)]
@@ -149,56 +149,56 @@ impl BalanceSheetStatement {
         fiscal_year: String,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
-        cash_and_cash_equivalents: f64,
-        short_term_investments: f64,
-        cash_and_short_term_investments: f64,
-        net_receivables: f64,
-        accounts_receivables: f64,
+        cash_and_cash_equivalents: Option<f64>,
+        short_term_investments: Option<f64>,
+        cash_and_short_term_investments: Option<f64>,
+        net_receivables: Option<f64>,
+        accounts_receivables: Option<f64>,
         other_receivables: f64,
-        inventory: f64,
-        prepaids: f64,
+        inventory: Option<f64>,
+        prepaids: Option<f64>,
         other_current_assets: f64,
-        total_current_assets: f64,
-        property_plant_equipment_net: f64,
-        goodwill: f64,
-        intangible_assets: f64,
-        goodwill_and_intangible_assets: f64,
-        long_term_investments: f64,
-        tax_assets: f64,
+        total_current_assets: Option<f64>,
+        property_plant_equipment_net: Option<f64>,
+        goodwill: Option<f64>,
+        intangible_assets: Option<f64>,
+        goodwill_and_intangible_assets: Option<f64>,
+        long_term_investments: Option<f64>,
+        tax_assets: Option<f64>,
         other_non_current_assets: f64,
-        total_non_current_assets: f64,
+        total_non_current_assets: Option<f64>,
         other_assets: f64,
-        total_assets: f64,
+        total_assets: Option<f64>,
         total_payables: f64,
-        account_payables: f64,
-        other_payables: f64,
-        accrued_expenses: f64,
-        short_term_debt: f64,
-        capital_lease_obligations_current: f64,
-        tax_payables: f64,
-        deferred_revenue: f64,
+        account_payables: Option<f64>,
+        other_payables: Option<f64>,
+        accrued_expenses: Option<f64>,
+        short_term_debt: Option<f64>,
+        capital_lease_obligations_current: Option<f64>,
+        tax_payables: Option<f64>,
+        deferred_revenue: Option<f64>,
         other_current_liabilities: f64,
-        total_current_liabilities: f64,
-        long_term_debt: f64,
-        capital_lease_obligations_non_current: f64,
-        deferred_revenue_non_current: f64,
-        deferred_tax_liabilities_non_current: f64,
+        total_current_liabilities: Option<f64>,
+        long_term_debt: Option<f64>,
+        capital_lease_obligations_non_current: Option<f64>,
+        deferred_revenue_non_current: Option<f64>,
+        deferred_tax_liabilities_non_current: Option<f64>,
         other_non_current_liabilities: f64,
-        total_non_current_liabilities: f64,
+        total_non_current_liabilities: Option<f64>,
         other_liabilities: f64,
         capital_lease_obligations: f64,
-        total_liabilities: f64,
-        treasury_stock: f64,
+        total_liabilities: Option<f64>,
+        treasury_stock: Option<f64>,
         preferred_stock: f64,
-        common_stock: f64,
-        retained_earnings: f64,
-        additional_paid_in_capital: f64,
-        accumulated_other_comprehensive_income_loss: f64,
+        common_stock: Option<f64>,
+        retained_earnings: Option<f64>,
+        additional_paid_in_capital: Option<f64>,
+        accumulated_other_comprehensive_income_loss: Option<f64>,
         other_total_stockholders_equity: f64,
-        total_stockholders_equity: f64,
-        total_equity: f64,
+        total_stockholders_equity: Option<f64>,
+        total_equity: Option<f64>,
         minority_interest: f64,
-        total_liabilities_and_total_equity: f64,
+        total_liabilities_and_total_equity: Option<f64>,
         total_investments: f64,
         total_debt: f64,
         net_debt: f64,

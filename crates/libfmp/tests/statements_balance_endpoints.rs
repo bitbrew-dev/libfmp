@@ -102,8 +102,8 @@ async fn proxy_client_uses_exact_queries_custom_auth_and_decodes_both_bare_array
         .unwrap();
 
     assert_eq!(historical.len(), 1);
-    assert_eq!(historical[0].total_assets, 359_241_000_000.0);
-    assert_eq!(historical[0].retained_earnings, -14_264_000_000.0);
+    assert_eq!(historical[0].total_assets, Some(359_241_000_000.0));
+    assert_eq!(historical[0].retained_earnings, Some(-14_264_000_000.0));
     assert_eq!(ttm.len(), 1);
     assert_eq!(ttm[0].total_assets, 371_082_000_000.0);
 
