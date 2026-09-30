@@ -746,6 +746,48 @@ fn null_text_codec_decodes_the_null_text_and_null_to_nil_through_the_raw_shadow(
 }
 
 #[test]
+fn shadow_decoded_members_report_their_failures_against_the_member() {
+    let aliases = BTreeMap::new();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let def = row(vec![
+        field("beta", "Option<f64>", deserialize_with("required_option")),
+        field(
+            "cusip",
+            "Option<Ticker>",
+            deserialize_with("crate::codecs::empty_or_null::deserialize"),
+        ),
+        field("last_updated_raw", "String", rename("lastUpdated\"")),
+        field(
+            "note",
+            "Option<String>",
+            FieldAttrs {
+                rename: Some("a,b".to_string()),
+                ..skip_serializing_if("Option::is_none")
+            },
+        ),
+    ]);
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    for expected in [
+        "return memberDecodeError(\"Row\", \"beta\", shadow.Beta, err)",
+        "return memberDecodeError(\"Row\", \"cusip\", shadow.CUSIP, err)",
+        "return memberDecodeError(\"Row\", \"lastUpdated\\\"\", lastUpdatedRawWire, err)",
+        "return memberDecodeError(\"Row\", \"a,b\", noteWire, err)",
+    ] {
+        assert!(
+            rendered.contains(expected),
+            "missing {expected:?} in\n{rendered}"
+        );
+    }
+    assert!(
+        !rendered.contains("&value); err != nil {\n\t\t\treturn err\n")
+            && !rendered.contains("&lastUpdatedRaw); err != nil {\n\t\treturn err\n"),
+        "a member unmarshal returns its error without the member in\n{rendered}"
+    );
+}
+
+#[test]
 fn skip_serializing_if_none_marks_only_the_public_tag_omitzero() {
     let aliases = BTreeMap::new();
     let structs = Vec::new();

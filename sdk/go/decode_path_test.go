@@ -3,6 +3,7 @@ package fmp
 import (
 	"context"
 	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
 	"strings"
@@ -110,4 +111,65 @@ func TestRequireObjectRowsLocatesTheNonObjectRow(t *testing.T) {
 	if !errors.As(err, &typed) || typed.Path != "/1" || typed.DecodeKind != DecodeKindWrongType {
 		t.Fatalf("error = %+v, want Path /1 wrong_type", typed)
 	}
+}
+
+func TestDecodeErrorNamesTheNullableMemberThatHasTheWrongType(t *testing.T) {
+	t.Parallel()
+	body := strings.Replace(string(readFixture(t, "company_screener_null_beta_synthetic.json")),
+		`"beta": null`, `"beta": "`+decodePathSentinel+`"`, 1)
+	typed := decodeScreenerBody(t, []byte(body))
+
+	if typed.Path != "/37/beta" || typed.DecodeKind != DecodeKindWrongType {
+		t.Fatalf("Path = %q, DecodeKind = %v, want /37/beta wrong_type", typed.Path, typed.DecodeKind)
+	}
+	if strings.Contains(typed.Error(), decodePathSentinel) || strings.Contains(typed.Unwrap().Error(), decodePathSentinel) {
+		t.Fatalf("decode error leaked the member value: %q / %q", typed.Error(), typed.Unwrap())
+	}
+}
+
+func TestDecodeErrorNamesTheCodecMemberThatFailed(t *testing.T) {
+	t.Parallel()
+	holdings := string(readFixture(t, "etf_fund_holdings.json"))
+	dividends := string(readFixture(t, "dividends.json"))
+	netWorth := `[{"senateID":"P000197","formType":"House Report","year":2022,"filingDate":"2023-05-15",` +
+		`"section":"Liabilities","category":"Mortgage","name":"Bank","assetType":"Mortgage","incomeType":null,` +
+		`"owner":"Joint","comment":null,"valueRange":{"min":1},"value":-1,"incomeRange":null,` +
+		`"income":null,"link":"https://example.test","debtDetails":null}]`
+	cases := []struct {
+		name   string
+		decode func([]byte) error
+		body   string
+		path   string
+		kind   DecodeKind
+	}{
+		{"empty_or_null wrong type", decodeRows[ETFFundHolding], strings.Replace(holdings, `"US0378331005"`, "5", 1),
+			"/0/isin", DecodeKindWrongType},
+		{"date wrong type", decodeRows[DividendEvent], strings.Replace(dividends, `"2026-05-11",
+    "symbol"`, `5,
+    "symbol"`, 1), "/0/recordDate", DecodeKindWrongType},
+		{"date malformed", decodeRows[DividendEvent], strings.Replace(dividends, `"2026-05-14"`, `"`+decodePathSentinel+`"`, 1),
+			"/0/paymentDate", DecodeKindInvalidValue},
+		{"nested model", decodeRows[CongressionalMemberNetWorth], netWorth, "/0/valueRange/max", DecodeKindMissingMember},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			err := tc.decode([]byte(tc.body))
+			if err == nil {
+				t.Fatal("decode succeeded, want an error")
+			}
+			path, kind := decodeLocation([]byte(tc.body), err)
+			if path != tc.path || kind != tc.kind {
+				t.Fatalf("Path = %q, DecodeKind = %v, want %q %v", path, kind, tc.path, tc.kind)
+			}
+			if strings.Contains(err.Error(), decodePathSentinel) {
+				t.Fatalf("decode error leaked the member value: %q", err)
+			}
+		})
+	}
+}
+
+func decodeRows[T any](body []byte) error {
+	var rows []T
+	return json.Unmarshal(body, &rows)
 }
