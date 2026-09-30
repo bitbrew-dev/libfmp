@@ -133,6 +133,7 @@ that no wire information is invented or lost:
 | `Date` (`YYYY-MM-DD`) | `fmp.Date` | civil date, no zone, own type |
 | `UsDate` (`MM-DD-YYYY`) | `fmp.UsDate` | same civil date, US wire text; `.Date()` converts |
 | `ApiDateTime` (naive) | `fmp.DateTime` | naive, own type; not `time.Time` |
+| `DateOrYear` (`YYYY-MM-DD` or `YYYY`) | `fmp.DateOrYear` | own type; `.Date()` / `.Year()` report which form arrived (ADR 0034) |
 | `IsoTimestamp` | `string` | exact RFC 3339 text, offset and precision preserved |
 | `DateOrDateTime`, `OpaqueDateText` | `string` | which form arrived is preserved |
 | `UnixSeconds`, `UnixMilliseconds` | `fmp.UnixSeconds`, `fmp.UnixMilliseconds` (`int64`) | `.Time()` helpers |

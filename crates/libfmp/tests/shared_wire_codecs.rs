@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use libfmp::{
     codecs::{
-        DateOrDateTime, DynamicJson, DynamicObject, FiscalYear, IsoTimestamp,
+        DateOrDateTime, DateOrYear, DynamicJson, DynamicObject, FiscalYear, IsoTimestamp,
         NumberOrNumericString, OpaqueDateText, PercentageValue, TitleCaseBoolFlag, TrueFalseFlag,
         UsDate, WireBool, YesNoFlag, YnFlag, empty_date, empty_or_null_date,
         empty_or_null_date_or_datetime,
@@ -115,6 +115,35 @@ fn temporal_contracts_are_strict_and_empty_or_null_aware() {
         DateOrDateTime::DateTime(_)
     ));
     assert!(DateOrDateTime::from_str("2026-07-30T00:00:00Z").is_err());
+
+    let year: DateOrYear = serde_json::from_str(r#""2020""#).unwrap();
+    assert_eq!(year, DateOrYear::Year(2020));
+    assert_eq!((year.as_year(), year.as_date()), (Some(2020), None));
+    assert_eq!(serde_json::to_string(&year).unwrap(), r#""2020""#);
+    let date: DateOrYear = serde_json::from_str(r#""2026-07-28""#).unwrap();
+    assert_eq!(date, DateOrYear::Date(Date::parse("2026-07-28").unwrap()));
+    assert_eq!(date.as_year(), None);
+    assert_eq!(serde_json::to_string(&date).unwrap(), r#""2026-07-28""#);
+    for garbage in [
+        r#""20x0""#,
+        r#""20201""#,
+        r#""202""#,
+        r#""2026-13-01""#,
+        r#""2026-07-28 00:00:00""#,
+        r#"" 2020""#,
+        r#""""#,
+    ] {
+        let message = serde_json::from_str::<DateOrYear>(garbage)
+            .unwrap_err()
+            .to_string();
+        let inner = garbage.trim_matches('"');
+        assert!(
+            inner.is_empty() || !message.contains(inner),
+            "{garbage}: error echoes the value"
+        );
+    }
+    assert!(serde_json::from_str::<DateOrYear>("2020").is_err());
+    assert!(serde_json::from_str::<DateOrYear>("null").is_err());
 
     for wire in [
         r#"{"declaration_date":"","filing_date":null}"#,

@@ -45,4 +45,5 @@ hold in every language:
 - [ADR 0031](../docs/adr/0031-pre-1.0-contract-decisions.md): pre-1.0 contract decisions (error equality without a source chain, `#[non_exhaustive]` responses, `f64` quantities, exact numeric strings, Python model equality, the `fmp` import name).
 - [ADR 0032](../docs/adr/0032-naming-policy.md): the naming policy for methods, row types, and Go initialisms across all three SDKs.
 - [ADR 0033](../docs/adr/0033-nullable-response-members.md): nullable response members, and `""` or null on typed codes and dates decoding to `None` / `nil`, from observed wire evidence.
+- [ADR 0034](../docs/adr/0034-date-or-year-members.md): a date member that can arrive as a bare `YYYY` year keeps the year as a year (`DateOrYear`, Python `datetime.date | int`, Go `fmp.DateOrYear`).
 - [Contract ambiguities register](../docs/contract-ambiguities.md): where the captured documentation is silent or contradictory, the SDK keeps an explicit raw type, a closed query, or a strict decode rather than a guessed schema. The register lists those deferred decisions.

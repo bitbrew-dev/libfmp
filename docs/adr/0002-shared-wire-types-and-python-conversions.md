@@ -48,7 +48,8 @@ The Python binding applies this conversion policy to public endpoint models
   offset spelling and millisecond precision are preserved rather than
   normalised into a timezone-aware `datetime.datetime`. Date-or-datetime
   fields remain `str`, preserving which of the two documented forms was
-  received. Empty and null optional dates become `None`. Opaque human or
+  received. Date-or-year fields (ADR 0034) become `datetime.date | int`.
+  Empty and null optional dates become `None`. Opaque human or
   partial date text remains `str`.
 - Dynamic JSON recursively becomes native Python dictionaries, lists, strings,
   integers, floats, booleans, and `None`.
