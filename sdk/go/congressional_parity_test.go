@@ -123,28 +123,29 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 	entry := entries[0]
 	if entry.MemberID != "P000197" || entry.FormType != "House Report" || entry.Year != 2022 ||
 		entry.FilingDate != mustParseDate(t, "2023-05-15") || entry.Section != "Liabilities" ||
-		entry.Category != "Mortgage & Real Estate Liability" || entry.Name != "Union Bank of California" ||
-		entry.AssetType != "Mortgage on 2640 Broadway, San Francisco, CA" || entry.Owner != "Joint" ||
-		entry.Value != 3_000_001 ||
+		!reflect.DeepEqual(entry.Category, new("Mortgage & Real Estate Liability")) ||
+		!reflect.DeepEqual(entry.Name, new("Union Bank of California")) ||
+		entry.AssetType != "Mortgage on 2640 Broadway, San Francisco, CA" || !reflect.DeepEqual(entry.Owner, new("Joint")) ||
+		!reflect.DeepEqual(entry.Value, new(3_000_001.0)) ||
 		entry.Link != "https://disclosures-clerk.house.gov/public_disc/financial-pdfs/2022/10053231.pdf" {
 		t.Fatalf("congress_senate_net_worth = %+v", entry)
 	}
 	if entry.IncomeType != nil || entry.Comment != nil || entry.IncomeRange != nil || entry.Income != nil {
 		t.Fatalf("null members decoded as non-nil: %+v", entry)
 	}
-	if entry.DebtDetails == nil || *entry.DebtDetails != (CongressionalDebtDetails{DateIncurred: "September 2007"}) {
+	if !reflect.DeepEqual(entry.DebtDetails, &CongressionalDebtDetails{DateIncurred: new("September 2007")}) {
 		t.Fatalf("debtDetails = %+v", entry.DebtDetails)
 	}
-	if entry.ValueRange == nil || *entry.ValueRange != (CongressionalNetWorthRange{Min: 1_000_001, Max: 5_000_000}) {
+	if !reflect.DeepEqual(entry.ValueRange, &CongressionalNetWorthRange{Min: 1_000_001, Max: new(int64(5_000_000))}) {
 		t.Fatalf("valueRange = %+v", entry.ValueRange)
 	}
 
 	totals := assertFixtureParity[CongressionalMemberNetWorthAggregate](t, "congress_senate_net_worth_aggregated.json")
 	if want := (CongressionalMemberNetWorthAggregate{MemberID: "P000197", Year: 2024, Total: 225_219_551,
-		RealEstateLiabilities: 27_000_005, CashAndCashEquivalents: 291_009, BusinessAndSelfEmployment: 0,
-		RealEstate: 45_032_504, OwnershipInterest: 70_140_014, Stock: 136_748_525, Options: 0,
-		RevolvingAndCreditLines: 1_500_002, AssetBackedSecurities: 4_475_006, BusinessLiabilities: 3_000_001,
-		MutualFundsAndETFs: 32_501}); len(totals) != 1 || totals[0] != want {
+		RealEstateLiabilities: new(27_000_005.0), CashAndCashEquivalents: 291_009, BusinessAndSelfEmployment: new(0.0),
+		RealEstate: new(45_032_504.0), OwnershipInterest: new(70_140_014.0), Stock: new(136_748_525.0), Options: new(0.0),
+		RevolvingAndCreditLines: new(1_500_002.0), AssetBackedSecurities: new(4_475_006.0), BusinessLiabilities: new(3_000_001.0),
+		MutualFundsAndETFs: 32_501}); len(totals) != 1 || !reflect.DeepEqual(totals[0], want) {
 		t.Fatalf("congress_senate_net_worth_aggregated = %+v", totals)
 	}
 	if encoded, err := json.Marshal(totals[0]); err != nil || !strings.Contains(string(encoded), `"mutualFundsAndETFs":32501`) {
@@ -174,7 +175,6 @@ func TestCongressionalRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		{"position with null senateID", `[` + strings.Replace(position, `"Z000018"`, `null`, 1) + `,"endDate":null}]`,
 			"CongressionalMemberPosition", "senateID"},
 		{"entry without debtDetails", `[` + entry + `}]`, "CongressionalMemberNetWorth", "debtDetails"},
-		{"entry with empty debtDetails", `[` + entry + `,"debtDetails":{}}]`, "CongressionalDebtDetails", "dateIncurred"},
 		{"entry with half a range",
 			`[` + strings.Replace(entry, `"valueRange":null`, `"valueRange":{"min":1}`, 1) + `,"debtDetails":null}]`,
 			"CongressionalNetWorthRange", "max"},
@@ -206,7 +206,7 @@ func TestCongressionalRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	}
 	var entries []CongressionalMemberNetWorth
 	if err := json.Unmarshal([]byte(`[`+entry+`,"debtDetails":null}]`), &entries); err != nil || len(entries) != 1 ||
-		entries[0].DebtDetails != nil || entries[0].Value != -1 || entries[0].IncomeRange == nil ||
+		entries[0].DebtDetails != nil || !reflect.DeepEqual(entries[0].Value, new(-1.0)) || entries[0].IncomeRange == nil ||
 		entries[0].IncomeRange.Min != -10 {
 		t.Fatalf("entry with null debtDetails = %+v, %v", entries, err)
 	}
@@ -252,5 +252,77 @@ func TestCongressionalMemberProfileImageDecodesNullAsNil(t *testing.T) {
 				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
 			}
 		})
+	}
+}
+
+// Mirrors itemized_fractional_value_and_null_members_decode_exactly and
+// aggregated_required_fields_are_strict_and_omittable_fields_may_be_absent in
+// crates/libfmp/tests/congressional_net_worth_endpoints.rs: fractional amounts
+// decode exactly, null itemized members and absent aggregate members decode to
+// nil, and an empty debtDetails object has no dateIncurred.
+func TestCongressionalNetWorthFractionalNullAndAbsentMembers(t *testing.T) {
+	t.Parallel()
+	const netWorth = "congress_senate_net_worth.json"
+	var entries []CongressionalMemberNetWorth
+	fractional := mutateFixtureMember(t, netWorth, "value", jsontext.Value(`32500.5`))
+	if err := json.Unmarshal(fractional, &entries); err != nil || len(entries) != 1 ||
+		!reflect.DeepEqual(entries[0].Value, new(32500.5)) {
+		t.Fatalf("fractional value = %+v, %v", entries, err)
+	}
+	nullable := []struct {
+		member string
+		isNil  func(CongressionalMemberNetWorth) bool
+	}{
+		{"category", func(row CongressionalMemberNetWorth) bool { return row.Category == nil }},
+		{"name", func(row CongressionalMemberNetWorth) bool { return row.Name == nil }},
+		{"owner", func(row CongressionalMemberNetWorth) bool { return row.Owner == nil }},
+		{"value", func(row CongressionalMemberNetWorth) bool { return row.Value == nil }},
+		{"valueRange.max", func(row CongressionalMemberNetWorth) bool {
+			return row.ValueRange != nil && row.ValueRange.Max == nil
+		}},
+	}
+	for _, tc := range nullable {
+		var rows []CongressionalMemberNetWorth
+		if err := json.Unmarshal(mutateFixtureMember(t, netWorth, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+			len(rows) != 1 || !tc.isNil(rows[0]) {
+			t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+		}
+		if err := json.Unmarshal(mutateFixtureMember(t, netWorth, tc.member, nil), &rows); err == nil {
+			t.Fatalf("missing %s decoded", tc.member)
+		}
+	}
+	if err := json.Unmarshal(mutateFixtureMember(t, netWorth, "debtDetails.dateIncurred", nil), &entries); err != nil ||
+		len(entries) != 1 || entries[0].DebtDetails == nil || entries[0].DebtDetails.DateIncurred != nil {
+		t.Fatalf("absent dateIncurred = %+v, %v", entries, err)
+	}
+	if encoded, err := json.Marshal(entries[0].DebtDetails); err != nil || string(encoded) != `{}` {
+		t.Fatalf("re-encoded debtDetails = %s, %v", encoded, err)
+	}
+
+	const sparse = `[{"cashAndCashEquivalents":121004.5,"mutualFundsAndETFs":34526531.5,` +
+		`"senateID":"M000355","total":59082540.5,"year":2023}]`
+	var totals []CongressionalMemberNetWorthAggregate
+	if err := json.Unmarshal([]byte(sparse), &totals); err != nil || len(totals) != 1 {
+		t.Fatalf("sparse aggregate = %+v, %v", totals, err)
+	}
+	if want := (CongressionalMemberNetWorthAggregate{MemberID: "M000355", Year: 2023, Total: 59_082_540.5,
+		CashAndCashEquivalents: 121_004.5, MutualFundsAndETFs: 34_526_531.5}); !reflect.DeepEqual(totals[0], want) {
+		t.Fatalf("sparse aggregate = %+v, want %+v", totals[0], want)
+	}
+	encoded, err := json.Marshal(totals)
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertCanonicalJSON(t, (*jsontext.Value)(&encoded), sparse)
+	fractionalTotals := strings.Replace(sparse, `"year":2023`, `"year":2023,"realEstate":3000000.5,"stock":8000.5`, 1)
+	if err := json.Unmarshal([]byte(fractionalTotals), &totals); err != nil || len(totals) != 1 ||
+		!reflect.DeepEqual(totals[0].RealEstate, new(3_000_000.5)) || !reflect.DeepEqual(totals[0].Stock, new(8_000.5)) {
+		t.Fatalf("fractional aggregate = %+v, %v", totals, err)
+	}
+	for _, member := range []string{"total", "cashAndCashEquivalents", "mutualFundsAndETFs"} {
+		var rows []CongressionalMemberNetWorthAggregate
+		if err := json.Unmarshal(mutateFixtureMember(t, "congress_senate_net_worth_aggregated.json", member, nil), &rows); err == nil {
+			t.Fatalf("missing %s decoded", member)
+		}
 	}
 }

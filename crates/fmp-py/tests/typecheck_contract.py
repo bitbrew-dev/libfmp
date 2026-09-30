@@ -206,8 +206,10 @@ def check_congressional_contract(client: FmpClient) -> None:
     totals: list[CongressionalMemberNetWorthAggregate] = client.congressional.net_worth_aggregated(
         "P000197", totals_col="stock"
     )
-    total: int = totals[0].total
-    _ = (disclosed, gains, born, years_active, value_range, total)
+    value: float | None = entries[0].value
+    total: float = totals[0].total
+    options: float | None = totals[0].options
+    _ = (disclosed, gains, born, years_active, value_range, value, total, options)
 
 
 def check_funds_contract(client: FmpClient) -> None:
