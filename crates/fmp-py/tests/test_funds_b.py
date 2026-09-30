@@ -87,8 +87,24 @@ def test_search_fund_disclosure_holders_encodes_punctuation(client: Any, fixture
     assert row.entity_org_type == "30"
     assert row.class_name == "Class A Shares"
     assert row.reporting_file_number == "811-03266"
+    assert row.address == "4000 ERICSSON DRIVE"
     assert row.zip_code == "15086-7561"
     assert row.state == "PA"
+
+
+def test_disclosure_rows_decode_omitted_members_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A null ``symbol``, an empty ``isin``, and a null ``address`` decode as ``None``."""
+    disclosure = load_fixture("fund_disclosures.json")
+    disclosure[0].update(symbol=None, isin="")
+    fixture_server.route("/funds/disclosure", disclosure)
+    search = load_fixture("fund_disclosure_holder_search.json")
+    search[0]["address"] = None
+    fixture_server.route("/funds/disclosure-holders-search", search)
+
+    position = client.funds.disclosures("VWO", 2023, 4)[0]
+    assert position.symbol is None
+    assert position.isin is None
+    assert client.funds.search_disclosure_holders(FEDERATED)[0].address is None
 
 
 def test_search_fund_disclosure_holders_with_a_plain_name(client: Any, fixture_server: FixtureServer) -> None:

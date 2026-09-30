@@ -125,7 +125,10 @@ async fn custom_proxy_preserves_exact_query_order_encoding_headers_and_fixture_i
     assert_eq!(latest[0].cik.as_str(), "0000866256");
     assert_eq!(latest[0].security_cusip.as_str(), "037833100");
     assert_eq!(latest[0].change, -316_881.0);
-    assert_eq!(disclosures[0].symbol.as_str(), "000089.SZ");
+    assert_eq!(
+        disclosures[0].symbol.as_ref().unwrap().as_str(),
+        "000089.SZ"
+    );
     assert_eq!(disclosures[0].cusip.as_str(), "N/A");
     assert_eq!(disclosures[0].currency_code.as_str(), "CNY");
     assert_eq!(disclosures[0].fair_val_level.as_str(), "2");

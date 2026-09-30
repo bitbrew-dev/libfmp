@@ -54,6 +54,21 @@ def test_etf_holdings_decodes_the_space_timestamp(client: Any, fixture_server: F
     assert row.updated_at == datetime.datetime(2026, 7, 30, 8, 7, 21)
 
 
+@pytest.mark.parametrize("wire", [None, ""])
+def test_etf_holdings_decodes_null_and_empty_codes_as_none(
+    client: Any, fixture_server: FixtureServer, wire: str | None
+) -> None:
+    """``etf_holdings`` surfaces a null or empty ``asset``, ``isin``, and ``securityCusip`` as ``None``."""
+    body = load_fixture("etf_fund_holdings.json")
+    body[0].update(asset=wire, isin=wire, securityCusip=wire)
+    fixture_server.route("/etf/holdings", body)
+    row = client.funds.etf_holdings("SPY")[0]
+
+    assert row.asset is None
+    assert row.isin is None
+    assert row.security_cusip is None
+
+
 def test_etf_holdings_encodes_a_spaced_symbol(client: Any, fixture_server: FixtureServer) -> None:
     """``etf_holdings`` form-encodes spaces and slashes in the ticker exactly as libfmp does."""
     fixture_server.route("/etf/holdings", load_fixture("etf_fund_holdings.json"))

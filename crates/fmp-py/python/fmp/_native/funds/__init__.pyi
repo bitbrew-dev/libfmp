@@ -102,13 +102,13 @@ class EtfFundHolding:
     @property
     def symbol(self) -> builtins.str: ...
     @property
-    def asset(self) -> builtins.str: ...
+    def asset(self) -> typing.Optional[builtins.str]: ...
     @property
     def name(self) -> builtins.str: ...
     @property
-    def isin(self) -> builtins.str: ...
+    def isin(self) -> typing.Optional[builtins.str]: ...
     @property
-    def security_cusip(self) -> builtins.str: ...
+    def security_cusip(self) -> typing.Optional[builtins.str]: ...
     @property
     def shares_number(self) -> builtins.float: ...
     @property
@@ -122,10 +122,10 @@ class EtfFundHolding:
         cls,
         *,
         symbol: builtins.str,
-        asset: builtins.str,
+        asset: typing.Optional[builtins.str],
         name: builtins.str,
-        isin: builtins.str,
-        security_cusip: builtins.str,
+        isin: typing.Optional[builtins.str],
+        security_cusip: typing.Optional[builtins.str],
         shares_number: builtins.float,
         weight_percentage: builtins.float,
         market_value: builtins.float,
@@ -326,7 +326,7 @@ class FundDisclosure:
     @property
     def accepted_date(self) -> datetime.datetime: ...
     @property
-    def symbol(self) -> builtins.str: ...
+    def symbol(self) -> typing.Optional[builtins.str]: ...
     @property
     def name(self) -> builtins.str: ...
     @property
@@ -336,7 +336,7 @@ class FundDisclosure:
     @property
     def cusip(self) -> builtins.str: ...
     @property
-    def isin(self) -> builtins.str: ...
+    def isin(self) -> typing.Optional[builtins.str]: ...
     @property
     def balance(self) -> builtins.float: ...
     @property
@@ -372,12 +372,12 @@ class FundDisclosure:
         cik: builtins.str,
         date: datetime.date,
         accepted_date: datetime.datetime,
-        symbol: builtins.str,
+        symbol: typing.Optional[builtins.str],
         name: builtins.str,
         lei: builtins.str,
         title: builtins.str,
         cusip: builtins.str,
-        isin: builtins.str,
+        isin: typing.Optional[builtins.str],
         balance: builtins.float,
         units: builtins.str,
         currency_code: builtins.str,
@@ -488,7 +488,7 @@ class FundDisclosureSearchResult:
     @property
     def reporting_file_number(self) -> builtins.str: ...
     @property
-    def address(self) -> builtins.str: ...
+    def address(self) -> typing.Optional[builtins.str]: ...
     @property
     def city(self) -> builtins.str: ...
     @property
@@ -508,7 +508,7 @@ class FundDisclosureSearchResult:
         series_name: builtins.str,
         class_name: builtins.str,
         reporting_file_number: builtins.str,
-        address: builtins.str,
+        address: typing.Optional[builtins.str],
         city: builtins.str,
         zip_code: builtins.str,
         state: builtins.str,

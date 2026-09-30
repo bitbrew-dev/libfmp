@@ -37,17 +37,20 @@ fn exact_holding_fixture_decodes_all_nine_fields_and_space_timestamp() {
         rows,
         [EtfFundHolding {
             symbol: Ticker::new("SPY").unwrap(),
-            asset: Ticker::new("AAPL").unwrap(),
+            asset: Some(Ticker::new("AAPL").unwrap()),
             name: "APPLE INC".to_owned(),
-            isin: Isin::new("US0378331005").unwrap(),
-            security_cusip: Cusip::new("037833100").unwrap(),
+            isin: Some(Isin::new("US0378331005").unwrap()),
+            security_cusip: Some(Cusip::new("037833100").unwrap()),
             shares_number: 181_418_073.0,
             weight_percentage: 7.79997012,
             market_value: 61_679_458_958.0,
             updated_at: ApiDateTime::parse("2026-07-30 08:07:21").unwrap(),
         }]
     );
-    assert_eq!(rows[0].security_cusip.as_str(), "037833100");
+    assert_eq!(
+        rows[0].security_cusip.as_ref().unwrap().as_str(),
+        "037833100"
+    );
 }
 
 #[test]
@@ -171,12 +174,12 @@ fn exact_disclosure_fixture_decodes_all_twenty_three_wire_fields() {
             cik: Cik::new("0000857489").unwrap(),
             date: Date::from_str("2023-10-31").unwrap(),
             accepted_date: ApiDateTime::parse("2023-12-28 09:26:13").unwrap(),
-            symbol: Ticker::new("000089.SZ").unwrap(),
+            symbol: Some(Ticker::new("000089.SZ").unwrap()),
             name: "Shenzhen Airport Co Ltd".to_owned(),
             lei: Lei::new("3003009W045RIKRBZI44").unwrap(),
             title: "SHENZ AIRPORT-A".to_owned(),
             cusip: Cusip::new("N/A").unwrap(),
-            isin: Isin::new("CNE000000VK1").unwrap(),
+            isin: Some(Isin::new("CNE000000VK1").unwrap()),
             balance: 2_438_784.0,
             units: "NS".to_owned(),
             currency_code: CurrencyCode::new("CNY").unwrap(),
@@ -193,7 +196,7 @@ fn exact_disclosure_fixture_decodes_all_twenty_three_wire_fields() {
             is_loan_by_fund: YnFlag::False,
         }]
     );
-    assert_eq!(rows[0].symbol.as_str(), "000089.SZ");
+    assert_eq!(rows[0].symbol.as_ref().unwrap().as_str(), "000089.SZ");
     assert_eq!(rows[0].cusip.as_str(), "N/A");
     assert_eq!(rows[0].fair_val_level.as_str(), "2");
     assert_eq!(
@@ -222,7 +225,7 @@ fn exact_search_fixture_preserves_all_thirteen_string_fields() {
     );
     assert_eq!(row.class_name, "Class A Shares");
     assert_eq!(row.reporting_file_number, "811-03266");
-    assert_eq!(row.address, "4000 ERICSSON DRIVE");
+    assert_eq!(row.address.as_deref(), Some("4000 ERICSSON DRIVE"));
     assert_eq!(row.city, "WARRENDALE");
     assert_eq!(row.zip_code, "15086-7561");
     assert_eq!(row.state, "PA");
@@ -299,7 +302,7 @@ fn identifiers_flags_and_temporal_wire_kinds_are_not_coerced() {
     disclosure[0]["cusip"] = serde_json::json!("001234567");
     let rows: Vec<FundDisclosure> = serde_json::from_value(disclosure).unwrap();
     assert_eq!(rows[0].cik.as_str(), "0000000001");
-    assert_eq!(rows[0].symbol.as_str(), "000001.SZ");
+    assert_eq!(rows[0].symbol.as_ref().unwrap().as_str(), "000001.SZ");
     assert_eq!(rows[0].cusip.as_str(), "001234567");
 
     let mut info: serde_json::Value = serde_json::from_slice(INFO).unwrap();
@@ -336,15 +339,15 @@ fn identifiers_flags_and_temporal_wire_kinds_are_not_coerced() {
 
 #[test]
 fn all_fields_and_nested_sector_fields_are_required_non_null_and_forward_tolerant() {
-    assert_contract::<EtfFundHolding>(HOLDINGS);
-    assert_contract::<EtfFundInfo>(INFO);
-    assert_contract::<EtfCountryWeighting>(COUNTRY);
-    assert_contract::<EtfAssetExposure>(ASSET);
-    assert_contract::<EtfSectorWeighting>(SECTOR);
-    assert_contract::<FundDisclosureHolder>(LATEST_HOLDERS);
-    assert_contract::<FundDisclosure>(DISCLOSURES);
-    assert_contract::<FundDisclosureSearchResult>(SEARCH);
-    assert_contract::<FundDisclosureDate>(DATES);
+    assert_contract::<EtfFundHolding>(HOLDINGS, &["asset", "isin", "securityCusip"]);
+    assert_contract::<EtfFundInfo>(INFO, &[]);
+    assert_contract::<EtfCountryWeighting>(COUNTRY, &[]);
+    assert_contract::<EtfAssetExposure>(ASSET, &[]);
+    assert_contract::<EtfSectorWeighting>(SECTOR, &[]);
+    assert_contract::<FundDisclosureHolder>(LATEST_HOLDERS, &[]);
+    assert_contract::<FundDisclosure>(DISCLOSURES, &["symbol", "isin"]);
+    assert_contract::<FundDisclosureSearchResult>(SEARCH, &["address"]);
+    assert_contract::<FundDisclosureDate>(DATES, &[]);
 
     for field in ["industry", "exposure"] {
         let mut missing: serde_json::Value = serde_json::from_slice(INFO).unwrap();
@@ -384,11 +387,58 @@ fn all_nine_contracts_are_bare_arrays_preserving_empty_and_multiple_rows() {
     );
 }
 
+#[test]
+fn omittable_members_decode_null_and_empty_as_none() {
+    for (field, wire) in [
+        ("asset", serde_json::Value::Null),
+        ("asset", serde_json::json!("")),
+        ("isin", serde_json::Value::Null),
+        ("isin", serde_json::json!("")),
+        ("securityCusip", serde_json::Value::Null),
+        ("securityCusip", serde_json::json!("")),
+    ] {
+        let mut value: serde_json::Value = serde_json::from_slice(HOLDINGS).unwrap();
+        value[0][field] = wire;
+        let rows: Vec<EtfFundHolding> = serde_json::from_value(value).unwrap();
+        let decoded = match field {
+            "asset" => rows[0].asset.is_none(),
+            "isin" => rows[0].isin.is_none(),
+            _ => rows[0].security_cusip.is_none(),
+        };
+        assert!(decoded, "{field}");
+        assert!(serde_json::to_value(&rows).unwrap()[0][field].is_null());
+    }
+
+    for wire in [serde_json::Value::Null, serde_json::json!("")] {
+        let mut value: serde_json::Value = serde_json::from_slice(DISCLOSURES).unwrap();
+        value[0]["isin"] = wire;
+        let rows: Vec<FundDisclosure> = serde_json::from_value(value).unwrap();
+        assert_eq!(rows[0].isin, None);
+    }
+    let mut disclosure: serde_json::Value = serde_json::from_slice(DISCLOSURES).unwrap();
+    disclosure[0]["symbol"] = serde_json::Value::Null;
+    let rows: Vec<FundDisclosure> = serde_json::from_value(disclosure).unwrap();
+    assert_eq!(rows[0].symbol, None);
+    assert!(serde_json::to_value(&rows).unwrap()[0]["symbol"].is_null());
+    let mut disclosure: serde_json::Value = serde_json::from_slice(DISCLOSURES).unwrap();
+    disclosure[0]["symbol"] = serde_json::json!("");
+    assert!(serde_json::from_value::<Vec<FundDisclosure>>(disclosure).is_err());
+
+    let mut search: serde_json::Value = serde_json::from_slice(SEARCH).unwrap();
+    search[0]["address"] = serde_json::Value::Null;
+    let rows: Vec<FundDisclosureSearchResult> = serde_json::from_value(search).unwrap();
+    assert_eq!(rows[0].address, None);
+    let mut search: serde_json::Value = serde_json::from_slice(SEARCH).unwrap();
+    search[0]["address"] = serde_json::json!("");
+    let rows: Vec<FundDisclosureSearchResult> = serde_json::from_value(search).unwrap();
+    assert_eq!(rows[0].address.as_deref(), Some(""));
+}
+
 fn source_row(fixture: &[u8]) -> serde_json::Value {
     serde_json::from_slice::<serde_json::Value>(fixture).unwrap()[0].clone()
 }
 
-fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
+fn assert_contract<T: DeserializeOwned>(fixture: &[u8], nullable: &[&str]) {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let keys = source[0]
         .as_object()
@@ -407,9 +457,10 @@ fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
 
         let mut null = source.clone();
         null[0][&key] = serde_json::Value::Null;
-        assert!(
-            serde_json::from_value::<Vec<T>>(null).is_err(),
-            "accepted null {key}"
+        assert_eq!(
+            serde_json::from_value::<Vec<T>>(null).is_ok(),
+            nullable.contains(&key.as_str()),
+            "null {key}"
         );
     }
 
