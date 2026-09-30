@@ -90,7 +90,7 @@ ANNOTATIONS: dict[str, tuple[str, str]] = {
 }
 REALTIME = "Nasdaq data is 15-minute delayed unless the real-time user declaration is on file"
 NOTES: dict[str, str] = {
-    "statements.reports.json": "typed row whose `sections` are dynamic JSON",
+    "statements.reports.json": "one typed object (not a list) whose `sections` are dynamic JSON",
     "statements.reports.xlsx": "binary payload (`BinaryResponse` / `fmp.BinaryPayload`)",
     "statements.reports.dates": "rows carry secret download links; redacted in Python `repr`",
     "quote.full": REALTIME,

@@ -141,7 +141,7 @@ served by the single method that owns the path:
 | `statements` | `statements.as_reported.cash_flow` | `cash_flow_statement_as_reported` | supported | supported |  |
 | `statements` | `statements.as_reported.full` | `financial_statement_full_as_reported` | supported | supported |  |
 | `statements` | `statements.reports.dates` | `financial_reports_dates` | supported | supported | rows carry secret download links; redacted in Python `repr` |
-| `statements` | `statements.reports.json` | `financial_reports_json` | supported | supported | typed row whose `sections` are dynamic JSON |
+| `statements` | `statements.reports.json` | `financial_reports_json` | supported | supported | one typed object (not a list) whose `sections` are dynamic JSON |
 | `statements` | `statements.reports.xlsx` | `financial_reports_xlsx` | supported | supported | binary payload (`BinaryResponse` / `fmp.BinaryPayload`) |
 | `statements` | `statements.segmentation.revenue_product` | `revenue_product_segmentation` | supported | supported |  |
 | `statements` | `statements.segmentation.revenue_geographic` | `revenue_geographic_segmentation` | supported | supported |  |
