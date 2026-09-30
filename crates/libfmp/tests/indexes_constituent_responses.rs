@@ -29,9 +29,11 @@ fn all_six_documented_constituent_fixtures_match_the_typed_wire_contract_exactly
         current[0].date_first_added.unwrap().to_string(),
         "2026-06-29"
     );
+    assert_eq!(current[0].founded, "1902/1985");
 
     let nullable: Vec<IndexConstituent> = serde_json::from_slice(NASDAQ).unwrap();
     assert_eq!(nullable[0].cik.as_str(), "0000796343");
+    assert_eq!(nullable[0].founded, "1982-12-01");
     assert_eq!(nullable[0].date_first_added, None);
 
     let history: Vec<HistoricalIndexConstituent> =
@@ -96,6 +98,18 @@ fn current_constituent_fields_are_required_and_nullable_date_stays_required() {
     future["futureField"] = json!({"nested": true});
     let decoded: IndexConstituent = serde_json::from_value(future).unwrap();
     assert_eq!(decoded.symbol.as_str(), "ADBE");
+}
+
+#[test]
+fn founded_keeps_year_multi_year_and_date_forms_verbatim() {
+    let source: Value = serde_json::from_slice(NASDAQ).unwrap();
+    for founded in ["1994", "1902/1985", "1902/1985/2001", "1982-12-01", ""] {
+        let mut row = source[0].clone();
+        row["founded"] = json!(founded);
+        let decoded: IndexConstituent = serde_json::from_value(row.clone()).unwrap();
+        assert_eq!(decoded.founded, founded);
+        assert_eq!(serde_json::to_value(decoded).unwrap(), row);
+    }
 }
 
 #[test]

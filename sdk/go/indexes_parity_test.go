@@ -108,7 +108,7 @@ func TestDocumentedIndexConstituentFixturesDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	sp500 := assertFixtureParity[IndexConstituent](t, "indexes_sp500_constituents.json")
 	if len(sp500) != 1 || sp500[0].Symbol != "HONA" || sp500[0].CIK != "0002089271" ||
-		sp500[0].SubSector != "Aerospace & Defense" || sp500[0].Founded != mustParseDate(t, "1913-12-31") {
+		sp500[0].SubSector != "Aerospace & Defense" || sp500[0].Founded != "1902/1985" {
 		t.Fatalf("indexes_sp500_constituents = %+v", sp500)
 	}
 	if got := sp500[0].DateFirstAdded; got == nil || got.String() != "2026-06-29" {
@@ -117,7 +117,7 @@ func TestDocumentedIndexConstituentFixturesDecodeExactValues(t *testing.T) {
 
 	nasdaq := assertFixtureParity[IndexConstituent](t, "indexes_nasdaq_constituents.json")
 	if len(nasdaq) != 1 || nasdaq[0].Symbol != "ADBE" || nasdaq[0].CIK != "0000796343" ||
-		nasdaq[0].HeadQuarter != "San Jose, CA" {
+		nasdaq[0].HeadQuarter != "San Jose, CA" || nasdaq[0].Founded != "1982-12-01" {
 		t.Fatalf("indexes_nasdaq_constituents = %+v", nasdaq)
 	}
 	if nasdaq[0].DateFirstAdded != nil {
@@ -171,6 +171,12 @@ func TestIndexesRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 		wire := `[{"dateFirstAdded":null,` + constituent + `,"futureField":{"nested":true}}]`
 		if err := json.Unmarshal([]byte(wire), &rows); err != nil || len(rows) != 1 || rows[0].DateFirstAdded != nil {
 			t.Fatalf("null dateFirstAdded with unknown member: %+v, %v", rows, err)
+		}
+		for _, founded := range []string{"1994", "1902/1985", "1902/1985/2001"} {
+			wire = `[{"dateFirstAdded":null,` + strings.Replace(constituent, "1982-12-01", founded, 1) + `}]`
+			if err := json.Unmarshal([]byte(wire), &rows); err != nil || len(rows) != 1 || rows[0].Founded != founded {
+				t.Fatalf("founded %q: %+v, %v", founded, rows, err)
+			}
 		}
 		var changes []HistoricalIndexConstituent
 		wire = `[{"removedSecurity":null,"removedTicker":null,` + history + `,"futureField":[1,2,3]}]`

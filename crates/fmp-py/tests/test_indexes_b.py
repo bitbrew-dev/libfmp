@@ -23,7 +23,7 @@ from fmp.indexes import HistoricalIndexConstituent, IndexConstituent
             "/sp500-constituent",
             "indexes_sp500_constituents.json",
             "HONA",
-            datetime.date(1913, 12, 31),
+            "1902/1985",
             datetime.date(2026, 6, 29),
             id="sp500",
         ),
@@ -32,7 +32,7 @@ from fmp.indexes import HistoricalIndexConstituent, IndexConstituent
             "/nasdaq-constituent",
             "indexes_nasdaq_constituents.json",
             "ADBE",
-            datetime.date(1982, 12, 1),
+            "1982-12-01",
             None,
             id="nasdaq",
         ),
@@ -41,7 +41,7 @@ from fmp.indexes import HistoricalIndexConstituent, IndexConstituent
             "/dowjones-constituent",
             "indexes_dow_jones_constituents.json",
             "GOOGL",
-            datetime.date(1998, 9, 4),
+            "1998-09-04",
             datetime.date(2026, 6, 29),
             id="dow-jones",
         ),
@@ -54,7 +54,7 @@ def test_current_constituents_take_no_arguments(
     path: str,
     fixture: str,
     symbol: str,
-    founded: datetime.date,
+    founded: str,
     date_first_added: datetime.date | None,
 ) -> None:
     """Each current-constituent method hits its own path with no query and decodes the date fields."""
@@ -70,6 +70,18 @@ def test_current_constituents_take_no_arguments(
     assert row.date_first_added == date_first_added
     assert row.cik.startswith("000")
     assert row.head_quarter
+
+
+@pytest.mark.parametrize("founded", ["1994", "1902/1985", "1902/1985/2001"])
+def test_constituent_founded_keeps_the_year_forms_verbatim(
+    client: Any, fixture_server: FixtureServer, founded: str
+) -> None:
+    """``founded`` is the provider's founding year or years, returned as the exact string."""
+    body = load_fixture("indexes_sp500_constituents.json")
+    body[0]["founded"] = founded
+    fixture_server.route("/sp500-constituent", body)
+
+    assert client.indexes.sp500_constituents()[0].founded == founded
 
 
 @pytest.mark.parametrize(

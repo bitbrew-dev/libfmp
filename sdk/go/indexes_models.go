@@ -66,7 +66,7 @@ type IndexConstituent struct {
 	HeadQuarter    string `json:"headQuarter"`
 	DateFirstAdded *Date  `json:"dateFirstAdded"`
 	CIK            string `json:"cik"`
-	Founded        Date   `json:"founded"`
+	Founded        string `json:"founded"`
 }
 
 // indexConstituentShadow mirrors IndexConstituent with a pointer or raw value
@@ -80,7 +80,7 @@ type indexConstituentShadow struct {
 	HeadQuarter    *string        `json:"headQuarter"`
 	DateFirstAdded jsontext.Value `json:"dateFirstAdded"`
 	CIK            *string        `json:"cik"`
-	Founded        *Date          `json:"founded"`
+	Founded        *string        `json:"founded"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
