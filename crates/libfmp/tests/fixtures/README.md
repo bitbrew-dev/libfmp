@@ -50,10 +50,14 @@ network connection.
   the ones reported in the issue, not a recorded response body. It is the
   decode proof for `Volume = f64` in `quote_short_endpoint.rs`,
   `fmp-py/tests/test_client.py`, and `sdk/go/quote_parity_test.go`.
-- **No captured live responses yet.** Nothing here was recorded from a live
-  call. When one is captured, add it under a `*_captured.json` name, note the
-  capture date and plan tier in the owning test, and resolve the matching row
-  in `docs/contract-ambiguities.md`.
+- **Trimmed live capture.** `financial_reports_json.json` is the one fixture
+  taken from a live call (AAPL, 2023, Q1, captured 2026-09-30 for issue
+  #374): the three headers plus three of its 48 sections, verbatim. It proves
+  the endpoint returns one bare object, not an array. It keeps the endpoint
+  name because the documented sample it replaced had the wrong shape.
+- **Other captured live responses.** When one is captured, add it under a
+  `*_captured.json` name, note the capture date and plan tier in the owning
+  test, and resolve the matching row in `docs/contract-ambiguities.md`.
 
 Formatting is not wire-faithful: the `pretty-format-json` pre-commit hook
 re-indents every file. Only the content (keys, value kinds, spelling,

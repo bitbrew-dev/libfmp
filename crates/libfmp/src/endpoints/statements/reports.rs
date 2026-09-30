@@ -118,7 +118,7 @@ pub fn financial_reports_dates(
 /// Describes `GET financial-reports-json` without binding it to a transport.
 pub fn financial_reports_json(
     query: FinancialReportsJsonQuery,
-) -> EndpointSpec<FinancialReportsJsonQuery, Vec<FinancialReportJson>> {
+) -> EndpointSpec<FinancialReportsJsonQuery, FinancialReportJson> {
     EndpointSpec::get("financial-reports-json", "financial-reports-json", query)
 }
 
@@ -143,11 +143,11 @@ impl Client {
         self.execute(&financial_reports_dates(query.into())).await
     }
 
-    /// Retrieves one dynamic JSON financial report as a bare array.
+    /// Retrieves one dynamic JSON financial report as a single object.
     pub async fn financial_reports_json(
         &self,
         query: FinancialReportsJsonQuery,
-    ) -> Result<Vec<FinancialReportJson>> {
+    ) -> Result<FinancialReportJson> {
         self.execute(&financial_reports_json(query)).await
     }
 

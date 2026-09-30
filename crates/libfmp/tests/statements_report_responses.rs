@@ -32,55 +32,44 @@ fn report_dates_decode_exact_five_fields_and_keep_links_secret() {
 }
 
 #[test]
-fn full_documented_report_preserves_all_70_top_level_keys() {
+fn captured_report_is_one_object_that_preserves_every_top_level_key() {
+    // Trimmed from a live AAPL 2023 Q1 response captured on 2026-09-30.
     let source: serde_json::Value = serde_json::from_slice(REPORT).unwrap();
-    assert_eq!(source.as_array().unwrap().len(), 1);
-    assert_eq!(source[0].as_object().unwrap().len(), 70);
+    assert_eq!(source.as_object().unwrap().len(), 6);
 
-    let rows: Vec<FinancialReportJson> = serde_json::from_value(source.clone()).unwrap();
-    assert_eq!(rows.len(), 1);
-    assert_eq!(rows[0].symbol, Ticker::new("AAPL").unwrap());
-    assert_eq!(rows[0].period, FiscalPeriod::FullYear);
-    assert_eq!(rows[0].year, FiscalYearString::new("2022").unwrap());
-    assert_eq!(rows[0].sections.len(), 67);
+    let report: FinancialReportJson = serde_json::from_value(source.clone()).unwrap();
+    assert_eq!(report.symbol, Ticker::new("AAPL").unwrap());
+    assert_eq!(report.period, FiscalPeriod::Q1);
+    assert_eq!(report.year, FiscalYearString::new("2023").unwrap());
+    assert_eq!(report.sections.len(), 3);
 
-    assert!(rows[0].sections.contains_key("Cover Page"));
-    assert!(rows[0].sections.contains_key("Shareholders' Equity"));
-    assert!(
-        rows[0]
-            .sections
-            .contains_key("CONSOLIDATED BALANCE SHEETS (Pa")
-    );
-    assert!(
-        rows[0]
-            .sections
-            .contains_key("Segment Information and Geogr_6")
-    );
+    for name in [
+        "CONDENSED CONSOLIDATED BALANC_2",
+        "Shareholders' Equity - Addition",
+        "Revenue - Additional Informatio",
+    ] {
+        assert!(report.sections.contains_key(name), "missing section {name}");
+    }
 
-    let round_trip = serde_json::to_value(&rows).unwrap();
+    let round_trip = serde_json::to_value(&report).unwrap();
     assert_eq!(round_trip, source);
 }
 
 #[test]
-fn documented_dynamic_sections_preserve_null_nbsp_and_heterogeneous_nested_values() {
-    let rows: Vec<FinancialReportJson> = serde_json::from_slice(REPORT).unwrap();
-    let sections = &rows[0].sections;
+fn captured_dynamic_sections_preserve_nbsp_and_scientific_notation() {
+    let report: FinancialReportJson = serde_json::from_slice(REPORT).unwrap();
+    let sections = &report.sections;
 
     assert_eq!(
-        sections["Income Taxes - Additional Infor"][0]["Income Taxes - Additional Information (Details) $ in Millions, € in Billions"]
-            [0],
-        serde_json::Value::Null
-    );
-    assert_eq!(
-        sections["Cover Page"][2]["Entity Information [Line Items]"][0],
+        sections["Shareholders' Equity - Addition"][2]["Share Repurchase Program [Line Items]"][0],
         serde_json::json!("\u{a0}")
     );
     assert_eq!(
-        sections["Leases - Lease Liability Maturi"][2]["2023"],
-        serde_json::json!([1758, "\u{a0}"])
+        sections["Revenue - Additional Informatio"][2]["Total deferred revenue"],
+        serde_json::json!([12.6, 12.4])
     );
     assert_eq!(
-        sections["CONSOLIDATED BALANCE SHEETS (Pa"][2]["Common stock, par value (in dollars per share)"]
+        sections["CONDENSED CONSOLIDATED BALANC_2"][2]["Common stock, par value (in dollars per share)"]
             [0]
             .as_number()
             .unwrap()
@@ -119,10 +108,10 @@ fn flattened_sections_round_trip_arbitrary_names_large_numbers_and_native_json_k
 
 #[test]
 fn serialization_rejects_every_reserved_header_in_dynamic_sections() {
-    let rows: Vec<FinancialReportJson> = serde_json::from_slice(REPORT).unwrap();
+    let captured: FinancialReportJson = serde_json::from_slice(REPORT).unwrap();
 
     for reserved in ["symbol", "period", "year"] {
-        let mut report = rows[0].clone();
+        let mut report = captured.clone();
         report.sections.insert(
             reserved.to_owned(),
             serde_json::json!("attacker-controlled replacement"),
@@ -143,8 +132,8 @@ fn strict_header_wire_kinds_and_requiredness_are_enforced() {
     assert!(serde_json::from_value::<Vec<FinancialReportDate>>(string_calendar_year).is_err());
 
     let mut numeric_report_year: serde_json::Value = serde_json::from_slice(REPORT).unwrap();
-    numeric_report_year[0]["year"] = serde_json::json!(2022);
-    assert!(serde_json::from_value::<Vec<FinancialReportJson>>(numeric_report_year).is_err());
+    numeric_report_year["year"] = serde_json::json!(2023);
+    assert!(serde_json::from_value::<FinancialReportJson>(numeric_report_year).is_err());
 
     for key in ["symbol", "fiscalYear", "period", "linkJson", "linkXlsx"] {
         let mut missing: serde_json::Value = serde_json::from_slice(DATES).unwrap();
@@ -156,27 +145,21 @@ fn strict_header_wire_kinds_and_requiredness_are_enforced() {
     }
     for key in ["symbol", "period", "year"] {
         let mut missing: serde_json::Value = serde_json::from_slice(REPORT).unwrap();
-        missing[0].as_object_mut().unwrap().remove(key);
+        missing.as_object_mut().unwrap().remove(key);
         assert!(
-            serde_json::from_value::<Vec<FinancialReportJson>>(missing).is_err(),
+            serde_json::from_value::<FinancialReportJson>(missing).is_err(),
             "accepted missing required report header {key}"
         );
     }
 }
 
 #[test]
-fn both_json_endpoints_preserve_bare_empty_and_multiple_arrays() {
+fn dates_keep_bare_arrays_while_the_report_is_one_object() {
     assert!(
         serde_json::from_slice::<Vec<FinancialReportDate>>(b"[]")
             .unwrap()
             .is_empty()
     );
-    assert!(
-        serde_json::from_slice::<Vec<FinancialReportJson>>(b"[]")
-            .unwrap()
-            .is_empty()
-    );
-
     let mut multiple_dates: serde_json::Value = serde_json::from_slice(DATES).unwrap();
     let duplicate_date = multiple_dates[0].clone();
     multiple_dates.as_array_mut().unwrap().push(duplicate_date);
@@ -187,19 +170,11 @@ fn both_json_endpoints_preserve_bare_empty_and_multiple_arrays() {
         2
     );
 
-    let mut multiple_reports: serde_json::Value = serde_json::from_slice(REPORT).unwrap();
-    let duplicate_report = multiple_reports[0].clone();
-    multiple_reports
-        .as_array_mut()
-        .unwrap()
-        .push(duplicate_report);
-    assert_eq!(
-        serde_json::from_value::<Vec<FinancialReportJson>>(multiple_reports)
-            .unwrap()
-            .len(),
-        2
-    );
-
+    let captured: serde_json::Value = serde_json::from_slice(REPORT).unwrap();
+    assert!(serde_json::from_value::<FinancialReportJson>(captured.clone()).is_ok());
+    assert!(serde_json::from_slice::<FinancialReportJson>(b"[]").is_err());
+    let listed = serde_json::json!([captured]);
+    assert!(serde_json::from_value::<FinancialReportJson>(listed).is_err());
     let wrapped = serde_json::json!({ "financialReports": [] });
-    assert!(serde_json::from_value::<Vec<FinancialReportJson>>(wrapped).is_err());
+    assert!(serde_json::from_value::<FinancialReportJson>(wrapped).is_err());
 }

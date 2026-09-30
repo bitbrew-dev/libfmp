@@ -127,8 +127,10 @@ func TestStatementsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	statementsCheck(t, "AsReported.Full", asFull, err, func(r AsReportedFinancialStatement) bool { return r.Data.Kind() == '{' })
 	dates, err := s.Reports.Dates(ctx, NewFinancialReportsDatesQuery(statementsTicker))
 	statementsCheck(t, "Reports.Dates", dates, err, func(r FinancialReportDate) bool { return r.FiscalYear == 2026 })
-	reports, err := s.Reports.JSON(ctx, NewFinancialReportsJSONQuery(statementsTicker, 2022, FiscalPeriodQ3))
-	statementsCheck(t, "Reports.JSON", reports, err, func(r FinancialReportJSON) bool { return r.Year == "2022" })
+	report, err := s.Reports.JSON(ctx, NewFinancialReportsJSONQuery(statementsTicker, 2022, FiscalPeriodQ3))
+	if err != nil || report.Year != "2023" {
+		t.Fatalf("Reports.JSON = %+v, %v", report, err)
+	}
 	xlsx, err := s.Reports.Xlsx(ctx, NewFinancialReportsXlsxQuery(statementsTicker, 2022, FiscalPeriodFullYear))
 	if err != nil || string(xlsx.Data) != statementsXlsxBytes || xlsx.ContentType != statementsXlsxType ||
 		xlsx.ContentDisposition != statementsDispositon || xlsx.MediaType() != statementsXlsxType {

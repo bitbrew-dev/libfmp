@@ -32,7 +32,7 @@ func TestStatementsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertFixtureParity[AsReportedFinancialStatement](t, "cash_flow_statement_as_reported.json")
 	assertFixtureParity[AsReportedFinancialStatement](t, "financial_statement_full_as_reported.json")
 	assertFixtureParity[FinancialReportDate](t, "financial_reports_dates.json")
-	assertFixtureParity[FinancialReportJSON](t, "financial_reports_json.json")
+	assertObjectFixtureParity[FinancialReportJSON](t, "financial_reports_json.json")
 	assertFixtureParity[RevenueSegmentation](t, "revenue_product_segmentation.json")
 	assertFixtureParity[RevenueSegmentation](t, "revenue_geographic_segmentation.json")
 	assertFixtureParity[LatestFinancialStatement](t, "latest_financial_statements.json")
