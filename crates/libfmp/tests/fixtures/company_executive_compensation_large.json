@@ -26,7 +26,7 @@
     "incentivePlanCompensation": 9000000000,
     "link": "https://example.test/filing",
     "nameAndPosition": "Synthetic Executive",
-    "optionAward": 8000000000,
+    "optionAward": null,
     "salary": 5000000000,
     "stockAward": 7000000000,
     "symbol": "BIG",

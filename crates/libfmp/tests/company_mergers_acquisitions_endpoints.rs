@@ -79,7 +79,10 @@ async fn proxy_client_preserves_omission_order_zero_above_bound_and_name_encodin
         .await
         .unwrap();
     assert_eq!(latest[0].cik.as_str(), "0002009312");
-    assert_eq!(latest[0].targeted_cik.as_str(), "0002009312");
+    assert_eq!(
+        latest[0].targeted_cik.as_ref().unwrap().as_str(),
+        "0002009312"
+    );
     assert_eq!(
         latest[0].targeted_company_name,
         "Aureus Greenway Holdings, Inc."
@@ -144,7 +147,7 @@ async fn merger_acquisition_arrays_preserve_multiple_empty_and_unknown_field_pay
         .unwrap();
     assert_eq!(multiple.len(), 2);
     assert_eq!(multiple[1].symbol.as_str(), "PEGY");
-    assert_eq!(multiple[1].targeted_symbol.as_str(), "JCS");
+    assert_eq!(multiple[1].targeted_symbol, None);
     assert_eq!(multiple[1].transaction_date.to_string(), "2021-11-12");
     assert_eq!(multiple[1].accepted_date.to_string(), "2021-11-12 09:54:22");
 

@@ -67,7 +67,11 @@ def test_profile_decodes_multiple_rows_with_large_integers(client: Any, fixture_
     assert rows[0].volume == float(18_446_744_073_709_551_615)
     assert isinstance(rows[0].market_cap, float)
     assert rows[0].market_cap == float(9_007_199_254_740_993)
-    assert rows[0].ipo_date == datetime.date(2026, 8, 27)
+    assert rows[0].ipo_date is None
+    assert rows[0].cik is None
+    assert rows[0].cusip is None
+    assert rows[0].full_time_employees is None
+    assert rows[0].phone is None
     assert rows[0].is_fund is True
     assert rows[1].ipo_date == datetime.date(1980, 12, 12)
 

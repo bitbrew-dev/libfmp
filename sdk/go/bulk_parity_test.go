@@ -42,7 +42,7 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 func TestDocumentedBulkSnapshotsDecodeExactValues(t *testing.T) {
 	t.Parallel()
 	profiles := assertFixtureParity[CompanyProfile](t, "bulk_company_profiles.json")
-	if len(profiles) != 1 || profiles[0].Symbol != "AAPL" || profiles[0].CIK != "0000320193" {
+	if len(profiles) != 1 || profiles[0].Symbol != "AAPL" || profiles[0].CIK == nil || *profiles[0].CIK != "0000320193" {
 		t.Fatalf("bulk_company_profiles = %+v", profiles)
 	}
 	ratings := assertFixtureParity[BulkStockRating](t, "bulk_stock_ratings.json")

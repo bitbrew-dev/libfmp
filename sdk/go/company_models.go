@@ -25,9 +25,9 @@ type CompanyProfile struct {
 	AverageVolume     float64 `json:"averageVolume"`
 	CompanyName       string  `json:"companyName"`
 	Currency          string  `json:"currency"`
-	CIK               string  `json:"cik"`
+	CIK               *string `json:"cik"`
 	ISIN              string  `json:"isin"`
-	CUSIP             string  `json:"cusip"`
+	CUSIP             *string `json:"cusip"`
 	ExchangeFullName  string  `json:"exchangeFullName"`
 	Exchange          string  `json:"exchange"`
 	Industry          string  `json:"industry"`
@@ -36,14 +36,14 @@ type CompanyProfile struct {
 	Ceo               string  `json:"ceo"`
 	Sector            string  `json:"sector"`
 	Country           string  `json:"country"`
-	FullTimeEmployees string  `json:"fullTimeEmployees"`
-	Phone             string  `json:"phone"`
+	FullTimeEmployees *string `json:"fullTimeEmployees"`
+	Phone             *string `json:"phone"`
 	Address           string  `json:"address"`
 	City              string  `json:"city"`
 	State             string  `json:"state"`
 	Zip               string  `json:"zip"`
 	Image             string  `json:"image"`
-	IPODate           Date    `json:"ipoDate"`
+	IPODate           *Date   `json:"ipoDate"`
 	DefaultImage      bool    `json:"defaultImage"`
 	IsETF             bool    `json:"isEtf"`
 	IsActivelyTrading bool    `json:"isActivelyTrading"`
@@ -55,42 +55,42 @@ type CompanyProfile struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type companyProfileShadow struct {
-	Symbol            *string  `json:"symbol"`
-	Price             *float64 `json:"price"`
-	MarketCap         *float64 `json:"marketCap"`
-	Beta              *float64 `json:"beta"`
-	LastDividend      *float64 `json:"lastDividend"`
-	Range             *string  `json:"range"`
-	Change            *float64 `json:"change"`
-	ChangePercentage  *float64 `json:"changePercentage"`
-	Volume            *float64 `json:"volume"`
-	AverageVolume     *float64 `json:"averageVolume"`
-	CompanyName       *string  `json:"companyName"`
-	Currency          *string  `json:"currency"`
-	CIK               *string  `json:"cik"`
-	ISIN              *string  `json:"isin"`
-	CUSIP             *string  `json:"cusip"`
-	ExchangeFullName  *string  `json:"exchangeFullName"`
-	Exchange          *string  `json:"exchange"`
-	Industry          *string  `json:"industry"`
-	Website           *string  `json:"website"`
-	Description       *string  `json:"description"`
-	Ceo               *string  `json:"ceo"`
-	Sector            *string  `json:"sector"`
-	Country           *string  `json:"country"`
-	FullTimeEmployees *string  `json:"fullTimeEmployees"`
-	Phone             *string  `json:"phone"`
-	Address           *string  `json:"address"`
-	City              *string  `json:"city"`
-	State             *string  `json:"state"`
-	Zip               *string  `json:"zip"`
-	Image             *string  `json:"image"`
-	IPODate           *Date    `json:"ipoDate"`
-	DefaultImage      *bool    `json:"defaultImage"`
-	IsETF             *bool    `json:"isEtf"`
-	IsActivelyTrading *bool    `json:"isActivelyTrading"`
-	IsAdr             *bool    `json:"isAdr"`
-	IsFund            *bool    `json:"isFund"`
+	Symbol            *string        `json:"symbol"`
+	Price             *float64       `json:"price"`
+	MarketCap         *float64       `json:"marketCap"`
+	Beta              *float64       `json:"beta"`
+	LastDividend      *float64       `json:"lastDividend"`
+	Range             *string        `json:"range"`
+	Change            *float64       `json:"change"`
+	ChangePercentage  *float64       `json:"changePercentage"`
+	Volume            *float64       `json:"volume"`
+	AverageVolume     *float64       `json:"averageVolume"`
+	CompanyName       *string        `json:"companyName"`
+	Currency          *string        `json:"currency"`
+	CIK               jsontext.Value `json:"cik"`
+	ISIN              *string        `json:"isin"`
+	CUSIP             jsontext.Value `json:"cusip"`
+	ExchangeFullName  *string        `json:"exchangeFullName"`
+	Exchange          *string        `json:"exchange"`
+	Industry          *string        `json:"industry"`
+	Website           *string        `json:"website"`
+	Description       *string        `json:"description"`
+	Ceo               *string        `json:"ceo"`
+	Sector            *string        `json:"sector"`
+	Country           *string        `json:"country"`
+	FullTimeEmployees jsontext.Value `json:"fullTimeEmployees"`
+	Phone             jsontext.Value `json:"phone"`
+	Address           *string        `json:"address"`
+	City              *string        `json:"city"`
+	State             *string        `json:"state"`
+	Zip               *string        `json:"zip"`
+	Image             *string        `json:"image"`
+	IPODate           jsontext.Value `json:"ipoDate"`
+	DefaultImage      *bool          `json:"defaultImage"`
+	IsETF             *bool          `json:"isEtf"`
+	IsActivelyTrading *bool          `json:"isActivelyTrading"`
+	IsAdr             *bool          `json:"isAdr"`
+	IsFund            *bool          `json:"isFund"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -126,11 +126,11 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "companyName")
 	case shadow.Currency == nil:
 		return missingMemberError("CompanyProfile", "currency")
-	case shadow.CIK == nil:
+	case len(shadow.CIK) == 0:
 		return missingMemberError("CompanyProfile", "cik")
 	case shadow.ISIN == nil:
 		return missingMemberError("CompanyProfile", "isin")
-	case shadow.CUSIP == nil:
+	case len(shadow.CUSIP) == 0:
 		return missingMemberError("CompanyProfile", "cusip")
 	case shadow.ExchangeFullName == nil:
 		return missingMemberError("CompanyProfile", "exchangeFullName")
@@ -148,9 +148,9 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "sector")
 	case shadow.Country == nil:
 		return missingMemberError("CompanyProfile", "country")
-	case shadow.FullTimeEmployees == nil:
+	case len(shadow.FullTimeEmployees) == 0:
 		return missingMemberError("CompanyProfile", "fullTimeEmployees")
-	case shadow.Phone == nil:
+	case len(shadow.Phone) == 0:
 		return missingMemberError("CompanyProfile", "phone")
 	case shadow.Address == nil:
 		return missingMemberError("CompanyProfile", "address")
@@ -162,7 +162,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "zip")
 	case shadow.Image == nil:
 		return missingMemberError("CompanyProfile", "image")
-	case shadow.IPODate == nil:
+	case len(shadow.IPODate) == 0:
 		return missingMemberError("CompanyProfile", "ipoDate")
 	case shadow.DefaultImage == nil:
 		return missingMemberError("CompanyProfile", "defaultImage")
@@ -174,6 +174,42 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "isAdr")
 	case shadow.IsFund == nil:
 		return missingMemberError("CompanyProfile", "isFund")
+	}
+	var cik *string
+	if shadow.CIK.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CIK, &value); err != nil {
+			return err
+		}
+		cik = &value
+	}
+	var cusip *string
+	if shadow.CUSIP.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CUSIP, &value); err != nil {
+			return err
+		}
+		cusip = &value
+	}
+	var fullTimeEmployees *string
+	if shadow.FullTimeEmployees.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.FullTimeEmployees, &value); err != nil {
+			return err
+		}
+		fullTimeEmployees = &value
+	}
+	var phone *string
+	if shadow.Phone.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Phone, &value); err != nil {
+			return err
+		}
+		phone = &value
+	}
+	ipoDate, err := decodeEmptyDate("CompanyProfile", "ipoDate", shadow.IPODate, true)
+	if err != nil {
+		return err
 	}
 	*m = CompanyProfile{
 		Symbol:            *shadow.Symbol,
@@ -188,9 +224,9 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		AverageVolume:     *shadow.AverageVolume,
 		CompanyName:       *shadow.CompanyName,
 		Currency:          *shadow.Currency,
-		CIK:               *shadow.CIK,
+		CIK:               cik,
 		ISIN:              *shadow.ISIN,
-		CUSIP:             *shadow.CUSIP,
+		CUSIP:             cusip,
 		ExchangeFullName:  *shadow.ExchangeFullName,
 		Exchange:          *shadow.Exchange,
 		Industry:          *shadow.Industry,
@@ -199,14 +235,14 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Ceo:               *shadow.Ceo,
 		Sector:            *shadow.Sector,
 		Country:           *shadow.Country,
-		FullTimeEmployees: *shadow.FullTimeEmployees,
-		Phone:             *shadow.Phone,
+		FullTimeEmployees: fullTimeEmployees,
+		Phone:             phone,
 		Address:           *shadow.Address,
 		City:              *shadow.City,
 		State:             *shadow.State,
 		Zip:               *shadow.Zip,
 		Image:             *shadow.Image,
-		IPODate:           *shadow.IPODate,
+		IPODate:           ipoDate,
 		DefaultImage:      *shadow.DefaultImage,
 		IsETF:             *shadow.IsETF,
 		IsActivelyTrading: *shadow.IsActivelyTrading,
@@ -218,19 +254,19 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // CompanyNote is one US company-issued note.
 type CompanyNote struct {
-	CIK      string `json:"cik"`
-	Symbol   string `json:"symbol"`
-	Title    string `json:"title"`
-	Exchange string `json:"exchange"`
+	CIK      string  `json:"cik"`
+	Symbol   string  `json:"symbol"`
+	Title    string  `json:"title"`
+	Exchange *string `json:"exchange"`
 }
 
 // companyNoteShadow mirrors CompanyNote with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type companyNoteShadow struct {
-	CIK      *string `json:"cik"`
-	Symbol   *string `json:"symbol"`
-	Title    *string `json:"title"`
-	Exchange *string `json:"exchange"`
+	CIK      *string        `json:"cik"`
+	Symbol   *string        `json:"symbol"`
+	Title    *string        `json:"title"`
+	Exchange jsontext.Value `json:"exchange"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -248,14 +284,22 @@ func (m *CompanyNote) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyNote", "symbol")
 	case shadow.Title == nil:
 		return missingMemberError("CompanyNote", "title")
-	case shadow.Exchange == nil:
+	case len(shadow.Exchange) == 0:
 		return missingMemberError("CompanyNote", "exchange")
+	}
+	var exchange *string
+	if shadow.Exchange.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Exchange, &value); err != nil {
+			return err
+		}
+		exchange = &value
 	}
 	*m = CompanyNote{
 		CIK:      *shadow.CIK,
 		Symbol:   *shadow.Symbol,
 		Title:    *shadow.Title,
-		Exchange: *shadow.Exchange,
+		Exchange: exchange,
 	}
 	return nil
 }
@@ -431,18 +475,18 @@ func (m *EmployeeCount) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // CompanyMarketCapitalization is one current or historical worldwide
 // market-capitalization observation.
 type CompanyMarketCapitalization struct {
-	Symbol    string  `json:"symbol"`
-	Date      Date    `json:"date"`
-	MarketCap float64 `json:"marketCap"`
+	Symbol    string   `json:"symbol"`
+	Date      Date     `json:"date"`
+	MarketCap *float64 `json:"marketCap"`
 }
 
 // companyMarketCapitalizationShadow mirrors CompanyMarketCapitalization with a
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type companyMarketCapitalizationShadow struct {
-	Symbol    *string  `json:"symbol"`
-	Date      *Date    `json:"date"`
-	MarketCap *float64 `json:"marketCap"`
+	Symbol    *string        `json:"symbol"`
+	Date      *Date          `json:"date"`
+	MarketCap jsontext.Value `json:"marketCap"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -458,13 +502,21 @@ func (m *CompanyMarketCapitalization) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		return missingMemberError("CompanyMarketCapitalization", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("CompanyMarketCapitalization", "date")
-	case shadow.MarketCap == nil:
+	case len(shadow.MarketCap) == 0:
 		return missingMemberError("CompanyMarketCapitalization", "marketCap")
+	}
+	var marketCap *float64
+	if shadow.MarketCap.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.MarketCap, &value); err != nil {
+			return err
+		}
+		marketCap = &value
 	}
 	*m = CompanyMarketCapitalization{
 		Symbol:    *shadow.Symbol,
 		Date:      *shadow.Date,
-		MarketCap: *shadow.MarketCap,
+		MarketCap: marketCap,
 	}
 	return nil
 }
@@ -477,19 +529,19 @@ type CompanyShareFloat struct {
 	FreeFloat         float64  `json:"freeFloat"`
 	FloatShares       float64  `json:"floatShares"`
 	OutstandingShares float64  `json:"outstandingShares"`
-	Source            string   `json:"source"`
+	Source            *string  `json:"source"`
 }
 
 // companyShareFloatShadow mirrors CompanyShareFloat with a pointer or raw
 // value for every required member so a missing or null member is observable
 // after decoding.
 type companyShareFloatShadow struct {
-	Symbol            *string   `json:"symbol"`
-	Date              *DateTime `json:"date"`
-	FreeFloat         *float64  `json:"freeFloat"`
-	FloatShares       *float64  `json:"floatShares"`
-	OutstandingShares *float64  `json:"outstandingShares"`
-	Source            *string   `json:"source"`
+	Symbol            *string        `json:"symbol"`
+	Date              *DateTime      `json:"date"`
+	FreeFloat         *float64       `json:"freeFloat"`
+	FloatShares       *float64       `json:"floatShares"`
+	OutstandingShares *float64       `json:"outstandingShares"`
+	Source            jsontext.Value `json:"source"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -511,8 +563,16 @@ func (m *CompanyShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyShareFloat", "floatShares")
 	case shadow.OutstandingShares == nil:
 		return missingMemberError("CompanyShareFloat", "outstandingShares")
-	case shadow.Source == nil:
+	case len(shadow.Source) == 0:
 		return missingMemberError("CompanyShareFloat", "source")
+	}
+	var source *string
+	if shadow.Source.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Source, &value); err != nil {
+			return err
+		}
+		source = &value
 	}
 	*m = CompanyShareFloat{
 		Symbol:            *shadow.Symbol,
@@ -520,7 +580,7 @@ func (m *CompanyShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		FreeFloat:         *shadow.FreeFloat,
 		FloatShares:       *shadow.FloatShares,
 		OutstandingShares: *shadow.OutstandingShares,
-		Source:            *shadow.Source,
+		Source:            source,
 	}
 	return nil
 }
@@ -530,19 +590,19 @@ func (m *CompanyShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type ShareFloat struct {
 	Symbol            string   `json:"symbol"`
 	Date              DateTime `json:"date"`
-	FreeFloat         float64  `json:"freeFloat"`
-	FloatShares       float64  `json:"floatShares"`
+	FreeFloat         *float64 `json:"freeFloat"`
+	FloatShares       *float64 `json:"floatShares"`
 	OutstandingShares float64  `json:"outstandingShares"`
 }
 
 // shareFloatShadow mirrors ShareFloat with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type shareFloatShadow struct {
-	Symbol            *string   `json:"symbol"`
-	Date              *DateTime `json:"date"`
-	FreeFloat         *float64  `json:"freeFloat"`
-	FloatShares       *float64  `json:"floatShares"`
-	OutstandingShares *float64  `json:"outstandingShares"`
+	Symbol            *string        `json:"symbol"`
+	Date              *DateTime      `json:"date"`
+	FreeFloat         jsontext.Value `json:"freeFloat"`
+	FloatShares       jsontext.Value `json:"floatShares"`
+	OutstandingShares *float64       `json:"outstandingShares"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -558,18 +618,34 @@ func (m *ShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ShareFloat", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("ShareFloat", "date")
-	case shadow.FreeFloat == nil:
+	case len(shadow.FreeFloat) == 0:
 		return missingMemberError("ShareFloat", "freeFloat")
-	case shadow.FloatShares == nil:
+	case len(shadow.FloatShares) == 0:
 		return missingMemberError("ShareFloat", "floatShares")
 	case shadow.OutstandingShares == nil:
 		return missingMemberError("ShareFloat", "outstandingShares")
 	}
+	var freeFloat *float64
+	if shadow.FreeFloat.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.FreeFloat, &value); err != nil {
+			return err
+		}
+		freeFloat = &value
+	}
+	var floatShares *float64
+	if shadow.FloatShares.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.FloatShares, &value); err != nil {
+			return err
+		}
+		floatShares = &value
+	}
 	*m = ShareFloat{
 		Symbol:            *shadow.Symbol,
 		Date:              *shadow.Date,
-		FreeFloat:         *shadow.FreeFloat,
-		FloatShares:       *shadow.FloatShares,
+		FreeFloat:         freeFloat,
+		FloatShares:       floatShares,
 		OutstandingShares: *shadow.OutstandingShares,
 	}
 	return nil
@@ -582,8 +658,8 @@ type MergerAcquisition struct {
 	CompanyName         string   `json:"companyName"`
 	CIK                 string   `json:"cik"`
 	TargetedCompanyName string   `json:"targetedCompanyName"`
-	TargetedCIK         string   `json:"targetedCik"`
-	TargetedSymbol      string   `json:"targetedSymbol"`
+	TargetedCIK         *string  `json:"targetedCik"`
+	TargetedSymbol      *string  `json:"targetedSymbol"`
 	TransactionDate     Date     `json:"transactionDate"`
 	AcceptedDate        DateTime `json:"acceptedDate"`
 	Link                string   `json:"link"`
@@ -593,15 +669,15 @@ type MergerAcquisition struct {
 // value for every required member so a missing or null member is observable
 // after decoding.
 type mergerAcquisitionShadow struct {
-	Symbol              *string   `json:"symbol"`
-	CompanyName         *string   `json:"companyName"`
-	CIK                 *string   `json:"cik"`
-	TargetedCompanyName *string   `json:"targetedCompanyName"`
-	TargetedCIK         *string   `json:"targetedCik"`
-	TargetedSymbol      *string   `json:"targetedSymbol"`
-	TransactionDate     *Date     `json:"transactionDate"`
-	AcceptedDate        *DateTime `json:"acceptedDate"`
-	Link                *string   `json:"link"`
+	Symbol              *string        `json:"symbol"`
+	CompanyName         *string        `json:"companyName"`
+	CIK                 *string        `json:"cik"`
+	TargetedCompanyName *string        `json:"targetedCompanyName"`
+	TargetedCIK         jsontext.Value `json:"targetedCik"`
+	TargetedSymbol      jsontext.Value `json:"targetedSymbol"`
+	TransactionDate     *Date          `json:"transactionDate"`
+	AcceptedDate        *DateTime      `json:"acceptedDate"`
+	Link                *string        `json:"link"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -621,9 +697,9 @@ func (m *MergerAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("MergerAcquisition", "cik")
 	case shadow.TargetedCompanyName == nil:
 		return missingMemberError("MergerAcquisition", "targetedCompanyName")
-	case shadow.TargetedCIK == nil:
+	case len(shadow.TargetedCIK) == 0:
 		return missingMemberError("MergerAcquisition", "targetedCik")
-	case shadow.TargetedSymbol == nil:
+	case len(shadow.TargetedSymbol) == 0:
 		return missingMemberError("MergerAcquisition", "targetedSymbol")
 	case shadow.TransactionDate == nil:
 		return missingMemberError("MergerAcquisition", "transactionDate")
@@ -632,13 +708,29 @@ func (m *MergerAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.Link == nil:
 		return missingMemberError("MergerAcquisition", "link")
 	}
+	var targetedCIK *string
+	if shadow.TargetedCIK.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.TargetedCIK, &value); err != nil {
+			return err
+		}
+		targetedCIK = &value
+	}
+	var targetedSymbol *string
+	if shadow.TargetedSymbol.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.TargetedSymbol, &value); err != nil {
+			return err
+		}
+		targetedSymbol = &value
+	}
 	*m = MergerAcquisition{
 		Symbol:              *shadow.Symbol,
 		CompanyName:         *shadow.CompanyName,
 		CIK:                 *shadow.CIK,
 		TargetedCompanyName: *shadow.TargetedCompanyName,
-		TargetedCIK:         *shadow.TargetedCIK,
-		TargetedSymbol:      *shadow.TargetedSymbol,
+		TargetedCIK:         targetedCIK,
+		TargetedSymbol:      targetedSymbol,
 		TransactionDate:     *shadow.TransactionDate,
 		AcceptedDate:        *shadow.AcceptedDate,
 		Link:                *shadow.Link,
@@ -653,7 +745,7 @@ type CompanyExecutive struct {
 	Name        string          `json:"name"`
 	Pay         *jsontext.Value `json:"pay"`
 	CurrencyPay string          `json:"currencyPay"`
-	Gender      string          `json:"gender"`
+	Gender      *string         `json:"gender"`
 	YearBorn    *jsontext.Value `json:"yearBorn"`
 	TitleSince  *jsontext.Value `json:"titleSince"`
 	Active      bool            `json:"active"`
@@ -667,7 +759,7 @@ type companyExecutiveShadow struct {
 	Name        *string         `json:"name"`
 	Pay         *jsontext.Value `json:"pay"`
 	CurrencyPay *string         `json:"currencyPay"`
-	Gender      *string         `json:"gender"`
+	Gender      jsontext.Value  `json:"gender"`
 	YearBorn    *jsontext.Value `json:"yearBorn"`
 	TitleSince  *jsontext.Value `json:"titleSince"`
 	Active      *bool           `json:"active"`
@@ -688,17 +780,25 @@ func (m *CompanyExecutive) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyExecutive", "name")
 	case shadow.CurrencyPay == nil:
 		return missingMemberError("CompanyExecutive", "currencyPay")
-	case shadow.Gender == nil:
+	case len(shadow.Gender) == 0:
 		return missingMemberError("CompanyExecutive", "gender")
 	case shadow.Active == nil:
 		return missingMemberError("CompanyExecutive", "active")
+	}
+	var gender *string
+	if shadow.Gender.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Gender, &value); err != nil {
+			return err
+		}
+		gender = &value
 	}
 	*m = CompanyExecutive{
 		Title:       *shadow.Title,
 		Name:        *shadow.Name,
 		Pay:         shadow.Pay,
 		CurrencyPay: *shadow.CurrencyPay,
-		Gender:      *shadow.Gender,
+		Gender:      gender,
 		YearBorn:    shadow.YearBorn,
 		TitleSince:  shadow.TitleSince,
 		Active:      *shadow.Active,
@@ -719,7 +819,7 @@ type ExecutiveCompensation struct {
 	Salary                    float64  `json:"salary"`
 	Bonus                     float64  `json:"bonus"`
 	StockAward                float64  `json:"stockAward"`
-	OptionAward               float64  `json:"optionAward"`
+	OptionAward               *float64 `json:"optionAward"`
 	IncentivePlanCompensation float64  `json:"incentivePlanCompensation"`
 	AllOtherCompensation      float64  `json:"allOtherCompensation"`
 	Total                     float64  `json:"total"`
@@ -730,21 +830,21 @@ type ExecutiveCompensation struct {
 // raw value for every required member so a missing or null member is
 // observable after decoding.
 type executiveCompensationShadow struct {
-	CIK                       *string   `json:"cik"`
-	Symbol                    *string   `json:"symbol"`
-	CompanyName               *string   `json:"companyName"`
-	FilingDate                *Date     `json:"filingDate"`
-	AcceptedDate              *DateTime `json:"acceptedDate"`
-	NameAndPosition           *string   `json:"nameAndPosition"`
-	Year                      *int64    `json:"year"`
-	Salary                    *float64  `json:"salary"`
-	Bonus                     *float64  `json:"bonus"`
-	StockAward                *float64  `json:"stockAward"`
-	OptionAward               *float64  `json:"optionAward"`
-	IncentivePlanCompensation *float64  `json:"incentivePlanCompensation"`
-	AllOtherCompensation      *float64  `json:"allOtherCompensation"`
-	Total                     *float64  `json:"total"`
-	Link                      *string   `json:"link"`
+	CIK                       *string        `json:"cik"`
+	Symbol                    *string        `json:"symbol"`
+	CompanyName               *string        `json:"companyName"`
+	FilingDate                *Date          `json:"filingDate"`
+	AcceptedDate              *DateTime      `json:"acceptedDate"`
+	NameAndPosition           *string        `json:"nameAndPosition"`
+	Year                      *int64         `json:"year"`
+	Salary                    *float64       `json:"salary"`
+	Bonus                     *float64       `json:"bonus"`
+	StockAward                *float64       `json:"stockAward"`
+	OptionAward               jsontext.Value `json:"optionAward"`
+	IncentivePlanCompensation *float64       `json:"incentivePlanCompensation"`
+	AllOtherCompensation      *float64       `json:"allOtherCompensation"`
+	Total                     *float64       `json:"total"`
+	Link                      *string        `json:"link"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -776,7 +876,7 @@ func (m *ExecutiveCompensation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExecutiveCompensation", "bonus")
 	case shadow.StockAward == nil:
 		return missingMemberError("ExecutiveCompensation", "stockAward")
-	case shadow.OptionAward == nil:
+	case len(shadow.OptionAward) == 0:
 		return missingMemberError("ExecutiveCompensation", "optionAward")
 	case shadow.IncentivePlanCompensation == nil:
 		return missingMemberError("ExecutiveCompensation", "incentivePlanCompensation")
@@ -786,6 +886,14 @@ func (m *ExecutiveCompensation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExecutiveCompensation", "total")
 	case shadow.Link == nil:
 		return missingMemberError("ExecutiveCompensation", "link")
+	}
+	var optionAward *float64
+	if shadow.OptionAward.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.OptionAward, &value); err != nil {
+			return err
+		}
+		optionAward = &value
 	}
 	*m = ExecutiveCompensation{
 		CIK:                       *shadow.CIK,
@@ -798,7 +906,7 @@ func (m *ExecutiveCompensation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Salary:                    *shadow.Salary,
 		Bonus:                     *shadow.Bonus,
 		StockAward:                *shadow.StockAward,
-		OptionAward:               *shadow.OptionAward,
+		OptionAward:               optionAward,
 		IncentivePlanCompensation: *shadow.IncentivePlanCompensation,
 		AllOtherCompensation:      *shadow.AllOtherCompensation,
 		Total:                     *shadow.Total,

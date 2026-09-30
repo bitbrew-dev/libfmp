@@ -49,7 +49,7 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	ctx := context.Background()
 
 	profile, err := client.Company.Profile(ctx, NewProfileQuery("AAPL"))
-	if err != nil || len(profile) != 1 || profile[0].CIK != "0000320193" {
+	if err != nil || len(profile) != 1 || profile[0].CIK == nil || *profile[0].CIK != "0000320193" {
 		t.Fatalf("Profile = %+v, %v", profile, err)
 	}
 	byCIK, err := client.Company.ProfileByCIK(ctx, NewProfileByCIKQuery("0000320193"))
@@ -57,11 +57,11 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("ProfileByCIK = %+v, %v", byCIK, err)
 	}
 	batch, err := client.Company.BatchMarketCapitalization(ctx, NewBatchMarketCapitalizationQuery([]string{"AAPL", "MSFT"}))
-	if err != nil || len(batch) != 1 || batch[0].MarketCap != 4_874_072_686_740 {
+	if err != nil || len(batch) != 1 || batch[0].MarketCap == nil || *batch[0].MarketCap != 4_874_072_686_740 {
 		t.Fatalf("BatchMarketCapitalization = %+v, %v", batch, err)
 	}
 	search, err := client.Company.SearchMergersAcquisitions(ctx, NewSearchMergersAcquisitionsQuery("Pineapple Energy"))
-	if err != nil || len(search) != 1 || search[0].TargetedSymbol != "JCS" {
+	if err != nil || len(search) != 1 || search[0].TargetedSymbol == nil || *search[0].TargetedSymbol != "JCS" {
 		t.Fatalf("SearchMergersAcquisitions = %+v, %v", search, err)
 	}
 
@@ -82,7 +82,7 @@ func TestCompanyMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	to := mustParseDate(t, "2026-07-16")
 	history, err := client.Company.HistoricalMarketCapitalization(ctx,
 		NewHistoricalMarketCapitalizationQuery("AAPL").WithFrom(from))
-	if err != nil || len(history) != 1 || history[0].MarketCap != 4_879_177_245_542 {
+	if err != nil || len(history) != 1 || history[0].MarketCap == nil || *history[0].MarketCap != 4_879_177_245_542 {
 		t.Fatalf("HistoricalMarketCapitalization from = %+v, %v", history, err)
 	}
 	reversed, err := client.Company.HistoricalMarketCapitalization(ctx,

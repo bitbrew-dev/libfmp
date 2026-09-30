@@ -20,7 +20,7 @@ fn documented_company_executive_decodes_exact_fields_and_nulls() {
     assert_eq!(row.name, "Kristin Huguet Quayle");
     assert_eq!(row.pay, None);
     assert_eq!(row.currency_pay.as_str(), "USD");
-    assert_eq!(row.gender, "female");
+    assert_eq!(row.gender.as_deref(), Some("female"));
     assert_eq!(row.year_born, None);
     assert_eq!(row.title_since, None);
     assert!(row.active);
@@ -56,6 +56,8 @@ fn company_executive_dynamic_fields_preserve_synthetic_non_null_json() {
     );
     assert_eq!(row.year_born, Some(json!("01980")));
     assert_eq!(row.title_since, Some(json!(1704067200)));
+    assert_eq!(row.gender, None);
+    assert!(serde_json::to_value(row).unwrap()["gender"].is_null());
     assert!(!row.active);
 }
 
@@ -77,7 +79,7 @@ fn documented_executive_compensation_decodes_dates_integer_year_and_amounts() {
     assert_eq!(row.salary, 819_231.0);
     assert_eq!(row.bonus, 0.0);
     assert_eq!(row.stock_award, 13_003_031.0);
-    assert_eq!(row.option_award, 0.0);
+    assert_eq!(row.option_award, Some(0.0));
     assert_eq!(row.incentive_plan_compensation, 1_638_462.0);
     assert_eq!(row.all_other_compensation, 22_204.0);
     assert_eq!(row.total, 15_482_928.0);
@@ -94,6 +96,8 @@ fn executive_compensation_arrays_decode_large_amounts_and_preserve_exact_casing(
     assert_eq!(rows[1].salary, 5_000_000_000.0);
     assert_eq!(rows[1].all_other_compensation, 10_000_000_000.0);
     assert_eq!(rows[1].total, u64::MAX as f64);
+    assert_eq!(rows[1].option_award, None);
+    assert!(serde_json::to_value(&rows[1]).unwrap()["optionAward"].is_null());
 
     let encoded = serde_json::to_value(&rows[0]).unwrap();
     assert_eq!(encoded["companyName"], "Apple Inc.");
