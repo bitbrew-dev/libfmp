@@ -133,7 +133,7 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 	results := assertFixtureParity[FundDisclosureSearchResult](t, "fund_disclosure_holder_search.json")
 	wantResult := FundDisclosureSearchResult{
 		Symbol: "FGOAX", CIK: "0000355691", ClassID: "C000024574", SeriesID: "S000009042",
-		EntityName: "Federated Hermes Government Income Securities, Inc.", EntityOrgType: "30",
+		EntityName: "Federated Hermes Government Income Securities, Inc.", EntityOrgType: new("30"),
 		SeriesName: "Federated Hermes Government Income Securities, Inc.", ClassName: "Class A Shares",
 		ReportingFileNumber: "811-03266", Address: new("4000 ERICSSON DRIVE"), City: "WARRENDALE", ZipCode: "15086-7561",
 		State: "PA",
@@ -207,6 +207,17 @@ func TestFundsOmittableMembersDecodeNullAndEmptyAsNil(t *testing.T) {
 	if err := json.Unmarshal(fundsRewrite(t, "fund_disclosure_holder_search.json",
 		map[string]string{"address": `""`}), &results); err != nil || !reflect.DeepEqual(results[0].Address, new("")) {
 		t.Fatalf("search empty address = %+v, %v", results, err)
+	}
+	for _, wire := range []string{`"NULL"`, "null"} {
+		if err := json.Unmarshal(fundsRewrite(t, "fund_disclosure_holder_search.json",
+			map[string]string{"entityOrgType": wire}), &results); err != nil || results[0].EntityOrgType != nil ||
+			string(memberValues(t, results[0])["entityOrgType"]) != "null" {
+			t.Fatalf("search entityOrgType %s = %+v, %v", wire, results, err)
+		}
+	}
+	if err := json.Unmarshal(fundsRewrite(t, "fund_disclosure_holder_search.json",
+		map[string]string{"entityOrgType": "30"}), &results); err == nil || strings.Contains(err.Error(), "30") {
+		t.Fatalf("search numeric entityOrgType = %+v, %v, want a type error without the value", results, err)
 	}
 }
 

@@ -107,6 +107,24 @@ def test_disclosure_rows_decode_omitted_members_as_none(client: Any, fixture_ser
     assert client.funds.search_disclosure_holders(FEDERATED)[0].address is None
 
 
+def test_search_entity_org_type_null_text_decodes_as_none(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """The ``"NULL"`` text in ``entityOrgType`` is ``None``; any other non-numeric text is a decode error."""
+    search = load_fixture("fund_disclosure_holder_search.json")
+    search[0]["entityOrgType"] = "NULL"
+    fixture_server.route("/funds/disclosure-holders-search", search)
+    assert client.funds.search_disclosure_holders(FEDERATED)[0].entity_org_type is None
+
+    search[0]["entityOrgType"] = "SECRET"
+    fixture_server.route("/funds/disclosure-holders-search", search)
+    with pytest.raises(errors.FmpDecodeError) as raised:
+        client.funds.search_disclosure_holders(FEDERATED)
+    assert raised.value.endpoint == "funds/disclosure-holders-search"
+    assert raised.value.decode_path == "[0].entityOrgType"
+    assert raised.value.decode_kind == "invalid_value"
+
+
 def test_search_fund_disclosure_holders_with_a_plain_name(client: Any, fixture_server: FixtureServer) -> None:
     """``search_disclosure_holders`` sends a space-separated name as ``+`` and nothing else."""
     fixture_server.route("/funds/disclosure-holders-search", load_fixture("fund_disclosure_holder_search.json"))

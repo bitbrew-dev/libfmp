@@ -480,7 +480,7 @@ class FundDisclosureSearchResult:
     @property
     def entity_name(self) -> builtins.str: ...
     @property
-    def entity_org_type(self) -> builtins.str: ...
+    def entity_org_type(self) -> typing.Optional[builtins.str]: ...
     @property
     def series_name(self) -> builtins.str: ...
     @property
@@ -504,7 +504,7 @@ class FundDisclosureSearchResult:
         class_id: builtins.str,
         series_id: builtins.str,
         entity_name: builtins.str,
-        entity_org_type: builtins.str,
+        entity_org_type: typing.Optional[builtins.str],
         series_name: builtins.str,
         class_name: builtins.str,
         reporting_file_number: builtins.str,

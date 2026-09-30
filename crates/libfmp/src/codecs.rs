@@ -807,6 +807,33 @@ pub(crate) mod empty_or_null {
     }
 }
 
+/// Deserializer for a required wire key holding a [`NumericString`] whose
+/// absent value the provider sends as the text `"NULL"` (ADR 0033, #380).
+///
+/// The exact text `"NULL"` and JSON null decode to `None`; any other string
+/// must be a numeric string, so `""`, `"null"` or `" NULL"` are still decode
+/// errors, and that error never includes the value. The key stays required:
+/// do not add `default` at call sites. Apply with
+/// `deserialize_with = "crate::codecs::null_text::deserialize"` (the exact
+/// path gen_go matches); serialization is serde's default, so `None`
+/// re-encodes as null.
+pub(crate) mod null_text {
+    use super::*;
+
+    pub(crate) fn deserialize<'de, D>(deserializer: D) -> Result<Option<NumericString>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        match Option::<String>::deserialize(deserializer)? {
+            None => Ok(None),
+            Some(value) if value == "NULL" => Ok(None),
+            Some(value) => NumericString::new(value)
+                .map(Some)
+                .map_err(de::Error::custom),
+        }
+    }
+}
+
 /// Serializers for response fields typed with an integral-`f64` alias.
 ///
 /// The provider documents fields such as [`Volume`](crate::types::Volume)
@@ -965,6 +992,50 @@ mod tests {
             missing.contains("missing field `country_code`"),
             "{missing}"
         );
+    }
+
+    #[test]
+    fn null_text_maps_the_null_text_and_null_to_none_and_parses_the_rest() {
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Row {
+            #[serde(deserialize_with = "super::null_text::deserialize")]
+            org_type: Option<super::NumericString>,
+        }
+        let decode = |text: &str| serde_json::from_str::<Row>(text);
+        let from_value =
+            |text: &str| serde_json::from_value::<Row>(serde_json::from_str(text).unwrap());
+
+        for text in [r#"{"org_type":"NULL"}"#, r#"{"org_type":null}"#] {
+            assert_eq!(decode(text).unwrap(), Row { org_type: None });
+            assert_eq!(from_value(text).unwrap(), Row { org_type: None });
+        }
+        let row = decode(r#"{"org_type":"30"}"#).unwrap();
+        assert_eq!(
+            row.org_type.as_ref().map(|value| value.as_str()),
+            Some("30")
+        );
+        assert_eq!(serde_json::to_string(&row).unwrap(), r#"{"org_type":"30"}"#);
+        assert_eq!(
+            serde_json::to_string(&Row { org_type: None }).unwrap(),
+            r#"{"org_type":null}"#
+        );
+
+        for (text, secret) in [
+            (r#"{"org_type":"SECRET"}"#, "SECRET"),
+            (r#"{"org_type":"null"}"#, "null"),
+            (r#"{"org_type":" NULL"}"#, "NULL"),
+            (r#"{"org_type":""}"#, "\"\""),
+        ] {
+            let error = decode(text).unwrap_err().to_string();
+            assert!(from_value(text).is_err(), "from_value {text}");
+            assert!(
+                !error.contains(secret),
+                "the error must not echo the value: {error}"
+            );
+        }
+        assert!(decode(r#"{"org_type":30}"#).is_err());
+        let missing = decode("{}").unwrap_err().to_string();
+        assert!(missing.contains("missing field `org_type`"), "{missing}");
     }
 
     #[test]

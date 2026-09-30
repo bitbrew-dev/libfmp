@@ -218,7 +218,10 @@ fn exact_search_fixture_preserves_all_thirteen_string_fields() {
         row.entity_name,
         "Federated Hermes Government Income Securities, Inc."
     );
-    assert_eq!(row.entity_org_type.as_str(), "30");
+    assert_eq!(
+        row.entity_org_type.as_ref().map(NumericString::as_str),
+        Some("30")
+    );
     assert_eq!(
         row.series_name,
         "Federated Hermes Government Income Securities, Inc."
@@ -346,7 +349,7 @@ fn all_fields_and_nested_sector_fields_are_required_non_null_and_forward_toleran
     assert_contract::<EtfSectorWeighting>(SECTOR, &[]);
     assert_contract::<FundDisclosureHolder>(LATEST_HOLDERS, &[]);
     assert_contract::<FundDisclosure>(DISCLOSURES, &["symbol", "isin"]);
-    assert_contract::<FundDisclosureSearchResult>(SEARCH, &["address"]);
+    assert_contract::<FundDisclosureSearchResult>(SEARCH, &["entityOrgType", "address"]);
     assert_contract::<FundDisclosureDate>(DATES, &[]);
 
     for field in ["industry", "exposure"] {
@@ -432,6 +435,20 @@ fn omittable_members_decode_null_and_empty_as_none() {
     search[0]["address"] = serde_json::json!("");
     let rows: Vec<FundDisclosureSearchResult> = serde_json::from_value(search).unwrap();
     assert_eq!(rows[0].address.as_deref(), Some(""));
+
+    let mut search: serde_json::Value = serde_json::from_slice(SEARCH).unwrap();
+    search[0]["entityOrgType"] = serde_json::json!("NULL");
+    let rows: Vec<FundDisclosureSearchResult> = serde_json::from_value(search).unwrap();
+    assert_eq!(rows[0].entity_org_type, None);
+    assert!(serde_json::to_value(&rows).unwrap()[0]["entityOrgType"].is_null());
+    for wire in ["SECRET", "null", ""] {
+        let mut search: serde_json::Value = serde_json::from_slice(SEARCH).unwrap();
+        search[0]["entityOrgType"] = serde_json::json!(wire);
+        let error = serde_json::from_value::<Vec<FundDisclosureSearchResult>>(search)
+            .unwrap_err()
+            .to_string();
+        assert!(!error.contains("SECRET"), "{error}");
+    }
 }
 
 fn source_row(fixture: &[u8]) -> serde_json::Value {

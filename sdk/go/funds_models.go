@@ -624,7 +624,7 @@ type FundDisclosureSearchResult struct {
 	ClassID             string  `json:"classId"`
 	SeriesID            string  `json:"seriesId"`
 	EntityName          string  `json:"entityName"`
-	EntityOrgType       string  `json:"entityOrgType"`
+	EntityOrgType       *string `json:"entityOrgType"`
 	SeriesName          string  `json:"seriesName"`
 	ClassName           string  `json:"className"`
 	ReportingFileNumber string  `json:"reportingFileNumber"`
@@ -643,7 +643,7 @@ type fundDisclosureSearchResultShadow struct {
 	ClassID             *string        `json:"classId"`
 	SeriesID            *string        `json:"seriesId"`
 	EntityName          *string        `json:"entityName"`
-	EntityOrgType       *string        `json:"entityOrgType"`
+	EntityOrgType       jsontext.Value `json:"entityOrgType"`
 	SeriesName          *string        `json:"seriesName"`
 	ClassName           *string        `json:"className"`
 	ReportingFileNumber *string        `json:"reportingFileNumber"`
@@ -672,7 +672,7 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("FundDisclosureSearchResult", "seriesId")
 	case shadow.EntityName == nil:
 		return missingMemberError("FundDisclosureSearchResult", "entityName")
-	case shadow.EntityOrgType == nil:
+	case len(shadow.EntityOrgType) == 0:
 		return missingMemberError("FundDisclosureSearchResult", "entityOrgType")
 	case shadow.SeriesName == nil:
 		return missingMemberError("FundDisclosureSearchResult", "seriesName")
@@ -689,6 +689,16 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	case shadow.State == nil:
 		return missingMemberError("FundDisclosureSearchResult", "state")
 	}
+	var entityOrgType *string
+	if shadow.EntityOrgType.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.EntityOrgType, &value); err != nil {
+			return err
+		}
+		if value != "NULL" {
+			entityOrgType = &value
+		}
+	}
 	var address *string
 	if shadow.Address.Kind() != 'n' {
 		var value string
@@ -703,7 +713,7 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		ClassID:             *shadow.ClassID,
 		SeriesID:            *shadow.SeriesID,
 		EntityName:          *shadow.EntityName,
-		EntityOrgType:       *shadow.EntityOrgType,
+		EntityOrgType:       entityOrgType,
 		SeriesName:          *shadow.SeriesName,
 		ClassName:           *shadow.ClassName,
 		ReportingFileNumber: *shadow.ReportingFileNumber,

@@ -171,7 +171,8 @@ pub struct FundDisclosureSearchResult {
     pub class_id: String,
     pub series_id: String,
     pub entity_name: String,
-    pub entity_org_type: NumericString,
+    #[serde(deserialize_with = "crate::codecs::null_text::deserialize")]
+    pub entity_org_type: Option<NumericString>,
     pub series_name: String,
     pub class_name: String,
     pub reporting_file_number: String,

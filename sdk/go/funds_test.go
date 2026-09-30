@@ -81,7 +81,7 @@ func TestFundsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	}
 	results, err := ns.SearchDisclosureHolders(ctx,
 		NewFundDisclosureHolderSearchQuery("Federated Hermes Government Income Securities, Inc."))
-	if err != nil || len(results) != 1 || results[0].EntityOrgType != "30" {
+	if err != nil || len(results) != 1 || results[0].EntityOrgType == nil || *results[0].EntityOrgType != "30" {
 		t.Fatalf("SearchDisclosureHolders = %+v, %v", results, err)
 	}
 	dates, err := ns.DisclosureDates(ctx, NewFundDisclosureDatesQuery("VWO").WithCIK("0000036405"))

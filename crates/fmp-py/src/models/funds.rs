@@ -1616,7 +1616,7 @@ pub(crate) struct FundDisclosureSearchResult {
     #[pyo3(get)]
     pub entity_name: String,
     #[pyo3(get)]
-    pub entity_org_type: String,
+    pub entity_org_type: Option<String>,
     #[pyo3(get)]
     pub series_name: String,
     #[pyo3(get)]
@@ -1646,7 +1646,7 @@ impl FundDisclosureSearchResult {
         class_id: String,
         series_id: String,
         entity_name: String,
-        entity_org_type: String,
+        entity_org_type: Option<String>,
         series_name: String,
         class_name: String,
         reporting_file_number: String,
@@ -1834,7 +1834,7 @@ impl From<libfmp::responses::funds::FundDisclosureSearchResult> for FundDisclosu
             class_id: value.class_id,
             series_id: value.series_id,
             entity_name: value.entity_name,
-            entity_org_type: value.entity_org_type.into_inner(),
+            entity_org_type: value.entity_org_type.map(|value| value.into_inner()),
             series_name: value.series_name,
             class_name: value.class_name,
             reporting_file_number: value.reporting_file_number,
