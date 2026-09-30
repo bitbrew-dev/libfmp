@@ -1,11 +1,19 @@
 //! Response rows returned by economics endpoints.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     query::EconomicIndicator,
     types::{ApiDateTime, Change, CountryCode, CurrencyCode, Date, Percentage},
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// Treasury rates across all twelve documented maturities for one date.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -13,18 +21,30 @@ use crate::{
 #[serde(rename_all = "camelCase")]
 pub struct TreasuryRate {
     pub date: Date,
-    pub month_1: Percentage,
-    pub month_2: Percentage,
-    pub month_3: Percentage,
-    pub month_6: Percentage,
-    pub year_1: Percentage,
-    pub year_2: Percentage,
-    pub year_3: Percentage,
-    pub year_5: Percentage,
-    pub year_7: Percentage,
-    pub year_10: Percentage,
-    pub year_20: Percentage,
-    pub year_30: Percentage,
+    #[serde(deserialize_with = "required_option")]
+    pub month_1: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub month_2: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub month_3: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub month_6: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_1: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_2: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_3: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_5: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_7: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_10: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_20: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub year_30: Option<Percentage>,
 }
 
 /// One observation of a documented or validated open economic indicator.
@@ -34,7 +54,8 @@ pub struct TreasuryRate {
 pub struct EconomicIndicatorObservation {
     pub name: EconomicIndicator,
     pub date: Date,
-    pub value: f64,
+    #[serde(deserialize_with = "required_option")]
+    pub value: Option<f64>,
 }
 
 /// One scheduled economic data release.
@@ -46,13 +67,19 @@ pub struct EconomicCalendarEvent {
     pub country: CountryCode,
     pub event: String,
     pub currency: CurrencyCode,
-    pub previous: f64,
-    pub estimate: f64,
-    pub actual: f64,
-    pub change: Change,
+    #[serde(deserialize_with = "required_option")]
+    pub previous: Option<f64>,
+    #[serde(deserialize_with = "required_option")]
+    pub estimate: Option<f64>,
+    #[serde(deserialize_with = "required_option")]
+    pub actual: Option<f64>,
+    #[serde(deserialize_with = "required_option")]
+    pub change: Option<Change>,
     pub impact: String,
-    pub change_percentage: Percentage,
-    pub unit: String,
+    #[serde(deserialize_with = "required_option")]
+    pub change_percentage: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    pub unit: Option<String>,
 }
 
 /// One country's documented market and total-equity risk premiums.

@@ -12,29 +12,29 @@ pub(crate) struct TreasuryRate {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub month_1: f64,
+    pub month_1: Option<f64>,
     #[pyo3(get)]
-    pub month_2: f64,
+    pub month_2: Option<f64>,
     #[pyo3(get)]
-    pub month_3: f64,
+    pub month_3: Option<f64>,
     #[pyo3(get)]
-    pub month_6: f64,
+    pub month_6: Option<f64>,
     #[pyo3(get)]
-    pub year_1: f64,
+    pub year_1: Option<f64>,
     #[pyo3(get)]
-    pub year_2: f64,
+    pub year_2: Option<f64>,
     #[pyo3(get)]
-    pub year_3: f64,
+    pub year_3: Option<f64>,
     #[pyo3(get)]
-    pub year_5: f64,
+    pub year_5: Option<f64>,
     #[pyo3(get)]
-    pub year_7: f64,
+    pub year_7: Option<f64>,
     #[pyo3(get)]
-    pub year_10: f64,
+    pub year_10: Option<f64>,
     #[pyo3(get)]
-    pub year_20: f64,
+    pub year_20: Option<f64>,
     #[pyo3(get)]
-    pub year_30: f64,
+    pub year_30: Option<f64>,
 }
 
 #[gen_stub_pymethods]
@@ -46,18 +46,18 @@ impl TreasuryRate {
     #[pyo3(signature = (*, date, month_1, month_2, month_3, month_6, year_1, year_2, year_3, year_5, year_7, year_10, year_20, year_30))]
     fn new(
         date: ::chrono::NaiveDate,
-        month_1: f64,
-        month_2: f64,
-        month_3: f64,
-        month_6: f64,
-        year_1: f64,
-        year_2: f64,
-        year_3: f64,
-        year_5: f64,
-        year_7: f64,
-        year_10: f64,
-        year_20: f64,
-        year_30: f64,
+        month_1: Option<f64>,
+        month_2: Option<f64>,
+        month_3: Option<f64>,
+        month_6: Option<f64>,
+        year_1: Option<f64>,
+        year_2: Option<f64>,
+        year_3: Option<f64>,
+        year_5: Option<f64>,
+        year_7: Option<f64>,
+        year_10: Option<f64>,
+        year_20: Option<f64>,
+        year_30: Option<f64>,
     ) -> Self {
         Self {
             date,
@@ -230,7 +230,7 @@ pub(crate) struct EconomicIndicatorObservation {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub value: f64,
+    pub value: Option<f64>,
 }
 
 #[gen_stub_pymethods]
@@ -240,7 +240,7 @@ impl EconomicIndicatorObservation {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, name, date, value))]
-    fn new(name: String, date: ::chrono::NaiveDate, value: f64) -> Self {
+    fn new(name: String, date: ::chrono::NaiveDate, value: Option<f64>) -> Self {
         Self { name, date, value }
     }
 
@@ -328,19 +328,19 @@ pub(crate) struct EconomicCalendarEvent {
     #[pyo3(get)]
     pub currency: String,
     #[pyo3(get)]
-    pub previous: f64,
+    pub previous: Option<f64>,
     #[pyo3(get)]
-    pub estimate: f64,
+    pub estimate: Option<f64>,
     #[pyo3(get)]
-    pub actual: f64,
+    pub actual: Option<f64>,
     #[pyo3(get)]
-    pub change: f64,
+    pub change: Option<f64>,
     #[pyo3(get)]
     pub impact: String,
     #[pyo3(get)]
-    pub change_percentage: f64,
+    pub change_percentage: Option<f64>,
     #[pyo3(get)]
-    pub unit: String,
+    pub unit: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -355,13 +355,13 @@ impl EconomicCalendarEvent {
         country: String,
         event: String,
         currency: String,
-        previous: f64,
-        estimate: f64,
-        actual: f64,
-        change: f64,
+        previous: Option<f64>,
+        estimate: Option<f64>,
+        actual: Option<f64>,
+        change: Option<f64>,
         impact: String,
-        change_percentage: f64,
-        unit: String,
+        change_percentage: Option<f64>,
+        unit: Option<String>,
     ) -> Self {
         Self {
             date,

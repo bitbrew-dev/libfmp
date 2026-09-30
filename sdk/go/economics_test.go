@@ -51,7 +51,7 @@ func TestEconomicsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	from, to := mustParseDate(t, "2026-01-27"), mustParseDate(t, "2026-04-27")
 
 	rates, err := client.Economics.TreasuryRates(ctx, NewTreasuryRatesQuery().WithFrom(from).WithTo(to))
-	if err != nil || len(rates) != 1 || rates[0].Year30 != 5.2 {
+	if err != nil || len(rates) != 1 || rates[0].Year30 == nil || *rates[0].Year30 != 5.2 {
 		t.Fatalf("TreasuryRates = %+v, %v", rates, err)
 	}
 	if rates, err = client.Economics.TreasuryRates(ctx, NewTreasuryRatesQuery().WithTo(to)); err != nil || len(rates) != 1 {
@@ -59,7 +59,7 @@ func TestEconomicsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	}
 	indicators, err := client.Economics.Indicators(ctx,
 		NewEconomicIndicatorsQuery(EconomicIndicatorGdp).WithFrom(from).WithTo(to))
-	if err != nil || len(indicators) != 1 || indicators[0].Value != 31_422.526 {
+	if err != nil || len(indicators) != 1 || indicators[0].Value == nil || *indicators[0].Value != 31_422.526 {
 		t.Fatalf("Indicators = %+v, %v", indicators, err)
 	}
 	if indicators, err = client.Economics.Indicators(ctx,
@@ -67,7 +67,7 @@ func TestEconomicsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 		t.Fatalf("Indicators with an open name = %+v, %v", indicators, err)
 	}
 	events, err := client.Economics.Calendar(ctx, NewEconomicCalendarQuery().WithCountry("US").WithFrom(from).WithTo(to))
-	if err != nil || len(events) != 1 || events[0].Actual != 13.6 {
+	if err != nil || len(events) != 1 || events[0].Actual == nil || *events[0].Actual != 13.6 {
 		t.Fatalf("Calendar = %+v, %v", events, err)
 	}
 	if events, err = client.Economics.Calendar(ctx, NewEconomicCalendarQuery().WithCountry("US")); err != nil || len(events) != 1 {

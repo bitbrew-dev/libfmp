@@ -103,9 +103,9 @@ async fn custom_proxy_preserves_exact_query_order_auth_headers_and_bare_arrays()
         .unwrap();
 
     assert_eq!(rates.len(), 1);
-    assert_eq!(rates[0].year_30, 5.2);
+    assert_eq!(rates[0].year_30, Some(5.2));
     assert_eq!(indicators.len(), 1);
-    assert_eq!(indicators[0].value, 31_422.526);
+    assert_eq!(indicators[0].value, Some(31_422.526));
 
     let requests = executor.requests();
     assert!(
