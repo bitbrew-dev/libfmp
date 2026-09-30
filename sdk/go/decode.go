@@ -1,6 +1,7 @@
 package fmp
 
 import (
+	"bytes"
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
@@ -131,6 +132,48 @@ func decodeLocation(body []byte, err error) (string, DecodeKind) {
 		return string(pointer), DecodeKindWrongType
 	default:
 		return string(pointer), DecodeKindInvalidValue
+	}
+}
+
+const (
+	maxPlainTextMessageBytes   = 256
+	maxErrorMessageObjectBytes = 1024
+	errorMessageMember         = "Error Message"
+)
+
+// isProviderMessage recognizes the two error shapes FMP sends with HTTP 200,
+// mirroring the Rust crate: a short plain-text line such as "Invalid name"
+// that is not JSON at all, or a JSON object whose only member is
+// "Error Message". Both checks are bounded by size so ordinary payloads are
+// not parsed twice.
+func isProviderMessage(body []byte) bool {
+	body = bytes.Trim(body, " \t\n\f\r")
+	if len(body) == 0 {
+		return false
+	}
+	switch body[0] {
+	case '{':
+		if len(body) > maxErrorMessageObjectBytes {
+			return false
+		}
+		var members map[string]jsontext.Value
+		if json.Unmarshal(body, &members) != nil {
+			return false
+		}
+		_, ok := members[errorMessageMember]
+		return ok && len(members) == 1
+	case '[':
+		return false
+	default:
+		if len(body) > maxPlainTextMessageBytes {
+			return false
+		}
+		for _, b := range body {
+			if b < ' ' || b > '~' {
+				return false
+			}
+		}
+		return !jsontext.Value(body).IsValid()
 	}
 }
 

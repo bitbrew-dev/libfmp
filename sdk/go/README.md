@@ -163,7 +163,10 @@ if errors.As(err, &fmpErr) {
 
 `Category` is one of `Validation`, `Configuration`, `Transport`, `Status`, or
 `Decode`. `Endpoint` is a logical endpoint id, never a URL. `Body` is the
-provider body, redacted and capped. A `Decode` error also carries `Path`, the
+provider body, redacted and capped. A `Status` error can carry `Status` 200
+when FMP answers a success status with its own error message (the plain-text
+`Invalid name`, or an object whose only member is `"Error Message"`) instead
+of the documented payload. A `Decode` error also carries `Path`, the
 JSON pointer of the failing member (`/37/beta`), and `DecodeKind`, the coarse
 reason (`DecodeKindNull`, `DecodeKindWrongType`, ...); neither ever includes
 the member value. The client never retries, wraps every
