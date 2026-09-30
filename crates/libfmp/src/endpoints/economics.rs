@@ -149,6 +149,10 @@ impl Client {
     /// The documented 90-day maximum is advisory metadata. Use
     /// [`EndpointBounds::accepts_date_range`](super::metadata::EndpointBounds::accepts_date_range)
     /// for optional preflight validation.
+    ///
+    /// The provider also caps the rows returned per call (about 60 observed
+    /// live), silently dropping the rest of a longer window. Walk long ranges
+    /// in short windows and merge the pages.
     pub async fn treasury_rates(
         &self,
         query: impl Into<TreasuryRatesQuery>,
@@ -161,6 +165,20 @@ impl Client {
     /// The documented 90-day maximum is advisory metadata. Use
     /// [`EndpointBounds::accepts_date_range`](super::metadata::EndpointBounds::accepts_date_range)
     /// for optional preflight validation.
+    ///
+    /// The provider caps the rows returned per call and can return fewer rows
+    /// than the window holds, or none: observed live, a one-year CPI window
+    /// returned 2 rows, a 91-day window 3, and a six-year GDP window `[]`.
+    /// Walk long ranges in short windows and merge the pages.
+    ///
+    /// # Errors
+    ///
+    /// An unknown indicator name is answered with HTTP 200 and the plain-text
+    /// body `Invalid name`; it surfaces as an [`ErrorCategory::Status`]
+    /// error whose [`Error::status_code`] is `Some(200)`, not a decode error.
+    ///
+    /// [`ErrorCategory::Status`]: crate::error::ErrorCategory::Status
+    /// [`Error::status_code`]: crate::Error::status_code
     pub async fn economic_indicators(
         &self,
         query: impl Into<EconomicIndicatorsQuery>,
