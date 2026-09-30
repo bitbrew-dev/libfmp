@@ -143,6 +143,26 @@ def test_pre_ipo_stub_rows_decode_null_amounts_as_none(client: Any, fixture_serv
     assert cash_row.net_income == 112_010_000_000
 
 
+def test_nullable_income_and_metrics_members_decode_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: null income dates, ``interestIncome`` and Graham numbers decode as ``None``."""
+    income = load_fixture("income_statement.json")
+    for member in ("interestIncome", "filingDate", "acceptedDate"):
+        income[0][member] = None
+    metrics = load_fixture("key_metrics.json")
+    metrics[0]["grahamNumber"] = None
+    metrics_ttm = load_fixture("key_metrics_ttm.json")
+    metrics_ttm[0]["grahamNumberTTM"] = None
+    fixture_server.route("/income-statement", income)
+    fixture_server.route("/key-metrics", metrics)
+    fixture_server.route("/key-metrics-ttm", metrics_ttm)
+
+    income_row = client.statements.income.statement("AAPL")[0]
+    assert (income_row.interest_income, income_row.filing_date, income_row.accepted_date) == (None, None, None)
+    assert income_row.revenue == 416_161_000_000
+    assert client.statements.metrics.key_metrics("AAPL")[0].graham_number is None
+    assert client.statements.metrics.key_metrics_ttm("AAPL")[0].graham_number_ttm is None
+
+
 def test_key_metrics_with_fiscal_quarter(client: Any, fixture_server: FixtureServer) -> None:
     """``metrics.key_metrics`` accepts a ``Q3`` fiscal quarter as the period."""
     fixture_server.route("/key-metrics", load_fixture("key_metrics.json"))

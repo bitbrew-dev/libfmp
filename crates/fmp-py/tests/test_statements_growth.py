@@ -108,6 +108,17 @@ def test_income_as_reported_with_annual_frequency(client: Any, fixture_server: F
     _assert_as_reported(rows[0], "comprehensiveincomenetoftax", 113_611_000_000)
 
 
+def test_null_as_reported_currency_decodes_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: a null ``reportedCurrency`` on an as-reported row decodes as ``None``."""
+    rows = load_fixture("income_statement_as_reported.json")
+    rows[0]["reportedCurrency"] = None
+    fixture_server.route("/income-statement-as-reported", rows)
+
+    row = client.statements.as_reported.income("AAPL")[0]
+    assert row.reported_currency is None
+    assert row.symbol == "AAPL"
+
+
 def test_balance_sheet_as_reported_with_quarter_frequency(client: Any, fixture_server: FixtureServer) -> None:
     """``as_reported.balance_sheet`` takes ``quarter``."""
     fixture_server.route(

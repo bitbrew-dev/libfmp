@@ -87,7 +87,7 @@ class FinancialScore:
     @property
     def reported_currency(self) -> builtins.str: ...
     @property
-    def altman_z_score(self) -> builtins.float: ...
+    def altman_z_score(self) -> typing.Optional[builtins.float]: ...
     @property
     def piotroski_score(self) -> builtins.int: ...
     @property
@@ -110,7 +110,7 @@ class FinancialScore:
         *,
         symbol: builtins.str,
         reported_currency: builtins.str,
-        altman_z_score: builtins.float,
+        altman_z_score: typing.Optional[builtins.float],
         piotroski_score: builtins.int,
         working_capital: builtins.float,
         total_assets: builtins.float,

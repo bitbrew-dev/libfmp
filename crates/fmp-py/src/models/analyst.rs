@@ -20,17 +20,17 @@ pub(crate) struct FinancialEstimate {
     #[pyo3(get)]
     pub revenue_avg: f64,
     #[pyo3(get)]
-    pub ebitda_low: f64,
+    pub ebitda_low: Option<f64>,
     #[pyo3(get)]
-    pub ebitda_high: f64,
+    pub ebitda_high: Option<f64>,
     #[pyo3(get)]
-    pub ebitda_avg: f64,
+    pub ebitda_avg: Option<f64>,
     #[pyo3(get)]
-    pub ebit_low: f64,
+    pub ebit_low: Option<f64>,
     #[pyo3(get)]
-    pub ebit_high: f64,
+    pub ebit_high: Option<f64>,
     #[pyo3(get)]
-    pub ebit_avg: f64,
+    pub ebit_avg: Option<f64>,
     #[pyo3(get)]
     pub net_income_low: f64,
     #[pyo3(get)]
@@ -68,12 +68,12 @@ impl FinancialEstimate {
         revenue_low: f64,
         revenue_high: f64,
         revenue_avg: f64,
-        ebitda_low: f64,
-        ebitda_high: f64,
-        ebitda_avg: f64,
-        ebit_low: f64,
-        ebit_high: f64,
-        ebit_avg: f64,
+        ebitda_low: Option<f64>,
+        ebitda_high: Option<f64>,
+        ebitda_avg: Option<f64>,
+        ebit_low: Option<f64>,
+        ebit_high: Option<f64>,
+        ebit_avg: Option<f64>,
         net_income_low: f64,
         net_income_high: f64,
         net_income_avg: f64,

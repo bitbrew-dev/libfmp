@@ -18,9 +18,9 @@ pub(crate) struct IncomeStatement {
     #[pyo3(get)]
     pub cik: String,
     #[pyo3(get)]
-    pub filing_date: ::chrono::NaiveDate,
+    pub filing_date: Option<::chrono::NaiveDate>,
     #[pyo3(get)]
-    pub accepted_date: ::chrono::NaiveDateTime,
+    pub accepted_date: Option<::chrono::NaiveDateTime>,
     #[pyo3(get)]
     pub fiscal_year: String,
     pub period: String,
@@ -47,7 +47,7 @@ pub(crate) struct IncomeStatement {
     #[pyo3(get)]
     pub net_interest_income: f64,
     #[pyo3(get)]
-    pub interest_income: f64,
+    pub interest_income: Option<f64>,
     #[pyo3(get)]
     pub interest_expense: f64,
     #[pyo3(get)]
@@ -100,8 +100,8 @@ impl IncomeStatement {
         symbol: String,
         reported_currency: String,
         cik: String,
-        filing_date: ::chrono::NaiveDate,
-        accepted_date: ::chrono::NaiveDateTime,
+        filing_date: Option<::chrono::NaiveDate>,
+        accepted_date: Option<::chrono::NaiveDateTime>,
         fiscal_year: String,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
@@ -116,7 +116,7 @@ impl IncomeStatement {
         operating_expenses: f64,
         cost_and_expenses: f64,
         net_interest_income: f64,
-        interest_income: f64,
+        interest_income: Option<f64>,
         interest_expense: f64,
         depreciation_and_amortization: f64,
         ebitda: f64,
@@ -760,8 +760,8 @@ impl From<libfmp::responses::statements::income::IncomeStatement> for IncomeStat
             symbol: value.symbol.into_inner(),
             reported_currency: value.reported_currency.into_inner(),
             cik: value.cik.into_inner(),
-            filing_date: value.filing_date.into_inner(),
-            accepted_date: value.accepted_date.into_inner(),
+            filing_date: value.filing_date.map(|value| value.into_inner()),
+            accepted_date: value.accepted_date.map(|value| value.into_inner()),
             fiscal_year: value.fiscal_year.as_str().to_owned(),
             period: value.period.to_string(),
             revenue: value.revenue,

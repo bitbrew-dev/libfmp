@@ -64,9 +64,9 @@ class IncomeStatement:
     @property
     def cik(self) -> builtins.str: ...
     @property
-    def filing_date(self) -> datetime.date: ...
+    def filing_date(self) -> typing.Optional[datetime.date]: ...
     @property
-    def accepted_date(self) -> datetime.datetime: ...
+    def accepted_date(self) -> typing.Optional[datetime.datetime]: ...
     @property
     def fiscal_year(self) -> builtins.str: ...
     @property
@@ -92,7 +92,7 @@ class IncomeStatement:
     @property
     def net_interest_income(self) -> builtins.float: ...
     @property
-    def interest_income(self) -> builtins.float: ...
+    def interest_income(self) -> typing.Optional[builtins.float]: ...
     @property
     def interest_expense(self) -> builtins.float: ...
     @property
@@ -141,8 +141,8 @@ class IncomeStatement:
         symbol: builtins.str,
         reported_currency: builtins.str,
         cik: builtins.str,
-        filing_date: datetime.date,
-        accepted_date: datetime.datetime,
+        filing_date: typing.Optional[datetime.date],
+        accepted_date: typing.Optional[datetime.datetime],
         fiscal_year: builtins.str,
         period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
         revenue: builtins.float,
@@ -156,7 +156,7 @@ class IncomeStatement:
         operating_expenses: builtins.float,
         cost_and_expenses: builtins.float,
         net_interest_income: builtins.float,
-        interest_income: builtins.float,
+        interest_income: typing.Optional[builtins.float],
         interest_expense: builtins.float,
         depreciation_and_amortization: builtins.float,
         ebitda: builtins.float,

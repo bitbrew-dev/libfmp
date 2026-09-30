@@ -1,8 +1,16 @@
 //! Response rows returned by analyst endpoints.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::types::{Count, Date, Price, StatementAmount, Ticker};
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One dated set of analyst financial estimates.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -17,18 +25,24 @@ pub struct FinancialEstimate {
     pub revenue_high: StatementAmount,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub revenue_avg: StatementAmount,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub ebitda_low: StatementAmount,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub ebitda_high: StatementAmount,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub ebitda_avg: StatementAmount,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub ebit_low: StatementAmount,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub ebit_high: StatementAmount,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub ebit_avg: StatementAmount,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub ebitda_low: Option<StatementAmount>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub ebitda_high: Option<StatementAmount>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub ebitda_avg: Option<StatementAmount>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub ebit_low: Option<StatementAmount>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub ebit_high: Option<StatementAmount>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub ebit_avg: Option<StatementAmount>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub net_income_low: StatementAmount,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]

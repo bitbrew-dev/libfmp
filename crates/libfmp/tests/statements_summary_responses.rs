@@ -50,7 +50,7 @@ fn documented_financial_score_decodes_all_eleven_exact_fields() {
         [FinancialScore {
             symbol: Ticker::new("AAPL").unwrap(),
             reported_currency: CurrencyCode::new("USD").unwrap(),
-            altman_z_score: 14.041374927993303,
+            altman_z_score: Some(14.041374927993303),
             piotroski_score: 9,
             working_capital: 9_473_000_000.0,
             total_assets: 371_082_000_000.0,
@@ -61,6 +61,16 @@ fn documented_financial_score_decodes_all_eleven_exact_fields() {
             revenue: 451_442_000_000.0,
         }]
     );
+}
+
+#[test]
+fn null_altman_z_score_decodes_as_none_and_reencodes_as_null() {
+    let mut value: serde_json::Value = serde_json::from_slice(SCORES).unwrap();
+    value[0]["altmanZScore"] = serde_json::Value::Null;
+
+    let rows: Vec<FinancialScore> = serde_json::from_value(value).unwrap();
+    assert_eq!(rows[0].altman_z_score, None);
+    assert!(serde_json::to_value(&rows).unwrap()[0]["altmanZScore"].is_null());
 }
 
 #[test]

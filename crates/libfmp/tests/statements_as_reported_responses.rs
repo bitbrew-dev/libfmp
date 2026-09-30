@@ -113,7 +113,7 @@ fn assert_envelope(row: &AsReportedFinancialStatement) {
     assert_eq!(row.symbol.as_str(), "AAPL");
     assert_eq!(row.fiscal_year.get(), 2025);
     assert_eq!(row.period.to_string(), "FY");
-    assert_eq!(row.reported_currency.as_str(), "USD");
+    assert_eq!(row.reported_currency.as_ref().unwrap().as_str(), "USD");
     assert_eq!(row.date.to_string(), "2025-09-26");
 }
 
@@ -186,4 +186,14 @@ fn dynamic_data_is_open_while_the_shared_bare_array_shape_preserves_empty_and_mu
 
     let wrapped = serde_json::json!({ "incomeStatementAsReported": income });
     assert!(serde_json::from_value::<Vec<AsReportedFinancialStatement>>(wrapped).is_err());
+}
+
+#[test]
+fn null_reported_currency_decodes_as_none_and_reencodes_as_null() {
+    let mut value: serde_json::Value = serde_json::from_slice(INCOME).unwrap();
+    value[0]["reportedCurrency"] = serde_json::Value::Null;
+
+    let rows: Vec<AsReportedFinancialStatement> = serde_json::from_value(value.clone()).unwrap();
+    assert_eq!(rows[0].reported_currency, None);
+    assert_eq!(serde_json::to_value(&rows).unwrap(), value);
 }

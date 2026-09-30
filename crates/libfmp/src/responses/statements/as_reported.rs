@@ -1,12 +1,20 @@
 //! Shared envelope for financial statements as reported by a company.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::DynamicObject,
     query::FiscalPeriod,
     types::{CalendarYear, CurrencyCode, Date, Ticker},
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One as-reported financial statement with provider-native data keys.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -16,7 +24,8 @@ pub struct AsReportedFinancialStatement {
     pub symbol: Ticker,
     pub fiscal_year: CalendarYear,
     pub period: FiscalPeriod,
-    pub reported_currency: CurrencyCode,
+    #[serde(deserialize_with = "required_option")]
+    pub reported_currency: Option<CurrencyCode>,
     pub date: Date,
     pub data: DynamicObject,
 }

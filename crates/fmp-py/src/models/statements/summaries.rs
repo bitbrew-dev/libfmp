@@ -163,7 +163,7 @@ pub(crate) struct FinancialScore {
     #[pyo3(get)]
     pub reported_currency: String,
     #[pyo3(get)]
-    pub altman_z_score: f64,
+    pub altman_z_score: Option<f64>,
     #[pyo3(get)]
     pub piotroski_score: u64,
     #[pyo3(get)]
@@ -192,7 +192,7 @@ impl FinancialScore {
     fn new(
         symbol: String,
         reported_currency: String,
-        altman_z_score: f64,
+        altman_z_score: Option<f64>,
         piotroski_score: u64,
         working_capital: f64,
         total_assets: f64,

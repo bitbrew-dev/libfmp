@@ -3,6 +3,7 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"reflect"
 	"testing"
 )
 
@@ -48,13 +49,13 @@ func TestDocumentedIncomeStatementDecodesAll39FieldsExactly(t *testing.T) {
 	rows := assertFixtureParity[IncomeStatement](t, "income_statement.json")
 	want := IncomeStatement{
 		Date: mustParseDate(t, "2025-09-27"), Symbol: "AAPL", ReportedCurrency: "USD", CIK: "0000320193",
-		FilingDate: mustParseDate(t, "2025-10-31"), AcceptedDate: mustParseDateTime(t, "2025-10-31 06:01:26"),
+		FilingDate: new(mustParseDate(t, "2025-10-31")), AcceptedDate: new(mustParseDateTime(t, "2025-10-31 06:01:26")),
 		FiscalYear: "2025", Period: "FY",
 		Revenue: 416_161_000_000, CostOfRevenue: 220_960_000_000, GrossProfit: 195_201_000_000,
 		ResearchAndDevelopmentExpenses: 34_550_000_000, GeneralAndAdministrativeExpenses: 27_601_000_000,
 		SellingAndMarketingExpenses: 0, SellingGeneralAndAdministrativeExpenses: 27_601_000_000,
 		OtherExpenses: 0, OperatingExpenses: 62_151_000_000, CostAndExpenses: 283_111_000_000,
-		NetInterestIncome: 0, InterestIncome: 0, InterestExpense: 0,
+		NetInterestIncome: 0, InterestIncome: new(0.0), InterestExpense: 0,
 		DepreciationAndAmortization: 11_698_000_000, Ebitda: 144_427_000_000, Ebit: 132_729_000_000,
 		NonOperatingIncomeExcludingInterest: 321_000_000, OperatingIncome: 133_050_000_000,
 		TotalOtherIncomeExpensesNet: -321_000_000, IncomeBeforeTax: 132_729_000_000,
@@ -63,7 +64,7 @@ func TestDocumentedIncomeStatementDecodesAll39FieldsExactly(t *testing.T) {
 		NetIncomeDeductions: 0, BottomLineNetIncome: 112_010_000_000, EPS: 7.49, EPSDiluted: 7.46,
 		WeightedAverageShsOut: 14_948_500_000, WeightedAverageShsOutDil: 15_004_697_000,
 	}
-	if len(rows) != 1 || rows[0] != want {
+	if len(rows) != 1 || !reflect.DeepEqual(rows[0], want) {
 		t.Fatalf("income_statement = %+v, want %+v", rows, want)
 	}
 	if got := memberSet(t, rows[0]); len(got) != 39 {
@@ -71,7 +72,7 @@ func TestDocumentedIncomeStatementDecodesAll39FieldsExactly(t *testing.T) {
 	}
 	ttm := assertFixtureParity[IncomeStatement](t, "income_statement_ttm.json")
 	if len(ttm) != 1 || ttm[0].Date != mustParseDate(t, "2026-03-28") || ttm[0].Period != "Q2" ||
-		ttm[0].Revenue != 451_442_000_000 || ttm[0].AcceptedDate != mustParseDateTime(t, "2026-05-01 10:01:00") {
+		ttm[0].Revenue != 451_442_000_000 || ttm[0].AcceptedDate == nil || *ttm[0].AcceptedDate != mustParseDateTime(t, "2026-05-01 10:01:00") {
 		t.Fatalf("income_statement_ttm = %+v", ttm)
 	}
 }
@@ -286,4 +287,56 @@ func TestPreIPOStubRowsDecodeNullAmountsAsNil(t *testing.T) {
 		t.Fatalf("cash flow stub row = %+v", cash[0])
 	}
 	assertStubMembersReencodeNull(t, cash[0], cashFlowStubQuarterNullMembers)
+}
+
+// Members FMP sends as null outside stub quarters (issue #368 audit): each
+// decodes to nil and re-encodes as null, mirroring the nullable-member tests
+// in the income, metrics, summary and as-reported Rust response suites.
+func TestNullableStatementMembersDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	incomeMembers := []string{"interestIncome", "filingDate", "acceptedDate"}
+	var income []IncomeStatement
+	if err := json.Unmarshal(statementsWithNullMembers(t, "income_statement.json", incomeMembers), &income); err != nil {
+		t.Fatalf("income: %v", err)
+	}
+	if income[0].InterestIncome != nil || income[0].FilingDate != nil || income[0].AcceptedDate != nil {
+		t.Fatalf("income = %+v", income[0])
+	}
+	assertStubMembersReencodeNull(t, income[0], incomeMembers)
+
+	var metrics []KeyMetrics
+	if err := json.Unmarshal(statementsWithNullMembers(t, "key_metrics.json", []string{"grahamNumber"}), &metrics); err != nil {
+		t.Fatalf("key metrics: %v", err)
+	}
+	if metrics[0].GrahamNumber != nil {
+		t.Fatalf("key metrics = %+v", metrics[0])
+	}
+	assertStubMembersReencodeNull(t, metrics[0], []string{"grahamNumber"})
+
+	var metricsTTM []KeyMetricsTTM
+	if err := json.Unmarshal(statementsWithNullMembers(t, "key_metrics_ttm.json", []string{"grahamNumberTTM"}), &metricsTTM); err != nil {
+		t.Fatalf("key metrics ttm: %v", err)
+	}
+	if metricsTTM[0].GrahamNumberTTM != nil {
+		t.Fatalf("key metrics ttm = %+v", metricsTTM[0])
+	}
+	assertStubMembersReencodeNull(t, metricsTTM[0], []string{"grahamNumberTTM"})
+
+	var scores []FinancialScore
+	if err := json.Unmarshal(statementsWithNullMembers(t, "financial_scores.json", []string{"altmanZScore"}), &scores); err != nil {
+		t.Fatalf("financial score: %v", err)
+	}
+	if scores[0].AltmanZScore != nil {
+		t.Fatalf("financial score = %+v", scores[0])
+	}
+	assertStubMembersReencodeNull(t, scores[0], []string{"altmanZScore"})
+
+	var asReported []AsReportedFinancialStatement
+	if err := json.Unmarshal(statementsWithNullMembers(t, "income_statement_as_reported.json", []string{"reportedCurrency"}), &asReported); err != nil {
+		t.Fatalf("as reported: %v", err)
+	}
+	if asReported[0].ReportedCurrency != nil {
+		t.Fatalf("as reported = %+v", asReported[0])
+	}
+	assertStubMembersReencodeNull(t, asReported[0], []string{"reportedCurrency"})
 }

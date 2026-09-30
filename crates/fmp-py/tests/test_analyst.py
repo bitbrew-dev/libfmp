@@ -58,6 +58,20 @@ def test_financial_estimates_annual_without_options(client: Any, fixture_server:
     assert row.num_analysts_eps == 7
 
 
+def test_null_ebit_estimates_decode_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: null EBIT and EBITDA estimate members decode as ``None``."""
+    rows = load_fixture("financial_estimates.json")
+    members = ("ebitdaLow", "ebitdaHigh", "ebitdaAvg", "ebitLow", "ebitHigh", "ebitAvg")
+    for member in members:
+        rows[0][member] = None
+    fixture_server.route("/analyst-estimates", rows)
+
+    row = client.analyst.financial_estimates("AAPL", "annual")[0]
+    assert (row.ebitda_low, row.ebitda_high, row.ebitda_avg) == (None, None, None)
+    assert (row.ebit_low, row.ebit_high, row.ebit_avg) == (None, None, None)
+    assert row.revenue_high == 735_022_980_353
+
+
 def test_financial_estimates_quarter_with_every_option(client: Any, fixture_server: FixtureServer) -> None:
     """Encoding order is ``symbol``, ``period``, ``page``, ``limit``; ``0`` and ``u32::MAX`` are sent verbatim."""
     fixture_server.route("/analyst-estimates", load_fixture("financial_estimates.json"))

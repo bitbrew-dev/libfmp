@@ -1,6 +1,6 @@
 //! Compact financial-summary response models.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::FiscalYearString,
@@ -10,6 +10,14 @@ use crate::{
         Quantity, StatementAmount, Ticker,
     },
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One recently added financial-statement filing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -30,7 +38,8 @@ pub struct LatestFinancialStatement {
 pub struct FinancialScore {
     pub symbol: Ticker,
     pub reported_currency: CurrencyCode,
-    pub altman_z_score: f64,
+    #[serde(deserialize_with = "required_option")]
+    pub altman_z_score: Option<f64>,
     #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub piotroski_score: Count,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]

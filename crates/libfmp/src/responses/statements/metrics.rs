@@ -1,12 +1,20 @@
 //! Historical and trailing-twelve-month key-metrics response models.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::FiscalYearString,
     query::FiscalPeriod,
     types::{CurrencyCode, Date, MarketCapitalization, StatementAmount, Ticker},
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One historical worldwide key-metrics row.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -31,7 +39,8 @@ pub struct KeyMetrics {
     pub net_debt_to_ebitda: f64,
     pub current_ratio: f64,
     pub income_quality: f64,
-    pub graham_number: f64,
+    #[serde(deserialize_with = "required_option")]
+    pub graham_number: Option<f64>,
     pub graham_net_net: f64,
     pub tax_burden: f64,
     pub interest_burden: f64,
@@ -105,8 +114,9 @@ pub struct KeyMetricsTtm {
     pub current_ratio_ttm: f64,
     #[serde(rename = "incomeQualityTTM")]
     pub income_quality_ttm: f64,
+    #[serde(deserialize_with = "required_option")]
     #[serde(rename = "grahamNumberTTM")]
-    pub graham_number_ttm: f64,
+    pub graham_number_ttm: Option<f64>,
     #[serde(rename = "grahamNetNetTTM")]
     pub graham_net_net_ttm: f64,
     #[serde(rename = "taxBurdenTTM")]

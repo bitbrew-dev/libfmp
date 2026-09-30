@@ -122,7 +122,9 @@ func TestStatementsMethodsUseExactPathsAndWireOrder(t *testing.T) {
 	asBalance, err := s.AsReported.BalanceSheet(ctx, NewBalanceSheetStatementAsReportedQuery(statementsTicker).WithLimit(7).WithPeriod(RetrievalFrequencyQuarterly))
 	statementsCheck(t, "AsReported.BalanceSheet", asBalance, err, func(r AsReportedFinancialStatement) bool { return r.Period == "FY" })
 	asCash, err := s.AsReported.CashFlow(ctx, NewCashFlowStatementAsReportedQuery(statementsTicker).WithLimit(5).WithPeriod(RetrievalFrequencyAnnual))
-	statementsCheck(t, "AsReported.CashFlow", asCash, err, func(r AsReportedFinancialStatement) bool { return r.ReportedCurrency == "USD" })
+	statementsCheck(t, "AsReported.CashFlow", asCash, err, func(r AsReportedFinancialStatement) bool {
+		return r.ReportedCurrency != nil && *r.ReportedCurrency == "USD"
+	})
 	asFull, err := s.AsReported.Full(ctx, NewFinancialStatementFullAsReportedQuery(statementsTicker).WithLimit(7).WithPeriod(RetrievalFrequencyQuarterly))
 	statementsCheck(t, "AsReported.Full", asFull, err, func(r AsReportedFinancialStatement) bool { return r.Data.Kind() == '{' })
 	dates, err := s.Reports.Dates(ctx, NewFinancialReportsDatesQuery(statementsTicker))

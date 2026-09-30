@@ -117,6 +117,7 @@ def check_statements_contract(client: FmpClient) -> None:
     rows: list[IncomeStatement] = income.statement("AAPL", period="annual", limit=5)
     reported_on: datetime.date = rows[0].date
     revenue: float = rows[0].revenue
+    interest_income: float | None = rows[0].interest_income
     fiscal: Literal["Q1", "Q2", "Q3", "Q4", "FY"] = rows[0].period
     dates: list[FinancialReportDate] = client.statements.reports.dates("AAPL")
     link: str = dates[0].expose_secret_url_json()
@@ -420,6 +421,7 @@ def check_analyst_contract(client: FmpClient) -> None:
     estimated_on: datetime.date = estimates[0].date
     revenue_high: float = estimates[0].revenue_high
     eps_avg: float = estimates[0].eps_avg
+    ebit_avg: float | None = estimates[0].ebit_avg
     consensus: list[PriceTargetConsensus] = client.analyst.price_target_consensus("AAPL")
     target_high: float = consensus[0].target_high
     grades: list[StockGrade] = client.analyst.stock_grades("AAPL")
