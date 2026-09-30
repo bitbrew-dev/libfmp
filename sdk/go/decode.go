@@ -27,14 +27,14 @@ func decodeEmptyDate(model, member string, raw jsontext.Value, allowNull bool) (
 	case '"':
 		var text string
 		if err := json.Unmarshal(raw, &text); err != nil {
-			return nil, err
+			return nil, memberDecodeError(model, member, raw, err)
 		}
 		if text == "" {
 			return nil, nil
 		}
 		date, err := ParseDate(text)
 		if err != nil {
-			return nil, err
+			return nil, invalidMemberValueError(model, member, "string holding a "+dateExpected)
 		}
 		return &date, nil
 	default:
@@ -112,7 +112,7 @@ func decodeLocation(body []byte, err error) (string, DecodeKind) {
 	pointer := semantic.JSONPointer
 	var member *Error
 	if errors.As(semantic.Err, &member) && member.member != "" {
-		pointer = pointer.AppendToken(member.member)
+		pointer = pointer.AppendToken(member.member) + member.memberPath
 		value, found := valueAt(body, pointer)
 		switch {
 		case !found:

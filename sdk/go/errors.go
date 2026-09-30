@@ -1,6 +1,7 @@
 package fmp
 
 import (
+	"encoding/json/jsontext"
 	"errors"
 	"fmt"
 	"slices"
@@ -163,6 +164,7 @@ type Error struct {
 	Path              string
 	DecodeKind        DecodeKind
 	member            string
+	memberPath        jsontext.Pointer
 	memberKind        DecodeKind
 	cause             error
 }
@@ -236,6 +238,28 @@ func invalidMemberValueError(model, member, expected string) *Error {
 	err := invalidMemberError(model, member, expected)
 	err.memberKind = DecodeKindInvalidValue
 	return err
+}
+
+// memberDecodeError reports a member whose raw value the generated decoder
+// could not unmarshal into its Go type. raw is that value and err the
+// unmarshal failure; the location inside raw is kept so the Decode error
+// names the full member path, and the failure text is dropped so no member
+// value survives. A failure a nested model already reported keeps that
+// model's message, which names the innermost member.
+func memberDecodeError(model, member string, raw jsontext.Value, err error) *Error {
+	path, kind := decodeLocation(raw, err)
+	message := fmt.Sprintf("member %q of %s could not be decoded", member, model)
+	var nested *Error
+	if errors.As(err, &nested) {
+		message = nested.Message
+	}
+	return &Error{
+		Category:   CategoryDecode,
+		Message:    message,
+		member:     member,
+		memberPath: jsontext.Pointer(path),
+		memberKind: kind,
+	}
 }
 
 func transportError(endpoint, message string, cause error) *Error {
