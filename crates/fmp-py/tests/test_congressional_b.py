@@ -285,3 +285,59 @@ def test_profiles_decode_null_image_to_none(client: Any, fixture_server: Fixture
     rows = client.congressional.profiles()
 
     assert rows[0].image is None
+
+
+def test_net_worth_decodes_fractional_value_and_null_members(client: Any, fixture_server: FixtureServer) -> None:
+    """A fractional ``value`` decodes exactly; null itemized members and a null range ``max`` decode to ``None``."""
+    body = load_fixture("congress_senate_net_worth.json")
+    body[0]["value"] = 32500.5
+    del body[0]["debtDetails"]["dateIncurred"]
+    fractional = dict(body[0], category=None, name=None, owner=None, value=None, valueRange={"min": 1, "max": None})
+    fixture_server.route("/senate-net-worth", [body[0], fractional])
+    rows = client.congressional.net_worth(MEMBER_ID)
+
+    assert rows[0].value == 32500.5
+    assert rows[0].debt_details.date_incurred is None
+    assert rows[1].category is None
+    assert rows[1].name is None
+    assert rows[1].owner is None
+    assert rows[1].value is None
+    assert rows[1].value_range.max is None
+
+
+def test_net_worth_aggregated_decodes_fractional_amounts_and_absent_members(
+    client: Any, fixture_server: FixtureServer
+) -> None:
+    """Fractional amounts decode exactly and absent aggregate members decode to ``None``."""
+    body = load_fixture("congress_senate_net_worth_aggregated.json")
+    for member in (
+        "realEstateLiabilities",
+        "businessAndSelfEmployment",
+        "ownershipInterest",
+        "options",
+        "revolvingAndCreditLines",
+        "assetBackedSecurities",
+        "businessLiabilities",
+    ):
+        del body[0][member]
+    body[0].update(total=59082540.5, cashAndCashEquivalents=121004.5, realEstate=3000000.5, stock=8000.5)
+    body[0]["mutualFundsAndETFs"] = 34526531.5
+    sparse = {key: value for key, value in body[0].items() if key not in ("realEstate", "stock")}
+    fixture_server.route("/senate-net-worth-aggregated", [body[0], sparse])
+    rows = client.congressional.net_worth_aggregated(MEMBER_ID)
+    row = rows[0]
+
+    assert row.total == 59082540.5
+    assert row.cash_and_cash_equivalents == 121004.5
+    assert row.real_estate == 3000000.5
+    assert row.stock == 8000.5
+    assert row.mutual_funds_and_etfs == 34526531.5
+    assert row.real_estate_liabilities is None
+    assert row.business_and_self_employment is None
+    assert row.ownership_interest is None
+    assert row.options is None
+    assert row.revolving_and_credit_lines is None
+    assert row.asset_backed_securities is None
+    assert row.business_liabilities is None
+    assert rows[1].real_estate is None
+    assert rows[1].stock is None

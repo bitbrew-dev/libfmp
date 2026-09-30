@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -121,7 +122,7 @@ func TestCongressionalMemberAndNetWorthMethodsUseExactPathsAndWireParameterOrder
 
 	netWorth, err := client.Congressional.NetWorth(ctx, NewCongressionalNetWorthQuery("P000197"))
 	if err != nil || len(netWorth) != 1 || netWorth[0].DebtDetails == nil ||
-		netWorth[0].DebtDetails.DateIncurred != "September 2007" || netWorth[0].Income != nil {
+		!reflect.DeepEqual(netWorth[0].DebtDetails.DateIncurred, new("September 2007")) || netWorth[0].Income != nil {
 		t.Fatalf("NetWorth = %+v, %v", netWorth, err)
 	}
 	paged, err := client.Congressional.NetWorth(ctx, NewCongressionalNetWorthQuery("P000197").WithPage(0).WithLimit(250))

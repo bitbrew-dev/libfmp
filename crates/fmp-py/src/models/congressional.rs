@@ -715,7 +715,7 @@ pub(crate) struct CongressionalNetWorthRange {
     #[pyo3(get)]
     pub min: i64,
     #[pyo3(get)]
-    pub max: i64,
+    pub max: Option<i64>,
 }
 
 #[gen_stub_pymethods]
@@ -725,7 +725,7 @@ impl CongressionalNetWorthRange {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, min, max))]
-    fn new(min: i64, max: i64) -> Self {
+    fn new(min: i64, max: Option<i64>) -> Self {
         Self { min, max }
     }
 
@@ -798,7 +798,7 @@ impl crate::models::convert::DictValue for CongressionalNetWorthRange {
 #[derive(Clone, PartialEq)]
 pub(crate) struct CongressionalDebtDetails {
     #[pyo3(get)]
-    pub date_incurred: String,
+    pub date_incurred: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -808,7 +808,7 @@ impl CongressionalDebtDetails {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, date_incurred))]
-    fn new(date_incurred: String) -> Self {
+    fn new(date_incurred: Option<String>) -> Self {
         Self { date_incurred }
     }
 
@@ -860,7 +860,7 @@ impl CongressionalDebtDetails {
 impl From<libfmp::responses::congressional::CongressionalDebtDetails> for CongressionalDebtDetails {
     fn from(value: libfmp::responses::congressional::CongressionalDebtDetails) -> Self {
         Self {
-            date_incurred: value.date_incurred.0,
+            date_incurred: value.date_incurred.map(|value| value.0),
         }
     }
 }
@@ -886,15 +886,15 @@ pub(crate) struct CongressionalMemberNetWorth {
     #[pyo3(get)]
     pub section: String,
     #[pyo3(get)]
-    pub category: String,
+    pub category: Option<String>,
     #[pyo3(get)]
-    pub name: String,
+    pub name: Option<String>,
     #[pyo3(get)]
     pub asset_type: String,
     #[pyo3(get)]
     pub income_type: Option<String>,
     #[pyo3(get)]
-    pub owner: String,
+    pub owner: Option<String>,
     #[pyo3(get)]
     pub comment: Option<String>,
     #[pyo3(get)]
@@ -902,7 +902,7 @@ pub(crate) struct CongressionalMemberNetWorth {
     #[pyo3(get)]
     pub value_range: Option<crate::models::congressional::CongressionalNetWorthRange>,
     #[pyo3(get)]
-    pub value: i64,
+    pub value: Option<f64>,
     #[pyo3(get)]
     pub income_range: Option<crate::models::congressional::CongressionalNetWorthRange>,
     income: Option<::serde_json::Value>,
@@ -923,15 +923,15 @@ impl CongressionalMemberNetWorth {
         year: u32,
         filing_date: ::chrono::NaiveDate,
         section: String,
-        category: String,
-        name: String,
+        category: Option<String>,
+        name: Option<String>,
         asset_type: String,
         income_type: Option<String>,
-        owner: String,
+        owner: Option<String>,
         comment: Option<String>,
         debt_details: Option<crate::models::congressional::CongressionalDebtDetails>,
         value_range: Option<crate::models::congressional::CongressionalNetWorthRange>,
-        value: i64,
+        value: Option<f64>,
         income_range: Option<crate::models::congressional::CongressionalNetWorthRange>,
         income: Option<String>,
         link: String,
@@ -1219,29 +1219,29 @@ pub(crate) struct CongressionalMemberNetWorthAggregate {
     #[pyo3(get)]
     pub year: u32,
     #[pyo3(get)]
-    pub total: i64,
+    pub total: f64,
     #[pyo3(get)]
-    pub real_estate_liabilities: i64,
+    pub real_estate_liabilities: Option<f64>,
     #[pyo3(get)]
-    pub cash_and_cash_equivalents: i64,
+    pub cash_and_cash_equivalents: f64,
     #[pyo3(get)]
-    pub business_and_self_employment: i64,
+    pub business_and_self_employment: Option<f64>,
     #[pyo3(get)]
-    pub real_estate: i64,
+    pub real_estate: Option<f64>,
     #[pyo3(get)]
-    pub ownership_interest: i64,
+    pub ownership_interest: Option<f64>,
     #[pyo3(get)]
-    pub stock: i64,
+    pub stock: Option<f64>,
     #[pyo3(get)]
-    pub options: i64,
+    pub options: Option<f64>,
     #[pyo3(get)]
-    pub revolving_and_credit_lines: i64,
+    pub revolving_and_credit_lines: Option<f64>,
     #[pyo3(get)]
-    pub asset_backed_securities: i64,
+    pub asset_backed_securities: Option<f64>,
     #[pyo3(get)]
-    pub business_liabilities: i64,
+    pub business_liabilities: Option<f64>,
     #[pyo3(get)]
-    pub mutual_funds_and_etfs: i64,
+    pub mutual_funds_and_etfs: f64,
 }
 
 #[gen_stub_pymethods]
@@ -1254,18 +1254,18 @@ impl CongressionalMemberNetWorthAggregate {
     fn new(
         member_id: String,
         year: u32,
-        total: i64,
-        real_estate_liabilities: i64,
-        cash_and_cash_equivalents: i64,
-        business_and_self_employment: i64,
-        real_estate: i64,
-        ownership_interest: i64,
-        stock: i64,
-        options: i64,
-        revolving_and_credit_lines: i64,
-        asset_backed_securities: i64,
-        business_liabilities: i64,
-        mutual_funds_and_etfs: i64,
+        total: f64,
+        real_estate_liabilities: Option<f64>,
+        cash_and_cash_equivalents: f64,
+        business_and_self_employment: Option<f64>,
+        real_estate: Option<f64>,
+        ownership_interest: Option<f64>,
+        stock: Option<f64>,
+        options: Option<f64>,
+        revolving_and_credit_lines: Option<f64>,
+        asset_backed_securities: Option<f64>,
+        business_liabilities: Option<f64>,
+        mutual_funds_and_etfs: f64,
     ) -> Self {
         Self {
             member_id,
