@@ -120,9 +120,9 @@ class StatementsReportsNamespace:
         symbol: builtins.str,
         year: builtins.int,
         period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
-    ) -> builtins.list[FinancialReportJson]:
+    ) -> FinancialReportJson:
         r"""
-        Retrieves one dynamic JSON financial report as a bare array.
+        Retrieves one dynamic JSON financial report as a single object.
         """
 
     def xlsx(
