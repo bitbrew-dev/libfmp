@@ -1,0 +1,23 @@
+[[namespace]]
+path = "statements.reports"
+
+[[namespace.endpoint]]
+name = "dates"
+method = "financial_reports_dates"
+query = "FinancialReportsDatesQuery"
+response = "statements::reports::FinancialReportDate"
+single = true
+doc = "Marks a rows method as single."
+args = [{ name = "symbol", kind = "ticker" }]
+
+[[namespace.endpoint]]
+name = "json"
+method = "financial_reports_json"
+query = "FinancialReportsJsonQuery"
+response = "statements::reports::FinancialReportJson"
+doc = "Leaves `single` off a method that returns one model."
+args = [
+    { name = "symbol", kind = "ticker" },
+    { name = "year", kind = "year" },
+    { name = "period", kind = "fiscal_period" },
+]

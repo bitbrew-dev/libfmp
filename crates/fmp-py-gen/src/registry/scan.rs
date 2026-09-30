@@ -448,6 +448,13 @@ mod tests {
             surface.methods["financial_reports_xlsx"].returns,
             Returns::Binary
         );
+        let singles: Vec<&str> = surface
+            .methods
+            .iter()
+            .filter(|(_, method)| matches!(method.returns, Returns::Single(_)))
+            .map(|(name, _)| name.as_str())
+            .collect();
+        assert_eq!(singles, ["financial_reports_json"]);
     }
 
     #[test]
