@@ -50,6 +50,8 @@ pub struct QueryApi {
 pub enum Returns {
     /// `Result<Vec<R>>`, carrying the row type name.
     Rows(String),
+    /// `Result<R>` for one typed object, carrying its type name.
+    Single(String),
     /// `Result<BinaryResponse>`.
     Binary,
     /// Anything else, carried verbatim for the error message.
@@ -300,7 +302,7 @@ fn client_method(file: &Path, sig: &syn::Signature) -> ClientMethod {
     }
 }
 
-/// Reads `Result<Vec<R>>` and `Result<BinaryResponse>`.
+/// Reads `Result<Vec<R>>`, `Result<BinaryResponse>`, and `Result<R>`.
 fn classify_return(ty: &Type) -> Returns {
     let verbatim = || Returns::Other(quote_type(ty));
     let Some((head, inner)) = generic_head(ty) else {
@@ -311,7 +313,11 @@ fn classify_return(ty: &Type) -> Returns {
     }
     match generic_head(inner) {
         Some((head, row)) if head == "Vec" => base_ident(row).map_or_else(verbatim, Returns::Rows),
-        None if base_ident(inner).as_deref() == Some("BinaryResponse") => Returns::Binary,
+        None => match base_ident(inner) {
+            Some(name) if name == "BinaryResponse" => Returns::Binary,
+            Some(name) => Returns::Single(name),
+            None => verbatim(),
+        },
         _ => verbatim(),
     }
 }

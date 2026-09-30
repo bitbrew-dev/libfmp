@@ -288,6 +288,7 @@ fn synthetic(args: Vec<Arg>) -> Node {
             setters: Vec::new(),
             nested: Vec::new(),
             binary: false,
+            single: false,
             dynamic: false,
         }],
         children: Default::default(),
@@ -342,6 +343,37 @@ fn wide_signatures_get_the_clippy_allow_and_prefixed_input_types() {
     );
     let source = render(&eight, &modules).expect("renders").source;
     assert!(source.contains("#[allow(clippy::too_many_arguments)]\nfn wide_query("));
+}
+
+#[test]
+fn single_entries_return_one_model_instead_of_a_list() {
+    let modules: QueryModules = [(
+        "calendar.wide".to_owned(),
+        EntryModules {
+            query: vec!["calendar".to_owned()],
+            nested: BTreeMap::new(),
+        },
+    )]
+    .into_iter()
+    .collect();
+    let mut node = synthetic(vec![arg("symbol", ArgKind::Ticker, true)]);
+    node.endpoints[0].single = true;
+    let rendered = render(&node, &modules).expect("renders");
+    syn::parse_file(&rendered.source).expect("parses");
+    let source = rendered.source;
+    for needle in [
+        "fn wide(&self, py: Python<'_>, symbol: &str) -> PyResult<Row> {",
+        "let row = py.detach(move || block_on(builder, |client| async move { client.wide_call(query).await }))?;",
+        "        row.map(Row::from).map_err(to_py_error)
+    }",
+    ] {
+        assert!(
+            source.contains(needle),
+            "missing {needle:?} in:
+{source}"
+        );
+    }
+    assert!(!source.contains("Vec<Row>"));
 }
 
 #[test]

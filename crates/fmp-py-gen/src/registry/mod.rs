@@ -102,6 +102,9 @@ pub struct Endpoint {
     pub nested: Vec<NestedBuilder>,
     /// Whether the client method returns `BinaryResponse` rather than rows.
     pub binary: bool,
+    /// Whether the client method returns one model rather than a `Vec` of
+    /// rows (registry `single = true`).
+    pub single: bool,
     /// Whether the rows are untyped `DynamicObject`s handed to Python as
     /// `dict`s (registry `response = "dynamic"`); no model is involved.
     pub dynamic: bool,

@@ -431,6 +431,7 @@ method = "quote"
 query = "QuoteQuery"
 response = "quote::Quote"
 binary = true
+single = true
 doc = "Binary and response together."
 args = [
     { name = "symbol", kind = "ticker" },
@@ -450,6 +451,12 @@ path = "other.sub"
         panic!("expected RegistryError::Invalid, got {error}");
     };
     assert_names(&errors, "quote.toml", "quote.full", "`binary = true`");
+    assert_names(
+        &errors,
+        "quote.toml",
+        "quote.full",
+        "`single = true` needs a typed",
+    );
     assert_names(
         &errors,
         "quote.toml",
