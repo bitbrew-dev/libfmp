@@ -72,6 +72,21 @@ fn adjusted_times_are_required_but_nullable_and_future_dynamic() {
 }
 
 #[test]
+fn is_closed_is_required_but_null_decodes_to_none() {
+    let source: Value = serde_json::from_slice(HOLIDAYS).unwrap();
+
+    let mut missing = source.clone();
+    missing[0].as_object_mut().unwrap().remove("isClosed");
+    assert!(serde_json::from_value::<Vec<ExchangeHoliday>>(missing).is_err());
+
+    let mut null = source;
+    null[0]["isClosed"] = Value::Null;
+    let decoded: Vec<ExchangeHoliday> = serde_json::from_value(null.clone()).unwrap();
+    assert_eq!(decoded[0].is_closed, None);
+    assert_eq!(serde_json::to_value(decoded).unwrap(), null);
+}
+
+#[test]
 fn market_hours_contracts_preserve_bare_array_roots() {
     assert!(
         serde_json::from_str::<Vec<ExchangeMarketHours>>("[]")

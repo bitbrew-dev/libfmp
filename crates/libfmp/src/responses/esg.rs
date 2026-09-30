@@ -2,9 +2,17 @@
 //!
 //! The Python binding exposes these models under `fmp.esg`.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::types::{CalendarYear, Cik, Date, Industry, Sector, Ticker};
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One company ESG disclosure filing and its component scores.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -15,8 +23,10 @@ pub struct EsgDisclosure {
     pub accepted_date: Date,
     pub symbol: Ticker,
     pub cik: Cik,
-    pub company_name: String,
-    pub form_type: crate::types::FormType,
+    #[serde(deserialize_with = "required_option")]
+    pub company_name: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub form_type: Option<crate::types::FormType>,
     pub environmental_score: f64,
     pub social_score: f64,
     pub governance_score: f64,
@@ -32,7 +42,8 @@ pub struct EsgDisclosure {
 pub struct EsgRating {
     pub symbol: Ticker,
     pub cik: Cik,
-    pub company_name: String,
+    #[serde(deserialize_with = "required_option")]
+    pub company_name: Option<String>,
     pub industry: Industry,
     pub fiscal_year: CalendarYear,
     #[serde(rename = "ESGRiskRating")]

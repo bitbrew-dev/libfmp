@@ -275,3 +275,13 @@ def test_decode_failure_is_structured(client: Any, fixture_server: FixtureServer
         client.congressional.net_worth_aggregated(MEMBER_ID)
     assert raised.value.endpoint == "senate-net-worth-aggregated"
     assert len(fixture_server.requests) == 1
+
+
+def test_profiles_decode_null_image_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A member profile with a null ``image`` decodes it to ``None``."""
+    body = load_fixture("congress_senate_profile.json")
+    body[0]["image"] = None
+    fixture_server.route("/senate-profile", body)
+    rows = client.congressional.profiles()
+
+    assert rows[0].image is None

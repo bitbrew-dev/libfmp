@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
+	"reflect"
 	"testing"
 )
 
@@ -60,7 +61,7 @@ func TestDocumentedExchangeHolidaysDecodeExactValues(t *testing.T) {
 	}
 	row := holidays[0]
 	if row.Exchange != "NASDAQ" || row.Date != mustParseDate(t, "2026-07-03") || row.Date.String() != "2026-07-03" ||
-		row.Name != "Independence Day" || !row.IsClosed || row.AdjOpenTime != nil || row.AdjCloseTime != nil {
+		row.Name != "Independence Day" || !reflect.DeepEqual(row.IsClosed, new(true)) || row.AdjOpenTime != nil || row.AdjCloseTime != nil {
 		t.Fatalf("holidays_by_exchange = %+v", row)
 	}
 	if members := memberSet(t, row); len(members) != 6 {
@@ -142,7 +143,7 @@ func TestMarketHoursRequiredMembersAndArrayRootsAreEnforcedLikeSerde(t *testing.
 			`required member "isMarketOpen" of ExchangeMarketHours is missing or null`},
 		{"missing date", holidays, "date", nil,
 			`required member "date" of ExchangeHoliday is missing or null`},
-		{"null closed flag", holidays, "isClosed", jsontext.Value(`null`),
+		{"missing closed flag", holidays, "isClosed", nil,
 			`required member "isClosed" of ExchangeHoliday is missing or null`},
 	}
 	for _, tc := range rejected {
@@ -169,5 +170,33 @@ func TestMarketHoursRequiredMembersAndArrayRootsAreEnforcedLikeSerde(t *testing.
 		if err := decode(fixture, []byte(`{}`)); err == nil {
 			t.Fatalf("%s: an object root decoded as an array", fixture)
 		}
+	}
+}
+
+// Mirrors is_closed_is_required_but_null_decodes_to_none in
+// crates/libfmp/tests/market_hours_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestExchangeHolidayIsClosedDecodesNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "holidays_by_exchange.json"
+	cases := []struct {
+		member string
+		isNil  func(ExchangeHoliday) bool
+	}{
+		{"isClosed", func(row ExchangeHoliday) bool { return row.IsClosed == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []ExchangeHoliday
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []ExchangeHoliday
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
 	}
 }

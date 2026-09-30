@@ -81,8 +81,8 @@ type NewsArticle struct {
 	PublishedDate DateTime `json:"publishedDate"`
 	Publisher     string   `json:"publisher"`
 	Title         string   `json:"title"`
-	Image         string   `json:"image"`
-	Site          string   `json:"site"`
+	Image         *string  `json:"image"`
+	Site          *string  `json:"site"`
 	Text          string   `json:"text"`
 	URL           string   `json:"url"`
 }
@@ -94,8 +94,8 @@ type newsArticleShadow struct {
 	PublishedDate *DateTime      `json:"publishedDate"`
 	Publisher     *string        `json:"publisher"`
 	Title         *string        `json:"title"`
-	Image         *string        `json:"image"`
-	Site          *string        `json:"site"`
+	Image         jsontext.Value `json:"image"`
+	Site          jsontext.Value `json:"site"`
 	Text          *string        `json:"text"`
 	URL           *string        `json:"url"`
 }
@@ -117,9 +117,9 @@ func (m *NewsArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("NewsArticle", "publisher")
 	case shadow.Title == nil:
 		return missingMemberError("NewsArticle", "title")
-	case shadow.Image == nil:
+	case len(shadow.Image) == 0:
 		return missingMemberError("NewsArticle", "image")
-	case shadow.Site == nil:
+	case len(shadow.Site) == 0:
 		return missingMemberError("NewsArticle", "site")
 	case shadow.Text == nil:
 		return missingMemberError("NewsArticle", "text")
@@ -134,13 +134,29 @@ func (m *NewsArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		symbol = &value
 	}
+	var image *string
+	if shadow.Image.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Image, &value); err != nil {
+			return err
+		}
+		image = &value
+	}
+	var site *string
+	if shadow.Site.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Site, &value); err != nil {
+			return err
+		}
+		site = &value
+	}
 	*m = NewsArticle{
 		Symbol:        symbol,
 		PublishedDate: *shadow.PublishedDate,
 		Publisher:     *shadow.Publisher,
 		Title:         *shadow.Title,
-		Image:         *shadow.Image,
-		Site:          *shadow.Site,
+		Image:         image,
+		Site:          site,
 		Text:          *shadow.Text,
 		URL:           *shadow.URL,
 	}

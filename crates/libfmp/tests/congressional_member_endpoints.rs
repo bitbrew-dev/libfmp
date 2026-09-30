@@ -198,7 +198,7 @@ async fn omitted_options_stay_omitted_and_unknown_response_fields_are_tolerated(
 }
 
 #[test]
-fn documented_fields_have_strict_types_and_only_position_end_date_is_nullable() {
+fn documented_fields_have_strict_types_and_only_image_and_end_date_are_nullable() {
     let profile = serde_json::from_slice::<serde_json::Value>(PROFILE).unwrap()[0].clone();
     for field in [
         "senateID",
@@ -208,7 +208,6 @@ fn documented_fields_have_strict_types_and_only_position_end_date_is_nullable() 
         "latestParty",
         "latestState",
         "latestPosition",
-        "image",
         "active",
         "yearsActive",
     ] {
@@ -219,6 +218,14 @@ fn documented_fields_have_strict_types_and_only_position_end_date_is_nullable() 
             "profile field {field} must not accept null"
         );
     }
+
+    let mut missing_image = profile.clone();
+    missing_image.as_object_mut().unwrap().remove("image");
+    assert!(serde_json::from_value::<CongressionalMemberProfile>(missing_image).is_err());
+    let mut null_image = profile.clone();
+    null_image["image"] = serde_json::Value::Null;
+    let decoded = serde_json::from_value::<CongressionalMemberProfile>(null_image).unwrap();
+    assert_eq!(decoded.image, None);
 
     let position = serde_json::from_slice::<serde_json::Value>(POSITIONS).unwrap()[0].clone();
     assert!(serde_json::from_value::<CongressionalMemberPosition>(position.clone()).is_ok());

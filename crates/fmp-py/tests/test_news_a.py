@@ -216,3 +216,15 @@ def test_latest_feeds_decode_an_empty_array(client: Any, fixture_server: Fixture
         "/news/general-latest",
         "/news/stock-latest?limit=0",
     ]
+
+
+def test_null_image_and_site_decode_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A null ``image`` or ``site`` decodes to ``None``."""
+    body = load_fixture("latest_crypto_news.json")
+    body[0]["image"] = None
+    body[0]["site"] = None
+    fixture_server.route("/news/crypto-latest", body)
+    rows = client.news.latest_crypto_news()
+
+    assert rows[0].image is None
+    assert rows[0].site is None

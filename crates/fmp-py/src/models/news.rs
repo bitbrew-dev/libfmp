@@ -178,9 +178,9 @@ pub(crate) struct NewsArticle {
     #[pyo3(get)]
     pub title: String,
     #[pyo3(get)]
-    pub image: String,
+    pub image: Option<String>,
     #[pyo3(get)]
-    pub site: String,
+    pub site: Option<String>,
     #[pyo3(get)]
     pub text: String,
     #[pyo3(get)]
@@ -199,8 +199,8 @@ impl NewsArticle {
         published_date: ::chrono::NaiveDateTime,
         publisher: String,
         title: String,
-        image: String,
-        site: String,
+        image: Option<String>,
+        site: Option<String>,
         text: String,
         url: String,
     ) -> Self {

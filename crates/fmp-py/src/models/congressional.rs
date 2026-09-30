@@ -329,7 +329,7 @@ pub(crate) struct CongressionalMemberProfile {
     #[pyo3(get)]
     pub latest_position: String,
     #[pyo3(get)]
-    pub image: String,
+    pub image: Option<String>,
     #[pyo3(get)]
     pub active: bool,
     #[pyo3(get)]
@@ -351,7 +351,7 @@ impl CongressionalMemberProfile {
         latest_party: String,
         latest_state: String,
         latest_position: String,
-        image: String,
+        image: Option<String>,
         active: bool,
         years_active: f64,
     ) -> Self {

@@ -40,7 +40,8 @@ pub struct ExchangeHoliday {
     pub exchange: ExchangeCode,
     pub date: Date,
     pub name: String,
-    pub is_closed: bool,
+    #[serde(deserialize_with = "required_option")]
+    pub is_closed: Option<bool>,
     #[serde(deserialize_with = "required_option")]
     pub adj_open_time: Option<DynamicJson>,
     #[serde(deserialize_with = "required_option")]

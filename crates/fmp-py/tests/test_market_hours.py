@@ -271,3 +271,13 @@ def test_decode_error_names_the_exchange_endpoint(
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.market_hours.exchange("NASDAQ")
     assert raised.value.endpoint == "exchange-market-hours"
+
+
+def test_holidays_decode_null_is_closed_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A null ``isClosed`` on an early-close day decodes to ``None``."""
+    body = load_fixture("holidays_by_exchange.json")
+    body[0]["isClosed"] = None
+    fixture_server.route("/holidays-by-exchange", body)
+    rows = client.market_hours.holidays("NASDAQ")
+
+    assert rows[0].is_closed is None

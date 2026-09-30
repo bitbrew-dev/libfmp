@@ -224,3 +224,25 @@ def test_decode_error_names_the_disclosures_endpoint(
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.esg.disclosures("AAPL")
     assert raised.value.endpoint == "esg-disclosures"
+
+
+def test_disclosures_decode_null_company_name_and_form_type_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A null ``companyName`` or ``formType`` decodes to ``None``."""
+    body = load_fixture("esg_disclosures.json")
+    body[0]["companyName"] = None
+    body[0]["formType"] = None
+    fixture_server.route("/esg-disclosures", body)
+    rows = client.esg.disclosures("AAPL")
+
+    assert rows[0].company_name is None
+    assert rows[0].form_type is None
+
+
+def test_ratings_decode_null_company_name_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A null ``companyName`` decodes to ``None``."""
+    body = load_fixture("esg_ratings.json")
+    body[0]["companyName"] = None
+    fixture_server.route("/esg-ratings", body)
+    rows = client.esg.ratings("AAPL")
+
+    assert rows[0].company_name is None

@@ -65,7 +65,8 @@ pub struct CongressionalMemberProfile {
     pub latest_party: String,
     pub latest_state: String,
     pub latest_position: String,
-    pub image: String,
+    #[serde(deserialize_with = "required_option")]
+    pub image: Option<String>,
     pub active: bool,
     pub years_active: f64,
 }

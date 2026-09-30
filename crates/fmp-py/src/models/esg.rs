@@ -18,9 +18,9 @@ pub(crate) struct EsgDisclosure {
     #[pyo3(get)]
     pub cik: String,
     #[pyo3(get)]
-    pub company_name: String,
+    pub company_name: Option<String>,
     #[pyo3(get)]
-    pub form_type: String,
+    pub form_type: Option<String>,
     #[pyo3(get)]
     pub environmental_score: f64,
     #[pyo3(get)]
@@ -45,8 +45,8 @@ impl EsgDisclosure {
         accepted_date: ::chrono::NaiveDate,
         symbol: String,
         cik: String,
-        company_name: String,
-        form_type: String,
+        company_name: Option<String>,
+        form_type: Option<String>,
         environmental_score: f64,
         social_score: f64,
         governance_score: f64,
@@ -222,7 +222,7 @@ impl From<libfmp::responses::esg::EsgDisclosure> for EsgDisclosure {
             symbol: value.symbol.into_inner(),
             cik: value.cik.into_inner(),
             company_name: value.company_name,
-            form_type: value.form_type.into_inner(),
+            form_type: value.form_type.map(|value| value.into_inner()),
             environmental_score: value.environmental_score,
             social_score: value.social_score,
             governance_score: value.governance_score,
@@ -247,7 +247,7 @@ pub(crate) struct EsgRating {
     #[pyo3(get)]
     pub cik: String,
     #[pyo3(get)]
-    pub company_name: String,
+    pub company_name: Option<String>,
     #[pyo3(get)]
     pub industry: String,
     #[pyo3(get)]
@@ -268,7 +268,7 @@ impl EsgRating {
     fn new(
         symbol: String,
         cik: String,
-        company_name: String,
+        company_name: Option<String>,
         industry: String,
         fiscal_year: u32,
         esg_risk_rating: String,

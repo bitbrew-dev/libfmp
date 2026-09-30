@@ -123,7 +123,7 @@ type CongressionalMemberProfile struct {
 	LatestParty    string  `json:"latestParty"`
 	LatestState    string  `json:"latestState"`
 	LatestPosition string  `json:"latestPosition"`
-	Image          string  `json:"image"`
+	Image          *string `json:"image"`
 	Active         bool    `json:"active"`
 	YearsActive    float64 `json:"yearsActive"`
 }
@@ -132,16 +132,16 @@ type CongressionalMemberProfile struct {
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type congressionalMemberProfileShadow struct {
-	MemberID       *string  `json:"senateID"`
-	FirstName      *string  `json:"firstName"`
-	LastName       *string  `json:"lastName"`
-	BirthDate      *Date    `json:"birthDate"`
-	LatestParty    *string  `json:"latestParty"`
-	LatestState    *string  `json:"latestState"`
-	LatestPosition *string  `json:"latestPosition"`
-	Image          *string  `json:"image"`
-	Active         *bool    `json:"active"`
-	YearsActive    *float64 `json:"yearsActive"`
+	MemberID       *string        `json:"senateID"`
+	FirstName      *string        `json:"firstName"`
+	LastName       *string        `json:"lastName"`
+	BirthDate      *Date          `json:"birthDate"`
+	LatestParty    *string        `json:"latestParty"`
+	LatestState    *string        `json:"latestState"`
+	LatestPosition *string        `json:"latestPosition"`
+	Image          jsontext.Value `json:"image"`
+	Active         *bool          `json:"active"`
+	YearsActive    *float64       `json:"yearsActive"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -167,12 +167,20 @@ func (m *CongressionalMemberProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("CongressionalMemberProfile", "latestState")
 	case shadow.LatestPosition == nil:
 		return missingMemberError("CongressionalMemberProfile", "latestPosition")
-	case shadow.Image == nil:
+	case len(shadow.Image) == 0:
 		return missingMemberError("CongressionalMemberProfile", "image")
 	case shadow.Active == nil:
 		return missingMemberError("CongressionalMemberProfile", "active")
 	case shadow.YearsActive == nil:
 		return missingMemberError("CongressionalMemberProfile", "yearsActive")
+	}
+	var image *string
+	if shadow.Image.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Image, &value); err != nil {
+			return err
+		}
+		image = &value
 	}
 	*m = CongressionalMemberProfile{
 		MemberID:       *shadow.MemberID,
@@ -182,7 +190,7 @@ func (m *CongressionalMemberProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		LatestParty:    *shadow.LatestParty,
 		LatestState:    *shadow.LatestState,
 		LatestPosition: *shadow.LatestPosition,
-		Image:          *shadow.Image,
+		Image:          image,
 		Active:         *shadow.Active,
 		YearsActive:    *shadow.YearsActive,
 	}

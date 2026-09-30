@@ -16,8 +16,8 @@ type ESGDisclosure struct {
 	AcceptedDate       Date    `json:"acceptedDate"`
 	Symbol             string  `json:"symbol"`
 	CIK                string  `json:"cik"`
-	CompanyName        string  `json:"companyName"`
-	FormType           string  `json:"formType"`
+	CompanyName        *string `json:"companyName"`
+	FormType           *string `json:"formType"`
 	EnvironmentalScore float64 `json:"environmentalScore"`
 	SocialScore        float64 `json:"socialScore"`
 	GovernanceScore    float64 `json:"governanceScore"`
@@ -29,17 +29,17 @@ type ESGDisclosure struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type esgDisclosureShadow struct {
-	Date               *Date    `json:"date"`
-	AcceptedDate       *Date    `json:"acceptedDate"`
-	Symbol             *string  `json:"symbol"`
-	CIK                *string  `json:"cik"`
-	CompanyName        *string  `json:"companyName"`
-	FormType           *string  `json:"formType"`
-	EnvironmentalScore *float64 `json:"environmentalScore"`
-	SocialScore        *float64 `json:"socialScore"`
-	GovernanceScore    *float64 `json:"governanceScore"`
-	ESGScore           *float64 `json:"ESGScore"`
-	URL                *string  `json:"url"`
+	Date               *Date          `json:"date"`
+	AcceptedDate       *Date          `json:"acceptedDate"`
+	Symbol             *string        `json:"symbol"`
+	CIK                *string        `json:"cik"`
+	CompanyName        jsontext.Value `json:"companyName"`
+	FormType           jsontext.Value `json:"formType"`
+	EnvironmentalScore *float64       `json:"environmentalScore"`
+	SocialScore        *float64       `json:"socialScore"`
+	GovernanceScore    *float64       `json:"governanceScore"`
+	ESGScore           *float64       `json:"ESGScore"`
+	URL                *string        `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -59,9 +59,9 @@ func (m *ESGDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ESGDisclosure", "symbol")
 	case shadow.CIK == nil:
 		return missingMemberError("ESGDisclosure", "cik")
-	case shadow.CompanyName == nil:
+	case len(shadow.CompanyName) == 0:
 		return missingMemberError("ESGDisclosure", "companyName")
-	case shadow.FormType == nil:
+	case len(shadow.FormType) == 0:
 		return missingMemberError("ESGDisclosure", "formType")
 	case shadow.EnvironmentalScore == nil:
 		return missingMemberError("ESGDisclosure", "environmentalScore")
@@ -74,13 +74,29 @@ func (m *ESGDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.URL == nil:
 		return missingMemberError("ESGDisclosure", "url")
 	}
+	var companyName *string
+	if shadow.CompanyName.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CompanyName, &value); err != nil {
+			return err
+		}
+		companyName = &value
+	}
+	var formType *string
+	if shadow.FormType.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.FormType, &value); err != nil {
+			return err
+		}
+		formType = &value
+	}
 	*m = ESGDisclosure{
 		Date:               *shadow.Date,
 		AcceptedDate:       *shadow.AcceptedDate,
 		Symbol:             *shadow.Symbol,
 		CIK:                *shadow.CIK,
-		CompanyName:        *shadow.CompanyName,
-		FormType:           *shadow.FormType,
+		CompanyName:        companyName,
+		FormType:           formType,
 		EnvironmentalScore: *shadow.EnvironmentalScore,
 		SocialScore:        *shadow.SocialScore,
 		GovernanceScore:    *shadow.GovernanceScore,
@@ -92,25 +108,25 @@ func (m *ESGDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // ESGRating is one company's ESG risk rating for a fiscal year.
 type ESGRating struct {
-	Symbol        string `json:"symbol"`
-	CIK           string `json:"cik"`
-	CompanyName   string `json:"companyName"`
-	Industry      string `json:"industry"`
-	FiscalYear    uint32 `json:"fiscalYear"`
-	ESGRiskRating string `json:"ESGRiskRating"`
-	IndustryRank  string `json:"industryRank"`
+	Symbol        string  `json:"symbol"`
+	CIK           string  `json:"cik"`
+	CompanyName   *string `json:"companyName"`
+	Industry      string  `json:"industry"`
+	FiscalYear    uint32  `json:"fiscalYear"`
+	ESGRiskRating string  `json:"ESGRiskRating"`
+	IndustryRank  string  `json:"industryRank"`
 }
 
 // esgRatingShadow mirrors ESGRating with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type esgRatingShadow struct {
-	Symbol        *string `json:"symbol"`
-	CIK           *string `json:"cik"`
-	CompanyName   *string `json:"companyName"`
-	Industry      *string `json:"industry"`
-	FiscalYear    *uint32 `json:"fiscalYear"`
-	ESGRiskRating *string `json:"ESGRiskRating"`
-	IndustryRank  *string `json:"industryRank"`
+	Symbol        *string        `json:"symbol"`
+	CIK           *string        `json:"cik"`
+	CompanyName   jsontext.Value `json:"companyName"`
+	Industry      *string        `json:"industry"`
+	FiscalYear    *uint32        `json:"fiscalYear"`
+	ESGRiskRating *string        `json:"ESGRiskRating"`
+	IndustryRank  *string        `json:"industryRank"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -126,7 +142,7 @@ func (m *ESGRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ESGRating", "symbol")
 	case shadow.CIK == nil:
 		return missingMemberError("ESGRating", "cik")
-	case shadow.CompanyName == nil:
+	case len(shadow.CompanyName) == 0:
 		return missingMemberError("ESGRating", "companyName")
 	case shadow.Industry == nil:
 		return missingMemberError("ESGRating", "industry")
@@ -137,10 +153,18 @@ func (m *ESGRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.IndustryRank == nil:
 		return missingMemberError("ESGRating", "industryRank")
 	}
+	var companyName *string
+	if shadow.CompanyName.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CompanyName, &value); err != nil {
+			return err
+		}
+		companyName = &value
+	}
 	*m = ESGRating{
 		Symbol:        *shadow.Symbol,
 		CIK:           *shadow.CIK,
-		CompanyName:   *shadow.CompanyName,
+		CompanyName:   companyName,
 		Industry:      *shadow.Industry,
 		FiscalYear:    *shadow.FiscalYear,
 		ESGRiskRating: *shadow.ESGRiskRating,
