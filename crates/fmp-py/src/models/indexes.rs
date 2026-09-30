@@ -130,7 +130,7 @@ pub(crate) struct IndexConstituent {
     #[pyo3(get)]
     pub cik: String,
     #[pyo3(get)]
-    pub founded: ::chrono::NaiveDate,
+    pub founded: String,
 }
 
 #[gen_stub_pymethods]
@@ -148,7 +148,7 @@ impl IndexConstituent {
         head_quarter: String,
         date_first_added: Option<::chrono::NaiveDate>,
         cik: String,
-        founded: ::chrono::NaiveDate,
+        founded: String,
     ) -> Self {
         Self {
             symbol,
@@ -279,7 +279,7 @@ impl From<libfmp::responses::indexes::IndexConstituent> for IndexConstituent {
             head_quarter: value.head_quarter,
             date_first_added: value.date_first_added.map(|value| value.into_inner()),
             cik: value.cik.into_inner(),
-            founded: value.founded.into_inner(),
+            founded: value.founded,
         }
     }
 }

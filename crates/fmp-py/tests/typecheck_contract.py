@@ -238,7 +238,7 @@ def check_indexes_contract(client: FmpClient) -> None:
     bar_time: datetime.datetime = intraday[0].date
     members: list[IndexConstituent] = client.indexes.sp500_constituents()
     first_added: datetime.date | None = members[0].date_first_added
-    founded: datetime.date = members[0].founded
+    founded: str = members[0].founded
     _ = (currency, bar_date, vwap, bar_time, first_added, founded)
 
 

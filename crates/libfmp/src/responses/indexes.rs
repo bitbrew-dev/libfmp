@@ -42,7 +42,10 @@ pub struct IndexConstituent {
     #[serde(deserialize_with = "required_option")]
     pub date_first_added: Option<Date>,
     pub cik: Cik,
-    pub founded: Date,
+    /// Founding year or years as the provider sends them, kept verbatim: a
+    /// year (`"1994"`), several years joined by `/` (`"1902/1985"`), or a full
+    /// date (`"1982-12-01"`) on some indexes. It is not a date.
+    pub founded: String,
 }
 
 /// One documented historical addition to and removal from a major US index.
