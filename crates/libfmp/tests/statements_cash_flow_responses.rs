@@ -150,6 +150,17 @@ fn null_on_an_amount_outside_the_stub_set_is_still_rejected() {
     assert!(serde_json::from_value::<Vec<CashFlowStatement>>(value).is_err());
 }
 
+#[test]
+fn missing_stub_amount_key_is_still_rejected() {
+    let mut value: serde_json::Value = serde_json::from_slice(HISTORICAL).unwrap();
+    value[0]
+        .as_object_mut()
+        .unwrap()
+        .remove("stockBasedCompensation");
+    let error = serde_json::from_value::<Vec<CashFlowStatement>>(value).unwrap_err();
+    assert!(error.to_string().contains("stockBasedCompensation"));
+}
+
 fn assert_historical(row: &CashFlowStatement) {
     assert_row!(
         row,
