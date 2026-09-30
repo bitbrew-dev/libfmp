@@ -319,6 +319,10 @@ func TestCongressionalNetWorthFractionalNullAndAbsentMembers(t *testing.T) {
 		!reflect.DeepEqual(totals[0].RealEstate, new(3_000_000.5)) || !reflect.DeepEqual(totals[0].Stock, new(8_000.5)) {
 		t.Fatalf("fractional aggregate = %+v, %v", totals, err)
 	}
+	if err := json.Unmarshal(mutateFixtureMember(t, "congress_senate_net_worth_aggregated.json", "realEstate", jsontext.Value(`null`)), &totals); err != nil ||
+		len(totals) != 1 || totals[0].RealEstate != nil {
+		t.Fatalf("null realEstate = %+v, %v, want nil", totals, err)
+	}
 	for _, member := range []string{"total", "cashAndCashEquivalents", "mutualFundsAndETFs"} {
 		var rows []CongressionalMemberNetWorthAggregate
 		if err := json.Unmarshal(mutateFixtureMember(t, "congress_senate_net_worth_aggregated.json", member, nil), &rows); err == nil {

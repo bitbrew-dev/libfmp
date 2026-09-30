@@ -338,6 +338,17 @@ fn aggregated_required_fields_are_strict_and_omittable_fields_may_be_absent() {
             "aggregate field {field} must not accept null"
         );
     }
+    for field in AGGREGATE_OMITTABLE {
+        let mut nulled = row.clone();
+        nulled[field] = serde_json::Value::Null;
+        let totals =
+            serde_json::from_value::<CongressionalMemberNetWorthAggregate>(nulled).unwrap();
+        let encoded = serde_json::to_value(&totals).unwrap();
+        assert!(
+            encoded.get(field).is_none(),
+            "aggregate field {field} must decode null as None"
+        );
+    }
 
     let mut sparse = row.clone();
     for field in AGGREGATE_OMITTABLE {
