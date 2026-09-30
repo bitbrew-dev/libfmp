@@ -33,8 +33,11 @@ fn exact_latest_and_search_fixtures_share_the_16_field_trade_row() {
     );
     assert_eq!(latest[0].reporting_cik.as_str(), "0001661867");
     assert_eq!(latest[0].company_cik.as_str(), "0000036146");
-    assert_eq!(latest[0].transaction_type.as_str(), "A-Award");
-    assert_eq!(latest[0].securities_owned, 62_959.0);
+    assert_eq!(
+        latest[0].transaction_type.as_ref().unwrap().as_str(),
+        "A-Award"
+    );
+    assert_eq!(latest[0].securities_owned, Some(62_959.0));
     assert_eq!(latest[0].securities_transacted, 1_608.0);
     assert_eq!(latest[0].price, 0.0);
     assert_eq!(latest[0].form_type.as_str(), "4");
@@ -79,7 +82,7 @@ fn exact_ownership_fixture_preserves_dates_identifiers_and_quoted_numbers() {
     let rows: Vec<BeneficialOwnershipAcquisition> = serde_json::from_value(source.clone()).unwrap();
     let row = &rows[0];
     assert_eq!(row.cik.as_str(), "0000320193");
-    assert_eq!(row.cusip.as_str(), "037833100");
+    assert_eq!(row.cusip.as_ref().unwrap().as_str(), "037833100");
     assert_eq!(row.accepted_date, Date::from_str("2026-04-29").unwrap());
     assert_eq!(row.sole_voting_power.as_str(), "0");
     assert_eq!(row.amount_beneficially_owned.as_str(), "1099168953");
@@ -94,7 +97,7 @@ fn counts_preserve_u64_quantities_decode_as_f64_and_integer_prices_decode_as_pri
     trade[0]["securitiesTransacted"] = serde_json::json!(u64::MAX);
     trade[0]["price"] = serde_json::json!(225);
     let rows: Vec<InsiderTrade> = serde_json::from_value(trade).unwrap();
-    assert_eq!(rows[0].securities_owned, u64::MAX as f64);
+    assert_eq!(rows[0].securities_owned, Some(u64::MAX as f64));
     assert_eq!(rows[0].securities_transacted, u64::MAX as f64);
     assert_eq!(rows[0].price, 225.0);
 
@@ -116,6 +119,46 @@ fn counts_preserve_u64_quantities_decode_as_f64_and_integer_prices_decode_as_pri
         let rows: Vec<InsiderTradeStatistics> = serde_json::from_value(source).unwrap();
         assert_eq!(serde_json::to_value(rows).unwrap()[0][field], 1_500.5);
     }
+}
+
+#[test]
+fn nullable_trade_members_decode_null_and_empty_type_as_none() {
+    let mut source: serde_json::Value = serde_json::from_slice(LATEST).unwrap();
+    source[0]["transactionType"] = serde_json::json!("");
+    source[0]["securitiesOwned"] = serde_json::Value::Null;
+    source[0]["directOrIndirect"] = serde_json::Value::Null;
+    let rows: Vec<InsiderTrade> = serde_json::from_value(source.clone()).unwrap();
+    assert_eq!(rows[0].transaction_type, None);
+    assert_eq!(rows[0].securities_owned, None);
+    assert_eq!(rows[0].direct_or_indirect, None);
+    let wire = serde_json::to_value(&rows).unwrap();
+    assert!(wire[0]["transactionType"].is_null());
+    assert!(wire[0]["securitiesOwned"].is_null());
+    assert!(wire[0]["directOrIndirect"].is_null());
+
+    source[0]["transactionType"] = serde_json::Value::Null;
+    let rows: Vec<InsiderTrade> = serde_json::from_value(source.clone()).unwrap();
+    assert_eq!(rows[0].transaction_type, None);
+
+    source[0]["transactionType"] = serde_json::json!(" ");
+    assert!(serde_json::from_value::<Vec<InsiderTrade>>(source).is_err());
+}
+
+#[test]
+fn nullable_ownership_members_decode_null_as_none() {
+    let mut source: serde_json::Value = serde_json::from_slice(OWNERSHIP).unwrap();
+    for field in [
+        "cusip",
+        "citizenshipOrPlaceOfOrganization",
+        "sharedVotingPower",
+    ] {
+        source[0][field] = serde_json::Value::Null;
+    }
+    let rows: Vec<BeneficialOwnershipAcquisition> = serde_json::from_value(source.clone()).unwrap();
+    assert_eq!(rows[0].cusip, None);
+    assert_eq!(rows[0].citizenship_or_place_of_organization, None);
+    assert_eq!(rows[0].shared_voting_power, None);
+    assert_eq!(serde_json::to_value(rows).unwrap(), source);
 }
 
 #[test]
@@ -143,12 +186,20 @@ fn quoted_numeric_ownership_fields_preserve_exact_decimal_text() {
 
 #[test]
 fn all_fields_are_required_non_null_and_unknowns_are_accepted() {
-    assert_contract::<InsiderTrade>(LATEST);
-    assert_contract::<InsiderTrade>(SEARCH);
-    assert_contract::<InsiderReportingName>(REPORTING_NAMES);
-    assert_contract::<InsiderTransactionType>(TRANSACTION_TYPES);
-    assert_contract::<InsiderTradeStatistics>(STATISTICS);
-    assert_contract::<BeneficialOwnershipAcquisition>(OWNERSHIP);
+    let trade_nullable = ["transactionType", "securitiesOwned", "directOrIndirect"];
+    assert_contract::<InsiderTrade>(LATEST, &trade_nullable);
+    assert_contract::<InsiderTrade>(SEARCH, &trade_nullable);
+    assert_contract::<InsiderReportingName>(REPORTING_NAMES, &[]);
+    assert_contract::<InsiderTransactionType>(TRANSACTION_TYPES, &[]);
+    assert_contract::<InsiderTradeStatistics>(STATISTICS, &[]);
+    assert_contract::<BeneficialOwnershipAcquisition>(
+        OWNERSHIP,
+        &[
+            "cusip",
+            "citizenshipOrPlaceOfOrganization",
+            "sharedVotingPower",
+        ],
+    );
 }
 
 #[test]
@@ -164,7 +215,7 @@ fn all_six_contracts_are_bare_arrays_preserving_empty_and_multiple_rows() {
     );
 }
 
-fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
+fn assert_contract<T: DeserializeOwned>(fixture: &[u8], nullable: &[&str]) {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let keys = source[0]
         .as_object()
@@ -182,9 +233,10 @@ fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
 
         let mut null = source.clone();
         null[0][&key] = serde_json::Value::Null;
-        assert!(
-            serde_json::from_value::<Vec<T>>(null).is_err(),
-            "{key} unexpectedly accepted as null"
+        assert_eq!(
+            serde_json::from_value::<Vec<T>>(null).is_ok(),
+            nullable.contains(&key.as_str()),
+            "{key} null acceptance differs from the nullable list"
         );
     }
 

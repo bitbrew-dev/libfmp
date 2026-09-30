@@ -44,15 +44,15 @@ class BeneficialOwnershipAcquisition:
     @property
     def accepted_date(self) -> datetime.date: ...
     @property
-    def cusip(self) -> builtins.str: ...
+    def cusip(self) -> typing.Optional[builtins.str]: ...
     @property
     def name_of_reporting_person(self) -> builtins.str: ...
     @property
-    def citizenship_or_place_of_organization(self) -> builtins.str: ...
+    def citizenship_or_place_of_organization(self) -> typing.Optional[builtins.str]: ...
     @property
     def sole_voting_power(self) -> builtins.str: ...
     @property
-    def shared_voting_power(self) -> builtins.str: ...
+    def shared_voting_power(self) -> typing.Optional[builtins.str]: ...
     @property
     def sole_dispositive_power(self) -> builtins.str: ...
     @property
@@ -73,11 +73,11 @@ class BeneficialOwnershipAcquisition:
         symbol: builtins.str,
         filing_date: datetime.date,
         accepted_date: datetime.date,
-        cusip: builtins.str,
+        cusip: typing.Optional[builtins.str],
         name_of_reporting_person: builtins.str,
-        citizenship_or_place_of_organization: builtins.str,
+        citizenship_or_place_of_organization: typing.Optional[builtins.str],
         sole_voting_power: builtins.str,
-        shared_voting_power: builtins.str,
+        shared_voting_power: typing.Optional[builtins.str],
         sole_dispositive_power: builtins.str,
         shared_dispositive_power: builtins.str,
         amount_beneficially_owned: builtins.str,
@@ -151,9 +151,9 @@ class InsiderTrade:
     @property
     def company_cik(self) -> builtins.str: ...
     @property
-    def transaction_type(self) -> builtins.str: ...
+    def transaction_type(self) -> typing.Optional[builtins.str]: ...
     @property
-    def securities_owned(self) -> builtins.float: ...
+    def securities_owned(self) -> typing.Optional[builtins.float]: ...
     @property
     def reporting_name(self) -> builtins.str: ...
     @property
@@ -161,7 +161,7 @@ class InsiderTrade:
     @property
     def acquisition_or_disposition(self) -> builtins.str: ...
     @property
-    def direct_or_indirect(self) -> builtins.str: ...
+    def direct_or_indirect(self) -> typing.Optional[builtins.str]: ...
     @property
     def form_type(self) -> builtins.str: ...
     @property
@@ -181,12 +181,12 @@ class InsiderTrade:
         transaction_date: datetime.date,
         reporting_cik: builtins.str,
         company_cik: builtins.str,
-        transaction_type: builtins.str,
-        securities_owned: builtins.float,
+        transaction_type: typing.Optional[builtins.str],
+        securities_owned: typing.Optional[builtins.float],
         reporting_name: builtins.str,
         type_of_owner: builtins.str,
         acquisition_or_disposition: builtins.str,
-        direct_or_indirect: builtins.str,
+        direct_or_indirect: typing.Optional[builtins.str],
         form_type: builtins.str,
         securities_transacted: builtins.float,
         price: builtins.float,

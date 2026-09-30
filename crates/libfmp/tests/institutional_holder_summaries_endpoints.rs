@@ -101,7 +101,10 @@ async fn custom_proxy_preserves_exact_queries_auth_headers_and_source_arrays() {
     assert_eq!(performance[0].cik.as_str(), "0001067983");
     assert_eq!(performance[0].change_in_performance, -14_398_745_159.0);
     assert_eq!(industry.len(), 1);
-    assert_eq!(industry[0].industry_title, "ELECTRONIC COMPUTERS");
+    assert_eq!(
+        industry[0].industry_title.as_deref(),
+        Some("ELECTRONIC COMPUTERS")
+    );
     assert_eq!(industry[0].change_in_performance, -47_453_494_598.0);
 
     let requests = executor.requests();

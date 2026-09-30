@@ -61,6 +61,19 @@ def test_latest_trades_with_every_filter(client: Any, fixture_server: FixtureSer
     assert_trmk_award(rows[0])
 
 
+def test_latest_trades_decode_omitted_members_as_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: a null or empty ``transactionType`` and null owned or direct members decode as ``None``."""
+    body = load_fixture("latest_insider_trades.json")
+    body[0].update(transactionType="", securitiesOwned=None, directOrIndirect=None)
+    fixture_server.route("/insider-trading/latest", body)
+    rows = client.insider_trading.latest_trades()
+
+    assert rows[0].transaction_type is None
+    assert rows[0].securities_owned is None
+    assert rows[0].direct_or_indirect is None
+    assert rows[0].symbol == "TRMK"
+
+
 def test_latest_trades_accepts_a_datetime_date(client: Any, fixture_server: FixtureServer) -> None:
     """``latest_trades`` formats a ``datetime.date`` as ``YYYY-MM-DD`` on the wire."""
     fixture_server.route("/insider-trading/latest", load_fixture("latest_insider_trades.json"))

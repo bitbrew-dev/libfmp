@@ -12,44 +12,44 @@ import (
 
 // InsiderTrade is one insider trade shared by the latest and search feeds.
 type InsiderTrade struct {
-	Symbol                   string  `json:"symbol"`
-	FilingDate               Date    `json:"filingDate"`
-	TransactionDate          Date    `json:"transactionDate"`
-	ReportingCIK             string  `json:"reportingCik"`
-	CompanyCIK               string  `json:"companyCik"`
-	TransactionType          string  `json:"transactionType"`
-	SecuritiesOwned          float64 `json:"securitiesOwned"`
-	ReportingName            string  `json:"reportingName"`
-	TypeOfOwner              string  `json:"typeOfOwner"`
-	AcquisitionOrDisposition string  `json:"acquisitionOrDisposition"`
-	DirectOrIndirect         string  `json:"directOrIndirect"`
-	FormType                 string  `json:"formType"`
-	SecuritiesTransacted     float64 `json:"securitiesTransacted"`
-	Price                    float64 `json:"price"`
-	SecurityName             string  `json:"securityName"`
-	URL                      string  `json:"url"`
+	Symbol                   string   `json:"symbol"`
+	FilingDate               Date     `json:"filingDate"`
+	TransactionDate          Date     `json:"transactionDate"`
+	ReportingCIK             string   `json:"reportingCik"`
+	CompanyCIK               string   `json:"companyCik"`
+	TransactionType          *string  `json:"transactionType"`
+	SecuritiesOwned          *float64 `json:"securitiesOwned"`
+	ReportingName            string   `json:"reportingName"`
+	TypeOfOwner              string   `json:"typeOfOwner"`
+	AcquisitionOrDisposition string   `json:"acquisitionOrDisposition"`
+	DirectOrIndirect         *string  `json:"directOrIndirect"`
+	FormType                 string   `json:"formType"`
+	SecuritiesTransacted     float64  `json:"securitiesTransacted"`
+	Price                    float64  `json:"price"`
+	SecurityName             string   `json:"securityName"`
+	URL                      string   `json:"url"`
 }
 
 // insiderTradeShadow mirrors InsiderTrade with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type insiderTradeShadow struct {
-	Symbol                   *string  `json:"symbol"`
-	FilingDate               *Date    `json:"filingDate"`
-	TransactionDate          *Date    `json:"transactionDate"`
-	ReportingCIK             *string  `json:"reportingCik"`
-	CompanyCIK               *string  `json:"companyCik"`
-	TransactionType          *string  `json:"transactionType"`
-	SecuritiesOwned          *float64 `json:"securitiesOwned"`
-	ReportingName            *string  `json:"reportingName"`
-	TypeOfOwner              *string  `json:"typeOfOwner"`
-	AcquisitionOrDisposition *string  `json:"acquisitionOrDisposition"`
-	DirectOrIndirect         *string  `json:"directOrIndirect"`
-	FormType                 *string  `json:"formType"`
-	SecuritiesTransacted     *float64 `json:"securitiesTransacted"`
-	Price                    *float64 `json:"price"`
-	SecurityName             *string  `json:"securityName"`
-	URL                      *string  `json:"url"`
+	Symbol                   *string        `json:"symbol"`
+	FilingDate               *Date          `json:"filingDate"`
+	TransactionDate          *Date          `json:"transactionDate"`
+	ReportingCIK             *string        `json:"reportingCik"`
+	CompanyCIK               *string        `json:"companyCik"`
+	TransactionType          jsontext.Value `json:"transactionType"`
+	SecuritiesOwned          jsontext.Value `json:"securitiesOwned"`
+	ReportingName            *string        `json:"reportingName"`
+	TypeOfOwner              *string        `json:"typeOfOwner"`
+	AcquisitionOrDisposition *string        `json:"acquisitionOrDisposition"`
+	DirectOrIndirect         jsontext.Value `json:"directOrIndirect"`
+	FormType                 *string        `json:"formType"`
+	SecuritiesTransacted     *float64       `json:"securitiesTransacted"`
+	Price                    *float64       `json:"price"`
+	SecurityName             *string        `json:"securityName"`
+	URL                      *string        `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -71,9 +71,9 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("InsiderTrade", "reportingCik")
 	case shadow.CompanyCIK == nil:
 		return missingMemberError("InsiderTrade", "companyCik")
-	case shadow.TransactionType == nil:
+	case len(shadow.TransactionType) == 0:
 		return missingMemberError("InsiderTrade", "transactionType")
-	case shadow.SecuritiesOwned == nil:
+	case len(shadow.SecuritiesOwned) == 0:
 		return missingMemberError("InsiderTrade", "securitiesOwned")
 	case shadow.ReportingName == nil:
 		return missingMemberError("InsiderTrade", "reportingName")
@@ -81,7 +81,7 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("InsiderTrade", "typeOfOwner")
 	case shadow.AcquisitionOrDisposition == nil:
 		return missingMemberError("InsiderTrade", "acquisitionOrDisposition")
-	case shadow.DirectOrIndirect == nil:
+	case len(shadow.DirectOrIndirect) == 0:
 		return missingMemberError("InsiderTrade", "directOrIndirect")
 	case shadow.FormType == nil:
 		return missingMemberError("InsiderTrade", "formType")
@@ -94,18 +94,44 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.URL == nil:
 		return missingMemberError("InsiderTrade", "url")
 	}
+	var transactionType *string
+	if shadow.TransactionType.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.TransactionType, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			transactionType = &value
+		}
+	}
+	var securitiesOwned *float64
+	if shadow.SecuritiesOwned.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.SecuritiesOwned, &value); err != nil {
+			return err
+		}
+		securitiesOwned = &value
+	}
+	var directOrIndirect *string
+	if shadow.DirectOrIndirect.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.DirectOrIndirect, &value); err != nil {
+			return err
+		}
+		directOrIndirect = &value
+	}
 	*m = InsiderTrade{
 		Symbol:                   *shadow.Symbol,
 		FilingDate:               *shadow.FilingDate,
 		TransactionDate:          *shadow.TransactionDate,
 		ReportingCIK:             *shadow.ReportingCIK,
 		CompanyCIK:               *shadow.CompanyCIK,
-		TransactionType:          *shadow.TransactionType,
-		SecuritiesOwned:          *shadow.SecuritiesOwned,
+		TransactionType:          transactionType,
+		SecuritiesOwned:          securitiesOwned,
 		ReportingName:            *shadow.ReportingName,
 		TypeOfOwner:              *shadow.TypeOfOwner,
 		AcquisitionOrDisposition: *shadow.AcquisitionOrDisposition,
-		DirectOrIndirect:         *shadow.DirectOrIndirect,
+		DirectOrIndirect:         directOrIndirect,
 		FormType:                 *shadow.FormType,
 		SecuritiesTransacted:     *shadow.SecuritiesTransacted,
 		Price:                    *shadow.Price,
@@ -290,42 +316,42 @@ func (m *InsiderTradeStatistics) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 // BeneficialOwnershipAcquisition is one beneficial-ownership acquisition
 // filing row.
 type BeneficialOwnershipAcquisition struct {
-	CIK                              string `json:"cik"`
-	Symbol                           string `json:"symbol"`
-	FilingDate                       Date   `json:"filingDate"`
-	AcceptedDate                     Date   `json:"acceptedDate"`
-	CUSIP                            string `json:"cusip"`
-	NameOfReportingPerson            string `json:"nameOfReportingPerson"`
-	CitizenshipOrPlaceOfOrganization string `json:"citizenshipOrPlaceOfOrganization"`
-	SoleVotingPower                  string `json:"soleVotingPower"`
-	SharedVotingPower                string `json:"sharedVotingPower"`
-	SoleDispositivePower             string `json:"soleDispositivePower"`
-	SharedDispositivePower           string `json:"sharedDispositivePower"`
-	AmountBeneficiallyOwned          string `json:"amountBeneficiallyOwned"`
-	PercentOfClass                   string `json:"percentOfClass"`
-	TypeOfReportingPerson            string `json:"typeOfReportingPerson"`
-	URL                              string `json:"url"`
+	CIK                              string  `json:"cik"`
+	Symbol                           string  `json:"symbol"`
+	FilingDate                       Date    `json:"filingDate"`
+	AcceptedDate                     Date    `json:"acceptedDate"`
+	CUSIP                            *string `json:"cusip"`
+	NameOfReportingPerson            string  `json:"nameOfReportingPerson"`
+	CitizenshipOrPlaceOfOrganization *string `json:"citizenshipOrPlaceOfOrganization"`
+	SoleVotingPower                  string  `json:"soleVotingPower"`
+	SharedVotingPower                *string `json:"sharedVotingPower"`
+	SoleDispositivePower             string  `json:"soleDispositivePower"`
+	SharedDispositivePower           string  `json:"sharedDispositivePower"`
+	AmountBeneficiallyOwned          string  `json:"amountBeneficiallyOwned"`
+	PercentOfClass                   string  `json:"percentOfClass"`
+	TypeOfReportingPerson            string  `json:"typeOfReportingPerson"`
+	URL                              string  `json:"url"`
 }
 
 // beneficialOwnershipAcquisitionShadow mirrors BeneficialOwnershipAcquisition
 // with a pointer or raw value for every required member so a missing or null
 // member is observable after decoding.
 type beneficialOwnershipAcquisitionShadow struct {
-	CIK                              *string `json:"cik"`
-	Symbol                           *string `json:"symbol"`
-	FilingDate                       *Date   `json:"filingDate"`
-	AcceptedDate                     *Date   `json:"acceptedDate"`
-	CUSIP                            *string `json:"cusip"`
-	NameOfReportingPerson            *string `json:"nameOfReportingPerson"`
-	CitizenshipOrPlaceOfOrganization *string `json:"citizenshipOrPlaceOfOrganization"`
-	SoleVotingPower                  *string `json:"soleVotingPower"`
-	SharedVotingPower                *string `json:"sharedVotingPower"`
-	SoleDispositivePower             *string `json:"soleDispositivePower"`
-	SharedDispositivePower           *string `json:"sharedDispositivePower"`
-	AmountBeneficiallyOwned          *string `json:"amountBeneficiallyOwned"`
-	PercentOfClass                   *string `json:"percentOfClass"`
-	TypeOfReportingPerson            *string `json:"typeOfReportingPerson"`
-	URL                              *string `json:"url"`
+	CIK                              *string        `json:"cik"`
+	Symbol                           *string        `json:"symbol"`
+	FilingDate                       *Date          `json:"filingDate"`
+	AcceptedDate                     *Date          `json:"acceptedDate"`
+	CUSIP                            jsontext.Value `json:"cusip"`
+	NameOfReportingPerson            *string        `json:"nameOfReportingPerson"`
+	CitizenshipOrPlaceOfOrganization jsontext.Value `json:"citizenshipOrPlaceOfOrganization"`
+	SoleVotingPower                  *string        `json:"soleVotingPower"`
+	SharedVotingPower                jsontext.Value `json:"sharedVotingPower"`
+	SoleDispositivePower             *string        `json:"soleDispositivePower"`
+	SharedDispositivePower           *string        `json:"sharedDispositivePower"`
+	AmountBeneficiallyOwned          *string        `json:"amountBeneficiallyOwned"`
+	PercentOfClass                   *string        `json:"percentOfClass"`
+	TypeOfReportingPerson            *string        `json:"typeOfReportingPerson"`
+	URL                              *string        `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -345,15 +371,15 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 		return missingMemberError("BeneficialOwnershipAcquisition", "filingDate")
 	case shadow.AcceptedDate == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "acceptedDate")
-	case shadow.CUSIP == nil:
+	case len(shadow.CUSIP) == 0:
 		return missingMemberError("BeneficialOwnershipAcquisition", "cusip")
 	case shadow.NameOfReportingPerson == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "nameOfReportingPerson")
-	case shadow.CitizenshipOrPlaceOfOrganization == nil:
+	case len(shadow.CitizenshipOrPlaceOfOrganization) == 0:
 		return missingMemberError("BeneficialOwnershipAcquisition", "citizenshipOrPlaceOfOrganization")
 	case shadow.SoleVotingPower == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "soleVotingPower")
-	case shadow.SharedVotingPower == nil:
+	case len(shadow.SharedVotingPower) == 0:
 		return missingMemberError("BeneficialOwnershipAcquisition", "sharedVotingPower")
 	case shadow.SoleDispositivePower == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "soleDispositivePower")
@@ -368,16 +394,40 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 	case shadow.URL == nil:
 		return missingMemberError("BeneficialOwnershipAcquisition", "url")
 	}
+	var cusip *string
+	if shadow.CUSIP.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CUSIP, &value); err != nil {
+			return err
+		}
+		cusip = &value
+	}
+	var citizenshipOrPlaceOfOrganization *string
+	if shadow.CitizenshipOrPlaceOfOrganization.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CitizenshipOrPlaceOfOrganization, &value); err != nil {
+			return err
+		}
+		citizenshipOrPlaceOfOrganization = &value
+	}
+	var sharedVotingPower *string
+	if shadow.SharedVotingPower.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.SharedVotingPower, &value); err != nil {
+			return err
+		}
+		sharedVotingPower = &value
+	}
 	*m = BeneficialOwnershipAcquisition{
 		CIK:                              *shadow.CIK,
 		Symbol:                           *shadow.Symbol,
 		FilingDate:                       *shadow.FilingDate,
 		AcceptedDate:                     *shadow.AcceptedDate,
-		CUSIP:                            *shadow.CUSIP,
+		CUSIP:                            cusip,
 		NameOfReportingPerson:            *shadow.NameOfReportingPerson,
-		CitizenshipOrPlaceOfOrganization: *shadow.CitizenshipOrPlaceOfOrganization,
+		CitizenshipOrPlaceOfOrganization: citizenshipOrPlaceOfOrganization,
 		SoleVotingPower:                  *shadow.SoleVotingPower,
-		SharedVotingPower:                *shadow.SharedVotingPower,
+		SharedVotingPower:                sharedVotingPower,
 		SoleDispositivePower:             *shadow.SoleDispositivePower,
 		SharedDispositivePower:           *shadow.SharedDispositivePower,
 		AmountBeneficiallyOwned:          *shadow.AmountBeneficiallyOwned,

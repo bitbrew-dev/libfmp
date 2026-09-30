@@ -1,11 +1,19 @@
 //! Response rows returned by institutional-ownership filing endpoints.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::types::{
     ApiDateTime, CalendarQuarter, CalendarYear, Cik, Cusip, Date, MarketValue, Price, Quantity,
     Ticker,
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// One recent institutional-ownership filing.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -32,7 +40,8 @@ pub struct InstitutionalHolding {
     pub accepted_date: Date,
     pub cik: Cik,
     pub security_cusip: Cusip,
-    pub symbol: Ticker,
+    #[serde(deserialize_with = "required_option")]
+    pub symbol: Option<Ticker>,
     pub name_of_issuer: String,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub shares: Quantity,
@@ -182,14 +191,17 @@ pub struct HolderIndustryBreakdown {
     pub date: Date,
     pub cik: Cik,
     pub investor_name: String,
-    pub industry_title: String,
+    #[serde(deserialize_with = "required_option")]
+    pub industry_title: Option<String>,
     pub weight: f64,
     pub last_weight: f64,
     pub change_in_weight: f64,
-    pub change_in_weight_percentage: f64,
+    #[serde(deserialize_with = "required_option")]
+    pub change_in_weight_percentage: Option<f64>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub performance: MarketValue,
-    pub performance_percentage: f64,
+    #[serde(deserialize_with = "required_option")]
+    pub performance_percentage: Option<f64>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub last_performance: MarketValue,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]

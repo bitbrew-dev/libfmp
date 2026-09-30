@@ -48,7 +48,7 @@ fn exact_extract_fixture_decodes_fourteen_fields_and_required_empty_put_call() {
             accepted_date: Date::from_str("2023-11-13").unwrap(),
             cik: Cik::new("0001388838").unwrap(),
             security_cusip: Cusip::new("674215207").unwrap(),
-            symbol: Ticker::new("CHRD").unwrap(),
+            symbol: Some(Ticker::new("CHRD").unwrap()),
             name_of_issuer: "CHORD ENERGY CORPORATION".to_owned(),
             shares: 13_280.0,
             title_of_class: "COM NEW".to_owned(),
@@ -62,6 +62,12 @@ fn exact_extract_fixture_decodes_fourteen_fields_and_required_empty_put_call() {
     assert_eq!(rows[0].cik.as_str(), "0001388838");
     assert_eq!(rows[0].security_cusip.as_str(), "674215207");
     assert!(rows[0].put_call_share.is_empty());
+
+    let mut null_symbol: serde_json::Value = serde_json::from_slice(EXTRACT).unwrap();
+    null_symbol[0]["symbol"] = serde_json::Value::Null;
+    let rows: Vec<InstitutionalHolding> = serde_json::from_value(null_symbol).unwrap();
+    assert_eq!(rows[0].symbol, None);
+    assert!(serde_json::to_value(&rows[0]).unwrap()["symbol"].is_null());
 
     let mut leading_zero: serde_json::Value = serde_json::from_slice(EXTRACT).unwrap();
     leading_zero[0]["securityCusip"] = serde_json::json!("001234567");
@@ -137,9 +143,9 @@ fn shares_and_value_decode_large_fractional_and_negative_numbers_but_reject_text
 
 #[test]
 fn all_fields_are_required_non_null_and_unknowns_are_accepted() {
-    assert_contract::<InstitutionalOwnershipFiling>(LATEST);
-    assert_contract::<InstitutionalHolding>(EXTRACT);
-    assert_contract::<Form13fFilingDate>(DATES);
+    assert_contract::<InstitutionalOwnershipFiling>(LATEST, &[]);
+    assert_contract::<InstitutionalHolding>(EXTRACT, &["symbol"]);
+    assert_contract::<Form13fFilingDate>(DATES, &[]);
 }
 
 #[test]
@@ -171,7 +177,7 @@ fn all_three_contracts_are_bare_arrays_preserving_empty_and_multiple_rows() {
     assert_multiple::<Form13fFilingDate>(DATES);
 }
 
-fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
+fn assert_contract<T: DeserializeOwned>(fixture: &[u8], nullable: &[&str]) {
     let source: serde_json::Value = serde_json::from_slice(fixture).unwrap();
     let keys = source[0]
         .as_object()
@@ -190,9 +196,10 @@ fn assert_contract<T: DeserializeOwned>(fixture: &[u8]) {
 
         let mut null = source.clone();
         null[0][&key] = serde_json::Value::Null;
-        assert!(
-            serde_json::from_value::<Vec<T>>(null).is_err(),
-            "accepted null {key}"
+        assert_eq!(
+            serde_json::from_value::<Vec<T>>(null).is_ok(),
+            nullable.contains(&key.as_str()),
+            "null {key} acceptance differs from the nullable list"
         );
     }
 

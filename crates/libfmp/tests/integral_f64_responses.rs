@@ -75,7 +75,7 @@ fn split_terms_decode_fractional_and_integral_float_forms() {
 fn insider_share_quantities_decode_fractional_and_integral_float_forms() {
     let rows: Vec<InsiderTrade> = serde_json::from_slice(INSIDER).unwrap();
 
-    assert_eq!(rows[0].securities_owned, 62_959.5);
+    assert_eq!(rows[0].securities_owned, Some(62_959.5));
     assert_eq!(rows[0].securities_transacted, 1.0);
     let wire = serde_json::to_value(&rows).unwrap();
     assert_eq!(wire[0]["securitiesOwned"], json!(62_959.5));

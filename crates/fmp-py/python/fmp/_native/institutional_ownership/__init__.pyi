@@ -68,7 +68,7 @@ class HolderIndustryBreakdown:
     @property
     def investor_name(self) -> builtins.str: ...
     @property
-    def industry_title(self) -> builtins.str: ...
+    def industry_title(self) -> typing.Optional[builtins.str]: ...
     @property
     def weight(self) -> builtins.float: ...
     @property
@@ -76,11 +76,11 @@ class HolderIndustryBreakdown:
     @property
     def change_in_weight(self) -> builtins.float: ...
     @property
-    def change_in_weight_percentage(self) -> builtins.float: ...
+    def change_in_weight_percentage(self) -> typing.Optional[builtins.float]: ...
     @property
     def performance(self) -> builtins.float: ...
     @property
-    def performance_percentage(self) -> builtins.float: ...
+    def performance_percentage(self) -> typing.Optional[builtins.float]: ...
     @property
     def last_performance(self) -> builtins.float: ...
     @property
@@ -92,13 +92,13 @@ class HolderIndustryBreakdown:
         date: datetime.date,
         cik: builtins.str,
         investor_name: builtins.str,
-        industry_title: builtins.str,
+        industry_title: typing.Optional[builtins.str],
         weight: builtins.float,
         last_weight: builtins.float,
         change_in_weight: builtins.float,
-        change_in_weight_percentage: builtins.float,
+        change_in_weight_percentage: typing.Optional[builtins.float],
         performance: builtins.float,
-        performance_percentage: builtins.float,
+        performance_percentage: typing.Optional[builtins.float],
         last_performance: builtins.float,
         change_in_performance: builtins.float,
     ) -> HolderIndustryBreakdown: ...
@@ -472,7 +472,7 @@ class InstitutionalHolding:
     @property
     def security_cusip(self) -> builtins.str: ...
     @property
-    def symbol(self) -> builtins.str: ...
+    def symbol(self) -> typing.Optional[builtins.str]: ...
     @property
     def name_of_issuer(self) -> builtins.str: ...
     @property
@@ -498,7 +498,7 @@ class InstitutionalHolding:
         accepted_date: datetime.date,
         cik: builtins.str,
         security_cusip: builtins.str,
-        symbol: builtins.str,
+        symbol: typing.Optional[builtins.str],
         name_of_issuer: builtins.str,
         shares: builtins.float,
         title_of_class: builtins.str,
