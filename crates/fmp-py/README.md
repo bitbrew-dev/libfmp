@@ -146,7 +146,7 @@ package root):
 | `FmpConfigError` | the client cannot be built (missing key, bad URL, insecure auth) |
 | `FmpValidationError` | an argument is rejected before the request |
 | `FmpTransportError` | the request never produced a response |
-| `FmpStatusError` | the provider answered with a non-success status |
+| `FmpStatusError` | the provider answered with a non-success status, or with a 200 whose body is its own error message (`Invalid name`, `{"Error Message": ...}`) |
 | `FmpDecodeError` | the body could not be decoded into the documented shape; `decode_path` names the member (for example `[37].beta`) and `decode_kind` the reason, never the value |
 
 ```python

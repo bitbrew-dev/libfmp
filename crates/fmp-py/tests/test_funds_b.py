@@ -261,7 +261,7 @@ def test_status_error_carries_the_funds_endpoint_id(
 
 def test_non_json_body_is_a_decode_error(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
     """A non-JSON body on the ETF path maps to ``FmpDecodeError``."""
-    fixture_server.route("/etf/holdings", b"not-json")
+    fixture_server.route("/etf/holdings", b"not-json " * 40)
     with pytest.raises(errors.FmpDecodeError):
         client.funds.etf_holdings("SPY")
 

@@ -141,7 +141,7 @@ fmp_exception!(
 fmp_exception!(
     FmpStatusError,
     FmpError,
-    "The provider returned a non-success HTTP status."
+    "The provider returned a non-success HTTP status, or a success status whose body is its own error message."
 );
 fmp_exception!(
     FmpDecodeError,

@@ -212,7 +212,7 @@ def test_status_error_carries_the_screener_endpoint_id(
 
 def test_decode_error_for_a_non_json_body(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
     """A body that is not JSON maps to ``FmpDecodeError`` rather than a raw exception."""
-    fixture_server.route("/company-screener", b"not-json")
+    fixture_server.route("/company-screener", b"not-json " * 40)
     with pytest.raises(errors.FmpDecodeError) as caught:
         client.screener.companies()
 
