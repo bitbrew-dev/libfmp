@@ -176,7 +176,7 @@ struct with pointer fields for every required member and an `UnmarshalJSON`
 that reports a `Decode` error naming the first missing field. Unknown members
 are ignored, as in Rust (no `deny_unknown_fields` exists in the crate).
 
-Four field codecs need more than a pointer, because json/v2 sets a pointer
+Four field codecs (five since ADR 0033) need more than a pointer, because json/v2 sets a pointer
 to nil for both a missing key and a JSON null. Their shadow member is the raw
 `jsontext.Value` (empty means missing) and the generated decoder finishes the
 job: `deserialize_with = "required_option"` (key required, null allowed,
@@ -191,6 +191,11 @@ it, plain members plus one `DynamicObject` holding the rest, and fails naming
 the struct otherwise. `FiscalYear` has no Go codec on purpose: no public model
 uses it, and the generator fails if one appears rather than widening it to
 `NumberOrString`.
+
+The fifth, from ADR 0033, is
+`deserialize_with = "crate::codecs::empty_or_null::deserialize"` on an
+`Option` of a string-backed typed code: key required, `""` and null are
+`nil`, public field `*string`.
 
 ### Generator placement
 
