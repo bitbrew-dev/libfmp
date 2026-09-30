@@ -159,8 +159,8 @@ async fn malformed_and_trailing_json_are_syntax_failures() {
 
 #[tokio::test]
 async fn non_json_and_empty_bodies_are_root_syntax_failures() {
-    for body in ["not-json", ""] {
-        let error = decode_error(json_body(body.to_owned())).await;
+    for body in ["not-json ".repeat(40), String::new()] {
+        let error = decode_error(json_body(body)).await;
 
         assert_eq!(error.decode_kind(), Some(DecodeErrorKind::Syntax));
         assert_eq!(error.decode_path(), None);

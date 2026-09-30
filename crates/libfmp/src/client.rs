@@ -22,7 +22,7 @@ use url::Url;
 use crate::{
     Result, VERSION,
     config::{Authentication, DEFAULT_BASE_URL, DEFAULT_PATH_PREFIX, RedirectPolicy},
-    endpoints::{QueryEncoder, ResponseMetadata},
+    endpoints::{DecodeFailure, QueryEncoder, ResponseMetadata},
     error::{ConfigurationErrorKind, Error, Redactor, SafeBody, SecretString},
     transport::{HttpExecutor, PreparedRequest, ReqwestExecutor, TransportResponse},
 };
@@ -489,17 +489,19 @@ impl Client {
                     response.body_bytes(),
                     ResponseMetadata::new(content_type, content_disposition),
                 )
-                .map_err(|failure| {
-                    Error::decode(
+                .map_err(|failure| match failure {
+                    DecodeFailure::Shape { path, kind } => Error::decode(
                         Some(endpoint.id()),
                         Some(response.status()),
                         Some(safe_body(response.body(), redactor)),
                         "successful response could not be decoded",
                     )
-                    .with_decode_location(
-                        failure.path.map(|path| redactor.redact(&path)),
-                        failure.kind,
-                    )
+                    .with_decode_location(path.map(|path| redactor.redact(&path)), kind),
+                    DecodeFailure::ProviderMessage => Error::provider_message(
+                        endpoint.id(),
+                        response.status(),
+                        Some(safe_body(response.body(), redactor)),
+                    ),
                 });
         }
 

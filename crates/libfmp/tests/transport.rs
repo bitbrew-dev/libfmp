@@ -823,7 +823,7 @@ async fn overlapping_secrets_are_redacted_from_status_and_decode_bodies() {
         Ok(TransportResponse::new(
             200,
             json_headers,
-            "shared-secret-prefix-and-suffix",
+            "{shared-secret-prefix-and-suffix}",
         )),
     ]));
     let client = Client::builder()
@@ -834,10 +834,13 @@ async fn overlapping_secrets_are_redacted_from_status_and_decode_bodies() {
         .build()
         .unwrap();
 
-    for expected_category in [ErrorCategory::Status, ErrorCategory::Decode] {
+    for (expected_category, expected_body) in [
+        (ErrorCategory::Status, "[REDACTED]"),
+        (ErrorCategory::Decode, "{[REDACTED]}"),
+    ] {
         let error = client.execute(&endpoint()).await.unwrap_err();
         assert_eq!(error.category(), expected_category);
-        assert_eq!(error.body().map(|body| body.as_str()), Some("[REDACTED]"));
+        assert_eq!(error.body().map(|body| body.as_str()), Some(expected_body));
         let diagnostic = format!("{error:?} {error}");
         assert!(!diagnostic.contains("shared-secret-prefix"));
         assert!(!diagnostic.contains("and-suffix"));
