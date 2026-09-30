@@ -659,7 +659,7 @@ pub(crate) struct ExchangeVariant {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub price: f64,
+    pub price: Option<f64>,
     #[pyo3(get)]
     pub beta: f64,
     #[pyo3(get)]
@@ -669,19 +669,19 @@ pub(crate) struct ExchangeVariant {
     #[pyo3(get)]
     pub last_div: f64,
     #[pyo3(get)]
-    pub range: String,
+    pub range: Option<String>,
     #[pyo3(get)]
-    pub changes: f64,
+    pub changes: Option<f64>,
     #[pyo3(get)]
     pub company_name: String,
     #[pyo3(get)]
     pub currency: String,
     #[pyo3(get)]
-    pub cik: String,
+    pub cik: Option<String>,
     #[pyo3(get)]
-    pub isin: String,
+    pub isin: Option<String>,
     #[pyo3(get)]
-    pub cusip: String,
+    pub cusip: Option<String>,
     #[pyo3(get)]
     pub exchange: String,
     #[pyo3(get)]
@@ -689,29 +689,29 @@ pub(crate) struct ExchangeVariant {
     #[pyo3(get)]
     pub industry: String,
     #[pyo3(get)]
-    pub website: String,
+    pub website: Option<String>,
     #[pyo3(get)]
     pub description: String,
     #[pyo3(get)]
-    pub ceo: String,
+    pub ceo: Option<String>,
     #[pyo3(get)]
     pub sector: String,
     #[pyo3(get)]
     pub country: String,
     #[pyo3(get)]
-    pub full_time_employees: String,
+    pub full_time_employees: Option<String>,
     #[pyo3(get)]
-    pub phone: String,
+    pub phone: Option<String>,
     #[pyo3(get)]
-    pub address: String,
+    pub address: Option<String>,
     #[pyo3(get)]
-    pub city: String,
+    pub city: Option<String>,
     #[pyo3(get)]
-    pub state: String,
+    pub state: Option<String>,
     #[pyo3(get)]
-    pub zip: String,
+    pub zip: Option<String>,
     #[pyo3(get)]
-    pub dcf_diff: f64,
+    pub dcf_diff: Option<f64>,
     #[pyo3(get)]
     pub dcf: f64,
     #[pyo3(get)]
@@ -739,33 +739,33 @@ impl ExchangeVariant {
     #[pyo3(signature = (*, symbol, price, beta, vol_avg, market_cap, last_div, range, changes, company_name, currency, cik, isin, cusip, exchange, exchange_short_name, industry, website, description, ceo, sector, country, full_time_employees, phone, address, city, state, zip, dcf_diff, dcf, image, ipo_date, default_image, is_etf, is_actively_trading, is_adr, is_fund))]
     fn new(
         symbol: String,
-        price: f64,
+        price: Option<f64>,
         beta: f64,
         vol_avg: f64,
         market_cap: f64,
         last_div: f64,
-        range: String,
-        changes: f64,
+        range: Option<String>,
+        changes: Option<f64>,
         company_name: String,
         currency: String,
-        cik: String,
-        isin: String,
-        cusip: String,
+        cik: Option<String>,
+        isin: Option<String>,
+        cusip: Option<String>,
         exchange: String,
         exchange_short_name: String,
         industry: String,
-        website: String,
+        website: Option<String>,
         description: String,
-        ceo: String,
+        ceo: Option<String>,
         sector: String,
         country: String,
-        full_time_employees: String,
-        phone: String,
-        address: String,
-        city: String,
-        state: String,
-        zip: String,
-        dcf_diff: f64,
+        full_time_employees: Option<String>,
+        phone: Option<String>,
+        address: Option<String>,
+        city: Option<String>,
+        state: Option<String>,
+        zip: Option<String>,
+        dcf_diff: Option<f64>,
         dcf: f64,
         image: String,
         ipo_date: ::chrono::NaiveDate,
@@ -1155,9 +1155,9 @@ impl From<libfmp::responses::search::ExchangeVariant> for ExchangeVariant {
             changes: value.changes,
             company_name: value.company_name,
             currency: value.currency.into_inner(),
-            cik: value.cik.into_inner(),
-            isin: value.isin.into_inner(),
-            cusip: value.cusip.into_inner(),
+            cik: value.cik.map(|value| value.into_inner()),
+            isin: value.isin.map(|value| value.into_inner()),
+            cusip: value.cusip.map(|value| value.into_inner()),
             exchange: value.exchange,
             exchange_short_name: value.exchange_short_name.into_inner(),
             industry: value.industry,

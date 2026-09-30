@@ -258,69 +258,27 @@ func (m *ISINSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // ExchangeVariant is one exchange listing returned by exchange-variants
 // search.
 type ExchangeVariant struct {
-	Symbol            string  `json:"symbol"`
-	Price             float64 `json:"price"`
-	Beta              float64 `json:"beta"`
-	VolAvg            float64 `json:"volAvg"`
-	MarketCap         float64 `json:"mktCap"`
-	LastDiv           float64 `json:"lastDiv"`
-	Range             string  `json:"range"`
-	Changes           float64 `json:"changes"`
-	CompanyName       string  `json:"companyName"`
-	Currency          string  `json:"currency"`
-	CIK               string  `json:"cik"`
-	ISIN              string  `json:"isin"`
-	CUSIP             string  `json:"cusip"`
-	Exchange          string  `json:"exchange"`
-	ExchangeShortName string  `json:"exchangeShortName"`
-	Industry          string  `json:"industry"`
-	Website           string  `json:"website"`
-	Description       string  `json:"description"`
-	Ceo               string  `json:"ceo"`
-	Sector            string  `json:"sector"`
-	Country           string  `json:"country"`
-	FullTimeEmployees string  `json:"fullTimeEmployees"`
-	Phone             string  `json:"phone"`
-	Address           string  `json:"address"`
-	City              string  `json:"city"`
-	State             string  `json:"state"`
-	Zip               string  `json:"zip"`
-	DCFDiff           float64 `json:"dcfDiff"`
-	DCF               float64 `json:"dcf"`
-	Image             string  `json:"image"`
-	IPODate           Date    `json:"ipoDate"`
-	DefaultImage      bool    `json:"defaultImage"`
-	IsETF             bool    `json:"isEtf"`
-	IsActivelyTrading bool    `json:"isActivelyTrading"`
-	IsAdr             bool    `json:"isAdr"`
-	IsFund            bool    `json:"isFund"`
-}
-
-// exchangeVariantShadow mirrors ExchangeVariant with a pointer or raw value
-// for every required member so a missing or null member is observable after
-// decoding.
-type exchangeVariantShadow struct {
-	Symbol            *string  `json:"symbol"`
+	Symbol            string   `json:"symbol"`
 	Price             *float64 `json:"price"`
-	Beta              *float64 `json:"beta"`
-	VolAvg            *float64 `json:"volAvg"`
-	MarketCap         *float64 `json:"mktCap"`
-	LastDiv           *float64 `json:"lastDiv"`
+	Beta              float64  `json:"beta"`
+	VolAvg            float64  `json:"volAvg"`
+	MarketCap         float64  `json:"mktCap"`
+	LastDiv           float64  `json:"lastDiv"`
 	Range             *string  `json:"range"`
 	Changes           *float64 `json:"changes"`
-	CompanyName       *string  `json:"companyName"`
-	Currency          *string  `json:"currency"`
+	CompanyName       string   `json:"companyName"`
+	Currency          string   `json:"currency"`
 	CIK               *string  `json:"cik"`
 	ISIN              *string  `json:"isin"`
 	CUSIP             *string  `json:"cusip"`
-	Exchange          *string  `json:"exchange"`
-	ExchangeShortName *string  `json:"exchangeShortName"`
-	Industry          *string  `json:"industry"`
+	Exchange          string   `json:"exchange"`
+	ExchangeShortName string   `json:"exchangeShortName"`
+	Industry          string   `json:"industry"`
 	Website           *string  `json:"website"`
-	Description       *string  `json:"description"`
+	Description       string   `json:"description"`
 	Ceo               *string  `json:"ceo"`
-	Sector            *string  `json:"sector"`
-	Country           *string  `json:"country"`
+	Sector            string   `json:"sector"`
+	Country           string   `json:"country"`
 	FullTimeEmployees *string  `json:"fullTimeEmployees"`
 	Phone             *string  `json:"phone"`
 	Address           *string  `json:"address"`
@@ -328,14 +286,56 @@ type exchangeVariantShadow struct {
 	State             *string  `json:"state"`
 	Zip               *string  `json:"zip"`
 	DCFDiff           *float64 `json:"dcfDiff"`
-	DCF               *float64 `json:"dcf"`
-	Image             *string  `json:"image"`
-	IPODate           *Date    `json:"ipoDate"`
-	DefaultImage      *bool    `json:"defaultImage"`
-	IsETF             *bool    `json:"isEtf"`
-	IsActivelyTrading *bool    `json:"isActivelyTrading"`
-	IsAdr             *bool    `json:"isAdr"`
-	IsFund            *bool    `json:"isFund"`
+	DCF               float64  `json:"dcf"`
+	Image             string   `json:"image"`
+	IPODate           Date     `json:"ipoDate"`
+	DefaultImage      bool     `json:"defaultImage"`
+	IsETF             bool     `json:"isEtf"`
+	IsActivelyTrading bool     `json:"isActivelyTrading"`
+	IsAdr             bool     `json:"isAdr"`
+	IsFund            bool     `json:"isFund"`
+}
+
+// exchangeVariantShadow mirrors ExchangeVariant with a pointer or raw value
+// for every required member so a missing or null member is observable after
+// decoding.
+type exchangeVariantShadow struct {
+	Symbol            *string        `json:"symbol"`
+	Price             jsontext.Value `json:"price"`
+	Beta              *float64       `json:"beta"`
+	VolAvg            *float64       `json:"volAvg"`
+	MarketCap         *float64       `json:"mktCap"`
+	LastDiv           *float64       `json:"lastDiv"`
+	Range             jsontext.Value `json:"range"`
+	Changes           jsontext.Value `json:"changes"`
+	CompanyName       *string        `json:"companyName"`
+	Currency          *string        `json:"currency"`
+	CIK               jsontext.Value `json:"cik"`
+	ISIN              jsontext.Value `json:"isin"`
+	CUSIP             jsontext.Value `json:"cusip"`
+	Exchange          *string        `json:"exchange"`
+	ExchangeShortName *string        `json:"exchangeShortName"`
+	Industry          *string        `json:"industry"`
+	Website           jsontext.Value `json:"website"`
+	Description       *string        `json:"description"`
+	Ceo               jsontext.Value `json:"ceo"`
+	Sector            *string        `json:"sector"`
+	Country           *string        `json:"country"`
+	FullTimeEmployees jsontext.Value `json:"fullTimeEmployees"`
+	Phone             jsontext.Value `json:"phone"`
+	Address           jsontext.Value `json:"address"`
+	City              jsontext.Value `json:"city"`
+	State             jsontext.Value `json:"state"`
+	Zip               jsontext.Value `json:"zip"`
+	DCFDiff           jsontext.Value `json:"dcfDiff"`
+	DCF               *float64       `json:"dcf"`
+	Image             *string        `json:"image"`
+	IPODate           *Date          `json:"ipoDate"`
+	DefaultImage      *bool          `json:"defaultImage"`
+	IsETF             *bool          `json:"isEtf"`
+	IsActivelyTrading *bool          `json:"isActivelyTrading"`
+	IsAdr             *bool          `json:"isAdr"`
+	IsFund            *bool          `json:"isFund"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -349,7 +349,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("ExchangeVariant", "symbol")
-	case shadow.Price == nil:
+	case len(shadow.Price) == 0:
 		return missingMemberError("ExchangeVariant", "price")
 	case shadow.Beta == nil:
 		return missingMemberError("ExchangeVariant", "beta")
@@ -359,19 +359,19 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeVariant", "mktCap")
 	case shadow.LastDiv == nil:
 		return missingMemberError("ExchangeVariant", "lastDiv")
-	case shadow.Range == nil:
+	case len(shadow.Range) == 0:
 		return missingMemberError("ExchangeVariant", "range")
-	case shadow.Changes == nil:
+	case len(shadow.Changes) == 0:
 		return missingMemberError("ExchangeVariant", "changes")
 	case shadow.CompanyName == nil:
 		return missingMemberError("ExchangeVariant", "companyName")
 	case shadow.Currency == nil:
 		return missingMemberError("ExchangeVariant", "currency")
-	case shadow.CIK == nil:
+	case len(shadow.CIK) == 0:
 		return missingMemberError("ExchangeVariant", "cik")
-	case shadow.ISIN == nil:
+	case len(shadow.ISIN) == 0:
 		return missingMemberError("ExchangeVariant", "isin")
-	case shadow.CUSIP == nil:
+	case len(shadow.CUSIP) == 0:
 		return missingMemberError("ExchangeVariant", "cusip")
 	case shadow.Exchange == nil:
 		return missingMemberError("ExchangeVariant", "exchange")
@@ -379,29 +379,29 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("ExchangeVariant", "exchangeShortName")
 	case shadow.Industry == nil:
 		return missingMemberError("ExchangeVariant", "industry")
-	case shadow.Website == nil:
+	case len(shadow.Website) == 0:
 		return missingMemberError("ExchangeVariant", "website")
 	case shadow.Description == nil:
 		return missingMemberError("ExchangeVariant", "description")
-	case shadow.Ceo == nil:
+	case len(shadow.Ceo) == 0:
 		return missingMemberError("ExchangeVariant", "ceo")
 	case shadow.Sector == nil:
 		return missingMemberError("ExchangeVariant", "sector")
 	case shadow.Country == nil:
 		return missingMemberError("ExchangeVariant", "country")
-	case shadow.FullTimeEmployees == nil:
+	case len(shadow.FullTimeEmployees) == 0:
 		return missingMemberError("ExchangeVariant", "fullTimeEmployees")
-	case shadow.Phone == nil:
+	case len(shadow.Phone) == 0:
 		return missingMemberError("ExchangeVariant", "phone")
-	case shadow.Address == nil:
+	case len(shadow.Address) == 0:
 		return missingMemberError("ExchangeVariant", "address")
-	case shadow.City == nil:
+	case len(shadow.City) == 0:
 		return missingMemberError("ExchangeVariant", "city")
-	case shadow.State == nil:
+	case len(shadow.State) == 0:
 		return missingMemberError("ExchangeVariant", "state")
-	case shadow.Zip == nil:
+	case len(shadow.Zip) == 0:
 		return missingMemberError("ExchangeVariant", "zip")
-	case shadow.DCFDiff == nil:
+	case len(shadow.DCFDiff) == 0:
 		return missingMemberError("ExchangeVariant", "dcfDiff")
 	case shadow.DCF == nil:
 		return missingMemberError("ExchangeVariant", "dcf")
@@ -420,35 +420,157 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.IsFund == nil:
 		return missingMemberError("ExchangeVariant", "isFund")
 	}
+	var price *float64
+	if shadow.Price.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Price, &value); err != nil {
+			return err
+		}
+		price = &value
+	}
+	var range_ *string
+	if shadow.Range.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Range, &value); err != nil {
+			return err
+		}
+		range_ = &value
+	}
+	var changes *float64
+	if shadow.Changes.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Changes, &value); err != nil {
+			return err
+		}
+		changes = &value
+	}
+	var cik *string
+	if shadow.CIK.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CIK, &value); err != nil {
+			return err
+		}
+		cik = &value
+	}
+	var isin *string
+	if shadow.ISIN.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
+			return err
+		}
+		isin = &value
+	}
+	var cusip *string
+	if shadow.CUSIP.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.CUSIP, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			cusip = &value
+		}
+	}
+	var website *string
+	if shadow.Website.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Website, &value); err != nil {
+			return err
+		}
+		website = &value
+	}
+	var ceo *string
+	if shadow.Ceo.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Ceo, &value); err != nil {
+			return err
+		}
+		ceo = &value
+	}
+	var fullTimeEmployees *string
+	if shadow.FullTimeEmployees.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.FullTimeEmployees, &value); err != nil {
+			return err
+		}
+		fullTimeEmployees = &value
+	}
+	var phone *string
+	if shadow.Phone.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Phone, &value); err != nil {
+			return err
+		}
+		phone = &value
+	}
+	var address *string
+	if shadow.Address.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Address, &value); err != nil {
+			return err
+		}
+		address = &value
+	}
+	var city *string
+	if shadow.City.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.City, &value); err != nil {
+			return err
+		}
+		city = &value
+	}
+	var state *string
+	if shadow.State.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.State, &value); err != nil {
+			return err
+		}
+		state = &value
+	}
+	var zip *string
+	if shadow.Zip.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Zip, &value); err != nil {
+			return err
+		}
+		zip = &value
+	}
+	var dcfDiff *float64
+	if shadow.DCFDiff.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.DCFDiff, &value); err != nil {
+			return err
+		}
+		dcfDiff = &value
+	}
 	*m = ExchangeVariant{
 		Symbol:            *shadow.Symbol,
-		Price:             *shadow.Price,
+		Price:             price,
 		Beta:              *shadow.Beta,
 		VolAvg:            *shadow.VolAvg,
 		MarketCap:         *shadow.MarketCap,
 		LastDiv:           *shadow.LastDiv,
-		Range:             *shadow.Range,
-		Changes:           *shadow.Changes,
+		Range:             range_,
+		Changes:           changes,
 		CompanyName:       *shadow.CompanyName,
 		Currency:          *shadow.Currency,
-		CIK:               *shadow.CIK,
-		ISIN:              *shadow.ISIN,
-		CUSIP:             *shadow.CUSIP,
+		CIK:               cik,
+		ISIN:              isin,
+		CUSIP:             cusip,
 		Exchange:          *shadow.Exchange,
 		ExchangeShortName: *shadow.ExchangeShortName,
 		Industry:          *shadow.Industry,
-		Website:           *shadow.Website,
+		Website:           website,
 		Description:       *shadow.Description,
-		Ceo:               *shadow.Ceo,
+		Ceo:               ceo,
 		Sector:            *shadow.Sector,
 		Country:           *shadow.Country,
-		FullTimeEmployees: *shadow.FullTimeEmployees,
-		Phone:             *shadow.Phone,
-		Address:           *shadow.Address,
-		City:              *shadow.City,
-		State:             *shadow.State,
-		Zip:               *shadow.Zip,
-		DCFDiff:           *shadow.DCFDiff,
+		FullTimeEmployees: fullTimeEmployees,
+		Phone:             phone,
+		Address:           address,
+		City:              city,
+		State:             state,
+		Zip:               zip,
+		DCFDiff:           dcfDiff,
 		DCF:               *shadow.DCF,
 		Image:             *shadow.Image,
 		IPODate:           *shadow.IPODate,

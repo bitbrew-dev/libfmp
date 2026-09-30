@@ -83,7 +83,7 @@ func TestScreenerCompaniesUsesExactPathAndWireParameterOrder(t *testing.T) {
 	}
 	// The direct-transport contract of screener_endpoint.rs.
 	direct, err := client.Screener.Companies(ctx, NewCompanyScreenerQuery().WithSector("Technology").WithLimit(1_000))
-	if err != nil || len(direct) != 2 || direct[0].Volume != math.MaxUint64 || !direct[1].IsFund {
+	if err != nil || len(direct) != 2 || direct[0].Volume != math.MaxUint64 || direct[1].IsFund == nil || !*direct[1].IsFund {
 		t.Fatalf("Companies direct = %+v, %v", direct, err)
 	}
 

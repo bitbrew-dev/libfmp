@@ -30,12 +30,14 @@ func decodeScreenerBody(t *testing.T, body []byte) *Error {
 
 func TestDecodeErrorNamesTheNullMemberRowAndMember(t *testing.T) {
 	t.Parallel()
-	typed := decodeScreenerBody(t, readFixture(t, "company_screener_null_beta_synthetic.json"))
+	body := strings.Replace(string(readFixture(t, "company_screener_null_beta_synthetic.json")),
+		`"companyName": "Synthetic Row 37"`, `"companyName": null`, 1)
+	typed := decodeScreenerBody(t, []byte(body))
 
-	if typed.Path != "/37/beta" || typed.DecodeKind != DecodeKindNull {
-		t.Fatalf("Path = %q, DecodeKind = %v, want /37/beta null", typed.Path, typed.DecodeKind)
+	if typed.Path != "/37/companyName" || typed.DecodeKind != DecodeKindNull {
+		t.Fatalf("Path = %q, DecodeKind = %v, want /37/companyName null", typed.Path, typed.DecodeKind)
 	}
-	want := "successful response could not be decoded: null value at /37/beta (endpoint: company-screener): "
+	want := "successful response could not be decoded: null value at /37/companyName (endpoint: company-screener): "
 	if !strings.HasPrefix(typed.Error(), want) {
 		t.Fatalf("Error() = %.120q, want prefix %q", typed.Error(), want)
 	}
@@ -44,11 +46,11 @@ func TestDecodeErrorNamesTheNullMemberRowAndMember(t *testing.T) {
 func TestDecodeErrorNeverCarriesAStringMemberValue(t *testing.T) {
 	t.Parallel()
 	body := strings.Replace(string(readFixture(t, "company_screener_null_beta_synthetic.json")),
-		`"beta": null`, `"beta": "`+decodePathSentinel+`"`, 1)
+		"\"symbol\": \"R37\",\n    \"volume\": 29909012", "\"symbol\": \"R37\",\n    \"volume\": \""+decodePathSentinel+"\"", 1)
 	typed := decodeScreenerBody(t, []byte(body))
 
-	if typed.Path != "/37/beta" || typed.DecodeKind != DecodeKindWrongType {
-		t.Fatalf("Path = %q, DecodeKind = %v, want /37/beta wrong_type", typed.Path, typed.DecodeKind)
+	if typed.Path != "/37/volume" || typed.DecodeKind != DecodeKindWrongType {
+		t.Fatalf("Path = %q, DecodeKind = %v, want /37/volume wrong_type", typed.Path, typed.DecodeKind)
 	}
 	if typed.Body == nil || !typed.Body.Truncated {
 		t.Fatalf("Body = %+v, want a truncated excerpt that ends before row 37", typed.Body)

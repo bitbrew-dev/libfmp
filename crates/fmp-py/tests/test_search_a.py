@@ -237,6 +237,24 @@ def test_exchange_variants_encodes_the_caret(client: Any, fixture_server: Fixtur
     assert row.default_image is False
 
 
+@pytest.mark.parametrize("cusip", [None, ""])
+def test_exchange_variants_decodes_null_members_and_empty_cusip_to_none(
+    client: Any, fixture_server: FixtureServer, cusip: str | None
+) -> None:
+    """Issue #368: the 15 members FMP can send as ``null`` read ``None``; an empty ``cusip`` does too."""
+    nullable = ("price", "range", "changes", "cik", "isin", "website", "ceo", "fullTimeEmployees", "phone")
+    nullable += ("address", "city", "state", "zip", "dcfDiff")
+    rows = load_fixture("search_exchange_variants.json")
+    rows[0].update(dict.fromkeys(nullable), cusip=cusip)
+    fixture_server.route("/search-exchange-variants", rows)
+    row = client.search.exchange_variants("AAPL")[0]
+
+    attributes = ("price", "range", "changes", "cik", "isin", "cusip", "website", "ceo", "full_time_employees")
+    attributes += ("phone", "address", "city", "state", "zip", "dcf_diff")
+    assert {name: getattr(row, name) for name in attributes} == dict.fromkeys(attributes)
+    assert row.symbol == "AAPL"
+
+
 @pytest.mark.parametrize(
     ("method", "argument", "path"),
     [

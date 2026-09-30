@@ -44,13 +44,37 @@ async fn decode_error(response: TransportResponse) -> libfmp::Error {
 }
 
 #[tokio::test]
-async fn null_member_names_the_row_index_and_member() {
-    let error = decode_error(json_fixture(NULL_BETA)).await;
+async fn nullable_beta_row_no_longer_fails_the_page() {
+    let executor = Arc::new(FixtureExecutor::new([json_fixture(NULL_BETA)]));
+    let client = Client::builder()
+        .base_url("https://proxy.example/router")
+        .path_prefix("stable")
+        .authentication(Authentication::None)
+        .executor(executor)
+        .build()
+        .unwrap();
+    let rows = client
+        .company_screener(CompanyScreenerQuery::new())
+        .await
+        .unwrap();
 
-    assert_eq!(error.decode_path(), Some("[37].beta"));
+    assert_eq!(rows.len(), 40);
+    assert_eq!(rows[37].beta, None);
+}
+
+#[tokio::test]
+async fn null_member_names_the_row_index_and_member() {
+    let body = String::from_utf8(NULL_BETA.to_vec()).unwrap().replacen(
+        "\"companyName\": \"Synthetic Row 37\"",
+        "\"companyName\": null",
+        1,
+    );
+    let error = decode_error(json_body(body)).await;
+
+    assert_eq!(error.decode_path(), Some("[37].companyName"));
     assert_eq!(error.decode_kind(), Some(DecodeErrorKind::Null));
     assert!(error.to_string().starts_with(
-        "successful response could not be decoded: null value at [37].beta \
+        "successful response could not be decoded: null value at [37].companyName \
          (endpoint: company-screener): "
     ));
 }
@@ -58,13 +82,13 @@ async fn null_member_names_the_row_index_and_member() {
 #[tokio::test]
 async fn string_valued_member_never_reaches_the_error_text() {
     let body = String::from_utf8(NULL_BETA.to_vec()).unwrap().replacen(
-        "\"beta\": null",
-        &format!("\"beta\": \"{SENTINEL}\""),
+        "\"symbol\": \"R37\",\n    \"volume\": 29909012",
+        &format!("\"symbol\": \"R37\",\n    \"volume\": \"{SENTINEL}\""),
         1,
     );
     let error = decode_error(json_body(body)).await;
 
-    assert_eq!(error.decode_path(), Some("[37].beta"));
+    assert_eq!(error.decode_path(), Some("[37].volume"));
     assert_eq!(error.decode_kind(), Some(DecodeErrorKind::WrongType));
     assert!(error.body().unwrap().is_truncated());
     assert!(!error.to_string().contains(SENTINEL));

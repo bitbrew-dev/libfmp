@@ -219,18 +219,39 @@ def test_decode_error_for_a_non_json_body(client: Any, fixture_server: FixtureSe
     assert (caught.value.decode_kind, caught.value.decode_path) == ("syntax", None)
 
 
+def test_companies_decodes_a_page_with_a_null_beta_row(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: a ``null`` beta no longer fails the page; the row's nullable members read ``None``."""
+    rows = load_fixture("company_screener_null_beta_synthetic.json")
+    for member in ("price", "lastAnnualDividend", "country", "isFund"):
+        rows[36][member] = None
+    fixture_server.route("/company-screener", rows)
+    decoded = client.screener.companies()
+
+    assert len(decoded) == 40
+    assert decoded[37].beta is None
+    assert decoded[35].beta == pytest.approx(1.097)
+    assert (decoded[36].price, decoded[36].last_annual_dividend, decoded[36].country, decoded[36].is_fund) == (
+        None,
+        None,
+        None,
+        None,
+    )
+
+
 def test_decode_error_names_the_null_member_row_and_member(
     client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
 ) -> None:
     """Issue #366: a ``null`` required member names its row index and member."""
-    fixture_server.route("/company-screener", load_fixture("company_screener_null_beta_synthetic.json"))
+    rows = load_fixture("company_screener_null_beta_synthetic.json")
+    rows[37]["companyName"] = None
+    fixture_server.route("/company-screener", rows)
     with pytest.raises(errors.FmpDecodeError) as caught:
         client.screener.companies()
 
-    assert caught.value.decode_path == "[37].beta"
+    assert caught.value.decode_path == "[37].companyName"
     assert caught.value.decode_kind == "null"
     assert str(caught.value).startswith(
-        "successful response could not be decoded: null value at [37].beta (endpoint: company-screener): "
+        "successful response could not be decoded: null value at [37].companyName (endpoint: company-screener): "
     )
 
 
@@ -240,13 +261,13 @@ def test_decode_error_never_carries_a_string_member_value(
     """Issue #366: the offending string value reaches neither the message nor an attribute."""
     sentinel = "SENTINEL-beta-text"
     rows = load_fixture("company_screener_null_beta_synthetic.json")
-    rows[37]["beta"] = sentinel
+    rows[37]["volume"] = sentinel
     fixture_server.route("/company-screener", rows)
     with pytest.raises(errors.FmpDecodeError) as caught:
         client.screener.companies()
 
     error = caught.value
-    assert error.decode_path == "[37].beta"
+    assert error.decode_path == "[37].volume"
     assert error.decode_kind == "wrong_type"
     assert error.body_truncated is True
     assert sentinel not in str(error)
