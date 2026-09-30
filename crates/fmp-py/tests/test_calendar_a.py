@@ -214,3 +214,39 @@ def test_earnings_calendar_decodes_fractional_revenue(client: Any, fixture_serve
     assert isinstance(rows[0].revenue_estimated, float)
     assert rows[0].revenue_estimated == 1_086_300_000.5
     assert rows[0].revenue_actual == 1_101_500_000.0
+
+
+@pytest.mark.parametrize("absent", ["", None])
+def test_dividends_calendar_absent_record_and_payment_dates_are_none(
+    client: Any, fixture_server: FixtureServer, absent: str | None
+) -> None:
+    """Issue #368: ``""`` and ``null`` record / payment dates decode as ``None``."""
+    body = load_fixture("dividends_calendar.json")
+    body[0]["recordDate"] = absent
+    body[0]["paymentDate"] = absent
+    fixture_server.route("/dividends-calendar", body)
+    row = client.calendar.dividends_calendar()[0]
+
+    assert row.record_date is None
+    assert row.payment_date is None
+
+
+def test_earnings_calendar_null_estimates_are_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: ``null`` EPS and revenue estimates decode as ``None``."""
+    body = load_fixture("earnings_calendar.json")
+    body[0]["epsEstimated"] = None
+    body[0]["revenueEstimated"] = None
+    fixture_server.route("/earnings-calendar", body)
+    row = client.calendar.earnings_calendar()[0]
+
+    assert row.eps_estimated is None
+    assert row.revenue_estimated is None
+
+
+def test_stock_splits_calendar_null_split_type_is_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: a ``null`` split type decodes as ``None``."""
+    body = load_fixture("stock_splits_calendar.json")
+    body[0]["splitType"] = None
+    fixture_server.route("/splits-calendar", body)
+
+    assert client.calendar.stock_splits_calendar()[0].split_type is None

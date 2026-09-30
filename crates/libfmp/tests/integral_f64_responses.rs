@@ -117,7 +117,7 @@ fn regulation_d_amounts_decode_fractional_and_integral_float_forms() {
 fn earnings_revenue_decodes_fractional_and_integral_float_forms() {
     let rows: Vec<EarningsEvent> = serde_json::from_slice(EARNINGS).unwrap();
 
-    assert_eq!(rows[0].revenue_estimated, 1_086_300_000.5);
+    assert_eq!(rows[0].revenue_estimated, Some(1_086_300_000.5));
     assert_eq!(rows[0].revenue_actual, Some(1_101_500_000.0));
     let wire = serde_json::to_value(&rows).unwrap();
     assert_eq!(wire[0]["revenueEstimated"], json!(1_086_300_000.5));

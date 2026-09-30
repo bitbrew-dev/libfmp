@@ -35,8 +35,8 @@ fn both_exact_dividend_fixtures_share_the_nine_field_row() {
         [DividendEvent {
             symbol: Ticker::new("AAPL").unwrap(),
             date: Date::from_str("2026-05-11").unwrap(),
-            record_date: Date::from_str("2026-05-11").unwrap(),
-            payment_date: Date::from_str("2026-05-14").unwrap(),
+            record_date: Some(Date::from_str("2026-05-11").unwrap()),
+            payment_date: Some(Date::from_str("2026-05-14").unwrap()),
             declaration_date: Some(Date::from_str("2026-04-30").unwrap()),
             adj_dividend: 0.27,
             dividend: 0.27,
@@ -56,10 +56,24 @@ fn both_exact_dividend_fixtures_share_the_nine_field_row() {
         serde_json::from_value::<Vec<DividendEvent>>(null).unwrap()[0].declaration_date,
         None
     );
+
+    for member in ["recordDate", "paymentDate"] {
+        for absent in [serde_json::json!(""), serde_json::Value::Null] {
+            let mut row: serde_json::Value = serde_json::from_slice(DIVIDENDS_CALENDAR).unwrap();
+            row[0][member] = absent;
+            let decoded = serde_json::from_value::<Vec<DividendEvent>>(row).unwrap();
+            let value = if member == "recordDate" {
+                decoded[0].record_date
+            } else {
+                decoded[0].payment_date
+            };
+            assert_eq!(value, None, "{member}");
+        }
+    }
 }
 
 #[test]
-fn both_exact_earnings_fixtures_preserve_only_nullable_actual_values() {
+fn both_exact_earnings_fixtures_preserve_nullable_actual_and_estimated_values() {
     assert_field_count(EARNINGS, 7);
     assert_field_count(EARNINGS_CALENDAR, 7);
 
@@ -70,9 +84,9 @@ fn both_exact_earnings_fixtures_preserve_only_nullable_actual_values() {
             symbol: Ticker::new("AAPL").unwrap(),
             date: Date::from_str("2026-07-30").unwrap(),
             eps_actual: None,
-            eps_estimated: 1.88,
+            eps_estimated: Some(1.88),
             revenue_actual: None,
-            revenue_estimated: 109_038_900_000.0,
+            revenue_estimated: Some(109_038_900_000.0),
             last_updated: Date::from_str("2026-07-30").unwrap(),
         }]
     );
@@ -80,9 +94,9 @@ fn both_exact_earnings_fixtures_preserve_only_nullable_actual_values() {
     let calendar: Vec<EarningsEvent> = serde_json::from_slice(EARNINGS_CALENDAR).unwrap();
     assert_eq!(calendar[0].symbol.as_str(), "GRG.L");
     assert_eq!(calendar[0].eps_actual, Some(0.549));
-    assert_eq!(calendar[0].eps_estimated, 0.501);
+    assert_eq!(calendar[0].eps_estimated, Some(0.501));
     assert_eq!(calendar[0].revenue_actual, Some(1_101_500_000.0));
-    assert_eq!(calendar[0].revenue_estimated, 1_086_300_000.0);
+    assert_eq!(calendar[0].revenue_estimated, Some(1_086_300_000.0));
 }
 
 #[test]
@@ -96,7 +110,7 @@ fn exact_ipo_calendar_fixture_preserves_literal_daa_and_source_only_nulls() {
             date: Date::from_str("2026-07-29").unwrap(),
             daa: IsoTimestamp::from_str("2026-07-29T04:00:00.000Z").unwrap(),
             company: "IMC Rare Earths Ltd".to_owned(),
-            exchange: ExchangeCode::new("NYSE").unwrap(),
+            exchange: Some(ExchangeCode::new("NYSE").unwrap()),
             actions: "Priced".to_owned(),
             shares: None,
             price_range: None,
@@ -154,8 +168,8 @@ fn exact_ipo_prospectus_fixture_decodes_all_thirteen_fields() {
             cik: Cik::new("0002083125").unwrap(),
             price_public_per_share: 1.0,
             price_public_total: 434.0,
-            discounts_and_commissions_per_share: 0.0,
-            discounts_and_commissions_total: 82_251.0,
+            discounts_and_commissions_per_share: Some(0.0),
+            discounts_and_commissions_total: Some(82_251.0),
             proceeds_before_expenses_per_share: 1.0,
             proceeds_before_expenses_total: 82_251.0,
             form: "S-1".to_owned(),
@@ -177,7 +191,7 @@ fn both_exact_stock_split_fixtures_share_the_five_field_integer_row() {
             date: Date::from_str("2020-08-31").unwrap(),
             numerator: 4.0,
             denominator: 1.0,
-            split_type: "stock-split".to_owned(),
+            split_type: Some("stock-split".to_owned()),
         }]
     );
 
@@ -189,15 +203,31 @@ fn both_exact_stock_split_fixtures_share_the_five_field_integer_row() {
 
 #[test]
 fn documented_fields_are_required_nullable_fields_stay_nullable_and_unknowns_are_accepted() {
-    assert_contract::<DividendEvent>(DIVIDENDS, &["declarationDate"]);
-    assert_contract::<DividendEvent>(DIVIDENDS_CALENDAR, &["declarationDate"]);
-    assert_contract::<EarningsEvent>(EARNINGS, &["epsActual", "revenueActual"]);
-    assert_contract::<EarningsEvent>(EARNINGS_CALENDAR, &["epsActual", "revenueActual"]);
-    assert_contract::<IpoCalendarEvent>(IPOS_CALENDAR, &["shares", "priceRange", "marketCap"]);
+    let dividend = ["recordDate", "paymentDate", "declarationDate"];
+    assert_contract::<DividendEvent>(DIVIDENDS, &dividend);
+    assert_contract::<DividendEvent>(DIVIDENDS_CALENDAR, &dividend);
+    let earnings = [
+        "epsActual",
+        "epsEstimated",
+        "revenueActual",
+        "revenueEstimated",
+    ];
+    assert_contract::<EarningsEvent>(EARNINGS, &earnings);
+    assert_contract::<EarningsEvent>(EARNINGS_CALENDAR, &earnings);
+    assert_contract::<IpoCalendarEvent>(
+        IPOS_CALENDAR,
+        &["exchange", "shares", "priceRange", "marketCap"],
+    );
     assert_contract::<IpoDisclosure>(IPOS_DISCLOSURE, &[]);
-    assert_contract::<IpoProspectus>(IPOS_PROSPECTUS, &[]);
-    assert_contract::<StockSplitEvent>(STOCK_SPLITS, &[]);
-    assert_contract::<StockSplitEvent>(STOCK_SPLITS_CALENDAR, &[]);
+    assert_contract::<IpoProspectus>(
+        IPOS_PROSPECTUS,
+        &[
+            "discountsAndCommissionsPerShare",
+            "discountsAndCommissionsTotal",
+        ],
+    );
+    assert_contract::<StockSplitEvent>(STOCK_SPLITS, &["splitType"]);
+    assert_contract::<StockSplitEvent>(STOCK_SPLITS_CALENDAR, &["splitType"]);
 }
 
 fn assert_contract<T: DeserializeOwned>(fixture: &[u8], nullable: &[&str]) {

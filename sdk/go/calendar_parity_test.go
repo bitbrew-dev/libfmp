@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -39,21 +40,21 @@ func patchedFixture(t *testing.T, name string, edit func(row map[string]jsontext
 	return encoded
 }
 
-// Exact values copied from calendar_responses.rs. declarationDate carries the
-// empty_or_null_date codec: "" and null are nil, a non-string is rejected, and
-// the key itself is still required.
-func TestDocumentedDividendFixturesDecodeExactValuesAndEmptyDeclarationDates(t *testing.T) {
+// Exact values copied from calendar_responses.rs. recordDate, paymentDate, and
+// declarationDate carry the empty_or_null_date codec: "" and null are nil, a
+// non-string is rejected, and the key itself is still required.
+func TestDocumentedDividendFixturesDecodeExactValuesAndEmptyDates(t *testing.T) {
 	t.Parallel()
 	company := assertFixtureParity[DividendEvent](t, "dividends.json")
 	if len(company) != 1 || company[0].DeclarationDate == nil {
 		t.Fatalf("dividends = %+v", company)
 	}
 	want := DividendEvent{
-		Symbol: "AAPL", Date: mustParseDate(t, "2026-05-11"), RecordDate: mustParseDate(t, "2026-05-11"),
-		PaymentDate: mustParseDate(t, "2026-05-14"), DeclarationDate: company[0].DeclarationDate,
+		Symbol: "AAPL", Date: mustParseDate(t, "2026-05-11"), RecordDate: new(mustParseDate(t, "2026-05-11")),
+		PaymentDate: new(mustParseDate(t, "2026-05-14")), DeclarationDate: company[0].DeclarationDate,
 		AdjDividend: 0.27, Dividend: 0.27, Yield: 0.3587535875358754, Frequency: "Quarterly",
 	}
-	if company[0] != want || *company[0].DeclarationDate != mustParseDate(t, "2026-04-30") {
+	if !reflect.DeepEqual(company[0], want) || *company[0].DeclarationDate != mustParseDate(t, "2026-04-30") {
 		t.Fatalf("dividends = %+v, want %+v", company[0], want)
 	}
 
@@ -88,24 +89,38 @@ func TestDocumentedDividendFixturesDecodeExactValuesAndEmptyDeclarationDates(t *
 	if !errors.As(err, &typed) || !strings.Contains(typed.Message, `"declarationDate"`) {
 		t.Fatalf("missing declarationDate: error = %v", err)
 	}
+	for _, member := range []string{"recordDate", "paymentDate"} {
+		for _, absent := range []string{`""`, "null"} {
+			wire := patchedFixture(t, "dividends_calendar.json", func(row map[string]jsontext.Value) {
+				row[member] = jsontext.Value(absent)
+			})
+			err := json.Unmarshal(wire, &rows)
+			if err != nil {
+				t.Fatalf("%s %s: %v", member, absent, err)
+			}
+			if got := map[string]*Date{"recordDate": rows[0].RecordDate, "paymentDate": rows[0].PaymentDate}; got[member] != nil {
+				t.Fatalf("%s %s decoded as %v, want nil", member, absent, *got[member])
+			}
+		}
+	}
 }
 
-// epsActual and revenueActual carry required_option: the key must be present
-// and null is a value, so the two fixtures decode to nil and to pointers.
-func TestDocumentedEarningsFixturesKeepOnlyActualValuesNullable(t *testing.T) {
+// The actual and estimated values carry required_option: the key must be
+// present and null is a value, so the two fixtures decode to nil and to pointers.
+func TestDocumentedEarningsFixturesKeepActualAndEstimatedValuesNullable(t *testing.T) {
 	t.Parallel()
 	company := assertFixtureParity[EarningsEvent](t, "earnings.json")
 	want := EarningsEvent{
-		Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), EPSEstimated: 1.88,
-		RevenueEstimated: 109_038_900_000, LastUpdated: mustParseDate(t, "2026-07-30"),
+		Symbol: "AAPL", Date: mustParseDate(t, "2026-07-30"), EPSEstimated: new(1.88),
+		RevenueEstimated: new(109_038_900_000.0), LastUpdated: mustParseDate(t, "2026-07-30"),
 	}
-	if len(company) != 1 || company[0] != want {
+	if len(company) != 1 || !reflect.DeepEqual(company[0], want) {
 		t.Fatalf("earnings = %+v, want %+v", company, want)
 	}
 
 	calendar := assertFixtureParity[EarningsEvent](t, "earnings_calendar.json")
-	if len(calendar) != 1 || calendar[0].Symbol != "GRG.L" || calendar[0].EPSEstimated != 0.501 ||
-		calendar[0].RevenueEstimated != 1_086_300_000 {
+	if len(calendar) != 1 || calendar[0].Symbol != "GRG.L" || !reflect.DeepEqual(calendar[0].EPSEstimated, new(0.501)) ||
+		!reflect.DeepEqual(calendar[0].RevenueEstimated, new(1_086_300_000.0)) {
 		t.Fatalf("earnings_calendar = %+v", calendar)
 	}
 	if calendar[0].EPSActual == nil || *calendar[0].EPSActual != 0.549 ||
@@ -121,9 +136,9 @@ func TestDocumentedIpoCalendarFixturePreservesLiteralDaaAndRawDynamicMembers(t *
 	rows := assertFixtureParity[IPOCalendarEvent](t, "ipos_calendar.json")
 	want := IPOCalendarEvent{
 		Symbol: "IMC", Date: mustParseDate(t, "2026-07-29"), Daa: "2026-07-29T04:00:00.000Z",
-		Company: "IMC Rare Earths Ltd", Exchange: "NYSE", Actions: "Priced",
+		Company: "IMC Rare Earths Ltd", Exchange: new("NYSE"), Actions: "Priced",
 	}
-	if len(rows) != 1 || rows[0] != want {
+	if len(rows) != 1 || !reflect.DeepEqual(rows[0], want) {
 		t.Fatalf("ipos_calendar = %+v, want %+v", rows, want)
 	}
 
@@ -160,18 +175,18 @@ func TestDocumentedIpoFilingAndStockSplitFixturesDecodeExactValues(t *testing.T)
 	wantProspectus := IPOProspectus{
 		Symbol: "FTW-WT", AcceptedDate: mustParseDate(t, "2026-07-29"), FilingDate: mustParseDate(t, "2026-07-30"),
 		IPODate: mustParseDate(t, "2026-07-28"), CIK: "0002083125", PricePublicPerShare: 1, PricePublicTotal: 434,
-		DiscountsAndCommissionsPerShare: 0, DiscountsAndCommissionsTotal: 82_251, ProceedsBeforeExpensesPerShare: 1,
+		DiscountsAndCommissionsPerShare: new(0.0), DiscountsAndCommissionsTotal: new(82_251.0), ProceedsBeforeExpensesPerShare: 1,
 		ProceedsBeforeExpensesTotal: 82_251, Form: "S-1",
 		URL: "https://www.sec.gov/Archives/edgar/data/2083125/000121390026082963/ea0298363-s1_presidio.htm",
 	}
-	if len(prospectus) != 1 || prospectus[0] != wantProspectus {
+	if len(prospectus) != 1 || !reflect.DeepEqual(prospectus[0], wantProspectus) {
 		t.Fatalf("ipos_prospectus = %+v", prospectus)
 	}
 
 	company := assertFixtureParity[StockSplitEvent](t, "stock_splits.json")
 	wantSplit := StockSplitEvent{Symbol: "AAPL", Date: mustParseDate(t, "2020-08-31"), Numerator: 4, Denominator: 1,
-		SplitType: "stock-split"}
-	if len(company) != 1 || company[0] != wantSplit {
+		SplitType: new("stock-split")}
+	if len(company) != 1 || !reflect.DeepEqual(company[0], wantSplit) {
 		t.Fatalf("stock_splits = %+v", company)
 	}
 	calendar := assertFixtureParity[StockSplitEvent](t, "stock_splits_calendar.json")
@@ -211,15 +226,18 @@ func assertMemberContract[T any](t *testing.T, name string, nullable ...string) 
 
 func TestCalendarRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	t.Parallel()
-	assertMemberContract[DividendEvent](t, "dividends.json", "declarationDate")
-	assertMemberContract[DividendEvent](t, "dividends_calendar.json", "declarationDate")
-	assertMemberContract[EarningsEvent](t, "earnings.json", "epsActual", "revenueActual")
-	assertMemberContract[EarningsEvent](t, "earnings_calendar.json", "epsActual", "revenueActual")
-	assertMemberContract[IPOCalendarEvent](t, "ipos_calendar.json", "shares", "priceRange", "marketCap")
+	dividend := []string{"recordDate", "paymentDate", "declarationDate"}
+	assertMemberContract[DividendEvent](t, "dividends.json", dividend...)
+	assertMemberContract[DividendEvent](t, "dividends_calendar.json", dividend...)
+	earnings := []string{"epsActual", "epsEstimated", "revenueActual", "revenueEstimated"}
+	assertMemberContract[EarningsEvent](t, "earnings.json", earnings...)
+	assertMemberContract[EarningsEvent](t, "earnings_calendar.json", earnings...)
+	assertMemberContract[IPOCalendarEvent](t, "ipos_calendar.json", "exchange", "shares", "priceRange", "marketCap")
 	assertMemberContract[IPODisclosure](t, "ipos_disclosure.json")
-	assertMemberContract[IPOProspectus](t, "ipos_prospectus.json")
-	assertMemberContract[StockSplitEvent](t, "stock_splits.json")
-	assertMemberContract[StockSplitEvent](t, "stock_splits_calendar.json")
+	assertMemberContract[IPOProspectus](t, "ipos_prospectus.json",
+		"discountsAndCommissionsPerShare", "discountsAndCommissionsTotal")
+	assertMemberContract[StockSplitEvent](t, "stock_splits.json", "splitType")
+	assertMemberContract[StockSplitEvent](t, "stock_splits_calendar.json", "splitType")
 
 	for _, wire := range []string{"[]", "[ ]"} {
 		var rows []DividendEvent

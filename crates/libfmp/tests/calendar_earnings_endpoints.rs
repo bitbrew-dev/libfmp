@@ -125,12 +125,12 @@ async fn custom_proxy_preserves_query_states_order_auth_headers_and_bare_arrays(
     assert_eq!(omitted.len(), 1);
     assert_eq!(omitted[0].eps_actual, None);
     assert_eq!(omitted[0].revenue_actual, None);
-    assert_eq!(omitted[0].revenue_estimated, 109_038_900_000.0);
+    assert_eq!(omitted[0].revenue_estimated, Some(109_038_900_000.0));
     assert_eq!(explicit_false, omitted);
     assert_eq!(calendar_omitted.len(), 1);
     assert_eq!(calendar_omitted[0].eps_actual, Some(0.549));
     assert_eq!(calendar_omitted[0].revenue_actual, Some(1_101_500_000.0));
-    assert_eq!(calendar_omitted[0].revenue_estimated, 1_086_300_000.0);
+    assert_eq!(calendar_omitted[0].revenue_estimated, Some(1_086_300_000.0));
     assert_eq!(calendar_true, calendar_omitted);
 
     let requests = executor.requests();

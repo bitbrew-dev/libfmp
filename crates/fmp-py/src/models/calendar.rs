@@ -14,9 +14,9 @@ pub(crate) struct DividendEvent {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub record_date: ::chrono::NaiveDate,
+    pub record_date: Option<::chrono::NaiveDate>,
     #[pyo3(get)]
-    pub payment_date: ::chrono::NaiveDate,
+    pub payment_date: Option<::chrono::NaiveDate>,
     #[pyo3(get)]
     pub declaration_date: Option<::chrono::NaiveDate>,
     #[pyo3(get)]
@@ -39,8 +39,8 @@ impl DividendEvent {
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
-        record_date: ::chrono::NaiveDate,
-        payment_date: ::chrono::NaiveDate,
+        record_date: Option<::chrono::NaiveDate>,
+        payment_date: Option<::chrono::NaiveDate>,
         declaration_date: Option<::chrono::NaiveDate>,
         adj_dividend: f64,
         dividend: f64,
@@ -191,8 +191,8 @@ impl From<libfmp::responses::calendar::DividendEvent> for DividendEvent {
         Self {
             symbol: value.symbol.into_inner(),
             date: value.date.into_inner(),
-            record_date: value.record_date.into_inner(),
-            payment_date: value.payment_date.into_inner(),
+            record_date: value.record_date.map(|value| value.into_inner()),
+            payment_date: value.payment_date.map(|value| value.into_inner()),
             declaration_date: value.declaration_date.map(|value| value.into_inner()),
             adj_dividend: value.adj_dividend,
             dividend: value.dividend,
@@ -219,11 +219,11 @@ pub(crate) struct EarningsEvent {
     #[pyo3(get)]
     pub eps_actual: Option<f64>,
     #[pyo3(get)]
-    pub eps_estimated: f64,
+    pub eps_estimated: Option<f64>,
     #[pyo3(get)]
     pub revenue_actual: Option<f64>,
     #[pyo3(get)]
-    pub revenue_estimated: f64,
+    pub revenue_estimated: Option<f64>,
     #[pyo3(get)]
     pub last_updated: ::chrono::NaiveDate,
 }
@@ -239,9 +239,9 @@ impl EarningsEvent {
         symbol: String,
         date: ::chrono::NaiveDate,
         eps_actual: Option<f64>,
-        eps_estimated: f64,
+        eps_estimated: Option<f64>,
         revenue_actual: Option<f64>,
-        revenue_estimated: f64,
+        revenue_estimated: Option<f64>,
         last_updated: ::chrono::NaiveDate,
     ) -> Self {
         Self {
@@ -400,7 +400,7 @@ pub(crate) struct IpoCalendarEvent {
     #[pyo3(get)]
     pub company: String,
     #[pyo3(get)]
-    pub exchange: String,
+    pub exchange: Option<String>,
     #[pyo3(get)]
     pub actions: String,
     shares: Option<::serde_json::Value>,
@@ -420,7 +420,7 @@ impl IpoCalendarEvent {
         date: ::chrono::NaiveDate,
         daa: String,
         company: String,
-        exchange: String,
+        exchange: Option<String>,
         actions: String,
         shares: Option<String>,
         price_range: Option<String>,
@@ -629,7 +629,7 @@ impl From<libfmp::responses::calendar::IpoCalendarEvent> for IpoCalendarEvent {
             date: value.date.into_inner(),
             daa: value.daa.as_str().to_owned(),
             company: value.company,
-            exchange: value.exchange.into_inner(),
+            exchange: value.exchange.map(|value| value.into_inner()),
             actions: value.actions,
             shares: value.shares,
             price_range: value.price_range,
@@ -836,9 +836,9 @@ pub(crate) struct IpoProspectus {
     #[pyo3(get)]
     pub price_public_total: f64,
     #[pyo3(get)]
-    pub discounts_and_commissions_per_share: f64,
+    pub discounts_and_commissions_per_share: Option<f64>,
     #[pyo3(get)]
-    pub discounts_and_commissions_total: f64,
+    pub discounts_and_commissions_total: Option<f64>,
     #[pyo3(get)]
     pub proceeds_before_expenses_per_share: f64,
     #[pyo3(get)]
@@ -864,8 +864,8 @@ impl IpoProspectus {
         cik: String,
         price_public_per_share: f64,
         price_public_total: f64,
-        discounts_and_commissions_per_share: f64,
-        discounts_and_commissions_total: f64,
+        discounts_and_commissions_per_share: Option<f64>,
+        discounts_and_commissions_total: Option<f64>,
         proceeds_before_expenses_per_share: f64,
         proceeds_before_expenses_total: f64,
         form: String,
@@ -1133,7 +1133,7 @@ pub(crate) struct StockSplitEvent {
     #[pyo3(get)]
     pub denominator: f64,
     #[pyo3(get)]
-    pub split_type: String,
+    pub split_type: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -1148,7 +1148,7 @@ impl StockSplitEvent {
         date: ::chrono::NaiveDate,
         numerator: f64,
         denominator: f64,
-        split_type: String,
+        split_type: Option<String>,
     ) -> Self {
         Self {
             symbol,

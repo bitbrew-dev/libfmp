@@ -14,8 +14,8 @@ import (
 type DividendEvent struct {
 	Symbol          string  `json:"symbol"`
 	Date            Date    `json:"date"`
-	RecordDate      Date    `json:"recordDate"`
-	PaymentDate     Date    `json:"paymentDate"`
+	RecordDate      *Date   `json:"recordDate"`
+	PaymentDate     *Date   `json:"paymentDate"`
 	DeclarationDate *Date   `json:"declarationDate"`
 	AdjDividend     float64 `json:"adjDividend"`
 	Dividend        float64 `json:"dividend"`
@@ -29,8 +29,8 @@ type DividendEvent struct {
 type dividendEventShadow struct {
 	Symbol          *string        `json:"symbol"`
 	Date            *Date          `json:"date"`
-	RecordDate      *Date          `json:"recordDate"`
-	PaymentDate     *Date          `json:"paymentDate"`
+	RecordDate      jsontext.Value `json:"recordDate"`
+	PaymentDate     jsontext.Value `json:"paymentDate"`
 	DeclarationDate jsontext.Value `json:"declarationDate"`
 	AdjDividend     *float64       `json:"adjDividend"`
 	Dividend        *float64       `json:"dividend"`
@@ -51,9 +51,9 @@ func (m *DividendEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("DividendEvent", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("DividendEvent", "date")
-	case shadow.RecordDate == nil:
+	case len(shadow.RecordDate) == 0:
 		return missingMemberError("DividendEvent", "recordDate")
-	case shadow.PaymentDate == nil:
+	case len(shadow.PaymentDate) == 0:
 		return missingMemberError("DividendEvent", "paymentDate")
 	case len(shadow.DeclarationDate) == 0:
 		return missingMemberError("DividendEvent", "declarationDate")
@@ -66,6 +66,14 @@ func (m *DividendEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.Frequency == nil:
 		return missingMemberError("DividendEvent", "frequency")
 	}
+	recordDate, err := decodeEmptyDate("DividendEvent", "recordDate", shadow.RecordDate, true)
+	if err != nil {
+		return err
+	}
+	paymentDate, err := decodeEmptyDate("DividendEvent", "paymentDate", shadow.PaymentDate, true)
+	if err != nil {
+		return err
+	}
 	declarationDate, err := decodeEmptyDate("DividendEvent", "declarationDate", shadow.DeclarationDate, true)
 	if err != nil {
 		return err
@@ -73,8 +81,8 @@ func (m *DividendEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	*m = DividendEvent{
 		Symbol:          *shadow.Symbol,
 		Date:            *shadow.Date,
-		RecordDate:      *shadow.RecordDate,
-		PaymentDate:     *shadow.PaymentDate,
+		RecordDate:      recordDate,
+		PaymentDate:     paymentDate,
 		DeclarationDate: declarationDate,
 		AdjDividend:     *shadow.AdjDividend,
 		Dividend:        *shadow.Dividend,
@@ -89,9 +97,9 @@ type EarningsEvent struct {
 	Symbol           string   `json:"symbol"`
 	Date             Date     `json:"date"`
 	EPSActual        *float64 `json:"epsActual"`
-	EPSEstimated     float64  `json:"epsEstimated"`
+	EPSEstimated     *float64 `json:"epsEstimated"`
 	RevenueActual    *float64 `json:"revenueActual"`
-	RevenueEstimated float64  `json:"revenueEstimated"`
+	RevenueEstimated *float64 `json:"revenueEstimated"`
 	LastUpdated      Date     `json:"lastUpdated"`
 }
 
@@ -102,9 +110,9 @@ type earningsEventShadow struct {
 	Symbol           *string        `json:"symbol"`
 	Date             *Date          `json:"date"`
 	EPSActual        jsontext.Value `json:"epsActual"`
-	EPSEstimated     *float64       `json:"epsEstimated"`
+	EPSEstimated     jsontext.Value `json:"epsEstimated"`
 	RevenueActual    jsontext.Value `json:"revenueActual"`
-	RevenueEstimated *float64       `json:"revenueEstimated"`
+	RevenueEstimated jsontext.Value `json:"revenueEstimated"`
 	LastUpdated      *Date          `json:"lastUpdated"`
 }
 
@@ -123,11 +131,11 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("EarningsEvent", "date")
 	case len(shadow.EPSActual) == 0:
 		return missingMemberError("EarningsEvent", "epsActual")
-	case shadow.EPSEstimated == nil:
+	case len(shadow.EPSEstimated) == 0:
 		return missingMemberError("EarningsEvent", "epsEstimated")
 	case len(shadow.RevenueActual) == 0:
 		return missingMemberError("EarningsEvent", "revenueActual")
-	case shadow.RevenueEstimated == nil:
+	case len(shadow.RevenueEstimated) == 0:
 		return missingMemberError("EarningsEvent", "revenueEstimated")
 	case shadow.LastUpdated == nil:
 		return missingMemberError("EarningsEvent", "lastUpdated")
@@ -140,6 +148,14 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		epsActual = &value
 	}
+	var epsEstimated *float64
+	if shadow.EPSEstimated.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.EPSEstimated, &value); err != nil {
+			return err
+		}
+		epsEstimated = &value
+	}
 	var revenueActual *float64
 	if shadow.RevenueActual.Kind() != 'n' {
 		var value float64
@@ -148,13 +164,21 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		revenueActual = &value
 	}
+	var revenueEstimated *float64
+	if shadow.RevenueEstimated.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.RevenueEstimated, &value); err != nil {
+			return err
+		}
+		revenueEstimated = &value
+	}
 	*m = EarningsEvent{
 		Symbol:           *shadow.Symbol,
 		Date:             *shadow.Date,
 		EPSActual:        epsActual,
-		EPSEstimated:     *shadow.EPSEstimated,
+		EPSEstimated:     epsEstimated,
 		RevenueActual:    revenueActual,
-		RevenueEstimated: *shadow.RevenueEstimated,
+		RevenueEstimated: revenueEstimated,
 		LastUpdated:      *shadow.LastUpdated,
 	}
 	return nil
@@ -166,7 +190,7 @@ type IPOCalendarEvent struct {
 	Date       Date            `json:"date"`
 	Daa        string          `json:"daa"`
 	Company    string          `json:"company"`
-	Exchange   string          `json:"exchange"`
+	Exchange   *string         `json:"exchange"`
 	Actions    string          `json:"actions"`
 	Shares     *jsontext.Value `json:"shares"`
 	PriceRange *jsontext.Value `json:"priceRange"`
@@ -181,7 +205,7 @@ type ipoCalendarEventShadow struct {
 	Date       *Date          `json:"date"`
 	Daa        *string        `json:"daa"`
 	Company    *string        `json:"company"`
-	Exchange   *string        `json:"exchange"`
+	Exchange   jsontext.Value `json:"exchange"`
 	Actions    *string        `json:"actions"`
 	Shares     jsontext.Value `json:"shares"`
 	PriceRange jsontext.Value `json:"priceRange"`
@@ -205,7 +229,7 @@ func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IPOCalendarEvent", "daa")
 	case shadow.Company == nil:
 		return missingMemberError("IPOCalendarEvent", "company")
-	case shadow.Exchange == nil:
+	case len(shadow.Exchange) == 0:
 		return missingMemberError("IPOCalendarEvent", "exchange")
 	case shadow.Actions == nil:
 		return missingMemberError("IPOCalendarEvent", "actions")
@@ -215,6 +239,14 @@ func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IPOCalendarEvent", "priceRange")
 	case len(shadow.MarketCap) == 0:
 		return missingMemberError("IPOCalendarEvent", "marketCap")
+	}
+	var exchange *string
+	if shadow.Exchange.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Exchange, &value); err != nil {
+			return err
+		}
+		exchange = &value
 	}
 	var shares *jsontext.Value
 	if shadow.Shares.Kind() != 'n' {
@@ -245,7 +277,7 @@ func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Date:       *shadow.Date,
 		Daa:        *shadow.Daa,
 		Company:    *shadow.Company,
-		Exchange:   *shadow.Exchange,
+		Exchange:   exchange,
 		Actions:    *shadow.Actions,
 		Shares:     shares,
 		PriceRange: priceRange,
@@ -317,38 +349,38 @@ func (m *IPODisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // IPOProspectus is one US IPO prospectus filing and its documented offering
 // values.
 type IPOProspectus struct {
-	Symbol                          string  `json:"symbol"`
-	AcceptedDate                    Date    `json:"acceptedDate"`
-	FilingDate                      Date    `json:"filingDate"`
-	IPODate                         Date    `json:"ipoDate"`
-	CIK                             string  `json:"cik"`
-	PricePublicPerShare             float64 `json:"pricePublicPerShare"`
-	PricePublicTotal                float64 `json:"pricePublicTotal"`
-	DiscountsAndCommissionsPerShare float64 `json:"discountsAndCommissionsPerShare"`
-	DiscountsAndCommissionsTotal    float64 `json:"discountsAndCommissionsTotal"`
-	ProceedsBeforeExpensesPerShare  float64 `json:"proceedsBeforeExpensesPerShare"`
-	ProceedsBeforeExpensesTotal     float64 `json:"proceedsBeforeExpensesTotal"`
-	Form                            string  `json:"form"`
-	URL                             string  `json:"url"`
+	Symbol                          string   `json:"symbol"`
+	AcceptedDate                    Date     `json:"acceptedDate"`
+	FilingDate                      Date     `json:"filingDate"`
+	IPODate                         Date     `json:"ipoDate"`
+	CIK                             string   `json:"cik"`
+	PricePublicPerShare             float64  `json:"pricePublicPerShare"`
+	PricePublicTotal                float64  `json:"pricePublicTotal"`
+	DiscountsAndCommissionsPerShare *float64 `json:"discountsAndCommissionsPerShare"`
+	DiscountsAndCommissionsTotal    *float64 `json:"discountsAndCommissionsTotal"`
+	ProceedsBeforeExpensesPerShare  float64  `json:"proceedsBeforeExpensesPerShare"`
+	ProceedsBeforeExpensesTotal     float64  `json:"proceedsBeforeExpensesTotal"`
+	Form                            string   `json:"form"`
+	URL                             string   `json:"url"`
 }
 
 // ipoProspectusShadow mirrors IPOProspectus with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type ipoProspectusShadow struct {
-	Symbol                          *string  `json:"symbol"`
-	AcceptedDate                    *Date    `json:"acceptedDate"`
-	FilingDate                      *Date    `json:"filingDate"`
-	IPODate                         *Date    `json:"ipoDate"`
-	CIK                             *string  `json:"cik"`
-	PricePublicPerShare             *float64 `json:"pricePublicPerShare"`
-	PricePublicTotal                *float64 `json:"pricePublicTotal"`
-	DiscountsAndCommissionsPerShare *float64 `json:"discountsAndCommissionsPerShare"`
-	DiscountsAndCommissionsTotal    *float64 `json:"discountsAndCommissionsTotal"`
-	ProceedsBeforeExpensesPerShare  *float64 `json:"proceedsBeforeExpensesPerShare"`
-	ProceedsBeforeExpensesTotal     *float64 `json:"proceedsBeforeExpensesTotal"`
-	Form                            *string  `json:"form"`
-	URL                             *string  `json:"url"`
+	Symbol                          *string        `json:"symbol"`
+	AcceptedDate                    *Date          `json:"acceptedDate"`
+	FilingDate                      *Date          `json:"filingDate"`
+	IPODate                         *Date          `json:"ipoDate"`
+	CIK                             *string        `json:"cik"`
+	PricePublicPerShare             *float64       `json:"pricePublicPerShare"`
+	PricePublicTotal                *float64       `json:"pricePublicTotal"`
+	DiscountsAndCommissionsPerShare jsontext.Value `json:"discountsAndCommissionsPerShare"`
+	DiscountsAndCommissionsTotal    jsontext.Value `json:"discountsAndCommissionsTotal"`
+	ProceedsBeforeExpensesPerShare  *float64       `json:"proceedsBeforeExpensesPerShare"`
+	ProceedsBeforeExpensesTotal     *float64       `json:"proceedsBeforeExpensesTotal"`
+	Form                            *string        `json:"form"`
+	URL                             *string        `json:"url"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -374,9 +406,9 @@ func (m *IPOProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("IPOProspectus", "pricePublicPerShare")
 	case shadow.PricePublicTotal == nil:
 		return missingMemberError("IPOProspectus", "pricePublicTotal")
-	case shadow.DiscountsAndCommissionsPerShare == nil:
+	case len(shadow.DiscountsAndCommissionsPerShare) == 0:
 		return missingMemberError("IPOProspectus", "discountsAndCommissionsPerShare")
-	case shadow.DiscountsAndCommissionsTotal == nil:
+	case len(shadow.DiscountsAndCommissionsTotal) == 0:
 		return missingMemberError("IPOProspectus", "discountsAndCommissionsTotal")
 	case shadow.ProceedsBeforeExpensesPerShare == nil:
 		return missingMemberError("IPOProspectus", "proceedsBeforeExpensesPerShare")
@@ -387,6 +419,22 @@ func (m *IPOProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.URL == nil:
 		return missingMemberError("IPOProspectus", "url")
 	}
+	var discountsAndCommissionsPerShare *float64
+	if shadow.DiscountsAndCommissionsPerShare.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.DiscountsAndCommissionsPerShare, &value); err != nil {
+			return err
+		}
+		discountsAndCommissionsPerShare = &value
+	}
+	var discountsAndCommissionsTotal *float64
+	if shadow.DiscountsAndCommissionsTotal.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.DiscountsAndCommissionsTotal, &value); err != nil {
+			return err
+		}
+		discountsAndCommissionsTotal = &value
+	}
 	*m = IPOProspectus{
 		Symbol:                          *shadow.Symbol,
 		AcceptedDate:                    *shadow.AcceptedDate,
@@ -395,8 +443,8 @@ func (m *IPOProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		CIK:                             *shadow.CIK,
 		PricePublicPerShare:             *shadow.PricePublicPerShare,
 		PricePublicTotal:                *shadow.PricePublicTotal,
-		DiscountsAndCommissionsPerShare: *shadow.DiscountsAndCommissionsPerShare,
-		DiscountsAndCommissionsTotal:    *shadow.DiscountsAndCommissionsTotal,
+		DiscountsAndCommissionsPerShare: discountsAndCommissionsPerShare,
+		DiscountsAndCommissionsTotal:    discountsAndCommissionsTotal,
 		ProceedsBeforeExpensesPerShare:  *shadow.ProceedsBeforeExpensesPerShare,
 		ProceedsBeforeExpensesTotal:     *shadow.ProceedsBeforeExpensesTotal,
 		Form:                            *shadow.Form,
@@ -411,18 +459,18 @@ type StockSplitEvent struct {
 	Date        Date    `json:"date"`
 	Numerator   float64 `json:"numerator"`
 	Denominator float64 `json:"denominator"`
-	SplitType   string  `json:"splitType"`
+	SplitType   *string `json:"splitType"`
 }
 
 // stockSplitEventShadow mirrors StockSplitEvent with a pointer or raw value
 // for every required member so a missing or null member is observable after
 // decoding.
 type stockSplitEventShadow struct {
-	Symbol      *string  `json:"symbol"`
-	Date        *Date    `json:"date"`
-	Numerator   *float64 `json:"numerator"`
-	Denominator *float64 `json:"denominator"`
-	SplitType   *string  `json:"splitType"`
+	Symbol      *string        `json:"symbol"`
+	Date        *Date          `json:"date"`
+	Numerator   *float64       `json:"numerator"`
+	Denominator *float64       `json:"denominator"`
+	SplitType   jsontext.Value `json:"splitType"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -442,15 +490,23 @@ func (m *StockSplitEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("StockSplitEvent", "numerator")
 	case shadow.Denominator == nil:
 		return missingMemberError("StockSplitEvent", "denominator")
-	case shadow.SplitType == nil:
+	case len(shadow.SplitType) == 0:
 		return missingMemberError("StockSplitEvent", "splitType")
+	}
+	var splitType *string
+	if shadow.SplitType.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.SplitType, &value); err != nil {
+			return err
+		}
+		splitType = &value
 	}
 	*m = StockSplitEvent{
 		Symbol:      *shadow.Symbol,
 		Date:        *shadow.Date,
 		Numerator:   *shadow.Numerator,
 		Denominator: *shadow.Denominator,
-		SplitType:   *shadow.SplitType,
+		SplitType:   splitType,
 	}
 	return nil
 }
