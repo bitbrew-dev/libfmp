@@ -63,7 +63,7 @@ func (m *CryptocurrencyListing) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CirculatingSupply.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CirculatingSupply, &value); err != nil {
-			return err
+			return memberDecodeError("CryptocurrencyListing", "circulatingSupply", shadow.CirculatingSupply, err)
 		}
 		circulatingSupply = &value
 	}
@@ -71,7 +71,7 @@ func (m *CryptocurrencyListing) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalSupply.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalSupply, &value); err != nil {
-			return err
+			return memberDecodeError("CryptocurrencyListing", "totalSupply", shadow.TotalSupply, err)
 		}
 		totalSupply = &value
 	}

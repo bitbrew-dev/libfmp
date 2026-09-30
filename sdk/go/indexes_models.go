@@ -113,7 +113,7 @@ func (m *IndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DateFirstAdded.Kind() != 'n' {
 		var value Date
 		if err := json.Unmarshal(shadow.DateFirstAdded, &value); err != nil {
-			return err
+			return memberDecodeError("IndexConstituent", "dateFirstAdded", shadow.DateFirstAdded, err)
 		}
 		dateFirstAdded = &value
 	}
@@ -183,7 +183,7 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	if shadow.AddedSecurity.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.AddedSecurity, &value); err != nil {
-			return err
+			return memberDecodeError("HistoricalIndexConstituent", "addedSecurity", shadow.AddedSecurity, err)
 		}
 		addedSecurity = &value
 	}
@@ -191,7 +191,7 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	if shadow.RemovedTicker.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.RemovedTicker, &value); err != nil {
-			return err
+			return memberDecodeError("HistoricalIndexConstituent", "removedTicker", shadow.RemovedTicker, err)
 		}
 		if value != "" {
 			removedTicker = &value
@@ -201,7 +201,7 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	if shadow.RemovedSecurity.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.RemovedSecurity, &value); err != nil {
-			return err
+			return memberDecodeError("HistoricalIndexConstituent", "removedSecurity", shadow.RemovedSecurity, err)
 		}
 		removedSecurity = &value
 	}
@@ -209,7 +209,7 @@ func (m *HistoricalIndexConstituent) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	if shadow.Reason.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Reason, &value); err != nil {
-			return err
+			return memberDecodeError("HistoricalIndexConstituent", "reason", shadow.Reason, err)
 		}
 		reason = &value
 	}

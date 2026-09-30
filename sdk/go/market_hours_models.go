@@ -113,7 +113,7 @@ func (m *ExchangeHoliday) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IsClosed.Kind() != 'n' {
 		var value bool
 		if err := json.Unmarshal(shadow.IsClosed, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeHoliday", "isClosed", shadow.IsClosed, err)
 		}
 		isClosed = &value
 	}
@@ -121,7 +121,7 @@ func (m *ExchangeHoliday) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AdjOpenTime.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.AdjOpenTime, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeHoliday", "adjOpenTime", shadow.AdjOpenTime, err)
 		}
 		adjOpenTime = &value
 	}
@@ -129,7 +129,7 @@ func (m *ExchangeHoliday) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AdjCloseTime.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.AdjCloseTime, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeHoliday", "adjCloseTime", shadow.AdjCloseTime, err)
 		}
 		adjCloseTime = &value
 	}

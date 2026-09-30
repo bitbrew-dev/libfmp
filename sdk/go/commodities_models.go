@@ -55,7 +55,7 @@ func (m *CommodityListing) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Exchange.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Exchange, &value); err != nil {
-			return err
+			return memberDecodeError("CommodityListing", "exchange", shadow.Exchange, err)
 		}
 		exchange = &value
 	}

@@ -424,7 +424,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Price.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Price, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "price", shadow.Price, err)
 		}
 		price = &value
 	}
@@ -432,7 +432,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Range.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Range, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "range", shadow.Range, err)
 		}
 		range_ = &value
 	}
@@ -440,7 +440,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Changes.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Changes, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "changes", shadow.Changes, err)
 		}
 		changes = &value
 	}
@@ -448,7 +448,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CIK.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CIK, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "cik", shadow.CIK, err)
 		}
 		cik = &value
 	}
@@ -456,7 +456,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.ISIN.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "isin", shadow.ISIN, err)
 		}
 		isin = &value
 	}
@@ -464,7 +464,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CUSIP.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CUSIP, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "cusip", shadow.CUSIP, err)
 		}
 		if value != "" {
 			cusip = &value
@@ -474,7 +474,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Website.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Website, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "website", shadow.Website, err)
 		}
 		website = &value
 	}
@@ -482,7 +482,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Ceo.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Ceo, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "ceo", shadow.Ceo, err)
 		}
 		ceo = &value
 	}
@@ -490,7 +490,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FullTimeEmployees.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.FullTimeEmployees, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "fullTimeEmployees", shadow.FullTimeEmployees, err)
 		}
 		fullTimeEmployees = &value
 	}
@@ -498,7 +498,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Phone.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Phone, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "phone", shadow.Phone, err)
 		}
 		phone = &value
 	}
@@ -506,7 +506,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Address.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Address, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "address", shadow.Address, err)
 		}
 		address = &value
 	}
@@ -514,7 +514,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.City.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.City, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "city", shadow.City, err)
 		}
 		city = &value
 	}
@@ -522,7 +522,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.State.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.State, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "state", shadow.State, err)
 		}
 		state = &value
 	}
@@ -530,7 +530,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Zip.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Zip, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "zip", shadow.Zip, err)
 		}
 		zip = &value
 	}
@@ -538,7 +538,7 @@ func (m *ExchangeVariant) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DCFDiff.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.DCFDiff, &value); err != nil {
-			return err
+			return memberDecodeError("ExchangeVariant", "dcfDiff", shadow.DCFDiff, err)
 		}
 		dcfDiff = &value
 	}

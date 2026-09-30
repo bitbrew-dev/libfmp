@@ -87,7 +87,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Month1.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Month1, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "month1", shadow.Month1, err)
 		}
 		month1 = &value
 	}
@@ -95,7 +95,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Month2.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Month2, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "month2", shadow.Month2, err)
 		}
 		month2 = &value
 	}
@@ -103,7 +103,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Month3.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Month3, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "month3", shadow.Month3, err)
 		}
 		month3 = &value
 	}
@@ -111,7 +111,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Month6.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Month6, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "month6", shadow.Month6, err)
 		}
 		month6 = &value
 	}
@@ -119,7 +119,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year1.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year1, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year1", shadow.Year1, err)
 		}
 		year1 = &value
 	}
@@ -127,7 +127,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year2.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year2, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year2", shadow.Year2, err)
 		}
 		year2 = &value
 	}
@@ -135,7 +135,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year3.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year3, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year3", shadow.Year3, err)
 		}
 		year3 = &value
 	}
@@ -143,7 +143,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year5.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year5, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year5", shadow.Year5, err)
 		}
 		year5 = &value
 	}
@@ -151,7 +151,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year7.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year7, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year7", shadow.Year7, err)
 		}
 		year7 = &value
 	}
@@ -159,7 +159,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year10.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year10, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year10", shadow.Year10, err)
 		}
 		year10 = &value
 	}
@@ -167,7 +167,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year20.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year20, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year20", shadow.Year20, err)
 		}
 		year20 = &value
 	}
@@ -175,7 +175,7 @@ func (m *TreasuryRate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Year30.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Year30, &value); err != nil {
-			return err
+			return memberDecodeError("TreasuryRate", "year30", shadow.Year30, err)
 		}
 		year30 = &value
 	}
@@ -234,7 +234,7 @@ func (m *EconomicIndicatorObservation) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 	if shadow.Value.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Value, &value); err != nil {
-			return err
+			return memberDecodeError("EconomicIndicatorObservation", "value", shadow.Value, err)
 		}
 		valueMember = &value
 	}
@@ -314,7 +314,7 @@ func (m *EconomicCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Previous.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Previous, &value); err != nil {
-			return err
+			return memberDecodeError("EconomicCalendarEvent", "previous", shadow.Previous, err)
 		}
 		previous = &value
 	}
@@ -322,7 +322,7 @@ func (m *EconomicCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Estimate.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Estimate, &value); err != nil {
-			return err
+			return memberDecodeError("EconomicCalendarEvent", "estimate", shadow.Estimate, err)
 		}
 		estimate = &value
 	}
@@ -330,7 +330,7 @@ func (m *EconomicCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Actual.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Actual, &value); err != nil {
-			return err
+			return memberDecodeError("EconomicCalendarEvent", "actual", shadow.Actual, err)
 		}
 		actual = &value
 	}
@@ -338,7 +338,7 @@ func (m *EconomicCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Change.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Change, &value); err != nil {
-			return err
+			return memberDecodeError("EconomicCalendarEvent", "change", shadow.Change, err)
 		}
 		change = &value
 	}
@@ -346,7 +346,7 @@ func (m *EconomicCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.ChangePercentage.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.ChangePercentage, &value); err != nil {
-			return err
+			return memberDecodeError("EconomicCalendarEvent", "changePercentage", shadow.ChangePercentage, err)
 		}
 		changePercentage = &value
 	}
@@ -354,7 +354,7 @@ func (m *EconomicCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Unit.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Unit, &value); err != nil {
-			return err
+			return memberDecodeError("EconomicCalendarEvent", "unit", shadow.Unit, err)
 		}
 		unit = &value
 	}

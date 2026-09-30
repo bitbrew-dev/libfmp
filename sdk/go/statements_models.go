@@ -59,7 +59,7 @@ func (m *AsReportedFinancialStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) 
 	if shadow.ReportedCurrency.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.ReportedCurrency, &value); err != nil {
-			return err
+			return memberDecodeError("AsReportedFinancialStatement", "reportedCurrency", shadow.ReportedCurrency, err)
 		}
 		reportedCurrency = &value
 	}
@@ -345,7 +345,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CashAndCashEquivalents.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CashAndCashEquivalents, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "cashAndCashEquivalents", shadow.CashAndCashEquivalents, err)
 		}
 		cashAndCashEquivalents = &value
 	}
@@ -353,7 +353,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.ShortTermInvestments.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.ShortTermInvestments, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "shortTermInvestments", shadow.ShortTermInvestments, err)
 		}
 		shortTermInvestments = &value
 	}
@@ -361,7 +361,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CashAndShortTermInvestments.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CashAndShortTermInvestments, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "cashAndShortTermInvestments", shadow.CashAndShortTermInvestments, err)
 		}
 		cashAndShortTermInvestments = &value
 	}
@@ -369,7 +369,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.NetReceivables.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.NetReceivables, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "netReceivables", shadow.NetReceivables, err)
 		}
 		netReceivables = &value
 	}
@@ -377,7 +377,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AccountsReceivables.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AccountsReceivables, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "accountsReceivables", shadow.AccountsReceivables, err)
 		}
 		accountsReceivables = &value
 	}
@@ -385,7 +385,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Inventory.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Inventory, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "inventory", shadow.Inventory, err)
 		}
 		inventory = &value
 	}
@@ -393,7 +393,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Prepaids.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Prepaids, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "prepaids", shadow.Prepaids, err)
 		}
 		prepaids = &value
 	}
@@ -401,7 +401,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalCurrentAssets.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalCurrentAssets, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalCurrentAssets", shadow.TotalCurrentAssets, err)
 		}
 		totalCurrentAssets = &value
 	}
@@ -409,7 +409,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.PropertyPlantEquipmentNet.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.PropertyPlantEquipmentNet, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "propertyPlantEquipmentNet", shadow.PropertyPlantEquipmentNet, err)
 		}
 		propertyPlantEquipmentNet = &value
 	}
@@ -417,7 +417,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Goodwill.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Goodwill, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "goodwill", shadow.Goodwill, err)
 		}
 		goodwill = &value
 	}
@@ -425,7 +425,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IntangibleAssets.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.IntangibleAssets, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "intangibleAssets", shadow.IntangibleAssets, err)
 		}
 		intangibleAssets = &value
 	}
@@ -433,7 +433,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.GoodwillAndIntangibleAssets.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.GoodwillAndIntangibleAssets, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "goodwillAndIntangibleAssets", shadow.GoodwillAndIntangibleAssets, err)
 		}
 		goodwillAndIntangibleAssets = &value
 	}
@@ -441,7 +441,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.LongTermInvestments.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.LongTermInvestments, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "longTermInvestments", shadow.LongTermInvestments, err)
 		}
 		longTermInvestments = &value
 	}
@@ -449,7 +449,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TaxAssets.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TaxAssets, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "taxAssets", shadow.TaxAssets, err)
 		}
 		taxAssets = &value
 	}
@@ -457,7 +457,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalNonCurrentAssets.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalNonCurrentAssets, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalNonCurrentAssets", shadow.TotalNonCurrentAssets, err)
 		}
 		totalNonCurrentAssets = &value
 	}
@@ -465,7 +465,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalAssets.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalAssets, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalAssets", shadow.TotalAssets, err)
 		}
 		totalAssets = &value
 	}
@@ -473,7 +473,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AccountPayables.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AccountPayables, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "accountPayables", shadow.AccountPayables, err)
 		}
 		accountPayables = &value
 	}
@@ -481,7 +481,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.OtherPayables.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.OtherPayables, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "otherPayables", shadow.OtherPayables, err)
 		}
 		otherPayables = &value
 	}
@@ -489,7 +489,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AccruedExpenses.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AccruedExpenses, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "accruedExpenses", shadow.AccruedExpenses, err)
 		}
 		accruedExpenses = &value
 	}
@@ -497,7 +497,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.ShortTermDebt.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.ShortTermDebt, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "shortTermDebt", shadow.ShortTermDebt, err)
 		}
 		shortTermDebt = &value
 	}
@@ -505,7 +505,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CapitalLeaseObligationsCurrent.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CapitalLeaseObligationsCurrent, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "capitalLeaseObligationsCurrent", shadow.CapitalLeaseObligationsCurrent, err)
 		}
 		capitalLeaseObligationsCurrent = &value
 	}
@@ -513,7 +513,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TaxPayables.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TaxPayables, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "taxPayables", shadow.TaxPayables, err)
 		}
 		taxPayables = &value
 	}
@@ -521,7 +521,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DeferredRevenue.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.DeferredRevenue, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "deferredRevenue", shadow.DeferredRevenue, err)
 		}
 		deferredRevenue = &value
 	}
@@ -529,7 +529,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalCurrentLiabilities.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalCurrentLiabilities, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalCurrentLiabilities", shadow.TotalCurrentLiabilities, err)
 		}
 		totalCurrentLiabilities = &value
 	}
@@ -537,7 +537,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.LongTermDebt.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.LongTermDebt, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "longTermDebt", shadow.LongTermDebt, err)
 		}
 		longTermDebt = &value
 	}
@@ -545,7 +545,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CapitalLeaseObligationsNonCurrent.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CapitalLeaseObligationsNonCurrent, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "capitalLeaseObligationsNonCurrent", shadow.CapitalLeaseObligationsNonCurrent, err)
 		}
 		capitalLeaseObligationsNonCurrent = &value
 	}
@@ -553,7 +553,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DeferredRevenueNonCurrent.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.DeferredRevenueNonCurrent, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "deferredRevenueNonCurrent", shadow.DeferredRevenueNonCurrent, err)
 		}
 		deferredRevenueNonCurrent = &value
 	}
@@ -561,7 +561,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DeferredTaxLiabilitiesNonCurrent.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.DeferredTaxLiabilitiesNonCurrent, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "deferredTaxLiabilitiesNonCurrent", shadow.DeferredTaxLiabilitiesNonCurrent, err)
 		}
 		deferredTaxLiabilitiesNonCurrent = &value
 	}
@@ -569,7 +569,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalNonCurrentLiabilities.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalNonCurrentLiabilities, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalNonCurrentLiabilities", shadow.TotalNonCurrentLiabilities, err)
 		}
 		totalNonCurrentLiabilities = &value
 	}
@@ -577,7 +577,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalLiabilities.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalLiabilities, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalLiabilities", shadow.TotalLiabilities, err)
 		}
 		totalLiabilities = &value
 	}
@@ -585,7 +585,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TreasuryStock.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TreasuryStock, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "treasuryStock", shadow.TreasuryStock, err)
 		}
 		treasuryStock = &value
 	}
@@ -593,7 +593,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CommonStock.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CommonStock, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "commonStock", shadow.CommonStock, err)
 		}
 		commonStock = &value
 	}
@@ -601,7 +601,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.RetainedEarnings.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.RetainedEarnings, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "retainedEarnings", shadow.RetainedEarnings, err)
 		}
 		retainedEarnings = &value
 	}
@@ -609,7 +609,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AdditionalPaidInCapital.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AdditionalPaidInCapital, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "additionalPaidInCapital", shadow.AdditionalPaidInCapital, err)
 		}
 		additionalPaidInCapital = &value
 	}
@@ -617,7 +617,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AccumulatedOtherComprehensiveIncomeLoss.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AccumulatedOtherComprehensiveIncomeLoss, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "accumulatedOtherComprehensiveIncomeLoss", shadow.AccumulatedOtherComprehensiveIncomeLoss, err)
 		}
 		accumulatedOtherComprehensiveIncomeLoss = &value
 	}
@@ -625,7 +625,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalStockholdersEquity.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalStockholdersEquity, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalStockholdersEquity", shadow.TotalStockholdersEquity, err)
 		}
 		totalStockholdersEquity = &value
 	}
@@ -633,7 +633,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalEquity.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalEquity, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalEquity", shadow.TotalEquity, err)
 		}
 		totalEquity = &value
 	}
@@ -641,7 +641,7 @@ func (m *BalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TotalLiabilitiesAndTotalEquity.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TotalLiabilitiesAndTotalEquity, &value); err != nil {
-			return err
+			return memberDecodeError("BalanceSheetStatement", "totalLiabilitiesAndTotalEquity", shadow.TotalLiabilitiesAndTotalEquity, err)
 		}
 		totalLiabilitiesAndTotalEquity = &value
 	}
@@ -1250,7 +1250,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DeferredIncomeTax.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.DeferredIncomeTax, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "deferredIncomeTax", shadow.DeferredIncomeTax, err)
 		}
 		deferredIncomeTax = &value
 	}
@@ -1258,7 +1258,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.StockBasedCompensation.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.StockBasedCompensation, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "stockBasedCompensation", shadow.StockBasedCompensation, err)
 		}
 		stockBasedCompensation = &value
 	}
@@ -1266,7 +1266,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AccountsReceivables.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AccountsReceivables, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "accountsReceivables", shadow.AccountsReceivables, err)
 		}
 		accountsReceivables = &value
 	}
@@ -1274,7 +1274,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Inventory.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Inventory, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "inventory", shadow.Inventory, err)
 		}
 		inventory = &value
 	}
@@ -1282,7 +1282,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AccountsPayables.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AccountsPayables, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "accountsPayables", shadow.AccountsPayables, err)
 		}
 		accountsPayables = &value
 	}
@@ -1290,7 +1290,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.PurchasesOfInvestments.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.PurchasesOfInvestments, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "purchasesOfInvestments", shadow.PurchasesOfInvestments, err)
 		}
 		purchasesOfInvestments = &value
 	}
@@ -1298,7 +1298,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SalesMaturitiesOfInvestments.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.SalesMaturitiesOfInvestments, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "salesMaturitiesOfInvestments", shadow.SalesMaturitiesOfInvestments, err)
 		}
 		salesMaturitiesOfInvestments = &value
 	}
@@ -1306,7 +1306,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.LongTermNetDebtIssuance.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.LongTermNetDebtIssuance, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "longTermNetDebtIssuance", shadow.LongTermNetDebtIssuance, err)
 		}
 		longTermNetDebtIssuance = &value
 	}
@@ -1314,7 +1314,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.NetStockIssuance.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.NetStockIssuance, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "netStockIssuance", shadow.NetStockIssuance, err)
 		}
 		netStockIssuance = &value
 	}
@@ -1322,7 +1322,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.NetCommonStockIssuance.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.NetCommonStockIssuance, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "netCommonStockIssuance", shadow.NetCommonStockIssuance, err)
 		}
 		netCommonStockIssuance = &value
 	}
@@ -1330,7 +1330,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CommonStockRepurchased.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CommonStockRepurchased, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "commonStockRepurchased", shadow.CommonStockRepurchased, err)
 		}
 		commonStockRepurchased = &value
 	}
@@ -1338,7 +1338,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.NetPreferredStockIssuance.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.NetPreferredStockIssuance, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "netPreferredStockIssuance", shadow.NetPreferredStockIssuance, err)
 		}
 		netPreferredStockIssuance = &value
 	}
@@ -1346,7 +1346,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.NetDividendsPaid.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.NetDividendsPaid, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "netDividendsPaid", shadow.NetDividendsPaid, err)
 		}
 		netDividendsPaid = &value
 	}
@@ -1354,7 +1354,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CommonDividendsPaid.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CommonDividendsPaid, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "commonDividendsPaid", shadow.CommonDividendsPaid, err)
 		}
 		commonDividendsPaid = &value
 	}
@@ -1362,7 +1362,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.PreferredDividendsPaid.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.PreferredDividendsPaid, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "preferredDividendsPaid", shadow.PreferredDividendsPaid, err)
 		}
 		preferredDividendsPaid = &value
 	}
@@ -1370,7 +1370,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.NetCashProvidedByFinancingActivities.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.NetCashProvidedByFinancingActivities, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "netCashProvidedByFinancingActivities", shadow.NetCashProvidedByFinancingActivities, err)
 		}
 		netCashProvidedByFinancingActivities = &value
 	}
@@ -1378,7 +1378,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CashAtBeginningOfPeriod.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.CashAtBeginningOfPeriod, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "cashAtBeginningOfPeriod", shadow.CashAtBeginningOfPeriod, err)
 		}
 		cashAtBeginningOfPeriod = &value
 	}
@@ -1386,7 +1386,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IncomeTaxesPaid.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.IncomeTaxesPaid, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "incomeTaxesPaid", shadow.IncomeTaxesPaid, err)
 		}
 		incomeTaxesPaid = &value
 	}
@@ -1394,7 +1394,7 @@ func (m *CashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.InterestPaid.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.InterestPaid, &value); err != nil {
-			return err
+			return memberDecodeError("CashFlowStatement", "interestPaid", shadow.InterestPaid, err)
 		}
 		interestPaid = &value
 	}
@@ -2612,7 +2612,7 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FilingDate.Kind() != 'n' {
 		var value Date
 		if err := json.Unmarshal(shadow.FilingDate, &value); err != nil {
-			return err
+			return memberDecodeError("IncomeStatement", "filingDate", shadow.FilingDate, err)
 		}
 		filingDate = &value
 	}
@@ -2620,7 +2620,7 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AcceptedDate.Kind() != 'n' {
 		var value DateTime
 		if err := json.Unmarshal(shadow.AcceptedDate, &value); err != nil {
-			return err
+			return memberDecodeError("IncomeStatement", "acceptedDate", shadow.AcceptedDate, err)
 		}
 		acceptedDate = &value
 	}
@@ -2628,7 +2628,7 @@ func (m *IncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.InterestIncome.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.InterestIncome, &value); err != nil {
-			return err
+			return memberDecodeError("IncomeStatement", "interestIncome", shadow.InterestIncome, err)
 		}
 		interestIncome = &value
 	}
@@ -2887,7 +2887,7 @@ func (m *KeyMetrics) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.GrahamNumber.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.GrahamNumber, &value); err != nil {
-			return err
+			return memberDecodeError("KeyMetrics", "grahamNumber", shadow.GrahamNumber, err)
 		}
 		grahamNumber = &value
 	}
@@ -3139,7 +3139,7 @@ func (m *KeyMetricsTTM) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.GrahamNumberTTM.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.GrahamNumberTTM, &value); err != nil {
-			return err
+			return memberDecodeError("KeyMetricsTTM", "grahamNumberTTM", shadow.GrahamNumberTTM, err)
 		}
 		grahamNumberTTM = &value
 	}
@@ -4158,7 +4158,7 @@ func (m *FinancialScore) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.AltmanZScore.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.AltmanZScore, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialScore", "altmanZScore", shadow.AltmanZScore, err)
 		}
 		altmanZScore = &value
 	}

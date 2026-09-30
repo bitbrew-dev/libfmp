@@ -130,7 +130,7 @@ func (m *NewsArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Symbol.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Symbol, &value); err != nil {
-			return err
+			return memberDecodeError("NewsArticle", "symbol", shadow.Symbol, err)
 		}
 		symbol = &value
 	}
@@ -138,7 +138,7 @@ func (m *NewsArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Image.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Image, &value); err != nil {
-			return err
+			return memberDecodeError("NewsArticle", "image", shadow.Image, err)
 		}
 		image = &value
 	}
@@ -146,7 +146,7 @@ func (m *NewsArticle) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Site.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Site, &value); err != nil {
-			return err
+			return memberDecodeError("NewsArticle", "site", shadow.Site, err)
 		}
 		site = &value
 	}

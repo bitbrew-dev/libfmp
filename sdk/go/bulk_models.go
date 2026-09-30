@@ -2603,7 +2603,7 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	var lastUpdatedRaw string
 	if err := json.Unmarshal(lastUpdatedRawWire, &lastUpdatedRaw); err != nil {
-		return err
+		return memberDecodeError("BulkETFHolding", "lastUpdated\"", lastUpdatedRawWire, err)
 	}
 	*m = BulkETFHolding{
 		Symbol:           *shadow.Symbol,

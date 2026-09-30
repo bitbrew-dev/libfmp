@@ -203,7 +203,7 @@ func (m *TipRanksPointInTimeRating) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 	if shadow.PriceTargetCurrency.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.PriceTargetCurrency, &value); err != nil {
-			return err
+			return memberDecodeError("TipRanksPointInTimeRating", "priceTargetCurrency", shadow.PriceTargetCurrency, err)
 		}
 		priceTargetCurrency = &value
 	}
@@ -218,7 +218,7 @@ func (m *TipRanksPointInTimeRating) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 	if shadow.BeatTarget.Kind() != 'n' {
 		var value bool
 		if err := json.Unmarshal(shadow.BeatTarget, &value); err != nil {
-			return err
+			return memberDecodeError("TipRanksPointInTimeRating", "beatTarget", shadow.BeatTarget, err)
 		}
 		beatTarget = &value
 	}

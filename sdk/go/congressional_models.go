@@ -178,7 +178,7 @@ func (m *CongressionalMemberProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	if shadow.Image.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Image, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberProfile", "image", shadow.Image, err)
 		}
 		image = &value
 	}
@@ -253,7 +253,7 @@ func (m *CongressionalMemberPosition) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.EndDate.Kind() != 'n' {
 		var value Date
 		if err := json.Unmarshal(shadow.EndDate, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberPosition", "endDate", shadow.EndDate, err)
 		}
 		endDate = &value
 	}
@@ -449,7 +449,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.IncomeType.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.IncomeType, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberNetWorth", "incomeType", shadow.IncomeType, err)
 		}
 		incomeType = &value
 	}
@@ -465,7 +465,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.Comment.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Comment, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberNetWorth", "comment", shadow.Comment, err)
 		}
 		comment = &value
 	}
@@ -473,7 +473,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.DebtDetails.Kind() != 'n' {
 		var value CongressionalDebtDetails
 		if err := json.Unmarshal(shadow.DebtDetails, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberNetWorth", "debtDetails", shadow.DebtDetails, err)
 		}
 		debtDetails = &value
 	}
@@ -481,7 +481,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.ValueRange.Kind() != 'n' {
 		var value CongressionalNetWorthRange
 		if err := json.Unmarshal(shadow.ValueRange, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberNetWorth", "valueRange", shadow.ValueRange, err)
 		}
 		valueRange = &value
 	}
@@ -497,7 +497,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.IncomeRange.Kind() != 'n' {
 		var value CongressionalNetWorthRange
 		if err := json.Unmarshal(shadow.IncomeRange, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberNetWorth", "incomeRange", shadow.IncomeRange, err)
 		}
 		incomeRange = &value
 	}
@@ -505,7 +505,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.Income.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.Income, &value); err != nil {
-			return err
+			return memberDecodeError("CongressionalMemberNetWorth", "income", shadow.Income, err)
 		}
 		income = &value
 	}
