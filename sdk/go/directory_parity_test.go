@@ -138,9 +138,8 @@ func TestDocumentedTaxonomyRowsDecodeExactFieldNamesAndOpenValues(t *testing.T) 
 	}
 }
 
-// The missing-required-member path of the generated decoders, once for this
-// domain: serde rejects a missing and a null member alike, and a malformed
-// date never decodes into a Date member.
+// Members FMP omits decode null, and "" on a typed code, as nil while the
+// key itself stays required.
 func TestDirectoryOmittableMembersDecodeNullAndEmptyAsNil(t *testing.T) {
 	t.Parallel()
 	for _, code := range []string{`null`, `""`} {
@@ -163,8 +162,19 @@ func TestDirectoryOmittableMembersDecodeNullAndEmptyAsNil(t *testing.T) {
 		new([]FinancialStatementSymbol)); err == nil {
 		t.Fatal("a missing reportingCurrency decoded")
 	}
+	for _, wire := range []string{
+		`[{"exchange":"CRYPTO","name":"Cryptocurrency","countryName":"","symbolSuffix":"N/A","delay":null}]`,
+		`[{"exchange":"CRYPTO","name":"Cryptocurrency","countryName":"","countryCode":null,"symbolSuffix":"N/A"}]`,
+	} {
+		if err := json.Unmarshal([]byte(wire), new([]AvailableExchange)); err == nil {
+			t.Fatalf("a missing AvailableExchange member decoded: %s", wire)
+		}
+	}
 }
 
+// The missing-required-member path of the generated decoders, once for this
+// domain: serde rejects a missing and a null member alike, and a malformed
+// date never decodes into a Date member.
 func TestDirectoryRequiredMembersAreEnforcedLikeSerde(t *testing.T) {
 	t.Parallel()
 	cases := []struct {
