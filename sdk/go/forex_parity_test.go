@@ -59,14 +59,12 @@ func TestDocumentedForexCatalogAndQuoteFixturesDecodeExactValues(t *testing.T) {
 	}
 
 	short := assertFixtureParity[QuoteShort](t, "forex_quote_short.json")
-	if want := (QuoteShort{Symbol: "EURUSD", Price: 1.15284, Change: 0.006314, Volume: 146_872}); len(short) != 1 ||
-		short[0] != want {
-		t.Fatalf("forex_quote_short = %+v, want %+v", short, want)
+	if len(short) != 1 || !quoteShortMatches(short[0], "EURUSD", 1.15284, 0.006314, 146_872) {
+		t.Fatalf("forex_quote_short = %+v", short)
 	}
 	batch := assertFixtureParity[QuoteShort](t, "forex_quotes.json")
-	if want := (QuoteShort{Symbol: "AEDAUD", Price: 0.38716, Change: -0.00513532, Volume: 0}); len(batch) != 1 ||
-		batch[0] != want {
-		t.Fatalf("forex_quotes = %+v, want %+v", batch, want)
+	if len(batch) != 1 || !quoteShortMatches(batch[0], "AEDAUD", 0.38716, -0.00513532, 0) {
+		t.Fatalf("forex_quotes = %+v", batch)
 	}
 }
 

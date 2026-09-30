@@ -241,7 +241,7 @@ fn crypto_quotes_preserve_large_volume_market_cap_and_nullable_market_cap() {
 
     let compact: Vec<CryptocurrencyQuoteShort> =
         serde_json::from_slice(CRYPTOCURRENCY_QUOTE_SHORT).unwrap();
-    assert_eq!(compact[0].volume, 32_030_003_200.0);
+    assert_eq!(compact[0].volume, Some(32_030_003_200.0));
 }
 
 #[test]

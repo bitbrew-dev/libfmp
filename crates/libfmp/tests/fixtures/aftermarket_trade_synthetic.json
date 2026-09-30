@@ -13,5 +13,11 @@
     "symbol": "000001.SZ",
     "timestamp": 1700000000000,
     "tradeSize": 9007199254740993
+  },
+  {
+    "price": 12.75,
+    "symbol": "000001.SZ",
+    "timestamp": 1700000000001,
+    "tradeSize": null
   }
 ]

@@ -53,14 +53,12 @@ func TestDocumentedCommodityCatalogAndQuoteFixturesDecodeExactValues(t *testing.
 	}
 
 	short := assertFixtureParity[QuoteShort](t, "commodities_quote_short.json")
-	if want := (QuoteShort{Symbol: "GCUSD", Price: 4168.3, Change: 132, Volume: 125_925}); len(short) != 1 ||
-		short[0] != want {
-		t.Fatalf("commodities_quote_short = %+v, want %+v", short, want)
+	if len(short) != 1 || !quoteShortMatches(short[0], "GCUSD", 4168.3, 132, 125_925) {
+		t.Fatalf("commodities_quote_short = %+v", short)
 	}
 	batch := assertFixtureParity[QuoteShort](t, "commodities_quotes.json")
-	if want := (QuoteShort{Symbol: "DCUSD", Price: 16.91, Change: 0.02, Volume: 615}); len(batch) != 1 ||
-		batch[0] != want {
-		t.Fatalf("commodities_quotes = %+v, want %+v", batch, want)
+	if len(batch) != 1 || !quoteShortMatches(batch[0], "DCUSD", 16.91, 0.02, 615) {
+		t.Fatalf("commodities_quotes = %+v", batch)
 	}
 }
 

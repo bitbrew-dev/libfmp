@@ -92,7 +92,7 @@ func TestQuantityAndAmountFieldsDecodeFractionalForms(t *testing.T) {
 	}
 
 	trades := assertFixtureParity[AftermarketTrade](t, "aftermarket_trade_fractional_synthetic.json")
-	if len(trades) != 1 || trades[0].TradeSize != 16.5 {
+	if len(trades) != 1 || trades[0].TradeSize == nil || *trades[0].TradeSize != 16.5 {
 		t.Fatalf("aftermarket_trade_fractional_synthetic = %+v", trades)
 	}
 
@@ -107,7 +107,7 @@ func TestQuantityAndAmountFieldsDecodeExponentForms(t *testing.T) {
 
 	var trade AftermarketTrade
 	err := json.Unmarshal([]byte(`{"symbol":"AAPL","price":232.53,"tradeSize":1.6e1,"timestamp":1738715334311}`), &trade)
-	if err != nil || trade.TradeSize != 16 {
+	if err != nil || trade.TradeSize == nil || *trade.TradeSize != 16 {
 		t.Fatalf("AftermarketTrade = %+v, %v", trade, err)
 	}
 

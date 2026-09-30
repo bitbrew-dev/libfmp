@@ -120,19 +120,19 @@ func (m *Quote) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // QuoteShort is the compact response returned by quote-short endpoints across
 // asset classes.
 type QuoteShort struct {
-	Symbol string  `json:"symbol"`
-	Price  float64 `json:"price"`
-	Change float64 `json:"change"`
-	Volume float64 `json:"volume"`
+	Symbol string   `json:"symbol"`
+	Price  *float64 `json:"price"`
+	Change *float64 `json:"change"`
+	Volume *float64 `json:"volume"`
 }
 
 // quoteShortShadow mirrors QuoteShort with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type quoteShortShadow struct {
-	Symbol *string  `json:"symbol"`
-	Price  *float64 `json:"price"`
-	Change *float64 `json:"change"`
-	Volume *float64 `json:"volume"`
+	Symbol *string        `json:"symbol"`
+	Price  jsontext.Value `json:"price"`
+	Change jsontext.Value `json:"change"`
+	Volume jsontext.Value `json:"volume"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -146,18 +146,42 @@ func (m *QuoteShort) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("QuoteShort", "symbol")
-	case shadow.Price == nil:
+	case len(shadow.Price) == 0:
 		return missingMemberError("QuoteShort", "price")
-	case shadow.Change == nil:
+	case len(shadow.Change) == 0:
 		return missingMemberError("QuoteShort", "change")
-	case shadow.Volume == nil:
+	case len(shadow.Volume) == 0:
 		return missingMemberError("QuoteShort", "volume")
+	}
+	var price *float64
+	if shadow.Price.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Price, &value); err != nil {
+			return err
+		}
+		price = &value
+	}
+	var change *float64
+	if shadow.Change.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Change, &value); err != nil {
+			return err
+		}
+		change = &value
+	}
+	var volume *float64
+	if shadow.Volume.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Volume, &value); err != nil {
+			return err
+		}
+		volume = &value
 	}
 	*m = QuoteShort{
 		Symbol: *shadow.Symbol,
-		Price:  *shadow.Price,
-		Change: *shadow.Change,
-		Volume: *shadow.Volume,
+		Price:  price,
+		Change: change,
+		Volume: volume,
 	}
 	return nil
 }
@@ -166,7 +190,7 @@ func (m *QuoteShort) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 type AftermarketTrade struct {
 	Symbol    string           `json:"symbol"`
 	Price     float64          `json:"price"`
-	TradeSize float64          `json:"tradeSize"`
+	TradeSize *float64         `json:"tradeSize"`
 	Timestamp UnixMilliseconds `json:"timestamp"`
 }
 
@@ -176,7 +200,7 @@ type AftermarketTrade struct {
 type aftermarketTradeShadow struct {
 	Symbol    *string           `json:"symbol"`
 	Price     *float64          `json:"price"`
-	TradeSize *float64          `json:"tradeSize"`
+	TradeSize jsontext.Value    `json:"tradeSize"`
 	Timestamp *UnixMilliseconds `json:"timestamp"`
 }
 
@@ -193,15 +217,23 @@ func (m *AftermarketTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("AftermarketTrade", "symbol")
 	case shadow.Price == nil:
 		return missingMemberError("AftermarketTrade", "price")
-	case shadow.TradeSize == nil:
+	case len(shadow.TradeSize) == 0:
 		return missingMemberError("AftermarketTrade", "tradeSize")
 	case shadow.Timestamp == nil:
 		return missingMemberError("AftermarketTrade", "timestamp")
 	}
+	var tradeSize *float64
+	if shadow.TradeSize.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.TradeSize, &value); err != nil {
+			return err
+		}
+		tradeSize = &value
+	}
 	*m = AftermarketTrade{
 		Symbol:    *shadow.Symbol,
 		Price:     *shadow.Price,
-		TradeSize: *shadow.TradeSize,
+		TradeSize: tradeSize,
 		Timestamp: *shadow.Timestamp,
 	}
 	return nil

@@ -54,9 +54,9 @@ fn documented_short_quote_preserves_negative_change() {
 
     assert_eq!(quotes.len(), 1);
     assert_eq!(quotes[0].symbol.as_str(), "AAPL");
-    assert_eq!(quotes[0].price, 331.85501);
-    assert_eq!(quotes[0].change, -6.33498);
-    assert_eq!(quotes[0].volume, 28_718_014.0);
+    assert_eq!(quotes[0].price, Some(331.85501));
+    assert_eq!(quotes[0].change, Some(-6.33498));
+    assert_eq!(quotes[0].volume, Some(28_718_014.0));
 }
 
 #[test]
@@ -69,8 +69,29 @@ fn bare_quote_arrays_retain_empty_and_multiple_shapes() {
     assert!(empty.is_empty());
     assert_eq!(multiple.len(), 2);
     assert_eq!(multiple[0].symbol.as_str(), "000001.SZ");
-    assert_eq!(multiple[0].volume, 4_294_967_296.0);
+    assert_eq!(multiple[0].volume, Some(4_294_967_296.0));
     assert_eq!(multiple[1].symbol.as_str(), "^VIX");
+    assert_eq!(multiple[1].price, Some(18.75));
+    assert_eq!(multiple[1].change, None);
+    assert_eq!(multiple[1].volume, None);
+}
+
+#[test]
+fn short_quote_null_members_decode_to_none_and_re_encode_as_null() {
+    let quote: QuoteShort =
+        serde_json::from_str(r#"{"symbol":"VFIAX","price":null,"change":null,"volume":null}"#)
+            .unwrap();
+
+    assert_eq!(
+        (quote.price, quote.change, quote.volume),
+        (None, None, None)
+    );
+    let wire = serde_json::to_value(&quote).unwrap();
+    assert!(wire["price"].is_null() && wire["change"].is_null() && wire["volume"].is_null());
+    assert!(
+        serde_json::from_str::<QuoteShort>(r#"{"symbol":"VFIAX","price":1.0,"change":0.0}"#)
+            .is_err()
+    );
 }
 
 #[test]
@@ -82,7 +103,7 @@ fn documented_aftermarket_trade_decodes_exact_wire_values_in_milliseconds() {
     let trade = &trades[0];
     assert_eq!(trade.symbol, Ticker::new("AAPL").unwrap());
     assert_eq!(trade.price, 331.85999);
-    assert_eq!(trade.trade_size, 16.0);
+    assert_eq!(trade.trade_size, Some(16.0));
     assert_eq!(trade.timestamp, UnixMilliseconds(1_785_430_813_000));
 
     let wire = serde_json::to_value(trade).unwrap();
@@ -165,10 +186,18 @@ fn new_quote_response_arrays_preserve_empty_multiple_unknown_and_large_values() 
 
     let trades: Vec<AftermarketTrade> =
         serde_json::from_str(include_str!("fixtures/aftermarket_trade_synthetic.json")).unwrap();
-    assert_eq!(trades.len(), 2);
-    assert_eq!(trades[0].trade_size, u64::MAX as f64);
+    assert_eq!(trades.len(), 3);
+    assert_eq!(trades[0].trade_size, Some(u64::MAX as f64));
     assert_eq!(trades[0].timestamp, UnixMilliseconds(i64::MAX));
-    assert_eq!(trades[1].trade_size, 9_007_199_254_740_992.0);
+    assert_eq!(trades[1].trade_size, Some(9_007_199_254_740_992.0));
+    assert_eq!(trades[2].trade_size, None);
+    assert!(serde_json::to_value(&trades[2]).unwrap()["tradeSize"].is_null());
+    assert!(
+        serde_json::from_str::<AftermarketTrade>(
+            r#"{"symbol":"AAPL","price":1.0,"timestamp":1700000000001}"#
+        )
+        .is_err()
+    );
 
     let quotes: Vec<AftermarketQuote> =
         serde_json::from_str(include_str!("fixtures/aftermarket_quote_synthetic.json")).unwrap();

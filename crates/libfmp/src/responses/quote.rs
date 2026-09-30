@@ -1,11 +1,19 @@
 //! Response models returned by quote endpoints.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::types::{
     Change, ExchangeCode, MarketCapitalization, Percentage, Price, Quantity, Ticker,
     UnixMilliseconds, UnixSeconds, Volume,
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// A detailed real-time stock quote.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -39,10 +47,13 @@ pub struct Quote {
 #[serde(rename_all = "camelCase")]
 pub struct QuoteShort {
     pub symbol: Ticker,
-    pub price: Price,
-    pub change: Change,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub volume: Volume,
+    #[serde(deserialize_with = "required_option")]
+    pub price: Option<Price>,
+    #[serde(deserialize_with = "required_option")]
+    pub change: Option<Change>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub volume: Option<Volume>,
 }
 
 /// One trade executed after regular US market hours.
@@ -52,8 +63,9 @@ pub struct QuoteShort {
 pub struct AftermarketTrade {
     pub symbol: Ticker,
     pub price: Price,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub trade_size: Quantity,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub trade_size: Option<Quantity>,
     pub timestamp: UnixMilliseconds,
 }
 

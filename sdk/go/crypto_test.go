@@ -60,7 +60,7 @@ func TestCryptoMethodsUseExactPathsAndQueryOrder(t *testing.T) {
 		t.Fatalf("Quote = %+v, %v", quote, err)
 	}
 	short, err := client.Crypto.QuoteShort(ctx, NewQuoteShortQuery("BTCUSD"))
-	if err != nil || len(short) != 1 || short[0].Volume != 32_030_003_200 {
+	if err != nil || len(short) != 1 || short[0].Volume == nil || *short[0].Volume != 32_030_003_200 {
 		t.Fatalf("QuoteShort = %+v, %v", short, err)
 	}
 	light, err := client.Crypto.ChartLight(ctx, NewAssetChartQuery("BTCUSD").WithFrom(eodFrom).WithTo(eodTo))

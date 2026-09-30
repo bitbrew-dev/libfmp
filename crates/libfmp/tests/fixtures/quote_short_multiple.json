@@ -6,9 +6,9 @@
     "volume": 4294967296
   },
   {
-    "change": 0.5,
+    "change": null,
     "price": 18.75,
     "symbol": "^VIX",
-    "volume": 0
+    "volume": null
   }
 ]

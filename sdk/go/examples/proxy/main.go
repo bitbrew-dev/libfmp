@@ -82,8 +82,11 @@ func run() error {
 	}
 
 	quote := quotes[0]
+	if quote.Price == nil || quote.Change == nil || quote.Volume == nil {
+		return fmt.Errorf("quote %s has no price, change or volume", quote.Symbol)
+	}
 	fmt.Printf("client: %v\n", client)
 	fmt.Printf("%s via tenant %s: price %.5f, change %.5f, volume %.0f\n",
-		quote.Symbol, tenant, quote.Price, quote.Change, quote.Volume)
+		quote.Symbol, tenant, *quote.Price, *quote.Change, *quote.Volume)
 	return nil
 }

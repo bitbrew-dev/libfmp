@@ -112,7 +112,7 @@ func liveAssertAppleRows(t *testing.T, rows []QuoteShort) {
 	if rows[0].Symbol != liveSymbol {
 		t.Fatalf("quote-short symbol = %q, want %q", rows[0].Symbol, liveSymbol)
 	}
-	if rows[0].Price <= 0 {
+	if rows[0].Price == nil || *rows[0].Price <= 0 {
 		t.Fatalf("quote-short price = %v, want a positive price", rows[0].Price)
 	}
 }

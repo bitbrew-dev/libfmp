@@ -40,9 +40,9 @@ async fn client_decodes_every_documented_field_without_selecting_a_first_row() {
 
     assert_eq!(rows.len(), 1);
     assert_eq!(rows[0].symbol.as_str(), "AAPL");
-    assert_eq!(rows[0].price, 331.85501);
-    assert_eq!(rows[0].change, -6.33498);
-    assert_eq!(rows[0].volume, 28_718_014.0);
+    assert_eq!(rows[0].price, Some(331.85501));
+    assert_eq!(rows[0].change, Some(-6.33498));
+    assert_eq!(rows[0].volume, Some(28_718_014.0));
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 1);
@@ -70,7 +70,7 @@ async fn client_preserves_empty_multiple_and_forward_compatible_arrays() {
     assert!(empty.is_empty());
     assert_eq!(multiple.len(), 2);
     assert_eq!(multiple[0].symbol.as_str(), "000001.SZ");
-    assert_eq!(multiple[0].volume, 4_294_967_296.0);
+    assert_eq!(multiple[0].volume, Some(4_294_967_296.0));
     assert_eq!(multiple[1].symbol.as_str(), "^VIX");
     assert_eq!(future_shape.len(), 1);
     assert_eq!(future_shape[0].symbol.as_str(), "AAPL");
@@ -89,9 +89,9 @@ async fn client_decodes_the_fractional_volume_observed_live_and_re_encodes_it_un
         .unwrap();
 
     assert_eq!(rows.len(), 1);
-    assert_eq!(rows[0].price, 342.395);
-    assert_eq!(rows[0].change, 3.415);
-    assert_eq!(rows[0].volume, 20_201_922.827_33);
+    assert_eq!(rows[0].price, Some(342.395));
+    assert_eq!(rows[0].change, Some(3.415));
+    assert_eq!(rows[0].volume, Some(20_201_922.827_33));
     let wire: serde_json::Value = serde_json::from_slice(QUOTE_SHORT_FRACTIONAL_VOLUME).unwrap();
     assert_eq!(serde_json::to_value(&rows).unwrap(), wire);
 }

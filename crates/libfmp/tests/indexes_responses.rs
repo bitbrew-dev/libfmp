@@ -30,7 +30,7 @@ fn every_documented_index_directory_and_quote_fixture_matches_the_typed_wire_con
 
     let compact: Vec<QuoteShort> = serde_json::from_slice(QUOTE_SHORT).unwrap();
     assert_eq!(compact[0].symbol.as_str(), "^VIX");
-    assert_eq!(compact[0].volume, 0.0);
+    assert_eq!(compact[0].volume, Some(0.0));
 }
 
 fn assert_exact<T>(fixture: &[u8])

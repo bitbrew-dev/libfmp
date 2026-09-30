@@ -187,11 +187,11 @@ async fn proxy_routing_uses_all_asset_facades_custom_auth_default_headers_and_ex
     assert_eq!(commodity_batch[0].symbol.as_str(), "DCUSD");
     assert_eq!(pairs[0].from_currency.as_str(), "ARS");
     assert_eq!(forex[0].market_cap, None);
-    assert_eq!(forex_short[0].volume, 146_872.0);
-    assert_eq!(forex_batch[0].change, -0.00513532);
+    assert_eq!(forex_short[0].volume, Some(146_872.0));
+    assert_eq!(forex_batch[0].change, Some(-0.00513532));
     assert_eq!(cryptocurrencies[0].total_supply, 4_788_606_639.0);
     assert_eq!(crypto[0].market_cap, Some(1_293_361_815_015.0));
-    assert_eq!(crypto_short[0].volume, 32_030_003_200.0);
+    assert_eq!(crypto_short[0].volume, Some(32_030_003_200.0));
     assert_eq!(crypto_batch[0].symbol.as_str(), "00USD");
 
     let requests = executor.requests();
