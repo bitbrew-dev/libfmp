@@ -75,7 +75,7 @@ func TestQuantityAndAmountFieldsDecodeFractionalForms(t *testing.T) {
 	}
 
 	earnings := assertFixtureParity[EarningsEvent](t, "earnings_calendar_fractional_synthetic.json")
-	if len(earnings) != 1 || earnings[0].RevenueEstimated != 1_086_300_000.5 ||
+	if len(earnings) != 1 || earnings[0].RevenueEstimated == nil || *earnings[0].RevenueEstimated != 1_086_300_000.5 ||
 		earnings[0].RevenueActual == nil || *earnings[0].RevenueActual != 1_101_500_000 {
 		t.Fatalf("earnings_calendar_fractional_synthetic = %+v", earnings)
 	}

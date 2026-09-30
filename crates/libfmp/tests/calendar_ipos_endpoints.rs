@@ -135,8 +135,8 @@ async fn custom_proxy_preserves_exact_queries_auth_headers_and_source_rows() {
     let offering_values: [f64; 6] = [
         prospectus[0].price_public_per_share,
         prospectus[0].price_public_total,
-        prospectus[0].discounts_and_commissions_per_share,
-        prospectus[0].discounts_and_commissions_total,
+        prospectus[0].discounts_and_commissions_per_share.unwrap(),
+        prospectus[0].discounts_and_commissions_total.unwrap(),
         prospectus[0].proceeds_before_expenses_per_share,
         prospectus[0].proceeds_before_expenses_total,
     ];

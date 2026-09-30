@@ -136,9 +136,10 @@ def check_calendar_contract(client: FmpClient) -> None:
         from_=datetime.date(2026, 4, 27), to="2026-07-26", page=0, include_report_times=True
     )
     eps_actual: float | None = earnings[0].eps_actual
+    eps_estimated: float | None = earnings[0].eps_estimated
     ipos: list[IpoCalendarEvent] = calendar.ipos_calendar(from_="2026-03-06", to=datetime.date(2026, 6, 6))
     ipo_date: datetime.date = ipos[0].date
-    _ = (yield_, declared, eps_actual, ipo_date)
+    _ = (yield_, declared, eps_actual, eps_estimated, ipo_date)
 
 
 def check_bulk_contract(client: FmpClient) -> None:

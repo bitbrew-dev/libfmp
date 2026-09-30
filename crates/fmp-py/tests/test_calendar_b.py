@@ -95,6 +95,22 @@ def test_ipos_prospectus_with_from_only(client: Any, fixture_server: FixtureServ
     assert row.proceeds_before_expenses_total == pytest.approx(82_251.0)
 
 
+def test_ipos_null_exchange_and_discounts_are_none(client: Any, fixture_server: FixtureServer) -> None:
+    """Issue #368: a ``null`` exchange and ``null`` discount values decode as ``None``."""
+    calendar = load_fixture("ipos_calendar.json")
+    calendar[0]["exchange"] = None
+    fixture_server.route("/ipos-calendar", calendar)
+    prospectus = load_fixture("ipos_prospectus.json")
+    prospectus[0]["discountsAndCommissionsPerShare"] = None
+    prospectus[0]["discountsAndCommissionsTotal"] = None
+    fixture_server.route("/ipos-prospectus", prospectus)
+
+    assert client.calendar.ipos_calendar()[0].exchange is None
+    row = client.calendar.ipos_prospectus()[0]
+    assert row.discounts_and_commissions_per_share is None
+    assert row.discounts_and_commissions_total is None
+
+
 def test_ipos_prospectus_with_both_dates(client: Any, fixture_server: FixtureServer) -> None:
     """``ipos_prospectus`` encodes both ISO strings in ``from``, ``to`` order."""
     fixture_server.route("/ipos-prospectus", load_fixture("ipos_prospectus.json"))

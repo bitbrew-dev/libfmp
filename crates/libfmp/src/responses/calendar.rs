@@ -22,8 +22,10 @@ where
 pub struct DividendEvent {
     pub symbol: Ticker,
     pub date: Date,
-    pub record_date: Date,
-    pub payment_date: Date,
+    #[serde(with = "empty_or_null_date")]
+    pub record_date: Option<Date>,
+    #[serde(with = "empty_or_null_date")]
+    pub payment_date: Option<Date>,
     #[serde(with = "empty_or_null_date")]
     pub declaration_date: Option<Date>,
     pub adj_dividend: Price,
@@ -41,12 +43,14 @@ pub struct EarningsEvent {
     pub date: Date,
     #[serde(deserialize_with = "required_option")]
     pub eps_actual: Option<f64>,
-    pub eps_estimated: f64,
+    #[serde(deserialize_with = "required_option")]
+    pub eps_estimated: Option<f64>,
     #[serde(deserialize_with = "required_option")]
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
     pub revenue_actual: Option<MarketValue>,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub revenue_estimated: MarketValue,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub revenue_estimated: Option<MarketValue>,
     pub last_updated: Date,
 }
 
@@ -59,7 +63,8 @@ pub struct IpoCalendarEvent {
     pub date: Date,
     pub daa: IsoTimestamp,
     pub company: String,
-    pub exchange: ExchangeCode,
+    #[serde(deserialize_with = "required_option")]
+    pub exchange: Option<ExchangeCode>,
     pub actions: String,
     #[serde(deserialize_with = "required_option")]
     pub shares: Option<DynamicJson>,
@@ -96,9 +101,11 @@ pub struct IpoProspectus {
     pub price_public_per_share: Price,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub price_public_total: MarketValue,
-    pub discounts_and_commissions_per_share: Price,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub discounts_and_commissions_total: MarketValue,
+    #[serde(deserialize_with = "required_option")]
+    pub discounts_and_commissions_per_share: Option<Price>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub discounts_and_commissions_total: Option<MarketValue>,
     pub proceeds_before_expenses_per_share: Price,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub proceeds_before_expenses_total: MarketValue,
@@ -117,5 +124,6 @@ pub struct StockSplitEvent {
     pub numerator: SplitTerm,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub denominator: SplitTerm,
-    pub split_type: String,
+    #[serde(deserialize_with = "required_option")]
+    pub split_type: Option<String>,
 }

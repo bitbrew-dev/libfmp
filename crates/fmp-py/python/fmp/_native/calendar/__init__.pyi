@@ -131,9 +131,9 @@ class DividendEvent:
     @property
     def date(self) -> datetime.date: ...
     @property
-    def record_date(self) -> datetime.date: ...
+    def record_date(self) -> typing.Optional[datetime.date]: ...
     @property
-    def payment_date(self) -> datetime.date: ...
+    def payment_date(self) -> typing.Optional[datetime.date]: ...
     @property
     def declaration_date(self) -> typing.Optional[datetime.date]: ...
     @property
@@ -150,8 +150,8 @@ class DividendEvent:
         *,
         symbol: builtins.str,
         date: datetime.date,
-        record_date: datetime.date,
-        payment_date: datetime.date,
+        record_date: typing.Optional[datetime.date],
+        payment_date: typing.Optional[datetime.date],
         declaration_date: typing.Optional[datetime.date],
         adj_dividend: builtins.float,
         dividend: builtins.float,
@@ -187,11 +187,11 @@ class EarningsEvent:
     @property
     def eps_actual(self) -> typing.Optional[builtins.float]: ...
     @property
-    def eps_estimated(self) -> builtins.float: ...
+    def eps_estimated(self) -> typing.Optional[builtins.float]: ...
     @property
     def revenue_actual(self) -> typing.Optional[builtins.float]: ...
     @property
-    def revenue_estimated(self) -> builtins.float: ...
+    def revenue_estimated(self) -> typing.Optional[builtins.float]: ...
     @property
     def last_updated(self) -> datetime.date: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
@@ -201,9 +201,9 @@ class EarningsEvent:
         symbol: builtins.str,
         date: datetime.date,
         eps_actual: typing.Optional[builtins.float],
-        eps_estimated: builtins.float,
+        eps_estimated: typing.Optional[builtins.float],
         revenue_actual: typing.Optional[builtins.float],
-        revenue_estimated: builtins.float,
+        revenue_estimated: typing.Optional[builtins.float],
         last_updated: datetime.date,
     ) -> EarningsEvent: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
@@ -239,7 +239,7 @@ class IpoCalendarEvent:
     @property
     def company(self) -> builtins.str: ...
     @property
-    def exchange(self) -> builtins.str: ...
+    def exchange(self) -> typing.Optional[builtins.str]: ...
     @property
     def actions(self) -> builtins.str: ...
     @property
@@ -256,7 +256,7 @@ class IpoCalendarEvent:
         date: datetime.date,
         daa: builtins.str,
         company: builtins.str,
-        exchange: builtins.str,
+        exchange: typing.Optional[builtins.str],
         actions: builtins.str,
         shares: typing.Optional[builtins.str],
         price_range: typing.Optional[builtins.str],
@@ -353,9 +353,11 @@ class IpoProspectus:
     @property
     def price_public_total(self) -> builtins.float: ...
     @property
-    def discounts_and_commissions_per_share(self) -> builtins.float: ...
+    def discounts_and_commissions_per_share(
+        self,
+    ) -> typing.Optional[builtins.float]: ...
     @property
-    def discounts_and_commissions_total(self) -> builtins.float: ...
+    def discounts_and_commissions_total(self) -> typing.Optional[builtins.float]: ...
     @property
     def proceeds_before_expenses_per_share(self) -> builtins.float: ...
     @property
@@ -375,8 +377,8 @@ class IpoProspectus:
         cik: builtins.str,
         price_public_per_share: builtins.float,
         price_public_total: builtins.float,
-        discounts_and_commissions_per_share: builtins.float,
-        discounts_and_commissions_total: builtins.float,
+        discounts_and_commissions_per_share: typing.Optional[builtins.float],
+        discounts_and_commissions_total: typing.Optional[builtins.float],
         proceeds_before_expenses_per_share: builtins.float,
         proceeds_before_expenses_total: builtins.float,
         form: builtins.str,
@@ -411,7 +413,7 @@ class StockSplitEvent:
     @property
     def denominator(self) -> builtins.float: ...
     @property
-    def split_type(self) -> builtins.str: ...
+    def split_type(self) -> typing.Optional[builtins.str]: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -420,7 +422,7 @@ class StockSplitEvent:
         date: datetime.date,
         numerator: builtins.float,
         denominator: builtins.float,
-        split_type: builtins.str,
+        split_type: typing.Optional[builtins.str],
     ) -> StockSplitEvent: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
     def __repr__(self) -> builtins.str: ...
