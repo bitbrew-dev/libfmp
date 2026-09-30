@@ -156,7 +156,7 @@ func (m *InstitutionalHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Symbol.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Symbol, &value); err != nil {
-			return err
+			return memberDecodeError("InstitutionalHolding", "symbol", shadow.Symbol, err)
 		}
 		symbol = &value
 	}
@@ -705,7 +705,7 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 	if shadow.IndustryTitle.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.IndustryTitle, &value); err != nil {
-			return err
+			return memberDecodeError("HolderIndustryBreakdown", "industryTitle", shadow.IndustryTitle, err)
 		}
 		industryTitle = &value
 	}
@@ -713,7 +713,7 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 	if shadow.ChangeInWeightPercentage.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.ChangeInWeightPercentage, &value); err != nil {
-			return err
+			return memberDecodeError("HolderIndustryBreakdown", "changeInWeightPercentage", shadow.ChangeInWeightPercentage, err)
 		}
 		changeInWeightPercentage = &value
 	}
@@ -721,7 +721,7 @@ func (m *HolderIndustryBreakdown) UnmarshalJSONFrom(dec *jsontext.Decoder) error
 	if shadow.PerformancePercentage.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.PerformancePercentage, &value); err != nil {
-			return err
+			return memberDecodeError("HolderIndustryBreakdown", "performancePercentage", shadow.PerformancePercentage, err)
 		}
 		performancePercentage = &value
 	}

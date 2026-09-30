@@ -157,7 +157,7 @@ func (m *QuoteShort) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Price.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Price, &value); err != nil {
-			return err
+			return memberDecodeError("QuoteShort", "price", shadow.Price, err)
 		}
 		price = &value
 	}
@@ -165,7 +165,7 @@ func (m *QuoteShort) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Change.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Change, &value); err != nil {
-			return err
+			return memberDecodeError("QuoteShort", "change", shadow.Change, err)
 		}
 		change = &value
 	}
@@ -173,7 +173,7 @@ func (m *QuoteShort) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Volume.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Volume, &value); err != nil {
-			return err
+			return memberDecodeError("QuoteShort", "volume", shadow.Volume, err)
 		}
 		volume = &value
 	}
@@ -226,7 +226,7 @@ func (m *AftermarketTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TradeSize.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.TradeSize, &value); err != nil {
-			return err
+			return memberDecodeError("AftermarketTrade", "tradeSize", shadow.TradeSize, err)
 		}
 		tradeSize = &value
 	}

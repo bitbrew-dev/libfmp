@@ -126,7 +126,7 @@ func (m *SECCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	if shadow.PhoneNumber.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.PhoneNumber, &value); err != nil {
-			return err
+			return memberDecodeError("SECCompanySearchResult", "phoneNumber", shadow.PhoneNumber, err)
 		}
 		phoneNumber = &value
 	}
@@ -306,7 +306,7 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FiscalYearEnd.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.FiscalYearEnd, &value); err != nil {
-			return err
+			return memberDecodeError("SECCompanyProfile", "fiscalYearEnd", shadow.FiscalYearEnd, err)
 		}
 		fiscalYearEnd = &value
 	}
@@ -314,7 +314,7 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Employees.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Employees, &value); err != nil {
-			return err
+			return memberDecodeError("SECCompanyProfile", "employees", shadow.Employees, err)
 		}
 		employees = &value
 	}
@@ -322,7 +322,7 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SecurityType.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.SecurityType, &value); err != nil {
-			return err
+			return memberDecodeError("SECCompanyProfile", "securityType", shadow.SecurityType, err)
 		}
 		securityType = &value
 	}

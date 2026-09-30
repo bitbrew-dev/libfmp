@@ -179,7 +179,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CIK.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CIK, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyProfile", "cik", shadow.CIK, err)
 		}
 		cik = &value
 	}
@@ -187,7 +187,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CUSIP.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CUSIP, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyProfile", "cusip", shadow.CUSIP, err)
 		}
 		cusip = &value
 	}
@@ -195,7 +195,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FullTimeEmployees.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.FullTimeEmployees, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyProfile", "fullTimeEmployees", shadow.FullTimeEmployees, err)
 		}
 		fullTimeEmployees = &value
 	}
@@ -203,7 +203,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Phone.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Phone, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyProfile", "phone", shadow.Phone, err)
 		}
 		phone = &value
 	}
@@ -291,7 +291,7 @@ func (m *CompanyNote) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Exchange.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Exchange, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyNote", "exchange", shadow.Exchange, err)
 		}
 		exchange = &value
 	}
@@ -509,7 +509,7 @@ func (m *CompanyMarketCapitalization) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 	if shadow.MarketCap.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.MarketCap, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyMarketCapitalization", "marketCap", shadow.MarketCap, err)
 		}
 		marketCap = &value
 	}
@@ -570,7 +570,7 @@ func (m *CompanyShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Source.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Source, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyShareFloat", "source", shadow.Source, err)
 		}
 		source = &value
 	}
@@ -629,7 +629,7 @@ func (m *ShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FreeFloat.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.FreeFloat, &value); err != nil {
-			return err
+			return memberDecodeError("ShareFloat", "freeFloat", shadow.FreeFloat, err)
 		}
 		freeFloat = &value
 	}
@@ -637,7 +637,7 @@ func (m *ShareFloat) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FloatShares.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.FloatShares, &value); err != nil {
-			return err
+			return memberDecodeError("ShareFloat", "floatShares", shadow.FloatShares, err)
 		}
 		floatShares = &value
 	}
@@ -712,7 +712,7 @@ func (m *MergerAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TargetedCIK.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.TargetedCIK, &value); err != nil {
-			return err
+			return memberDecodeError("MergerAcquisition", "targetedCik", shadow.TargetedCIK, err)
 		}
 		targetedCIK = &value
 	}
@@ -720,7 +720,7 @@ func (m *MergerAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TargetedSymbol.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.TargetedSymbol, &value); err != nil {
-			return err
+			return memberDecodeError("MergerAcquisition", "targetedSymbol", shadow.TargetedSymbol, err)
 		}
 		targetedSymbol = &value
 	}
@@ -789,7 +789,7 @@ func (m *CompanyExecutive) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Gender.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Gender, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyExecutive", "gender", shadow.Gender, err)
 		}
 		gender = &value
 	}
@@ -891,7 +891,7 @@ func (m *ExecutiveCompensation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.OptionAward.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.OptionAward, &value); err != nil {
-			return err
+			return memberDecodeError("ExecutiveCompensation", "optionAward", shadow.OptionAward, err)
 		}
 		optionAward = &value
 	}

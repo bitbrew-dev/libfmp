@@ -95,7 +95,7 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Beta.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Beta, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyScreenerResult", "beta", shadow.Beta, err)
 		}
 		beta = &value
 	}
@@ -103,7 +103,7 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Price.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.Price, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyScreenerResult", "price", shadow.Price, err)
 		}
 		price = &value
 	}
@@ -111,7 +111,7 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.LastAnnualDividend.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.LastAnnualDividend, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyScreenerResult", "lastAnnualDividend", shadow.LastAnnualDividend, err)
 		}
 		lastAnnualDividend = &value
 	}
@@ -119,7 +119,7 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Country.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Country, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyScreenerResult", "country", shadow.Country, err)
 		}
 		country = &value
 	}
@@ -127,7 +127,7 @@ func (m *CompanyScreenerResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IsFund.Kind() != 'n' {
 		var value bool
 		if err := json.Unmarshal(shadow.IsFund, &value); err != nil {
-			return err
+			return memberDecodeError("CompanyScreenerResult", "isFund", shadow.IsFund, err)
 		}
 		isFund = &value
 	}

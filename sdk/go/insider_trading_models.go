@@ -98,7 +98,7 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.TransactionType.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.TransactionType, &value); err != nil {
-			return err
+			return memberDecodeError("InsiderTrade", "transactionType", shadow.TransactionType, err)
 		}
 		if value != "" {
 			transactionType = &value
@@ -108,7 +108,7 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SecuritiesOwned.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.SecuritiesOwned, &value); err != nil {
-			return err
+			return memberDecodeError("InsiderTrade", "securitiesOwned", shadow.SecuritiesOwned, err)
 		}
 		securitiesOwned = &value
 	}
@@ -116,7 +116,7 @@ func (m *InsiderTrade) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DirectOrIndirect.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.DirectOrIndirect, &value); err != nil {
-			return err
+			return memberDecodeError("InsiderTrade", "directOrIndirect", shadow.DirectOrIndirect, err)
 		}
 		directOrIndirect = &value
 	}
@@ -398,7 +398,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 	if shadow.CUSIP.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CUSIP, &value); err != nil {
-			return err
+			return memberDecodeError("BeneficialOwnershipAcquisition", "cusip", shadow.CUSIP, err)
 		}
 		cusip = &value
 	}
@@ -406,7 +406,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 	if shadow.CitizenshipOrPlaceOfOrganization.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CitizenshipOrPlaceOfOrganization, &value); err != nil {
-			return err
+			return memberDecodeError("BeneficialOwnershipAcquisition", "citizenshipOrPlaceOfOrganization", shadow.CitizenshipOrPlaceOfOrganization, err)
 		}
 		citizenshipOrPlaceOfOrganization = &value
 	}
@@ -414,7 +414,7 @@ func (m *BeneficialOwnershipAcquisition) UnmarshalJSONFrom(dec *jsontext.Decoder
 	if shadow.SharedVotingPower.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.SharedVotingPower, &value); err != nil {
-			return err
+			return memberDecodeError("BeneficialOwnershipAcquisition", "sharedVotingPower", shadow.SharedVotingPower, err)
 		}
 		sharedVotingPower = &value
 	}

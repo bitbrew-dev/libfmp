@@ -87,7 +87,7 @@ func (m *FinancialStatementSymbol) UnmarshalJSONFrom(dec *jsontext.Decoder) erro
 	if shadow.ReportingCurrency.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.ReportingCurrency, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialStatementSymbol", "reportingCurrency", shadow.ReportingCurrency, err)
 		}
 		if value != "" {
 			reportingCurrency = &value
@@ -340,7 +340,7 @@ func (m *AvailableExchange) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CountryCode.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CountryCode, &value); err != nil {
-			return err
+			return memberDecodeError("AvailableExchange", "countryCode", shadow.CountryCode, err)
 		}
 		if value != "" {
 			countryCode = &value
@@ -350,7 +350,7 @@ func (m *AvailableExchange) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Delay.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Delay, &value); err != nil {
-			return err
+			return memberDecodeError("AvailableExchange", "delay", shadow.Delay, err)
 		}
 		delay = &value
 	}

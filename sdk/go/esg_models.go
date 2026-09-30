@@ -78,7 +78,7 @@ func (m *ESGDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CompanyName.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CompanyName, &value); err != nil {
-			return err
+			return memberDecodeError("ESGDisclosure", "companyName", shadow.CompanyName, err)
 		}
 		companyName = &value
 	}
@@ -86,7 +86,7 @@ func (m *ESGDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FormType.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.FormType, &value); err != nil {
-			return err
+			return memberDecodeError("ESGDisclosure", "formType", shadow.FormType, err)
 		}
 		formType = &value
 	}
@@ -157,7 +157,7 @@ func (m *ESGRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CompanyName.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CompanyName, &value); err != nil {
-			return err
+			return memberDecodeError("ESGRating", "companyName", shadow.CompanyName, err)
 		}
 		companyName = &value
 	}

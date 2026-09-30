@@ -336,7 +336,7 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
 /// The per-member decode a raw shadow value needs after the presence check.
 fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut String) {
     if field.raw_key {
-        render_raw_member(field, local, out);
+        render_raw_member(model, field, local, out);
         return;
     }
     match field.codec {
@@ -352,10 +352,13 @@ fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut Strin
             let inner = field.public_ty.trim_start_matches('*');
             let _ = writeln!(
                 out,
-                "\tvar {local} {}\n\tif shadow.{}.Kind() != 'n' {{\n\t\tvar value {inner}\n\
-                 \t\tif err := json.Unmarshal(shadow.{}, &value); err != nil {{\n\
-                 \t\t\treturn err\n\t\t}}\n\t\t{local} = &value\n\t}}",
-                field.public_ty, field.name, field.name
+                "\tvar {local} {ty}\n\tif shadow.{name}.Kind() != 'n' {{\n\t\tvar value {inner}\n\
+                 \t\tif err := json.Unmarshal(shadow.{name}, &value); err != nil {{\n\
+                 \t\t\treturn memberDecodeError({model:?}, {wire:?}, shadow.{name}, err)\n\
+                 \t\t}}\n\t\t{local} = &value\n\t}}",
+                ty = field.public_ty,
+                name = field.name,
+                wire = field.wire
             );
         }
         Codec::EmptyOrNullString | Codec::NullTextString => {
@@ -367,10 +370,13 @@ fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut Strin
             };
             let _ = writeln!(
                 out,
-                "\tvar {local} {}\n\tif shadow.{}.Kind() != 'n' {{\n\t\tvar value {inner}\n\
-                 \t\tif err := json.Unmarshal(shadow.{}, &value); err != nil {{\n\
-                 \t\t\treturn err\n\t\t}}\n\t\tif value != {sentinel:?} {{\n\t\t\t{local} = &value\n\t\t}}\n\t}}",
-                field.public_ty, field.name, field.name
+                "\tvar {local} {ty}\n\tif shadow.{name}.Kind() != 'n' {{\n\t\tvar value {inner}\n\
+                 \t\tif err := json.Unmarshal(shadow.{name}, &value); err != nil {{\n\
+                 \t\t\treturn memberDecodeError({model:?}, {wire:?}, shadow.{name}, err)\n\t\t}}\n\
+                 \t\tif value != {sentinel:?} {{\n\t\t\t{local} = &value\n\t\t}}\n\t}}",
+                ty = field.public_ty,
+                name = field.name,
+                wire = field.wire
             );
         }
         Codec::EmptyDate | Codec::EmptyOrNullDate => {
@@ -436,7 +442,7 @@ fn member_tag(field: &GoField, options: &str) -> String {
 /// The decode of a raw-keyed plain member from the value `rawMember` found:
 /// missing and null were already reported for a required member and mean nil
 /// for an optional one.
-fn render_raw_member(field: &GoField, local: &str, out: &mut String) {
+fn render_raw_member(model: &str, field: &GoField, local: &str, out: &mut String) {
     let wire = format!("{local}Wire");
     if field.optional {
         let inner = field.public_ty.trim_start_matches('*');
@@ -444,15 +450,18 @@ fn render_raw_member(field: &GoField, local: &str, out: &mut String) {
             out,
             "\tvar {local} {}\n\tif {wire} != nil {{\n\t\tvar value {inner}\n\
              \t\tif err := json.Unmarshal({wire}, &value); err != nil {{\n\
-             \t\t\treturn err\n\t\t}}\n\t\t{local} = &value\n\t}}",
-            field.public_ty
+             \t\t\treturn memberDecodeError({model:?}, {member:?}, {wire}, err)\n\
+             \t\t}}\n\t\t{local} = &value\n\t}}",
+            field.public_ty,
+            member = field.wire
         );
     } else {
         let _ = writeln!(
             out,
             "\tvar {local} {}\n\tif err := json.Unmarshal({wire}, &{local}); err != nil {{\n\
-             \t\treturn err\n\t}}",
-            field.public_ty
+             \t\treturn memberDecodeError({model:?}, {member:?}, {wire}, err)\n\t}}",
+            field.public_ty,
+            member = field.wire
         );
     }
 }

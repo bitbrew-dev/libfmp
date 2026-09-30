@@ -47,7 +47,7 @@ func (m *CrowdfundingOfferingSearchResult) UnmarshalJSONFrom(dec *jsontext.Decod
 	if shadow.Date.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.Date, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOfferingSearchResult", "date", shadow.Date, err)
 		}
 		date = &value
 	}
@@ -316,7 +316,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IssuerWebsite.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.IssuerWebsite, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "issuerWebsite", shadow.IssuerWebsite, err)
 		}
 		issuerWebsite = &value
 	}
@@ -324,7 +324,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IntermediaryCompanyName.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.IntermediaryCompanyName, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "intermediaryCompanyName", shadow.IntermediaryCompanyName, err)
 		}
 		intermediaryCompanyName = &value
 	}
@@ -332,7 +332,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IntermediaryCommissionFileNumber.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.IntermediaryCommissionFileNumber, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "intermediaryCommissionFileNumber", shadow.IntermediaryCommissionFileNumber, err)
 		}
 		intermediaryCommissionFileNumber = &value
 	}
@@ -340,7 +340,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.CompensationAmount.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.CompensationAmount, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "compensationAmount", shadow.CompensationAmount, err)
 		}
 		compensationAmount = &value
 	}
@@ -348,7 +348,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.FinancialInterest.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.FinancialInterest, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "financialInterest", shadow.FinancialInterest, err)
 		}
 		financialInterest = &value
 	}
@@ -356,7 +356,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SecurityOfferedType.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.SecurityOfferedType, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "securityOfferedType", shadow.SecurityOfferedType, err)
 		}
 		securityOfferedType = &value
 	}
@@ -364,7 +364,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SecurityOfferedOtherDescription.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.SecurityOfferedOtherDescription, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "securityOfferedOtherDescription", shadow.SecurityOfferedOtherDescription, err)
 		}
 		securityOfferedOtherDescription = &value
 	}
@@ -375,7 +375,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.OverSubscriptionAllocationType.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.OverSubscriptionAllocationType, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "overSubscriptionAllocationType", shadow.OverSubscriptionAllocationType, err)
 		}
 		overSubscriptionAllocationType = &value
 	}
@@ -383,7 +383,7 @@ func (m *CrowdfundingOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.OfferingDeadlineDate.Kind() != 'n' {
 		var value USDate
 		if err := json.Unmarshal(shadow.OfferingDeadlineDate, &value); err != nil {
-			return err
+			return memberDecodeError("CrowdfundingOffering", "offeringDeadlineDate", shadow.OfferingDeadlineDate, err)
 		}
 		offeringDeadlineDate = &value
 	}
@@ -640,7 +640,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.IncorporatedWithinFiveYears.Kind() != 'n' {
 		var value bool
 		if err := json.Unmarshal(shadow.IncorporatedWithinFiveYears, &value); err != nil {
-			return err
+			return memberDecodeError("RegulationDOffering", "incorporatedWithinFiveYears", shadow.IncorporatedWithinFiveYears, err)
 		}
 		incorporatedWithinFiveYears = &value
 	}
@@ -648,7 +648,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.RevenueRange.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.RevenueRange, &value); err != nil {
-			return err
+			return memberDecodeError("RegulationDOffering", "revenueRange", shadow.RevenueRange, err)
 		}
 		revenueRange = &value
 	}
@@ -660,7 +660,7 @@ func (m *RegulationDOffering) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SecuritiesOfferedAreOfEquityType.Kind() != 'n' {
 		var value bool
 		if err := json.Unmarshal(shadow.SecuritiesOfferedAreOfEquityType, &value); err != nil {
-			return err
+			return memberDecodeError("RegulationDOffering", "securitiesOfferedAreOfEquityType", shadow.SecuritiesOfferedAreOfEquityType, err)
 		}
 		securitiesOfferedAreOfEquityType = &value
 	}

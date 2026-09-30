@@ -122,7 +122,7 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EbitdaLow.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EbitdaLow, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialEstimate", "ebitdaLow", shadow.EbitdaLow, err)
 		}
 		ebitdaLow = &value
 	}
@@ -130,7 +130,7 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EbitdaHigh.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EbitdaHigh, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialEstimate", "ebitdaHigh", shadow.EbitdaHigh, err)
 		}
 		ebitdaHigh = &value
 	}
@@ -138,7 +138,7 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EbitdaAvg.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EbitdaAvg, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialEstimate", "ebitdaAvg", shadow.EbitdaAvg, err)
 		}
 		ebitdaAvg = &value
 	}
@@ -146,7 +146,7 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EbitLow.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EbitLow, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialEstimate", "ebitLow", shadow.EbitLow, err)
 		}
 		ebitLow = &value
 	}
@@ -154,7 +154,7 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EbitHigh.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EbitHigh, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialEstimate", "ebitHigh", shadow.EbitHigh, err)
 		}
 		ebitHigh = &value
 	}
@@ -162,7 +162,7 @@ func (m *FinancialEstimate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EbitAvg.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EbitAvg, &value); err != nil {
-			return err
+			return memberDecodeError("FinancialEstimate", "ebitAvg", shadow.EbitAvg, err)
 		}
 		ebitAvg = &value
 	}

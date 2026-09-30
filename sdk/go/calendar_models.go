@@ -144,7 +144,7 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EPSActual.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EPSActual, &value); err != nil {
-			return err
+			return memberDecodeError("EarningsEvent", "epsActual", shadow.EPSActual, err)
 		}
 		epsActual = &value
 	}
@@ -152,7 +152,7 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.EPSEstimated.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.EPSEstimated, &value); err != nil {
-			return err
+			return memberDecodeError("EarningsEvent", "epsEstimated", shadow.EPSEstimated, err)
 		}
 		epsEstimated = &value
 	}
@@ -160,7 +160,7 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.RevenueActual.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.RevenueActual, &value); err != nil {
-			return err
+			return memberDecodeError("EarningsEvent", "revenueActual", shadow.RevenueActual, err)
 		}
 		revenueActual = &value
 	}
@@ -168,7 +168,7 @@ func (m *EarningsEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.RevenueEstimated.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.RevenueEstimated, &value); err != nil {
-			return err
+			return memberDecodeError("EarningsEvent", "revenueEstimated", shadow.RevenueEstimated, err)
 		}
 		revenueEstimated = &value
 	}
@@ -244,7 +244,7 @@ func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Exchange.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Exchange, &value); err != nil {
-			return err
+			return memberDecodeError("IPOCalendarEvent", "exchange", shadow.Exchange, err)
 		}
 		exchange = &value
 	}
@@ -252,7 +252,7 @@ func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Shares.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.Shares, &value); err != nil {
-			return err
+			return memberDecodeError("IPOCalendarEvent", "shares", shadow.Shares, err)
 		}
 		shares = &value
 	}
@@ -260,7 +260,7 @@ func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.PriceRange.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.PriceRange, &value); err != nil {
-			return err
+			return memberDecodeError("IPOCalendarEvent", "priceRange", shadow.PriceRange, err)
 		}
 		priceRange = &value
 	}
@@ -268,7 +268,7 @@ func (m *IPOCalendarEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.MarketCap.Kind() != 'n' {
 		var value jsontext.Value
 		if err := json.Unmarshal(shadow.MarketCap, &value); err != nil {
-			return err
+			return memberDecodeError("IPOCalendarEvent", "marketCap", shadow.MarketCap, err)
 		}
 		marketCap = &value
 	}
@@ -423,7 +423,7 @@ func (m *IPOProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DiscountsAndCommissionsPerShare.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.DiscountsAndCommissionsPerShare, &value); err != nil {
-			return err
+			return memberDecodeError("IPOProspectus", "discountsAndCommissionsPerShare", shadow.DiscountsAndCommissionsPerShare, err)
 		}
 		discountsAndCommissionsPerShare = &value
 	}
@@ -431,7 +431,7 @@ func (m *IPOProspectus) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.DiscountsAndCommissionsTotal.Kind() != 'n' {
 		var value float64
 		if err := json.Unmarshal(shadow.DiscountsAndCommissionsTotal, &value); err != nil {
-			return err
+			return memberDecodeError("IPOProspectus", "discountsAndCommissionsTotal", shadow.DiscountsAndCommissionsTotal, err)
 		}
 		discountsAndCommissionsTotal = &value
 	}
@@ -497,7 +497,7 @@ func (m *StockSplitEvent) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SplitType.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.SplitType, &value); err != nil {
-			return err
+			return memberDecodeError("StockSplitEvent", "splitType", shadow.SplitType, err)
 		}
 		splitType = &value
 	}

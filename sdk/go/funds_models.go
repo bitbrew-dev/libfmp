@@ -70,7 +70,7 @@ func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Asset.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Asset, &value); err != nil {
-			return err
+			return memberDecodeError("ETFFundHolding", "asset", shadow.Asset, err)
 		}
 		if value != "" {
 			asset = &value
@@ -80,7 +80,7 @@ func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.ISIN.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
-			return err
+			return memberDecodeError("ETFFundHolding", "isin", shadow.ISIN, err)
 		}
 		if value != "" {
 			isin = &value
@@ -90,7 +90,7 @@ func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.SecurityCUSIP.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.SecurityCUSIP, &value); err != nil {
-			return err
+			return memberDecodeError("ETFFundHolding", "securityCusip", shadow.SecurityCUSIP, err)
 		}
 		if value != "" {
 			securityCUSIP = &value
@@ -574,7 +574,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.Symbol.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Symbol, &value); err != nil {
-			return err
+			return memberDecodeError("FundDisclosure", "symbol", shadow.Symbol, err)
 		}
 		symbol = &value
 	}
@@ -582,7 +582,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if shadow.ISIN.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
-			return err
+			return memberDecodeError("FundDisclosure", "isin", shadow.ISIN, err)
 		}
 		if value != "" {
 			isin = &value
@@ -693,7 +693,7 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	if shadow.EntityOrgType.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.EntityOrgType, &value); err != nil {
-			return err
+			return memberDecodeError("FundDisclosureSearchResult", "entityOrgType", shadow.EntityOrgType, err)
 		}
 		if value != "NULL" {
 			entityOrgType = &value
@@ -703,7 +703,7 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 	if shadow.Address.Kind() != 'n' {
 		var value string
 		if err := json.Unmarshal(shadow.Address, &value); err != nil {
-			return err
+			return memberDecodeError("FundDisclosureSearchResult", "address", shadow.Address, err)
 		}
 		address = &value
 	}
