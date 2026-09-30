@@ -79,7 +79,7 @@ class FmpError(builtins.Exception):
 
 class FmpStatusError(FmpError):
     r"""
-    The provider returned a non-success HTTP status.
+    The provider returned a non-success HTTP status, or a success status whose body is its own error message.
     """
 
     ...

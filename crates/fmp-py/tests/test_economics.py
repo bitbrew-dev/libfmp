@@ -349,3 +349,27 @@ def test_decode_error_names_the_risk_premium_endpoint(
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.economics.market_risk_premium()
     assert raised.value.endpoint == "market-risk-premium"
+
+
+ERROR_MESSAGE_BODY = (
+    '{\n  "Error Message": "No Data for this symbol or invalid API call. '
+    'Please retry or visit our documentation at https://financialmodelingprep.com/developer/docs."\n}'
+)
+
+
+@pytest.mark.parametrize("body", ["Invalid name", ERROR_MESSAGE_BODY], ids=["plain-text", "error-message-object"])
+def test_provider_message_with_a_success_status_is_a_status_error(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace, body: str
+) -> None:
+    """A 200 whose body is FMP's own error message raises ``FmpStatusError``, not ``FmpDecodeError``."""
+    fixture_server.route("/economic-indicators", body.encode())
+    with pytest.raises(errors.FmpStatusError) as raised:
+        client.economics.indicators("notARealIndicator")
+    error = raised.value
+    assert not isinstance(error, errors.FmpDecodeError)
+    assert error.category == "status"
+    assert error.endpoint == "economic-indicators"
+    assert error.status == 200
+    assert error.body == body
+    assert error.decode_kind is None
+    assert str(error).startswith("provider returned an error message with HTTP status 200")

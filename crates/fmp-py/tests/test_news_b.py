@@ -234,6 +234,6 @@ def test_status_error_carries_the_news_endpoint_id(
 
 def test_non_json_body_is_a_decode_error(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
     """A non-JSON body on the authored feed maps to ``FmpDecodeError``."""
-    fixture_server.route("/fmp-articles", b"not-json")
+    fixture_server.route("/fmp-articles", b"not-json " * 40)
     with pytest.raises(errors.FmpDecodeError):
         client.news.articles()

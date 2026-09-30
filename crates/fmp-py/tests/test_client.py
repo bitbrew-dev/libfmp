@@ -260,14 +260,14 @@ def test_status_error_is_structured(client: Any, fixture_server: FixtureServer, 
 
 def test_decode_error_is_structured(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
     """A 200 with an undecodable body raises ``FmpDecodeError``."""
-    fixture_server.route(QUOTE_SHORT_PATH, b"not-json")
+    fixture_server.route(QUOTE_SHORT_PATH, b"not-json " * 40)
     with pytest.raises(errors.FmpDecodeError) as raised:
         client.quote.short("INVALID_JSON")
     error = raised.value
     assert error.category == "decode"
     assert error.endpoint == "quote-short"
     assert error.status == 200
-    assert error.body == "not-json"
+    assert error.body == "not-json " * 40
     assert error.body_truncated is False
 
 

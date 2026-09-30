@@ -298,7 +298,7 @@ def test_status_error_carries_the_sec_endpoint_id(
 
 def test_non_json_body_is_a_decode_error(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
     """A non-JSON body on a lookup maps to ``FmpDecodeError``."""
-    fixture_server.route("/sec-profile", b"not-json")
+    fixture_server.route("/sec-profile", b"not-json " * 40)
     with pytest.raises(errors.FmpDecodeError):
         client.sec_filings.company_profile("AAPL")
 

@@ -217,6 +217,6 @@ def test_status_error_carries_the_calendar_endpoint_id(
 
 def test_decode_error_on_a_non_json_body(client: Any, fixture_server: FixtureServer, errors: SimpleNamespace) -> None:
     """A body that is not JSON maps to ``FmpDecodeError`` rather than a bare exception."""
-    fixture_server.route("/dividends", b"not-json")
+    fixture_server.route("/dividends", b"not-json " * 40)
     with pytest.raises(errors.FmpDecodeError):
         client.calendar.dividends("AAPL")
