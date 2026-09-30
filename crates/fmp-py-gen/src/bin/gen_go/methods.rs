@@ -69,6 +69,7 @@ impl QueryPlan {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum ResponseKind {
     Rows(String),
+    Single(String),
     Dynamic,
     Binary(Vec<String>),
 }
@@ -280,7 +281,11 @@ impl Context<'_> {
                         model.name
                     ));
                 }
-                ResponseKind::Rows(go_name(&model.name))
+                if endpoint.single {
+                    ResponseKind::Single(go_name(&model.name))
+                } else {
+                    ResponseKind::Rows(go_name(&model.name))
+                }
             }
             (model, contract) => {
                 return Err(format!(

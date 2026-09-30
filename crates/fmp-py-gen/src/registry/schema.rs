@@ -4,7 +4,8 @@
 //! identifier validity, namespace path prefixes, duplicate names, setter to
 //! argument references, and the `binary` versus `response` exclusivity.
 //! `response = "dynamic"` marks an endpoint whose rows carry no typed model
-//! (`Vec<DynamicObject>`) and reach Python as plain `dict`s. An arg carrying
+//! (`Vec<DynamicObject>`) and reach Python as plain `dict`s; `single = true`
+//! marks one typed model returned bare instead of a `Vec` of rows. An arg carrying
 //! `nested` instead of `kind` is a builder passed to the constructor; its
 //! setters are flattened into [`Endpoint::args`] as optional parameters.
 //! Problems are collected per file so one load reports them all.
@@ -52,6 +53,8 @@ struct EndpointEntry {
     setters: Vec<SetterEntry>,
     #[serde(default)]
     binary: bool,
+    #[serde(default)]
+    single: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -233,6 +236,9 @@ fn lower_endpoint(
         fail("args and setters need a `query` type".to_owned());
     }
     let dynamic = entry.response.as_deref() == Some(DYNAMIC_RESPONSE) && !entry.binary;
+    if entry.single && (entry.binary || dynamic) {
+        fail("`single = true` needs a typed `response` model".to_owned());
+    }
     let response_model = match (&entry.response, entry.binary) {
         (Some(_), true) => {
             fail("`binary = true` entries must not name a `response` model".to_owned());
@@ -395,6 +401,7 @@ fn lower_endpoint(
         setters,
         nested,
         binary: entry.binary,
+        single: entry.single,
         dynamic,
     }
 }

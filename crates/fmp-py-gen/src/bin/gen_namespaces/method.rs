@@ -5,7 +5,8 @@
 //! mapping); argument conversion and query construction live in the builder
 //! so an async twin can reuse them without touching this template. A
 //! `binary = true` entry returns one `BinaryPayload` instead of a `Vec` of
-//! models, with the same hand-off; a `response = "dynamic"` entry returns
+//! models, with the same hand-off; a `single = true` entry returns one model;
+//! a `response = "dynamic"` entry returns
 //! each untyped row as a Python `dict` through `crate::convert`. A nested
 //! builder is assembled in the query builder from its flattened keyword
 //! arguments and passed whole to the query constructor.
@@ -161,6 +162,13 @@ fn result_shape(endpoint: &Endpoint) -> (String, &'static str, String) {
         .response_model
         .as_ref()
         .map_or_else(|| "()".to_owned(), |model| model.name.clone());
+    if endpoint.single {
+        return (
+            model.clone(),
+            "row",
+            format!("row.map({model}::from).map_err(to_py_error)"),
+        );
+    }
     (
         format!("Vec<{model}>"),
         "rows",

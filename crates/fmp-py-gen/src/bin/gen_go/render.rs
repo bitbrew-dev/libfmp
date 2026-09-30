@@ -336,9 +336,10 @@ fn render_method(namespace: &NamespacePlan, method: &MethodPlan, out: &mut Strin
         .as_ref()
         .map_or(String::new(), |query| format!(", q {query}"));
     let (result, zero) = match &method.response {
-        ResponseKind::Rows(model) => (format!("[]{model}"), "nil"),
-        ResponseKind::Dynamic => ("[]jsontext.Value".to_string(), "nil"),
-        ResponseKind::Binary(_) => ("BinaryPayload".to_string(), "BinaryPayload{}"),
+        ResponseKind::Rows(model) => (format!("[]{model}"), "nil".to_string()),
+        ResponseKind::Single(model) => (model.clone(), format!("{model}{{}}")),
+        ResponseKind::Dynamic => ("[]jsontext.Value".to_string(), "nil".to_string()),
+        ResponseKind::Binary(_) => ("BinaryPayload".to_string(), "BinaryPayload{}".to_string()),
     };
     let _ = writeln!(
         out,
@@ -367,11 +368,11 @@ fn render_method(namespace: &NamespacePlan, method: &MethodPlan, out: &mut Strin
                 types.join(", ")
             );
         }
-        ResponseKind::Rows(_) | ResponseKind::Dynamic => {
+        ResponseKind::Rows(_) | ResponseKind::Single(_) | ResponseKind::Dynamic => {
             let _ = writeln!(
                 out,
                 "\tvar out {result}\n\tif err := n.client.getJSON(ctx, {id:?}, {path:?}, {params}, &out); err != nil {{\n\
-                 \t\treturn nil, err\n\t}}"
+                 \t\treturn {zero}, err\n\t}}"
             );
             if method.response == ResponseKind::Dynamic {
                 let _ = writeln!(

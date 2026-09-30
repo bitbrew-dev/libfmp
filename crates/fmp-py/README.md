@@ -305,7 +305,9 @@ after a Python keyword (`from`) is spelled with a trailing underscore
 (`from_`) on the Python side while the `libfmp` setter keeps its name.
 Entries marked `binary = true` (the endpoints whose `libfmp` method returns
 `BinaryResponse`, such as the XLSX financial report download) return a single
-`BinaryPayload` instead of a list of models; entries marked
+`BinaryPayload` instead of a list of models; entries marked `single = true`
+(the endpoints whose `libfmp` method returns one model, such as the JSON
+financial report) return that model alone; entries marked
 `response = "dynamic"` return `list[dict[str, Any]]`. `BinaryPayload` is
 hand-written in `src/binary.rs` and exported from the package root as
 `fmp.BinaryPayload`.
