@@ -212,14 +212,16 @@ def check_funds_contract(client: FmpClient) -> None:
     funds: FundsNamespace = client.funds
     holdings: list[EtfFundHolding] = funds.etf_holdings("SPY")
     updated: datetime.datetime = holdings[0].updated_at
+    asset: str | None = holdings[0].asset
     info: list[EtfFundInfo] = client.funds.etf_info("SPY")
     inception: datetime.date = info[0].inception_date
     exposure: float = info[0].sectors_list[0].exposure
     positions: list[FundDisclosure] = client.funds.disclosures("VWO", 2023, 4, cik="0000857489")
     accepted: datetime.datetime = positions[0].accepted_date
+    position_symbol: str | None = positions[0].symbol
     dates: list[Form13fFilingDate] = client.funds.disclosure_dates("VWO", cik="0000036405")
     quarter: int = dates[0].quarter
-    _ = (updated, inception, exposure, accepted, quarter)
+    _ = (updated, asset, inception, exposure, accepted, position_symbol, quarter)
 
 
 def check_indexes_contract(client: FmpClient) -> None:

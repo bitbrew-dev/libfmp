@@ -12,13 +12,13 @@ pub(crate) struct EtfFundHolding {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub asset: String,
+    pub asset: Option<String>,
     #[pyo3(get)]
     pub name: String,
     #[pyo3(get)]
-    pub isin: String,
+    pub isin: Option<String>,
     #[pyo3(get)]
-    pub security_cusip: String,
+    pub security_cusip: Option<String>,
     #[pyo3(get)]
     pub shares_number: f64,
     #[pyo3(get)]
@@ -38,10 +38,10 @@ impl EtfFundHolding {
     #[pyo3(signature = (*, symbol, asset, name, isin, security_cusip, shares_number, weight_percentage, market_value, updated_at))]
     fn new(
         symbol: String,
-        asset: String,
+        asset: Option<String>,
         name: String,
-        isin: String,
-        security_cusip: String,
+        isin: Option<String>,
+        security_cusip: Option<String>,
         shares_number: f64,
         weight_percentage: f64,
         market_value: f64,
@@ -190,10 +190,10 @@ impl From<libfmp::responses::funds::EtfFundHolding> for EtfFundHolding {
     fn from(value: libfmp::responses::funds::EtfFundHolding) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
-            asset: value.asset.into_inner(),
+            asset: value.asset.map(|value| value.into_inner()),
             name: value.name,
-            isin: value.isin.into_inner(),
-            security_cusip: value.security_cusip.into_inner(),
+            isin: value.isin.map(|value| value.into_inner()),
+            security_cusip: value.security_cusip.map(|value| value.into_inner()),
             shares_number: value.shares_number,
             weight_percentage: value.weight_percentage,
             market_value: value.market_value,
@@ -1187,7 +1187,7 @@ pub(crate) struct FundDisclosure {
     #[pyo3(get)]
     pub accepted_date: ::chrono::NaiveDateTime,
     #[pyo3(get)]
-    pub symbol: String,
+    pub symbol: Option<String>,
     #[pyo3(get)]
     pub name: String,
     #[pyo3(get)]
@@ -1197,7 +1197,7 @@ pub(crate) struct FundDisclosure {
     #[pyo3(get)]
     pub cusip: String,
     #[pyo3(get)]
-    pub isin: String,
+    pub isin: Option<String>,
     #[pyo3(get)]
     pub balance: f64,
     #[pyo3(get)]
@@ -1235,12 +1235,12 @@ impl FundDisclosure {
         cik: String,
         date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDateTime,
-        symbol: String,
+        symbol: Option<String>,
         name: String,
         lei: String,
         title: String,
         cusip: String,
-        isin: String,
+        isin: Option<String>,
         balance: f64,
         units: String,
         currency_code: String,
@@ -1571,12 +1571,12 @@ impl From<libfmp::responses::funds::FundDisclosure> for FundDisclosure {
             cik: value.cik.into_inner(),
             date: value.date.into_inner(),
             accepted_date: value.accepted_date.into_inner(),
-            symbol: value.symbol.into_inner(),
+            symbol: value.symbol.map(|value| value.into_inner()),
             name: value.name,
             lei: value.lei.into_inner(),
             title: value.title,
             cusip: value.cusip.into_inner(),
-            isin: value.isin.into_inner(),
+            isin: value.isin.map(|value| value.into_inner()),
             balance: value.balance,
             units: value.units,
             currency_code: value.currency_code.into_inner(),
@@ -1624,7 +1624,7 @@ pub(crate) struct FundDisclosureSearchResult {
     #[pyo3(get)]
     pub reporting_file_number: String,
     #[pyo3(get)]
-    pub address: String,
+    pub address: Option<String>,
     #[pyo3(get)]
     pub city: String,
     #[pyo3(get)]
@@ -1650,7 +1650,7 @@ impl FundDisclosureSearchResult {
         series_name: String,
         class_name: String,
         reporting_file_number: String,
-        address: String,
+        address: Option<String>,
         city: String,
         zip_code: String,
         state: String,

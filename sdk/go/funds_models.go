@@ -13,10 +13,10 @@ import (
 // ETFFundHolding is one asset held by an ETF or mutual fund.
 type ETFFundHolding struct {
 	Symbol           string   `json:"symbol"`
-	Asset            string   `json:"asset"`
+	Asset            *string  `json:"asset"`
 	Name             string   `json:"name"`
-	ISIN             string   `json:"isin"`
-	SecurityCUSIP    string   `json:"securityCusip"`
+	ISIN             *string  `json:"isin"`
+	SecurityCUSIP    *string  `json:"securityCusip"`
 	SharesNumber     float64  `json:"sharesNumber"`
 	WeightPercentage float64  `json:"weightPercentage"`
 	MarketValue      float64  `json:"marketValue"`
@@ -27,15 +27,15 @@ type ETFFundHolding struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type etfFundHoldingShadow struct {
-	Symbol           *string   `json:"symbol"`
-	Asset            *string   `json:"asset"`
-	Name             *string   `json:"name"`
-	ISIN             *string   `json:"isin"`
-	SecurityCUSIP    *string   `json:"securityCusip"`
-	SharesNumber     *float64  `json:"sharesNumber"`
-	WeightPercentage *float64  `json:"weightPercentage"`
-	MarketValue      *float64  `json:"marketValue"`
-	UpdatedAt        *DateTime `json:"updatedAt"`
+	Symbol           *string        `json:"symbol"`
+	Asset            jsontext.Value `json:"asset"`
+	Name             *string        `json:"name"`
+	ISIN             jsontext.Value `json:"isin"`
+	SecurityCUSIP    jsontext.Value `json:"securityCusip"`
+	SharesNumber     *float64       `json:"sharesNumber"`
+	WeightPercentage *float64       `json:"weightPercentage"`
+	MarketValue      *float64       `json:"marketValue"`
+	UpdatedAt        *DateTime      `json:"updatedAt"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -49,13 +49,13 @@ func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("ETFFundHolding", "symbol")
-	case shadow.Asset == nil:
+	case len(shadow.Asset) == 0:
 		return missingMemberError("ETFFundHolding", "asset")
 	case shadow.Name == nil:
 		return missingMemberError("ETFFundHolding", "name")
-	case shadow.ISIN == nil:
+	case len(shadow.ISIN) == 0:
 		return missingMemberError("ETFFundHolding", "isin")
-	case shadow.SecurityCUSIP == nil:
+	case len(shadow.SecurityCUSIP) == 0:
 		return missingMemberError("ETFFundHolding", "securityCusip")
 	case shadow.SharesNumber == nil:
 		return missingMemberError("ETFFundHolding", "sharesNumber")
@@ -66,12 +66,42 @@ func (m *ETFFundHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.UpdatedAt == nil:
 		return missingMemberError("ETFFundHolding", "updatedAt")
 	}
+	var asset *string
+	if shadow.Asset.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Asset, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			asset = &value
+		}
+	}
+	var isin *string
+	if shadow.ISIN.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			isin = &value
+		}
+	}
+	var securityCUSIP *string
+	if shadow.SecurityCUSIP.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.SecurityCUSIP, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			securityCUSIP = &value
+		}
+	}
 	*m = ETFFundHolding{
 		Symbol:           *shadow.Symbol,
-		Asset:            *shadow.Asset,
+		Asset:            asset,
 		Name:             *shadow.Name,
-		ISIN:             *shadow.ISIN,
-		SecurityCUSIP:    *shadow.SecurityCUSIP,
+		ISIN:             isin,
+		SecurityCUSIP:    securityCUSIP,
 		SharesNumber:     *shadow.SharesNumber,
 		WeightPercentage: *shadow.WeightPercentage,
 		MarketValue:      *shadow.MarketValue,
@@ -433,12 +463,12 @@ type FundDisclosure struct {
 	CIK                 string   `json:"cik"`
 	Date                Date     `json:"date"`
 	AcceptedDate        DateTime `json:"acceptedDate"`
-	Symbol              string   `json:"symbol"`
+	Symbol              *string  `json:"symbol"`
 	Name                string   `json:"name"`
 	Lei                 string   `json:"lei"`
 	Title               string   `json:"title"`
 	CUSIP               string   `json:"cusip"`
-	ISIN                string   `json:"isin"`
+	ISIN                *string  `json:"isin"`
 	Balance             float64  `json:"balance"`
 	Units               string   `json:"units"`
 	CurrencyCode        string   `json:"cur_cd"`
@@ -459,29 +489,29 @@ type FundDisclosure struct {
 // every required member so a missing or null member is observable after
 // decoding.
 type fundDisclosureShadow struct {
-	CIK                 *string   `json:"cik"`
-	Date                *Date     `json:"date"`
-	AcceptedDate        *DateTime `json:"acceptedDate"`
-	Symbol              *string   `json:"symbol"`
-	Name                *string   `json:"name"`
-	Lei                 *string   `json:"lei"`
-	Title               *string   `json:"title"`
-	CUSIP               *string   `json:"cusip"`
-	ISIN                *string   `json:"isin"`
-	Balance             *float64  `json:"balance"`
-	Units               *string   `json:"units"`
-	CurrencyCode        *string   `json:"cur_cd"`
-	ValUsd              *float64  `json:"valUsd"`
-	PctVal              *float64  `json:"pctVal"`
-	PayoffProfile       *string   `json:"payoffProfile"`
-	AssetCat            *string   `json:"assetCat"`
-	IssuerCat           *string   `json:"issuerCat"`
-	InvCountry          *string   `json:"invCountry"`
-	IsRestrictedSEC     *string   `json:"isRestrictedSec"`
-	FairValLevel        *string   `json:"fairValLevel"`
-	IsCashCollateral    *string   `json:"isCashCollateral"`
-	IsNonCashCollateral *string   `json:"isNonCashCollateral"`
-	IsLoanByFund        *string   `json:"isLoanByFund"`
+	CIK                 *string        `json:"cik"`
+	Date                *Date          `json:"date"`
+	AcceptedDate        *DateTime      `json:"acceptedDate"`
+	Symbol              jsontext.Value `json:"symbol"`
+	Name                *string        `json:"name"`
+	Lei                 *string        `json:"lei"`
+	Title               *string        `json:"title"`
+	CUSIP               *string        `json:"cusip"`
+	ISIN                jsontext.Value `json:"isin"`
+	Balance             *float64       `json:"balance"`
+	Units               *string        `json:"units"`
+	CurrencyCode        *string        `json:"cur_cd"`
+	ValUsd              *float64       `json:"valUsd"`
+	PctVal              *float64       `json:"pctVal"`
+	PayoffProfile       *string        `json:"payoffProfile"`
+	AssetCat            *string        `json:"assetCat"`
+	IssuerCat           *string        `json:"issuerCat"`
+	InvCountry          *string        `json:"invCountry"`
+	IsRestrictedSEC     *string        `json:"isRestrictedSec"`
+	FairValLevel        *string        `json:"fairValLevel"`
+	IsCashCollateral    *string        `json:"isCashCollateral"`
+	IsNonCashCollateral *string        `json:"isNonCashCollateral"`
+	IsLoanByFund        *string        `json:"isLoanByFund"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -499,7 +529,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FundDisclosure", "date")
 	case shadow.AcceptedDate == nil:
 		return missingMemberError("FundDisclosure", "acceptedDate")
-	case shadow.Symbol == nil:
+	case len(shadow.Symbol) == 0:
 		return missingMemberError("FundDisclosure", "symbol")
 	case shadow.Name == nil:
 		return missingMemberError("FundDisclosure", "name")
@@ -509,7 +539,7 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("FundDisclosure", "title")
 	case shadow.CUSIP == nil:
 		return missingMemberError("FundDisclosure", "cusip")
-	case shadow.ISIN == nil:
+	case len(shadow.ISIN) == 0:
 		return missingMemberError("FundDisclosure", "isin")
 	case shadow.Balance == nil:
 		return missingMemberError("FundDisclosure", "balance")
@@ -540,16 +570,34 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.IsLoanByFund == nil:
 		return missingMemberError("FundDisclosure", "isLoanByFund")
 	}
+	var symbol *string
+	if shadow.Symbol.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Symbol, &value); err != nil {
+			return err
+		}
+		symbol = &value
+	}
+	var isin *string
+	if shadow.ISIN.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
+			return err
+		}
+		if value != "" {
+			isin = &value
+		}
+	}
 	*m = FundDisclosure{
 		CIK:                 *shadow.CIK,
 		Date:                *shadow.Date,
 		AcceptedDate:        *shadow.AcceptedDate,
-		Symbol:              *shadow.Symbol,
+		Symbol:              symbol,
 		Name:                *shadow.Name,
 		Lei:                 *shadow.Lei,
 		Title:               *shadow.Title,
 		CUSIP:               *shadow.CUSIP,
-		ISIN:                *shadow.ISIN,
+		ISIN:                isin,
 		Balance:             *shadow.Balance,
 		Units:               *shadow.Units,
 		CurrencyCode:        *shadow.CurrencyCode,
@@ -571,38 +619,38 @@ func (m *FundDisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // FundDisclosureSearchResult is one result from searching disclosure holders
 // by fund or ETF name.
 type FundDisclosureSearchResult struct {
-	Symbol              string `json:"symbol"`
-	CIK                 string `json:"cik"`
-	ClassID             string `json:"classId"`
-	SeriesID            string `json:"seriesId"`
-	EntityName          string `json:"entityName"`
-	EntityOrgType       string `json:"entityOrgType"`
-	SeriesName          string `json:"seriesName"`
-	ClassName           string `json:"className"`
-	ReportingFileNumber string `json:"reportingFileNumber"`
-	Address             string `json:"address"`
-	City                string `json:"city"`
-	ZipCode             string `json:"zipCode"`
-	State               string `json:"state"`
+	Symbol              string  `json:"symbol"`
+	CIK                 string  `json:"cik"`
+	ClassID             string  `json:"classId"`
+	SeriesID            string  `json:"seriesId"`
+	EntityName          string  `json:"entityName"`
+	EntityOrgType       string  `json:"entityOrgType"`
+	SeriesName          string  `json:"seriesName"`
+	ClassName           string  `json:"className"`
+	ReportingFileNumber string  `json:"reportingFileNumber"`
+	Address             *string `json:"address"`
+	City                string  `json:"city"`
+	ZipCode             string  `json:"zipCode"`
+	State               string  `json:"state"`
 }
 
 // fundDisclosureSearchResultShadow mirrors FundDisclosureSearchResult with a
 // pointer or raw value for every required member so a missing or null member
 // is observable after decoding.
 type fundDisclosureSearchResultShadow struct {
-	Symbol              *string `json:"symbol"`
-	CIK                 *string `json:"cik"`
-	ClassID             *string `json:"classId"`
-	SeriesID            *string `json:"seriesId"`
-	EntityName          *string `json:"entityName"`
-	EntityOrgType       *string `json:"entityOrgType"`
-	SeriesName          *string `json:"seriesName"`
-	ClassName           *string `json:"className"`
-	ReportingFileNumber *string `json:"reportingFileNumber"`
-	Address             *string `json:"address"`
-	City                *string `json:"city"`
-	ZipCode             *string `json:"zipCode"`
-	State               *string `json:"state"`
+	Symbol              *string        `json:"symbol"`
+	CIK                 *string        `json:"cik"`
+	ClassID             *string        `json:"classId"`
+	SeriesID            *string        `json:"seriesId"`
+	EntityName          *string        `json:"entityName"`
+	EntityOrgType       *string        `json:"entityOrgType"`
+	SeriesName          *string        `json:"seriesName"`
+	ClassName           *string        `json:"className"`
+	ReportingFileNumber *string        `json:"reportingFileNumber"`
+	Address             jsontext.Value `json:"address"`
+	City                *string        `json:"city"`
+	ZipCode             *string        `json:"zipCode"`
+	State               *string        `json:"state"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -632,7 +680,7 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("FundDisclosureSearchResult", "className")
 	case shadow.ReportingFileNumber == nil:
 		return missingMemberError("FundDisclosureSearchResult", "reportingFileNumber")
-	case shadow.Address == nil:
+	case len(shadow.Address) == 0:
 		return missingMemberError("FundDisclosureSearchResult", "address")
 	case shadow.City == nil:
 		return missingMemberError("FundDisclosureSearchResult", "city")
@@ -640,6 +688,14 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		return missingMemberError("FundDisclosureSearchResult", "zipCode")
 	case shadow.State == nil:
 		return missingMemberError("FundDisclosureSearchResult", "state")
+	}
+	var address *string
+	if shadow.Address.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Address, &value); err != nil {
+			return err
+		}
+		address = &value
 	}
 	*m = FundDisclosureSearchResult{
 		Symbol:              *shadow.Symbol,
@@ -651,7 +707,7 @@ func (m *FundDisclosureSearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) er
 		SeriesName:          *shadow.SeriesName,
 		ClassName:           *shadow.ClassName,
 		ReportingFileNumber: *shadow.ReportingFileNumber,
-		Address:             *shadow.Address,
+		Address:             address,
 		City:                *shadow.City,
 		ZipCode:             *shadow.ZipCode,
 		State:               *shadow.State,

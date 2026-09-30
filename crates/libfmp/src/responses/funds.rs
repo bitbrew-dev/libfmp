@@ -1,6 +1,6 @@
 //! Response rows returned by ETF and mutual-fund endpoints.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
     codecs::{IsoTimestamp, NumericString, PercentString, YnFlag},
@@ -10,16 +10,27 @@ use crate::{
     },
 };
 
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
+
 /// One asset held by an ETF or mutual fund.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
 pub struct EtfFundHolding {
     pub symbol: Ticker,
-    pub asset: Ticker,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub asset: Option<Ticker>,
     pub name: String,
-    pub isin: Isin,
-    pub security_cusip: Cusip,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub isin: Option<Isin>,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub security_cusip: Option<Cusip>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub shares_number: Quantity,
     pub weight_percentage: Percentage,
@@ -123,12 +134,14 @@ pub struct FundDisclosure {
     pub cik: Cik,
     pub date: Date,
     pub accepted_date: ApiDateTime,
-    pub symbol: Ticker,
+    #[serde(deserialize_with = "required_option")]
+    pub symbol: Option<Ticker>,
     pub name: String,
     pub lei: Lei,
     pub title: String,
     pub cusip: Cusip,
-    pub isin: Isin,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub isin: Option<Isin>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub balance: Quantity,
     pub units: String,
@@ -162,7 +175,8 @@ pub struct FundDisclosureSearchResult {
     pub series_name: String,
     pub class_name: String,
     pub reporting_file_number: String,
-    pub address: String,
+    #[serde(deserialize_with = "required_option")]
+    pub address: Option<String>,
     pub city: String,
     pub zip_code: String,
     pub state: String,

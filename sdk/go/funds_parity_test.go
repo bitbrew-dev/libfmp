@@ -5,14 +5,14 @@ import (
 	"encoding/json/v2"
 	"errors"
 	"math"
+	"reflect"
 	"slices"
 	"strings"
 	"testing"
 )
 
 // The nine funds fixtures, one per registry method. Every member is required
-// and non-null in the Rust models, so no fixture carries an intentionally
-// unknown member. fund_disclosure_dates.json decodes into the reused
+// in the Rust models, so no fixture carries an intentionally unknown member. fund_disclosure_dates.json decodes into the reused
 // institutional_ownership Form13FFilingDate model.
 func TestFundsFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
@@ -33,11 +33,11 @@ func TestDocumentedEtfFixturesDecodeExactly(t *testing.T) {
 	t.Parallel()
 	holdings := assertFixtureParity[ETFFundHolding](t, "etf_fund_holdings.json")
 	wantHolding := ETFFundHolding{
-		Symbol: "SPY", Asset: "AAPL", Name: "APPLE INC", ISIN: "US0378331005", SecurityCUSIP: "037833100",
+		Symbol: "SPY", Asset: new("AAPL"), Name: "APPLE INC", ISIN: new("US0378331005"), SecurityCUSIP: new("037833100"),
 		SharesNumber: 181_418_073, WeightPercentage: 7.79997012, MarketValue: 61_679_458_958.0,
 		UpdatedAt: mustParseDateTime(t, "2026-07-30 08:07:21"),
 	}
-	if len(holdings) != 1 || holdings[0] != wantHolding {
+	if len(holdings) != 1 || !reflect.DeepEqual(holdings[0], wantHolding) {
 		t.Fatalf("etf_fund_holdings = %+v, want %+v", holdings, wantHolding)
 	}
 	if got := memberSet(t, holdings[0]); len(got) != 9 {
@@ -116,13 +116,13 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 	disclosures := assertFixtureParity[FundDisclosure](t, "fund_disclosures.json")
 	wantDisclosure := FundDisclosure{
 		CIK: "0000857489", Date: mustParseDate(t, "2023-10-31"), AcceptedDate: mustParseDateTime(t, "2023-12-28 09:26:13"),
-		Symbol: "000089.SZ", Name: "Shenzhen Airport Co Ltd", Lei: "3003009W045RIKRBZI44", Title: "SHENZ AIRPORT-A",
-		CUSIP: "N/A", ISIN: "CNE000000VK1", Balance: 2_438_784, Units: "NS", CurrencyCode: "CNY",
+		Symbol: new("000089.SZ"), Name: "Shenzhen Airport Co Ltd", Lei: "3003009W045RIKRBZI44", Title: "SHENZ AIRPORT-A",
+		CUSIP: "N/A", ISIN: new("CNE000000VK1"), Balance: 2_438_784, Units: "NS", CurrencyCode: "CNY",
 		ValUsd: 2_255_873.6, PctVal: 0.0023838966190458206, PayoffProfile: "Long", AssetCat: "EC", IssuerCat: "CORP",
 		InvCountry: "CN", IsRestrictedSEC: "N", FairValLevel: "2", IsCashCollateral: "N", IsNonCashCollateral: "N",
 		IsLoanByFund: "N",
 	}
-	if len(disclosures) != 1 || disclosures[0] != wantDisclosure {
+	if len(disclosures) != 1 || !reflect.DeepEqual(disclosures[0], wantDisclosure) {
 		t.Fatalf("fund_disclosures = %+v, want %+v", disclosures, wantDisclosure)
 	}
 	members := memberValues(t, disclosures[0])
@@ -135,10 +135,10 @@ func TestDocumentedFundDisclosureFixturesDecodeExactly(t *testing.T) {
 		Symbol: "FGOAX", CIK: "0000355691", ClassID: "C000024574", SeriesID: "S000009042",
 		EntityName: "Federated Hermes Government Income Securities, Inc.", EntityOrgType: "30",
 		SeriesName: "Federated Hermes Government Income Securities, Inc.", ClassName: "Class A Shares",
-		ReportingFileNumber: "811-03266", Address: "4000 ERICSSON DRIVE", City: "WARRENDALE", ZipCode: "15086-7561",
+		ReportingFileNumber: "811-03266", Address: new("4000 ERICSSON DRIVE"), City: "WARRENDALE", ZipCode: "15086-7561",
 		State: "PA",
 	}
-	if len(results) != 1 || results[0] != wantResult {
+	if len(results) != 1 || !reflect.DeepEqual(results[0], wantResult) {
 		t.Fatalf("fund_disclosure_holder_search = %+v, want %+v", results, wantResult)
 	}
 	if got := memberSet(t, results[0]); len(got) != 13 {
@@ -167,6 +167,47 @@ func fundsRewrite(t *testing.T, fixture string, members map[string]string) []byt
 		t.Fatal(err)
 	}
 	return encoded
+}
+
+// Mirrors omittable_members_decode_null_and_empty_as_none: the typed-code
+// members decode null and "" to nil, symbol and address decode null to nil,
+// and every nil member re-encodes as null.
+func TestFundsOmittableMembersDecodeNullAndEmptyAsNil(t *testing.T) {
+	t.Parallel()
+	for _, wire := range []string{"null", `""`} {
+		var holdings []ETFFundHolding
+		if err := json.Unmarshal(fundsRewrite(t, "etf_fund_holdings.json",
+			map[string]string{"asset": wire, "isin": wire, "securityCusip": wire}), &holdings); err != nil ||
+			holdings[0].Asset != nil || holdings[0].ISIN != nil || holdings[0].SecurityCUSIP != nil {
+			t.Fatalf("holding %s = %+v, %v", wire, holdings, err)
+		}
+		members := memberValues(t, holdings[0])
+		for _, member := range []string{"asset", "isin", "securityCusip"} {
+			if string(members[member]) != "null" {
+				t.Fatalf("holding %s re-encoded %s = %s, want null", wire, member, members[member])
+			}
+		}
+		var disclosures []FundDisclosure
+		if err := json.Unmarshal(fundsRewrite(t, "fund_disclosures.json",
+			map[string]string{"isin": wire}), &disclosures); err != nil || disclosures[0].ISIN != nil {
+			t.Fatalf("disclosure isin %s = %+v, %v", wire, disclosures, err)
+		}
+	}
+	var disclosures []FundDisclosure
+	if err := json.Unmarshal(fundsRewrite(t, "fund_disclosures.json",
+		map[string]string{"symbol": "null"}), &disclosures); err != nil || disclosures[0].Symbol != nil ||
+		string(memberValues(t, disclosures[0])["symbol"]) != "null" {
+		t.Fatalf("disclosure null symbol = %+v, %v", disclosures, err)
+	}
+	var results []FundDisclosureSearchResult
+	if err := json.Unmarshal(fundsRewrite(t, "fund_disclosure_holder_search.json",
+		map[string]string{"address": "null"}), &results); err != nil || results[0].Address != nil {
+		t.Fatalf("search null address = %+v, %v", results, err)
+	}
+	if err := json.Unmarshal(fundsRewrite(t, "fund_disclosure_holder_search.json",
+		map[string]string{"address": `""`}), &results); err != nil || !reflect.DeepEqual(results[0].Address, new("")) {
+		t.Fatalf("search empty address = %+v, %v", results, err)
+	}
 }
 
 // Mirrors integer_widths_signed_change_and_decimal_market_values_are_preserved.
