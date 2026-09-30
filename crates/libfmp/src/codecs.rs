@@ -576,6 +576,77 @@ impl<'de> Deserialize<'de> for DateOrDateTime {
     }
 }
 
+/// A field documented as a `YYYY-MM-DD` date that the provider sometimes sends
+/// as a bare `YYYY` year. A year is kept as a year, never widened to a date.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[non_exhaustive]
+pub enum DateOrYear {
+    Date(Date),
+    Year(u16),
+}
+
+impl DateOrYear {
+    pub const fn as_date(self) -> Option<Date> {
+        match self {
+            Self::Date(value) => Some(value),
+            Self::Year(_) => None,
+        }
+    }
+
+    pub const fn as_year(self) -> Option<u16> {
+        match self {
+            Self::Date(_) => None,
+            Self::Year(value) => Some(value),
+        }
+    }
+}
+
+impl fmt::Display for DateOrYear {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Date(value) => value.fmt(formatter),
+            Self::Year(value) => write!(formatter, "{value:04}"),
+        }
+    }
+}
+
+impl FromStr for DateOrYear {
+    type Err = InvalidTemporalValue;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        if value.len() == 10 {
+            Date::parse(value).map(Self::Date)
+        } else if value.len() == 4 && value.bytes().all(|byte| byte.is_ascii_digit()) {
+            value
+                .parse()
+                .map(Self::Year)
+                .map_err(|_| InvalidTemporalValue::new("YYYY-MM-DD date or YYYY year"))
+        } else {
+            Err(InvalidTemporalValue::new("YYYY-MM-DD date or YYYY year"))
+        }
+    }
+}
+
+impl Serialize for DateOrYear {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.collect_str(self)
+    }
+}
+
+impl<'de> Deserialize<'de> for DateOrYear {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        String::deserialize(deserializer)?
+            .parse()
+            .map_err(de::Error::custom)
+    }
+}
+
 /// A US-formatted date represented exactly as `MM-DD-YYYY`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct UsDate(NaiveDate);
