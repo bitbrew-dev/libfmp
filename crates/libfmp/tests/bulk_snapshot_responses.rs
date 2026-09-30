@@ -33,7 +33,10 @@ fn exact_outer_md_fixtures_round_trip_with_exact_field_counts() {
 
 #[test]
 fn every_documented_field_is_required_non_null_and_unknown_fields_are_tolerated() {
-    assert_required::<CompanyProfile>(PROFILE);
+    assert_required_nullable::<CompanyProfile>(
+        PROFILE,
+        &["cik", "cusip", "fullTimeEmployees", "phone", "ipoDate"],
+    );
     assert_required::<BulkStockRating>(RATING);
     assert_required::<BulkDcfValuation>(DCF);
     assert_required::<BulkFinancialScore>(SCORES);
@@ -115,6 +118,13 @@ fn assert_required<T>(fixture: &[u8])
 where
     T: DeserializeOwned,
 {
+    assert_required_nullable::<T>(fixture, &[]);
+}
+
+fn assert_required_nullable<T>(fixture: &[u8], nullable: &[&str])
+where
+    T: DeserializeOwned,
+{
     let row = source_row(fixture);
     for field in row.keys() {
         let mut missing = row.clone();
@@ -126,9 +136,10 @@ where
 
         let mut null = row.clone();
         null.insert(field.clone(), Value::Null);
-        assert!(
-            serde_json::from_value::<T>(Value::Object(null)).is_err(),
-            "null {field} unexpectedly decoded"
+        assert_eq!(
+            serde_json::from_value::<T>(Value::Object(null)).is_ok(),
+            nullable.contains(&field.as_str()),
+            "null {field} decoded contrary to its nullability"
         );
     }
 

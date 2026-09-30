@@ -34,11 +34,11 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub currency: String,
     #[pyo3(get)]
-    pub cik: String,
+    pub cik: Option<String>,
     #[pyo3(get)]
     pub isin: String,
     #[pyo3(get)]
-    pub cusip: String,
+    pub cusip: Option<String>,
     #[pyo3(get)]
     pub exchange_full_name: String,
     #[pyo3(get)]
@@ -56,9 +56,9 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub country: String,
     #[pyo3(get)]
-    pub full_time_employees: String,
+    pub full_time_employees: Option<String>,
     #[pyo3(get)]
-    pub phone: String,
+    pub phone: Option<String>,
     #[pyo3(get)]
     pub address: String,
     #[pyo3(get)]
@@ -70,7 +70,7 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub image: String,
     #[pyo3(get)]
-    pub ipo_date: ::chrono::NaiveDate,
+    pub ipo_date: Option<::chrono::NaiveDate>,
     #[pyo3(get)]
     pub default_image: bool,
     #[pyo3(get)]
@@ -103,9 +103,9 @@ impl CompanyProfile {
         average_volume: f64,
         company_name: String,
         currency: String,
-        cik: String,
+        cik: Option<String>,
         isin: String,
-        cusip: String,
+        cusip: Option<String>,
         exchange_full_name: String,
         exchange: String,
         industry: String,
@@ -114,14 +114,14 @@ impl CompanyProfile {
         ceo: String,
         sector: String,
         country: String,
-        full_time_employees: String,
-        phone: String,
+        full_time_employees: Option<String>,
+        phone: Option<String>,
         address: String,
         city: String,
         state: String,
         zip: String,
         image: String,
-        ipo_date: ::chrono::NaiveDate,
+        ipo_date: Option<::chrono::NaiveDate>,
         default_image: bool,
         is_etf: bool,
         is_actively_trading: bool,
@@ -528,9 +528,9 @@ impl From<libfmp::responses::company::CompanyProfile> for CompanyProfile {
             average_volume: value.average_volume,
             company_name: value.company_name,
             currency: value.currency.into_inner(),
-            cik: value.cik.into_inner(),
+            cik: value.cik.map(|value| value.into_inner()),
             isin: value.isin.into_inner(),
-            cusip: value.cusip.into_inner(),
+            cusip: value.cusip.map(|value| value.into_inner()),
             exchange_full_name: value.exchange_full_name,
             exchange: value.exchange.into_inner(),
             industry: value.industry.into_inner(),
@@ -539,14 +539,14 @@ impl From<libfmp::responses::company::CompanyProfile> for CompanyProfile {
             ceo: value.ceo,
             sector: value.sector.into_inner(),
             country: value.country.into_inner(),
-            full_time_employees: value.full_time_employees.into_inner(),
+            full_time_employees: value.full_time_employees.map(|value| value.into_inner()),
             phone: value.phone,
             address: value.address,
             city: value.city,
             state: value.state,
             zip: value.zip,
             image: value.image,
-            ipo_date: value.ipo_date.into_inner(),
+            ipo_date: value.ipo_date.map(|value| value.into_inner()),
             default_image: value.default_image,
             is_etf: value.is_etf,
             is_actively_trading: value.is_actively_trading,
@@ -573,7 +573,7 @@ pub(crate) struct CompanyNote {
     #[pyo3(get)]
     pub title: String,
     #[pyo3(get)]
-    pub exchange: String,
+    pub exchange: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -583,7 +583,7 @@ impl CompanyNote {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, cik, symbol, title, exchange))]
-    fn new(cik: String, symbol: String, title: String, exchange: String) -> Self {
+    fn new(cik: String, symbol: String, title: String, exchange: Option<String>) -> Self {
         Self {
             cik,
             symbol,
@@ -657,7 +657,7 @@ impl From<libfmp::responses::company::CompanyNote> for CompanyNote {
             cik: value.cik.into_inner(),
             symbol: value.symbol.into_inner(),
             title: value.title,
-            exchange: value.exchange.into_inner(),
+            exchange: value.exchange.map(|value| value.into_inner()),
         }
     }
 }
@@ -1141,7 +1141,7 @@ pub(crate) struct CompanyMarketCapitalization {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub market_cap: f64,
+    pub market_cap: Option<f64>,
 }
 
 #[gen_stub_pymethods]
@@ -1151,7 +1151,7 @@ impl CompanyMarketCapitalization {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, symbol, date, market_cap))]
-    fn new(symbol: String, date: ::chrono::NaiveDate, market_cap: f64) -> Self {
+    fn new(symbol: String, date: ::chrono::NaiveDate, market_cap: Option<f64>) -> Self {
         Self {
             symbol,
             date,
@@ -1243,7 +1243,7 @@ pub(crate) struct CompanyShareFloat {
     #[pyo3(get)]
     pub outstanding_shares: f64,
     #[pyo3(get)]
-    pub source: String,
+    pub source: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -1259,7 +1259,7 @@ impl CompanyShareFloat {
         free_float: f64,
         float_shares: f64,
         outstanding_shares: f64,
-        source: String,
+        source: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -1392,9 +1392,9 @@ pub(crate) struct ShareFloat {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDateTime,
     #[pyo3(get)]
-    pub free_float: f64,
+    pub free_float: Option<f64>,
     #[pyo3(get)]
-    pub float_shares: f64,
+    pub float_shares: Option<f64>,
     #[pyo3(get)]
     pub outstanding_shares: f64,
 }
@@ -1409,8 +1409,8 @@ impl ShareFloat {
     fn new(
         symbol: String,
         date: ::chrono::NaiveDateTime,
-        free_float: f64,
-        float_shares: f64,
+        free_float: Option<f64>,
+        float_shares: Option<f64>,
         outstanding_shares: f64,
     ) -> Self {
         Self {
@@ -1539,9 +1539,9 @@ pub(crate) struct MergerAcquisition {
     #[pyo3(get)]
     pub targeted_company_name: String,
     #[pyo3(get)]
-    pub targeted_cik: String,
+    pub targeted_cik: Option<String>,
     #[pyo3(get)]
-    pub targeted_symbol: String,
+    pub targeted_symbol: Option<String>,
     #[pyo3(get)]
     pub transaction_date: ::chrono::NaiveDate,
     #[pyo3(get)]
@@ -1562,8 +1562,8 @@ impl MergerAcquisition {
         company_name: String,
         cik: String,
         targeted_company_name: String,
-        targeted_cik: String,
-        targeted_symbol: String,
+        targeted_cik: Option<String>,
+        targeted_symbol: Option<String>,
         transaction_date: ::chrono::NaiveDate,
         accepted_date: ::chrono::NaiveDateTime,
         link: String,
@@ -1726,8 +1726,8 @@ impl From<libfmp::responses::company::MergerAcquisition> for MergerAcquisition {
             company_name: value.company_name,
             cik: value.cik.into_inner(),
             targeted_company_name: value.targeted_company_name,
-            targeted_cik: value.targeted_cik.into_inner(),
-            targeted_symbol: value.targeted_symbol.into_inner(),
+            targeted_cik: value.targeted_cik.map(|value| value.into_inner()),
+            targeted_symbol: value.targeted_symbol.map(|value| value.into_inner()),
             transaction_date: value.transaction_date.into_inner(),
             accepted_date: value.accepted_date.into_inner(),
             link: value.link,
@@ -1753,7 +1753,7 @@ pub(crate) struct CompanyExecutive {
     #[pyo3(get)]
     pub currency_pay: String,
     #[pyo3(get)]
-    pub gender: String,
+    pub gender: Option<String>,
     year_born: Option<::serde_json::Value>,
     title_since: Option<::serde_json::Value>,
     #[pyo3(get)]
@@ -1772,7 +1772,7 @@ impl CompanyExecutive {
         name: String,
         pay: Option<String>,
         currency_pay: String,
-        gender: String,
+        gender: Option<String>,
         year_born: Option<String>,
         title_since: Option<String>,
         active: bool,
@@ -2017,7 +2017,7 @@ pub(crate) struct ExecutiveCompensation {
     #[pyo3(get)]
     pub stock_award: f64,
     #[pyo3(get)]
-    pub option_award: f64,
+    pub option_award: Option<f64>,
     #[pyo3(get)]
     pub incentive_plan_compensation: f64,
     #[pyo3(get)]
@@ -2046,7 +2046,7 @@ impl ExecutiveCompensation {
         salary: f64,
         bonus: f64,
         stock_award: f64,
-        option_award: f64,
+        option_award: Option<f64>,
         incentive_plan_compensation: f64,
         all_other_compensation: f64,
         total: f64,

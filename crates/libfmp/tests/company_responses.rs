@@ -19,9 +19,9 @@ fn documented_company_profile_decodes_every_exact_field_and_wire_type() {
     assert_eq!(row.average_volume, 55_309_000.0);
     assert_eq!(row.company_name, "Apple Inc.");
     assert_eq!(row.currency.as_str(), "USD");
-    assert_eq!(row.cik.as_str(), "0000320193");
+    assert_eq!(row.cik.as_ref().unwrap().as_str(), "0000320193");
     assert_eq!(row.isin.as_str(), "US0378331005");
-    assert_eq!(row.cusip.as_str(), "037833100");
+    assert_eq!(row.cusip.as_ref().unwrap().as_str(), "037833100");
     assert_eq!(row.exchange_full_name, "NASDAQ Global Select");
     assert_eq!(row.exchange.as_str(), "NASDAQ");
     assert_eq!(row.industry.as_str(), "Consumer Electronics");
@@ -33,8 +33,8 @@ fn documented_company_profile_decodes_every_exact_field_and_wire_type() {
     assert_eq!(row.ceo, "Timothy D. Cook");
     assert_eq!(row.sector.as_str(), "Technology");
     assert_eq!(row.country.as_str(), "US");
-    assert_eq!(row.full_time_employees.as_str(), "166000");
-    assert_eq!(row.phone, "(408) 996-1010");
+    assert_eq!(row.full_time_employees.as_ref().unwrap().as_str(), "166000");
+    assert_eq!(row.phone.as_deref(), Some("(408) 996-1010"));
     assert_eq!(row.address, "One Apple Park Way");
     assert_eq!(row.city, "Cupertino");
     assert_eq!(row.state, "CA");
@@ -43,7 +43,7 @@ fn documented_company_profile_decodes_every_exact_field_and_wire_type() {
         row.image,
         "https://images.financialmodelingprep.com/symbol/AAPL.png"
     );
-    assert_eq!(row.ipo_date.to_string(), "1980-12-12");
+    assert_eq!(row.ipo_date.unwrap().to_string(), "1980-12-12");
     assert!(!row.default_image);
     assert!(!row.is_etf);
     assert!(row.is_actively_trading);
@@ -77,7 +77,7 @@ fn documented_company_note_and_stock_peer_preserve_exact_names() {
     assert_eq!(notes[0].cik.as_str(), "0000320193");
     assert_eq!(notes[0].symbol.as_str(), "AAPL");
     assert_eq!(notes[0].title, "0.000% Notes due 2025");
-    assert_eq!(notes[0].exchange.as_str(), "NASDAQ");
+    assert_eq!(notes[0].exchange.as_ref().unwrap().as_str(), "NASDAQ");
 
     assert_eq!(peers.len(), 1);
     assert_eq!(peers[0].symbol.as_str(), "GOOGL");
@@ -119,12 +119,34 @@ fn company_arrays_preserve_empty_multiple_unknown_and_large_values() {
     assert!(profiles[0].market_cap >= 2_f64.powi(53));
     assert_eq!(profiles[0].volume, u64::MAX as f64);
     assert_eq!(profiles[0].average_volume, 4_294_967_296.0);
-    assert_eq!(profiles[0].full_time_employees.as_str(), "42");
+    assert_eq!(profiles[0].cik, None);
+    assert_eq!(profiles[0].cusip, None);
+    assert_eq!(profiles[0].full_time_employees, None);
+    assert_eq!(profiles[0].phone, None);
+    assert_eq!(profiles[0].ipo_date, None);
     let large_wire = serde_json::to_value(&profiles[0]).unwrap();
-    assert_eq!(large_wire["fullTimeEmployees"], "42");
-    assert!(large_wire["fullTimeEmployees"].is_string());
+    assert!(large_wire["cik"].is_null());
+    assert!(large_wire["fullTimeEmployees"].is_null());
+    assert!(large_wire["ipoDate"].is_null());
     assert_eq!(profiles[0].sector.as_str(), "Future Sector");
     assert_eq!(profiles[0].industry.as_str(), "Future Industry");
     assert_eq!(unknown.len(), 1);
     assert_eq!(unknown[0].symbol.as_str(), "AAPL");
+}
+
+#[test]
+fn company_note_decodes_a_null_exchange_as_none() {
+    let notes: Vec<CompanyNote> = serde_json::from_str(
+        r#"[{"cik":"0001577552","symbol":"BABA","title":"2.125% Notes due 2031","exchange":null}]"#,
+    )
+    .unwrap();
+
+    assert_eq!(notes[0].exchange, None);
+    assert!(serde_json::to_value(&notes[0]).unwrap()["exchange"].is_null());
+    assert!(
+        serde_json::from_str::<Vec<CompanyNote>>(
+            r#"[{"cik":"0001577552","symbol":"BABA","title":"t"}]"#
+        )
+        .is_err()
+    );
 }

@@ -4,16 +4,24 @@
 //! The Python binding exposes these thirteen models under `fmp.company` with
 //! the same names.
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
-    codecs::{DynamicJson, NumericString},
+    codecs::{DynamicJson, NumericString, empty_or_null_date},
     types::{
         ApiDateTime, Change, Cik, Count, CountryCode, CurrencyCode, Cusip, Date, ExchangeCode,
         Industry, Isin, MarketCapitalization, MarketValue, PerShareAmount, Percentage, Price,
         Quantity, Ratio, Sector, Ticker, Volume,
     },
 };
+
+fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+where
+    D: Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(deserializer)
+}
 
 /// A detailed worldwide company profile returned by symbol or US CIK lookup.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -37,9 +45,11 @@ pub struct CompanyProfile {
     pub average_volume: Volume,
     pub company_name: String,
     pub currency: CurrencyCode,
-    pub cik: Cik,
+    #[serde(deserialize_with = "required_option")]
+    pub cik: Option<Cik>,
     pub isin: Isin,
-    pub cusip: Cusip,
+    #[serde(deserialize_with = "required_option")]
+    pub cusip: Option<Cusip>,
     pub exchange_full_name: String,
     pub exchange: ExchangeCode,
     pub industry: Industry,
@@ -48,14 +58,17 @@ pub struct CompanyProfile {
     pub ceo: String,
     pub sector: Sector,
     pub country: CountryCode,
-    pub full_time_employees: NumericString,
-    pub phone: String,
+    #[serde(deserialize_with = "required_option")]
+    pub full_time_employees: Option<NumericString>,
+    #[serde(deserialize_with = "required_option")]
+    pub phone: Option<String>,
     pub address: String,
     pub city: String,
     pub state: String,
     pub zip: String,
     pub image: String,
-    pub ipo_date: Date,
+    #[serde(with = "empty_or_null_date")]
+    pub ipo_date: Option<Date>,
     pub default_image: bool,
     pub is_etf: bool,
     pub is_actively_trading: bool,
@@ -71,7 +84,8 @@ pub struct CompanyNote {
     pub cik: Cik,
     pub symbol: Ticker,
     pub title: String,
-    pub exchange: ExchangeCode,
+    #[serde(deserialize_with = "required_option")]
+    pub exchange: Option<ExchangeCode>,
 }
 
 /// One worldwide stock peer selected by the provider.
@@ -123,8 +137,9 @@ pub struct EmployeeCount {
 pub struct CompanyMarketCapitalization {
     pub symbol: Ticker,
     pub date: Date,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub market_cap: MarketCapitalization,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub market_cap: Option<MarketCapitalization>,
 }
 
 /// One worldwide company share-float observation with its filing source.
@@ -139,7 +154,8 @@ pub struct CompanyShareFloat {
     pub float_shares: Quantity,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub outstanding_shares: Quantity,
-    pub source: String,
+    #[serde(deserialize_with = "required_option")]
+    pub source: Option<String>,
 }
 
 /// One all-company share-float observation, whose payload has no source field.
@@ -149,9 +165,11 @@ pub struct CompanyShareFloat {
 pub struct ShareFloat {
     pub symbol: Ticker,
     pub date: ApiDateTime,
-    pub free_float: Percentage,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub float_shares: Quantity,
+    #[serde(deserialize_with = "required_option")]
+    pub free_float: Option<Percentage>,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub float_shares: Option<Quantity>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub outstanding_shares: Quantity,
 }
@@ -165,8 +183,10 @@ pub struct MergerAcquisition {
     pub company_name: String,
     pub cik: Cik,
     pub targeted_company_name: String,
-    pub targeted_cik: Cik,
-    pub targeted_symbol: Ticker,
+    #[serde(deserialize_with = "required_option")]
+    pub targeted_cik: Option<Cik>,
+    #[serde(deserialize_with = "required_option")]
+    pub targeted_symbol: Option<Ticker>,
     pub transaction_date: Date,
     pub accepted_date: ApiDateTime,
     pub link: String,
@@ -181,7 +201,8 @@ pub struct CompanyExecutive {
     pub name: String,
     pub pay: Option<DynamicJson>,
     pub currency_pay: CurrencyCode,
-    pub gender: String,
+    #[serde(deserialize_with = "required_option")]
+    pub gender: Option<String>,
     pub year_born: Option<DynamicJson>,
     pub title_since: Option<DynamicJson>,
     pub active: bool,
@@ -205,8 +226,9 @@ pub struct ExecutiveCompensation {
     pub bonus: MarketValue,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub stock_award: MarketValue,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub option_award: MarketValue,
+    #[serde(deserialize_with = "required_option")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub option_award: Option<MarketValue>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub incentive_plan_compensation: MarketValue,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]

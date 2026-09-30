@@ -9,7 +9,7 @@ fn documented_market_capitalization_decodes_every_exact_field_and_wire_type() {
     let row = &rows[0];
     assert_eq!(row.symbol.as_str(), "AAPL");
     assert_eq!(row.date.to_string(), "2026-07-30");
-    assert_eq!(row.market_cap, 4_874_072_686_740.0);
+    assert_eq!(row.market_cap, Some(4_874_072_686_740.0));
 
     let wire = serde_json::to_value(row).unwrap();
     assert_eq!(wire["date"], "2026-07-30");
@@ -24,7 +24,7 @@ fn documented_market_capitalization_decodes_every_exact_field_and_wire_type() {
     assert_eq!(historical.len(), 1);
     assert_eq!(historical[0].symbol.as_str(), "AAPL");
     assert_eq!(historical[0].date.to_string(), "2026-07-30");
-    assert_eq!(historical[0].market_cap, 4_879_177_245_542.0);
+    assert_eq!(historical[0].market_cap, Some(4_879_177_245_542.0));
 }
 
 #[test]
@@ -40,8 +40,8 @@ fn documented_company_share_float_decodes_source_and_exact_wire_types() {
     assert_eq!(row.float_shares, 14_662_387_495.0);
     assert_eq!(row.outstanding_shares, 14_687_356_000.0);
     assert_eq!(
-        row.source,
-        "https://www.sec.gov/Archives/edgar/data/320193/000032019326000013/aapl-20260328.htm"
+        row.source.as_deref(),
+        Some("https://www.sec.gov/Archives/edgar/data/320193/000032019326000013/aapl-20260328.htm")
     );
 
     let wire = serde_json::to_value(row).unwrap();
@@ -63,8 +63,8 @@ fn documented_all_share_float_is_a_separate_source_free_shape() {
     let row = &rows[0];
     assert_eq!(row.symbol.as_str(), "000001.SZ");
     assert_eq!(row.date.to_string(), "2026-07-29 14:23:30");
-    assert_eq!(row.free_float, 41.40900000201062);
-    assert_eq!(row.float_shares, 8_035_796_667.0);
+    assert_eq!(row.free_float, Some(41.40900000201062));
+    assert_eq!(row.float_shares, Some(8_035_796_667.0));
     assert_eq!(row.outstanding_shares, 19_405_918_198.0);
 
     let wire = serde_json::to_value(row).unwrap();
@@ -98,22 +98,26 @@ fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_large_values() 
     let market_caps: Vec<CompanyMarketCapitalization> = serde_json::from_str(
         r#"[
           {"symbol":"AAPL","date":"2026-07-30","marketCap":18446744073709551615,"future":true},
-          {"symbol":"MSFT","date":"2026-07-30","marketCap":9007199254740993}
+          {"symbol":"MSFT","date":"2026-07-30","marketCap":9007199254740993},
+          {"symbol":"EURUSD","date":"2026-07-30","marketCap":null}
         ]"#,
     )
     .unwrap();
-    assert_eq!(market_caps.len(), 2);
-    assert_eq!(market_caps[0].market_cap, u64::MAX as f64);
-    assert_eq!(market_caps[1].market_cap, 9_007_199_254_740_992.0);
+    assert_eq!(market_caps.len(), 3);
+    assert_eq!(market_caps[0].market_cap, Some(u64::MAX as f64));
+    assert_eq!(market_caps[1].market_cap, Some(9_007_199_254_740_992.0));
+    assert_eq!(market_caps[2].market_cap, None);
+    assert!(serde_json::to_value(&market_caps[2]).unwrap()["marketCap"].is_null());
 
     let company_floats: Vec<CompanyShareFloat> = serde_json::from_str(
         r#"[
           {"symbol":"AAPL","date":"2026-07-30 15:48:00","freeFloat":99.83,"floatShares":18446744073709551615,"outstandingShares":9007199254740993,"source":"https://www.sec.gov/example","future":{"nested":true}},
-          {"symbol":"MSFT","date":"2026-07-30 15:48:00","freeFloat":98.1,"floatShares":1,"outstandingShares":2,"source":"https://www.sec.gov/example"}
+          {"symbol":"MSFT","date":"2026-07-30 15:48:00","freeFloat":98.1,"floatShares":1,"outstandingShares":2,"source":null}
         ]"#,
     )
     .unwrap();
     assert_eq!(company_floats.len(), 2);
+    assert_eq!(company_floats[1].source, None);
     assert_eq!(company_floats[0].float_shares, u64::MAX as f64);
     assert_eq!(
         company_floats[0].outstanding_shares,
@@ -123,11 +127,16 @@ fn market_data_arrays_preserve_empty_multiple_unknown_fields_and_large_values() 
     let all_floats: Vec<ShareFloat> = serde_json::from_str(
         r#"[
           {"symbol":"000001.SZ","date":"2026-07-29 14:23:30","freeFloat":41.409,"floatShares":18446744073709551615,"outstandingShares":9007199254740993,"future":null},
-          {"symbol":"000002.SZ","date":"2026-07-29 14:23:30","freeFloat":42.0,"floatShares":3,"outstandingShares":4}
+          {"symbol":"000002.SZ","date":"2026-07-29 14:23:30","freeFloat":null,"floatShares":null,"outstandingShares":4}
         ]"#,
     )
     .unwrap();
     assert_eq!(all_floats.len(), 2);
-    assert_eq!(all_floats[0].float_shares, u64::MAX as f64);
+    assert_eq!(all_floats[0].float_shares, Some(u64::MAX as f64));
+    assert_eq!(all_floats[1].free_float, None);
+    assert_eq!(all_floats[1].float_shares, None);
+    let null_wire = serde_json::to_value(&all_floats[1]).unwrap();
+    assert!(null_wire["freeFloat"].is_null());
+    assert!(null_wire["floatShares"].is_null());
     assert_eq!(all_floats[0].outstanding_shares, 9_007_199_254_740_992.0);
 }

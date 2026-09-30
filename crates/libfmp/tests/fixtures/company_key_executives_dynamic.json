@@ -12,7 +12,7 @@
   {
     "active": false,
     "currencyPay": "XTS",
-    "gender": "unspecified",
+    "gender": null,
     "name": "Representation Probe",
     "pay": {
       "amount": "00123.450",

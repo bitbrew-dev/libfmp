@@ -15,8 +15,8 @@ fn documented_latest_merger_acquisition_decodes_every_exact_field_and_wire_type(
     assert_eq!(row.company_name, "Aureus Greenway Holdings Inc");
     assert_eq!(row.cik.as_str(), "0002009312");
     assert_eq!(row.targeted_company_name, "Aureus Greenway Holdings, Inc.");
-    assert_eq!(row.targeted_cik.as_str(), "0002009312");
-    assert_eq!(row.targeted_symbol.as_str(), "PUSA");
+    assert_eq!(row.targeted_cik.as_ref().unwrap().as_str(), "0002009312");
+    assert_eq!(row.targeted_symbol.as_ref().unwrap().as_str(), "PUSA");
     assert_eq!(row.transaction_date.to_string(), "2026-07-29");
     assert_eq!(row.accepted_date.to_string(), "2026-07-29 16:00:46");
     assert_eq!(
@@ -34,8 +34,8 @@ fn documented_search_merger_acquisition_preserves_leading_zero_ciks_names_and_ur
     assert_eq!(row.company_name, "Pineapple Energy Inc.");
     assert_eq!(row.cik.as_str(), "0000022701");
     assert_eq!(row.targeted_company_name, "Communications Systems, Inc.");
-    assert_eq!(row.targeted_cik.as_str(), "0000022701");
-    assert_eq!(row.targeted_symbol.as_str(), "JCS");
+    assert_eq!(row.targeted_cik.as_ref().unwrap().as_str(), "0000022701");
+    assert_eq!(row.targeted_symbol.as_ref().unwrap().as_str(), "JCS");
     assert_eq!(row.transaction_date.to_string(), "2021-11-12");
     assert_eq!(row.accepted_date.to_string(), "2021-11-12 09:54:22");
     assert_eq!(
@@ -52,8 +52,15 @@ fn merger_acquisition_arrays_preserve_empty_multiple_and_unknown_field_shapes() 
 
     assert!(empty.is_empty());
     assert_eq!(multiple.len(), 2);
-    assert_eq!(multiple[0].targeted_symbol.as_str(), "PUSA");
-    assert_eq!(multiple[1].targeted_symbol.as_str(), "JCS");
+    assert_eq!(
+        multiple[0].targeted_symbol.as_ref().unwrap().as_str(),
+        "PUSA"
+    );
+    assert_eq!(multiple[1].targeted_cik, None);
+    assert_eq!(multiple[1].targeted_symbol, None);
+    let wire = serde_json::to_value(&multiple[1]).unwrap();
+    assert!(wire["targetedCik"].is_null());
+    assert!(wire["targetedSymbol"].is_null());
     assert_eq!(unknown.len(), 1);
     assert_eq!(unknown[0].cik.as_str(), "0002009312");
 }

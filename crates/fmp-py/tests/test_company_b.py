@@ -101,6 +101,8 @@ def test_latest_mergers_acquisitions_with_page_only_decodes_multiple_rows(
     assert len(rows) == 2
     assert [row.symbol for row in rows] == ["AGH", "PEGY"]
     assert rows[1].transaction_date == datetime.date(2021, 11, 12)
+    assert rows[1].targeted_cik is None
+    assert rows[1].targeted_symbol is None
 
 
 def test_search_mergers_acquisitions_preserves_the_name_verbatim(client: Any, fixture_server: FixtureServer) -> None:
@@ -151,6 +153,7 @@ def test_key_executives_surfaces_dynamic_json_values(client: Any, fixture_server
     assert probe.pay == {"amount": "00123.450", "components": [1, True, None]}
     assert probe.title_since == 1_704_067_200
     assert probe.year_born == "01980"
+    assert probe.gender is None
 
 
 def test_key_executives_keeps_big_integers_exact(client: Any, fixture_server: FixtureServer) -> None:
@@ -213,6 +216,7 @@ def test_executive_compensation_decodes_large_amounts(client: Any, fixture_serve
     assert rows[1].company_name == "Large Amount Probe"
     assert rows[1].salary == 5_000_000_000
     assert rows[1].all_other_compensation == 10_000_000_000
+    assert rows[1].option_award is None
     assert rows[1].accepted_date == datetime.datetime(2026, 1, 1, 0, 0, 0)
 
 

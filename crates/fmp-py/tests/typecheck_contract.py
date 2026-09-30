@@ -145,7 +145,7 @@ def check_bulk_contract(client: FmpClient) -> None:
     """Type-check the constructor-only bulk arguments and the cross-domain profile rows."""
     bulk: BulkNamespace = client.bulk
     profiles: list[CompanyProfile] = bulk.company_profiles("0")
-    ipo_date: datetime.date = profiles[0].ipo_date
+    ipo_date: datetime.date | None = profiles[0].ipo_date
     statements: list[BulkIncomeStatement] = client.bulk.income_statements(2026, "Q1")
     accepted: datetime.datetime = statements[0].accepted_date
     revenue: str = statements[0].revenue
@@ -161,11 +161,11 @@ def check_company_contract(client: FmpClient) -> None:
     """Type-check the flat company namespace, its date keywords, and the batch list input."""
     company: CompanyNamespace = client.company
     profiles: list[CompanyProfile] = company.profile("AAPL")
-    ipo_date: datetime.date = profiles[0].ipo_date
+    ipo_date: datetime.date | None = profiles[0].ipo_date
     history: list[CompanyMarketCapitalization] = client.company.historical_market_capitalization(
         "AAPL", limit=5001, from_=datetime.date(2026, 4, 16), to="2026-07-16"
     )
-    market_cap: float = history[0].market_cap
+    market_cap: float | None = history[0].market_cap
     batch: list[CompanyMarketCapitalization] = client.company.batch_market_capitalization(["AAPL", "MSFT"])
     benchmarks: list[ExecutiveCompensationBenchmark] = client.company.executive_compensation_benchmark(year="2024")
     average: float = benchmarks[0].average_compensation

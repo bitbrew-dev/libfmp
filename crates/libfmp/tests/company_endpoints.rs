@@ -82,6 +82,8 @@ async fn custom_proxy_client_executes_all_four_paths_with_exact_required_queries
             .await
             .unwrap()[0]
             .cik
+            .as_ref()
+            .unwrap()
             .as_str(),
         "0000320193"
     );
@@ -91,6 +93,8 @@ async fn custom_proxy_client_executes_all_four_paths_with_exact_required_queries
             .await
             .unwrap()[0]
             .full_time_employees
+            .as_ref()
+            .unwrap()
             .as_str(),
         "166000"
     );
@@ -151,7 +155,7 @@ async fn profile_client_preserves_empty_multiple_and_unknown_field_arrays() {
     assert_eq!(multiple[0].market_cap, 9_007_199_254_740_992.0);
     assert_eq!(multiple[0].volume, u64::MAX as f64);
     assert_eq!(unknown.len(), 1);
-    assert_eq!(unknown[0].cik.as_str(), "0000320193");
+    assert_eq!(unknown[0].cik.as_ref().unwrap().as_str(), "0000320193");
 }
 
 #[tokio::test]
