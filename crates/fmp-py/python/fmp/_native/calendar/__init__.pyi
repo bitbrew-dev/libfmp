@@ -345,7 +345,7 @@ class IpoProspectus:
     @property
     def filing_date(self) -> datetime.date: ...
     @property
-    def ipo_date(self) -> datetime.date: ...
+    def ipo_date(self) -> datetime.date | builtins.int: ...
     @property
     def cik(self) -> builtins.str: ...
     @property
@@ -373,7 +373,7 @@ class IpoProspectus:
         symbol: builtins.str,
         accepted_date: datetime.date,
         filing_date: datetime.date,
-        ipo_date: datetime.date,
+        ipo_date: datetime.date | builtins.int,
         cik: builtins.str,
         price_public_per_share: builtins.float,
         price_public_total: builtins.float,

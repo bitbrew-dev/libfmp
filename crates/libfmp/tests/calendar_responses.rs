@@ -5,7 +5,7 @@ mod assert_row;
 use std::str::FromStr;
 
 use libfmp::{
-    codecs::IsoTimestamp,
+    codecs::{DateOrYear, IsoTimestamp},
     responses::calendar::{
         DividendEvent, EarningsEvent, IpoCalendarEvent, IpoDisclosure, IpoProspectus,
         StockSplitEvent,
@@ -164,7 +164,7 @@ fn exact_ipo_prospectus_fixture_decodes_all_thirteen_fields() {
             symbol: Ticker::new("FTW-WT").unwrap(),
             accepted_date: Date::from_str("2026-07-29").unwrap(),
             filing_date: Date::from_str("2026-07-30").unwrap(),
-            ipo_date: Date::from_str("2026-07-28").unwrap(),
+            ipo_date: DateOrYear::Date(Date::from_str("2026-07-28").unwrap()),
             cik: Cik::new("0002083125").unwrap(),
             price_public_per_share: 1.0,
             price_public_total: 434.0,
@@ -176,6 +176,25 @@ fn exact_ipo_prospectus_fixture_decodes_all_thirteen_fields() {
             url: "https://www.sec.gov/Archives/edgar/data/2083125/000121390026082963/ea0298363-s1_presidio.htm".to_owned(),
         }]
     );
+}
+
+#[test]
+fn ipo_prospectus_year_only_ipo_date_decodes_as_a_year() {
+    let mut rows: serde_json::Value = serde_json::from_slice(IPOS_PROSPECTUS).unwrap();
+    rows[0]["ipoDate"] = "2020".into();
+    let decoded: Vec<IpoProspectus> = serde_json::from_value(rows.clone()).unwrap();
+    assert_eq!(decoded[0].ipo_date, DateOrYear::Year(2020));
+    assert_eq!(decoded[0].ipo_date.as_date(), None);
+    assert_eq!(
+        serde_json::to_value(&decoded).unwrap()[0]["ipoDate"],
+        "2020"
+    );
+
+    rows[0]["ipoDate"] = "20x0".into();
+    let message = serde_json::from_value::<Vec<IpoProspectus>>(rows)
+        .unwrap_err()
+        .to_string();
+    assert!(!message.contains("20x0"), "error echoes the value");
 }
 
 #[test]

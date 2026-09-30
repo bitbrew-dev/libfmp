@@ -174,7 +174,7 @@ func TestDocumentedIpoFilingAndStockSplitFixturesDecodeExactValues(t *testing.T)
 	prospectus := assertFixtureParity[IPOProspectus](t, "ipos_prospectus.json")
 	wantProspectus := IPOProspectus{
 		Symbol: "FTW-WT", AcceptedDate: mustParseDate(t, "2026-07-29"), FilingDate: mustParseDate(t, "2026-07-30"),
-		IPODate: mustParseDate(t, "2026-07-28"), CIK: "0002083125", PricePublicPerShare: 1, PricePublicTotal: 434,
+		IPODate: mustParseDateOrYear(t, "2026-07-28"), CIK: "0002083125", PricePublicPerShare: 1, PricePublicTotal: 434,
 		DiscountsAndCommissionsPerShare: new(0.0), DiscountsAndCommissionsTotal: new(82_251.0), ProceedsBeforeExpensesPerShare: 1,
 		ProceedsBeforeExpensesTotal: 82_251, Form: "S-1",
 		URL: "https://www.sec.gov/Archives/edgar/data/2083125/000121390026082963/ea0298363-s1_presidio.htm",
@@ -221,6 +221,33 @@ func assertMemberContract[T any](t *testing.T, name string, nullable ...string) 
 		if (err == nil) != wantOK {
 			t.Fatalf("%s: null %q: error = %v, want accepted = %v", name, member, err, wantOK)
 		}
+	}
+}
+
+func TestIpoProspectusYearOnlyIpoDateDecodesAsAYear(t *testing.T) {
+	t.Parallel()
+	raw := string(readFixture(t, "ipos_prospectus.json"))
+	yearOnly := strings.Replace(raw, `"ipoDate": "2026-07-28"`, `"ipoDate": "2020"`, 1)
+	var rows []IPOProspectus
+	if err := json.Unmarshal([]byte(yearOnly), &rows); err != nil {
+		t.Fatalf("decode year-only row: %v", err)
+	}
+	if year, ok := rows[0].IPODate.Year(); !ok || year != 2020 {
+		t.Fatalf("IPODate.Year() = %d, %v", year, ok)
+	}
+	if _, ok := rows[0].IPODate.Date(); ok {
+		t.Fatal("a year-only ipoDate reported a full date")
+	}
+	encoded, err := json.Marshal(rows[0])
+	if err != nil || !strings.Contains(string(encoded), `"ipoDate":"2020"`) {
+		t.Fatalf("re-encode = %s, %v", encoded, err)
+	}
+
+	garbage := strings.Replace(raw, `"ipoDate": "2026-07-28"`, `"ipoDate": "20x0"`, 1)
+	err = json.Unmarshal([]byte(garbage), &rows)
+	var invalid *InvalidTemporalValueError
+	if !errors.As(err, &invalid) || strings.Contains(err.Error(), "20x0") {
+		t.Fatalf("garbage ipoDate error = %v", err)
 	}
 }
 

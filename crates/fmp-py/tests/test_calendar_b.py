@@ -8,6 +8,7 @@ argument-kind family. The expected targets are the ones the Rust
 """
 
 import datetime
+import pickle
 from types import SimpleNamespace
 from typing import Any
 
@@ -109,6 +110,26 @@ def test_ipos_null_exchange_and_discounts_are_none(client: Any, fixture_server: 
     row = client.calendar.ipos_prospectus()[0]
     assert row.discounts_and_commissions_per_share is None
     assert row.discounts_and_commissions_total is None
+
+
+def test_ipos_prospectus_year_only_ipo_date_is_an_int(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """Issue #379: a bare ``"2020"`` ``ipoDate`` decodes as the ``int`` year, a full date stays a date."""
+    prospectus = load_fixture("ipos_prospectus.json")
+    prospectus[0]["ipoDate"] = "2020"
+    fixture_server.route("/ipos-prospectus", prospectus)
+    row = client.calendar.ipos_prospectus()[0]
+    assert row.ipo_date == 2020
+    assert type(row.ipo_date) is int
+    assert row.to_dict()["ipo_date"] == 2020
+    assert pickle.loads(pickle.dumps(row)) == row
+
+    prospectus[0]["ipoDate"] = "20x0"
+    fixture_server.route("/ipos-prospectus", prospectus)
+    with pytest.raises(errors.FmpDecodeError) as raised:
+        client.calendar.ipos_prospectus()
+    assert (raised.value.decode_path, raised.value.decode_kind) == ("[0].ipoDate", "invalid_value")
 
 
 def test_ipos_prospectus_with_both_dates(client: Any, fixture_server: FixtureServer) -> None:

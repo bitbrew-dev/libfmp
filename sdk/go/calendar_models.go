@@ -349,19 +349,19 @@ func (m *IPODisclosure) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // IPOProspectus is one US IPO prospectus filing and its documented offering
 // values.
 type IPOProspectus struct {
-	Symbol                          string   `json:"symbol"`
-	AcceptedDate                    Date     `json:"acceptedDate"`
-	FilingDate                      Date     `json:"filingDate"`
-	IPODate                         Date     `json:"ipoDate"`
-	CIK                             string   `json:"cik"`
-	PricePublicPerShare             float64  `json:"pricePublicPerShare"`
-	PricePublicTotal                float64  `json:"pricePublicTotal"`
-	DiscountsAndCommissionsPerShare *float64 `json:"discountsAndCommissionsPerShare"`
-	DiscountsAndCommissionsTotal    *float64 `json:"discountsAndCommissionsTotal"`
-	ProceedsBeforeExpensesPerShare  float64  `json:"proceedsBeforeExpensesPerShare"`
-	ProceedsBeforeExpensesTotal     float64  `json:"proceedsBeforeExpensesTotal"`
-	Form                            string   `json:"form"`
-	URL                             string   `json:"url"`
+	Symbol                          string     `json:"symbol"`
+	AcceptedDate                    Date       `json:"acceptedDate"`
+	FilingDate                      Date       `json:"filingDate"`
+	IPODate                         DateOrYear `json:"ipoDate"`
+	CIK                             string     `json:"cik"`
+	PricePublicPerShare             float64    `json:"pricePublicPerShare"`
+	PricePublicTotal                float64    `json:"pricePublicTotal"`
+	DiscountsAndCommissionsPerShare *float64   `json:"discountsAndCommissionsPerShare"`
+	DiscountsAndCommissionsTotal    *float64   `json:"discountsAndCommissionsTotal"`
+	ProceedsBeforeExpensesPerShare  float64    `json:"proceedsBeforeExpensesPerShare"`
+	ProceedsBeforeExpensesTotal     float64    `json:"proceedsBeforeExpensesTotal"`
+	Form                            string     `json:"form"`
+	URL                             string     `json:"url"`
 }
 
 // ipoProspectusShadow mirrors IPOProspectus with a pointer or raw value for
@@ -371,7 +371,7 @@ type ipoProspectusShadow struct {
 	Symbol                          *string        `json:"symbol"`
 	AcceptedDate                    *Date          `json:"acceptedDate"`
 	FilingDate                      *Date          `json:"filingDate"`
-	IPODate                         *Date          `json:"ipoDate"`
+	IPODate                         *DateOrYear    `json:"ipoDate"`
 	CIK                             *string        `json:"cik"`
 	PricePublicPerShare             *float64       `json:"pricePublicPerShare"`
 	PricePublicTotal                *float64       `json:"pricePublicTotal"`

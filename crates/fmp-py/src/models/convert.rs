@@ -243,3 +243,31 @@ mod tests {
         });
     }
 }
+
+/// A `datetime.date | int` model member: a full date stays a `datetime.date`
+/// and a bare year the provider sent instead stays an `int`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, IntoPyObject, FromPyObject)]
+pub(crate) enum DateOrYear {
+    #[pyo3(transparent, annotation = "datetime.date")]
+    Date(chrono::NaiveDate),
+    #[pyo3(transparent, annotation = "int")]
+    Year(u16),
+}
+
+pyo3_stub_gen::impl_stub_type!(DateOrYear = chrono::NaiveDate | u16);
+
+impl From<libfmp::codecs::DateOrYear> for DateOrYear {
+    fn from(value: libfmp::codecs::DateOrYear) -> Self {
+        match (value.as_date(), value.as_year()) {
+            (Some(date), _) => Self::Date(date.into_inner()),
+            (None, Some(year)) => Self::Year(year),
+            (None, None) => unreachable!("libfmp DateOrYear holds a date or a year"),
+        }
+    }
+}
+
+impl DictValue for DateOrYear {
+    fn dict_value<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        (*self).into_bound_py_any(py)
+    }
+}
