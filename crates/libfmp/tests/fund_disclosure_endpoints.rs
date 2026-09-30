@@ -137,7 +137,7 @@ async fn custom_proxy_preserves_exact_query_order_encoding_headers_and_fixture_i
         ApiDateTime::parse("2023-12-28 09:26:13").unwrap()
     );
     assert_eq!(search[0].cik.as_str(), "0000355691");
-    assert_eq!(search[0].entity_org_type.as_str(), "30");
+    assert_eq!(search[0].entity_org_type.as_ref().unwrap().as_str(), "30");
     assert_eq!(dates[0].year.get(), 2026);
     assert_eq!(dates[0].quarter.get(), 2);
 

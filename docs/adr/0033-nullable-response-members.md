@@ -28,6 +28,7 @@ evidence is now a second source, so both need a rule.
 | `""` on a typed code (`CountryCode`, `Isin`, `Ticker`, ...) | `Option<T>` through `codecs::empty_or_null` | `None` | `nil` |
 | `""` on a date | `Option<Date>` through `codecs::empty_or_null_date` | `None` | `nil` |
 | `""` on a plain `String` | unchanged: stays `""` | `""` | `""` |
+| `"NULL"` text on a `NumericString` (`FundDisclosureSearchResult.entityOrgType`, #380) | `Option<NumericString>` through `codecs::null_text` | `None` | `nil` |
 
 - Evidence decides: a member changes only when the audit (or a later
   report) saw it null or empty. Parity siblings are not widened.
@@ -37,8 +38,14 @@ evidence is now a second source, so both need a rule.
   value. `None` re-encodes as `null`.
 - No invented values: a null amount never becomes `0` or `NaN`, and a row
   is never dropped to hide a bad member.
+- `codecs::null_text` accepts the exact text `"NULL"` and null as `None`
+  and parses any other string as a `NumericString`, so `""`, `"null"`, or a
+  padded `" NULL"` is still an error that never includes the value. It is
+  used only where the evidence shows `"NULL"` standing in for an absent
+  value (the live rows that send it on `entityOrgType` also send a null
+  `address`); no other codec treats `"NULL"` as absent.
 - A member whose non-null value has the wrong type (a year where a date is
-  documented, the text `"NULL"`) is a separate type fix, not an `Option`.
+  documented) is a separate type fix, not an `Option`.
 - Every change is breaking and ships in a minor release with a
   `BREAKING CHANGE:` footer naming the members.
 
@@ -47,8 +54,9 @@ evidence is now a second source, so both need a rule.
 `gen_go` maps `deserialize_with = "crate::codecs::empty_or_null::deserialize"`
 on an `Option` of a string-backed type to `Codec::EmptyOrNullString`: the
 shadow member keeps the raw `jsontext.Value`, the key is required, and
-`""` or null decode to `nil`. It fails on any other shape rather than
-guessing.
+`""` or null decode to `nil`. `crate::codecs::null_text::deserialize` maps
+the same way to `Codec::NullTextString`, where the text `"NULL"` or null
+decode to `nil`. It fails on any other shape rather than guessing.
 
 ## Alternatives considered
 

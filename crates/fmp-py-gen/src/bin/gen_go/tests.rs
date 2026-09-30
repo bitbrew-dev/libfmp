@@ -698,6 +698,54 @@ fn empty_or_null_codec_decodes_empty_and_null_to_nil_through_the_raw_shadow() {
 }
 
 #[test]
+fn null_text_codec_decodes_the_null_text_and_null_to_nil_through_the_raw_shadow() {
+    let aliases = BTreeMap::new();
+    let structs = Vec::new();
+    let table = TypeTable::new(&structs, &aliases);
+    let codec = "crate::codecs::null_text::deserialize";
+    let def = row(vec![field(
+        "entity_org_type",
+        "Option<NumericString>",
+        deserialize_with(codec),
+    )]);
+    let mapped = table.go_field(&def, &def.fields[0]).expect("maps");
+    assert_eq!(
+        (
+            mapped.public_ty.as_str(),
+            mapped.shadow_ty.as_str(),
+            mapped.codec,
+            mapped.required_key(),
+        ),
+        ("*string", "jsontext.Value", Codec::NullTextString, true)
+    );
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    for expected in [
+        "EntityOrgType *string `json:\"entityOrgType\"`",
+        "EntityOrgType jsontext.Value `json:\"entityOrgType\"`",
+        "case len(shadow.EntityOrgType) == 0:",
+        "var entityOrgType *string\n\tif shadow.EntityOrgType.Kind() != 'n' {",
+        "if value != \"NULL\" {\n\t\t\tentityOrgType = &value\n\t\t}",
+        "EntityOrgType: entityOrgType,",
+    ] {
+        assert!(
+            rendered.contains(expected),
+            "missing {expected:?} in\n{rendered}"
+        );
+    }
+
+    for (name, ty) in [
+        ("bare", "NumericString"),
+        ("price", "Option<f64>"),
+        ("many", "Option<Vec<NumericString>>"),
+    ] {
+        let def = row(vec![field(name, ty, deserialize_with(codec))]);
+        let error = table.go_field(&def, &def.fields[0]).expect_err(name);
+        assert!(error.contains("null_text"), "{name}: {error}");
+    }
+}
+
+#[test]
 fn skip_serializing_if_none_marks_only_the_public_tag_omitzero() {
     let aliases = BTreeMap::new();
     let structs = Vec::new();
