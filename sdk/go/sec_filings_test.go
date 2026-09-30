@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"math"
 	"net/http"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -93,7 +94,7 @@ func TestSecFilingsMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("SearchCompaniesBySymbol = %+v, %v", companyBySymbol, err)
 	}
 	companyByCIK, err := client.SECFilings.SearchCompaniesByCIK(ctx, NewSECCompaniesByCIKQuery("0000320193"))
-	if err != nil || len(companyByCIK) != 1 || companyByCIK[0] != companyBySymbol[0] {
+	if err != nil || len(companyByCIK) != 1 || !reflect.DeepEqual(companyByCIK[0], companyBySymbol[0]) {
 		t.Fatalf("SearchCompaniesByCIK = %+v, %v", companyByCIK, err)
 	}
 	profile, err := client.SECFilings.CompanyProfile(ctx, NewSECCompanyProfileQuery("AAPL").WithCIKA("0000320193"))

@@ -301,3 +301,25 @@ def test_non_json_body_is_a_decode_error(client: Any, fixture_server: FixtureSer
     fixture_server.route("/sec-profile", b"not-json")
     with pytest.raises(errors.FmpDecodeError):
         client.sec_filings.company_profile("AAPL")
+
+
+def test_company_profile_decodes_null_employees_and_fiscal_year_end_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A fund profile with null ``employees`` and ``fiscalYearEnd`` decodes them to ``None``."""
+    body = load_fixture("sec_company_profile.json")
+    body[0]["employees"] = None
+    body[0]["fiscalYearEnd"] = None
+    fixture_server.route("/sec-profile", body)
+    rows = client.sec_filings.company_profile("AAPL")
+
+    assert rows[0].employees is None
+    assert rows[0].fiscal_year_end is None
+
+
+def test_search_companies_by_name_decodes_null_phone_number_to_none(client: Any, fixture_server: FixtureServer) -> None:
+    """A null ``phoneNumber`` decodes to ``None``."""
+    body = load_fixture("sec_companies_by_name.json")
+    body[0]["phoneNumber"] = None
+    fixture_server.route("/sec-filings-company-search/name", body)
+    rows = client.sec_filings.search_companies_by_name("Berkshire")
+
+    assert rows[0].phone_number is None

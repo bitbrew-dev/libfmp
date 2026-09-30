@@ -207,7 +207,7 @@ pub(crate) struct SecCompanySearchResult {
     #[pyo3(get)]
     pub business_address: String,
     #[pyo3(get)]
-    pub phone_number: String,
+    pub phone_number: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -224,7 +224,7 @@ impl SecCompanySearchResult {
         sic_code: String,
         industry_title: String,
         business_address: String,
-        phone_number: String,
+        phone_number: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -408,11 +408,11 @@ pub(crate) struct SecCompanyProfile {
     #[pyo3(get)]
     pub state_of_incorporation: String,
     #[pyo3(get)]
-    pub fiscal_year_end: String,
+    pub fiscal_year_end: Option<String>,
     #[pyo3(get)]
     pub ipo_date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub employees: String,
+    pub employees: Option<String>,
     #[pyo3(get)]
     pub sec_filings_url: String,
     #[pyo3(get)]
@@ -466,9 +466,9 @@ impl SecCompanyProfile {
         exchange: String,
         state_location: String,
         state_of_incorporation: String,
-        fiscal_year_end: String,
+        fiscal_year_end: Option<String>,
         ipo_date: ::chrono::NaiveDate,
-        employees: String,
+        employees: Option<String>,
         sec_filings_url: String,
         tax_identification_number: String,
         fifty_two_week_range: String,
@@ -957,7 +957,7 @@ impl From<libfmp::responses::sec_filings::SecCompanyProfile> for SecCompanyProfi
             state_of_incorporation: value.state_of_incorporation,
             fiscal_year_end: value.fiscal_year_end,
             ipo_date: value.ipo_date.into_inner(),
-            employees: value.employees.into_inner(),
+            employees: value.employees.map(|value| value.into_inner()),
             sec_filings_url: value.sec_filings_url,
             tax_identification_number: value.tax_identification_number,
             fifty_two_week_range: value.fifty_two_week_range,

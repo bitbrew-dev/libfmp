@@ -67,13 +67,19 @@ pub struct CrowdfundingOffering {
     pub issuer_city: String,
     pub issuer_state_or_country: String,
     pub issuer_zip_code: String,
-    pub issuer_website: String,
-    pub intermediary_company_name: String,
+    #[serde(deserialize_with = "required_option")]
+    pub issuer_website: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub intermediary_company_name: Option<String>,
     pub intermediary_commission_cik: Cik,
-    pub intermediary_commission_file_number: String,
-    pub compensation_amount: String,
-    pub financial_interest: String,
-    pub security_offered_type: String,
+    #[serde(deserialize_with = "required_option")]
+    pub intermediary_commission_file_number: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub compensation_amount: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub financial_interest: Option<String>,
+    #[serde(deserialize_with = "required_option")]
+    pub security_offered_type: Option<String>,
     #[serde(deserialize_with = "required_option")]
     pub security_offered_other_description: Option<String>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
@@ -82,10 +88,12 @@ pub struct CrowdfundingOffering {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub offering_amount: StatementAmount,
     pub over_subscription_accepted: YnFlag,
-    pub over_subscription_allocation_type: String,
+    #[serde(deserialize_with = "required_option")]
+    pub over_subscription_allocation_type: Option<String>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub maximum_offering_amount: StatementAmount,
-    pub offering_deadline_date: UsDate,
+    #[serde(deserialize_with = "required_option")]
+    pub offering_deadline_date: Option<UsDate>,
     #[serde(deserialize_with = "crate::codecs::count::deserialize")]
     pub current_number_of_employees: Count,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
@@ -166,13 +174,15 @@ pub struct RegulationDOffering {
     pub related_person_zip_code: String,
     pub related_person_relationship: String,
     pub industry_group_type: String,
-    pub revenue_range: String,
+    #[serde(deserialize_with = "required_option")]
+    pub revenue_range: Option<String>,
     pub federal_exemptions_exclusions: String,
     pub is_amendment: bool,
     #[serde(with = "empty_date")]
     pub date_of_first_sale: Option<Date>,
     pub duration_of_offering_is_more_than_year: bool,
-    pub securities_offered_are_of_equity_type: bool,
+    #[serde(deserialize_with = "required_option")]
+    pub securities_offered_are_of_equity_type: Option<bool>,
     pub is_business_combination_transaction: bool,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub minimum_investment_accepted: MarketValue,

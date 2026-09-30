@@ -5,6 +5,11 @@ use libfmp::responses::fundraising::RegulationDOffering;
 
 const LATEST: &[u8] = include_bytes!("fixtures/fundraising_latest.json");
 const BY_CIK: &[u8] = include_bytes!("fixtures/fundraising_by_cik.json");
+const NULLABLE: [&str; 3] = [
+    "incorporatedWithinFiveYears",
+    "revenueRange",
+    "securitiesOfferedAreOfEquityType",
+];
 
 #[test]
 fn both_exact_outer_md_fixtures_round_trip_as_the_shared_43_key_row() {
@@ -45,7 +50,7 @@ fn typed_fields_preserve_ciks_temporals_empty_sentinels_and_amounts() {
 }
 
 #[test]
-fn incorporated_flag_is_required_present_nullable_and_every_other_key_is_non_null() {
+fn nullable_members_are_required_present_and_every_other_key_is_non_null() {
     for fixture in [LATEST, BY_CIK] {
         let source: Value = serde_json::from_slice(fixture).unwrap();
         let row = source[0].as_object().unwrap();
@@ -60,8 +65,10 @@ fn incorporated_flag_is_required_present_nullable_and_every_other_key_is_non_nul
 
             let mut null = row.clone();
             null.insert(field.clone(), Value::Null);
-            if field == "incorporatedWithinFiveYears" {
-                assert!(serde_json::from_value::<RegulationDOffering>(Value::Object(null)).is_ok());
+            if NULLABLE.contains(&field.as_str()) {
+                let decoded =
+                    serde_json::from_value::<RegulationDOffering>(Value::Object(null)).unwrap();
+                assert!(serde_json::to_value(decoded).unwrap()[field].is_null());
             } else {
                 assert!(
                     serde_json::from_value::<RegulationDOffering>(Value::Object(null)).is_err(),

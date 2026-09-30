@@ -76,26 +76,26 @@ func (m *SECFiling) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // SECCompanySearchResult is one company identity returned by the three SEC
 // company-search routes.
 type SECCompanySearchResult struct {
-	Symbol          string `json:"symbol"`
-	Name            string `json:"name"`
-	CIK             string `json:"cik"`
-	SicCode         string `json:"sicCode"`
-	IndustryTitle   string `json:"industryTitle"`
-	BusinessAddress string `json:"businessAddress"`
-	PhoneNumber     string `json:"phoneNumber"`
+	Symbol          string  `json:"symbol"`
+	Name            string  `json:"name"`
+	CIK             string  `json:"cik"`
+	SicCode         string  `json:"sicCode"`
+	IndustryTitle   string  `json:"industryTitle"`
+	BusinessAddress string  `json:"businessAddress"`
+	PhoneNumber     *string `json:"phoneNumber"`
 }
 
 // secCompanySearchResultShadow mirrors SECCompanySearchResult with a pointer
 // or raw value for every required member so a missing or null member is
 // observable after decoding.
 type secCompanySearchResultShadow struct {
-	Symbol          *string `json:"symbol"`
-	Name            *string `json:"name"`
-	CIK             *string `json:"cik"`
-	SicCode         *string `json:"sicCode"`
-	IndustryTitle   *string `json:"industryTitle"`
-	BusinessAddress *string `json:"businessAddress"`
-	PhoneNumber     *string `json:"phoneNumber"`
+	Symbol          *string        `json:"symbol"`
+	Name            *string        `json:"name"`
+	CIK             *string        `json:"cik"`
+	SicCode         *string        `json:"sicCode"`
+	IndustryTitle   *string        `json:"industryTitle"`
+	BusinessAddress *string        `json:"businessAddress"`
+	PhoneNumber     jsontext.Value `json:"phoneNumber"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -119,8 +119,16 @@ func (m *SECCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		return missingMemberError("SECCompanySearchResult", "industryTitle")
 	case shadow.BusinessAddress == nil:
 		return missingMemberError("SECCompanySearchResult", "businessAddress")
-	case shadow.PhoneNumber == nil:
+	case len(shadow.PhoneNumber) == 0:
 		return missingMemberError("SECCompanySearchResult", "phoneNumber")
+	}
+	var phoneNumber *string
+	if shadow.PhoneNumber.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.PhoneNumber, &value); err != nil {
+			return err
+		}
+		phoneNumber = &value
 	}
 	*m = SECCompanySearchResult{
 		Symbol:          *shadow.Symbol,
@@ -129,7 +137,7 @@ func (m *SECCompanySearchResult) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 		SicCode:         *shadow.SicCode,
 		IndustryTitle:   *shadow.IndustryTitle,
 		BusinessAddress: *shadow.BusinessAddress,
-		PhoneNumber:     *shadow.PhoneNumber,
+		PhoneNumber:     phoneNumber,
 	}
 	return nil
 }
@@ -156,9 +164,9 @@ type SECCompanyProfile struct {
 	Exchange                string          `json:"exchange"`
 	StateLocation           string          `json:"stateLocation"`
 	StateOfIncorporation    string          `json:"stateOfIncorporation"`
-	FiscalYearEnd           string          `json:"fiscalYearEnd"`
+	FiscalYearEnd           *string         `json:"fiscalYearEnd"`
 	IPODate                 Date            `json:"ipoDate"`
-	Employees               string          `json:"employees"`
+	Employees               *string         `json:"employees"`
 	SECFilingsURL           string          `json:"secFilingsUrl"`
 	TaxIdentificationNumber string          `json:"taxIdentificationNumber"`
 	FiftyTwoWeekRange       string          `json:"fiftyTwoWeekRange"`
@@ -197,9 +205,9 @@ type secCompanyProfileShadow struct {
 	Exchange                *string        `json:"exchange"`
 	StateLocation           *string        `json:"stateLocation"`
 	StateOfIncorporation    *string        `json:"stateOfIncorporation"`
-	FiscalYearEnd           *string        `json:"fiscalYearEnd"`
+	FiscalYearEnd           jsontext.Value `json:"fiscalYearEnd"`
 	IPODate                 *Date          `json:"ipoDate"`
-	Employees               *string        `json:"employees"`
+	Employees               jsontext.Value `json:"employees"`
 	SECFilingsURL           *string        `json:"secFilingsUrl"`
 	TaxIdentificationNumber *string        `json:"taxIdentificationNumber"`
 	FiftyTwoWeekRange       *string        `json:"fiftyTwoWeekRange"`
@@ -263,11 +271,11 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("SECCompanyProfile", "stateLocation")
 	case shadow.StateOfIncorporation == nil:
 		return missingMemberError("SECCompanyProfile", "stateOfIncorporation")
-	case shadow.FiscalYearEnd == nil:
+	case len(shadow.FiscalYearEnd) == 0:
 		return missingMemberError("SECCompanyProfile", "fiscalYearEnd")
 	case shadow.IPODate == nil:
 		return missingMemberError("SECCompanyProfile", "ipoDate")
-	case shadow.Employees == nil:
+	case len(shadow.Employees) == 0:
 		return missingMemberError("SECCompanyProfile", "employees")
 	case shadow.SECFilingsURL == nil:
 		return missingMemberError("SECCompanyProfile", "secFilingsUrl")
@@ -293,6 +301,22 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("SECCompanyProfile", "isAdr")
 	case shadow.IsFund == nil:
 		return missingMemberError("SECCompanyProfile", "isFund")
+	}
+	var fiscalYearEnd *string
+	if shadow.FiscalYearEnd.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.FiscalYearEnd, &value); err != nil {
+			return err
+		}
+		fiscalYearEnd = &value
+	}
+	var employees *string
+	if shadow.Employees.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Employees, &value); err != nil {
+			return err
+		}
+		employees = &value
 	}
 	var securityType *jsontext.Value
 	if shadow.SecurityType.Kind() != 'n' {
@@ -323,9 +347,9 @@ func (m *SECCompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Exchange:                *shadow.Exchange,
 		StateLocation:           *shadow.StateLocation,
 		StateOfIncorporation:    *shadow.StateOfIncorporation,
-		FiscalYearEnd:           *shadow.FiscalYearEnd,
+		FiscalYearEnd:           fiscalYearEnd,
 		IPODate:                 *shadow.IPODate,
-		Employees:               *shadow.Employees,
+		Employees:               employees,
 		SECFilingsURL:           *shadow.SECFilingsURL,
 		TaxIdentificationNumber: *shadow.TaxIdentificationNumber,
 		FiftyTwoWeekRange:       *shadow.FiftyTwoWeekRange,

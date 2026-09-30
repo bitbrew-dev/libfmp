@@ -252,19 +252,19 @@ pub(crate) struct CrowdfundingOffering {
     #[pyo3(get)]
     pub issuer_zip_code: String,
     #[pyo3(get)]
-    pub issuer_website: String,
+    pub issuer_website: Option<String>,
     #[pyo3(get)]
-    pub intermediary_company_name: String,
+    pub intermediary_company_name: Option<String>,
     #[pyo3(get)]
     pub intermediary_commission_cik: String,
     #[pyo3(get)]
-    pub intermediary_commission_file_number: String,
+    pub intermediary_commission_file_number: Option<String>,
     #[pyo3(get)]
-    pub compensation_amount: String,
+    pub compensation_amount: Option<String>,
     #[pyo3(get)]
-    pub financial_interest: String,
+    pub financial_interest: Option<String>,
     #[pyo3(get)]
-    pub security_offered_type: String,
+    pub security_offered_type: Option<String>,
     #[pyo3(get)]
     pub security_offered_other_description: Option<String>,
     #[pyo3(get)]
@@ -274,11 +274,11 @@ pub(crate) struct CrowdfundingOffering {
     pub offering_amount: f64,
     pub over_subscription_accepted: String,
     #[pyo3(get)]
-    pub over_subscription_allocation_type: String,
+    pub over_subscription_allocation_type: Option<String>,
     #[pyo3(get)]
     pub maximum_offering_amount: f64,
     #[pyo3(get)]
-    pub offering_deadline_date: ::chrono::NaiveDate,
+    pub offering_deadline_date: Option<::chrono::NaiveDate>,
     #[pyo3(get)]
     pub current_number_of_employees: u64,
     #[pyo3(get)]
@@ -341,13 +341,13 @@ impl CrowdfundingOffering {
         issuer_city: String,
         issuer_state_or_country: String,
         issuer_zip_code: String,
-        issuer_website: String,
-        intermediary_company_name: String,
+        issuer_website: Option<String>,
+        intermediary_company_name: Option<String>,
         intermediary_commission_cik: String,
-        intermediary_commission_file_number: String,
-        compensation_amount: String,
-        financial_interest: String,
-        security_offered_type: String,
+        intermediary_commission_file_number: Option<String>,
+        compensation_amount: Option<String>,
+        financial_interest: Option<String>,
+        security_offered_type: Option<String>,
         security_offered_other_description: Option<String>,
         number_of_security_offered: f64,
         #[gen_stub(override_type(type_repr = "builtins.int | builtins.float", imports = ("builtins",)))]
@@ -355,9 +355,9 @@ impl CrowdfundingOffering {
         offering_amount: f64,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Y\", \"N\"]", imports = ("builtins", "typing")))]
         over_subscription_accepted: String,
-        over_subscription_allocation_type: String,
+        over_subscription_allocation_type: Option<String>,
         maximum_offering_amount: f64,
-        offering_deadline_date: ::chrono::NaiveDate,
+        offering_deadline_date: Option<::chrono::NaiveDate>,
         current_number_of_employees: u64,
         total_asset_most_recent_fiscal_year: f64,
         total_asset_prior_fiscal_year: f64,
@@ -1269,7 +1269,7 @@ impl From<libfmp::responses::fundraising::CrowdfundingOffering> for Crowdfunding
             over_subscription_accepted: value.over_subscription_accepted.to_string(),
             over_subscription_allocation_type: value.over_subscription_allocation_type,
             maximum_offering_amount: value.maximum_offering_amount,
-            offering_deadline_date: value.offering_deadline_date.into_inner(),
+            offering_deadline_date: value.offering_deadline_date.map(|value| value.into_inner()),
             current_number_of_employees: value.current_number_of_employees,
             total_asset_most_recent_fiscal_year: value.total_asset_most_recent_fiscal_year,
             total_asset_prior_fiscal_year: value.total_asset_prior_fiscal_year,
@@ -1361,7 +1361,7 @@ pub(crate) struct RegulationDOffering {
     #[pyo3(get)]
     pub industry_group_type: String,
     #[pyo3(get)]
-    pub revenue_range: String,
+    pub revenue_range: Option<String>,
     #[pyo3(get)]
     pub federal_exemptions_exclusions: String,
     #[pyo3(get)]
@@ -1371,7 +1371,7 @@ pub(crate) struct RegulationDOffering {
     #[pyo3(get)]
     pub duration_of_offering_is_more_than_year: bool,
     #[pyo3(get)]
-    pub securities_offered_are_of_equity_type: bool,
+    pub securities_offered_are_of_equity_type: Option<bool>,
     #[pyo3(get)]
     pub is_business_combination_transaction: bool,
     #[pyo3(get)]
@@ -1429,12 +1429,12 @@ impl RegulationDOffering {
         related_person_zip_code: String,
         related_person_relationship: String,
         industry_group_type: String,
-        revenue_range: String,
+        revenue_range: Option<String>,
         federal_exemptions_exclusions: String,
         is_amendment: bool,
         date_of_first_sale: Option<::chrono::NaiveDate>,
         duration_of_offering_is_more_than_year: bool,
-        securities_offered_are_of_equity_type: bool,
+        securities_offered_are_of_equity_type: Option<bool>,
         is_business_combination_transaction: bool,
         minimum_investment_accepted: f64,
         total_offering_amount: f64,

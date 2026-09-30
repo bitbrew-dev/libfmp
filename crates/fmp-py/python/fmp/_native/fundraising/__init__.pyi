@@ -96,19 +96,19 @@ class CrowdfundingOffering:
     @property
     def issuer_zip_code(self) -> builtins.str: ...
     @property
-    def issuer_website(self) -> builtins.str: ...
+    def issuer_website(self) -> typing.Optional[builtins.str]: ...
     @property
-    def intermediary_company_name(self) -> builtins.str: ...
+    def intermediary_company_name(self) -> typing.Optional[builtins.str]: ...
     @property
     def intermediary_commission_cik(self) -> builtins.str: ...
     @property
-    def intermediary_commission_file_number(self) -> builtins.str: ...
+    def intermediary_commission_file_number(self) -> typing.Optional[builtins.str]: ...
     @property
-    def compensation_amount(self) -> builtins.str: ...
+    def compensation_amount(self) -> typing.Optional[builtins.str]: ...
     @property
-    def financial_interest(self) -> builtins.str: ...
+    def financial_interest(self) -> typing.Optional[builtins.str]: ...
     @property
-    def security_offered_type(self) -> builtins.str: ...
+    def security_offered_type(self) -> typing.Optional[builtins.str]: ...
     @property
     def security_offered_other_description(self) -> typing.Optional[builtins.str]: ...
     @property
@@ -116,11 +116,11 @@ class CrowdfundingOffering:
     @property
     def offering_amount(self) -> builtins.float: ...
     @property
-    def over_subscription_allocation_type(self) -> builtins.str: ...
+    def over_subscription_allocation_type(self) -> typing.Optional[builtins.str]: ...
     @property
     def maximum_offering_amount(self) -> builtins.float: ...
     @property
-    def offering_deadline_date(self) -> datetime.date: ...
+    def offering_deadline_date(self) -> typing.Optional[datetime.date]: ...
     @property
     def current_number_of_employees(self) -> builtins.int: ...
     @property
@@ -181,21 +181,21 @@ class CrowdfundingOffering:
         issuer_city: builtins.str,
         issuer_state_or_country: builtins.str,
         issuer_zip_code: builtins.str,
-        issuer_website: builtins.str,
-        intermediary_company_name: builtins.str,
+        issuer_website: typing.Optional[builtins.str],
+        intermediary_company_name: typing.Optional[builtins.str],
         intermediary_commission_cik: builtins.str,
-        intermediary_commission_file_number: builtins.str,
-        compensation_amount: builtins.str,
-        financial_interest: builtins.str,
-        security_offered_type: builtins.str,
+        intermediary_commission_file_number: typing.Optional[builtins.str],
+        compensation_amount: typing.Optional[builtins.str],
+        financial_interest: typing.Optional[builtins.str],
+        security_offered_type: typing.Optional[builtins.str],
         security_offered_other_description: typing.Optional[builtins.str],
         number_of_security_offered: builtins.float,
         offering_price: builtins.int | builtins.float,
         offering_amount: builtins.float,
         over_subscription_accepted: typing.Literal["Y", "N"],
-        over_subscription_allocation_type: builtins.str,
+        over_subscription_allocation_type: typing.Optional[builtins.str],
         maximum_offering_amount: builtins.float,
-        offering_deadline_date: datetime.date,
+        offering_deadline_date: typing.Optional[datetime.date],
         current_number_of_employees: builtins.int,
         total_asset_most_recent_fiscal_year: builtins.float,
         total_asset_prior_fiscal_year: builtins.float,
@@ -415,7 +415,7 @@ class RegulationDOffering:
     @property
     def industry_group_type(self) -> builtins.str: ...
     @property
-    def revenue_range(self) -> builtins.str: ...
+    def revenue_range(self) -> typing.Optional[builtins.str]: ...
     @property
     def federal_exemptions_exclusions(self) -> builtins.str: ...
     @property
@@ -425,7 +425,9 @@ class RegulationDOffering:
     @property
     def duration_of_offering_is_more_than_year(self) -> builtins.bool: ...
     @property
-    def securities_offered_are_of_equity_type(self) -> builtins.bool: ...
+    def securities_offered_are_of_equity_type(
+        self,
+    ) -> typing.Optional[builtins.bool]: ...
     @property
     def is_business_combination_transaction(self) -> builtins.bool: ...
     @property
@@ -477,12 +479,12 @@ class RegulationDOffering:
         related_person_zip_code: builtins.str,
         related_person_relationship: builtins.str,
         industry_group_type: builtins.str,
-        revenue_range: builtins.str,
+        revenue_range: typing.Optional[builtins.str],
         federal_exemptions_exclusions: builtins.str,
         is_amendment: builtins.bool,
         date_of_first_sale: typing.Optional[datetime.date],
         duration_of_offering_is_more_than_year: builtins.bool,
-        securities_offered_are_of_equity_type: builtins.bool,
+        securities_offered_are_of_equity_type: typing.Optional[builtins.bool],
         is_business_combination_transaction: builtins.bool,
         minimum_investment_accepted: builtins.float,
         total_offering_amount: builtins.float,

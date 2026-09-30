@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
 	"errors"
+	"reflect"
 	"slices"
 	"strings"
 	"testing"
@@ -83,7 +84,7 @@ func TestDocumentedRegulationDOfferingsDecodeExactValues(t *testing.T) {
 		row.AcceptedDate.String() != "2026-07-30 13:05:23" || row.FormType != "D" ||
 		row.IncorporatedWithinFiveYears == nil || !*row.IncorporatedWithinFiveYears ||
 		row.YearOfIncorporation != "2026" || row.DateOfFirstSale != nil || row.TotalNumberAlreadyInvested != 0 ||
-		row.IsAmendment || !row.SecuritiesOfferedAreOfEquityType {
+		row.IsAmendment || !reflect.DeepEqual(row.SecuritiesOfferedAreOfEquityType, new(true)) {
 		t.Fatalf("fundraising_latest = %+v", row)
 	}
 	if members := memberSet(t, row); len(members) != 43 {
@@ -217,5 +218,69 @@ func TestFundraisingRequiredMembersAndCodecsAreEnforcedLikeSerde(t *testing.T) {
 	var wrongFlag []CrowdfundingOffering
 	if err := json.Unmarshal(mutateFixtureMember(t, crowdfunding, "overSubscriptionAccepted", jsontext.Value(`true`)), &wrongFlag); err == nil {
 		t.Fatal("a JSON bool decoded into the Y/N string flag")
+	}
+}
+
+// Mirrors nullable_members_are_required_present_and_all_other_keys_are_non_null in
+// crates/libfmp/tests/fundraising_crowdfunding_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestCrowdfundingNullableMembersDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "crowdfunding_offerings_latest.json"
+	cases := []struct {
+		member string
+		isNil  func(CrowdfundingOffering) bool
+	}{
+		{"compensationAmount", func(row CrowdfundingOffering) bool { return row.CompensationAmount == nil }},
+		{"financialInterest", func(row CrowdfundingOffering) bool { return row.FinancialInterest == nil }},
+		{"intermediaryCommissionFileNumber", func(row CrowdfundingOffering) bool { return row.IntermediaryCommissionFileNumber == nil }},
+		{"intermediaryCompanyName", func(row CrowdfundingOffering) bool { return row.IntermediaryCompanyName == nil }},
+		{"issuerWebsite", func(row CrowdfundingOffering) bool { return row.IssuerWebsite == nil }},
+		{"offeringDeadlineDate", func(row CrowdfundingOffering) bool { return row.OfferingDeadlineDate == nil }},
+		{"overSubscriptionAllocationType", func(row CrowdfundingOffering) bool { return row.OverSubscriptionAllocationType == nil }},
+		{"securityOfferedType", func(row CrowdfundingOffering) bool { return row.SecurityOfferedType == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []CrowdfundingOffering
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []CrowdfundingOffering
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
+	}
+}
+
+// Mirrors nullable_members_are_required_present_and_every_other_key_is_non_null in
+// crates/libfmp/tests/fundraising_regulation_d_responses.rs: members FMP sends as null
+// decode to nil, while a missing member still fails.
+func TestRegulationDNullableMembersDecodeNullAsNil(t *testing.T) {
+	t.Parallel()
+	const fixture = "fundraising_latest.json"
+	cases := []struct {
+		member string
+		isNil  func(RegulationDOffering) bool
+	}{
+		{"revenueRange", func(row RegulationDOffering) bool { return row.RevenueRange == nil }},
+		{"securitiesOfferedAreOfEquityType", func(row RegulationDOffering) bool { return row.SecuritiesOfferedAreOfEquityType == nil }},
+	}
+	for _, tc := range cases {
+		t.Run(tc.member, func(t *testing.T) {
+			t.Parallel()
+			var missing []RegulationDOffering
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, nil), &missing); err == nil {
+				t.Fatalf("missing %s decoded", tc.member)
+			}
+			var rows []RegulationDOffering
+			if err := json.Unmarshal(mutateFixtureMember(t, fixture, tc.member, jsontext.Value(`null`)), &rows); err != nil ||
+				len(rows) != 1 || !tc.isNil(rows[0]) {
+				t.Fatalf("null %s = %+v, %v, want nil", tc.member, rows, err)
+			}
+		})
 	}
 }
