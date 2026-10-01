@@ -45,6 +45,10 @@ func TestBulkSnapshotsDecodeExactValues(t *testing.T) {
 		profiles[0].CIK == nil || *profiles[0].CIK != "0000107263" || profiles[0].IsETF {
 		t.Fatalf("bulk_company_profiles = %+v", profiles[0])
 	}
+	if profiles[2].Symbol != "ACCV" || profiles[2].Change != nil || profiles[2].ChangePercentage != nil ||
+		profiles[3].Symbol != "CFHAX" || profiles[3].ISIN != nil || profiles[3].Country != nil || profiles[3].Ceo != "" {
+		t.Fatalf("empty profile cells = %+v, %+v", profiles[2], profiles[3])
+	}
 	ratings := assertCSVFixtureParity[BulkStockRating](t, "bulk_stock_ratings.csv", 9)
 	if ratings[0].Rating != "B-" || cellText(ratings[0].PriceToBookScore) != "4" {
 		t.Fatalf("bulk_stock_ratings = %+v", ratings[0])

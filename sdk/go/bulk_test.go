@@ -58,7 +58,7 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	ctx := context.Background()
 
 	profiles, err := client.Bulk.CompanyProfiles(ctx, NewBulkPartQuery("0"))
-	if err != nil || len(profiles) != 2 || profiles[0].Symbol != "WMB" || profiles[0].MarketCap != 82_906_291_252 {
+	if err != nil || len(profiles) != 4 || profiles[0].Symbol != "WMB" || profiles[0].MarketCap != 82_906_291_252 {
 		t.Fatalf("CompanyProfiles = %+v, %v", profiles, err)
 	}
 	ratings, err := client.Bulk.StockRatings(ctx)

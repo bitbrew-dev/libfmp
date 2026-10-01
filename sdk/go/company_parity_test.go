@@ -52,11 +52,11 @@ func TestDocumentedCompanyProfileNoteAndPeerDecodeExactValues(t *testing.T) {
 	profile := profiles[0]
 	want := CompanyProfile{
 		Symbol: "AAPL", Price: 331.85501, MarketCap: 4_874_072_686_740, Beta: 1.097, LastDividend: 1.05,
-		Range: "201.5-344.57", Change: -6.33498, ChangePercentage: -1.8732, Volume: 28_718_014,
+		Range: "201.5-344.57", Change: new(-6.33498), ChangePercentage: new(-1.8732), Volume: 28_718_014,
 		AverageVolume: 55_309_000, CompanyName: "Apple Inc.", Currency: "USD", CIK: new("0000320193"),
-		ISIN: "US0378331005", CUSIP: new("037833100"), ExchangeFullName: "NASDAQ Global Select", Exchange: "NASDAQ",
+		ISIN: new("US0378331005"), CUSIP: new("037833100"), ExchangeFullName: "NASDAQ Global Select", Exchange: "NASDAQ",
 		Industry: "Consumer Electronics", Website: "https://www.apple.com", Description: profile.Description,
-		Ceo: "Timothy D. Cook", Sector: "Technology", Country: "US", FullTimeEmployees: new("166000"),
+		Ceo: "Timothy D. Cook", Sector: "Technology", Country: new("US"), FullTimeEmployees: new("166000"),
 		Phone: new("(408) 996-1010"), Address: "One Apple Park Way", City: "Cupertino", State: "CA", Zip: "95014",
 		Image: "https://images.financialmodelingprep.com/symbol/AAPL.png", IPODate: new(mustParseDate(t, "1980-12-12")),
 		DefaultImage: false, IsETF: false, IsActivelyTrading: true, IsAdr: false, IsFund: false,

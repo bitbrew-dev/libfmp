@@ -322,9 +322,9 @@ class CompanyProfile:
     @property
     def range(self) -> builtins.str: ...
     @property
-    def change(self) -> builtins.float: ...
+    def change(self) -> typing.Optional[builtins.float]: ...
     @property
-    def change_percentage(self) -> builtins.float: ...
+    def change_percentage(self) -> typing.Optional[builtins.float]: ...
     @property
     def volume(self) -> builtins.float: ...
     @property
@@ -336,7 +336,7 @@ class CompanyProfile:
     @property
     def cik(self) -> typing.Optional[builtins.str]: ...
     @property
-    def isin(self) -> builtins.str: ...
+    def isin(self) -> typing.Optional[builtins.str]: ...
     @property
     def cusip(self) -> typing.Optional[builtins.str]: ...
     @property
@@ -354,7 +354,7 @@ class CompanyProfile:
     @property
     def sector(self) -> builtins.str: ...
     @property
-    def country(self) -> builtins.str: ...
+    def country(self) -> typing.Optional[builtins.str]: ...
     @property
     def full_time_employees(self) -> typing.Optional[builtins.str]: ...
     @property
@@ -391,14 +391,14 @@ class CompanyProfile:
         beta: builtins.float,
         last_dividend: builtins.float,
         range: builtins.str,
-        change: builtins.float,
-        change_percentage: builtins.float,
+        change: typing.Optional[builtins.float],
+        change_percentage: typing.Optional[builtins.float],
         volume: builtins.float,
         average_volume: builtins.float,
         company_name: builtins.str,
         currency: builtins.str,
         cik: typing.Optional[builtins.str],
-        isin: builtins.str,
+        isin: typing.Optional[builtins.str],
         cusip: typing.Optional[builtins.str],
         exchange_full_name: builtins.str,
         exchange: builtins.str,
@@ -407,7 +407,7 @@ class CompanyProfile:
         description: builtins.str,
         ceo: builtins.str,
         sector: builtins.str,
-        country: builtins.str,
+        country: typing.Optional[builtins.str],
         full_time_employees: typing.Optional[builtins.str],
         phone: typing.Optional[builtins.str],
         address: builtins.str,
