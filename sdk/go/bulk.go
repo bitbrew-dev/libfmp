@@ -198,11 +198,7 @@ func (n *BulkNamespace) UpgradesDowngradesConsensus(ctx context.Context) ([]Bulk
 //
 // GET key-metrics-ttm-bulk
 func (n *BulkNamespace) KeyMetricsTTM(ctx context.Context) ([]BulkKeyMetricsTTM, error) {
-	var out []BulkKeyMetricsTTM
-	if err := n.client.getJSON(ctx, "key-metrics-ttm-bulk", "key-metrics-ttm-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkKeyMetricsTTM](ctx, n.client, "key-metrics-ttm-bulk", "key-metrics-ttm-bulk", nil)
 }
 
 // FinancialRatiosTTM retrieves worldwide trailing-twelve-month financial
@@ -210,22 +206,14 @@ func (n *BulkNamespace) KeyMetricsTTM(ctx context.Context) ([]BulkKeyMetricsTTM,
 //
 // GET ratios-ttm-bulk
 func (n *BulkNamespace) FinancialRatiosTTM(ctx context.Context) ([]BulkFinancialRatiosTTM, error) {
-	var out []BulkFinancialRatiosTTM
-	if err := n.client.getJSON(ctx, "ratios-ttm-bulk", "ratios-ttm-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkFinancialRatiosTTM](ctx, n.client, "ratios-ttm-bulk", "ratios-ttm-bulk", nil)
 }
 
 // StockPeers retrieves worldwide stock peers in one provider bulk response.
 //
 // GET peers-bulk
 func (n *BulkNamespace) StockPeers(ctx context.Context) ([]BulkStockPeer, error) {
-	var out []BulkStockPeer
-	if err := n.client.getJSON(ctx, "peers-bulk", "peers-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkStockPeer](ctx, n.client, "peers-bulk", "peers-bulk", nil)
 }
 
 // EarningsSurprises retrieves worldwide annual earnings surprises for one
@@ -237,11 +225,7 @@ func (n *BulkNamespace) EarningsSurprises(ctx context.Context, q BulkYearQuery) 
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkEarningsSurprise
-	if err := n.client.getJSON(ctx, "earnings-surprises-bulk", "earnings-surprises-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkEarningsSurprise](ctx, n.client, "earnings-surprises-bulk", "earnings-surprises-bulk", params)
 }
 
 // IncomeStatements retrieves worldwide bulk income statements for one year and
