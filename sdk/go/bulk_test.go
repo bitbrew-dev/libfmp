@@ -25,13 +25,13 @@ var bulkRoutes = map[string]string{
 	"/router/stable/ratios-ttm-bulk":                                         "bulk_financial_ratios_ttm.csv",
 	"/router/stable/peers-bulk":                                              "bulk_stock_peers.csv",
 	"/router/stable/earnings-surprises-bulk?year=4294967295":                 "bulk_earnings_surprises.csv",
-	"/router/stable/income-statement-bulk?year=2026&period=Q1":               "bulk_income_statements.json",
-	"/router/stable/income-statement-growth-bulk?year=2026&period=Q2":        "bulk_income_statement_growth.json",
-	"/router/stable/balance-sheet-statement-bulk?year=2026&period=Q3":        "bulk_balance_sheet_statements.json",
-	"/router/stable/balance-sheet-statement-growth-bulk?year=2026&period=Q4": "bulk_balance_sheet_statement_growth.json",
-	"/router/stable/cash-flow-statement-bulk?year=4294967295&period=FY":      "bulk_cash_flow_statements.json",
-	"/router/stable/cash-flow-statement-growth-bulk?year=2025&period=FY":     "bulk_cash_flow_statement_growth.json",
-	"/router/stable/eod-bulk?date=2024-10-22":                                "bulk_eod.json",
+	"/router/stable/income-statement-bulk?year=2026&period=Q1":               "bulk_income_statements.csv",
+	"/router/stable/income-statement-growth-bulk?year=2026&period=Q2":        "bulk_income_statement_growth.csv",
+	"/router/stable/balance-sheet-statement-bulk?year=2026&period=Q3":        "bulk_balance_sheet_statements.csv",
+	"/router/stable/balance-sheet-statement-growth-bulk?year=2026&period=Q4": "bulk_balance_sheet_statement_growth.csv",
+	"/router/stable/cash-flow-statement-bulk?year=4294967295&period=FY":      "bulk_cash_flow_statements.csv",
+	"/router/stable/cash-flow-statement-growth-bulk?year=2025&period=FY":     "bulk_cash_flow_statement_growth.csv",
+	"/router/stable/eod-bulk?date=2024-10-22":                                "bulk_eod.csv",
 }
 
 func bulkRouter(t *testing.T) http.HandlerFunc {
@@ -102,31 +102,31 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("EarningsSurprises = %+v, %v", surprises, err)
 	}
 	income, err := client.Bulk.IncomeStatements(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ1))
-	if err != nil || len(income) != 1 || income[0].Revenue != "33644000000" {
+	if err != nil || len(income) != 2 || income[0].Revenue != "251641000000" {
 		t.Fatalf("IncomeStatements = %+v, %v", income, err)
 	}
 	incomeGrowth, err := client.Bulk.IncomeStatementGrowth(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ2))
-	if err != nil || len(incomeGrowth) != 1 || incomeGrowth[0].GrowthEbit != "1" {
+	if err != nil || len(incomeGrowth) != 2 || incomeGrowth[0].GrowthRevenue != "-0.08220846812871789" {
 		t.Fatalf("IncomeStatementGrowth = %+v, %v", incomeGrowth, err)
 	}
 	balance, err := client.Bulk.BalanceSheetStatements(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ3))
-	if err != nil || len(balance) != 1 || balance[0].Symbol != "MTLRP.ME" {
+	if err != nil || len(balance) != 2 || balance[1].Symbol != "0002.KL" {
 		t.Fatalf("BalanceSheetStatements = %+v, %v", balance, err)
 	}
 	balanceGrowth, err := client.Bulk.BalanceSheetStatementGrowth(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ4))
-	if err != nil || len(balanceGrowth) != 1 || balanceGrowth[0].GrowthShortTermInvestments != "0" {
+	if err != nil || len(balanceGrowth) != 2 || balanceGrowth[0].GrowthShortTermInvestments != "0.3981363245708905" {
 		t.Fatalf("BalanceSheetStatementGrowth = %+v, %v", balanceGrowth, err)
 	}
 	cashFlow, err := client.Bulk.CashFlowStatements(ctx, NewBulkStatementQuery(4_294_967_295, FiscalPeriodFullYear))
-	if err != nil || len(cashFlow) != 1 || cashFlow[0].NetIncome != "0" {
+	if err != nil || len(cashFlow) != 2 || cashFlow[0].NetIncome != "14932000000" {
 		t.Fatalf("CashFlowStatements = %+v, %v", cashFlow, err)
 	}
 	cashGrowth, err := client.Bulk.CashFlowStatementGrowth(ctx, NewBulkStatementQuery(2025, FiscalPeriodFullYear))
-	if err != nil || len(cashGrowth) != 1 || cashGrowth[0].GrowthNetDebtIssuance != "1" {
+	if err != nil || len(cashGrowth) != 2 || cashGrowth[0].GrowthNetIncome != "-0.04191152728446884" {
 		t.Fatalf("CashFlowStatementGrowth = %+v, %v", cashGrowth, err)
 	}
 	eod, err := client.Bulk.Eod(ctx, NewBulkEodQuery(mustParseDate(t, "2024-10-22")))
-	if err != nil || len(eod) != 1 || eod[0].Volume != "920904" {
+	if err != nil || len(eod) != 2 || eod[1].Close != "0.91741" {
 		t.Fatalf("Eod = %+v, %v", eod, err)
 	}
 

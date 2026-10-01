@@ -16,13 +16,17 @@ use libfmp::{
     transport::{HttpMethod, TransportResponse},
 };
 
-use support::{FixtureExecutor, json_fixture};
+use support::{FixtureExecutor, fixture_response, json_fixture};
 
-const INCOME: &[u8] = include_bytes!("fixtures/bulk_income_statements.json");
-const GROWTH: &[u8] = include_bytes!("fixtures/bulk_income_statement_growth.json");
+const INCOME: &[u8] = include_bytes!("fixtures/bulk_income_statements.csv");
+const GROWTH: &[u8] = include_bytes!("fixtures/bulk_income_statement_growth.csv");
+
+fn csv_fixture(body: &'static [u8]) -> TransportResponse {
+    fixture_response(Some("text/csv"), body)
+}
 
 fn fixtures() -> [TransportResponse; 2] {
-    [json_fixture(INCOME), json_fixture(GROWTH)]
+    [csv_fixture(INCOME), csv_fixture(GROWTH)]
 }
 
 #[test]
@@ -62,7 +66,7 @@ fn assert_response_types(
 #[tokio::test]
 async fn all_five_periods_encode_required_year_then_period_without_defaults_or_ranges() {
     let executor = Arc::new(FixtureExecutor::new(
-        std::iter::repeat_with(|| json_fixture(b"[]")).take(5),
+        std::iter::repeat_with(|| csv_fixture(b"")).take(5),
     ));
     let client = Client::builder()
         .authentication(Authentication::fmp_header("secret"))
@@ -118,9 +122,9 @@ async fn custom_proxy_sends_one_exact_request_per_method_with_auth_headers_and_d
 
     assert_eq!(income[0].symbol.as_str(), "000001.SZ");
     assert_eq!(income[0].cik.as_str(), "0000000000");
-    assert_eq!(income[0].accepted_date.to_string(), "2025-03-31 00:00:00");
+    assert_eq!(income[0].accepted_date.to_string(), "2024-12-31 00:00:00");
     assert_eq!(growth[0].reported_currency.as_str(), "CNY");
-    assert_eq!(growth[0].period, FiscalPeriod::Q1);
+    assert_eq!(growth[0].period, FiscalPeriod::FullYear);
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 2);
@@ -184,12 +188,12 @@ async fn direct_fmp_header_and_query_auth_preserve_paths_and_exact_query_order()
 }
 
 #[tokio::test]
-async fn bare_empty_arrays_decode_and_malformed_roots_keep_both_endpoint_identities() {
+async fn empty_bodies_decode_and_json_bodies_keep_both_endpoint_identities() {
     let executor = Arc::new(FixtureExecutor::new([
+        csv_fixture(b""),
+        csv_fixture(b""),
         json_fixture(b"[]"),
         json_fixture(b"[]"),
-        json_fixture(b"{}"),
-        json_fixture(b"{}"),
     ]));
     let client = Client::builder()
         .authentication(Authentication::fmp_header("secret"))

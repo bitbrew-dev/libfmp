@@ -20,17 +20,21 @@ use libfmp::{
     types::Date,
 };
 
-use support::{FixtureExecutor, json_fixture};
+use support::{FixtureExecutor, fixture_response, json_fixture};
 
-const CASH_FLOW: &[u8] = include_bytes!("fixtures/bulk_cash_flow_statements.json");
-const GROWTH: &[u8] = include_bytes!("fixtures/bulk_cash_flow_statement_growth.json");
-const EOD: &[u8] = include_bytes!("fixtures/bulk_eod.json");
+const CASH_FLOW: &[u8] = include_bytes!("fixtures/bulk_cash_flow_statements.csv");
+const GROWTH: &[u8] = include_bytes!("fixtures/bulk_cash_flow_statement_growth.csv");
+const EOD: &[u8] = include_bytes!("fixtures/bulk_eod.csv");
+
+fn csv_fixture(body: &'static [u8]) -> TransportResponse {
+    fixture_response(Some("text/csv"), body)
+}
 
 fn fixtures() -> [TransportResponse; 3] {
     [
-        json_fixture(CASH_FLOW),
-        json_fixture(GROWTH),
-        json_fixture(EOD),
+        csv_fixture(CASH_FLOW),
+        csv_fixture(GROWTH),
+        csv_fixture(EOD),
     ]
 }
 
@@ -78,7 +82,7 @@ fn assert_response_types(
 #[tokio::test]
 async fn all_five_periods_encode_required_year_then_period_without_defaults_or_ranges() {
     let executor = Arc::new(FixtureExecutor::new(
-        std::iter::repeat_with(|| json_fixture(b"[]")).take(5),
+        std::iter::repeat_with(|| csv_fixture(b"")).take(5),
     ));
     let client = Client::builder()
         .authentication(Authentication::fmp_header("secret"))
@@ -139,9 +143,9 @@ async fn custom_proxy_sends_one_exact_request_per_method_with_auth_headers_and_d
     assert_eq!(cash_flow[0].symbol.as_str(), "000001.SZ");
     assert_eq!(cash_flow[0].cik.as_str(), "0000000000");
     assert_eq!(growth[0].reported_currency.as_str(), "CNY");
-    assert_eq!(growth[0].period, FiscalPeriod::Q1);
-    assert_eq!(eod[0].symbol.as_str(), "EGS745W1C011.CA");
-    assert_eq!(eod[0].date, date);
+    assert_eq!(growth[0].period, FiscalPeriod::FullYear);
+    assert_eq!(eod[0].symbol.as_str(), "PCFD.SG");
+    assert_eq!(eod[0].date, Date::parse("2025-06-02").unwrap());
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 3);
@@ -218,14 +222,14 @@ async fn direct_fmp_header_and_query_auth_preserve_paths_and_exact_query_order()
 }
 
 #[tokio::test]
-async fn bare_empty_arrays_decode_and_malformed_roots_keep_all_endpoint_identities() {
+async fn empty_bodies_decode_and_json_bodies_keep_all_endpoint_identities() {
     let executor = Arc::new(FixtureExecutor::new([
+        csv_fixture(b""),
+        csv_fixture(b""),
+        csv_fixture(b""),
         json_fixture(b"[]"),
         json_fixture(b"[]"),
         json_fixture(b"[]"),
-        json_fixture(b"{}"),
-        json_fixture(b"{}"),
-        json_fixture(b"{}"),
     ]));
     let client = Client::builder()
         .authentication(Authentication::fmp_header("secret"))

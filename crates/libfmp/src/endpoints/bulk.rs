@@ -237,7 +237,7 @@ pub fn bulk_earnings_surprises(
 pub fn bulk_income_statements(
     query: BulkStatementQuery,
 ) -> EndpointSpec<BulkStatementQuery, Vec<BulkIncomeStatement>> {
-    EndpointSpec::get("income-statement-bulk", "income-statement-bulk", query)
+    EndpointSpec::get_csv("income-statement-bulk", "income-statement-bulk", query)
         .with_metadata(WORLDWIDE)
 }
 
@@ -245,7 +245,7 @@ pub fn bulk_income_statements(
 pub fn bulk_income_statement_growth(
     query: BulkStatementQuery,
 ) -> EndpointSpec<BulkStatementQuery, Vec<BulkIncomeStatementGrowth>> {
-    EndpointSpec::get(
+    EndpointSpec::get_csv(
         "income-statement-growth-bulk",
         "income-statement-growth-bulk",
         query,
@@ -257,7 +257,7 @@ pub fn bulk_income_statement_growth(
 pub fn bulk_balance_sheet_statements(
     query: BulkStatementQuery,
 ) -> EndpointSpec<BulkStatementQuery, Vec<BulkBalanceSheetStatement>> {
-    EndpointSpec::get(
+    EndpointSpec::get_csv(
         "balance-sheet-statement-bulk",
         "balance-sheet-statement-bulk",
         query,
@@ -269,7 +269,7 @@ pub fn bulk_balance_sheet_statements(
 pub fn bulk_balance_sheet_statement_growth(
     query: BulkStatementQuery,
 ) -> EndpointSpec<BulkStatementQuery, Vec<BulkBalanceSheetStatementGrowth>> {
-    EndpointSpec::get(
+    EndpointSpec::get_csv(
         "balance-sheet-statement-growth-bulk",
         "balance-sheet-statement-growth-bulk",
         query,
@@ -281,7 +281,7 @@ pub fn bulk_balance_sheet_statement_growth(
 pub fn bulk_cash_flow_statements(
     query: BulkStatementQuery,
 ) -> EndpointSpec<BulkStatementQuery, Vec<BulkCashFlowStatement>> {
-    EndpointSpec::get(
+    EndpointSpec::get_csv(
         "cash-flow-statement-bulk",
         "cash-flow-statement-bulk",
         query,
@@ -293,7 +293,7 @@ pub fn bulk_cash_flow_statements(
 pub fn bulk_cash_flow_statement_growth(
     query: BulkStatementQuery,
 ) -> EndpointSpec<BulkStatementQuery, Vec<BulkCashFlowStatementGrowth>> {
-    EndpointSpec::get(
+    EndpointSpec::get_csv(
         "cash-flow-statement-growth-bulk",
         "cash-flow-statement-growth-bulk",
         query,
@@ -303,7 +303,7 @@ pub fn bulk_cash_flow_statement_growth(
 
 /// Describes `GET eod-bulk` without binding a transport.
 pub fn bulk_eod(query: BulkEodQuery) -> EndpointSpec<BulkEodQuery, Vec<BulkEodBar>> {
-    EndpointSpec::get("eod-bulk", "eod-bulk", query).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("eod-bulk", "eod-bulk", query).with_metadata(WORLDWIDE)
 }
 
 impl Client {
@@ -490,9 +490,21 @@ mod tests {
     }
 
     #[test]
-    fn bulk_descriptors_inherit_the_finite_client_response_limit() {
+    fn bulk_descriptors_default_to_the_bulk_limit_without_overriding_the_client() {
+        let bulk = crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES;
         assert_eq!(bulk_stock_ratings().max_response_body_bytes(), None);
-        assert_eq!(bulk_key_metrics_ttm().max_response_body_bytes(), None);
-        assert_eq!(bulk_financial_ratios_ttm().max_response_body_bytes(), None);
+        assert_eq!(bulk_stock_ratings().default_max_response_body_bytes(), bulk);
+        assert_eq!(
+            bulk_key_metrics_ttm().default_max_response_body_bytes(),
+            bulk
+        );
+        assert_eq!(
+            bulk_financial_ratios_ttm().default_max_response_body_bytes(),
+            bulk
+        );
+        assert_eq!(
+            bulk_eod(Date::parse("2025-06-02").unwrap().into()).default_max_response_body_bytes(),
+            bulk
+        );
     }
 }
