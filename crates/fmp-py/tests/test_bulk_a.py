@@ -83,13 +83,15 @@ def test_dcf_valuations_decodes_the_spaced_stock_price_column(client: Any, fixtu
     rows = client.bulk.dcf_valuations()
 
     assert fixture_server.requests[0].target == "/dcf-bulk"
-    assert len(rows) == 2
+    assert len(rows) == 3
     row = rows[0]
     assert isinstance(row, BulkDcfValuation)
     assert row.symbol == "000006.SZ"
     assert row.date == datetime.date(2026, 9, 29)
     assert row.dcf == "2.525226853334803"
     assert row.stock_price == "7.62"
+    assert rows[2].dcf is None
+    assert rows[2].stock_price == "1.72"
 
 
 def test_financial_scores_keeps_string_backed_numbers(client: Any, fixture_server: FixtureServer) -> None:
@@ -98,7 +100,7 @@ def test_financial_scores_keeps_string_backed_numbers(client: Any, fixture_serve
     rows = client.bulk.financial_scores()
 
     assert fixture_server.requests[0].target == "/scores-bulk"
-    assert len(rows) == 2
+    assert len(rows) == 3
     row = rows[0]
     assert isinstance(row, BulkFinancialScore)
     assert row.symbol == "000001.SZ"
@@ -106,6 +108,8 @@ def test_financial_scores_keeps_string_backed_numbers(client: Any, fixture_serve
     assert row.altman_z_score == "-0.06634014283050256"
     assert row.piotroski_score == "4"
     assert row.market_cap == "219286875637"
+    assert rows[2].reported_currency is None
+    assert rows[2].altman_z_score is None
 
 
 def test_price_target_summaries_preserves_the_raw_publishers_cell(client: Any, fixture_server: FixtureServer) -> None:
@@ -129,7 +133,7 @@ def test_etf_holdings_form_encodes_the_part(client: Any, fixture_server: Fixture
     rows = client.bulk.etf_holdings("part 1/beta")
 
     assert fixture_server.requests[0].target == "/etf-holder-bulk?part=part+1%2Fbeta"
-    assert len(rows) == 2
+    assert len(rows) == 4
     row = rows[0]
     assert isinstance(row, BulkEtfHolding)
     assert row.symbol == " -- "
@@ -137,6 +141,7 @@ def test_etf_holdings_form_encodes_the_part(client: Any, fixture_server: Fixture
     assert row.isin == "US88642R1095"
     assert row.weight_percentage == "2.63"
     assert row.last_updated == datetime.date(2026, 9, 27)
+    assert (rows[2].asset, rows[2].isin, rows[2].cusip) == (None, None, "")
 
 
 def test_upgrades_downgrades_consensus_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:

@@ -12,7 +12,9 @@ use libfmp::{
     types::{BulkPart, Date, Ticker},
 };
 
-use bulk_csv::{assert_empty_bodies, assert_members, assert_round_trip, decode};
+use bulk_csv::{
+    assert_empty_bodies, assert_members, assert_required_members, assert_round_trip, decode,
+};
 
 const PROFILE: &[u8] = include_bytes!("fixtures/bulk_company_profiles.csv");
 const RATING: &[u8] = include_bytes!("fixtures/bulk_stock_ratings.csv");
@@ -38,7 +40,7 @@ fn live_csv_fixtures_round_trip_every_cell_with_exact_field_counts() {
 }
 
 #[test]
-fn every_column_is_required_and_only_optional_or_text_members_accept_an_empty_cell() {
+fn every_column_is_required_and_only_identity_members_reject_an_empty_cell() {
     assert_members(
         &bulk_company_profiles(part()),
         PROFILE,
@@ -61,16 +63,12 @@ fn every_column_is_required_and_only_optional_or_text_members_accept_an_empty_ce
             "ipoDate",
         ],
     );
-    assert_members(&bulk_stock_ratings(), RATING, &["rating"]);
-    assert_members(&bulk_dcf_valuations(), DCF, &[]);
-    assert_members(&bulk_financial_scores(), SCORES, &[]);
-    assert_members(&bulk_price_target_summaries(), TARGET, &["publishers"]);
-    assert_members(&bulk_etf_holdings(part()), ETF, &["name", "cusip"]);
-    assert_members(
-        &bulk_upgrades_downgrades_consensus(),
-        CONSENSUS,
-        &["symbol", "consensus"],
-    );
+    assert_required_members(&bulk_stock_ratings(), RATING, &["symbol", "date"]);
+    assert_required_members(&bulk_dcf_valuations(), DCF, &["symbol", "date"]);
+    assert_required_members(&bulk_financial_scores(), SCORES, &["symbol"]);
+    assert_required_members(&bulk_price_target_summaries(), TARGET, &["symbol"]);
+    assert_required_members(&bulk_etf_holdings(part()), ETF, &["symbol", "lastUpdated"]);
+    assert_required_members(&bulk_upgrades_downgrades_consensus(), CONSENSUS, &[]);
 }
 
 #[test]
@@ -86,9 +84,9 @@ fn empty_and_header_only_bodies_decode_to_no_rows() {
 
 #[test]
 fn provider_spellings_and_quoted_text_are_preserved_verbatim() {
-    let dcf = decode(&bulk_dcf_valuations(), DCF).unwrap().remove(0);
-    assert_eq!(dcf.stock_price.as_str(), "7.62");
-    assert_eq!(dcf.dcf.as_str(), "2.525226853334803");
+    let dcf = decode(&bulk_dcf_valuations(), DCF).unwrap();
+    assert_eq!(dcf[0].stock_price.as_ref().unwrap().as_str(), "7.62");
+    assert_eq!(dcf[0].dcf.as_ref().unwrap().as_str(), "2.525226853334803");
 
     let target = decode(&bulk_price_target_summaries(), TARGET)
         .unwrap()
@@ -100,7 +98,7 @@ fn provider_spellings_and_quoted_text_are_preserved_verbatim() {
 
     let etf = decode(&bulk_etf_holdings(part()), ETF).unwrap().remove(0);
     assert_eq!(etf.symbol.as_str(), " -- ");
-    assert_eq!(etf.asset, Ticker::new("TDW").unwrap());
+    assert_eq!(etf.asset, Some(Ticker::new("TDW").unwrap()));
     assert_eq!(etf.last_updated, Date::parse("2026-09-27").unwrap());
 
     let profile = decode(&bulk_company_profiles(part()), PROFILE)
@@ -109,4 +107,25 @@ fn provider_spellings_and_quoted_text_are_preserved_verbatim() {
     assert_eq!(profile.symbol, Ticker::new("WMB").unwrap());
     assert_eq!(profile.company_name, "The Williams Companies, Inc.");
     assert!(!profile.is_etf);
+}
+
+#[test]
+fn live_empty_cells_decode_as_absent_members_and_empty_text() {
+    let dcf = decode(&bulk_dcf_valuations(), DCF).unwrap().remove(2);
+    assert_eq!(dcf.symbol.as_str(), "000023.SZ");
+    assert_eq!(dcf.dcf, None);
+    assert_eq!(dcf.stock_price.unwrap().as_str(), "1.72");
+
+    let scores = decode(&bulk_financial_scores(), SCORES).unwrap().remove(2);
+    assert_eq!(scores.symbol.as_str(), "AAAU");
+    assert_eq!(scores.reported_currency, None);
+    assert_eq!(scores.altman_z_score, None);
+    assert_eq!(scores.piotroski_score.unwrap().as_str(), "2");
+
+    let etf = decode(&bulk_etf_holdings(part()), ETF).unwrap().remove(2);
+    assert_eq!(etf.name, "Other/Cash");
+    assert_eq!(etf.asset, None);
+    assert_eq!(etf.cusip, "");
+    assert_eq!(etf.isin, None);
+    assert_eq!(etf.shares_number.unwrap().as_str(), "0");
 }

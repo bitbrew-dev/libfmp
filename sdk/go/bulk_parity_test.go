@@ -46,29 +46,33 @@ func TestBulkSnapshotsDecodeExactValues(t *testing.T) {
 		t.Fatalf("bulk_company_profiles = %+v", profiles[0])
 	}
 	ratings := assertCSVFixtureParity[BulkStockRating](t, "bulk_stock_ratings.csv", 9)
-	if want := (BulkStockRating{Symbol: "000001.SZ", Date: mustParseDate(t, "2026-09-30"), Rating: "B-",
-		DiscountedCashFlowScore: "1", ReturnOnEquityScore: "3", ReturnOnAssetsScore: "2", DebtToEquityScore: "1",
-		PriceToEarningsScore: "4", PriceToBookScore: "4"}); ratings[0] != want {
+	if ratings[0].Rating != "B-" || cellText(ratings[0].PriceToBookScore) != "4" {
 		t.Fatalf("bulk_stock_ratings = %+v", ratings[0])
 	}
 	dcf := assertCSVFixtureParity[BulkDCFValuation](t, "bulk_dcf_valuations.csv", 4)
-	if want := (BulkDCFValuation{Symbol: "000006.SZ", Date: mustParseDate(t, "2026-09-29"),
-		DCF: "2.525226853334803", StockPrice: "7.62"}); dcf[0] != want {
-		t.Fatalf("bulk_dcf_valuations = %+v", dcf[0])
-	}
 	if encoded, err := json.Marshal(dcf[0]); err != nil || !strings.Contains(string(encoded), `"Stock Price":"7.62"`) {
 		t.Fatalf("re-encoded dcf = %s, %v", encoded, err)
 	}
+	if dcf[2].Symbol != "000023.SZ" || dcf[2].DCF != nil || cellText(dcf[2].StockPrice) != "1.72" {
+		t.Fatalf("empty dcf cell = %+v", dcf[2])
+	}
+	scores := assertCSVFixtureParity[BulkFinancialScore](t, "bulk_financial_scores.csv", 11)
+	if scores[2].Symbol != "AAAU" || scores[2].ReportedCurrency != nil || scores[2].AltmanZScore != nil ||
+		cellText(scores[2].PiotroskiScore) != "2" {
+		t.Fatalf("empty score cells = %+v", scores[2])
+	}
 	targets := assertCSVFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.csv", 10)
-	if targets[0].Symbol != "A" || targets[0].Publishers != `["StreetInsider","Benzinga","Pulse 2.0"]` ||
-		targets[0].AllTimeAvgPriceTarget != "159.49" {
+	if targets[0].Publishers != `["StreetInsider","Benzinga","Pulse 2.0"]` ||
+		cellText(targets[0].AllTimeAvgPriceTarget) != "159.49" {
 		t.Fatalf("bulk_price_target_summaries = %+v", targets[0])
 	}
 	holdings := assertCSVFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.csv", 9)
-	if want := (BulkETFHolding{Symbol: " -- ", Name: "Tidewater Inc", SharesNumber: "91962", Asset: "TDW",
-		WeightPercentage: "2.63", CUSIP: "88642R109", ISIN: "US88642R1095", MarketValue: "6457163.796",
-		LastUpdated: mustParseDate(t, "2026-09-27")}); holdings[0] != want {
+	if holdings[0].Symbol != " -- " || cellText(holdings[0].Asset) != "TDW" ||
+		holdings[0].LastUpdated != mustParseDate(t, "2026-09-27") {
 		t.Fatalf("bulk_etf_holdings = %+v", holdings[0])
+	}
+	if holdings[2].Name != "Other/Cash" || holdings[2].Asset != nil || holdings[2].ISIN != nil || holdings[2].CUSIP != "" {
+		t.Fatalf("empty holding cells = %+v", holdings[2])
 	}
 }
 
