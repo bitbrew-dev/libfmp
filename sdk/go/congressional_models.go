@@ -494,7 +494,7 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		valueMember = &value
 	}
 	var incomeRange *CongressionalNetWorthRange
-	if shadow.IncomeRange.Kind() != 'n' {
+	if shadow.IncomeRange.Kind() != 'n' && string(shadow.IncomeRange) != "\"\"" {
 		var value CongressionalNetWorthRange
 		if err := json.Unmarshal(shadow.IncomeRange, &value); err != nil {
 			return memberDecodeError("CongressionalMemberNetWorth", "incomeRange", shadow.IncomeRange, err)

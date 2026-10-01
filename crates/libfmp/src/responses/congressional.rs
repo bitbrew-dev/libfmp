@@ -136,7 +136,7 @@ pub struct CongressionalMemberNetWorth {
     #[serde(deserialize_with = "required_option")]
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
     pub value: Option<MarketValue>,
-    #[serde(deserialize_with = "required_option")]
+    #[serde(deserialize_with = "crate::codecs::empty_or_null_object::deserialize")]
     pub income_range: Option<CongressionalNetWorthRange>,
     #[serde(deserialize_with = "required_option")]
     pub income: Option<DynamicJson>,

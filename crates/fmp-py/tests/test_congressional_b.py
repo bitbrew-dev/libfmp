@@ -305,6 +305,27 @@ def test_net_worth_decodes_fractional_value_and_null_members(client: Any, fixtur
     assert rows[1].value_range.max is None
 
 
+def test_net_worth_income_range_decodes_empty_and_null_as_none(
+    client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
+) -> None:
+    """An ``incomeRange`` of ``""`` or null is ``None``; an object decodes; any other value is a decode error."""
+    body = load_fixture("congress_senate_net_worth.json")
+    rows = [dict(body[0], incomeRange=value) for value in ("", None, {"min": 1001, "max": 15000})]
+    fixture_server.route("/senate-net-worth", rows)
+    decoded = client.congressional.net_worth(MEMBER_ID)
+
+    assert decoded[0].income_range is None
+    assert decoded[1].income_range is None
+    assert isinstance(decoded[2].income_range, CongressionalNetWorthRange)
+    assert (decoded[2].income_range.min, decoded[2].income_range.max) == (1001, 15000)
+
+    fixture_server.route("/senate-net-worth", [dict(body[0], incomeRange="1001-15000")])
+    with pytest.raises(errors.FmpDecodeError) as raised:
+        client.congressional.net_worth(MEMBER_ID)
+    assert raised.value.endpoint == "senate-net-worth"
+    assert raised.value.decode_path == "[0].incomeRange"
+
+
 def test_net_worth_aggregated_decodes_fractional_amounts_and_absent_members(
     client: Any, fixture_server: FixtureServer
 ) -> None:
