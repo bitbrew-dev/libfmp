@@ -196,7 +196,11 @@ uses it, and the generator fails if one appears rather than widening it to
 The fifth, from ADR 0033, is
 `deserialize_with = "crate::codecs::empty_or_null::deserialize"` on an
 `Option` of a string-backed typed code: key required, `""` and null are
-`nil`, public field `*string`.
+`nil`, public field `*string`. ADR 0033 later adds
+`crate::codecs::null_text::deserialize` (the text `"NULL"` and null are
+`nil`, #380) and `crate::codecs::empty_or_null_object::deserialize` on an
+`Option` of a response struct (`""` and null are `nil`, an object decodes
+into the struct, public field `*T`, #400).
 
 ### Generator placement
 
