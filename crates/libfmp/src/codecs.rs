@@ -807,6 +807,96 @@ pub(crate) mod empty_or_null {
     }
 }
 
+/// Deserializer for a required wire key holding a nested object whose absent
+/// value the provider sends as `""` or JSON null (ADR 0033, #400).
+///
+/// Both spellings decode to `None`; a JSON object decodes as `T`, and any
+/// other value (a non-empty string, a number, an array) is a decode error
+/// whose message never includes the value. The key stays required, as with
+/// `required_option`: do not add `default` at call sites. Apply with
+/// `deserialize_with = "crate::codecs::empty_or_null_object::deserialize"`
+/// (the exact path gen_go matches); serialization is serde's default, so
+/// `None` re-encodes as null.
+#[cfg_attr(not(test), allow(dead_code))]
+pub(crate) mod empty_or_null_object {
+    use super::*;
+
+    use std::marker::PhantomData;
+
+    const EXPECTED: &str = "a JSON object, an empty string or null";
+
+    pub(crate) fn deserialize<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+    where
+        D: Deserializer<'de>,
+        T: Deserialize<'de>,
+    {
+        deserializer.deserialize_any(ObjectVisitor(PhantomData))
+    }
+
+    struct ObjectVisitor<T>(PhantomData<T>);
+
+    impl<T> ObjectVisitor<T> {
+        fn reject<E: de::Error>(self) -> Result<Option<T>, E> {
+            Err(E::custom(format_args!("expected {EXPECTED}")))
+        }
+    }
+
+    impl<'de, T: Deserialize<'de>> de::Visitor<'de> for ObjectVisitor<T> {
+        type Value = Option<T>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+            formatter.write_str(EXPECTED)
+        }
+
+        fn visit_unit<E: de::Error>(self) -> Result<Self::Value, E> {
+            Ok(None)
+        }
+
+        fn visit_none<E: de::Error>(self) -> Result<Self::Value, E> {
+            Ok(None)
+        }
+
+        fn visit_some<D: Deserializer<'de>>(
+            self,
+            deserializer: D,
+        ) -> Result<Self::Value, D::Error> {
+            deserializer.deserialize_any(self)
+        }
+
+        fn visit_str<E: de::Error>(self, value: &str) -> Result<Self::Value, E> {
+            if value.is_empty() {
+                Ok(None)
+            } else {
+                self.reject()
+            }
+        }
+
+        fn visit_bool<E: de::Error>(self, _: bool) -> Result<Self::Value, E> {
+            self.reject()
+        }
+
+        fn visit_i64<E: de::Error>(self, _: i64) -> Result<Self::Value, E> {
+            self.reject()
+        }
+
+        fn visit_u64<E: de::Error>(self, _: u64) -> Result<Self::Value, E> {
+            self.reject()
+        }
+
+        fn visit_f64<E: de::Error>(self, _: f64) -> Result<Self::Value, E> {
+            self.reject()
+        }
+
+        fn visit_seq<A: de::SeqAccess<'de>>(self, _: A) -> Result<Self::Value, A::Error> {
+            self.reject()
+        }
+
+        fn visit_map<A: de::MapAccess<'de>>(self, map: A) -> Result<Self::Value, A::Error> {
+            T::deserialize(de::value::MapAccessDeserializer::new(map)).map(Some)
+        }
+    }
+}
+
 /// Deserializer for a required wire key holding a [`NumericString`] whose
 /// absent value the provider sends as the text `"NULL"` (ADR 0033, #380).
 ///
@@ -992,6 +1082,61 @@ mod tests {
             missing.contains("missing field `country_code`"),
             "{missing}"
         );
+    }
+
+    #[test]
+    fn empty_or_null_object_maps_empty_and_null_to_none_and_decodes_objects() {
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Range {
+            min: i64,
+        }
+        #[derive(Debug, PartialEq, Serialize, Deserialize)]
+        struct Row {
+            #[serde(deserialize_with = "super::empty_or_null_object::deserialize")]
+            range: Option<Range>,
+        }
+        let decode = |text: &str| serde_json::from_str::<Row>(text);
+        let from_value =
+            |text: &str| serde_json::from_value::<Row>(serde_json::from_str(text).unwrap());
+
+        for text in [r#"{"range":""}"#, r#"{"range":null}"#] {
+            assert_eq!(decode(text).unwrap(), Row { range: None });
+            assert_eq!(from_value(text).unwrap(), Row { range: None });
+        }
+        let row = decode(r#"{"range":{"min":-10}}"#).unwrap();
+        assert_eq!(
+            row,
+            Row {
+                range: Some(Range { min: -10 })
+            }
+        );
+        assert_eq!(from_value(r#"{"range":{"min":-10}}"#).unwrap(), row);
+        assert_eq!(
+            serde_json::to_string(&row).unwrap(),
+            r#"{"range":{"min":-10}}"#
+        );
+        assert_eq!(
+            serde_json::to_string(&Row { range: None }).unwrap(),
+            r#"{"range":null}"#
+        );
+
+        for (text, secret) in [
+            (r#"{"range":"SECRET"}"#, "SECRET"),
+            (r#"{"range":" "}"#, "\" \""),
+            (r#"{"range":31337}"#, "31337"),
+            (r#"{"range":["SECRET"]}"#, "SECRET"),
+            (r#"{"range":true}"#, "true"),
+        ] {
+            let error = decode(text).unwrap_err().to_string();
+            assert!(from_value(text).is_err(), "from_value {text}");
+            assert!(
+                !error.contains(secret),
+                "the error must not echo the value: {error}"
+            );
+        }
+        assert!(decode(r#"{"range":{}}"#).is_err());
+        let missing = decode("{}").unwrap_err().to_string();
+        assert!(missing.contains("missing field `range`"), "{missing}");
     }
 
     #[test]

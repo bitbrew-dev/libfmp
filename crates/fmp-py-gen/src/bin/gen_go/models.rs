@@ -222,6 +222,7 @@ fn render_model(model: &ModelPlan, out: &mut String) {
             | Codec::RequiredNumber
             | Codec::Count
             | Codec::EmptyOrNullString
+            | Codec::EmptyOrNullObject
             | Codec::NullTextString
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate => local_name(rust_name),
@@ -315,6 +316,7 @@ fn render_required_switch(model: &ModelPlan, out: &mut String) {
             | Codec::RequiredNumber
             | Codec::Count
             | Codec::EmptyOrNullString
+            | Codec::EmptyOrNullObject
             | Codec::NullTextString
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate
@@ -377,6 +379,21 @@ fn render_codec_block(model: &str, field: &GoField, local: &str, out: &mut Strin
                 ty = field.public_ty,
                 name = field.name,
                 wire = field.wire
+            );
+        }
+        Codec::EmptyOrNullObject => {
+            let inner = field.public_ty.trim_start_matches('*');
+            let _ = writeln!(
+                out,
+                "\tvar {local} {ty}\n\tif shadow.{name}.Kind() != 'n' && string(shadow.{name}) != {empty:?} {{\n\
+                 \t\tvar value {inner}\n\
+                 \t\tif err := json.Unmarshal(shadow.{name}, &value); err != nil {{\n\
+                 \t\t\treturn memberDecodeError({model:?}, {wire:?}, shadow.{name}, err)\n\
+                 \t\t}}\n\t\t{local} = &value\n\t}}",
+                ty = field.public_ty,
+                name = field.name,
+                wire = field.wire,
+                empty = "\"\""
             );
         }
         Codec::EmptyDate | Codec::EmptyOrNullDate => {

@@ -40,6 +40,10 @@ pub(crate) enum Codec {
     /// `Option` of a string-backed type: the key is required, and `""` and
     /// null are both absent (ADR 0033). The shadow keeps the raw value.
     EmptyOrNullString,
+    /// `deserialize_with = "crate::codecs::empty_or_null_object::deserialize"`
+    /// on an `Option` of a response struct: the key is required, and `""` and
+    /// null are both absent (ADR 0033, #400). The shadow keeps the raw value.
+    EmptyOrNullObject,
     /// `deserialize_with = "crate::codecs::null_text::deserialize"` on an
     /// `Option` of a string-backed type: the key is required, and the text
     /// `"NULL"` and null are both absent (ADR 0033). The shadow keeps the raw
@@ -58,6 +62,9 @@ const COUNT_CODEC: &str = "crate::codecs::count::deserialize";
 
 /// The `deserialize_with` path of the Rust empty-or-null typed-code codec.
 const EMPTY_OR_NULL_CODEC: &str = "crate::codecs::empty_or_null::deserialize";
+
+/// The `deserialize_with` path of the Rust empty-or-null nested-object codec.
+const EMPTY_OR_NULL_OBJECT_CODEC: &str = "crate::codecs::empty_or_null_object::deserialize";
 
 /// The `deserialize_with` path of the Rust `"NULL"`-text codec.
 const NULL_TEXT_CODEC: &str = "crate::codecs::null_text::deserialize";
@@ -96,6 +103,7 @@ impl GoField {
             | Codec::RequiredNumber
             | Codec::Count
             | Codec::EmptyOrNullString
+            | Codec::EmptyOrNullObject
             | Codec::NullTextString
             | Codec::EmptyDate
             | Codec::EmptyOrNullDate
@@ -214,6 +222,17 @@ impl<'a> TypeTable<'a> {
             (Some(EMPTY_OR_NULL_CODEC), _, _) => {
                 return Err(fail(
                     "the empty_or_null codec needs an Option of a string-backed type".to_string(),
+                ));
+            }
+            (Some(EMPTY_OR_NULL_OBJECT_CODEC), BaseKind::Scalar, [Wrap::Option])
+                if self.structs.contains(ident.as_str()) =>
+            {
+                (Codec::EmptyOrNullObject, "jsontext.Value".to_string())
+            }
+            (Some(EMPTY_OR_NULL_OBJECT_CODEC), _, _) => {
+                return Err(fail(
+                    "the empty_or_null_object codec needs an Option of a response struct"
+                        .to_string(),
                 ));
             }
             (Some(NULL_TEXT_CODEC), BaseKind::Scalar, [Wrap::Option]) if base.go == "string" => {
