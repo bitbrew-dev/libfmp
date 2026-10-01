@@ -181,3 +181,135 @@ impl<'de> de::Deserializer<'de> for Cell<'_> {
         char str string bytes byte_buf unit_struct seq tuple tuple_struct map struct identifier
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use serde::Deserialize;
+
+    use super::*;
+    use crate::{codecs::NumericString, endpoints::ResponseContract, types::Date};
+
+    #[derive(Debug, PartialEq, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    struct Row {
+        symbol: String,
+        date: Date,
+        price: f64,
+        listed: bool,
+        volume: Option<NumericString>,
+        #[serde(rename = "Stock Price")]
+        stock_price: Option<f64>,
+        peers: String,
+    }
+
+    const HEADER: &str =
+        "\"symbol\",\"date\",\"price\",\"listed\",\"volume\",\"Stock Price\",\"peers\"\n";
+
+    fn decode(body: &str) -> std::result::Result<Vec<Row>, DecodeFailure> {
+        ResponseContract::<Vec<Row>>::csv().decode(
+            Bytes::from(body.to_owned()),
+            ResponseMetadata::new("text/csv", None),
+        )
+    }
+
+    fn failure(body: &str) -> (Option<String>, DecodeErrorKind) {
+        match decode(body).unwrap_err() {
+            DecodeFailure::Shape { path, kind } => (path, kind),
+            DecodeFailure::ProviderMessage => panic!("CSV never reports a provider message"),
+        }
+    }
+
+    #[test]
+    fn empty_and_header_only_bodies_decode_to_no_rows() {
+        assert_eq!(decode("").unwrap(), []);
+        assert_eq!(decode(HEADER).unwrap(), []);
+        assert_eq!(decode("symbol,price\n").unwrap(), []);
+    }
+
+    #[test]
+    fn cells_decode_by_header_name_with_quoted_commas_and_verbatim_numbers() {
+        let body = format!(
+            "{HEADER}\"AAPL\",\"2025-06-02\",201.7,true,6.9148336e-9,12.5,\"MSFT,GOOG\"\n\
+             \"\",\"2025-06-02\",-0.5,false,,,\"say \"\"hi\"\"\"\n"
+        );
+        let rows = decode(&body).unwrap();
+
+        assert_eq!(rows[0].symbol, "AAPL");
+        assert_eq!(rows[0].date, Date::parse("2025-06-02").unwrap());
+        assert_eq!(rows[0].price, 201.7);
+        assert!(rows[0].listed);
+        assert_eq!(rows[0].volume.as_ref().unwrap().as_str(), "6.9148336e-9");
+        assert_eq!(rows[0].stock_price, Some(12.5));
+        assert_eq!(rows[0].peers, "MSFT,GOOG");
+        assert_eq!(rows[1].symbol, "");
+        assert_eq!(rows[1].volume, None);
+        assert_eq!(rows[1].stock_price, None);
+        assert_eq!(rows[1].peers, "say \"hi\"");
+    }
+
+    #[test]
+    fn an_empty_cell_on_a_required_member_is_a_null_at_its_row_and_member() {
+        let body = format!("{HEADER}A,2025-06-02,1,true,1,1,x\nB,2025-06-02,,true,1,1,x\n");
+        assert_eq!(
+            failure(&body),
+            (Some("[1].price".into()), DecodeErrorKind::Null)
+        );
+        let body = format!("{HEADER}A,,1,true,1,1,x\n");
+        assert_eq!(
+            failure(&body),
+            (Some("[0].date".into()), DecodeErrorKind::Null)
+        );
+    }
+
+    #[test]
+    fn malformed_cells_are_classified_without_their_values() {
+        let body = format!("{HEADER}A,2025-06-02,abc,true,1,1,x\n");
+        assert_eq!(
+            failure(&body),
+            (Some("[0].price".into()), DecodeErrorKind::WrongType)
+        );
+        let body = format!("{HEADER}A,2025-06-02,1,yes,1,1,x\n");
+        assert_eq!(
+            failure(&body),
+            (Some("[0].listed".into()), DecodeErrorKind::WrongType)
+        );
+        let body = format!("{HEADER}A,2025-13-40,1,true,1,1,x\n");
+        assert_eq!(
+            failure(&body),
+            (Some("[0].date".into()), DecodeErrorKind::InvalidValue)
+        );
+    }
+
+    #[test]
+    fn a_missing_column_is_a_missing_member() {
+        let body = "symbol,date,price,listed,volume,Stock Price\nA,2025-06-02,1,true,1,1\n";
+        assert_eq!(
+            failure(body),
+            (Some("[0].peers".into()), DecodeErrorKind::MissingMember)
+        );
+    }
+
+    #[test]
+    fn a_record_with_the_wrong_cell_count_is_a_syntax_error_at_its_row() {
+        let body = format!("{HEADER}A,2025-06-02,1,true,1,1,x\nB,2025-06-02\n");
+        assert_eq!(
+            failure(&body),
+            (Some("[1]".into()), DecodeErrorKind::Syntax)
+        );
+    }
+
+    #[test]
+    fn a_one_line_message_is_a_header_not_a_provider_message() {
+        assert_eq!(decode("Invalid name\n").unwrap(), []);
+    }
+
+    #[test]
+    fn the_csv_contract_accepts_only_text_csv() {
+        let expected = ResponseContract::<Vec<Row>>::csv().expected_content_type();
+
+        assert!(expected.matches("text/csv"));
+        assert!(expected.matches("Text/CSV; charset=utf-8"));
+        assert!(!expected.matches("application/json"));
+        assert!(!expected.matches("text/plain"));
+    }
+}
