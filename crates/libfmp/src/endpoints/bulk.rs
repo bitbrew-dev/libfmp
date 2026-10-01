@@ -1,17 +1,21 @@
 //! Bulk endpoint contracts.
 //!
-//! Every bulk route answers one `GET` with one bare JSON array, and each
-//! convenience method sends exactly one request: the client never paginates
-//! a `part`, retries, or fans out on the caller's behalf. Numeric cells arrive
-//! as strings on every route except `profile-bulk` and are preserved verbatim
-//! as [`crate::codecs::NumericString`].
+//! Every bulk route answers one `GET` with one headed `text/csv` body (ADR
+//! 0035), and each convenience method sends exactly one request: the client
+//! never paginates a `part`, retries, or fans out on the caller's behalf. Each
+//! record decodes into one row by header name; an empty or header-only body is
+//! no rows. Numeric cells are preserved verbatim as
+//! [`crate::codecs::NumericString`] on every route except `profile-bulk`, and
+//! an empty numeric cell is `None`.
 //!
-//! Bulk descriptors and convenience methods inherit the client's finite
-//! response-body limit and its single logical timeout. Raise
-//! [`crate::client::ClientBuilder::max_response_body_bytes`] and, when needed,
-//! [`crate::client::ClientBuilder::timeout`] when a known provider response
-//! will exceed the configured limits. The Python binding exposes the same
-//! eighteen methods under `client.bulk`.
+//! Bulk descriptors buffer up to
+//! [`crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES`] (256 MiB) while the
+//! client limit is unset: whole-market bodies such as `ratios-ttm-bulk`
+//! exceed the 64 MiB general default. A limit set with
+//! [`crate::client::ClientBuilder::max_response_body_bytes`] applies to bulk
+//! routes too, and every bulk call shares the client's single logical
+//! timeout, which [`crate::client::ClientBuilder::timeout`] can raise. The
+//! Python binding exposes the same eighteen methods under `client.bulk`.
 
 use crate::{
     Client, Result,

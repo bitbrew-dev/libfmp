@@ -172,7 +172,9 @@ class FmpClient:
     the default host the constructor raises `FmpConfigError` naming
     `FMP_API_KEY`.
     `timeout` and `connect_timeout` are positive finite numbers of seconds.
-    `max_response_body_bytes` bounds each buffered response. Authenticated
+    `max_response_body_bytes` bounds each buffered response; when omitted,
+    `client.bulk` methods buffer up to 256 MiB and every other method up to
+    64 MiB. Authenticated
     non-loopback HTTP requires `danger_allow_insecure_authentication=True`.
     Redirects are either disabled or restricted to the same origin.
 
