@@ -66,11 +66,11 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("StockRatings = %+v, %v", ratings, err)
 	}
 	dcf, err := client.Bulk.DCFValuations(ctx)
-	if err != nil || len(dcf) != 2 || dcf[1].StockPrice != "2.39" {
+	if err != nil || len(dcf) != 3 || cellText(dcf[1].StockPrice) != "2.39" {
 		t.Fatalf("DCFValuations = %+v, %v", dcf, err)
 	}
 	scores, err := client.Bulk.FinancialScores(ctx)
-	if err != nil || len(scores) != 2 || scores[0].PiotroskiScore != "4" {
+	if err != nil || len(scores) != 3 || cellText(scores[0].PiotroskiScore) != "4" {
 		t.Fatalf("FinancialScores = %+v, %v", scores, err)
 	}
 	targets, err := client.Bulk.PriceTargetSummaries(ctx)
@@ -78,7 +78,7 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("PriceTargetSummaries = %+v, %v", targets, err)
 	}
 	holdings, err := client.Bulk.ETFHoldings(ctx, NewBulkPartQuery("segment A/7"))
-	if err != nil || len(holdings) != 2 || holdings[1].Asset != "3665.TW" {
+	if err != nil || len(holdings) != 4 || cellText(holdings[1].Asset) != "3665.TW" {
 		t.Fatalf("ETFHoldings = %+v, %v", holdings, err)
 	}
 	consensus, err := client.Bulk.UpgradesDowngradesConsensus(ctx)

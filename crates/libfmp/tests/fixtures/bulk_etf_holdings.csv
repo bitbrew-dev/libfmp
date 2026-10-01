@@ -1,3 +1,5 @@
 "symbol","name","sharesNumber","asset","weightPercentage","cusip","isin","marketValue","lastUpdated"
 " -- ","Tidewater Inc",91962,"TDW",2.63,"88642R109","US88642R1095",6457163.796,"2026-09-27"
 "0050.TW","Bizlink Holding Inc.",4103274,"3665.TW",0.39,"G11474106","KYG114741062",9672220672.39,"2026-09-24"
+" -- ","Other/Cash",0,"",0.15,"","",360428.571,"2026-09-27"
+" -- ","Expro Group Holdings Nv",134790,"",0.74,"","",1823848.8606,"2026-09-27"

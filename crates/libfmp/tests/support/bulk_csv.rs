@@ -78,8 +78,34 @@ where
 /// model member's cell decodes only for a member in `blankable`, and is
 /// otherwise a null at `[0].member`; dropping a model member's column is a missing member even
 /// for an `Option`, while any other column, and an unknown one, is ignored.
+#[allow(dead_code)] // Each suite uses the member contract that fits its rows.
 pub fn assert_members<Q, R>(endpoint: &EndpointSpec<Q, Vec<R>>, fixture: &[u8], blankable: &[&str])
 where
+    Q: QueryParameters,
+    R: Serialize,
+{
+    check_members(endpoint, fixture, |member| blankable.contains(&member));
+}
+
+/// [`assert_members`] for a bulk CSV row under ADR 0035, where every member
+/// accepts an empty cell except the identity members in `required`.
+#[allow(dead_code)] // Each suite uses the member contract that fits its rows.
+pub fn assert_required_members<Q, R>(
+    endpoint: &EndpointSpec<Q, Vec<R>>,
+    fixture: &[u8],
+    required: &[&str],
+) where
+    Q: QueryParameters,
+    R: Serialize,
+{
+    check_members(endpoint, fixture, |member| !required.contains(&member));
+}
+
+fn check_members<Q, R>(
+    endpoint: &EndpointSpec<Q, Vec<R>>,
+    fixture: &[u8],
+    blankable: impl Fn(&str) -> bool,
+) where
     Q: QueryParameters,
     R: Serialize,
 {
@@ -92,7 +118,7 @@ where
         let mut blank = records[0].clone();
         blank[column].clear();
         let result = decode(endpoint, write(&header, &blank));
-        if blankable.contains(&member.as_str()) || !members.contains_key(member) {
+        if blankable(member) || !members.contains_key(member) {
             assert!(result.is_ok(), "blank {member} did not decode");
         } else {
             assert_failure(result, member, DecodeErrorKind::Null);

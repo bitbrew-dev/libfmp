@@ -201,3 +201,12 @@ func assertCSVFixtureParity[T any](t *testing.T, name string, fields int) []T {
 	}
 	return rows
 }
+
+// cellText returns the text of an optional numeric-string member, or "" when
+// its CSV cell was empty.
+func cellText(value *string) string {
+	if value == nil {
+		return ""
+	}
+	return *value
+}

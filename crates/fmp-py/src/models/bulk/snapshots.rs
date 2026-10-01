@@ -16,17 +16,17 @@ pub(crate) struct BulkStockRating {
     #[pyo3(get)]
     pub rating: String,
     #[pyo3(get)]
-    pub discounted_cash_flow_score: String,
+    pub discounted_cash_flow_score: Option<String>,
     #[pyo3(get)]
-    pub return_on_equity_score: String,
+    pub return_on_equity_score: Option<String>,
     #[pyo3(get)]
-    pub return_on_assets_score: String,
+    pub return_on_assets_score: Option<String>,
     #[pyo3(get)]
-    pub debt_to_equity_score: String,
+    pub debt_to_equity_score: Option<String>,
     #[pyo3(get)]
-    pub price_to_earnings_score: String,
+    pub price_to_earnings_score: Option<String>,
     #[pyo3(get)]
-    pub price_to_book_score: String,
+    pub price_to_book_score: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -40,12 +40,12 @@ impl BulkStockRating {
         symbol: String,
         date: ::chrono::NaiveDate,
         rating: String,
-        discounted_cash_flow_score: String,
-        return_on_equity_score: String,
-        return_on_assets_score: String,
-        debt_to_equity_score: String,
-        price_to_earnings_score: String,
-        price_to_book_score: String,
+        discounted_cash_flow_score: Option<String>,
+        return_on_equity_score: Option<String>,
+        return_on_assets_score: Option<String>,
+        debt_to_equity_score: Option<String>,
+        price_to_earnings_score: Option<String>,
+        price_to_book_score: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -208,12 +208,16 @@ impl From<libfmp::responses::bulk::BulkStockRating> for BulkStockRating {
             symbol: value.symbol.into_inner(),
             date: value.date.into_inner(),
             rating: value.rating,
-            discounted_cash_flow_score: value.discounted_cash_flow_score.into_inner(),
-            return_on_equity_score: value.return_on_equity_score.into_inner(),
-            return_on_assets_score: value.return_on_assets_score.into_inner(),
-            debt_to_equity_score: value.debt_to_equity_score.into_inner(),
-            price_to_earnings_score: value.price_to_earnings_score.into_inner(),
-            price_to_book_score: value.price_to_book_score.into_inner(),
+            discounted_cash_flow_score: value
+                .discounted_cash_flow_score
+                .map(|value| value.into_inner()),
+            return_on_equity_score: value.return_on_equity_score.map(|value| value.into_inner()),
+            return_on_assets_score: value.return_on_assets_score.map(|value| value.into_inner()),
+            debt_to_equity_score: value.debt_to_equity_score.map(|value| value.into_inner()),
+            price_to_earnings_score: value
+                .price_to_earnings_score
+                .map(|value| value.into_inner()),
+            price_to_book_score: value.price_to_book_score.map(|value| value.into_inner()),
         }
     }
 }
@@ -233,9 +237,9 @@ pub(crate) struct BulkDcfValuation {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub dcf: String,
+    pub dcf: Option<String>,
     #[pyo3(get)]
-    pub stock_price: String,
+    pub stock_price: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -245,7 +249,12 @@ impl BulkDcfValuation {
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
     #[pyo3(signature = (*, symbol, date, dcf, stock_price))]
-    fn new(symbol: String, date: ::chrono::NaiveDate, dcf: String, stock_price: String) -> Self {
+    fn new(
+        symbol: String,
+        date: ::chrono::NaiveDate,
+        dcf: Option<String>,
+        stock_price: Option<String>,
+    ) -> Self {
         Self {
             symbol,
             date,
@@ -324,8 +333,8 @@ impl From<libfmp::responses::bulk::BulkDcfValuation> for BulkDcfValuation {
         Self {
             symbol: value.symbol.into_inner(),
             date: value.date.into_inner(),
-            dcf: value.dcf.into_inner(),
-            stock_price: value.stock_price.into_inner(),
+            dcf: value.dcf.map(|value| value.into_inner()),
+            stock_price: value.stock_price.map(|value| value.into_inner()),
         }
     }
 }
@@ -343,25 +352,25 @@ pub(crate) struct BulkFinancialScore {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub reported_currency: String,
+    pub reported_currency: Option<String>,
     #[pyo3(get)]
-    pub altman_z_score: String,
+    pub altman_z_score: Option<String>,
     #[pyo3(get)]
-    pub piotroski_score: String,
+    pub piotroski_score: Option<String>,
     #[pyo3(get)]
-    pub working_capital: String,
+    pub working_capital: Option<String>,
     #[pyo3(get)]
-    pub total_assets: String,
+    pub total_assets: Option<String>,
     #[pyo3(get)]
-    pub retained_earnings: String,
+    pub retained_earnings: Option<String>,
     #[pyo3(get)]
-    pub ebit: String,
+    pub ebit: Option<String>,
     #[pyo3(get)]
-    pub market_cap: String,
+    pub market_cap: Option<String>,
     #[pyo3(get)]
-    pub total_liabilities: String,
+    pub total_liabilities: Option<String>,
     #[pyo3(get)]
-    pub revenue: String,
+    pub revenue: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -373,16 +382,16 @@ impl BulkFinancialScore {
     #[pyo3(signature = (*, symbol, reported_currency, altman_z_score, piotroski_score, working_capital, total_assets, retained_earnings, ebit, market_cap, total_liabilities, revenue))]
     fn new(
         symbol: String,
-        reported_currency: String,
-        altman_z_score: String,
-        piotroski_score: String,
-        working_capital: String,
-        total_assets: String,
-        retained_earnings: String,
-        ebit: String,
-        market_cap: String,
-        total_liabilities: String,
-        revenue: String,
+        reported_currency: Option<String>,
+        altman_z_score: Option<String>,
+        piotroski_score: Option<String>,
+        working_capital: Option<String>,
+        total_assets: Option<String>,
+        retained_earnings: Option<String>,
+        ebit: Option<String>,
+        market_cap: Option<String>,
+        total_liabilities: Option<String>,
+        revenue: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -561,16 +570,16 @@ impl From<libfmp::responses::bulk::BulkFinancialScore> for BulkFinancialScore {
     fn from(value: libfmp::responses::bulk::BulkFinancialScore) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
-            reported_currency: value.reported_currency.into_inner(),
-            altman_z_score: value.altman_z_score.into_inner(),
-            piotroski_score: value.piotroski_score.into_inner(),
-            working_capital: value.working_capital.into_inner(),
-            total_assets: value.total_assets.into_inner(),
-            retained_earnings: value.retained_earnings.into_inner(),
-            ebit: value.ebit.into_inner(),
-            market_cap: value.market_cap.into_inner(),
-            total_liabilities: value.total_liabilities.into_inner(),
-            revenue: value.revenue.into_inner(),
+            reported_currency: value.reported_currency.map(|value| value.into_inner()),
+            altman_z_score: value.altman_z_score.map(|value| value.into_inner()),
+            piotroski_score: value.piotroski_score.map(|value| value.into_inner()),
+            working_capital: value.working_capital.map(|value| value.into_inner()),
+            total_assets: value.total_assets.map(|value| value.into_inner()),
+            retained_earnings: value.retained_earnings.map(|value| value.into_inner()),
+            ebit: value.ebit.map(|value| value.into_inner()),
+            market_cap: value.market_cap.map(|value| value.into_inner()),
+            total_liabilities: value.total_liabilities.map(|value| value.into_inner()),
+            revenue: value.revenue.map(|value| value.into_inner()),
         }
     }
 }
@@ -588,21 +597,21 @@ pub(crate) struct BulkPriceTargetSummary {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub last_month_count: String,
+    pub last_month_count: Option<String>,
     #[pyo3(get)]
-    pub last_month_avg_price_target: String,
+    pub last_month_avg_price_target: Option<String>,
     #[pyo3(get)]
-    pub last_quarter_count: String,
+    pub last_quarter_count: Option<String>,
     #[pyo3(get)]
-    pub last_quarter_avg_price_target: String,
+    pub last_quarter_avg_price_target: Option<String>,
     #[pyo3(get)]
-    pub last_year_count: String,
+    pub last_year_count: Option<String>,
     #[pyo3(get)]
-    pub last_year_avg_price_target: String,
+    pub last_year_avg_price_target: Option<String>,
     #[pyo3(get)]
-    pub all_time_count: String,
+    pub all_time_count: Option<String>,
     #[pyo3(get)]
-    pub all_time_avg_price_target: String,
+    pub all_time_avg_price_target: Option<String>,
     #[pyo3(get)]
     pub publishers: String,
 }
@@ -616,14 +625,14 @@ impl BulkPriceTargetSummary {
     #[pyo3(signature = (*, symbol, last_month_count, last_month_avg_price_target, last_quarter_count, last_quarter_avg_price_target, last_year_count, last_year_avg_price_target, all_time_count, all_time_avg_price_target, publishers))]
     fn new(
         symbol: String,
-        last_month_count: String,
-        last_month_avg_price_target: String,
-        last_quarter_count: String,
-        last_quarter_avg_price_target: String,
-        last_year_count: String,
-        last_year_avg_price_target: String,
-        all_time_count: String,
-        all_time_avg_price_target: String,
+        last_month_count: Option<String>,
+        last_month_avg_price_target: Option<String>,
+        last_quarter_count: Option<String>,
+        last_quarter_avg_price_target: Option<String>,
+        last_year_count: Option<String>,
+        last_year_avg_price_target: Option<String>,
+        all_time_count: Option<String>,
+        all_time_avg_price_target: Option<String>,
         publishers: String,
     ) -> Self {
         Self {
@@ -817,14 +826,22 @@ impl From<libfmp::responses::bulk::BulkPriceTargetSummary> for BulkPriceTargetSu
     fn from(value: libfmp::responses::bulk::BulkPriceTargetSummary) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
-            last_month_count: value.last_month_count.into_inner(),
-            last_month_avg_price_target: value.last_month_avg_price_target.into_inner(),
-            last_quarter_count: value.last_quarter_count.into_inner(),
-            last_quarter_avg_price_target: value.last_quarter_avg_price_target.into_inner(),
-            last_year_count: value.last_year_count.into_inner(),
-            last_year_avg_price_target: value.last_year_avg_price_target.into_inner(),
-            all_time_count: value.all_time_count.into_inner(),
-            all_time_avg_price_target: value.all_time_avg_price_target.into_inner(),
+            last_month_count: value.last_month_count.map(|value| value.into_inner()),
+            last_month_avg_price_target: value
+                .last_month_avg_price_target
+                .map(|value| value.into_inner()),
+            last_quarter_count: value.last_quarter_count.map(|value| value.into_inner()),
+            last_quarter_avg_price_target: value
+                .last_quarter_avg_price_target
+                .map(|value| value.into_inner()),
+            last_year_count: value.last_year_count.map(|value| value.into_inner()),
+            last_year_avg_price_target: value
+                .last_year_avg_price_target
+                .map(|value| value.into_inner()),
+            all_time_count: value.all_time_count.map(|value| value.into_inner()),
+            all_time_avg_price_target: value
+                .all_time_avg_price_target
+                .map(|value| value.into_inner()),
             publishers: value.publishers,
         }
     }
@@ -845,17 +862,17 @@ pub(crate) struct BulkEtfHolding {
     #[pyo3(get)]
     pub name: String,
     #[pyo3(get)]
-    pub shares_number: String,
+    pub shares_number: Option<String>,
     #[pyo3(get)]
-    pub asset: String,
+    pub asset: Option<String>,
     #[pyo3(get)]
-    pub weight_percentage: String,
+    pub weight_percentage: Option<String>,
     #[pyo3(get)]
     pub cusip: String,
     #[pyo3(get)]
-    pub isin: String,
+    pub isin: Option<String>,
     #[pyo3(get)]
-    pub market_value: String,
+    pub market_value: Option<String>,
     #[pyo3(get)]
     pub last_updated: ::chrono::NaiveDate,
 }
@@ -870,12 +887,12 @@ impl BulkEtfHolding {
     fn new(
         symbol: String,
         name: String,
-        shares_number: String,
-        asset: String,
-        weight_percentage: String,
+        shares_number: Option<String>,
+        asset: Option<String>,
+        weight_percentage: Option<String>,
         cusip: String,
-        isin: String,
-        market_value: String,
+        isin: Option<String>,
+        market_value: Option<String>,
         last_updated: ::chrono::NaiveDate,
     ) -> Self {
         Self {
@@ -1022,12 +1039,12 @@ impl From<libfmp::responses::bulk::BulkEtfHolding> for BulkEtfHolding {
         Self {
             symbol: value.symbol.into_inner(),
             name: value.name,
-            shares_number: value.shares_number.into_inner(),
-            asset: value.asset.into_inner(),
-            weight_percentage: value.weight_percentage.into_inner(),
+            shares_number: value.shares_number.map(|value| value.into_inner()),
+            asset: value.asset.map(|value| value.into_inner()),
+            weight_percentage: value.weight_percentage.map(|value| value.into_inner()),
             cusip: value.cusip,
-            isin: value.isin.into_inner(),
-            market_value: value.market_value.into_inner(),
+            isin: value.isin.map(|value| value.into_inner()),
+            market_value: value.market_value.map(|value| value.into_inner()),
             last_updated: value.last_updated.into_inner(),
         }
     }
@@ -1046,15 +1063,15 @@ pub(crate) struct BulkUpgradesDowngradesConsensus {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub strong_buy: String,
+    pub strong_buy: Option<String>,
     #[pyo3(get)]
-    pub buy: String,
+    pub buy: Option<String>,
     #[pyo3(get)]
-    pub hold: String,
+    pub hold: Option<String>,
     #[pyo3(get)]
-    pub sell: String,
+    pub sell: Option<String>,
     #[pyo3(get)]
-    pub strong_sell: String,
+    pub strong_sell: Option<String>,
     #[pyo3(get)]
     pub consensus: String,
 }
@@ -1068,11 +1085,11 @@ impl BulkUpgradesDowngradesConsensus {
     #[pyo3(signature = (*, symbol, strong_buy, buy, hold, sell, strong_sell, consensus))]
     fn new(
         symbol: String,
-        strong_buy: String,
-        buy: String,
-        hold: String,
-        sell: String,
-        strong_sell: String,
+        strong_buy: Option<String>,
+        buy: Option<String>,
+        hold: Option<String>,
+        sell: Option<String>,
+        strong_sell: Option<String>,
         consensus: String,
     ) -> Self {
         Self {
@@ -1186,11 +1203,11 @@ impl From<libfmp::responses::bulk::BulkUpgradesDowngradesConsensus>
     fn from(value: libfmp::responses::bulk::BulkUpgradesDowngradesConsensus) -> Self {
         Self {
             symbol: value.symbol,
-            strong_buy: value.strong_buy.into_inner(),
-            buy: value.buy.into_inner(),
-            hold: value.hold.into_inner(),
-            sell: value.sell.into_inner(),
-            strong_sell: value.strong_sell.into_inner(),
+            strong_buy: value.strong_buy.map(|value| value.into_inner()),
+            buy: value.buy.map(|value| value.into_inner()),
+            hold: value.hold.map(|value| value.into_inner()),
+            sell: value.sell.map(|value| value.into_inner()),
+            strong_sell: value.strong_sell.map(|value| value.into_inner()),
             consensus: value.consensus,
         }
     }

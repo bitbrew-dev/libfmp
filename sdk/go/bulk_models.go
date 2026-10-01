@@ -2275,15 +2275,15 @@ func (m *BulkEarningsSurprise) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 
 // BulkStockRating is one worldwide stock-rating bulk row.
 type BulkStockRating struct {
-	Symbol                  string `json:"symbol"`
-	Date                    Date   `json:"date"`
-	Rating                  string `json:"rating"`
-	DiscountedCashFlowScore string `json:"discountedCashFlowScore"`
-	ReturnOnEquityScore     string `json:"returnOnEquityScore"`
-	ReturnOnAssetsScore     string `json:"returnOnAssetsScore"`
-	DebtToEquityScore       string `json:"debtToEquityScore"`
-	PriceToEarningsScore    string `json:"priceToEarningsScore"`
-	PriceToBookScore        string `json:"priceToBookScore"`
+	Symbol                  string  `json:"symbol"`
+	Date                    Date    `json:"date"`
+	Rating                  string  `json:"rating"`
+	DiscountedCashFlowScore *string `json:"discountedCashFlowScore"`
+	ReturnOnEquityScore     *string `json:"returnOnEquityScore"`
+	ReturnOnAssetsScore     *string `json:"returnOnAssetsScore"`
+	DebtToEquityScore       *string `json:"debtToEquityScore"`
+	PriceToEarningsScore    *string `json:"priceToEarningsScore"`
+	PriceToBookScore        *string `json:"priceToBookScore"`
 }
 
 // bulkStockRatingShadow mirrors BulkStockRating with a pointer or raw value
@@ -2316,39 +2316,27 @@ func (m *BulkStockRating) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkStockRating", "date")
 	case shadow.Rating == nil:
 		return missingMemberError("BulkStockRating", "rating")
-	case shadow.DiscountedCashFlowScore == nil:
-		return missingMemberError("BulkStockRating", "discountedCashFlowScore")
-	case shadow.ReturnOnEquityScore == nil:
-		return missingMemberError("BulkStockRating", "returnOnEquityScore")
-	case shadow.ReturnOnAssetsScore == nil:
-		return missingMemberError("BulkStockRating", "returnOnAssetsScore")
-	case shadow.DebtToEquityScore == nil:
-		return missingMemberError("BulkStockRating", "debtToEquityScore")
-	case shadow.PriceToEarningsScore == nil:
-		return missingMemberError("BulkStockRating", "priceToEarningsScore")
-	case shadow.PriceToBookScore == nil:
-		return missingMemberError("BulkStockRating", "priceToBookScore")
 	}
 	*m = BulkStockRating{
 		Symbol:                  *shadow.Symbol,
 		Date:                    *shadow.Date,
 		Rating:                  *shadow.Rating,
-		DiscountedCashFlowScore: *shadow.DiscountedCashFlowScore,
-		ReturnOnEquityScore:     *shadow.ReturnOnEquityScore,
-		ReturnOnAssetsScore:     *shadow.ReturnOnAssetsScore,
-		DebtToEquityScore:       *shadow.DebtToEquityScore,
-		PriceToEarningsScore:    *shadow.PriceToEarningsScore,
-		PriceToBookScore:        *shadow.PriceToBookScore,
+		DiscountedCashFlowScore: shadow.DiscountedCashFlowScore,
+		ReturnOnEquityScore:     shadow.ReturnOnEquityScore,
+		ReturnOnAssetsScore:     shadow.ReturnOnAssetsScore,
+		DebtToEquityScore:       shadow.DebtToEquityScore,
+		PriceToEarningsScore:    shadow.PriceToEarningsScore,
+		PriceToBookScore:        shadow.PriceToBookScore,
 	}
 	return nil
 }
 
 // BulkDCFValuation is one worldwide discounted-cash-flow bulk row.
 type BulkDCFValuation struct {
-	Symbol     string `json:"symbol"`
-	Date       Date   `json:"date"`
-	DCF        string `json:"dcf"`
-	StockPrice string `json:"Stock Price"`
+	Symbol     string  `json:"symbol"`
+	Date       Date    `json:"date"`
+	DCF        *string `json:"dcf"`
+	StockPrice *string `json:"Stock Price"`
 }
 
 // bulkDCFValuationShadow mirrors BulkDCFValuation with a pointer or raw value
@@ -2374,40 +2362,19 @@ func (m *BulkDCFValuation) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkDCFValuation", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("BulkDCFValuation", "date")
-	case shadow.DCF == nil:
-		return missingMemberError("BulkDCFValuation", "dcf")
-	case shadow.StockPrice == nil:
-		return missingMemberError("BulkDCFValuation", "Stock Price")
 	}
 	*m = BulkDCFValuation{
 		Symbol:     *shadow.Symbol,
 		Date:       *shadow.Date,
-		DCF:        *shadow.DCF,
-		StockPrice: *shadow.StockPrice,
+		DCF:        shadow.DCF,
+		StockPrice: shadow.StockPrice,
 	}
 	return nil
 }
 
 // BulkFinancialScore is one worldwide financial-score bulk row.
 type BulkFinancialScore struct {
-	Symbol           string `json:"symbol"`
-	ReportedCurrency string `json:"reportedCurrency"`
-	AltmanZScore     string `json:"altmanZScore"`
-	PiotroskiScore   string `json:"piotroskiScore"`
-	WorkingCapital   string `json:"workingCapital"`
-	TotalAssets      string `json:"totalAssets"`
-	RetainedEarnings string `json:"retainedEarnings"`
-	Ebit             string `json:"ebit"`
-	MarketCap        string `json:"marketCap"`
-	TotalLiabilities string `json:"totalLiabilities"`
-	Revenue          string `json:"revenue"`
-}
-
-// bulkFinancialScoreShadow mirrors BulkFinancialScore with a pointer or raw
-// value for every required member so a missing or null member is observable
-// after decoding.
-type bulkFinancialScoreShadow struct {
-	Symbol           *string `json:"symbol"`
+	Symbol           string  `json:"symbol"`
 	ReportedCurrency *string `json:"reportedCurrency"`
 	AltmanZScore     *string `json:"altmanZScore"`
 	PiotroskiScore   *string `json:"piotroskiScore"`
@@ -2418,6 +2385,23 @@ type bulkFinancialScoreShadow struct {
 	MarketCap        *string `json:"marketCap"`
 	TotalLiabilities *string `json:"totalLiabilities"`
 	Revenue          *string `json:"revenue"`
+}
+
+// bulkFinancialScoreShadow mirrors BulkFinancialScore with a pointer or raw
+// value for every required member so a missing or null member is observable
+// after decoding.
+type bulkFinancialScoreShadow struct {
+	Symbol           *string        `json:"symbol"`
+	ReportedCurrency jsontext.Value `json:"reportedCurrency"`
+	AltmanZScore     *string        `json:"altmanZScore"`
+	PiotroskiScore   *string        `json:"piotroskiScore"`
+	WorkingCapital   *string        `json:"workingCapital"`
+	TotalAssets      *string        `json:"totalAssets"`
+	RetainedEarnings *string        `json:"retainedEarnings"`
+	Ebit             *string        `json:"ebit"`
+	MarketCap        *string        `json:"marketCap"`
+	TotalLiabilities *string        `json:"totalLiabilities"`
+	Revenue          *string        `json:"revenue"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -2431,55 +2415,47 @@ func (m *BulkFinancialScore) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("BulkFinancialScore", "symbol")
-	case shadow.ReportedCurrency == nil:
+	case len(shadow.ReportedCurrency) == 0:
 		return missingMemberError("BulkFinancialScore", "reportedCurrency")
-	case shadow.AltmanZScore == nil:
-		return missingMemberError("BulkFinancialScore", "altmanZScore")
-	case shadow.PiotroskiScore == nil:
-		return missingMemberError("BulkFinancialScore", "piotroskiScore")
-	case shadow.WorkingCapital == nil:
-		return missingMemberError("BulkFinancialScore", "workingCapital")
-	case shadow.TotalAssets == nil:
-		return missingMemberError("BulkFinancialScore", "totalAssets")
-	case shadow.RetainedEarnings == nil:
-		return missingMemberError("BulkFinancialScore", "retainedEarnings")
-	case shadow.Ebit == nil:
-		return missingMemberError("BulkFinancialScore", "ebit")
-	case shadow.MarketCap == nil:
-		return missingMemberError("BulkFinancialScore", "marketCap")
-	case shadow.TotalLiabilities == nil:
-		return missingMemberError("BulkFinancialScore", "totalLiabilities")
-	case shadow.Revenue == nil:
-		return missingMemberError("BulkFinancialScore", "revenue")
+	}
+	var reportedCurrency *string
+	if shadow.ReportedCurrency.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ReportedCurrency, &value); err != nil {
+			return memberDecodeError("BulkFinancialScore", "reportedCurrency", shadow.ReportedCurrency, err)
+		}
+		if value != "" {
+			reportedCurrency = &value
+		}
 	}
 	*m = BulkFinancialScore{
 		Symbol:           *shadow.Symbol,
-		ReportedCurrency: *shadow.ReportedCurrency,
-		AltmanZScore:     *shadow.AltmanZScore,
-		PiotroskiScore:   *shadow.PiotroskiScore,
-		WorkingCapital:   *shadow.WorkingCapital,
-		TotalAssets:      *shadow.TotalAssets,
-		RetainedEarnings: *shadow.RetainedEarnings,
-		Ebit:             *shadow.Ebit,
-		MarketCap:        *shadow.MarketCap,
-		TotalLiabilities: *shadow.TotalLiabilities,
-		Revenue:          *shadow.Revenue,
+		ReportedCurrency: reportedCurrency,
+		AltmanZScore:     shadow.AltmanZScore,
+		PiotroskiScore:   shadow.PiotroskiScore,
+		WorkingCapital:   shadow.WorkingCapital,
+		TotalAssets:      shadow.TotalAssets,
+		RetainedEarnings: shadow.RetainedEarnings,
+		Ebit:             shadow.Ebit,
+		MarketCap:        shadow.MarketCap,
+		TotalLiabilities: shadow.TotalLiabilities,
+		Revenue:          shadow.Revenue,
 	}
 	return nil
 }
 
 // BulkPriceTargetSummary is one US price-target-summary bulk row.
 type BulkPriceTargetSummary struct {
-	Symbol                    string `json:"symbol"`
-	LastMonthCount            string `json:"lastMonthCount"`
-	LastMonthAvgPriceTarget   string `json:"lastMonthAvgPriceTarget"`
-	LastQuarterCount          string `json:"lastQuarterCount"`
-	LastQuarterAvgPriceTarget string `json:"lastQuarterAvgPriceTarget"`
-	LastYearCount             string `json:"lastYearCount"`
-	LastYearAvgPriceTarget    string `json:"lastYearAvgPriceTarget"`
-	AllTimeCount              string `json:"allTimeCount"`
-	AllTimeAvgPriceTarget     string `json:"allTimeAvgPriceTarget"`
-	Publishers                string `json:"publishers"`
+	Symbol                    string  `json:"symbol"`
+	LastMonthCount            *string `json:"lastMonthCount"`
+	LastMonthAvgPriceTarget   *string `json:"lastMonthAvgPriceTarget"`
+	LastQuarterCount          *string `json:"lastQuarterCount"`
+	LastQuarterAvgPriceTarget *string `json:"lastQuarterAvgPriceTarget"`
+	LastYearCount             *string `json:"lastYearCount"`
+	LastYearAvgPriceTarget    *string `json:"lastYearAvgPriceTarget"`
+	AllTimeCount              *string `json:"allTimeCount"`
+	AllTimeAvgPriceTarget     *string `json:"allTimeAvgPriceTarget"`
+	Publishers                string  `json:"publishers"`
 }
 
 // bulkPriceTargetSummaryShadow mirrors BulkPriceTargetSummary with a pointer
@@ -2509,35 +2485,19 @@ func (m *BulkPriceTargetSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("BulkPriceTargetSummary", "symbol")
-	case shadow.LastMonthCount == nil:
-		return missingMemberError("BulkPriceTargetSummary", "lastMonthCount")
-	case shadow.LastMonthAvgPriceTarget == nil:
-		return missingMemberError("BulkPriceTargetSummary", "lastMonthAvgPriceTarget")
-	case shadow.LastQuarterCount == nil:
-		return missingMemberError("BulkPriceTargetSummary", "lastQuarterCount")
-	case shadow.LastQuarterAvgPriceTarget == nil:
-		return missingMemberError("BulkPriceTargetSummary", "lastQuarterAvgPriceTarget")
-	case shadow.LastYearCount == nil:
-		return missingMemberError("BulkPriceTargetSummary", "lastYearCount")
-	case shadow.LastYearAvgPriceTarget == nil:
-		return missingMemberError("BulkPriceTargetSummary", "lastYearAvgPriceTarget")
-	case shadow.AllTimeCount == nil:
-		return missingMemberError("BulkPriceTargetSummary", "allTimeCount")
-	case shadow.AllTimeAvgPriceTarget == nil:
-		return missingMemberError("BulkPriceTargetSummary", "allTimeAvgPriceTarget")
 	case shadow.Publishers == nil:
 		return missingMemberError("BulkPriceTargetSummary", "publishers")
 	}
 	*m = BulkPriceTargetSummary{
 		Symbol:                    *shadow.Symbol,
-		LastMonthCount:            *shadow.LastMonthCount,
-		LastMonthAvgPriceTarget:   *shadow.LastMonthAvgPriceTarget,
-		LastQuarterCount:          *shadow.LastQuarterCount,
-		LastQuarterAvgPriceTarget: *shadow.LastQuarterAvgPriceTarget,
-		LastYearCount:             *shadow.LastYearCount,
-		LastYearAvgPriceTarget:    *shadow.LastYearAvgPriceTarget,
-		AllTimeCount:              *shadow.AllTimeCount,
-		AllTimeAvgPriceTarget:     *shadow.AllTimeAvgPriceTarget,
+		LastMonthCount:            shadow.LastMonthCount,
+		LastMonthAvgPriceTarget:   shadow.LastMonthAvgPriceTarget,
+		LastQuarterCount:          shadow.LastQuarterCount,
+		LastQuarterAvgPriceTarget: shadow.LastQuarterAvgPriceTarget,
+		LastYearCount:             shadow.LastYearCount,
+		LastYearAvgPriceTarget:    shadow.LastYearAvgPriceTarget,
+		AllTimeCount:              shadow.AllTimeCount,
+		AllTimeAvgPriceTarget:     shadow.AllTimeAvgPriceTarget,
 		Publishers:                *shadow.Publishers,
 	}
 	return nil
@@ -2545,30 +2505,30 @@ func (m *BulkPriceTargetSummary) UnmarshalJSONFrom(dec *jsontext.Decoder) error 
 
 // BulkETFHolding is one worldwide ETF holding bulk row.
 type BulkETFHolding struct {
-	Symbol           string `json:"symbol"`
-	Name             string `json:"name"`
-	SharesNumber     string `json:"sharesNumber"`
-	Asset            string `json:"asset"`
-	WeightPercentage string `json:"weightPercentage"`
-	CUSIP            string `json:"cusip"`
-	ISIN             string `json:"isin"`
-	MarketValue      string `json:"marketValue"`
-	LastUpdated      Date   `json:"lastUpdated"`
+	Symbol           string  `json:"symbol"`
+	Name             string  `json:"name"`
+	SharesNumber     *string `json:"sharesNumber"`
+	Asset            *string `json:"asset"`
+	WeightPercentage *string `json:"weightPercentage"`
+	CUSIP            string  `json:"cusip"`
+	ISIN             *string `json:"isin"`
+	MarketValue      *string `json:"marketValue"`
+	LastUpdated      Date    `json:"lastUpdated"`
 }
 
 // bulkETFHoldingShadow mirrors BulkETFHolding with a pointer or raw value for
 // every required member so a missing or null member is observable after
 // decoding.
 type bulkETFHoldingShadow struct {
-	Symbol           *string `json:"symbol"`
-	Name             *string `json:"name"`
-	SharesNumber     *string `json:"sharesNumber"`
-	Asset            *string `json:"asset"`
-	WeightPercentage *string `json:"weightPercentage"`
-	CUSIP            *string `json:"cusip"`
-	ISIN             *string `json:"isin"`
-	MarketValue      *string `json:"marketValue"`
-	LastUpdated      *Date   `json:"lastUpdated"`
+	Symbol           *string        `json:"symbol"`
+	Name             *string        `json:"name"`
+	SharesNumber     *string        `json:"sharesNumber"`
+	Asset            jsontext.Value `json:"asset"`
+	WeightPercentage *string        `json:"weightPercentage"`
+	CUSIP            *string        `json:"cusip"`
+	ISIN             jsontext.Value `json:"isin"`
+	MarketValue      *string        `json:"marketValue"`
+	LastUpdated      *Date          `json:"lastUpdated"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -2584,30 +2544,44 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkETFHolding", "symbol")
 	case shadow.Name == nil:
 		return missingMemberError("BulkETFHolding", "name")
-	case shadow.SharesNumber == nil:
-		return missingMemberError("BulkETFHolding", "sharesNumber")
-	case shadow.Asset == nil:
+	case len(shadow.Asset) == 0:
 		return missingMemberError("BulkETFHolding", "asset")
-	case shadow.WeightPercentage == nil:
-		return missingMemberError("BulkETFHolding", "weightPercentage")
 	case shadow.CUSIP == nil:
 		return missingMemberError("BulkETFHolding", "cusip")
-	case shadow.ISIN == nil:
+	case len(shadow.ISIN) == 0:
 		return missingMemberError("BulkETFHolding", "isin")
-	case shadow.MarketValue == nil:
-		return missingMemberError("BulkETFHolding", "marketValue")
 	case shadow.LastUpdated == nil:
 		return missingMemberError("BulkETFHolding", "lastUpdated")
+	}
+	var asset *string
+	if shadow.Asset.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Asset, &value); err != nil {
+			return memberDecodeError("BulkETFHolding", "asset", shadow.Asset, err)
+		}
+		if value != "" {
+			asset = &value
+		}
+	}
+	var isin *string
+	if shadow.ISIN.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
+			return memberDecodeError("BulkETFHolding", "isin", shadow.ISIN, err)
+		}
+		if value != "" {
+			isin = &value
+		}
 	}
 	*m = BulkETFHolding{
 		Symbol:           *shadow.Symbol,
 		Name:             *shadow.Name,
-		SharesNumber:     *shadow.SharesNumber,
-		Asset:            *shadow.Asset,
-		WeightPercentage: *shadow.WeightPercentage,
+		SharesNumber:     shadow.SharesNumber,
+		Asset:            asset,
+		WeightPercentage: shadow.WeightPercentage,
 		CUSIP:            *shadow.CUSIP,
-		ISIN:             *shadow.ISIN,
-		MarketValue:      *shadow.MarketValue,
+		ISIN:             isin,
+		MarketValue:      shadow.MarketValue,
 		LastUpdated:      *shadow.LastUpdated,
 	}
 	return nil
@@ -2616,13 +2590,13 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // BulkUpgradesDowngradesConsensus is one worldwide
 // upgrades/downgrades-consensus bulk row.
 type BulkUpgradesDowngradesConsensus struct {
-	Symbol     string `json:"symbol"`
-	StrongBuy  string `json:"strongBuy"`
-	Buy        string `json:"buy"`
-	Hold       string `json:"hold"`
-	Sell       string `json:"sell"`
-	StrongSell string `json:"strongSell"`
-	Consensus  string `json:"consensus"`
+	Symbol     string  `json:"symbol"`
+	StrongBuy  *string `json:"strongBuy"`
+	Buy        *string `json:"buy"`
+	Hold       *string `json:"hold"`
+	Sell       *string `json:"sell"`
+	StrongSell *string `json:"strongSell"`
+	Consensus  string  `json:"consensus"`
 }
 
 // bulkUpgradesDowngradesConsensusShadow mirrors
@@ -2649,26 +2623,16 @@ func (m *BulkUpgradesDowngradesConsensus) UnmarshalJSONFrom(dec *jsontext.Decode
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("BulkUpgradesDowngradesConsensus", "symbol")
-	case shadow.StrongBuy == nil:
-		return missingMemberError("BulkUpgradesDowngradesConsensus", "strongBuy")
-	case shadow.Buy == nil:
-		return missingMemberError("BulkUpgradesDowngradesConsensus", "buy")
-	case shadow.Hold == nil:
-		return missingMemberError("BulkUpgradesDowngradesConsensus", "hold")
-	case shadow.Sell == nil:
-		return missingMemberError("BulkUpgradesDowngradesConsensus", "sell")
-	case shadow.StrongSell == nil:
-		return missingMemberError("BulkUpgradesDowngradesConsensus", "strongSell")
 	case shadow.Consensus == nil:
 		return missingMemberError("BulkUpgradesDowngradesConsensus", "consensus")
 	}
 	*m = BulkUpgradesDowngradesConsensus{
 		Symbol:     *shadow.Symbol,
-		StrongBuy:  *shadow.StrongBuy,
-		Buy:        *shadow.Buy,
-		Hold:       *shadow.Hold,
-		Sell:       *shadow.Sell,
-		StrongSell: *shadow.StrongSell,
+		StrongBuy:  shadow.StrongBuy,
+		Buy:        shadow.Buy,
+		Hold:       shadow.Hold,
+		Sell:       shadow.Sell,
+		StrongSell: shadow.StrongSell,
 		Consensus:  *shadow.Consensus,
 	}
 	return nil

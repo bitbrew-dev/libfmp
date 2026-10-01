@@ -182,10 +182,13 @@ async fn custom_proxy_sends_one_exact_request_per_method_with_auth_headers_and_f
 
     assert_eq!(profile[1].symbol.as_str(), "AMAT");
     assert_eq!(rating[1].rating, "C+");
-    assert_eq!(dcf[1].stock_price.as_str(), "2.39");
-    assert_eq!(scores[0].reported_currency.as_str(), "CNY");
+    assert_eq!(dcf[1].stock_price.as_ref().unwrap().as_str(), "2.39");
+    assert_eq!(
+        scores[0].reported_currency.as_ref().unwrap().as_str(),
+        "CNY"
+    );
     assert_eq!(target[1].symbol.as_str(), "AA");
-    assert_eq!(etf[1].asset.as_str(), "3665.TW");
+    assert_eq!(etf[1].asset.as_ref().unwrap().as_str(), "3665.TW");
     assert_eq!(consensus[1].consensus, "Hold");
 
     let requests = executor.requests();
