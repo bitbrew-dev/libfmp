@@ -330,3 +330,48 @@ func TestCongressionalNetWorthFractionalNullAndAbsentMembers(t *testing.T) {
 		}
 	}
 }
+
+func TestCongressionalNetWorthIncomeRangeDecodesEmptyAndNullAsNil(t *testing.T) {
+	t.Parallel()
+	const netWorth = "congress_senate_net_worth.json"
+	for _, raw := range []string{`""`, `null`} {
+		var rows []CongressionalMemberNetWorth
+		if err := json.Unmarshal(mutateFixtureMember(t, netWorth, "incomeRange", jsontext.Value(raw)), &rows); err != nil ||
+			len(rows) != 1 || rows[0].IncomeRange != nil {
+			t.Fatalf("incomeRange %s = %+v, %v, want nil", raw, rows, err)
+		}
+		encoded, err := json.Marshal(rows[0])
+		if err != nil || !strings.Contains(string(encoded), `"incomeRange":null`) {
+			t.Fatalf("re-encoded incomeRange %s = %s, %v", raw, encoded, err)
+		}
+	}
+	var rows []CongressionalMemberNetWorth
+	object := mutateFixtureMember(t, netWorth, "incomeRange", jsontext.Value(`{"min":1001,"max":15000}`))
+	if err := json.Unmarshal(object, &rows); err != nil || len(rows) != 1 ||
+		!reflect.DeepEqual(rows[0].IncomeRange, &CongressionalNetWorthRange{Min: 1001, Max: new(int64(15000))}) {
+		t.Fatalf("incomeRange object = %+v, %v", rows, err)
+	}
+	for _, tc := range []struct {
+		raw, path string
+		kind      DecodeKind
+	}{
+		{`"` + decodePathSentinel + `"`, "/0/incomeRange", DecodeKindWrongType},
+		{`31337`, "/0/incomeRange", DecodeKindWrongType},
+		{`{"max":15000}`, "/0/incomeRange/min", DecodeKindMissingMember},
+	} {
+		body := mutateFixtureMember(t, netWorth, "incomeRange", jsontext.Value(tc.raw))
+		err := json.Unmarshal(body, &rows)
+		if err == nil {
+			t.Fatalf("incomeRange %s decoded", tc.raw)
+		}
+		if path, kind := decodeLocation(body, err); path != tc.path || kind != tc.kind {
+			t.Fatalf("incomeRange %s: Path = %q, DecodeKind = %v, want %q %v", tc.raw, path, kind, tc.path, tc.kind)
+		}
+		if strings.Contains(err.Error(), decodePathSentinel) || strings.Contains(err.Error(), "31337") {
+			t.Fatalf("decode error leaked the member value: %q", err)
+		}
+	}
+	if err := json.Unmarshal(mutateFixtureMember(t, netWorth, "incomeRange", nil), &rows); err == nil {
+		t.Fatal("missing incomeRange decoded")
+	}
+}

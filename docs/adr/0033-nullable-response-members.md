@@ -29,6 +29,7 @@ evidence is now a second source, so both need a rule.
 | `""` on a date | `Option<Date>` through `codecs::empty_or_null_date` | `None` | `nil` |
 | `""` on a plain `String` | unchanged: stays `""` | `""` | `""` |
 | `"NULL"` text on a `NumericString` (`FundDisclosureSearchResult.entityOrgType`, #380) | `Option<NumericString>` through `codecs::null_text` | `None` | `nil` |
+| `""` on a nested object (`CongressionalMemberNetWorth.incomeRange`, #400) | `Option<T>` through `codecs::empty_or_null_object` | `None` | `nil` |
 | key absent from the object | plain `Option<T>` with `skip_serializing_if = "Option::is_none"` (no `required_option`) | `None` | `*T` with `omitzero` |
 
 - Evidence decides: a member changes only when the audit (or a later
@@ -45,6 +46,14 @@ evidence is now a second source, so both need a rule.
   used only where the evidence shows `"NULL"` standing in for an absent
   value (the live rows that send it on `entityOrgType` also send a null
   `address`); no other codec treats `"NULL"` as absent.
+- `codecs::empty_or_null_object` accepts `""` and null as `None` and
+  decodes a JSON object as the nested struct; any other value (a non-empty
+  string, a number, an array) is an error that never includes the value.
+  First case, [#400](https://github.com/bitbrew-dev/libfmp/issues/400): a
+  live probe of 4 `senate-net-worth` members (993 rows) saw `""` on
+  `incomeRange` 47 times and never on `valueRange`, so only `incomeRange`
+  uses it. The member was already `Option`, so the public type is
+  unchanged and the fix is not breaking.
 - A member is optional-when-absent only when the audit saw its key
   missing, not merely null; every other member keeps a required key.
   First case, [#377](https://github.com/bitbrew-dev/libfmp/issues/377):
@@ -71,7 +80,11 @@ on an `Option` of a string-backed type to `Codec::EmptyOrNullString`: the
 shadow member keeps the raw `jsontext.Value`, the key is required, and
 `""` or null decode to `nil`. `crate::codecs::null_text::deserialize` maps
 the same way to `Codec::NullTextString`, where the text `"NULL"` or null
-decode to `nil`. It fails on any other shape rather than guessing.
+decode to `nil`. `crate::codecs::empty_or_null_object::deserialize` on an
+`Option` of a response struct maps to `Codec::EmptyOrNullObject`: the
+shadow keeps the raw value, null or the exact `""` decode to `nil`, and
+anything else unmarshals into the struct with failures reported through
+`memberDecodeError`. It fails on any other shape rather than guessing.
 A plain `Option<T>` without a codec is `Codec::Plain`: the key
 may be absent or null, and `skip_serializing_if = "Option::is_none"` adds
 `omitzero` so a re-encoded row omits it as serde does.

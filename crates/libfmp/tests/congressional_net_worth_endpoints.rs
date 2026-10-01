@@ -463,3 +463,60 @@ async fn malformed_non_array_responses_keep_both_endpoint_identities() {
         assert_eq!(error.status_code(), Some(200));
     }
 }
+
+#[tokio::test]
+async fn income_range_decodes_empty_string_and_null_as_none_and_rejects_other_values() {
+    let row = serde_json::from_slice::<serde_json::Value>(NET_WORTH).unwrap()[0].clone();
+    let body = |income_range: serde_json::Value| -> &'static [u8] {
+        let mut row = row.clone();
+        row["incomeRange"] = income_range;
+        serde_json::to_vec(&[row]).unwrap().leak()
+    };
+    let executor = Arc::new(FixtureExecutor::new([
+        json_fixture(body(serde_json::json!(""))),
+        json_fixture(body(serde_json::Value::Null)),
+        json_fixture(body(serde_json::json!({"min": 1001, "max": 15000}))),
+        json_fixture(body(serde_json::json!("SECRET-RANGE"))),
+        json_fixture(body(serde_json::json!(31337))),
+        json_fixture(body(serde_json::json!({"max": 15000}))),
+    ]));
+    let client = Client::builder()
+        .authentication(Authentication::fmp_header("secret"))
+        .executor(executor)
+        .build()
+        .unwrap();
+    let member_id = || CongressionalMemberId::new("P000197").unwrap();
+
+    for _ in 0..2 {
+        let rows = client.congressional_net_worth(member_id()).await.unwrap();
+        assert_eq!(rows[0].income_range, None);
+        assert_eq!(
+            serde_json::to_value(&rows[0]).unwrap()["incomeRange"],
+            serde_json::Value::Null
+        );
+    }
+    let rows = client.congressional_net_worth(member_id()).await.unwrap();
+    let range = rows[0].income_range.as_ref().unwrap();
+    assert_eq!((range.min, range.max), (1001, Some(15000)));
+
+    for (secret, path) in [
+        ("SECRET-RANGE", "[0].incomeRange"),
+        ("31337", "[0].incomeRange"),
+        ("min", "[0].incomeRange.min"),
+    ] {
+        let error = client
+            .congressional_net_worth(member_id())
+            .await
+            .unwrap_err();
+        assert_eq!(error.category(), ErrorCategory::Decode);
+        assert_eq!(error.endpoint(), Some("senate-net-worth"));
+        assert_eq!(error.decode_path(), Some(path));
+        if secret != "min" {
+            assert!(!error.message().contains(secret), "{}", error.message());
+        }
+    }
+
+    let mut missing = row.clone();
+    missing.as_object_mut().unwrap().remove("incomeRange");
+    assert!(serde_json::from_value::<CongressionalMemberNetWorth>(missing).is_err());
+}

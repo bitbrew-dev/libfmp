@@ -817,7 +817,6 @@ pub(crate) mod empty_or_null {
 /// `deserialize_with = "crate::codecs::empty_or_null_object::deserialize"`
 /// (the exact path gen_go matches); serialization is serde's default, so
 /// `None` re-encodes as null.
-#[cfg_attr(not(test), allow(dead_code))]
 pub(crate) mod empty_or_null_object {
     use super::*;
 
