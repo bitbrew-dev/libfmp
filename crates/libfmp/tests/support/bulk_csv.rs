@@ -142,6 +142,28 @@ pub fn with_cells(fixture: &[u8], cells: &[(&str, &str)]) -> Vec<u8> {
     write(&header, &record)
 }
 
+/// Decodes the fixture and returns its first row re-encoded as JSON members.
+#[allow(dead_code)] // Only suites that check wire spellings use it.
+pub fn first_row<Q, R>(
+    endpoint: &EndpointSpec<Q, Vec<R>>,
+    fixture: &[u8],
+) -> serde_json::Map<String, Value>
+where
+    Q: QueryParameters,
+    R: Serialize,
+{
+    match serde_json::to_value(&decode(endpoint, fixture).unwrap()[0]).unwrap() {
+        Value::Object(members) => members,
+        other => panic!("a row re-encodes as a JSON object, not {other}"),
+    }
+}
+
+/// Asserts that a decode failed at `[0].member` with `kind`.
+#[allow(dead_code)] // Only suites that probe individual cells use it.
+pub fn assert_cell_failure<R>(result: libfmp::Result<R>, member: &str, kind: DecodeErrorKind) {
+    assert_failure(result, member, kind);
+}
+
 fn assert_failure<R>(result: libfmp::Result<R>, member: &str, kind: DecodeErrorKind) {
     let Err(error) = result else {
         panic!("{member}: expected a {kind:?} failure");
