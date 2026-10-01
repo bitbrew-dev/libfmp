@@ -1,9 +1,14 @@
 package fmp
 
 import (
+	"bytes"
 	"context"
+	"encoding/csv"
+	"encoding/json/v2"
 	"errors"
 	"net/http"
+	"slices"
+	"strconv"
 	"testing"
 )
 
@@ -144,4 +149,55 @@ func TestBulkBodyLimitDefaultsUntilTheClientSetsOne(t *testing.T) {
 		typed.Message != "response body exceeded configured limit" {
 		t.Fatalf("err = %v", err)
 	}
+}
+
+// assertCSVFixtureParity mirrors assert_round_trip in
+// crates/libfmp/tests/support/bulk_csv.rs: every row of the shared CSV
+// fixture decodes, and the first row re-encodes fields members, each a header
+// column equal to its cell (verbatim text, the parsed number or boolean, and
+// null or "" for an empty cell).
+func assertCSVFixtureParity[T any](t *testing.T, name string, fields int) []T {
+	t.Helper()
+	raw := readFixture(t, name)
+	rows, path, kind, err := decodeCSVRows[T](raw)
+	if kind != DecodeKindNone {
+		t.Fatalf("%s: decode at %q (%v): %v", name, path, kind, err)
+	}
+	records, err := csv.NewReader(bytes.NewReader(raw)).ReadAll()
+	if err != nil || len(records) != len(rows)+1 {
+		t.Fatalf("%s: %d records for %d rows: %v", name, len(records), len(rows), err)
+	}
+	members := memberValues(t, rows[0])
+	if len(members) != fields {
+		t.Fatalf("%s: %d members re-encoded, want %d", name, len(members), fields)
+	}
+	for member, value := range members {
+		column := slices.Index(records[0], member)
+		if column < 0 {
+			t.Fatalf("%s: member %q is not a header column", name, member)
+		}
+		cell := records[1][column]
+		var text string
+		switch value.Kind() {
+		case 'n':
+			text = ""
+		case '"':
+			if err := json.Unmarshal(value, &text); err != nil {
+				t.Fatal(err)
+			}
+		case '0':
+			want, _ := strconv.ParseFloat(cell, 64)
+			got, _ := strconv.ParseFloat(string(value), 64)
+			if got == want {
+				continue
+			}
+			text = string(value)
+		default:
+			text = string(value)
+		}
+		if text != cell {
+			t.Fatalf("%s: member %q re-encoded %s for cell %q", name, member, value, cell)
+		}
+	}
+	return rows
 }

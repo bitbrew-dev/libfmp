@@ -13,13 +13,13 @@ import (
 // relatively from the shared fixture directory, never copied.
 func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	t.Parallel()
-	assertFixtureParity[CompanyProfile](t, "bulk_company_profiles.json")
-	assertFixtureParity[BulkStockRating](t, "bulk_stock_ratings.json")
-	assertFixtureParity[BulkDCFValuation](t, "bulk_dcf_valuations.json")
-	assertFixtureParity[BulkFinancialScore](t, "bulk_financial_scores.json")
-	assertFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.json")
-	assertFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.json")
-	assertFixtureParity[BulkUpgradesDowngradesConsensus](t, "bulk_upgrades_downgrades_consensus.json")
+	assertCSVFixtureParity[CompanyProfile](t, "bulk_company_profiles.csv", 36)
+	assertCSVFixtureParity[BulkStockRating](t, "bulk_stock_ratings.csv", 9)
+	assertCSVFixtureParity[BulkDCFValuation](t, "bulk_dcf_valuations.csv", 4)
+	assertCSVFixtureParity[BulkFinancialScore](t, "bulk_financial_scores.csv", 11)
+	assertCSVFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.csv", 10)
+	assertCSVFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.csv", 9)
+	assertCSVFixtureParity[BulkUpgradesDowngradesConsensus](t, "bulk_upgrades_downgrades_consensus.csv", 7)
 	assertFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.json")
 	assertFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.json")
 	assertFixtureParity[BulkStockPeer](t, "bulk_stock_peers.json")
@@ -34,55 +34,40 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 }
 
 // Exact values copied from crates/libfmp/tests/bulk_snapshot_responses.rs:
-// every numeric cell stays the provider's string, and the documented source
-// defects (the "Stock Price" key, the malformed publishers text, the empty
-// CUSIP and consensus symbol) are preserved verbatim.
-func TestDocumentedBulkSnapshotsDecodeExactValues(t *testing.T) {
+// every numeric cell stays the provider's text, and the provider spellings
+// (the "Stock Price" column, the quoted publishers list, the " -- " ETF
+// symbol) are preserved verbatim.
+func TestBulkSnapshotsDecodeExactValues(t *testing.T) {
 	t.Parallel()
-	profiles := assertFixtureParity[CompanyProfile](t, "bulk_company_profiles.json")
-	if len(profiles) != 1 || profiles[0].Symbol != "AAPL" || profiles[0].CIK == nil || *profiles[0].CIK != "0000320193" {
-		t.Fatalf("bulk_company_profiles = %+v", profiles)
+	profiles := assertCSVFixtureParity[CompanyProfile](t, "bulk_company_profiles.csv", 36)
+	if profiles[0].Symbol != "WMB" || profiles[0].CompanyName != "The Williams Companies, Inc." ||
+		profiles[0].CIK == nil || *profiles[0].CIK != "0000107263" || profiles[0].IsETF {
+		t.Fatalf("bulk_company_profiles = %+v", profiles[0])
 	}
-	ratings := assertFixtureParity[BulkStockRating](t, "bulk_stock_ratings.json")
-	if want := (BulkStockRating{Symbol: "000001.SZ", Date: mustParseDate(t, "2025-07-09"), Rating: "B+",
-		DiscountedCashFlowScore: "5", ReturnOnEquityScore: "3", ReturnOnAssetsScore: "2", DebtToEquityScore: "1",
-		PriceToEarningsScore: "4", PriceToBookScore: "4"}); len(ratings) != 1 || ratings[0] != want {
-		t.Fatalf("bulk_stock_ratings = %+v", ratings)
+	ratings := assertCSVFixtureParity[BulkStockRating](t, "bulk_stock_ratings.csv", 9)
+	if want := (BulkStockRating{Symbol: "000001.SZ", Date: mustParseDate(t, "2026-09-30"), Rating: "B-",
+		DiscountedCashFlowScore: "1", ReturnOnEquityScore: "3", ReturnOnAssetsScore: "2", DebtToEquityScore: "1",
+		PriceToEarningsScore: "4", PriceToBookScore: "4"}); ratings[0] != want {
+		t.Fatalf("bulk_stock_ratings = %+v", ratings[0])
 	}
-	dcf := assertFixtureParity[BulkDCFValuation](t, "bulk_dcf_valuations.json")
-	if want := (BulkDCFValuation{Symbol: "000002.SZ", Date: mustParseDate(t, "2025-07-09"),
-		DCF: "179.6654688379575", StockPrice: "6.54"}); len(dcf) != 1 || dcf[0] != want {
-		t.Fatalf("bulk_dcf_valuations = %+v", dcf)
+	dcf := assertCSVFixtureParity[BulkDCFValuation](t, "bulk_dcf_valuations.csv", 4)
+	if want := (BulkDCFValuation{Symbol: "000006.SZ", Date: mustParseDate(t, "2026-09-29"),
+		DCF: "2.525226853334803", StockPrice: "7.62"}); dcf[0] != want {
+		t.Fatalf("bulk_dcf_valuations = %+v", dcf[0])
 	}
-	if encoded, err := json.Marshal(dcf[0]); err != nil || !strings.Contains(string(encoded), `"Stock Price":"6.54"`) {
+	if encoded, err := json.Marshal(dcf[0]); err != nil || !strings.Contains(string(encoded), `"Stock Price":"7.62"`) {
 		t.Fatalf("re-encoded dcf = %s, %v", encoded, err)
 	}
-	scores := assertFixtureParity[BulkFinancialScore](t, "bulk_financial_scores.json")
-	if len(scores) != 1 || scores[0].Symbol != "000001.SZ" || scores[0].ReportedCurrency != "CNY" ||
-		scores[0].AltmanZScore != "0.29153682196643543" || scores[0].PiotroskiScore != "5" ||
-		scores[0].TotalAssets != "5777858000000" {
-		t.Fatalf("bulk_financial_scores = %+v", scores)
+	targets := assertCSVFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.csv", 10)
+	if targets[0].Symbol != "A" || targets[0].Publishers != `["StreetInsider","Benzinga","Pulse 2.0"]` ||
+		targets[0].AllTimeAvgPriceTarget != "159.49" {
+		t.Fatalf("bulk_price_target_summaries = %+v", targets[0])
 	}
-	targets := assertFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.json")
-	if len(targets) != 1 || targets[0].Symbol != "A" || targets[0].Publishers != `[""TheFly"` ||
-		targets[0].LastMonthCount != "0" || targets[0].AllTimeAvgPriceTarget != "146.61" {
-		t.Fatalf("bulk_price_target_summaries = %+v", targets)
-	}
-	consensus := assertFixtureParity[BulkUpgradesDowngradesConsensus](t, "bulk_upgrades_downgrades_consensus.json")
-	if want := (BulkUpgradesDowngradesConsensus{Symbol: "", StrongBuy: "0", Buy: "1", Hold: "1", Sell: "0",
-		StrongSell: "0", Consensus: "Buy"}); len(consensus) != 1 || consensus[0] != want {
-		t.Fatalf("bulk_upgrades_downgrades_consensus = %+v", consensus)
-	}
-}
-
-// The ETF holding row's lastUpdated member is a strict date.
-func TestBulkEtfHoldingDecodesLastUpdatedAsADate(t *testing.T) {
-	t.Parallel()
-	holdings := assertFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.json")
-	if want := (BulkETFHolding{Symbol: "EXCH.AS", Name: "SAMSUNG ELECTRO MECHANICS LTD", SharesNumber: "15514",
-		Asset: "009150.KS", WeightPercentage: "0.09611", CUSIP: "", ISIN: "KR7009150004", MarketValue: "1553142.49",
-		LastUpdated: mustParseDate(t, "2024-09-06")}); len(holdings) != 1 || holdings[0] != want {
-		t.Fatalf("bulk_etf_holdings = %+v", holdings)
+	holdings := assertCSVFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.csv", 9)
+	if want := (BulkETFHolding{Symbol: " -- ", Name: "Tidewater Inc", SharesNumber: "91962", Asset: "TDW",
+		WeightPercentage: "2.63", CUSIP: "88642R109", ISIN: "US88642R1095", MarketValue: "6457163.796",
+		LastUpdated: mustParseDate(t, "2026-09-27")}); holdings[0] != want {
+		t.Fatalf("bulk_etf_holdings = %+v", holdings[0])
 	}
 }
 
