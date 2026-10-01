@@ -1,163 +1,112 @@
-use serde::{Serialize, de::DeserializeOwned};
-use serde_json::{Map, Value, json};
+#[path = "support/bulk_csv.rs"]
+mod bulk_csv;
+#[allow(dead_code)] // The CSV helpers use only the fixture executor.
+mod support;
 
 use libfmp::{
-    responses::{
-        bulk::{
-            BulkDcfValuation, BulkEtfHolding, BulkFinancialScore, BulkPriceTargetSummary,
-            BulkStockRating, BulkUpgradesDowngradesConsensus,
-        },
-        company::CompanyProfile,
+    endpoints::bulk::{
+        BulkPartQuery, bulk_company_profiles, bulk_dcf_valuations, bulk_etf_holdings,
+        bulk_financial_scores, bulk_price_target_summaries, bulk_stock_ratings,
+        bulk_upgrades_downgrades_consensus,
     },
-    types::{Date, Ticker},
+    types::{BulkPart, Date, Ticker},
 };
 
-const PROFILE: &[u8] = include_bytes!("fixtures/bulk_company_profiles.json");
-const RATING: &[u8] = include_bytes!("fixtures/bulk_stock_ratings.json");
-const DCF: &[u8] = include_bytes!("fixtures/bulk_dcf_valuations.json");
-const SCORES: &[u8] = include_bytes!("fixtures/bulk_financial_scores.json");
-const TARGET: &[u8] = include_bytes!("fixtures/bulk_price_target_summaries.json");
-const ETF: &[u8] = include_bytes!("fixtures/bulk_etf_holdings.json");
-const CONSENSUS: &[u8] = include_bytes!("fixtures/bulk_upgrades_downgrades_consensus.json");
+use bulk_csv::{assert_empty_bodies, assert_members, assert_round_trip, decode};
 
-#[test]
-fn exact_outer_md_fixtures_round_trip_with_exact_field_counts() {
-    assert_exact::<CompanyProfile>(PROFILE, 36);
-    assert_exact::<BulkStockRating>(RATING, 9);
-    assert_exact::<BulkDcfValuation>(DCF, 4);
-    assert_exact::<BulkFinancialScore>(SCORES, 11);
-    assert_exact::<BulkPriceTargetSummary>(TARGET, 10);
-    assert_exact::<BulkEtfHolding>(ETF, 9);
-    assert_exact::<BulkUpgradesDowngradesConsensus>(CONSENSUS, 7);
+const PROFILE: &[u8] = include_bytes!("fixtures/bulk_company_profiles.csv");
+const RATING: &[u8] = include_bytes!("fixtures/bulk_stock_ratings.csv");
+const DCF: &[u8] = include_bytes!("fixtures/bulk_dcf_valuations.csv");
+const SCORES: &[u8] = include_bytes!("fixtures/bulk_financial_scores.csv");
+const TARGET: &[u8] = include_bytes!("fixtures/bulk_price_target_summaries.csv");
+const ETF: &[u8] = include_bytes!("fixtures/bulk_etf_holdings.csv");
+const CONSENSUS: &[u8] = include_bytes!("fixtures/bulk_upgrades_downgrades_consensus.csv");
+
+fn part() -> BulkPartQuery {
+    BulkPart::new("0").unwrap().into()
 }
 
 #[test]
-fn every_documented_field_is_required_non_null_and_unknown_fields_are_tolerated() {
-    assert_required_nullable::<CompanyProfile>(
+fn live_csv_fixtures_round_trip_every_cell_with_exact_field_counts() {
+    assert_round_trip(&bulk_company_profiles(part()), PROFILE, 36);
+    assert_round_trip(&bulk_stock_ratings(), RATING, 9);
+    assert_round_trip(&bulk_dcf_valuations(), DCF, 4);
+    assert_round_trip(&bulk_financial_scores(), SCORES, 11);
+    assert_round_trip(&bulk_price_target_summaries(), TARGET, 10);
+    assert_round_trip(&bulk_etf_holdings(part()), ETF, 9);
+    assert_round_trip(&bulk_upgrades_downgrades_consensus(), CONSENSUS, 7);
+}
+
+#[test]
+fn every_column_is_required_and_only_optional_or_text_members_accept_an_empty_cell() {
+    assert_members(
+        &bulk_company_profiles(part()),
         PROFILE,
-        &["cik", "cusip", "fullTimeEmployees", "phone", "ipoDate"],
+        &[
+            "range",
+            "companyName",
+            "cik",
+            "cusip",
+            "exchangeFullName",
+            "website",
+            "description",
+            "ceo",
+            "fullTimeEmployees",
+            "phone",
+            "address",
+            "city",
+            "state",
+            "zip",
+            "image",
+            "ipoDate",
+        ],
     );
-    assert_required::<BulkStockRating>(RATING);
-    assert_required::<BulkDcfValuation>(DCF);
-    assert_required::<BulkFinancialScore>(SCORES);
-    assert_required::<BulkPriceTargetSummary>(TARGET);
-    assert_required::<BulkEtfHolding>(ETF);
-    assert_required::<BulkUpgradesDowngradesConsensus>(CONSENSUS);
+    assert_members(&bulk_stock_ratings(), RATING, &["rating"]);
+    assert_members(&bulk_dcf_valuations(), DCF, &[]);
+    assert_members(&bulk_financial_scores(), SCORES, &[]);
+    assert_members(&bulk_price_target_summaries(), TARGET, &["publishers"]);
+    assert_members(&bulk_etf_holdings(part()), ETF, &["name", "cusip"]);
+    assert_members(
+        &bulk_upgrades_downgrades_consensus(),
+        CONSENSUS,
+        &["symbol", "consensus"],
+    );
 }
 
 #[test]
-fn numeric_string_fields_reject_json_numbers_in_every_new_contract() {
-    assert_number_rejected::<BulkStockRating>(RATING, "discountedCashFlowScore");
-    assert_number_rejected::<BulkDcfValuation>(DCF, "dcf");
-    assert_number_rejected::<BulkDcfValuation>(DCF, "Stock Price");
-    assert_number_rejected::<BulkFinancialScore>(SCORES, "altmanZScore");
-    assert_number_rejected::<BulkPriceTargetSummary>(TARGET, "allTimeAvgPriceTarget");
-    assert_number_rejected::<BulkEtfHolding>(ETF, "marketValue");
-    assert_number_rejected::<BulkUpgradesDowngradesConsensus>(CONSENSUS, "strongBuy");
+fn empty_and_header_only_bodies_decode_to_no_rows() {
+    assert_empty_bodies(&bulk_company_profiles(part()), PROFILE);
+    assert_empty_bodies(&bulk_stock_ratings(), RATING);
+    assert_empty_bodies(&bulk_dcf_valuations(), DCF);
+    assert_empty_bodies(&bulk_financial_scores(), SCORES);
+    assert_empty_bodies(&bulk_price_target_summaries(), TARGET);
+    assert_empty_bodies(&bulk_etf_holdings(part()), ETF);
+    assert_empty_bodies(&bulk_upgrades_downgrades_consensus(), CONSENSUS);
 }
 
 #[test]
-fn malformed_documented_strings_and_wire_keys_are_preserved_verbatim() {
-    let target = rows::<BulkPriceTargetSummary>(TARGET).remove(0);
-    assert_eq!(target.publishers, "[\"\"TheFly\"");
+fn provider_spellings_and_quoted_text_are_preserved_verbatim() {
+    let dcf = decode(&bulk_dcf_valuations(), DCF).unwrap().remove(0);
+    assert_eq!(dcf.stock_price.as_str(), "7.62");
+    assert_eq!(dcf.dcf.as_str(), "2.525226853334803");
 
-    let etf = rows::<BulkEtfHolding>(ETF).remove(0);
-    assert_eq!(etf.cusip, "");
-    assert_eq!(etf.last_updated, Date::parse("2024-09-06").unwrap());
-
-    let consensus = rows::<BulkUpgradesDowngradesConsensus>(CONSENSUS).remove(0);
-    assert_eq!(consensus.symbol, "");
-}
-
-#[test]
-fn company_profile_is_the_existing_typed_contract_and_new_symbols_are_typed_where_proven() {
-    let profile = rows::<CompanyProfile>(PROFILE).remove(0);
-    assert_eq!(profile.symbol, Ticker::new("AAPL").unwrap());
-
-    let rating = rows::<BulkStockRating>(RATING).remove(0);
-    assert_eq!(rating.symbol.as_str(), "000001.SZ");
-    let etf = rows::<BulkEtfHolding>(ETF).remove(0);
-    assert_eq!(etf.asset.as_str(), "009150.KS");
-}
-
-#[test]
-fn all_seven_contracts_require_bare_array_roots_and_accept_empty_arrays() {
-    assert_array_contract::<CompanyProfile>();
-    assert_array_contract::<BulkStockRating>();
-    assert_array_contract::<BulkDcfValuation>();
-    assert_array_contract::<BulkFinancialScore>();
-    assert_array_contract::<BulkPriceTargetSummary>();
-    assert_array_contract::<BulkEtfHolding>();
-    assert_array_contract::<BulkUpgradesDowngradesConsensus>();
-}
-
-fn rows<T: DeserializeOwned>(fixture: &[u8]) -> Vec<T> {
-    serde_json::from_slice(fixture).unwrap()
-}
-
-fn source_row(fixture: &[u8]) -> Map<String, Value> {
-    serde_json::from_slice::<Value>(fixture).unwrap()[0]
-        .as_object()
+    let target = decode(&bulk_price_target_summaries(), TARGET)
         .unwrap()
-        .clone()
-}
+        .remove(0);
+    assert_eq!(
+        target.publishers,
+        r#"["StreetInsider","Benzinga","Pulse 2.0"]"#
+    );
 
-fn assert_exact<T>(fixture: &[u8], fields: usize)
-where
-    T: DeserializeOwned + Serialize,
-{
-    let source: Value = serde_json::from_slice(fixture).unwrap();
-    assert_eq!(source[0].as_object().unwrap().len(), fields);
-    assert_eq!(serde_json::to_value(rows::<T>(fixture)).unwrap(), source);
-}
+    let etf = decode(&bulk_etf_holdings(part()), ETF).unwrap().remove(0);
+    assert_eq!(etf.symbol.as_str(), " -- ");
+    assert_eq!(etf.asset, Ticker::new("TDW").unwrap());
+    assert_eq!(etf.last_updated, Date::parse("2026-09-27").unwrap());
 
-fn assert_required<T>(fixture: &[u8])
-where
-    T: DeserializeOwned,
-{
-    assert_required_nullable::<T>(fixture, &[]);
-}
-
-fn assert_required_nullable<T>(fixture: &[u8], nullable: &[&str])
-where
-    T: DeserializeOwned,
-{
-    let row = source_row(fixture);
-    for field in row.keys() {
-        let mut missing = row.clone();
-        missing.remove(field);
-        assert!(
-            serde_json::from_value::<T>(Value::Object(missing)).is_err(),
-            "missing {field} unexpectedly decoded"
-        );
-
-        let mut null = row.clone();
-        null.insert(field.clone(), Value::Null);
-        assert_eq!(
-            serde_json::from_value::<T>(Value::Object(null)).is_ok(),
-            nullable.contains(&field.as_str()),
-            "null {field} decoded contrary to its nullability"
-        );
-    }
-
-    let mut future = row;
-    future.insert("futureField".into(), json!({"nested": true}));
-    assert!(serde_json::from_value::<T>(Value::Object(future)).is_ok());
-}
-
-fn assert_number_rejected<T>(fixture: &[u8], field: &str)
-where
-    T: DeserializeOwned,
-{
-    let mut row = source_row(fixture);
-    row.insert(field.into(), json!(123.5));
-    assert!(serde_json::from_value::<T>(Value::Object(row)).is_err());
-}
-
-fn assert_array_contract<T>()
-where
-    T: DeserializeOwned,
-{
-    assert!(serde_json::from_slice::<Vec<T>>(b"[]").unwrap().is_empty());
-    assert!(serde_json::from_slice::<Vec<T>>(b"{}").is_err());
+    let profile = decode(&bulk_company_profiles(part()), PROFILE)
+        .unwrap()
+        .remove(0);
+    assert_eq!(profile.symbol, Ticker::new("WMB").unwrap());
+    assert_eq!(profile.company_name, "The Williams Companies, Inc.");
+    assert!(!profile.is_etf);
 }
