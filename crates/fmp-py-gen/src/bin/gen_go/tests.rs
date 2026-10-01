@@ -196,6 +196,30 @@ fn nested_namespaces_embed_children_by_registry_path() {
     );
 }
 
+/// Bulk descriptors use `EndpointSpec::get_csv`, so their methods decode
+/// through `getCSV` instead of `getJSON` (ADR 0035).
+#[test]
+fn csv_bulk_endpoints_render_through_get_csv() {
+    let files =
+        generate_domains(&domain_set(&["bulk", "company"])).expect("bulk generates with company");
+    let (_, bulk) = files
+        .iter()
+        .find(|(name, _)| name == "bulk.go")
+        .expect("bulk.go is rendered");
+    assert!(
+        bulk.contains(
+            "return getCSV[BulkStockRating](ctx, n.client, \"rating-bulk\", \"rating-bulk\", nil)"
+        ),
+        "{bulk}"
+    );
+    assert!(
+        bulk.contains(
+            "return getCSV[CompanyProfile](ctx, n.client, \"profile-bulk\", \"profile-bulk\", params)"
+        ),
+        "{bulk}"
+    );
+}
+
 #[test]
 fn cross_domain_models_require_their_owner_to_be_generated() {
     let error =

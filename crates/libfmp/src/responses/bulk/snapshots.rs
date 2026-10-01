@@ -83,8 +83,7 @@ pub struct BulkEtfHolding {
     pub cusip: String,
     pub isin: Isin,
     pub market_value: NumericString,
-    #[serde(rename = "lastUpdated\"")]
-    pub last_updated_raw: String,
+    pub last_updated: Date,
 }
 
 /// One worldwide upgrades/downgrades-consensus bulk row.

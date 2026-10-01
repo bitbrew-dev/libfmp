@@ -26,25 +26,29 @@ use libfmp::{
     types::{BulkPart, StringValueError},
 };
 
-use support::{FixtureExecutor, json_fixture};
+use support::{FixtureExecutor, fixture_response, json_fixture};
 
-const PROFILE: &[u8] = include_bytes!("fixtures/bulk_company_profiles.json");
-const RATING: &[u8] = include_bytes!("fixtures/bulk_stock_ratings.json");
-const DCF: &[u8] = include_bytes!("fixtures/bulk_dcf_valuations.json");
-const SCORES: &[u8] = include_bytes!("fixtures/bulk_financial_scores.json");
-const TARGET: &[u8] = include_bytes!("fixtures/bulk_price_target_summaries.json");
-const ETF: &[u8] = include_bytes!("fixtures/bulk_etf_holdings.json");
-const CONSENSUS: &[u8] = include_bytes!("fixtures/bulk_upgrades_downgrades_consensus.json");
+const PROFILE: &[u8] = include_bytes!("fixtures/bulk_company_profiles.csv");
+const RATING: &[u8] = include_bytes!("fixtures/bulk_stock_ratings.csv");
+const DCF: &[u8] = include_bytes!("fixtures/bulk_dcf_valuations.csv");
+const SCORES: &[u8] = include_bytes!("fixtures/bulk_financial_scores.csv");
+const TARGET: &[u8] = include_bytes!("fixtures/bulk_price_target_summaries.csv");
+const ETF: &[u8] = include_bytes!("fixtures/bulk_etf_holdings.csv");
+const CONSENSUS: &[u8] = include_bytes!("fixtures/bulk_upgrades_downgrades_consensus.csv");
+
+fn csv_fixture(body: &'static [u8]) -> TransportResponse {
+    fixture_response(Some("text/csv"), body)
+}
 
 fn fixtures() -> [TransportResponse; 7] {
     [
-        json_fixture(PROFILE),
-        json_fixture(RATING),
-        json_fixture(DCF),
-        json_fixture(SCORES),
-        json_fixture(TARGET),
-        json_fixture(ETF),
-        json_fixture(CONSENSUS),
+        csv_fixture(PROFILE),
+        csv_fixture(RATING),
+        csv_fixture(DCF),
+        csv_fixture(SCORES),
+        csv_fixture(TARGET),
+        csv_fixture(ETF),
+        csv_fixture(CONSENSUS),
     ]
 }
 
@@ -176,13 +180,13 @@ async fn custom_proxy_sends_one_exact_request_per_method_with_auth_headers_and_f
         .unwrap();
     let consensus = client.bulk_upgrades_downgrades_consensus().await.unwrap();
 
-    assert_eq!(profile[0].symbol.as_str(), "AAPL");
-    assert_eq!(rating[0].rating, "B+");
-    assert_eq!(dcf[0].stock_price.as_str(), "6.54");
+    assert_eq!(profile[1].symbol.as_str(), "AMAT");
+    assert_eq!(rating[1].rating, "C+");
+    assert_eq!(dcf[1].stock_price.as_str(), "2.39");
     assert_eq!(scores[0].reported_currency.as_str(), "CNY");
-    assert_eq!(target[0].publishers, "[\"\"TheFly\"");
-    assert_eq!(etf[0].last_updated_raw, "2024-09-06\"");
-    assert_eq!(consensus[0].symbol, "");
+    assert_eq!(target[1].symbol.as_str(), "AA");
+    assert_eq!(etf[1].asset.as_str(), "3665.TW");
+    assert_eq!(consensus[1].consensus, "Hold");
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 7);
@@ -281,11 +285,11 @@ async fn direct_fmp_header_and_query_auth_preserve_paths_and_exact_query_shape()
 }
 
 #[tokio::test]
-async fn empty_arrays_decode_and_malformed_roots_keep_all_endpoint_identities() {
+async fn empty_bodies_decode_and_json_bodies_keep_all_endpoint_identities() {
     let executor = Arc::new(FixtureExecutor::new(
-        std::iter::repeat_with(|| json_fixture(b"[]"))
+        std::iter::repeat_with(|| csv_fixture(b""))
             .take(7)
-            .chain(std::iter::repeat_with(|| json_fixture(b"{}")).take(7)),
+            .chain(std::iter::repeat_with(|| json_fixture(b"[]")).take(7)),
     ));
     let client = Client::builder()
         .authentication(Authentication::fmp_header("secret"))

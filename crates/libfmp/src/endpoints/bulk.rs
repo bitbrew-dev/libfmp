@@ -169,39 +169,39 @@ const US_ONLY: EndpointMetadata =
 pub fn bulk_company_profiles(
     query: BulkPartQuery,
 ) -> EndpointSpec<BulkPartQuery, Vec<CompanyProfile>> {
-    EndpointSpec::get("profile-bulk", "profile-bulk", query).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("profile-bulk", "profile-bulk", query).with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET rating-bulk` without binding a transport.
 pub fn bulk_stock_ratings() -> EndpointSpec<(), Vec<BulkStockRating>> {
-    EndpointSpec::get("rating-bulk", "rating-bulk", ()).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("rating-bulk", "rating-bulk", ()).with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET dcf-bulk` without binding a transport.
 pub fn bulk_dcf_valuations() -> EndpointSpec<(), Vec<BulkDcfValuation>> {
-    EndpointSpec::get("dcf-bulk", "dcf-bulk", ()).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("dcf-bulk", "dcf-bulk", ()).with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET scores-bulk` without binding a transport.
 pub fn bulk_financial_scores() -> EndpointSpec<(), Vec<BulkFinancialScore>> {
-    EndpointSpec::get("scores-bulk", "scores-bulk", ()).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("scores-bulk", "scores-bulk", ()).with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET price-target-summary-bulk` without binding a transport.
 pub fn bulk_price_target_summaries() -> EndpointSpec<(), Vec<BulkPriceTargetSummary>> {
-    EndpointSpec::get("price-target-summary-bulk", "price-target-summary-bulk", ())
+    EndpointSpec::get_csv("price-target-summary-bulk", "price-target-summary-bulk", ())
         .with_metadata(US_ONLY)
 }
 
 /// Describes `GET etf-holder-bulk` without binding a transport.
 pub fn bulk_etf_holdings(query: BulkPartQuery) -> EndpointSpec<BulkPartQuery, Vec<BulkEtfHolding>> {
-    EndpointSpec::get("etf-holder-bulk", "etf-holder-bulk", query).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("etf-holder-bulk", "etf-holder-bulk", query).with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET upgrades-downgrades-consensus-bulk` without binding a transport.
 pub fn bulk_upgrades_downgrades_consensus() -> EndpointSpec<(), Vec<BulkUpgradesDowngradesConsensus>>
 {
-    EndpointSpec::get(
+    EndpointSpec::get_csv(
         "upgrades-downgrades-consensus-bulk",
         "upgrades-downgrades-consensus-bulk",
         (),
