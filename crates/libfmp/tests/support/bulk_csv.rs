@@ -75,8 +75,8 @@ where
 }
 
 /// Asserts the CSV member contract on the fixture's first record: a blanked
-/// cell decodes only for a member in `blankable`, and is otherwise a null at
-/// `[0].member`; dropping a model member's column is a missing member even
+/// model member's cell decodes only for a member in `blankable`, and is
+/// otherwise a null at `[0].member`; dropping a model member's column is a missing member even
 /// for an `Option`, while any other column, and an unknown one, is ignored.
 pub fn assert_members<Q, R>(endpoint: &EndpointSpec<Q, Vec<R>>, fixture: &[u8], blankable: &[&str])
 where
@@ -92,7 +92,7 @@ where
         let mut blank = records[0].clone();
         blank[column].clear();
         let result = decode(endpoint, write(&header, &blank));
-        if blankable.contains(&member.as_str()) {
+        if blankable.contains(&member.as_str()) || !members.contains_key(member) {
             assert!(result.is_ok(), "blank {member} did not decode");
         } else {
             assert_failure(result, member, DecodeErrorKind::Null);
@@ -128,6 +128,18 @@ where
     let (header, _) = read(fixture);
     assert!(decode(endpoint, Vec::new()).unwrap().is_empty());
     assert!(decode(endpoint, write(&header, &[])).unwrap().is_empty());
+}
+
+/// Returns the fixture's header and first record with the named cells replaced.
+#[allow(dead_code)] // Only suites that probe individual cells use it.
+pub fn with_cells(fixture: &[u8], cells: &[(&str, &str)]) -> Vec<u8> {
+    let (header, records) = read(fixture);
+    let mut record = records[0].clone();
+    for (name, value) in cells {
+        let column = header.iter().position(|column| column == name);
+        record[column.unwrap_or_else(|| panic!("{name} is a header column"))] = (*value).to_owned();
+    }
+    write(&header, &record)
 }
 
 fn assert_failure<R>(result: libfmp::Result<R>, member: &str, kind: DecodeErrorKind) {
