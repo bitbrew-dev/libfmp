@@ -237,11 +237,7 @@ func (n *BulkNamespace) IncomeStatements(ctx context.Context, q BulkStatementQue
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkIncomeStatement
-	if err := n.client.getJSON(ctx, "income-statement-bulk", "income-statement-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkIncomeStatement](ctx, n.client, "income-statement-bulk", "income-statement-bulk", params)
 }
 
 // IncomeStatementGrowth retrieves worldwide bulk income-statement growth for
@@ -253,11 +249,7 @@ func (n *BulkNamespace) IncomeStatementGrowth(ctx context.Context, q BulkStateme
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkIncomeStatementGrowth
-	if err := n.client.getJSON(ctx, "income-statement-growth-bulk", "income-statement-growth-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkIncomeStatementGrowth](ctx, n.client, "income-statement-growth-bulk", "income-statement-growth-bulk", params)
 }
 
 // BalanceSheetStatements retrieves worldwide bulk balance sheets for one year
@@ -269,11 +261,7 @@ func (n *BulkNamespace) BalanceSheetStatements(ctx context.Context, q BulkStatem
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkBalanceSheetStatement
-	if err := n.client.getJSON(ctx, "balance-sheet-statement-bulk", "balance-sheet-statement-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkBalanceSheetStatement](ctx, n.client, "balance-sheet-statement-bulk", "balance-sheet-statement-bulk", params)
 }
 
 // BalanceSheetStatementGrowth retrieves worldwide bulk balance-sheet growth
@@ -285,11 +273,7 @@ func (n *BulkNamespace) BalanceSheetStatementGrowth(ctx context.Context, q BulkS
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkBalanceSheetStatementGrowth
-	if err := n.client.getJSON(ctx, "balance-sheet-statement-growth-bulk", "balance-sheet-statement-growth-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkBalanceSheetStatementGrowth](ctx, n.client, "balance-sheet-statement-growth-bulk", "balance-sheet-statement-growth-bulk", params)
 }
 
 // CashFlowStatements retrieves worldwide bulk cash-flow statements for one
@@ -301,11 +285,7 @@ func (n *BulkNamespace) CashFlowStatements(ctx context.Context, q BulkStatementQ
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkCashFlowStatement
-	if err := n.client.getJSON(ctx, "cash-flow-statement-bulk", "cash-flow-statement-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkCashFlowStatement](ctx, n.client, "cash-flow-statement-bulk", "cash-flow-statement-bulk", params)
 }
 
 // CashFlowStatementGrowth retrieves worldwide bulk cash-flow growth for one
@@ -317,11 +297,7 @@ func (n *BulkNamespace) CashFlowStatementGrowth(ctx context.Context, q BulkState
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkCashFlowStatementGrowth
-	if err := n.client.getJSON(ctx, "cash-flow-statement-growth-bulk", "cash-flow-statement-growth-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkCashFlowStatementGrowth](ctx, n.client, "cash-flow-statement-growth-bulk", "cash-flow-statement-growth-bulk", params)
 }
 
 // Eod retrieves worldwide bulk end-of-day prices for one required date.
@@ -332,9 +308,5 @@ func (n *BulkNamespace) Eod(ctx context.Context, q BulkEodQuery) ([]BulkEodBar, 
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkEodBar
-	if err := n.client.getJSON(ctx, "eod-bulk", "eod-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkEodBar](ctx, n.client, "eod-bulk", "eod-bulk", params)
 }
