@@ -12,148 +12,150 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from conftest import FixtureServer, load_fixture
+from conftest import CSV_CONTENT_TYPE, FixtureServer, load_csv_fixture
 from fmp.bulk.balance import BulkBalanceSheetStatement, BulkBalanceSheetStatementGrowth
 from fmp.bulk.cash_flow import BulkCashFlowStatement, BulkCashFlowStatementGrowth
 from fmp.bulk.eod import BulkEodBar
 from fmp.bulk.income import BulkIncomeStatement, BulkIncomeStatementGrowth
 
-DATE_2025_03_31 = datetime.date(2025, 3, 31)
 DATE_2024_10_22 = datetime.date(2024, 10, 22)
+
+
+def route_csv(fixture_server: FixtureServer, path: str, fixture: str) -> None:
+    """Serve the shared CSV fixture on ``path`` as ``text/csv``, as the bulk routes answer."""
+    fixture_server.route(path, load_csv_fixture(fixture), content_type=CSV_CONTENT_TYPE)
 
 
 def test_income_statements_encodes_year_then_period(client: Any, fixture_server: FixtureServer) -> None:
     """``income_statements`` sends ``year`` before ``period`` and decodes the datetime column."""
-    fixture_server.route("/income-statement-bulk", load_fixture("bulk_income_statements.json"))
+    route_csv(fixture_server, "/income-statement-bulk", "bulk_income_statements.csv")
     rows = client.bulk.income_statements(2026, "Q1")
 
     assert fixture_server.requests[0].target == "/income-statement-bulk?year=2026&period=Q1"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkIncomeStatement)
     assert row.symbol == "000001.SZ"
-    assert row.date == DATE_2025_03_31
-    assert row.filing_date == DATE_2025_03_31
-    assert row.accepted_date == datetime.datetime(2025, 3, 31, 0, 0, 0)
-    assert (row.fiscal_year, row.period) == ("2025", "Q1")
-    assert row.revenue == "33644000000"
-    assert row.net_income == "14096000000"
-    assert row.eps == "0.62"
+    assert row.date == datetime.date(2024, 12, 31)
+    assert row.filing_date == datetime.date(2024, 12, 31)
+    assert row.accepted_date == datetime.datetime(2024, 12, 31, 0, 0, 0)
+    assert (row.fiscal_year, row.period) == ("2024", "FY")
+    assert row.revenue == "251641000000"
+    assert row.net_income == "44508000000"
+    assert row.eps == "2.15"
 
 
 def test_income_statement_growth_with_keyword_arguments(client: Any, fixture_server: FixtureServer) -> None:
     """``income_statement_growth`` accepts both constructor arguments by keyword."""
-    fixture_server.route("/income-statement-growth-bulk", load_fixture("bulk_income_statement_growth.json"))
+    route_csv(fixture_server, "/income-statement-growth-bulk", "bulk_income_statement_growth.csv")
     rows = client.bulk.income_statement_growth(period="Q1", year=2026)
 
     assert fixture_server.requests[0].target == "/income-statement-growth-bulk?year=2026&period=Q1"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkIncomeStatementGrowth)
     assert row.symbol == "000001.SZ"
-    assert row.date == DATE_2025_03_31
-    assert (row.fiscal_year, row.period) == ("2025", "Q1")
-    assert row.growth_revenue == "-0.04159070191431176"
-    assert row.growth_net_income == "1.9495710399665203"
-    assert row.growth_eps == "1.6956521739130435"
+    assert row.date == datetime.date(2024, 12, 31)
+    assert (row.fiscal_year, row.period) == ("2024", "FY")
+    assert row.growth_revenue == "-0.08220846812871789"
+    assert row.growth_net_income == "-0.04191152728446884"
+    assert row.growth_eps == "-0.04444444444444448"
 
 
 def test_balance_sheet_statements_with_the_full_year_period(client: Any, fixture_server: FixtureServer) -> None:
     """``balance_sheet_statements`` accepts ``FY`` and decodes the mid-day accepted timestamp."""
-    fixture_server.route("/balance-sheet-statement-bulk", load_fixture("bulk_balance_sheet_statements.json"))
+    route_csv(fixture_server, "/balance-sheet-statement-bulk", "bulk_balance_sheet_statements.csv")
     rows = client.bulk.balance_sheet_statements(2025, "FY")
 
     assert fixture_server.requests[0].target == "/balance-sheet-statement-bulk?year=2025&period=FY"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkBalanceSheetStatement)
-    assert row.symbol == "MTLRP.ME"
-    assert row.date == DATE_2025_03_31
-    assert row.filing_date == datetime.date(2025, 5, 31)
-    assert row.accepted_date == datetime.datetime(2025, 3, 31, 7, 0, 0)
-    assert row.total_assets == "247871857000"
-    assert row.cash_and_cash_equivalents == "1985000"
-    assert row.total_debt == "183766847000"
+    assert row.symbol == "000001.SZ"
+    assert row.date == datetime.date(2024, 12, 31)
+    assert row.filing_date == datetime.date(2024, 12, 31)
+    assert row.accepted_date == datetime.datetime(2024, 12, 31, 0, 0, 0)
+    assert row.total_assets == "5769270000000"
+    assert row.cash_and_cash_equivalents == "680935000000"
+    assert row.total_debt == "756251000000"
 
 
 def test_balance_sheet_statement_growth_is_case_insensitive_on_period(
     client: Any, fixture_server: FixtureServer
 ) -> None:
     """A lower-case fiscal period is normalised to the documented upper-case spelling."""
-    fixture_server.route(
-        "/balance-sheet-statement-growth-bulk", load_fixture("bulk_balance_sheet_statement_growth.json")
-    )
+    route_csv(fixture_server, "/balance-sheet-statement-growth-bulk", "bulk_balance_sheet_statement_growth.csv")
     rows = client.bulk.balance_sheet_statement_growth(2026, "q4")
 
     assert fixture_server.requests[0].target == "/balance-sheet-statement-growth-bulk?year=2026&period=Q4"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkBalanceSheetStatementGrowth)
     assert row.symbol == "000001.SZ"
-    assert row.date == DATE_2025_03_31
-    assert row.growth_total_assets == "0.001488576544346165"
-    assert row.growth_cash_and_cash_equivalents == "0.09574482145872953"
-    assert row.growth_net_debt == "-0.09574482145872953"
+    assert row.date == datetime.date(2024, 12, 31)
+    assert row.growth_total_assets == "0.032602509058340653"
+    assert row.growth_cash_and_cash_equivalents == "0.13745663137040692"
+    assert row.growth_net_debt == "-0.5927764260610976"
 
 
 def test_cash_flow_statements_encodes_year_then_period(client: Any, fixture_server: FixtureServer) -> None:
     """``cash_flow_statements`` maps to ``/cash-flow-statement-bulk`` in documented order."""
-    fixture_server.route("/cash-flow-statement-bulk", load_fixture("bulk_cash_flow_statements.json"))
+    route_csv(fixture_server, "/cash-flow-statement-bulk", "bulk_cash_flow_statements.csv")
     rows = client.bulk.cash_flow_statements(2026, "Q2")
 
     assert fixture_server.requests[0].target == "/cash-flow-statement-bulk?year=2026&period=Q2"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkCashFlowStatement)
     assert row.symbol == "000001.SZ"
-    assert row.date == DATE_2025_03_31
-    assert row.accepted_date == datetime.datetime(2025, 3, 31, 0, 0, 0)
-    assert row.net_income == "0"
-    assert row.free_cash_flow == "162608000000"
-    assert row.capital_expenditure == "-338000000"
+    assert row.date == datetime.date(2024, 3, 31)
+    assert row.accepted_date == datetime.datetime(2024, 3, 30, 20, 0, 0)
+    assert row.net_income == "14932000000"
+    assert row.free_cash_flow == "-21623000000"
+    assert row.capital_expenditure == "-241000000"
 
 
 def test_cash_flow_statement_growth_encodes_year_then_period(client: Any, fixture_server: FixtureServer) -> None:
     """``cash_flow_statement_growth`` maps to ``/cash-flow-statement-growth-bulk``."""
-    fixture_server.route("/cash-flow-statement-growth-bulk", load_fixture("bulk_cash_flow_statement_growth.json"))
+    route_csv(fixture_server, "/cash-flow-statement-growth-bulk", "bulk_cash_flow_statement_growth.csv")
     rows = client.bulk.cash_flow_statement_growth(2026, "Q3")
 
     assert fixture_server.requests[0].target == "/cash-flow-statement-growth-bulk?year=2026&period=Q3"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkCashFlowStatementGrowth)
     assert row.symbol == "000001.SZ"
-    assert row.date == DATE_2025_03_31
-    assert (row.fiscal_year, row.period) == ("2025", "Q1")
-    assert row.growth_net_income == "0"
-    assert row.growth_free_cash_flow == "3.16553689621649"
-    assert row.growth_capital_expenditure == "0.7332280978689818"
+    assert row.date == datetime.date(2024, 12, 31)
+    assert (row.fiscal_year, row.period) == ("2024", "FY")
+    assert row.growth_net_income == "-0.04191152728446884"
+    assert row.growth_free_cash_flow == "-0.3179880266323505"
+    assert row.growth_capital_expenditure == "0.22868217054263565"
 
 
 def test_eod_accepts_a_date_object(client: Any, fixture_server: FixtureServer) -> None:
     """``eod`` encodes a ``datetime.date`` as the ISO ``date`` parameter."""
-    fixture_server.route("/eod-bulk", load_fixture("bulk_eod.json"))
+    route_csv(fixture_server, "/eod-bulk", "bulk_eod.csv")
     rows = client.bulk.eod(DATE_2024_10_22)
 
     assert fixture_server.requests[0].target == "/eod-bulk?date=2024-10-22"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkEodBar)
-    assert row.symbol == "EGS745W1C011.CA"
-    assert row.date == DATE_2024_10_22
-    assert row.open == "2.67"
-    assert row.close == "2.93"
-    assert row.adj_close == "2.93"
-    assert row.volume == "920904"
+    assert row.symbol == "PCFD.SG"
+    assert row.date == datetime.date(2025, 6, 2)
+    assert row.open == "7.35"
+    assert row.close == "19.71"
+    assert row.adj_close == "19.71"
+    assert row.volume == "0"
 
 
 def test_eod_accepts_an_iso_string(client: Any, fixture_server: FixtureServer) -> None:
     """``eod`` also takes the date as an ISO string, by keyword."""
-    fixture_server.route("/eod-bulk", load_fixture("bulk_eod.json"))
+    route_csv(fixture_server, "/eod-bulk", "bulk_eod.csv")
     rows = client.bulk.eod(date="2024-10-22")
 
     assert fixture_server.requests[0].target == "/eod-bulk?date=2024-10-22"
-    assert rows[0].date == DATE_2024_10_22
+    assert rows[1].date == datetime.date(2025, 6, 2)
 
 
 def test_statement_arguments_are_required(client: Any, fixture_server: FixtureServer) -> None:
