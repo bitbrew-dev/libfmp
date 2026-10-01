@@ -9,7 +9,7 @@ use libfmp::{
         },
         company::CompanyProfile,
     },
-    types::Ticker,
+    types::{Date, Ticker},
 };
 
 const PROFILE: &[u8] = include_bytes!("fixtures/bulk_company_profiles.json");
@@ -63,10 +63,7 @@ fn malformed_documented_strings_and_wire_keys_are_preserved_verbatim() {
 
     let etf = rows::<BulkEtfHolding>(ETF).remove(0);
     assert_eq!(etf.cusip, "");
-    assert_eq!(etf.last_updated_raw, "2024-09-06\"");
-    let etf_json = serde_json::to_value(etf).unwrap();
-    assert_eq!(etf_json["lastUpdated\""], "2024-09-06\"");
-    assert!(etf_json.get("lastUpdated").is_none());
+    assert_eq!(etf.last_updated, Date::parse("2024-09-06").unwrap());
 
     let consensus = rows::<BulkUpgradesDowngradesConsensus>(CONSENSUS).remove(0);
     assert_eq!(consensus.symbol, "");

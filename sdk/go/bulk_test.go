@@ -14,13 +14,13 @@ import (
 // crates/libfmp/tests/bulk_*_endpoints.rs (year before period, one GET, no
 // fan-out over parts).
 var bulkRoutes = map[string]string{
-	"/router/stable/profile-bulk?part=0":                                     "bulk_company_profiles.json",
-	"/router/stable/rating-bulk":                                             "bulk_stock_ratings.json",
-	"/router/stable/dcf-bulk":                                                "bulk_dcf_valuations.json",
-	"/router/stable/scores-bulk":                                             "bulk_financial_scores.json",
-	"/router/stable/price-target-summary-bulk":                               "bulk_price_target_summaries.json",
-	"/router/stable/etf-holder-bulk?part=segment+A%2F7":                      "bulk_etf_holdings.json",
-	"/router/stable/upgrades-downgrades-consensus-bulk":                      "bulk_upgrades_downgrades_consensus.json",
+	"/router/stable/profile-bulk?part=0":                                     "bulk_company_profiles.csv",
+	"/router/stable/rating-bulk":                                             "bulk_stock_ratings.csv",
+	"/router/stable/dcf-bulk":                                                "bulk_dcf_valuations.csv",
+	"/router/stable/scores-bulk":                                             "bulk_financial_scores.csv",
+	"/router/stable/price-target-summary-bulk":                               "bulk_price_target_summaries.csv",
+	"/router/stable/etf-holder-bulk?part=segment+A%2F7":                      "bulk_etf_holdings.csv",
+	"/router/stable/upgrades-downgrades-consensus-bulk":                      "bulk_upgrades_downgrades_consensus.csv",
 	"/router/stable/key-metrics-ttm-bulk":                                    "bulk_key_metrics_ttm.json",
 	"/router/stable/ratios-ttm-bulk":                                         "bulk_financial_ratios_ttm.json",
 	"/router/stable/peers-bulk":                                              "bulk_stock_peers.json",
@@ -44,6 +44,9 @@ func bulkRouter(t *testing.T) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
+		if strings.HasSuffix(fixture, ".csv") {
+			w.Header().Set("Content-Type", "text/csv")
+		}
 		_, _ = w.Write(readFixture(t, fixture))
 	}
 }
@@ -55,31 +58,31 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 	ctx := context.Background()
 
 	profiles, err := client.Bulk.CompanyProfiles(ctx, NewBulkPartQuery("0"))
-	if err != nil || len(profiles) != 1 || profiles[0].Symbol != "AAPL" || profiles[0].MarketCap != 4_009_711_150_080 {
+	if err != nil || len(profiles) != 2 || profiles[0].Symbol != "WMB" || profiles[0].MarketCap != 82_906_291_252 {
 		t.Fatalf("CompanyProfiles = %+v, %v", profiles, err)
 	}
 	ratings, err := client.Bulk.StockRatings(ctx)
-	if err != nil || len(ratings) != 1 || ratings[0].Rating != "B+" {
+	if err != nil || len(ratings) != 2 || ratings[1].Rating != "C+" {
 		t.Fatalf("StockRatings = %+v, %v", ratings, err)
 	}
 	dcf, err := client.Bulk.DCFValuations(ctx)
-	if err != nil || len(dcf) != 1 || dcf[0].StockPrice != "6.54" {
+	if err != nil || len(dcf) != 2 || dcf[1].StockPrice != "2.39" {
 		t.Fatalf("DCFValuations = %+v, %v", dcf, err)
 	}
 	scores, err := client.Bulk.FinancialScores(ctx)
-	if err != nil || len(scores) != 1 || scores[0].PiotroskiScore != "5" {
+	if err != nil || len(scores) != 2 || scores[0].PiotroskiScore != "4" {
 		t.Fatalf("FinancialScores = %+v, %v", scores, err)
 	}
 	targets, err := client.Bulk.PriceTargetSummaries(ctx)
-	if err != nil || len(targets) != 1 || targets[0].Symbol != "A" {
+	if err != nil || len(targets) != 2 || targets[1].Symbol != "AA" {
 		t.Fatalf("PriceTargetSummaries = %+v, %v", targets, err)
 	}
 	holdings, err := client.Bulk.ETFHoldings(ctx, NewBulkPartQuery("segment A/7"))
-	if err != nil || len(holdings) != 1 || holdings[0].LastUpdatedRaw != `2024-09-06"` {
+	if err != nil || len(holdings) != 2 || holdings[1].Asset != "3665.TW" {
 		t.Fatalf("ETFHoldings = %+v, %v", holdings, err)
 	}
 	consensus, err := client.Bulk.UpgradesDowngradesConsensus(ctx)
-	if err != nil || len(consensus) != 1 || consensus[0].Consensus != "Buy" {
+	if err != nil || len(consensus) != 2 || consensus[1].Consensus != "Hold" {
 		t.Fatalf("UpgradesDowngradesConsensus = %+v, %v", consensus, err)
 	}
 	metrics, err := client.Bulk.KeyMetricsTTM(ctx)
@@ -203,20 +206,27 @@ func TestBulkQueriesAreValidatedBeforeAnyRequest(t *testing.T) {
 	}
 }
 
-// A bulk row missing its raw-keyed member surfaces as a Decode error on the
-// endpoint, exactly like a missing tagged member does.
+// A bulk body missing a model member's column surfaces as a Decode error on
+// the endpoint at the first row and that member.
 func TestBulkMethodsReportMissingMembersAsDecodeErrors(t *testing.T) {
 	t.Parallel()
-	body := strings.Replace(string(readFixture(t, "bulk_etf_holdings.json")), `"lastUpdated\"": "2024-09-06\"",`, "", 1)
-	if body == string(readFixture(t, "bulk_etf_holdings.json")) {
-		t.Fatal("fixture no longer carries the quoted lastUpdated member on one line")
+	lines := strings.Split(strings.TrimSuffix(string(readFixture(t, "bulk_etf_holdings.csv")), "\n"), "\n")
+	if !strings.HasSuffix(lines[0], `,"lastUpdated"`) {
+		t.Fatal("fixture no longer ends its header with the lastUpdated column")
 	}
-	server, _ := newServer(t, jsonHandler(body))
+	for index, line := range lines {
+		lines[index] = line[:strings.LastIndex(line, ",")]
+	}
+	body := strings.Join(lines, "\n") + "\n"
+	server, _ := newServer(t, func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "text/csv")
+		_, _ = w.Write([]byte(body))
+	})
 	client := newClient(t, server, WithAuthentication(FMPHeader("route-secret")))
 
 	_, err := client.Bulk.ETFHoldings(context.Background(), NewBulkPartQuery("0"))
 	typed := assertQuoteError(t, err, CategoryDecode, http.StatusOK, "etf-holder-bulk")
-	if cause := typed.Unwrap(); cause == nil || !strings.Contains(cause.Error(), `"lastUpdated\""`) {
-		t.Fatalf("cause = %v, want it to name the missing member lastUpdated\"", cause)
+	if typed.Path != "/0/lastUpdated" || typed.DecodeKind != DecodeKindMissingMember {
+		t.Fatalf("error = %+v, want a missing member at /0/lastUpdated", typed)
 	}
 }

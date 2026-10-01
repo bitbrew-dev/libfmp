@@ -2553,23 +2553,22 @@ type BulkETFHolding struct {
 	CUSIP            string `json:"cusip"`
 	ISIN             string `json:"isin"`
 	MarketValue      string `json:"marketValue"`
-	LastUpdatedRaw   string `json:"-"`
+	LastUpdated      Date   `json:"lastUpdated"`
 }
 
 // bulkETFHoldingShadow mirrors BulkETFHolding with a pointer or raw value for
 // every required member so a missing or null member is observable after
-// decoding. The embedded fallback collects the members json/v2 cannot spell in
-// a struct tag.
+// decoding.
 type bulkETFHoldingShadow struct {
-	Symbol           *string                   `json:"symbol"`
-	Name             *string                   `json:"name"`
-	SharesNumber     *string                   `json:"sharesNumber"`
-	Asset            *string                   `json:"asset"`
-	WeightPercentage *string                   `json:"weightPercentage"`
-	CUSIP            *string                   `json:"cusip"`
-	ISIN             *string                   `json:"isin"`
-	MarketValue      *string                   `json:"marketValue"`
-	RawMembers       map[string]jsontext.Value `json:",embed"`
+	Symbol           *string `json:"symbol"`
+	Name             *string `json:"name"`
+	SharesNumber     *string `json:"sharesNumber"`
+	Asset            *string `json:"asset"`
+	WeightPercentage *string `json:"weightPercentage"`
+	CUSIP            *string `json:"cusip"`
+	ISIN             *string `json:"isin"`
+	MarketValue      *string `json:"marketValue"`
+	LastUpdated      *Date   `json:"lastUpdated"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
@@ -2580,7 +2579,6 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
 		return err
 	}
-	lastUpdatedRawWire := rawMember(shadow.RawMembers, "lastUpdated\"")
 	switch {
 	case shadow.Symbol == nil:
 		return missingMemberError("BulkETFHolding", "symbol")
@@ -2598,12 +2596,8 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkETFHolding", "isin")
 	case shadow.MarketValue == nil:
 		return missingMemberError("BulkETFHolding", "marketValue")
-	case lastUpdatedRawWire == nil:
-		return missingMemberError("BulkETFHolding", "lastUpdated\"")
-	}
-	var lastUpdatedRaw string
-	if err := json.Unmarshal(lastUpdatedRawWire, &lastUpdatedRaw); err != nil {
-		return memberDecodeError("BulkETFHolding", "lastUpdated\"", lastUpdatedRawWire, err)
+	case shadow.LastUpdated == nil:
+		return missingMemberError("BulkETFHolding", "lastUpdated")
 	}
 	*m = BulkETFHolding{
 		Symbol:           *shadow.Symbol,
@@ -2614,37 +2608,9 @@ func (m *BulkETFHolding) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		CUSIP:            *shadow.CUSIP,
 		ISIN:             *shadow.ISIN,
 		MarketValue:      *shadow.MarketValue,
-		LastUpdatedRaw:   lastUpdatedRaw,
+		LastUpdated:      *shadow.LastUpdated,
 	}
 	return nil
-}
-
-// bulkETFHoldingPlain is BulkETFHolding without its JSON methods, so its
-// tagged members marshal through the ordinary struct rules.
-type bulkETFHoldingPlain BulkETFHolding
-
-// bulkETFHoldingEmit carries the members json/v2 cannot spell in a struct tag
-// through an embedded fallback, next to the promoted tagged members of
-// bulkETFHoldingPlain.
-type bulkETFHoldingEmit struct {
-	bulkETFHoldingPlain
-	RawMembers map[string]jsontext.Value `json:",embed"`
-}
-
-// MarshalJSONTo encodes the object with every member under its exact wire
-// name, including the names json/v2 cannot spell in a struct tag. The value
-// receiver keeps non-addressable values, such as slice elements, on this path.
-func (m BulkETFHolding) MarshalJSONTo(enc *jsontext.Encoder) error {
-	rawMembers := make(map[string]jsontext.Value, 1)
-	lastUpdatedRawWire, err := json.Marshal(m.LastUpdatedRaw)
-	if err != nil {
-		return err
-	}
-	rawMembers["lastUpdated\""] = lastUpdatedRawWire
-	return json.MarshalEncode(enc, bulkETFHoldingEmit{
-		bulkETFHoldingPlain: bulkETFHoldingPlain(m),
-		RawMembers:          rawMembers,
-	})
 }
 
 // BulkUpgradesDowngradesConsensus is one worldwide

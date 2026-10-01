@@ -139,11 +139,7 @@ func (n *BulkNamespace) CompanyProfiles(ctx context.Context, q BulkPartQuery) ([
 	if err != nil {
 		return nil, err
 	}
-	var out []CompanyProfile
-	if err := n.client.getJSON(ctx, "profile-bulk", "profile-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[CompanyProfile](ctx, n.client, "profile-bulk", "profile-bulk", params)
 }
 
 // StockRatings retrieves worldwide stock ratings in one provider bulk
@@ -151,11 +147,7 @@ func (n *BulkNamespace) CompanyProfiles(ctx context.Context, q BulkPartQuery) ([
 //
 // GET rating-bulk
 func (n *BulkNamespace) StockRatings(ctx context.Context) ([]BulkStockRating, error) {
-	var out []BulkStockRating
-	if err := n.client.getJSON(ctx, "rating-bulk", "rating-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkStockRating](ctx, n.client, "rating-bulk", "rating-bulk", nil)
 }
 
 // DCFValuations retrieves worldwide discounted-cash-flow valuations in one
@@ -163,11 +155,7 @@ func (n *BulkNamespace) StockRatings(ctx context.Context) ([]BulkStockRating, er
 //
 // GET dcf-bulk
 func (n *BulkNamespace) DCFValuations(ctx context.Context) ([]BulkDCFValuation, error) {
-	var out []BulkDCFValuation
-	if err := n.client.getJSON(ctx, "dcf-bulk", "dcf-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkDCFValuation](ctx, n.client, "dcf-bulk", "dcf-bulk", nil)
 }
 
 // FinancialScores retrieves worldwide financial scores in one provider bulk
@@ -175,11 +163,7 @@ func (n *BulkNamespace) DCFValuations(ctx context.Context) ([]BulkDCFValuation, 
 //
 // GET scores-bulk
 func (n *BulkNamespace) FinancialScores(ctx context.Context) ([]BulkFinancialScore, error) {
-	var out []BulkFinancialScore
-	if err := n.client.getJSON(ctx, "scores-bulk", "scores-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkFinancialScore](ctx, n.client, "scores-bulk", "scores-bulk", nil)
 }
 
 // PriceTargetSummaries retrieves US price-target summaries in one provider
@@ -187,11 +171,7 @@ func (n *BulkNamespace) FinancialScores(ctx context.Context) ([]BulkFinancialSco
 //
 // GET price-target-summary-bulk
 func (n *BulkNamespace) PriceTargetSummaries(ctx context.Context) ([]BulkPriceTargetSummary, error) {
-	var out []BulkPriceTargetSummary
-	if err := n.client.getJSON(ctx, "price-target-summary-bulk", "price-target-summary-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkPriceTargetSummary](ctx, n.client, "price-target-summary-bulk", "price-target-summary-bulk", nil)
 }
 
 // ETFHoldings retrieves one provider partition of worldwide ETF holdings.
@@ -202,11 +182,7 @@ func (n *BulkNamespace) ETFHoldings(ctx context.Context, q BulkPartQuery) ([]Bul
 	if err != nil {
 		return nil, err
 	}
-	var out []BulkETFHolding
-	if err := n.client.getJSON(ctx, "etf-holder-bulk", "etf-holder-bulk", params, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkETFHolding](ctx, n.client, "etf-holder-bulk", "etf-holder-bulk", params)
 }
 
 // UpgradesDowngradesConsensus retrieves worldwide upgrades/downgrades
@@ -214,11 +190,7 @@ func (n *BulkNamespace) ETFHoldings(ctx context.Context, q BulkPartQuery) ([]Bul
 //
 // GET upgrades-downgrades-consensus-bulk
 func (n *BulkNamespace) UpgradesDowngradesConsensus(ctx context.Context) ([]BulkUpgradesDowngradesConsensus, error) {
-	var out []BulkUpgradesDowngradesConsensus
-	if err := n.client.getJSON(ctx, "upgrades-downgrades-consensus-bulk", "upgrades-downgrades-consensus-bulk", nil, &out); err != nil {
-		return nil, err
-	}
-	return out, nil
+	return getCSV[BulkUpgradesDowngradesConsensus](ctx, n.client, "upgrades-downgrades-consensus-bulk", "upgrades-downgrades-consensus-bulk", nil)
 }
 
 // KeyMetricsTTM retrieves worldwide trailing-twelve-month key metrics in one

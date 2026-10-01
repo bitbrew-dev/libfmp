@@ -3,8 +3,6 @@ package fmp
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
-	"errors"
-	"strconv"
 	"strings"
 	"testing"
 )
@@ -77,57 +75,14 @@ func TestDocumentedBulkSnapshotsDecodeExactValues(t *testing.T) {
 	}
 }
 
-// The ETF holding row carries the documented wire key `lastUpdated"`, which
-// encoding/json/v2 cannot spell in a struct tag: the member travels through
-// the embedded fallback and MarshalJSONTo (see rawMember). Its value keeps
-// the trailing quote, re-encodes under the exact key, and is required.
-func TestBulkEtfHoldingKeepsTheQuotedLastUpdatedKeyVerbatim(t *testing.T) {
+// The ETF holding row's lastUpdated member is a strict date.
+func TestBulkEtfHoldingDecodesLastUpdatedAsADate(t *testing.T) {
 	t.Parallel()
 	holdings := assertFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.json")
 	if want := (BulkETFHolding{Symbol: "EXCH.AS", Name: "SAMSUNG ELECTRO MECHANICS LTD", SharesNumber: "15514",
 		Asset: "009150.KS", WeightPercentage: "0.09611", CUSIP: "", ISIN: "KR7009150004", MarketValue: "1553142.49",
-		LastUpdatedRaw: `2024-09-06"`}); len(holdings) != 1 || holdings[0] != want {
+		LastUpdated: mustParseDate(t, "2024-09-06")}); len(holdings) != 1 || holdings[0] != want {
 		t.Fatalf("bulk_etf_holdings = %+v", holdings)
-	}
-	encoded, err := json.Marshal(holdings)
-	if err != nil || !strings.Contains(string(encoded), `"lastUpdated\"":"2024-09-06\""`) ||
-		strings.Contains(string(encoded), `"lastUpdated":`) || strings.Contains(string(encoded), "RawMembers") {
-		t.Fatalf("re-encoded holdings = %s, %v", encoded, err)
-	}
-	var decoded []BulkETFHolding
-	if err := json.Unmarshal(encoded, &decoded); err != nil || len(decoded) != 1 || decoded[0] != holdings[0] {
-		t.Fatalf("round trip = %+v, %v", decoded, err)
-	}
-
-	var wire []map[string]jsontext.Value
-	if err := json.Unmarshal(readFixture(t, "bulk_etf_holdings.json"), &wire); err != nil {
-		t.Fatal(err)
-	}
-	for _, tc := range []struct{ name, member, value string }{
-		{"missing raw key", `lastUpdated"`, ""},
-		{"null raw key", `lastUpdated"`, "null"},
-		{"missing tagged member", "symbol", ""},
-		{"null tagged member", "symbol", "null"},
-	} {
-		row := map[string]jsontext.Value{}
-		for member, value := range wire[0] {
-			row[member] = value
-		}
-		delete(row, tc.member)
-		if tc.value != "" {
-			row[tc.member] = jsontext.Value(tc.value)
-		}
-		body, err := json.Marshal([]map[string]jsontext.Value{row})
-		if err != nil {
-			t.Fatal(err)
-		}
-		var rows []BulkETFHolding
-		err = json.Unmarshal(body, &rows)
-		var typed *Error
-		if !errors.As(err, &typed) || typed.Category != CategoryDecode ||
-			!strings.Contains(typed.Message, "required member "+strconv.Quote(tc.member)+" of BulkETFHolding") {
-			t.Fatalf("%s: error = %v, want a Decode *Error naming %q", tc.name, err, tc.member)
-		}
 	}
 }
 

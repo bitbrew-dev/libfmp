@@ -857,7 +857,7 @@ pub(crate) struct BulkEtfHolding {
     #[pyo3(get)]
     pub market_value: String,
     #[pyo3(get)]
-    pub last_updated_raw: String,
+    pub last_updated: ::chrono::NaiveDate,
 }
 
 #[gen_stub_pymethods]
@@ -866,7 +866,7 @@ impl BulkEtfHolding {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (*, symbol, name, shares_number, asset, weight_percentage, cusip, isin, market_value, last_updated_raw))]
+    #[pyo3(signature = (*, symbol, name, shares_number, asset, weight_percentage, cusip, isin, market_value, last_updated))]
     fn new(
         symbol: String,
         name: String,
@@ -876,7 +876,7 @@ impl BulkEtfHolding {
         cusip: String,
         isin: String,
         market_value: String,
-        last_updated_raw: String,
+        last_updated: ::chrono::NaiveDate,
     ) -> Self {
         Self {
             symbol,
@@ -887,7 +887,7 @@ impl BulkEtfHolding {
             cusip,
             isin,
             market_value,
-            last_updated_raw,
+            last_updated,
         }
     }
 
@@ -895,7 +895,7 @@ impl BulkEtfHolding {
     const __hash__: Option<Py<PyAny>> = None;
 
     #[classattr]
-    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name'], typing.Literal['shares_number'], typing.Literal['asset'], typing.Literal['weight_percentage'], typing.Literal['cusip'], typing.Literal['isin'], typing.Literal['market_value'], typing.Literal['last_updated_raw']]", imports = ("typing",)))]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['symbol'], typing.Literal['name'], typing.Literal['shares_number'], typing.Literal['asset'], typing.Literal['weight_percentage'], typing.Literal['cusip'], typing.Literal['isin'], typing.Literal['market_value'], typing.Literal['last_updated']]", imports = ("typing",)))]
     fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
         PyTuple::new(
             py,
@@ -908,7 +908,7 @@ impl BulkEtfHolding {
                 "cusip",
                 "isin",
                 "market_value",
-                "last_updated_raw",
+                "last_updated",
             ],
         )
     }
@@ -937,8 +937,8 @@ impl BulkEtfHolding {
             self.market_value.clone().into_bound_py_any(py)?,
         )?;
         kwargs.set_item(
-            "last_updated_raw",
-            self.last_updated_raw.clone().into_bound_py_any(py)?,
+            "last_updated",
+            self.last_updated.clone().into_bound_py_any(py)?,
         )?;
         Ok((PyTuple::empty(py), kwargs))
     }
@@ -965,8 +965,8 @@ impl BulkEtfHolding {
                     self.market_value.clone().into_bound_py_any(py)?,
                 ),
                 (
-                    "last_updated_raw",
-                    self.last_updated_raw.clone().into_bound_py_any(py)?,
+                    "last_updated",
+                    self.last_updated.clone().into_bound_py_any(py)?,
                 ),
             ],
         )
@@ -1010,8 +1010,8 @@ impl BulkEtfHolding {
             crate::models::convert::DictValue::dict_value(&self.market_value, py)?,
         )?;
         dict.set_item(
-            "last_updated_raw",
-            crate::models::convert::DictValue::dict_value(&self.last_updated_raw, py)?,
+            "last_updated",
+            crate::models::convert::DictValue::dict_value(&self.last_updated, py)?,
         )?;
         Ok(dict)
     }
@@ -1028,7 +1028,7 @@ impl From<libfmp::responses::bulk::BulkEtfHolding> for BulkEtfHolding {
             cusip: value.cusip,
             isin: value.isin.into_inner(),
             market_value: value.market_value.into_inner(),
-            last_updated_raw: value.last_updated_raw,
+            last_updated: value.last_updated.into_inner(),
         }
     }
 }

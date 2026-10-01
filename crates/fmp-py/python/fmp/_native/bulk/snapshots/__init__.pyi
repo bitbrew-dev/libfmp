@@ -62,7 +62,7 @@ class BulkEtfHolding:
         typing.Literal["cusip"],
         typing.Literal["isin"],
         typing.Literal["market_value"],
-        typing.Literal["last_updated_raw"],
+        typing.Literal["last_updated"],
     ]
 
     @property
@@ -82,7 +82,7 @@ class BulkEtfHolding:
     @property
     def market_value(self) -> builtins.str: ...
     @property
-    def last_updated_raw(self) -> builtins.str: ...
+    def last_updated(self) -> datetime.date: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -95,7 +95,7 @@ class BulkEtfHolding:
         cusip: builtins.str,
         isin: builtins.str,
         market_value: builtins.str,
-        last_updated_raw: builtins.str,
+        last_updated: datetime.date,
     ) -> BulkEtfHolding: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
     def __repr__(self) -> builtins.str: ...
