@@ -230,6 +230,16 @@ def test_earnings_surprises_accepts_the_year_keyword(client: Any, fixture_server
     assert fixture_server.requests[0].target == "/earnings-surprises-bulk?year=2024"
 
 
+@pytest.mark.parametrize("body", [b"", b'"symbol","peers"\n'], ids=["empty", "header-only"])
+def test_empty_and_header_only_csv_bodies_decode_to_no_rows(
+    client: Any, fixture_server: FixtureServer, body: bytes
+) -> None:
+    """An empty or header-only ``text/csv`` body is an empty list, not a provider error."""
+    fixture_server.route("/peers-bulk", body, content_type=CSV_CONTENT_TYPE)
+
+    assert client.bulk.stock_peers() == []
+
+
 def test_status_error_carries_the_bulk_endpoint_id(
     client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
 ) -> None:
