@@ -211,24 +211,25 @@ pub fn bulk_upgrades_downgrades_consensus() -> EndpointSpec<(), Vec<BulkUpgrades
 
 /// Describes `GET key-metrics-ttm-bulk` without binding a transport.
 pub fn bulk_key_metrics_ttm() -> EndpointSpec<(), Vec<BulkKeyMetricsTtm>> {
-    EndpointSpec::get("key-metrics-ttm-bulk", "key-metrics-ttm-bulk", ()).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("key-metrics-ttm-bulk", "key-metrics-ttm-bulk", ())
+        .with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET ratios-ttm-bulk` without binding a transport.
 pub fn bulk_financial_ratios_ttm() -> EndpointSpec<(), Vec<BulkFinancialRatiosTtm>> {
-    EndpointSpec::get("ratios-ttm-bulk", "ratios-ttm-bulk", ()).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("ratios-ttm-bulk", "ratios-ttm-bulk", ()).with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET peers-bulk` without binding a transport.
 pub fn bulk_stock_peers() -> EndpointSpec<(), Vec<BulkStockPeer>> {
-    EndpointSpec::get("peers-bulk", "peers-bulk", ()).with_metadata(WORLDWIDE)
+    EndpointSpec::get_csv("peers-bulk", "peers-bulk", ()).with_metadata(WORLDWIDE)
 }
 
 /// Describes `GET earnings-surprises-bulk` without binding a transport.
 pub fn bulk_earnings_surprises(
     query: BulkYearQuery,
 ) -> EndpointSpec<BulkYearQuery, Vec<BulkEarningsSurprise>> {
-    EndpointSpec::get("earnings-surprises-bulk", "earnings-surprises-bulk", query)
+    EndpointSpec::get_csv("earnings-surprises-bulk", "earnings-surprises-bulk", query)
         .with_metadata(WORLDWIDE)
 }
 

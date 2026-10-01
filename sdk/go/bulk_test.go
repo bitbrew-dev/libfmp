@@ -21,10 +21,10 @@ var bulkRoutes = map[string]string{
 	"/router/stable/price-target-summary-bulk":                               "bulk_price_target_summaries.csv",
 	"/router/stable/etf-holder-bulk?part=segment+A%2F7":                      "bulk_etf_holdings.csv",
 	"/router/stable/upgrades-downgrades-consensus-bulk":                      "bulk_upgrades_downgrades_consensus.csv",
-	"/router/stable/key-metrics-ttm-bulk":                                    "bulk_key_metrics_ttm.json",
-	"/router/stable/ratios-ttm-bulk":                                         "bulk_financial_ratios_ttm.json",
-	"/router/stable/peers-bulk":                                              "bulk_stock_peers.json",
-	"/router/stable/earnings-surprises-bulk?year=4294967295":                 "bulk_earnings_surprises.json",
+	"/router/stable/key-metrics-ttm-bulk":                                    "bulk_key_metrics_ttm.csv",
+	"/router/stable/ratios-ttm-bulk":                                         "bulk_financial_ratios_ttm.csv",
+	"/router/stable/peers-bulk":                                              "bulk_stock_peers.csv",
+	"/router/stable/earnings-surprises-bulk?year=4294967295":                 "bulk_earnings_surprises.csv",
 	"/router/stable/income-statement-bulk?year=2026&period=Q1":               "bulk_income_statements.json",
 	"/router/stable/income-statement-growth-bulk?year=2026&period=Q2":        "bulk_income_statement_growth.json",
 	"/router/stable/balance-sheet-statement-bulk?year=2026&period=Q3":        "bulk_balance_sheet_statements.json",
@@ -86,19 +86,19 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("UpgradesDowngradesConsensus = %+v, %v", consensus, err)
 	}
 	metrics, err := client.Bulk.KeyMetricsTTM(ctx)
-	if err != nil || len(metrics) != 1 || metrics[0].MarketCap != "249171756000" {
+	if err != nil || len(metrics) != 2 || metrics[0].MarketCap != "224526473551" {
 		t.Fatalf("KeyMetricsTTM = %+v, %v", metrics, err)
 	}
 	ratios, err := client.Bulk.FinancialRatiosTTM(ctx)
-	if err != nil || len(ratios) != 1 || ratios[0].GrossProfitMarginTTM != "1.1622776732779352" {
+	if err != nil || len(ratios) != 2 || ratios[0].GrossProfitMarginTTM != "0.5535250166330814" {
 		t.Fatalf("FinancialRatiosTTM = %+v, %v", ratios, err)
 	}
 	peers, err := client.Bulk.StockPeers(ctx)
-	if err != nil || len(peers) != 1 || peers[0].Peers != "600036.SS" {
+	if err != nil || len(peers) != 2 || peers[0].Peers != "3698.HK,600000.SS,600015.SS,600016.SS,600036.SS,601166.SS,601658.SS" {
 		t.Fatalf("StockPeers = %+v, %v", peers, err)
 	}
 	surprises, err := client.Bulk.EarningsSurprises(ctx, NewBulkYearQuery(4_294_967_295))
-	if err != nil || len(surprises) != 1 || surprises[0].Symbol != "AMKYF" {
+	if err != nil || len(surprises) != 2 || surprises[0].Symbol != "AUTO.OL" {
 		t.Fatalf("EarningsSurprises = %+v, %v", surprises, err)
 	}
 	income, err := client.Bulk.IncomeStatements(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ1))

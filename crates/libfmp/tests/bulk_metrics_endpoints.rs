@@ -21,19 +21,23 @@ use libfmp::{
     transport::{HttpMethod, TransportResponse},
 };
 
-use support::{FixtureExecutor, json_fixture};
+use support::{FixtureExecutor, fixture_response, json_fixture};
 
-const KEY_METRICS: &[u8] = include_bytes!("fixtures/bulk_key_metrics_ttm.json");
-const RATIOS: &[u8] = include_bytes!("fixtures/bulk_financial_ratios_ttm.json");
-const PEERS: &[u8] = include_bytes!("fixtures/bulk_stock_peers.json");
-const SURPRISES: &[u8] = include_bytes!("fixtures/bulk_earnings_surprises.json");
+const KEY_METRICS: &[u8] = include_bytes!("fixtures/bulk_key_metrics_ttm.csv");
+const RATIOS: &[u8] = include_bytes!("fixtures/bulk_financial_ratios_ttm.csv");
+const PEERS: &[u8] = include_bytes!("fixtures/bulk_stock_peers.csv");
+const SURPRISES: &[u8] = include_bytes!("fixtures/bulk_earnings_surprises.csv");
+
+fn csv_fixture(body: &'static [u8]) -> TransportResponse {
+    fixture_response(Some("text/csv"), body)
+}
 
 fn fixtures() -> [TransportResponse; 4] {
     [
-        json_fixture(KEY_METRICS),
-        json_fixture(RATIOS),
-        json_fixture(PEERS),
-        json_fixture(SURPRISES),
+        csv_fixture(KEY_METRICS),
+        csv_fixture(RATIOS),
+        csv_fixture(PEERS),
+        csv_fixture(SURPRISES),
     ]
 }
 
@@ -106,13 +110,13 @@ async fn custom_proxy_sends_one_exact_request_per_method_with_auth_headers_and_d
     let peers = client.bulk_stock_peers().await.unwrap();
     let surprises = client.bulk_earnings_surprises(Year(2026)).await.unwrap();
 
-    assert_eq!(metrics[0].ev_to_ebitda_ttm.as_str(), "-14.656106051669223");
+    assert_eq!(metrics[0].ev_to_ebitda_ttm.as_str(), "29.23198788110799");
     assert_eq!(
         ratios[0].net_income_per_ebt_ttm.as_str(),
-        "0.8225101702576465"
+        "0.83539656299258"
     );
-    assert_eq!(peers[0].peers, "600036.SS");
-    assert_eq!(surprises[0].eps_actual.as_str(), "0.3631");
+    assert_eq!(peers[1].symbol.as_str(), "000002.SZ");
+    assert_eq!(surprises[1].eps_actual.as_str(), "-0.11675");
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 4);
@@ -185,11 +189,11 @@ async fn direct_fmp_header_and_query_auth_preserve_paths_and_exact_query_shape()
 }
 
 #[tokio::test]
-async fn empty_arrays_decode_and_malformed_roots_keep_all_four_endpoint_identities() {
+async fn empty_bodies_decode_and_json_bodies_keep_all_four_endpoint_identities() {
     let executor = Arc::new(FixtureExecutor::new(
-        std::iter::repeat_with(|| json_fixture(b"[]"))
+        std::iter::repeat_with(|| csv_fixture(b""))
             .take(4)
-            .chain(std::iter::repeat_with(|| json_fixture(b"{}")).take(4)),
+            .chain(std::iter::repeat_with(|| json_fixture(b"[]")).take(4)),
     ));
     let client = Client::builder()
         .authentication(Authentication::fmp_header("secret"))
