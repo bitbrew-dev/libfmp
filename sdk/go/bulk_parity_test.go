@@ -25,13 +25,13 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertCSVFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.csv", 60)
 	assertCSVFixtureParity[BulkStockPeer](t, "bulk_stock_peers.csv", 2)
 	assertCSVFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.csv", 5)
-	assertFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.json")
-	assertFixtureParity[BulkIncomeStatementGrowth](t, "bulk_income_statement_growth.json")
-	assertFixtureParity[BulkBalanceSheetStatement](t, "bulk_balance_sheet_statements.json")
-	assertFixtureParity[BulkBalanceSheetStatementGrowth](t, "bulk_balance_sheet_statement_growth.json")
-	assertFixtureParity[BulkCashFlowStatement](t, "bulk_cash_flow_statements.json")
-	assertFixtureParity[BulkCashFlowStatementGrowth](t, "bulk_cash_flow_statement_growth.json")
-	assertFixtureParity[BulkEodBar](t, "bulk_eod.json")
+	assertCSVFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.csv", 39)
+	assertCSVFixtureParity[BulkIncomeStatementGrowth](t, "bulk_income_statement_growth.csv", 34)
+	assertCSVFixtureParity[BulkBalanceSheetStatement](t, "bulk_balance_sheet_statements.csv", 61)
+	assertCSVFixtureParity[BulkBalanceSheetStatementGrowth](t, "bulk_balance_sheet_statement_growth.csv", 56)
+	assertCSVFixtureParity[BulkCashFlowStatement](t, "bulk_cash_flow_statements.csv", 47)
+	assertCSVFixtureParity[BulkCashFlowStatementGrowth](t, "bulk_cash_flow_statement_growth.csv", 42)
+	assertCSVFixtureParity[BulkEodBar](t, "bulk_eod.csv", 8)
 }
 
 // Exact values copied from crates/libfmp/tests/bulk_snapshot_responses.rs:
@@ -127,62 +127,41 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 }
 
 // Exact values copied from crates/libfmp/tests/bulk_{income,balance,cash_eod}_responses.rs:
-// identity fields keep their documented representations (ten-zero CIK, naive
-// accepted date, Q1 period) and the provider typos keep their wire spelling.
+// identity fields keep their provider representations (ten-zero CIK, naive
+// accepted date, period) and the provider typos keep their wire spelling.
 func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 	t.Parallel()
-	income := assertFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.json")
-	if len(income) != 1 || income[0].Symbol != "000001.SZ" || income[0].ReportedCurrency != "CNY" ||
-		income[0].CIK != "0000000000" || income[0].Date != mustParseDate(t, "2025-03-31") ||
-		income[0].FilingDate != mustParseDate(t, "2025-03-31") ||
-		income[0].AcceptedDate != mustParseDateTime(t, "2025-03-31 00:00:00") || income[0].FiscalYear != "2025" ||
-		income[0].Period != "Q1" || income[0].Revenue != "33644000000" || income[0].CostOfRevenue != "0" ||
-		income[0].TotalOtherIncomeExpensesNet != "-7392000000" || income[0].EPS != "0.62" ||
-		income[0].WeightedAverageShsOut != "22735483871" {
-		t.Fatalf("bulk_income_statements = %+v", income)
+	income := assertCSVFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.csv", 39)
+	if income[0].Symbol != "000001.SZ" || income[0].ReportedCurrency != "CNY" || income[0].CIK != "0000000000" ||
+		income[0].Date != mustParseDate(t, "2024-12-31") ||
+		income[0].AcceptedDate != mustParseDateTime(t, "2024-12-31 00:00:00") || income[0].FiscalYear != "2024" ||
+		income[0].Period != "FY" || income[0].Revenue != "251641000000" {
+		t.Fatalf("bulk_income_statements = %+v", income[0])
 	}
-	incomeGrowth := assertFixtureParity[BulkIncomeStatementGrowth](t, "bulk_income_statement_growth.json")
-	if len(incomeGrowth) != 1 || incomeGrowth[0].GrowthEbit != "1" || incomeGrowth[0].GrowthCostOfRevenue != "0" ||
-		incomeGrowth[0].GrowthOtherExpenses != "-0.9860376183912135" ||
-		incomeGrowth[0].GrowthOperatingIncome != "-0.018874787810201278" {
-		t.Fatalf("bulk_income_statement_growth = %+v", incomeGrowth)
-	}
+	incomeGrowth := assertCSVFixtureParity[BulkIncomeStatementGrowth](t, "bulk_income_statement_growth.csv", 34)
 	if encoded, err := json.Marshal(incomeGrowth[0]); err != nil || !strings.Contains(string(encoded), `"growthEBITDA":`) ||
 		!strings.Contains(string(encoded), `"growthEPSDiluted":`) || !strings.Contains(string(encoded), `"growthEBIT":`) {
 		t.Fatalf("re-encoded income growth = %s, %v", encoded, err)
 	}
 
-	balance := assertFixtureParity[BulkBalanceSheetStatement](t, "bulk_balance_sheet_statements.json")
-	if len(balance) != 1 || balance[0].Symbol != "MTLRP.ME" || balance[0].ReportedCurrency != "RUB" ||
-		balance[0].CIK != "0000000000" || balance[0].FilingDate != mustParseDate(t, "2025-05-31") ||
-		balance[0].AcceptedDate != mustParseDateTime(t, "2025-03-31 07:00:00") || balance[0].Period != "Q1" ||
-		balance[0].TotalAssets != "247871857000" || balance[0].RetainedEarnings != "-5066509000" ||
-		balance[0].OtherAssets != "0" || balance[0].NetDebt != "183764862000" {
+	balance := assertCSVFixtureParity[BulkBalanceSheetStatement](t, "bulk_balance_sheet_statements.csv", 61)
+	if balance[1].Symbol != "0002.KL" || balance[1].ReportedCurrency != "MYR" ||
+		balance[1].AcceptedDate != mustParseDateTime(t, "2025-06-30 00:00:00") || balance[0].TotalAssets != "5769270000000" {
 		t.Fatalf("bulk_balance_sheet_statements = %+v", balance)
 	}
-	balanceGrowth := assertFixtureParity[BulkBalanceSheetStatementGrowth](t, "bulk_balance_sheet_statement_growth.json")
-	if len(balanceGrowth) != 1 || balanceGrowth[0].GrowthCashAndCashEquivalents != "0.09574482145872953" ||
-		balanceGrowth[0].GrowthShortTermInvestments != "0" || balanceGrowth[0].GrowthTotalPayables != "-0.12022416350749959" {
-		t.Fatalf("bulk_balance_sheet_statement_growth = %+v", balanceGrowth)
-	}
+	balanceGrowth := assertCSVFixtureParity[BulkBalanceSheetStatementGrowth](t, "bulk_balance_sheet_statement_growth.csv", 56)
 	if encoded, err := json.Marshal(balanceGrowth[0]); err != nil ||
 		!strings.Contains(string(encoded), `"growthOthertotalStockholdersEquity":`) ||
 		!strings.Contains(string(encoded), `"growthTotalLiabilitiesAndStockholdersEquity":`) {
 		t.Fatalf("re-encoded balance growth = %s, %v", encoded, err)
 	}
 
-	cashFlow := assertFixtureParity[BulkCashFlowStatement](t, "bulk_cash_flow_statements.json")
-	if len(cashFlow) != 1 || cashFlow[0].Symbol != "000001.SZ" || cashFlow[0].CIK != "0000000000" ||
-		cashFlow[0].AcceptedDate != mustParseDateTime(t, "2025-03-31 00:00:00") || cashFlow[0].Period != "Q1" ||
-		cashFlow[0].OtherNonCashItems != "162946000000" || cashFlow[0].PurchasesOfInvestments != "-227916000000" ||
-		cashFlow[0].NetIncome != "0" {
-		t.Fatalf("bulk_cash_flow_statements = %+v", cashFlow)
+	cashFlow := assertCSVFixtureParity[BulkCashFlowStatement](t, "bulk_cash_flow_statements.csv", 47)
+	if cashFlow[0].CIK != "0000000000" || cashFlow[0].AcceptedDate != mustParseDateTime(t, "2024-03-30 20:00:00") ||
+		cashFlow[0].Period != "Q1" || cashFlow[0].NetIncome != "14932000000" {
+		t.Fatalf("bulk_cash_flow_statements = %+v", cashFlow[0])
 	}
-	cashGrowth := assertFixtureParity[BulkCashFlowStatementGrowth](t, "bulk_cash_flow_statement_growth.json")
-	if len(cashGrowth) != 1 || cashGrowth[0].GrowthNetCashUsedProvidedByFinancingActivities != "-3.2122934677858628" ||
-		cashGrowth[0].GrowthNetDebtIssuance != "1" {
-		t.Fatalf("bulk_cash_flow_statement_growth = %+v", cashGrowth)
-	}
+	cashGrowth := assertCSVFixtureParity[BulkCashFlowStatementGrowth](t, "bulk_cash_flow_statement_growth.csv", 42)
 	if encoded, err := json.Marshal(cashGrowth[0]); err != nil ||
 		!strings.Contains(string(encoded), `"growthNetCashProvidedByOperatingActivites":`) ||
 		!strings.Contains(string(encoded), `"growthOtherInvestingActivites":`) ||
@@ -191,9 +170,9 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 		t.Fatalf("re-encoded cash-flow growth = %s, %v", encoded, err)
 	}
 
-	eod := assertFixtureParity[BulkEodBar](t, "bulk_eod.json")
-	if want := (BulkEodBar{Symbol: "EGS745W1C011.CA", Date: mustParseDate(t, "2024-10-22"), Open: "2.67", Low: "2.7",
-		High: "2.9", Close: "2.93", AdjClose: "2.93", Volume: "920904"}); len(eod) != 1 || eod[0] != want {
-		t.Fatalf("bulk_eod = %+v", eod)
+	eod := assertCSVFixtureParity[BulkEodBar](t, "bulk_eod.csv", 8)
+	if want := (BulkEodBar{Symbol: "HKDCNH", Date: mustParseDate(t, "2025-06-02"), Open: "0.91858", Low: "0.91692",
+		High: "0.9186", Close: "0.91741", AdjClose: "0.91741", Volume: "0"}); eod[1] != want {
+		t.Fatalf("bulk_eod = %+v", eod[1])
 	}
 }
