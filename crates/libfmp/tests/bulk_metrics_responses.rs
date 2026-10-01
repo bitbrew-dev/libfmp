@@ -13,7 +13,9 @@ use libfmp::{
     query::Year,
 };
 
-use bulk_csv::{assert_empty_bodies, assert_members, assert_round_trip, decode, with_cells};
+use bulk_csv::{
+    assert_empty_bodies, assert_required_members, assert_round_trip, decode, with_cells,
+};
 
 const KEY_METRICS: &[u8] = include_bytes!("fixtures/bulk_key_metrics_ttm.csv");
 const RATIOS: &[u8] = include_bytes!("fixtures/bulk_financial_ratios_ttm.csv");
@@ -29,11 +31,15 @@ fn live_csv_fixtures_round_trip_every_cell_with_exact_field_counts() {
 }
 
 #[test]
-fn every_column_is_required_and_only_text_members_accept_an_empty_cell() {
-    assert_members(&bulk_key_metrics_ttm(), KEY_METRICS, &[]);
-    assert_members(&bulk_financial_ratios_ttm(), RATIOS, &[]);
-    assert_members(&bulk_stock_peers(), PEERS, &["peers"]);
-    assert_members(&bulk_earnings_surprises(Year(2024).into()), SURPRISES, &[]);
+fn every_column_is_required_and_only_identity_members_reject_an_empty_cell() {
+    assert_required_members(&bulk_key_metrics_ttm(), KEY_METRICS, &["symbol"]);
+    assert_required_members(&bulk_financial_ratios_ttm(), RATIOS, &["symbol"]);
+    assert_required_members(&bulk_stock_peers(), PEERS, &["symbol"]);
+    assert_required_members(
+        &bulk_earnings_surprises(Year(2024).into()),
+        SURPRISES,
+        &["symbol", "date", "lastUpdated"],
+    );
 }
 
 #[test]
@@ -58,9 +64,12 @@ fn numeric_cells_keep_their_exact_text_beyond_u64_and_in_exponent_form() {
     );
     let decoded = decode(&bulk_key_metrics_ttm(), body).unwrap().remove(0);
 
-    assert_eq!(decoded.market_cap.as_str(), beyond_u64);
-    assert_eq!(decoded.free_cash_flow_to_firm_ttm.as_str(), high_precision);
-    assert_eq!(decoded.ev_to_sales_ttm.as_str(), "6.9148336e-9");
+    assert_eq!(decoded.market_cap.unwrap().as_str(), beyond_u64);
+    assert_eq!(
+        decoded.free_cash_flow_to_firm_ttm.unwrap().as_str(),
+        high_precision
+    );
+    assert_eq!(decoded.ev_to_sales_ttm.unwrap().as_str(), "6.9148336e-9");
 }
 
 #[test]
@@ -112,4 +121,29 @@ fn first_row<R: serde::Serialize>(rows: &[R]) -> Map<String, Value> {
         Value::Object(members) => members,
         other => panic!("a row re-encodes as an object, not {other}"),
     }
+}
+
+#[test]
+fn live_empty_cells_decode_as_absent_metrics_and_empty_text() {
+    let metrics = decode(&bulk_key_metrics_ttm(), KEY_METRICS)
+        .unwrap()
+        .remove(2);
+    assert_eq!(metrics.symbol.as_str(), "ADAMO");
+    assert_eq!(metrics.enterprise_value_ttm, None);
+    assert_eq!(metrics.market_cap.unwrap().as_str(), "711942736");
+
+    let ratios = decode(&bulk_financial_ratios_ttm(), RATIOS)
+        .unwrap()
+        .remove(2);
+    assert_eq!(ratios.price_to_earnings_ratio_ttm, None);
+    assert_eq!(ratios.gross_profit_margin_ttm.unwrap().as_str(), "0");
+
+    let surprise = decode(&bulk_earnings_surprises(Year(2024).into()), SURPRISES)
+        .unwrap()
+        .remove(2);
+    assert_eq!(surprise.eps_estimated, None);
+    assert_eq!(surprise.eps_actual.unwrap().as_str(), "0.00084");
+
+    let peers = decode(&bulk_stock_peers(), PEERS).unwrap().remove(2);
+    assert_eq!(peers.peers, "");
 }
