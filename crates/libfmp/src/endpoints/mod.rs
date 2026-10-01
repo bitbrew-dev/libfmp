@@ -10,6 +10,7 @@ pub mod commodities;
 pub mod company;
 pub mod congressional;
 pub mod crypto;
+mod csv_rows;
 pub mod dcf;
 pub mod directory;
 pub mod economics;
@@ -43,6 +44,9 @@ use metadata::EndpointMetadata;
 
 /// The JSON media type requested by FMP's structured-data endpoints.
 pub const APPLICATION_JSON: &str = "application/json";
+
+/// The CSV media type FMP answers on every bulk route (ADR 0035).
+pub const TEXT_CSV: &str = "text/csv";
 
 /// A typed endpoint description that contains no transport configuration.
 ///
@@ -260,6 +264,8 @@ impl<const N: usize> QueryParameters for [(&str, &str); N] {
 pub enum ExpectedContentType {
     /// Standard JSON and registered vendor JSON media types (`+json`).
     Json,
+    /// `text/csv`, compared case-insensitively.
+    Csv,
     /// One of the listed binary media types, compared case-insensitively.
     Binary(&'static [&'static str]),
 }
@@ -272,6 +278,7 @@ impl ExpectedContentType {
             .trim();
         match self {
             Self::Json => valid_json_media_type(media_type),
+            Self::Csv => media_type.eq_ignore_ascii_case(TEXT_CSV),
             Self::Binary(expected) => expected
                 .iter()
                 .any(|expected| media_type.eq_ignore_ascii_case(expected)),
@@ -384,6 +391,24 @@ where
         Self {
             expected_content_type: ExpectedContentType::Json,
             decoder: decode_json::<R>,
+            response: PhantomData,
+        }
+    }
+}
+
+impl<Row> ResponseContract<Vec<Row>>
+where
+    Row: DeserializeOwned,
+{
+    /// Creates a contract that decodes a headed CSV body into rows.
+    ///
+    /// An empty or header-only body yields no rows. The provider-message
+    /// check of the JSON contract does not apply: a short header-only CSV
+    /// body is data, not an error message.
+    pub const fn csv() -> Self {
+        Self {
+            expected_content_type: ExpectedContentType::Csv,
+            decoder: csv_rows::decode_csv::<Row>,
             response: PhantomData,
         }
     }

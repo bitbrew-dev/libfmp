@@ -89,7 +89,7 @@ pub enum ConfigurationErrorKind {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 #[non_exhaustive]
 pub enum DecodeErrorKind {
-    /// The body is not well-formed JSON.
+    /// The body is not well-formed JSON, or a CSV record is malformed.
     Syntax,
     /// A member that requires a value was JSON `null`.
     Null,

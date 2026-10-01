@@ -31,6 +31,7 @@ harness = false
 [dependencies]
 bytes.workspace = true
 chrono.workspace = true
+csv.workspace = true
 http.workspace = true
 reqwest.workspace = true
 serde.workspace = true
