@@ -46,13 +46,17 @@ fn every_column_is_required_and_only_identity_members_reject_an_empty_cell() {
         PROFILE,
         &[
             "range",
+            "change",
+            "changePercentage",
             "companyName",
             "cik",
+            "isin",
             "cusip",
             "exchangeFullName",
             "website",
             "description",
             "ceo",
+            "country",
             "fullTimeEmployees",
             "phone",
             "address",
@@ -128,4 +132,21 @@ fn live_empty_cells_decode_as_absent_members_and_empty_text() {
     assert_eq!(etf.cusip, "");
     assert_eq!(etf.isin, None);
     assert_eq!(etf.shares_number.unwrap().as_str(), "0");
+}
+
+#[test]
+fn live_profile_rows_with_empty_codes_and_changes_decode_as_absent() {
+    let profiles = decode(&bulk_company_profiles(part()), PROFILE).unwrap();
+    let accelevation = &profiles[2];
+    assert_eq!(accelevation.symbol, Ticker::new("ACCV").unwrap());
+    assert_eq!(accelevation.change, None);
+    assert_eq!(accelevation.change_percentage, None);
+    assert_eq!(accelevation.range, "");
+
+    let catalyst = &profiles[3];
+    assert_eq!(catalyst.symbol, Ticker::new("CFHAX").unwrap());
+    assert_eq!(catalyst.isin, None);
+    assert_eq!(catalyst.country, None);
+    assert_eq!(catalyst.ceo, "");
+    assert_eq!(catalyst.website, "");
 }

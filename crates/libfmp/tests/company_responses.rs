@@ -13,14 +13,14 @@ fn documented_company_profile_decodes_every_exact_field_and_wire_type() {
     assert_eq!(row.beta, 1.097);
     assert_eq!(row.last_dividend, 1.05);
     assert_eq!(row.range, "201.5-344.57");
-    assert_eq!(row.change, -6.33498);
-    assert_eq!(row.change_percentage, -1.8732);
+    assert_eq!(row.change, Some(-6.33498));
+    assert_eq!(row.change_percentage, Some(-1.8732));
     assert_eq!(row.volume, 28_718_014.0);
     assert_eq!(row.average_volume, 55_309_000.0);
     assert_eq!(row.company_name, "Apple Inc.");
     assert_eq!(row.currency.as_str(), "USD");
     assert_eq!(row.cik.as_ref().unwrap().as_str(), "0000320193");
-    assert_eq!(row.isin.as_str(), "US0378331005");
+    assert_eq!(row.isin.as_ref().unwrap().as_str(), "US0378331005");
     assert_eq!(row.cusip.as_ref().unwrap().as_str(), "037833100");
     assert_eq!(row.exchange_full_name, "NASDAQ Global Select");
     assert_eq!(row.exchange.as_str(), "NASDAQ");
@@ -32,7 +32,7 @@ fn documented_company_profile_decodes_every_exact_field_and_wire_type() {
     );
     assert_eq!(row.ceo, "Timothy D. Cook");
     assert_eq!(row.sector.as_str(), "Technology");
-    assert_eq!(row.country.as_str(), "US");
+    assert_eq!(row.country.as_ref().unwrap().as_str(), "US");
     assert_eq!(row.full_time_employees.as_ref().unwrap().as_str(), "166000");
     assert_eq!(row.phone.as_deref(), Some("(408) 996-1010"));
     assert_eq!(row.address, "One Apple Park Way");

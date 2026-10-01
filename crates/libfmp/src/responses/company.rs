@@ -37,8 +37,10 @@ pub struct CompanyProfile {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub last_dividend: PerShareAmount,
     pub range: String,
-    pub change: Change,
-    pub change_percentage: Percentage,
+    #[serde(deserialize_with = "required_option")]
+    pub change: Option<Change>,
+    #[serde(deserialize_with = "required_option")]
+    pub change_percentage: Option<Percentage>,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
     pub volume: Volume,
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
@@ -47,7 +49,8 @@ pub struct CompanyProfile {
     pub currency: CurrencyCode,
     #[serde(deserialize_with = "required_option")]
     pub cik: Option<Cik>,
-    pub isin: Isin,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub isin: Option<Isin>,
     #[serde(deserialize_with = "required_option")]
     pub cusip: Option<Cusip>,
     pub exchange_full_name: String,
@@ -57,7 +60,8 @@ pub struct CompanyProfile {
     pub description: String,
     pub ceo: String,
     pub sector: Sector,
-    pub country: CountryCode,
+    #[serde(deserialize_with = "crate::codecs::empty_or_null::deserialize")]
+    pub country: Option<CountryCode>,
     #[serde(deserialize_with = "required_option")]
     pub full_time_employees: Option<NumericString>,
     #[serde(deserialize_with = "required_option")]

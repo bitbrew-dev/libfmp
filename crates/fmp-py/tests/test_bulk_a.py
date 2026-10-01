@@ -42,7 +42,7 @@ def test_company_profiles_form_encodes_the_part(client: Any, fixture_server: Fix
     rows = client.bulk.company_profiles("segment 0/alpha")
 
     assert fixture_server.requests[0].target == "/profile-bulk?part=segment+0%2Falpha"
-    assert len(rows) == 2
+    assert len(rows) == 4
     row = rows[0]
     assert isinstance(row, CompanyProfile)
     assert row.symbol == "WMB"
@@ -50,6 +50,8 @@ def test_company_profiles_form_encodes_the_part(client: Any, fixture_server: Fix
     assert row.price == pytest.approx(67.78)
     assert row.market_cap == 82_906_291_252
     assert row.is_etf is False
+    assert (rows[2].symbol, rows[2].change, rows[2].change_percentage) == ("ACCV", None, None)
+    assert (rows[3].symbol, rows[3].isin, rows[3].country) == ("CFHAX", None, None)
 
 
 def test_company_profiles_with_a_numeric_part(client: Any, fixture_server: FixtureServer) -> None:

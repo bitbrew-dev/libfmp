@@ -22,9 +22,9 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub range: String,
     #[pyo3(get)]
-    pub change: f64,
+    pub change: Option<f64>,
     #[pyo3(get)]
-    pub change_percentage: f64,
+    pub change_percentage: Option<f64>,
     #[pyo3(get)]
     pub volume: f64,
     #[pyo3(get)]
@@ -36,7 +36,7 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub cik: Option<String>,
     #[pyo3(get)]
-    pub isin: String,
+    pub isin: Option<String>,
     #[pyo3(get)]
     pub cusip: Option<String>,
     #[pyo3(get)]
@@ -54,7 +54,7 @@ pub(crate) struct CompanyProfile {
     #[pyo3(get)]
     pub sector: String,
     #[pyo3(get)]
-    pub country: String,
+    pub country: Option<String>,
     #[pyo3(get)]
     pub full_time_employees: Option<String>,
     #[pyo3(get)]
@@ -97,14 +97,14 @@ impl CompanyProfile {
         beta: f64,
         last_dividend: f64,
         range: String,
-        change: f64,
-        change_percentage: f64,
+        change: Option<f64>,
+        change_percentage: Option<f64>,
         volume: f64,
         average_volume: f64,
         company_name: String,
         currency: String,
         cik: Option<String>,
-        isin: String,
+        isin: Option<String>,
         cusip: Option<String>,
         exchange_full_name: String,
         exchange: String,
@@ -113,7 +113,7 @@ impl CompanyProfile {
         description: String,
         ceo: String,
         sector: String,
-        country: String,
+        country: Option<String>,
         full_time_employees: Option<String>,
         phone: Option<String>,
         address: String,
@@ -529,7 +529,7 @@ impl From<libfmp::responses::company::CompanyProfile> for CompanyProfile {
             company_name: value.company_name,
             currency: value.currency.into_inner(),
             cik: value.cik.map(|value| value.into_inner()),
-            isin: value.isin.into_inner(),
+            isin: value.isin.map(|value| value.into_inner()),
             cusip: value.cusip.map(|value| value.into_inner()),
             exchange_full_name: value.exchange_full_name,
             exchange: value.exchange.into_inner(),
@@ -538,7 +538,7 @@ impl From<libfmp::responses::company::CompanyProfile> for CompanyProfile {
             description: value.description,
             ceo: value.ceo,
             sector: value.sector.into_inner(),
-            country: value.country.into_inner(),
+            country: value.country.map(|value| value.into_inner()),
             full_time_employees: value.full_time_employees.map(|value| value.into_inner()),
             phone: value.phone,
             address: value.address,

@@ -13,42 +13,42 @@ import (
 // CompanyProfile is a detailed worldwide company profile returned by symbol or
 // US CIK lookup.
 type CompanyProfile struct {
-	Symbol            string  `json:"symbol"`
-	Price             float64 `json:"price"`
-	MarketCap         float64 `json:"marketCap"`
-	Beta              float64 `json:"beta"`
-	LastDividend      float64 `json:"lastDividend"`
-	Range             string  `json:"range"`
-	Change            float64 `json:"change"`
-	ChangePercentage  float64 `json:"changePercentage"`
-	Volume            float64 `json:"volume"`
-	AverageVolume     float64 `json:"averageVolume"`
-	CompanyName       string  `json:"companyName"`
-	Currency          string  `json:"currency"`
-	CIK               *string `json:"cik"`
-	ISIN              string  `json:"isin"`
-	CUSIP             *string `json:"cusip"`
-	ExchangeFullName  string  `json:"exchangeFullName"`
-	Exchange          string  `json:"exchange"`
-	Industry          string  `json:"industry"`
-	Website           string  `json:"website"`
-	Description       string  `json:"description"`
-	Ceo               string  `json:"ceo"`
-	Sector            string  `json:"sector"`
-	Country           string  `json:"country"`
-	FullTimeEmployees *string `json:"fullTimeEmployees"`
-	Phone             *string `json:"phone"`
-	Address           string  `json:"address"`
-	City              string  `json:"city"`
-	State             string  `json:"state"`
-	Zip               string  `json:"zip"`
-	Image             string  `json:"image"`
-	IPODate           *Date   `json:"ipoDate"`
-	DefaultImage      bool    `json:"defaultImage"`
-	IsETF             bool    `json:"isEtf"`
-	IsActivelyTrading bool    `json:"isActivelyTrading"`
-	IsAdr             bool    `json:"isAdr"`
-	IsFund            bool    `json:"isFund"`
+	Symbol            string   `json:"symbol"`
+	Price             float64  `json:"price"`
+	MarketCap         float64  `json:"marketCap"`
+	Beta              float64  `json:"beta"`
+	LastDividend      float64  `json:"lastDividend"`
+	Range             string   `json:"range"`
+	Change            *float64 `json:"change"`
+	ChangePercentage  *float64 `json:"changePercentage"`
+	Volume            float64  `json:"volume"`
+	AverageVolume     float64  `json:"averageVolume"`
+	CompanyName       string   `json:"companyName"`
+	Currency          string   `json:"currency"`
+	CIK               *string  `json:"cik"`
+	ISIN              *string  `json:"isin"`
+	CUSIP             *string  `json:"cusip"`
+	ExchangeFullName  string   `json:"exchangeFullName"`
+	Exchange          string   `json:"exchange"`
+	Industry          string   `json:"industry"`
+	Website           string   `json:"website"`
+	Description       string   `json:"description"`
+	Ceo               string   `json:"ceo"`
+	Sector            string   `json:"sector"`
+	Country           *string  `json:"country"`
+	FullTimeEmployees *string  `json:"fullTimeEmployees"`
+	Phone             *string  `json:"phone"`
+	Address           string   `json:"address"`
+	City              string   `json:"city"`
+	State             string   `json:"state"`
+	Zip               string   `json:"zip"`
+	Image             string   `json:"image"`
+	IPODate           *Date    `json:"ipoDate"`
+	DefaultImage      bool     `json:"defaultImage"`
+	IsETF             bool     `json:"isEtf"`
+	IsActivelyTrading bool     `json:"isActivelyTrading"`
+	IsAdr             bool     `json:"isAdr"`
+	IsFund            bool     `json:"isFund"`
 }
 
 // companyProfileShadow mirrors CompanyProfile with a pointer or raw value for
@@ -61,14 +61,14 @@ type companyProfileShadow struct {
 	Beta              *float64       `json:"beta"`
 	LastDividend      *float64       `json:"lastDividend"`
 	Range             *string        `json:"range"`
-	Change            *float64       `json:"change"`
-	ChangePercentage  *float64       `json:"changePercentage"`
+	Change            jsontext.Value `json:"change"`
+	ChangePercentage  jsontext.Value `json:"changePercentage"`
 	Volume            *float64       `json:"volume"`
 	AverageVolume     *float64       `json:"averageVolume"`
 	CompanyName       *string        `json:"companyName"`
 	Currency          *string        `json:"currency"`
 	CIK               jsontext.Value `json:"cik"`
-	ISIN              *string        `json:"isin"`
+	ISIN              jsontext.Value `json:"isin"`
 	CUSIP             jsontext.Value `json:"cusip"`
 	ExchangeFullName  *string        `json:"exchangeFullName"`
 	Exchange          *string        `json:"exchange"`
@@ -77,7 +77,7 @@ type companyProfileShadow struct {
 	Description       *string        `json:"description"`
 	Ceo               *string        `json:"ceo"`
 	Sector            *string        `json:"sector"`
-	Country           *string        `json:"country"`
+	Country           jsontext.Value `json:"country"`
 	FullTimeEmployees jsontext.Value `json:"fullTimeEmployees"`
 	Phone             jsontext.Value `json:"phone"`
 	Address           *string        `json:"address"`
@@ -114,9 +114,9 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "lastDividend")
 	case shadow.Range == nil:
 		return missingMemberError("CompanyProfile", "range")
-	case shadow.Change == nil:
+	case len(shadow.Change) == 0:
 		return missingMemberError("CompanyProfile", "change")
-	case shadow.ChangePercentage == nil:
+	case len(shadow.ChangePercentage) == 0:
 		return missingMemberError("CompanyProfile", "changePercentage")
 	case shadow.Volume == nil:
 		return missingMemberError("CompanyProfile", "volume")
@@ -128,7 +128,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "currency")
 	case len(shadow.CIK) == 0:
 		return missingMemberError("CompanyProfile", "cik")
-	case shadow.ISIN == nil:
+	case len(shadow.ISIN) == 0:
 		return missingMemberError("CompanyProfile", "isin")
 	case len(shadow.CUSIP) == 0:
 		return missingMemberError("CompanyProfile", "cusip")
@@ -146,7 +146,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("CompanyProfile", "ceo")
 	case shadow.Sector == nil:
 		return missingMemberError("CompanyProfile", "sector")
-	case shadow.Country == nil:
+	case len(shadow.Country) == 0:
 		return missingMemberError("CompanyProfile", "country")
 	case len(shadow.FullTimeEmployees) == 0:
 		return missingMemberError("CompanyProfile", "fullTimeEmployees")
@@ -175,6 +175,22 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	case shadow.IsFund == nil:
 		return missingMemberError("CompanyProfile", "isFund")
 	}
+	var change *float64
+	if shadow.Change.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.Change, &value); err != nil {
+			return memberDecodeError("CompanyProfile", "change", shadow.Change, err)
+		}
+		change = &value
+	}
+	var changePercentage *float64
+	if shadow.ChangePercentage.Kind() != 'n' {
+		var value float64
+		if err := json.Unmarshal(shadow.ChangePercentage, &value); err != nil {
+			return memberDecodeError("CompanyProfile", "changePercentage", shadow.ChangePercentage, err)
+		}
+		changePercentage = &value
+	}
 	var cik *string
 	if shadow.CIK.Kind() != 'n' {
 		var value string
@@ -183,6 +199,16 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		}
 		cik = &value
 	}
+	var isin *string
+	if shadow.ISIN.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.ISIN, &value); err != nil {
+			return memberDecodeError("CompanyProfile", "isin", shadow.ISIN, err)
+		}
+		if value != "" {
+			isin = &value
+		}
+	}
 	var cusip *string
 	if shadow.CUSIP.Kind() != 'n' {
 		var value string
@@ -190,6 +216,16 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 			return memberDecodeError("CompanyProfile", "cusip", shadow.CUSIP, err)
 		}
 		cusip = &value
+	}
+	var country *string
+	if shadow.Country.Kind() != 'n' {
+		var value string
+		if err := json.Unmarshal(shadow.Country, &value); err != nil {
+			return memberDecodeError("CompanyProfile", "country", shadow.Country, err)
+		}
+		if value != "" {
+			country = &value
+		}
 	}
 	var fullTimeEmployees *string
 	if shadow.FullTimeEmployees.Kind() != 'n' {
@@ -218,14 +254,14 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Beta:              *shadow.Beta,
 		LastDividend:      *shadow.LastDividend,
 		Range:             *shadow.Range,
-		Change:            *shadow.Change,
-		ChangePercentage:  *shadow.ChangePercentage,
+		Change:            change,
+		ChangePercentage:  changePercentage,
 		Volume:            *shadow.Volume,
 		AverageVolume:     *shadow.AverageVolume,
 		CompanyName:       *shadow.CompanyName,
 		Currency:          *shadow.Currency,
 		CIK:               cik,
-		ISIN:              *shadow.ISIN,
+		ISIN:              isin,
 		CUSIP:             cusip,
 		ExchangeFullName:  *shadow.ExchangeFullName,
 		Exchange:          *shadow.Exchange,
@@ -234,7 +270,7 @@ func (m *CompanyProfile) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		Description:       *shadow.Description,
 		Ceo:               *shadow.Ceo,
 		Sector:            *shadow.Sector,
-		Country:           *shadow.Country,
+		Country:           country,
 		FullTimeEmployees: fullTimeEmployees,
 		Phone:             phone,
 		Address:           *shadow.Address,
