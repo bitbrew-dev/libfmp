@@ -10,8 +10,8 @@ use libfmp::{
 };
 
 use bulk_csv::{
-    assert_cell_failure, assert_empty_bodies, assert_members, assert_round_trip, decode, first_row,
-    with_cells,
+    assert_cell_failure, assert_empty_bodies, assert_required_members, assert_round_trip, decode,
+    first_row, with_cells,
 };
 
 const INCOME: &[u8] = include_bytes!("fixtures/bulk_income_statements.csv");
@@ -28,9 +28,26 @@ fn live_csv_fixtures_round_trip_every_cell_with_exact_field_counts() {
 }
 
 #[test]
-fn every_column_is_required_and_no_member_accepts_an_empty_cell() {
-    assert_members(&bulk_income_statements(query()), INCOME, &[]);
-    assert_members(&bulk_income_statement_growth(query()), GROWTH, &[]);
+fn every_column_is_required_and_only_identity_members_reject_an_empty_cell() {
+    assert_required_members(
+        &bulk_income_statements(query()),
+        INCOME,
+        &[
+            "date",
+            "symbol",
+            "reportedCurrency",
+            "cik",
+            "filingDate",
+            "acceptedDate",
+            "fiscalYear",
+            "period",
+        ],
+    );
+    assert_required_members(
+        &bulk_income_statement_growth(query()),
+        GROWTH,
+        &["symbol", "date", "fiscalYear", "period", "reportedCurrency"],
+    );
 }
 
 #[test]
@@ -51,7 +68,7 @@ fn identity_fields_are_narrow_and_preserve_provider_representations() {
     assert_eq!(income.accepted_date.to_string(), "2024-12-31 00:00:00");
     assert_eq!(income.fiscal_year.as_str(), "2024");
     assert_eq!(income.period, FiscalPeriod::FullYear);
-    assert_eq!(income.revenue.as_str(), "251641000000");
+    assert_eq!(income.revenue.unwrap().as_str(), "251641000000");
 
     for (member, cell) in [
         ("date", "2024-12-31 00:00:00"),
@@ -87,4 +104,15 @@ fn acronym_hazards_keep_exact_provider_wire_names() {
     ] {
         assert!(!growth.contains_key(incorrect));
     }
+}
+
+#[test]
+fn live_empty_cells_decode_as_absent_metrics() {
+    let income = decode(&bulk_income_statements(query()), INCOME)
+        .unwrap()
+        .remove(2);
+    assert_eq!(income.symbol.as_str(), "OASMY");
+    assert_eq!(income.eps, None);
+    assert_eq!(income.weighted_average_shs_out_dil, None);
+    assert_eq!(income.net_income.unwrap().as_str(), "-39754000");
 }

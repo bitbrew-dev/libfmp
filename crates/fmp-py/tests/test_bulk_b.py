@@ -32,7 +32,7 @@ def test_income_statements_encodes_year_then_period(client: Any, fixture_server:
     rows = client.bulk.income_statements(2026, "Q1")
 
     assert fixture_server.requests[0].target == "/income-statement-bulk?year=2026&period=Q1"
-    assert len(rows) == 2
+    assert len(rows) == 3
     row = rows[0]
     assert isinstance(row, BulkIncomeStatement)
     assert row.symbol == "000001.SZ"
@@ -43,6 +43,7 @@ def test_income_statements_encodes_year_then_period(client: Any, fixture_server:
     assert row.revenue == "251641000000"
     assert row.net_income == "44508000000"
     assert row.eps == "2.15"
+    assert (rows[2].symbol, rows[2].eps, rows[2].weighted_average_shs_out_dil) == ("OASMY", None, None)
 
 
 def test_income_statement_growth_with_keyword_arguments(client: Any, fixture_server: FixtureServer) -> None:

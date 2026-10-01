@@ -145,8 +145,11 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 	if income[0].Symbol != "000001.SZ" || income[0].ReportedCurrency != "CNY" || income[0].CIK != "0000000000" ||
 		income[0].Date != mustParseDate(t, "2024-12-31") ||
 		income[0].AcceptedDate != mustParseDateTime(t, "2024-12-31 00:00:00") || income[0].FiscalYear != "2024" ||
-		income[0].Period != "FY" || income[0].Revenue != "251641000000" {
+		income[0].Period != "FY" || cellText(income[0].Revenue) != "251641000000" {
 		t.Fatalf("bulk_income_statements = %+v", income[0])
+	}
+	if income[2].Symbol != "OASMY" || income[2].EPS != nil || cellText(income[2].NetIncome) != "-39754000" {
+		t.Fatalf("empty income cells = %+v", income[2])
 	}
 	incomeGrowth := assertCSVFixtureParity[BulkIncomeStatementGrowth](t, "bulk_income_statement_growth.csv", 34)
 	if encoded, err := json.Marshal(incomeGrowth[0]); err != nil || !strings.Contains(string(encoded), `"growthEBITDA":`) ||
