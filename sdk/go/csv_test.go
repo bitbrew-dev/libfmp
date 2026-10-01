@@ -84,6 +84,16 @@ func TestGetCSVDecodesCellsByHeaderName(t *testing.T) {
 	}
 }
 
+// TestGetCSVSkipsALeadingByteOrderMark mirrors
+// a_leading_byte_order_mark_is_not_part_of_the_first_header.
+func TestGetCSVSkipsALeadingByteOrderMark(t *testing.T) {
+	t.Parallel()
+	rows, err := getCSVProbe[csvProbeRow](t, "\ufeff"+csvProbeHeader+"A,2025-06-02,1,true,1,1,x\r\n")
+	if err != nil || len(rows) != 1 || rows[0].Symbol != "A" || rows[0].Peers != "x" {
+		t.Fatalf("rows = %+v, err = %v", rows, err)
+	}
+}
+
 // TestGetCSVReportsRowAndMemberOfAFailure mirrors the Rust decoder's
 // null, missing-member, and syntax tests on a generated model.
 func TestGetCSVReportsRowAndMemberOfAFailure(t *testing.T) {
