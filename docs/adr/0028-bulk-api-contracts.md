@@ -5,6 +5,11 @@
 Accepted for issue #37's Rust API inventory. All 18 routes are implemented in
 Rust; the Python facade remains reserved.
 
+Superseded in part by [ADR 0035](0035-bulk-csv-responses.md): the routes
+answer `text/csv`, not a bare JSON array; numeric bulk members are optional;
+and the ETF key is a clean `lastUpdated` decoded as a date. The names, queries,
+single-request rule, and preserved provider spellings below still hold.
+
 ## Decision
 
 All 18 documented bulk entries use the following public Rust names.
