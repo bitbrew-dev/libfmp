@@ -82,8 +82,8 @@ func TestBulkSnapshotsDecodeExactValues(t *testing.T) {
 func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 	t.Parallel()
 	metrics := assertCSVFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.csv", 43)
-	if metrics[0].Symbol != "000001.SZ" || metrics[0].MarketCap != "224526473551" ||
-		metrics[0].EvToEbitdaTTM != "29.23198788110799" {
+	if metrics[0].Symbol != "000001.SZ" || cellText(metrics[0].MarketCap) != "224526473551" ||
+		cellText(metrics[0].EvToEbitdaTTM) != "29.23198788110799" {
 		t.Fatalf("bulk_key_metrics_ttm = %+v", metrics[0])
 	}
 	encoded, err := json.Marshal(metrics[0])
@@ -94,7 +94,7 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 		t.Fatalf("re-encoded key metrics = %s, %v", encoded, err)
 	}
 	ratios := assertCSVFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.csv", 60)
-	if ratios[0].GrossProfitMarginTTM != "0.5535250166330814" || ratios[0].NetIncomePerEbtTTM != "0.83539656299258" {
+	if cellText(ratios[0].GrossProfitMarginTTM) != "0.5535250166330814" || cellText(ratios[0].NetIncomePerEbtTTM) != "0.83539656299258" {
 		t.Fatalf("bulk_financial_ratios_ttm = %+v", ratios[0])
 	}
 
@@ -113,8 +113,8 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 	writer := csv.NewWriter(&body)
 	_ = writer.WriteAll([][]string{records[0], row})
 	decoded, _, kind, err := decodeCSVRows[BulkKeyMetricsTTM]([]byte(body.String()))
-	if kind != DecodeKindNone || decoded[0].MarketCap != beyondU64 ||
-		decoded[0].FreeCashFlowToFirmTTM != highPrecision || decoded[0].EvToSalesTTM != "6.9148336e-9" {
+	if kind != DecodeKindNone || cellText(decoded[0].MarketCap) != beyondU64 ||
+		cellText(decoded[0].FreeCashFlowToFirmTTM) != highPrecision || cellText(decoded[0].EvToSalesTTM) != "6.9148336e-9" {
 		t.Fatalf("beyond-u64 decode = %+v, %v", decoded, err)
 	}
 
@@ -124,9 +124,15 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 		t.Fatalf("bulk_stock_peers = %+v", peers[0])
 	}
 	surprises := assertCSVFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.csv", 5)
-	if want := (BulkEarningsSurprise{Symbol: "AUTO.OL", Date: mustParseDate(t, "2024-12-31"), EPSActual: "0.1332",
-		EPSEstimated: "0.1581", LastUpdated: mustParseDate(t, "2025-10-07")}); surprises[0] != want {
+	if surprises[0].Symbol != "AUTO.OL" || cellText(surprises[0].EPSActual) != "0.1332" ||
+		surprises[0].LastUpdated != mustParseDate(t, "2025-10-07") {
 		t.Fatalf("bulk_earnings_surprises = %+v", surprises[0])
+	}
+	if surprises[2].Symbol != "GUD.TO" || surprises[2].EPSEstimated != nil || cellText(surprises[2].EPSActual) != "0.00084" {
+		t.Fatalf("empty earnings cell = %+v", surprises[2])
+	}
+	if metrics[2].Symbol != "ADAMO" || metrics[2].EnterpriseValueTTM != nil || peers[2].Peers != "" {
+		t.Fatalf("empty metric cells = %+v, %+v", metrics[2], peers[2])
 	}
 }
 

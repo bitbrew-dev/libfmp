@@ -110,13 +110,19 @@ async fn custom_proxy_sends_one_exact_request_per_method_with_auth_headers_and_d
     let peers = client.bulk_stock_peers().await.unwrap();
     let surprises = client.bulk_earnings_surprises(Year(2026)).await.unwrap();
 
-    assert_eq!(metrics[0].ev_to_ebitda_ttm.as_str(), "29.23198788110799");
     assert_eq!(
-        ratios[0].net_income_per_ebt_ttm.as_str(),
+        metrics[0].ev_to_ebitda_ttm.as_ref().unwrap().as_str(),
+        "29.23198788110799"
+    );
+    assert_eq!(
+        ratios[0].net_income_per_ebt_ttm.as_ref().unwrap().as_str(),
         "0.83539656299258"
     );
     assert_eq!(peers[1].symbol.as_str(), "000002.SZ");
-    assert_eq!(surprises[1].eps_actual.as_str(), "-0.11675");
+    assert_eq!(
+        surprises[1].eps_actual.as_ref().unwrap().as_str(),
+        "-0.11675"
+    );
 
     let requests = executor.requests();
     assert_eq!(requests.len(), 4);

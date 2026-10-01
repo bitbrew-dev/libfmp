@@ -12,89 +12,89 @@ pub(crate) struct BulkKeyMetricsTtm {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub market_cap: String,
+    pub market_cap: Option<String>,
     #[pyo3(get)]
-    pub enterprise_value_ttm: String,
+    pub enterprise_value_ttm: Option<String>,
     #[pyo3(get)]
-    pub ev_to_sales_ttm: String,
+    pub ev_to_sales_ttm: Option<String>,
     #[pyo3(get)]
-    pub ev_to_operating_cash_flow_ttm: String,
+    pub ev_to_operating_cash_flow_ttm: Option<String>,
     #[pyo3(get)]
-    pub ev_to_free_cash_flow_ttm: String,
+    pub ev_to_free_cash_flow_ttm: Option<String>,
     #[pyo3(get)]
-    pub ev_to_ebitda_ttm: String,
+    pub ev_to_ebitda_ttm: Option<String>,
     #[pyo3(get)]
-    pub net_debt_to_ebitda_ttm: String,
+    pub net_debt_to_ebitda_ttm: Option<String>,
     #[pyo3(get)]
-    pub current_ratio_ttm: String,
+    pub current_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub income_quality_ttm: String,
+    pub income_quality_ttm: Option<String>,
     #[pyo3(get)]
-    pub graham_number_ttm: String,
+    pub graham_number_ttm: Option<String>,
     #[pyo3(get)]
-    pub graham_net_net_ttm: String,
+    pub graham_net_net_ttm: Option<String>,
     #[pyo3(get)]
-    pub tax_burden_ttm: String,
+    pub tax_burden_ttm: Option<String>,
     #[pyo3(get)]
-    pub interest_burden_ttm: String,
+    pub interest_burden_ttm: Option<String>,
     #[pyo3(get)]
-    pub working_capital_ttm: String,
+    pub working_capital_ttm: Option<String>,
     #[pyo3(get)]
-    pub invested_capital_ttm: String,
+    pub invested_capital_ttm: Option<String>,
     #[pyo3(get)]
-    pub return_on_assets_ttm: String,
+    pub return_on_assets_ttm: Option<String>,
     #[pyo3(get)]
-    pub operating_return_on_assets_ttm: String,
+    pub operating_return_on_assets_ttm: Option<String>,
     #[pyo3(get)]
-    pub return_on_tangible_assets_ttm: String,
+    pub return_on_tangible_assets_ttm: Option<String>,
     #[pyo3(get)]
-    pub return_on_equity_ttm: String,
+    pub return_on_equity_ttm: Option<String>,
     #[pyo3(get)]
-    pub return_on_invested_capital_ttm: String,
+    pub return_on_invested_capital_ttm: Option<String>,
     #[pyo3(get)]
-    pub return_on_capital_employed_ttm: String,
+    pub return_on_capital_employed_ttm: Option<String>,
     #[pyo3(get)]
-    pub earnings_yield_ttm: String,
+    pub earnings_yield_ttm: Option<String>,
     #[pyo3(get)]
-    pub free_cash_flow_yield_ttm: String,
+    pub free_cash_flow_yield_ttm: Option<String>,
     #[pyo3(get)]
-    pub capex_to_operating_cash_flow_ttm: String,
+    pub capex_to_operating_cash_flow_ttm: Option<String>,
     #[pyo3(get)]
-    pub capex_to_depreciation_ttm: String,
+    pub capex_to_depreciation_ttm: Option<String>,
     #[pyo3(get)]
-    pub capex_to_revenue_ttm: String,
+    pub capex_to_revenue_ttm: Option<String>,
     #[pyo3(get)]
-    pub sales_general_and_administrative_to_revenue_ttm: String,
+    pub sales_general_and_administrative_to_revenue_ttm: Option<String>,
     #[pyo3(get)]
-    pub research_and_development_to_revenue_ttm: String,
+    pub research_and_development_to_revenue_ttm: Option<String>,
     #[pyo3(get)]
-    pub stock_based_compensation_to_revenue_ttm: String,
+    pub stock_based_compensation_to_revenue_ttm: Option<String>,
     #[pyo3(get)]
-    pub intangibles_to_total_assets_ttm: String,
+    pub intangibles_to_total_assets_ttm: Option<String>,
     #[pyo3(get)]
-    pub average_receivables_ttm: String,
+    pub average_receivables_ttm: Option<String>,
     #[pyo3(get)]
-    pub average_payables_ttm: String,
+    pub average_payables_ttm: Option<String>,
     #[pyo3(get)]
-    pub average_inventory_ttm: String,
+    pub average_inventory_ttm: Option<String>,
     #[pyo3(get)]
-    pub days_of_sales_outstanding_ttm: String,
+    pub days_of_sales_outstanding_ttm: Option<String>,
     #[pyo3(get)]
-    pub days_of_payables_outstanding_ttm: String,
+    pub days_of_payables_outstanding_ttm: Option<String>,
     #[pyo3(get)]
-    pub days_of_inventory_outstanding_ttm: String,
+    pub days_of_inventory_outstanding_ttm: Option<String>,
     #[pyo3(get)]
-    pub operating_cycle_ttm: String,
+    pub operating_cycle_ttm: Option<String>,
     #[pyo3(get)]
-    pub cash_conversion_cycle_ttm: String,
+    pub cash_conversion_cycle_ttm: Option<String>,
     #[pyo3(get)]
-    pub free_cash_flow_to_equity_ttm: String,
+    pub free_cash_flow_to_equity_ttm: Option<String>,
     #[pyo3(get)]
-    pub free_cash_flow_to_firm_ttm: String,
+    pub free_cash_flow_to_firm_ttm: Option<String>,
     #[pyo3(get)]
-    pub tangible_asset_value_ttm: String,
+    pub tangible_asset_value_ttm: Option<String>,
     #[pyo3(get)]
-    pub net_current_asset_value_ttm: String,
+    pub net_current_asset_value_ttm: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -106,48 +106,48 @@ impl BulkKeyMetricsTtm {
     #[pyo3(signature = (*, symbol, market_cap, enterprise_value_ttm, ev_to_sales_ttm, ev_to_operating_cash_flow_ttm, ev_to_free_cash_flow_ttm, ev_to_ebitda_ttm, net_debt_to_ebitda_ttm, current_ratio_ttm, income_quality_ttm, graham_number_ttm, graham_net_net_ttm, tax_burden_ttm, interest_burden_ttm, working_capital_ttm, invested_capital_ttm, return_on_assets_ttm, operating_return_on_assets_ttm, return_on_tangible_assets_ttm, return_on_equity_ttm, return_on_invested_capital_ttm, return_on_capital_employed_ttm, earnings_yield_ttm, free_cash_flow_yield_ttm, capex_to_operating_cash_flow_ttm, capex_to_depreciation_ttm, capex_to_revenue_ttm, sales_general_and_administrative_to_revenue_ttm, research_and_development_to_revenue_ttm, stock_based_compensation_to_revenue_ttm, intangibles_to_total_assets_ttm, average_receivables_ttm, average_payables_ttm, average_inventory_ttm, days_of_sales_outstanding_ttm, days_of_payables_outstanding_ttm, days_of_inventory_outstanding_ttm, operating_cycle_ttm, cash_conversion_cycle_ttm, free_cash_flow_to_equity_ttm, free_cash_flow_to_firm_ttm, tangible_asset_value_ttm, net_current_asset_value_ttm))]
     fn new(
         symbol: String,
-        market_cap: String,
-        enterprise_value_ttm: String,
-        ev_to_sales_ttm: String,
-        ev_to_operating_cash_flow_ttm: String,
-        ev_to_free_cash_flow_ttm: String,
-        ev_to_ebitda_ttm: String,
-        net_debt_to_ebitda_ttm: String,
-        current_ratio_ttm: String,
-        income_quality_ttm: String,
-        graham_number_ttm: String,
-        graham_net_net_ttm: String,
-        tax_burden_ttm: String,
-        interest_burden_ttm: String,
-        working_capital_ttm: String,
-        invested_capital_ttm: String,
-        return_on_assets_ttm: String,
-        operating_return_on_assets_ttm: String,
-        return_on_tangible_assets_ttm: String,
-        return_on_equity_ttm: String,
-        return_on_invested_capital_ttm: String,
-        return_on_capital_employed_ttm: String,
-        earnings_yield_ttm: String,
-        free_cash_flow_yield_ttm: String,
-        capex_to_operating_cash_flow_ttm: String,
-        capex_to_depreciation_ttm: String,
-        capex_to_revenue_ttm: String,
-        sales_general_and_administrative_to_revenue_ttm: String,
-        research_and_development_to_revenue_ttm: String,
-        stock_based_compensation_to_revenue_ttm: String,
-        intangibles_to_total_assets_ttm: String,
-        average_receivables_ttm: String,
-        average_payables_ttm: String,
-        average_inventory_ttm: String,
-        days_of_sales_outstanding_ttm: String,
-        days_of_payables_outstanding_ttm: String,
-        days_of_inventory_outstanding_ttm: String,
-        operating_cycle_ttm: String,
-        cash_conversion_cycle_ttm: String,
-        free_cash_flow_to_equity_ttm: String,
-        free_cash_flow_to_firm_ttm: String,
-        tangible_asset_value_ttm: String,
-        net_current_asset_value_ttm: String,
+        market_cap: Option<String>,
+        enterprise_value_ttm: Option<String>,
+        ev_to_sales_ttm: Option<String>,
+        ev_to_operating_cash_flow_ttm: Option<String>,
+        ev_to_free_cash_flow_ttm: Option<String>,
+        ev_to_ebitda_ttm: Option<String>,
+        net_debt_to_ebitda_ttm: Option<String>,
+        current_ratio_ttm: Option<String>,
+        income_quality_ttm: Option<String>,
+        graham_number_ttm: Option<String>,
+        graham_net_net_ttm: Option<String>,
+        tax_burden_ttm: Option<String>,
+        interest_burden_ttm: Option<String>,
+        working_capital_ttm: Option<String>,
+        invested_capital_ttm: Option<String>,
+        return_on_assets_ttm: Option<String>,
+        operating_return_on_assets_ttm: Option<String>,
+        return_on_tangible_assets_ttm: Option<String>,
+        return_on_equity_ttm: Option<String>,
+        return_on_invested_capital_ttm: Option<String>,
+        return_on_capital_employed_ttm: Option<String>,
+        earnings_yield_ttm: Option<String>,
+        free_cash_flow_yield_ttm: Option<String>,
+        capex_to_operating_cash_flow_ttm: Option<String>,
+        capex_to_depreciation_ttm: Option<String>,
+        capex_to_revenue_ttm: Option<String>,
+        sales_general_and_administrative_to_revenue_ttm: Option<String>,
+        research_and_development_to_revenue_ttm: Option<String>,
+        stock_based_compensation_to_revenue_ttm: Option<String>,
+        intangibles_to_total_assets_ttm: Option<String>,
+        average_receivables_ttm: Option<String>,
+        average_payables_ttm: Option<String>,
+        average_inventory_ttm: Option<String>,
+        days_of_sales_outstanding_ttm: Option<String>,
+        days_of_payables_outstanding_ttm: Option<String>,
+        days_of_inventory_outstanding_ttm: Option<String>,
+        operating_cycle_ttm: Option<String>,
+        cash_conversion_cycle_ttm: Option<String>,
+        free_cash_flow_to_equity_ttm: Option<String>,
+        free_cash_flow_to_firm_ttm: Option<String>,
+        tangible_asset_value_ttm: Option<String>,
+        net_current_asset_value_ttm: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -900,54 +900,92 @@ impl From<libfmp::responses::bulk::BulkKeyMetricsTtm> for BulkKeyMetricsTtm {
     fn from(value: libfmp::responses::bulk::BulkKeyMetricsTtm) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
-            market_cap: value.market_cap.into_inner(),
-            enterprise_value_ttm: value.enterprise_value_ttm.into_inner(),
-            ev_to_sales_ttm: value.ev_to_sales_ttm.into_inner(),
-            ev_to_operating_cash_flow_ttm: value.ev_to_operating_cash_flow_ttm.into_inner(),
-            ev_to_free_cash_flow_ttm: value.ev_to_free_cash_flow_ttm.into_inner(),
-            ev_to_ebitda_ttm: value.ev_to_ebitda_ttm.into_inner(),
-            net_debt_to_ebitda_ttm: value.net_debt_to_ebitda_ttm.into_inner(),
-            current_ratio_ttm: value.current_ratio_ttm.into_inner(),
-            income_quality_ttm: value.income_quality_ttm.into_inner(),
-            graham_number_ttm: value.graham_number_ttm.into_inner(),
-            graham_net_net_ttm: value.graham_net_net_ttm.into_inner(),
-            tax_burden_ttm: value.tax_burden_ttm.into_inner(),
-            interest_burden_ttm: value.interest_burden_ttm.into_inner(),
-            working_capital_ttm: value.working_capital_ttm.into_inner(),
-            invested_capital_ttm: value.invested_capital_ttm.into_inner(),
-            return_on_assets_ttm: value.return_on_assets_ttm.into_inner(),
-            operating_return_on_assets_ttm: value.operating_return_on_assets_ttm.into_inner(),
-            return_on_tangible_assets_ttm: value.return_on_tangible_assets_ttm.into_inner(),
-            return_on_equity_ttm: value.return_on_equity_ttm.into_inner(),
-            return_on_invested_capital_ttm: value.return_on_invested_capital_ttm.into_inner(),
-            return_on_capital_employed_ttm: value.return_on_capital_employed_ttm.into_inner(),
-            earnings_yield_ttm: value.earnings_yield_ttm.into_inner(),
-            free_cash_flow_yield_ttm: value.free_cash_flow_yield_ttm.into_inner(),
-            capex_to_operating_cash_flow_ttm: value.capex_to_operating_cash_flow_ttm.into_inner(),
-            capex_to_depreciation_ttm: value.capex_to_depreciation_ttm.into_inner(),
-            capex_to_revenue_ttm: value.capex_to_revenue_ttm.into_inner(),
+            market_cap: value.market_cap.map(|value| value.into_inner()),
+            enterprise_value_ttm: value.enterprise_value_ttm.map(|value| value.into_inner()),
+            ev_to_sales_ttm: value.ev_to_sales_ttm.map(|value| value.into_inner()),
+            ev_to_operating_cash_flow_ttm: value
+                .ev_to_operating_cash_flow_ttm
+                .map(|value| value.into_inner()),
+            ev_to_free_cash_flow_ttm: value
+                .ev_to_free_cash_flow_ttm
+                .map(|value| value.into_inner()),
+            ev_to_ebitda_ttm: value.ev_to_ebitda_ttm.map(|value| value.into_inner()),
+            net_debt_to_ebitda_ttm: value.net_debt_to_ebitda_ttm.map(|value| value.into_inner()),
+            current_ratio_ttm: value.current_ratio_ttm.map(|value| value.into_inner()),
+            income_quality_ttm: value.income_quality_ttm.map(|value| value.into_inner()),
+            graham_number_ttm: value.graham_number_ttm.map(|value| value.into_inner()),
+            graham_net_net_ttm: value.graham_net_net_ttm.map(|value| value.into_inner()),
+            tax_burden_ttm: value.tax_burden_ttm.map(|value| value.into_inner()),
+            interest_burden_ttm: value.interest_burden_ttm.map(|value| value.into_inner()),
+            working_capital_ttm: value.working_capital_ttm.map(|value| value.into_inner()),
+            invested_capital_ttm: value.invested_capital_ttm.map(|value| value.into_inner()),
+            return_on_assets_ttm: value.return_on_assets_ttm.map(|value| value.into_inner()),
+            operating_return_on_assets_ttm: value
+                .operating_return_on_assets_ttm
+                .map(|value| value.into_inner()),
+            return_on_tangible_assets_ttm: value
+                .return_on_tangible_assets_ttm
+                .map(|value| value.into_inner()),
+            return_on_equity_ttm: value.return_on_equity_ttm.map(|value| value.into_inner()),
+            return_on_invested_capital_ttm: value
+                .return_on_invested_capital_ttm
+                .map(|value| value.into_inner()),
+            return_on_capital_employed_ttm: value
+                .return_on_capital_employed_ttm
+                .map(|value| value.into_inner()),
+            earnings_yield_ttm: value.earnings_yield_ttm.map(|value| value.into_inner()),
+            free_cash_flow_yield_ttm: value
+                .free_cash_flow_yield_ttm
+                .map(|value| value.into_inner()),
+            capex_to_operating_cash_flow_ttm: value
+                .capex_to_operating_cash_flow_ttm
+                .map(|value| value.into_inner()),
+            capex_to_depreciation_ttm: value
+                .capex_to_depreciation_ttm
+                .map(|value| value.into_inner()),
+            capex_to_revenue_ttm: value.capex_to_revenue_ttm.map(|value| value.into_inner()),
             sales_general_and_administrative_to_revenue_ttm: value
                 .sales_general_and_administrative_to_revenue_ttm
-                .into_inner(),
+                .map(|value| value.into_inner()),
             research_and_development_to_revenue_ttm: value
                 .research_and_development_to_revenue_ttm
-                .into_inner(),
+                .map(|value| value.into_inner()),
             stock_based_compensation_to_revenue_ttm: value
                 .stock_based_compensation_to_revenue_ttm
-                .into_inner(),
-            intangibles_to_total_assets_ttm: value.intangibles_to_total_assets_ttm.into_inner(),
-            average_receivables_ttm: value.average_receivables_ttm.into_inner(),
-            average_payables_ttm: value.average_payables_ttm.into_inner(),
-            average_inventory_ttm: value.average_inventory_ttm.into_inner(),
-            days_of_sales_outstanding_ttm: value.days_of_sales_outstanding_ttm.into_inner(),
-            days_of_payables_outstanding_ttm: value.days_of_payables_outstanding_ttm.into_inner(),
-            days_of_inventory_outstanding_ttm: value.days_of_inventory_outstanding_ttm.into_inner(),
-            operating_cycle_ttm: value.operating_cycle_ttm.into_inner(),
-            cash_conversion_cycle_ttm: value.cash_conversion_cycle_ttm.into_inner(),
-            free_cash_flow_to_equity_ttm: value.free_cash_flow_to_equity_ttm.into_inner(),
-            free_cash_flow_to_firm_ttm: value.free_cash_flow_to_firm_ttm.into_inner(),
-            tangible_asset_value_ttm: value.tangible_asset_value_ttm.into_inner(),
-            net_current_asset_value_ttm: value.net_current_asset_value_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            intangibles_to_total_assets_ttm: value
+                .intangibles_to_total_assets_ttm
+                .map(|value| value.into_inner()),
+            average_receivables_ttm: value
+                .average_receivables_ttm
+                .map(|value| value.into_inner()),
+            average_payables_ttm: value.average_payables_ttm.map(|value| value.into_inner()),
+            average_inventory_ttm: value.average_inventory_ttm.map(|value| value.into_inner()),
+            days_of_sales_outstanding_ttm: value
+                .days_of_sales_outstanding_ttm
+                .map(|value| value.into_inner()),
+            days_of_payables_outstanding_ttm: value
+                .days_of_payables_outstanding_ttm
+                .map(|value| value.into_inner()),
+            days_of_inventory_outstanding_ttm: value
+                .days_of_inventory_outstanding_ttm
+                .map(|value| value.into_inner()),
+            operating_cycle_ttm: value.operating_cycle_ttm.map(|value| value.into_inner()),
+            cash_conversion_cycle_ttm: value
+                .cash_conversion_cycle_ttm
+                .map(|value| value.into_inner()),
+            free_cash_flow_to_equity_ttm: value
+                .free_cash_flow_to_equity_ttm
+                .map(|value| value.into_inner()),
+            free_cash_flow_to_firm_ttm: value
+                .free_cash_flow_to_firm_ttm
+                .map(|value| value.into_inner()),
+            tangible_asset_value_ttm: value
+                .tangible_asset_value_ttm
+                .map(|value| value.into_inner()),
+            net_current_asset_value_ttm: value
+                .net_current_asset_value_ttm
+                .map(|value| value.into_inner()),
         }
     }
 }
@@ -965,123 +1003,123 @@ pub(crate) struct BulkFinancialRatiosTtm {
     #[pyo3(get)]
     pub symbol: String,
     #[pyo3(get)]
-    pub gross_profit_margin_ttm: String,
+    pub gross_profit_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub ebit_margin_ttm: String,
+    pub ebit_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub ebitda_margin_ttm: String,
+    pub ebitda_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub operating_profit_margin_ttm: String,
+    pub operating_profit_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub pretax_profit_margin_ttm: String,
+    pub pretax_profit_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub continuous_operations_profit_margin_ttm: String,
+    pub continuous_operations_profit_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub net_profit_margin_ttm: String,
+    pub net_profit_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub bottom_line_profit_margin_ttm: String,
+    pub bottom_line_profit_margin_ttm: Option<String>,
     #[pyo3(get)]
-    pub receivables_turnover_ttm: String,
+    pub receivables_turnover_ttm: Option<String>,
     #[pyo3(get)]
-    pub payables_turnover_ttm: String,
+    pub payables_turnover_ttm: Option<String>,
     #[pyo3(get)]
-    pub inventory_turnover_ttm: String,
+    pub inventory_turnover_ttm: Option<String>,
     #[pyo3(get)]
-    pub fixed_asset_turnover_ttm: String,
+    pub fixed_asset_turnover_ttm: Option<String>,
     #[pyo3(get)]
-    pub asset_turnover_ttm: String,
+    pub asset_turnover_ttm: Option<String>,
     #[pyo3(get)]
-    pub current_ratio_ttm: String,
+    pub current_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub quick_ratio_ttm: String,
+    pub quick_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub solvency_ratio_ttm: String,
+    pub solvency_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub cash_ratio_ttm: String,
+    pub cash_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub price_to_earnings_ratio_ttm: String,
+    pub price_to_earnings_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub price_to_earnings_growth_ratio_ttm: String,
+    pub price_to_earnings_growth_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub forward_price_to_earnings_growth_ratio_ttm: String,
+    pub forward_price_to_earnings_growth_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub price_to_book_ratio_ttm: String,
+    pub price_to_book_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub price_to_sales_ratio_ttm: String,
+    pub price_to_sales_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub price_to_free_cash_flow_ratio_ttm: String,
+    pub price_to_free_cash_flow_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub price_to_operating_cash_flow_ratio_ttm: String,
+    pub price_to_operating_cash_flow_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub debt_to_assets_ratio_ttm: String,
+    pub debt_to_assets_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub debt_to_equity_ratio_ttm: String,
+    pub debt_to_equity_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub debt_to_capital_ratio_ttm: String,
+    pub debt_to_capital_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub long_term_debt_to_capital_ratio_ttm: String,
+    pub long_term_debt_to_capital_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub financial_leverage_ratio_ttm: String,
+    pub financial_leverage_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub working_capital_turnover_ratio_ttm: String,
+    pub working_capital_turnover_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub operating_cash_flow_ratio_ttm: String,
+    pub operating_cash_flow_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub operating_cash_flow_sales_ratio_ttm: String,
+    pub operating_cash_flow_sales_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub free_cash_flow_operating_cash_flow_ratio_ttm: String,
+    pub free_cash_flow_operating_cash_flow_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub debt_service_coverage_ratio_ttm: String,
+    pub debt_service_coverage_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub interest_coverage_ratio_ttm: String,
+    pub interest_coverage_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub short_term_operating_cash_flow_coverage_ratio_ttm: String,
+    pub short_term_operating_cash_flow_coverage_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub operating_cash_flow_coverage_ratio_ttm: String,
+    pub operating_cash_flow_coverage_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub capital_expenditure_coverage_ratio_ttm: String,
+    pub capital_expenditure_coverage_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub dividend_paid_and_capex_coverage_ratio_ttm: String,
+    pub dividend_paid_and_capex_coverage_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub dividend_payout_ratio_ttm: String,
+    pub dividend_payout_ratio_ttm: Option<String>,
     #[pyo3(get)]
-    pub dividend_yield_ttm: String,
+    pub dividend_yield_ttm: Option<String>,
     #[pyo3(get)]
-    pub enterprise_value_ttm: String,
+    pub enterprise_value_ttm: Option<String>,
     #[pyo3(get)]
-    pub revenue_per_share_ttm: String,
+    pub revenue_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub net_income_per_share_ttm: String,
+    pub net_income_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub interest_debt_per_share_ttm: String,
+    pub interest_debt_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub cash_per_share_ttm: String,
+    pub cash_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub book_value_per_share_ttm: String,
+    pub book_value_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub tangible_book_value_per_share_ttm: String,
+    pub tangible_book_value_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub shareholders_equity_per_share_ttm: String,
+    pub shareholders_equity_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub operating_cash_flow_per_share_ttm: String,
+    pub operating_cash_flow_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub capex_per_share_ttm: String,
+    pub capex_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub free_cash_flow_per_share_ttm: String,
+    pub free_cash_flow_per_share_ttm: Option<String>,
     #[pyo3(get)]
-    pub net_income_per_ebt_ttm: String,
+    pub net_income_per_ebt_ttm: Option<String>,
     #[pyo3(get)]
-    pub ebt_per_ebit_ttm: String,
+    pub ebt_per_ebit_ttm: Option<String>,
     #[pyo3(get)]
-    pub price_to_fair_value_ttm: String,
+    pub price_to_fair_value_ttm: Option<String>,
     #[pyo3(get)]
-    pub debt_to_market_cap_ttm: String,
+    pub debt_to_market_cap_ttm: Option<String>,
     #[pyo3(get)]
-    pub effective_tax_rate_ttm: String,
+    pub effective_tax_rate_ttm: Option<String>,
     #[pyo3(get)]
-    pub enterprise_value_multiple_ttm: String,
+    pub enterprise_value_multiple_ttm: Option<String>,
     #[pyo3(get)]
-    pub dividend_per_share_ttm: String,
+    pub dividend_per_share_ttm: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -1093,65 +1131,65 @@ impl BulkFinancialRatiosTtm {
     #[pyo3(signature = (*, symbol, gross_profit_margin_ttm, ebit_margin_ttm, ebitda_margin_ttm, operating_profit_margin_ttm, pretax_profit_margin_ttm, continuous_operations_profit_margin_ttm, net_profit_margin_ttm, bottom_line_profit_margin_ttm, receivables_turnover_ttm, payables_turnover_ttm, inventory_turnover_ttm, fixed_asset_turnover_ttm, asset_turnover_ttm, current_ratio_ttm, quick_ratio_ttm, solvency_ratio_ttm, cash_ratio_ttm, price_to_earnings_ratio_ttm, price_to_earnings_growth_ratio_ttm, forward_price_to_earnings_growth_ratio_ttm, price_to_book_ratio_ttm, price_to_sales_ratio_ttm, price_to_free_cash_flow_ratio_ttm, price_to_operating_cash_flow_ratio_ttm, debt_to_assets_ratio_ttm, debt_to_equity_ratio_ttm, debt_to_capital_ratio_ttm, long_term_debt_to_capital_ratio_ttm, financial_leverage_ratio_ttm, working_capital_turnover_ratio_ttm, operating_cash_flow_ratio_ttm, operating_cash_flow_sales_ratio_ttm, free_cash_flow_operating_cash_flow_ratio_ttm, debt_service_coverage_ratio_ttm, interest_coverage_ratio_ttm, short_term_operating_cash_flow_coverage_ratio_ttm, operating_cash_flow_coverage_ratio_ttm, capital_expenditure_coverage_ratio_ttm, dividend_paid_and_capex_coverage_ratio_ttm, dividend_payout_ratio_ttm, dividend_yield_ttm, enterprise_value_ttm, revenue_per_share_ttm, net_income_per_share_ttm, interest_debt_per_share_ttm, cash_per_share_ttm, book_value_per_share_ttm, tangible_book_value_per_share_ttm, shareholders_equity_per_share_ttm, operating_cash_flow_per_share_ttm, capex_per_share_ttm, free_cash_flow_per_share_ttm, net_income_per_ebt_ttm, ebt_per_ebit_ttm, price_to_fair_value_ttm, debt_to_market_cap_ttm, effective_tax_rate_ttm, enterprise_value_multiple_ttm, dividend_per_share_ttm))]
     fn new(
         symbol: String,
-        gross_profit_margin_ttm: String,
-        ebit_margin_ttm: String,
-        ebitda_margin_ttm: String,
-        operating_profit_margin_ttm: String,
-        pretax_profit_margin_ttm: String,
-        continuous_operations_profit_margin_ttm: String,
-        net_profit_margin_ttm: String,
-        bottom_line_profit_margin_ttm: String,
-        receivables_turnover_ttm: String,
-        payables_turnover_ttm: String,
-        inventory_turnover_ttm: String,
-        fixed_asset_turnover_ttm: String,
-        asset_turnover_ttm: String,
-        current_ratio_ttm: String,
-        quick_ratio_ttm: String,
-        solvency_ratio_ttm: String,
-        cash_ratio_ttm: String,
-        price_to_earnings_ratio_ttm: String,
-        price_to_earnings_growth_ratio_ttm: String,
-        forward_price_to_earnings_growth_ratio_ttm: String,
-        price_to_book_ratio_ttm: String,
-        price_to_sales_ratio_ttm: String,
-        price_to_free_cash_flow_ratio_ttm: String,
-        price_to_operating_cash_flow_ratio_ttm: String,
-        debt_to_assets_ratio_ttm: String,
-        debt_to_equity_ratio_ttm: String,
-        debt_to_capital_ratio_ttm: String,
-        long_term_debt_to_capital_ratio_ttm: String,
-        financial_leverage_ratio_ttm: String,
-        working_capital_turnover_ratio_ttm: String,
-        operating_cash_flow_ratio_ttm: String,
-        operating_cash_flow_sales_ratio_ttm: String,
-        free_cash_flow_operating_cash_flow_ratio_ttm: String,
-        debt_service_coverage_ratio_ttm: String,
-        interest_coverage_ratio_ttm: String,
-        short_term_operating_cash_flow_coverage_ratio_ttm: String,
-        operating_cash_flow_coverage_ratio_ttm: String,
-        capital_expenditure_coverage_ratio_ttm: String,
-        dividend_paid_and_capex_coverage_ratio_ttm: String,
-        dividend_payout_ratio_ttm: String,
-        dividend_yield_ttm: String,
-        enterprise_value_ttm: String,
-        revenue_per_share_ttm: String,
-        net_income_per_share_ttm: String,
-        interest_debt_per_share_ttm: String,
-        cash_per_share_ttm: String,
-        book_value_per_share_ttm: String,
-        tangible_book_value_per_share_ttm: String,
-        shareholders_equity_per_share_ttm: String,
-        operating_cash_flow_per_share_ttm: String,
-        capex_per_share_ttm: String,
-        free_cash_flow_per_share_ttm: String,
-        net_income_per_ebt_ttm: String,
-        ebt_per_ebit_ttm: String,
-        price_to_fair_value_ttm: String,
-        debt_to_market_cap_ttm: String,
-        effective_tax_rate_ttm: String,
-        enterprise_value_multiple_ttm: String,
-        dividend_per_share_ttm: String,
+        gross_profit_margin_ttm: Option<String>,
+        ebit_margin_ttm: Option<String>,
+        ebitda_margin_ttm: Option<String>,
+        operating_profit_margin_ttm: Option<String>,
+        pretax_profit_margin_ttm: Option<String>,
+        continuous_operations_profit_margin_ttm: Option<String>,
+        net_profit_margin_ttm: Option<String>,
+        bottom_line_profit_margin_ttm: Option<String>,
+        receivables_turnover_ttm: Option<String>,
+        payables_turnover_ttm: Option<String>,
+        inventory_turnover_ttm: Option<String>,
+        fixed_asset_turnover_ttm: Option<String>,
+        asset_turnover_ttm: Option<String>,
+        current_ratio_ttm: Option<String>,
+        quick_ratio_ttm: Option<String>,
+        solvency_ratio_ttm: Option<String>,
+        cash_ratio_ttm: Option<String>,
+        price_to_earnings_ratio_ttm: Option<String>,
+        price_to_earnings_growth_ratio_ttm: Option<String>,
+        forward_price_to_earnings_growth_ratio_ttm: Option<String>,
+        price_to_book_ratio_ttm: Option<String>,
+        price_to_sales_ratio_ttm: Option<String>,
+        price_to_free_cash_flow_ratio_ttm: Option<String>,
+        price_to_operating_cash_flow_ratio_ttm: Option<String>,
+        debt_to_assets_ratio_ttm: Option<String>,
+        debt_to_equity_ratio_ttm: Option<String>,
+        debt_to_capital_ratio_ttm: Option<String>,
+        long_term_debt_to_capital_ratio_ttm: Option<String>,
+        financial_leverage_ratio_ttm: Option<String>,
+        working_capital_turnover_ratio_ttm: Option<String>,
+        operating_cash_flow_ratio_ttm: Option<String>,
+        operating_cash_flow_sales_ratio_ttm: Option<String>,
+        free_cash_flow_operating_cash_flow_ratio_ttm: Option<String>,
+        debt_service_coverage_ratio_ttm: Option<String>,
+        interest_coverage_ratio_ttm: Option<String>,
+        short_term_operating_cash_flow_coverage_ratio_ttm: Option<String>,
+        operating_cash_flow_coverage_ratio_ttm: Option<String>,
+        capital_expenditure_coverage_ratio_ttm: Option<String>,
+        dividend_paid_and_capex_coverage_ratio_ttm: Option<String>,
+        dividend_payout_ratio_ttm: Option<String>,
+        dividend_yield_ttm: Option<String>,
+        enterprise_value_ttm: Option<String>,
+        revenue_per_share_ttm: Option<String>,
+        net_income_per_share_ttm: Option<String>,
+        interest_debt_per_share_ttm: Option<String>,
+        cash_per_share_ttm: Option<String>,
+        book_value_per_share_ttm: Option<String>,
+        tangible_book_value_per_share_ttm: Option<String>,
+        shareholders_equity_per_share_ttm: Option<String>,
+        operating_cash_flow_per_share_ttm: Option<String>,
+        capex_per_share_ttm: Option<String>,
+        free_cash_flow_per_share_ttm: Option<String>,
+        net_income_per_ebt_ttm: Option<String>,
+        ebt_per_ebit_ttm: Option<String>,
+        price_to_fair_value_ttm: Option<String>,
+        debt_to_market_cap_ttm: Option<String>,
+        effective_tax_rate_ttm: Option<String>,
+        enterprise_value_multiple_ttm: Option<String>,
+        dividend_per_share_ttm: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -2229,89 +2267,143 @@ impl From<libfmp::responses::bulk::BulkFinancialRatiosTtm> for BulkFinancialRati
     fn from(value: libfmp::responses::bulk::BulkFinancialRatiosTtm) -> Self {
         Self {
             symbol: value.symbol.into_inner(),
-            gross_profit_margin_ttm: value.gross_profit_margin_ttm.into_inner(),
-            ebit_margin_ttm: value.ebit_margin_ttm.into_inner(),
-            ebitda_margin_ttm: value.ebitda_margin_ttm.into_inner(),
-            operating_profit_margin_ttm: value.operating_profit_margin_ttm.into_inner(),
-            pretax_profit_margin_ttm: value.pretax_profit_margin_ttm.into_inner(),
+            gross_profit_margin_ttm: value
+                .gross_profit_margin_ttm
+                .map(|value| value.into_inner()),
+            ebit_margin_ttm: value.ebit_margin_ttm.map(|value| value.into_inner()),
+            ebitda_margin_ttm: value.ebitda_margin_ttm.map(|value| value.into_inner()),
+            operating_profit_margin_ttm: value
+                .operating_profit_margin_ttm
+                .map(|value| value.into_inner()),
+            pretax_profit_margin_ttm: value
+                .pretax_profit_margin_ttm
+                .map(|value| value.into_inner()),
             continuous_operations_profit_margin_ttm: value
                 .continuous_operations_profit_margin_ttm
-                .into_inner(),
-            net_profit_margin_ttm: value.net_profit_margin_ttm.into_inner(),
-            bottom_line_profit_margin_ttm: value.bottom_line_profit_margin_ttm.into_inner(),
-            receivables_turnover_ttm: value.receivables_turnover_ttm.into_inner(),
-            payables_turnover_ttm: value.payables_turnover_ttm.into_inner(),
-            inventory_turnover_ttm: value.inventory_turnover_ttm.into_inner(),
-            fixed_asset_turnover_ttm: value.fixed_asset_turnover_ttm.into_inner(),
-            asset_turnover_ttm: value.asset_turnover_ttm.into_inner(),
-            current_ratio_ttm: value.current_ratio_ttm.into_inner(),
-            quick_ratio_ttm: value.quick_ratio_ttm.into_inner(),
-            solvency_ratio_ttm: value.solvency_ratio_ttm.into_inner(),
-            cash_ratio_ttm: value.cash_ratio_ttm.into_inner(),
-            price_to_earnings_ratio_ttm: value.price_to_earnings_ratio_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            net_profit_margin_ttm: value.net_profit_margin_ttm.map(|value| value.into_inner()),
+            bottom_line_profit_margin_ttm: value
+                .bottom_line_profit_margin_ttm
+                .map(|value| value.into_inner()),
+            receivables_turnover_ttm: value
+                .receivables_turnover_ttm
+                .map(|value| value.into_inner()),
+            payables_turnover_ttm: value.payables_turnover_ttm.map(|value| value.into_inner()),
+            inventory_turnover_ttm: value.inventory_turnover_ttm.map(|value| value.into_inner()),
+            fixed_asset_turnover_ttm: value
+                .fixed_asset_turnover_ttm
+                .map(|value| value.into_inner()),
+            asset_turnover_ttm: value.asset_turnover_ttm.map(|value| value.into_inner()),
+            current_ratio_ttm: value.current_ratio_ttm.map(|value| value.into_inner()),
+            quick_ratio_ttm: value.quick_ratio_ttm.map(|value| value.into_inner()),
+            solvency_ratio_ttm: value.solvency_ratio_ttm.map(|value| value.into_inner()),
+            cash_ratio_ttm: value.cash_ratio_ttm.map(|value| value.into_inner()),
+            price_to_earnings_ratio_ttm: value
+                .price_to_earnings_ratio_ttm
+                .map(|value| value.into_inner()),
             price_to_earnings_growth_ratio_ttm: value
                 .price_to_earnings_growth_ratio_ttm
-                .into_inner(),
+                .map(|value| value.into_inner()),
             forward_price_to_earnings_growth_ratio_ttm: value
                 .forward_price_to_earnings_growth_ratio_ttm
-                .into_inner(),
-            price_to_book_ratio_ttm: value.price_to_book_ratio_ttm.into_inner(),
-            price_to_sales_ratio_ttm: value.price_to_sales_ratio_ttm.into_inner(),
-            price_to_free_cash_flow_ratio_ttm: value.price_to_free_cash_flow_ratio_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            price_to_book_ratio_ttm: value
+                .price_to_book_ratio_ttm
+                .map(|value| value.into_inner()),
+            price_to_sales_ratio_ttm: value
+                .price_to_sales_ratio_ttm
+                .map(|value| value.into_inner()),
+            price_to_free_cash_flow_ratio_ttm: value
+                .price_to_free_cash_flow_ratio_ttm
+                .map(|value| value.into_inner()),
             price_to_operating_cash_flow_ratio_ttm: value
                 .price_to_operating_cash_flow_ratio_ttm
-                .into_inner(),
-            debt_to_assets_ratio_ttm: value.debt_to_assets_ratio_ttm.into_inner(),
-            debt_to_equity_ratio_ttm: value.debt_to_equity_ratio_ttm.into_inner(),
-            debt_to_capital_ratio_ttm: value.debt_to_capital_ratio_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            debt_to_assets_ratio_ttm: value
+                .debt_to_assets_ratio_ttm
+                .map(|value| value.into_inner()),
+            debt_to_equity_ratio_ttm: value
+                .debt_to_equity_ratio_ttm
+                .map(|value| value.into_inner()),
+            debt_to_capital_ratio_ttm: value
+                .debt_to_capital_ratio_ttm
+                .map(|value| value.into_inner()),
             long_term_debt_to_capital_ratio_ttm: value
                 .long_term_debt_to_capital_ratio_ttm
-                .into_inner(),
-            financial_leverage_ratio_ttm: value.financial_leverage_ratio_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            financial_leverage_ratio_ttm: value
+                .financial_leverage_ratio_ttm
+                .map(|value| value.into_inner()),
             working_capital_turnover_ratio_ttm: value
                 .working_capital_turnover_ratio_ttm
-                .into_inner(),
-            operating_cash_flow_ratio_ttm: value.operating_cash_flow_ratio_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            operating_cash_flow_ratio_ttm: value
+                .operating_cash_flow_ratio_ttm
+                .map(|value| value.into_inner()),
             operating_cash_flow_sales_ratio_ttm: value
                 .operating_cash_flow_sales_ratio_ttm
-                .into_inner(),
+                .map(|value| value.into_inner()),
             free_cash_flow_operating_cash_flow_ratio_ttm: value
                 .free_cash_flow_operating_cash_flow_ratio_ttm
-                .into_inner(),
-            debt_service_coverage_ratio_ttm: value.debt_service_coverage_ratio_ttm.into_inner(),
-            interest_coverage_ratio_ttm: value.interest_coverage_ratio_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            debt_service_coverage_ratio_ttm: value
+                .debt_service_coverage_ratio_ttm
+                .map(|value| value.into_inner()),
+            interest_coverage_ratio_ttm: value
+                .interest_coverage_ratio_ttm
+                .map(|value| value.into_inner()),
             short_term_operating_cash_flow_coverage_ratio_ttm: value
                 .short_term_operating_cash_flow_coverage_ratio_ttm
-                .into_inner(),
+                .map(|value| value.into_inner()),
             operating_cash_flow_coverage_ratio_ttm: value
                 .operating_cash_flow_coverage_ratio_ttm
-                .into_inner(),
+                .map(|value| value.into_inner()),
             capital_expenditure_coverage_ratio_ttm: value
                 .capital_expenditure_coverage_ratio_ttm
-                .into_inner(),
+                .map(|value| value.into_inner()),
             dividend_paid_and_capex_coverage_ratio_ttm: value
                 .dividend_paid_and_capex_coverage_ratio_ttm
-                .into_inner(),
-            dividend_payout_ratio_ttm: value.dividend_payout_ratio_ttm.into_inner(),
-            dividend_yield_ttm: value.dividend_yield_ttm.into_inner(),
-            enterprise_value_ttm: value.enterprise_value_ttm.into_inner(),
-            revenue_per_share_ttm: value.revenue_per_share_ttm.into_inner(),
-            net_income_per_share_ttm: value.net_income_per_share_ttm.into_inner(),
-            interest_debt_per_share_ttm: value.interest_debt_per_share_ttm.into_inner(),
-            cash_per_share_ttm: value.cash_per_share_ttm.into_inner(),
-            book_value_per_share_ttm: value.book_value_per_share_ttm.into_inner(),
-            tangible_book_value_per_share_ttm: value.tangible_book_value_per_share_ttm.into_inner(),
-            shareholders_equity_per_share_ttm: value.shareholders_equity_per_share_ttm.into_inner(),
-            operating_cash_flow_per_share_ttm: value.operating_cash_flow_per_share_ttm.into_inner(),
-            capex_per_share_ttm: value.capex_per_share_ttm.into_inner(),
-            free_cash_flow_per_share_ttm: value.free_cash_flow_per_share_ttm.into_inner(),
-            net_income_per_ebt_ttm: value.net_income_per_ebt_ttm.into_inner(),
-            ebt_per_ebit_ttm: value.ebt_per_ebit_ttm.into_inner(),
-            price_to_fair_value_ttm: value.price_to_fair_value_ttm.into_inner(),
-            debt_to_market_cap_ttm: value.debt_to_market_cap_ttm.into_inner(),
-            effective_tax_rate_ttm: value.effective_tax_rate_ttm.into_inner(),
-            enterprise_value_multiple_ttm: value.enterprise_value_multiple_ttm.into_inner(),
-            dividend_per_share_ttm: value.dividend_per_share_ttm.into_inner(),
+                .map(|value| value.into_inner()),
+            dividend_payout_ratio_ttm: value
+                .dividend_payout_ratio_ttm
+                .map(|value| value.into_inner()),
+            dividend_yield_ttm: value.dividend_yield_ttm.map(|value| value.into_inner()),
+            enterprise_value_ttm: value.enterprise_value_ttm.map(|value| value.into_inner()),
+            revenue_per_share_ttm: value.revenue_per_share_ttm.map(|value| value.into_inner()),
+            net_income_per_share_ttm: value
+                .net_income_per_share_ttm
+                .map(|value| value.into_inner()),
+            interest_debt_per_share_ttm: value
+                .interest_debt_per_share_ttm
+                .map(|value| value.into_inner()),
+            cash_per_share_ttm: value.cash_per_share_ttm.map(|value| value.into_inner()),
+            book_value_per_share_ttm: value
+                .book_value_per_share_ttm
+                .map(|value| value.into_inner()),
+            tangible_book_value_per_share_ttm: value
+                .tangible_book_value_per_share_ttm
+                .map(|value| value.into_inner()),
+            shareholders_equity_per_share_ttm: value
+                .shareholders_equity_per_share_ttm
+                .map(|value| value.into_inner()),
+            operating_cash_flow_per_share_ttm: value
+                .operating_cash_flow_per_share_ttm
+                .map(|value| value.into_inner()),
+            capex_per_share_ttm: value.capex_per_share_ttm.map(|value| value.into_inner()),
+            free_cash_flow_per_share_ttm: value
+                .free_cash_flow_per_share_ttm
+                .map(|value| value.into_inner()),
+            net_income_per_ebt_ttm: value.net_income_per_ebt_ttm.map(|value| value.into_inner()),
+            ebt_per_ebit_ttm: value.ebt_per_ebit_ttm.map(|value| value.into_inner()),
+            price_to_fair_value_ttm: value
+                .price_to_fair_value_ttm
+                .map(|value| value.into_inner()),
+            debt_to_market_cap_ttm: value.debt_to_market_cap_ttm.map(|value| value.into_inner()),
+            effective_tax_rate_ttm: value.effective_tax_rate_ttm.map(|value| value.into_inner()),
+            enterprise_value_multiple_ttm: value
+                .enterprise_value_multiple_ttm
+                .map(|value| value.into_inner()),
+            dividend_per_share_ttm: value.dividend_per_share_ttm.map(|value| value.into_inner()),
         }
     }
 }
@@ -2414,9 +2506,9 @@ pub(crate) struct BulkEarningsSurprise {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub eps_actual: String,
+    pub eps_actual: Option<String>,
     #[pyo3(get)]
-    pub eps_estimated: String,
+    pub eps_estimated: Option<String>,
     #[pyo3(get)]
     pub last_updated: ::chrono::NaiveDate,
 }
@@ -2431,8 +2523,8 @@ impl BulkEarningsSurprise {
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
-        eps_actual: String,
-        eps_estimated: String,
+        eps_actual: Option<String>,
+        eps_estimated: Option<String>,
         last_updated: ::chrono::NaiveDate,
     ) -> Self {
         Self {
@@ -2535,8 +2627,8 @@ impl From<libfmp::responses::bulk::BulkEarningsSurprise> for BulkEarningsSurpris
         Self {
             symbol: value.symbol.into_inner(),
             date: value.date.into_inner(),
-            eps_actual: value.eps_actual.into_inner(),
-            eps_estimated: value.eps_estimated.into_inner(),
+            eps_actual: value.eps_actual.map(|value| value.into_inner()),
+            eps_estimated: value.eps_estimated.map(|value| value.into_inner()),
             last_updated: value.last_updated.into_inner(),
         }
     }

@@ -165,13 +165,14 @@ def test_key_metrics_ttm_takes_no_arguments(client: Any, fixture_server: Fixture
     rows = client.bulk.key_metrics_ttm()
 
     assert fixture_server.requests[0].target == "/key-metrics-ttm-bulk"
-    assert len(rows) == 2
+    assert len(rows) == 3
     row = rows[0]
     assert isinstance(row, BulkKeyMetricsTtm)
     assert row.symbol == "000001.SZ"
     assert row.market_cap == "224526473551"
     assert row.ev_to_ebitda_ttm == "29.23198788110799"
     assert row.earnings_yield_ttm == "0.19355846887948813"
+    assert rows[2].enterprise_value_ttm is None
 
 
 def test_financial_ratios_ttm_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
@@ -180,7 +181,7 @@ def test_financial_ratios_ttm_takes_no_arguments(client: Any, fixture_server: Fi
     rows = client.bulk.financial_ratios_ttm()
 
     assert fixture_server.requests[0].target == "/ratios-ttm-bulk"
-    assert len(rows) == 2
+    assert len(rows) == 3
     row = rows[0]
     assert isinstance(row, BulkFinancialRatiosTtm)
     assert row.symbol == "000001.SZ"
@@ -195,7 +196,7 @@ def test_stock_peers_takes_no_arguments(client: Any, fixture_server: FixtureServ
     rows = client.bulk.stock_peers()
 
     assert fixture_server.requests[0].target == "/peers-bulk"
-    assert len(rows) == 2
+    assert len(rows) == 3
     row = rows[0]
     assert isinstance(row, BulkStockPeer)
     assert row.symbol == "000001.SZ"
@@ -208,7 +209,7 @@ def test_earnings_surprises_encodes_the_required_year(client: Any, fixture_serve
     rows = client.bulk.earnings_surprises(2026)
 
     assert fixture_server.requests[0].target == "/earnings-surprises-bulk?year=2026"
-    assert len(rows) == 2
+    assert len(rows) == 3
     row = rows[0]
     assert isinstance(row, BulkEarningsSurprise)
     assert row.symbol == "AUTO.OL"
@@ -216,6 +217,7 @@ def test_earnings_surprises_encodes_the_required_year(client: Any, fixture_serve
     assert row.eps_actual == "0.1332"
     assert row.eps_estimated == "0.1581"
     assert row.last_updated == datetime.date(2025, 10, 7)
+    assert rows[2].eps_estimated is None
 
 
 def test_earnings_surprises_accepts_the_year_keyword(client: Any, fixture_server: FixtureServer) -> None:

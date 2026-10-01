@@ -86,19 +86,19 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("UpgradesDowngradesConsensus = %+v, %v", consensus, err)
 	}
 	metrics, err := client.Bulk.KeyMetricsTTM(ctx)
-	if err != nil || len(metrics) != 2 || metrics[0].MarketCap != "224526473551" {
+	if err != nil || len(metrics) != 3 || cellText(metrics[0].MarketCap) != "224526473551" {
 		t.Fatalf("KeyMetricsTTM = %+v, %v", metrics, err)
 	}
 	ratios, err := client.Bulk.FinancialRatiosTTM(ctx)
-	if err != nil || len(ratios) != 2 || ratios[0].GrossProfitMarginTTM != "0.5535250166330814" {
+	if err != nil || len(ratios) != 3 || cellText(ratios[0].GrossProfitMarginTTM) != "0.5535250166330814" {
 		t.Fatalf("FinancialRatiosTTM = %+v, %v", ratios, err)
 	}
 	peers, err := client.Bulk.StockPeers(ctx)
-	if err != nil || len(peers) != 2 || peers[0].Peers != "3698.HK,600000.SS,600015.SS,600016.SS,600036.SS,601166.SS,601658.SS" {
+	if err != nil || len(peers) != 3 || peers[0].Peers != "3698.HK,600000.SS,600015.SS,600016.SS,600036.SS,601166.SS,601658.SS" {
 		t.Fatalf("StockPeers = %+v, %v", peers, err)
 	}
 	surprises, err := client.Bulk.EarningsSurprises(ctx, NewBulkYearQuery(4_294_967_295))
-	if err != nil || len(surprises) != 2 || surprises[0].Symbol != "AUTO.OL" {
+	if err != nil || len(surprises) != 3 || surprises[0].Symbol != "AUTO.OL" {
 		t.Fatalf("EarningsSurprises = %+v, %v", surprises, err)
 	}
 	income, err := client.Bulk.IncomeStatements(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ1))
