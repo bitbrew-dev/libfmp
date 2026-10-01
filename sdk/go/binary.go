@@ -49,7 +49,7 @@ func (c *Client) getBinary(ctx context.Context, endpointID, relativePath string,
 
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := c.executeRedirects(ctx, endpointID, target)
+	resp, err := c.executeRedirects(ctx, endpointID, target, c.maxResponseBodyBytes)
 	if err != nil {
 		return BinaryPayload{}, err
 	}

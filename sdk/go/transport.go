@@ -50,10 +50,11 @@ type bufferedResponse struct {
 	body   []byte
 }
 
-func (c *Client) executeRedirects(ctx context.Context, endpointID string, target *url.URL) (*bufferedResponse, error) {
+func (c *Client) executeRedirects(ctx context.Context, endpointID string, target *url.URL,
+	maxBodyBytes int64) (*bufferedResponse, error) {
 	for hop := 0; hop <= maxRedirects; hop++ {
 		c.applyQueryAuth(target)
-		resp, err := c.roundTrip(ctx, endpointID, target)
+		resp, err := c.roundTrip(ctx, endpointID, target, maxBodyBytes)
 		if err != nil {
 			return nil, err
 		}
@@ -97,7 +98,8 @@ func (c *Client) redirectDestination(current *url.URL, location string) (*url.UR
 	return destination, true
 }
 
-func (c *Client) roundTrip(ctx context.Context, endpointID string, target *url.URL) (*bufferedResponse, error) {
+func (c *Client) roundTrip(ctx context.Context, endpointID string, target *url.URL,
+	maxBodyBytes int64) (*bufferedResponse, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, target.String(), nil)
 	if err != nil {
 		return nil, transportError(endpointID, "request execution failed", c.redactCause(err))
@@ -121,10 +123,10 @@ func (c *Client) roundTrip(ctx context.Context, endpointID string, target *url.U
 	if isRedirect(resp.StatusCode) {
 		return buffered, nil
 	}
-	if resp.ContentLength > c.maxResponseBodyBytes {
+	if resp.ContentLength > maxBodyBytes {
 		return nil, transportError(endpointID, "response body exceeded configured limit", nil)
 	}
-	body, err := io.ReadAll(io.LimitReader(resp.Body, c.maxResponseBodyBytes+1))
+	body, err := io.ReadAll(io.LimitReader(resp.Body, maxBodyBytes+1))
 	if err != nil {
 		message := "request execution failed"
 		if errors.Is(err, context.DeadlineExceeded) {
@@ -132,7 +134,7 @@ func (c *Client) roundTrip(ctx context.Context, endpointID string, target *url.U
 		}
 		return nil, transportError(endpointID, message, c.redactCause(err))
 	}
-	if int64(len(body)) > c.maxResponseBodyBytes {
+	if int64(len(body)) > maxBodyBytes {
 		return nil, transportError(endpointID, "response body exceeded configured limit", nil)
 	}
 	buffered.body = body

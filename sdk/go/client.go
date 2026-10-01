@@ -24,6 +24,10 @@ const (
 	DefaultConnectTimeout = 10 * time.Second
 	// DefaultMaxResponseBodyBytes is the largest body buffered per response (64 MiB).
 	DefaultMaxResponseBodyBytes int64 = 64 * 1024 * 1024
+	// DefaultBulkMaxResponseBodyBytes is the largest CSV bulk body buffered
+	// while WithMaxResponseBodyBytes is unset (256 MiB): ratios-ttm-bulk
+	// measured 65.6 MiB on 2026-10-01 (ADR 0035).
+	DefaultBulkMaxResponseBodyBytes int64 = 256 * 1024 * 1024
 
 	maxRedirects = 10
 )
@@ -64,6 +68,7 @@ type clientConfig struct {
 	timeout                  time.Duration
 	connectTimeout           time.Duration
 	maxResponseBodyBytes     int64
+	maxResponseBodyBytesSet  bool
 	dangerAllowInsecureAuth  bool
 	redirectPolicy           RedirectPolicy
 	httpClient               *http.Client
@@ -123,8 +128,14 @@ func WithConnectTimeout(timeout time.Duration) Option {
 }
 
 // WithMaxResponseBodyBytes sets the largest body buffered for one response.
+// It applies to every endpoint, bulk included; until it is set, bulk
+// endpoints use DefaultBulkMaxResponseBodyBytes and the others use
+// DefaultMaxResponseBodyBytes.
 func WithMaxResponseBodyBytes(maxBytes int64) Option {
-	return func(c *clientConfig) { c.maxResponseBodyBytes = maxBytes }
+	return func(c *clientConfig) {
+		c.maxResponseBodyBytes = maxBytes
+		c.maxResponseBodyBytesSet = true
+	}
 }
 
 // WithDangerAllowInsecureAuthentication allows credentials over plaintext
@@ -165,7 +176,10 @@ type Client struct {
 	ownsTransport        bool
 	timeout              time.Duration
 	maxResponseBodyBytes int64
-	redirectPolicy       RedirectPolicy
+	// bulkMaxResponseBodyBytes caps CSV bulk bodies: the configured limit,
+	// or DefaultBulkMaxResponseBodyBytes when none was set.
+	bulkMaxResponseBodyBytes int64
+	redirectPolicy           RedirectPolicy
 }
 
 // NewClient validates the options and builds a client with the direct FMP
@@ -256,6 +270,10 @@ func NewClient(opts ...Option) (*Client, error) {
 		maxResponseBodyBytes: cfg.maxResponseBodyBytes,
 		redirectPolicy:       cfg.redirectPolicy,
 	}
+	client.bulkMaxResponseBodyBytes = DefaultBulkMaxResponseBodyBytes
+	if cfg.maxResponseBodyBytesSet {
+		client.bulkMaxResponseBodyBytes = cfg.maxResponseBodyBytes
+	}
 	client.bindNamespaces()
 	return client, nil
 }
@@ -306,7 +324,7 @@ func (c *Client) getJSON(ctx context.Context, endpointID, relativePath string, q
 
 	ctx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
-	resp, err := c.executeRedirects(ctx, endpointID, target)
+	resp, err := c.executeRedirects(ctx, endpointID, target, c.maxResponseBodyBytes)
 	if err != nil {
 		return err
 	}
