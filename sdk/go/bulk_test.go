@@ -114,7 +114,7 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("BalanceSheetStatements = %+v, %v", balance, err)
 	}
 	balanceGrowth, err := client.Bulk.BalanceSheetStatementGrowth(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ4))
-	if err != nil || len(balanceGrowth) != 2 || balanceGrowth[0].GrowthShortTermInvestments != "0.3981363245708905" {
+	if err != nil || len(balanceGrowth) != 2 || cellText(balanceGrowth[0].GrowthShortTermInvestments) != "0.3981363245708905" {
 		t.Fatalf("BalanceSheetStatementGrowth = %+v, %v", balanceGrowth, err)
 	}
 	cashFlow, err := client.Bulk.CashFlowStatements(ctx, NewBulkStatementQuery(4_294_967_295, FiscalPeriodFullYear))
