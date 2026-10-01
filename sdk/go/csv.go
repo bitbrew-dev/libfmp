@@ -38,7 +38,9 @@ type csvColumn struct {
 // getCSV issues one GET for a bulk endpoint and decodes the headed CSV body
 // into rows of T, mirroring the Rust crate's CSV contract. Each record is
 // written as a JSON object keyed by the header names and decoded with the
-// model's own JSON rules, so a failure reports "/<row>/<member>". An empty
+// model's own JSON rules, so a failure reports "/<row>/<member>". Every
+// json-tagged member, pointer or not, must be a header column; the first
+// record checks it. An empty
 // or header-only body yields no rows, and the provider-message check of
 // getJSON does not apply. The redirect, timeout, and no-retry rules of
 // getJSON are unchanged; the body cap is the bulk limit.
@@ -104,6 +106,12 @@ func decodeCSVRows[T any](body []byte) ([]T, string, DecodeKind, error) {
 		if err != nil {
 			return nil, row, DecodeKindSyntax, err
 		}
+		if len(rows) == 0 {
+			if missing, ok := missingColumn(header, reflect.TypeFor[T]()); ok {
+				return nil, string(jsontext.Pointer(row).AppendToken(missing)), DecodeKindMissingMember,
+					errors.New("a model member is not a header column")
+			}
+		}
 		object = appendCSVObject(object[:0], header, record, plan)
 		var value T
 		if err := json.Unmarshal(object, &value); err != nil {
@@ -136,6 +144,21 @@ func appendCSVObject(dst []byte, header, record []string, plan map[string]csvCol
 		}
 	}
 	return append(dst, '}')
+}
+
+// missingColumn reports the first member of model, in declaration order as
+// serde reports it, that the header does not carry.
+func missingColumn(header []string, model reflect.Type) (string, bool) {
+	if model.Kind() != reflect.Struct {
+		return "", false
+	}
+	for field := range model.Fields() {
+		name, _, _ := strings.Cut(field.Tag.Get("json"), ",")
+		if name != "" && name != "-" && !slices.Contains(header, name) {
+			return name, true
+		}
+	}
+	return "", false
 }
 
 func isJSONNumber(cell string) bool {

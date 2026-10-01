@@ -97,6 +97,12 @@ func TestGetCSVReportsRowAndMemberOfAFailure(t *testing.T) {
 		_, err := getCSVProbe[BulkDCFValuation](t, tc.body)
 		assertCSVDecodeError(t, err, tc.path, tc.kind)
 	}
+	_, err := getCSVProbe[csvProbeRow](t, `"symbol","date","price","listed","Stock Price","peers"`+"\nA,2025-06-02,1,true,1,x\n")
+	assertCSVDecodeError(t, err, "/0/volume", DecodeKindMissingMember)
+	rows, err := getCSVProbe[csvProbeRow](t, "symbol,date\n")
+	if err != nil || len(rows) != 0 {
+		t.Fatalf("header-only body with missing columns: rows = %v, err = %v", rows, err)
+	}
 }
 
 func TestGetCSVAcceptsOnlyTextCSV(t *testing.T) {
