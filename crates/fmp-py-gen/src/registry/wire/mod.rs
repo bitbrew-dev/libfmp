@@ -66,6 +66,8 @@ impl fmt::Display for HttpMethod {
 pub enum Contract {
     /// A JSON array of rows.
     Rows,
+    /// A headed CSV body, one row per record (ADR 0035).
+    CsvRows,
     /// A binary body with the listed acceptable content types.
     Binary(Vec<String>),
 }
@@ -273,7 +275,8 @@ mod tests {
                     assert!(!wire.id.is_empty(), "{}", wire.method);
                     assert_eq!(wire.http_method, HttpMethod::Get, "{}", wire.method);
                     match (&wire.contract, endpoint.binary) {
-                        (Contract::Rows, false) | (Contract::Binary(_), true) => {}
+                        (Contract::Rows | Contract::CsvRows, false)
+                        | (Contract::Binary(_), true) => {}
                         (contract, binary) => {
                             panic!(
                                 "{}: contract {contract:?} vs binary = {binary}",
@@ -510,11 +513,19 @@ mod tests {
             pub fn explicit(query: CustomQuery) -> EndpointSpec<CustomQuery, BinaryResponse> {
                 EndpointSpec::with_response(HttpMethod::Get, "x", "x-path", query, ResponseContract::binary(&["a/b"]))
             }
+            pub fn bulk() -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::get_csv("dcf-bulk", "dcf-bulk", ())
+            }
+            pub fn explicit_csv() -> EndpointSpec<(), Vec<Row>> {
+                EndpointSpec::with_response(HttpMethod::Get, "y", "y-path", (), ResponseContract::csv())
+            }
             impl Client {
                 pub async fn quotes(&self) -> Result<Vec<Row>> { self.execute(&quotes()).await }
                 pub async fn custom(&self, query: CustomQuery) -> Result<Vec<Row>> { self.execute(&custom(query)).await }
                 pub async fn xlsx(&self, query: CustomQuery) -> Result<BinaryResponse> { self.execute(&xlsx(query)).await }
                 pub async fn explicit(&self, query: CustomQuery) -> Result<BinaryResponse> { self.execute(&explicit(query)).await }
+                pub async fn bulk(&self) -> Result<Vec<Row>> { self.execute(&bulk()).await }
+                pub async fn explicit_csv(&self) -> Result<Vec<Row>> { self.execute(&explicit_csv()).await }
             }
         "#;
         let surface = surface(&[("dcf.rs", source)]);
@@ -548,6 +559,12 @@ mod tests {
             Contract::Binary(vec!["a/b".to_owned()])
         );
         assert_eq!(surface.endpoints["explicit"].relative_path, "x-path");
+        assert_eq!(surface.endpoints["bulk"].contract, Contract::CsvRows);
+        assert_eq!(surface.endpoints["bulk"].relative_path, "dcf-bulk");
+        assert_eq!(
+            surface.endpoints["explicit_csv"].contract,
+            Contract::CsvRows
+        );
     }
 
     #[test]

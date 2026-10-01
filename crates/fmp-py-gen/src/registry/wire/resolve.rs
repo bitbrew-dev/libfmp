@@ -297,6 +297,13 @@ impl Evaluator<'_> {
                 contract: Contract::Binary(strings(3, "content types")?),
                 metadata: None,
             }),
+            "get_csv" => Ok(Spec {
+                id: string(0, "id")?,
+                relative_path: string(1, "path")?,
+                http_method: HttpMethod::Get,
+                contract: Contract::CsvRows,
+                metadata: None,
+            }),
             "new" => Ok(Spec {
                 http_method: http_method(0)?,
                 id: string(1, "id")?,
@@ -315,7 +322,7 @@ impl Evaluator<'_> {
         }
     }
 
-    /// Reads `ResponseContract::json()` or `ResponseContract::binary(list)`.
+    /// Reads `ResponseContract::json()`, `::csv()`, or `::binary(list)`.
     fn response_contract(
         &self,
         expr: Option<&Expr>,
@@ -323,7 +330,7 @@ impl Evaluator<'_> {
     ) -> Result<Contract, String> {
         let unsupported = |expr: Option<&Expr>| {
             format!(
-                "response contract is not `ResponseContract::json()` or `::binary(..)`: {}",
+                "response contract is not `ResponseContract::json()`, `::csv()` or `::binary(..)`: {}",
                 expr.map(text).unwrap_or_default()
             )
         };
@@ -342,6 +349,9 @@ impl Evaluator<'_> {
         match (segments.as_slice(), call.args.first()) {
             ([head, kind], None) if head == "ResponseContract" && kind == "json" => {
                 Ok(Contract::Rows)
+            }
+            ([head, kind], None) if head == "ResponseContract" && kind == "csv" => {
+                Ok(Contract::CsvRows)
             }
             ([head, kind], Some(list)) if head == "ResponseContract" && kind == "binary" => {
                 match self.eval(list, &BTreeMap::new(), module) {
