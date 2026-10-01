@@ -60,6 +60,7 @@ pub struct EndpointSpec<Q, R> {
     response: ResponseContract<R>,
     metadata: EndpointMetadata,
     max_response_body_bytes: Option<usize>,
+    default_max_response_body_bytes: usize,
 }
 
 impl<Q, R> EndpointSpec<Q, R> {
@@ -79,6 +80,7 @@ impl<Q, R> EndpointSpec<Q, R> {
             response,
             metadata: EndpointMetadata::new(),
             max_response_body_bytes: None,
+            default_max_response_body_bytes: crate::client::DEFAULT_MAX_RESPONSE_BODY_BYTES,
         }
     }
 
@@ -131,6 +133,15 @@ impl<Q, R> EndpointSpec<Q, R> {
     pub const fn max_response_body_bytes(&self) -> Option<usize> {
         self.max_response_body_bytes
     }
+
+    /// Returns the limit used when neither this endpoint nor the client sets one.
+    ///
+    /// This is [`crate::client::DEFAULT_MAX_RESPONSE_BODY_BYTES`] except for
+    /// CSV bulk descriptors, which use
+    /// [`crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES`].
+    pub const fn default_max_response_body_bytes(&self) -> usize {
+        self.default_max_response_body_bytes
+    }
 }
 
 impl<Q, R> EndpointSpec<Q, R>
@@ -159,6 +170,28 @@ where
         query: Q,
     ) -> Self {
         Self::with_response(method, id, relative_path, query, ResponseContract::json())
+    }
+}
+
+impl<Q, Row> EndpointSpec<Q, Vec<Row>>
+where
+    Row: DeserializeOwned,
+{
+    /// Creates a reusable GET descriptor for a CSV bulk response.
+    ///
+    /// Each record decodes into one `Row` by header name. Unless the endpoint
+    /// or the client sets a limit, the body may grow to
+    /// [`crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES`].
+    pub const fn get_csv(id: &'static str, relative_path: &'static str, query: Q) -> Self {
+        let mut spec = Self::with_response(
+            HttpMethod::Get,
+            id,
+            relative_path,
+            query,
+            ResponseContract::csv(),
+        );
+        spec.default_max_response_body_bytes = crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES;
+        spec
     }
 }
 

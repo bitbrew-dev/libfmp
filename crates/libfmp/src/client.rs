@@ -33,9 +33,17 @@ const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
 const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 /// Default maximum bytes buffered for each HTTP response (64 MiB).
 ///
-/// This finite default also applies to bulk and XLSX convenience methods.
-/// Callers expecting a larger response can raise the client limit explicitly.
+/// This finite default also applies to XLSX convenience methods. Callers
+/// expecting a larger response can raise the client limit explicitly.
 pub const DEFAULT_MAX_RESPONSE_BODY_BYTES: usize = 64 * 1024 * 1024;
+
+/// Default maximum bytes buffered for each CSV bulk response (256 MiB).
+///
+/// Whole-market bulk bodies exceed the general default: `ratios-ttm-bulk`
+/// measured 65.6 MiB on 2026-10-01. It applies only while the client limit
+/// is unset; [`ClientBuilder::max_response_body_bytes`] replaces it for
+/// every endpoint, bulk included (ADR 0035).
+pub const DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES: usize = 256 * 1024 * 1024;
 const MAX_REDIRECTS: usize = 10;
 
 #[derive(Clone)]
@@ -66,7 +74,7 @@ pub struct ClientBuilder {
     user_agent: String,
     timeout: Duration,
     connect_timeout: Duration,
-    max_response_body_bytes: usize,
+    max_response_body_bytes: Option<usize>,
     danger_allow_insecure_authentication: bool,
     redirect_policy: RedirectPolicy,
     executor: Option<Arc<dyn HttpExecutor>>,
@@ -84,7 +92,7 @@ impl Default for ClientBuilder {
             user_agent: format!("libfmp/{VERSION}"),
             timeout: DEFAULT_TIMEOUT,
             connect_timeout: DEFAULT_CONNECT_TIMEOUT,
-            max_response_body_bytes: DEFAULT_MAX_RESPONSE_BODY_BYTES,
+            max_response_body_bytes: None,
             danger_allow_insecure_authentication: false,
             redirect_policy: RedirectPolicy::SameOrigin,
             executor: None,
@@ -180,10 +188,12 @@ impl ClientBuilder {
     /// error body while streaming. Buffers returned by custom executors are
     /// checked defensively for every status, including redirects. An endpoint
     /// can replace the limit with
-    /// [`EndpointSpec::with_max_response_body_bytes`]. Bulk and XLSX
-    /// convenience methods inherit this client-wide value.
+    /// [`EndpointSpec::with_max_response_body_bytes`]. Until this is set,
+    /// each endpoint uses its own default: [`DEFAULT_MAX_RESPONSE_BODY_BYTES`],
+    /// or [`DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES`] for CSV bulk routes. Once
+    /// set, it applies to every endpoint, bulk and XLSX included.
     pub fn max_response_body_bytes(mut self, max_bytes: usize) -> Self {
-        self.max_response_body_bytes = max_bytes;
+        self.max_response_body_bytes = Some(max_bytes);
         self
     }
 
@@ -300,7 +310,7 @@ struct ClientInner {
     executor: Arc<dyn HttpExecutor>,
     deadline_backend: DeadlineBackend,
     timeout: Duration,
-    max_response_body_bytes: usize,
+    max_response_body_bytes: Option<usize>,
     redirect_policy: RedirectPolicy,
 }
 
@@ -396,7 +406,8 @@ impl Client {
             apply_query_auth(&mut url, self.inner.auth.query.as_ref());
             let max_body_bytes = endpoint
                 .max_response_body_bytes()
-                .unwrap_or(self.inner.max_response_body_bytes);
+                .or(self.inner.max_response_body_bytes)
+                .unwrap_or(endpoint.default_max_response_body_bytes());
             let response = self
                 .inner
                 .executor
@@ -1115,9 +1126,7 @@ mod tests {
     #[test]
     fn default_response_limit_is_the_documented_finite_value() {
         assert_eq!(DEFAULT_MAX_RESPONSE_BODY_BYTES, 64 * 1024 * 1024);
-        assert_eq!(
-            ClientBuilder::default().max_response_body_bytes,
-            DEFAULT_MAX_RESPONSE_BODY_BYTES
-        );
+        assert_eq!(DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES, 256 * 1024 * 1024);
+        assert_eq!(ClientBuilder::default().max_response_body_bytes, None);
     }
 }

@@ -12,7 +12,7 @@ use bytes::Bytes;
 use http::header::{CONTENT_TYPE, HeaderMap, HeaderValue, LOCATION};
 use libfmp::{
     Client,
-    client::EndpointSpec,
+    client::{DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES, DEFAULT_MAX_RESPONSE_BODY_BYTES, EndpointSpec},
     config::{Authentication, RedirectPolicy},
     endpoints::BinaryBody,
     error::{ConfigurationErrorKind, ErrorCategory},
@@ -709,6 +709,48 @@ async fn endpoint_override_replaces_the_client_body_limit() {
 
     assert_eq!(answer, Answer { ok: true });
     assert_eq!(executor.requests()[0].max_response_body_bytes(), 11);
+}
+
+#[tokio::test]
+async fn csv_bulk_endpoints_default_to_the_bulk_body_limit_until_the_client_sets_one() {
+    let mut headers = HeaderMap::new();
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("text/csv"));
+    let csv = || TransportResponse::new(200, headers.clone(), b"ok\ntrue\n".as_slice());
+    let bulk = EndpointSpec::<(), Vec<Answer>>::get_csv("bulk-test", "bulk-test", ());
+    let executor = Arc::new(ScriptedExecutor::new(vec![
+        Ok(csv()),
+        Ok(json_response()),
+        Ok(csv()),
+    ]));
+    let unset = Client::builder()
+        .base_url("https://example.test")
+        .executor(executor.clone())
+        .build()
+        .unwrap();
+    let configured = Client::builder()
+        .base_url("https://example.test")
+        .max_response_body_bytes(64)
+        .executor(executor.clone())
+        .build()
+        .unwrap();
+
+    assert_eq!(unset.execute(&bulk).await.unwrap(), [Answer { ok: true }]);
+    unset.execute(&endpoint()).await.unwrap();
+    configured.execute(&bulk).await.unwrap();
+
+    let limits: Vec<_> = executor
+        .requests()
+        .iter()
+        .map(PreparedRequest::max_response_body_bytes)
+        .collect();
+    assert_eq!(
+        limits,
+        [
+            DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES,
+            DEFAULT_MAX_RESPONSE_BODY_BYTES,
+            64
+        ]
+    );
 }
 
 #[tokio::test]
