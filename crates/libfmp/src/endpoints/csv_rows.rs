@@ -292,6 +292,14 @@ mod tests {
     }
 
     #[test]
+    fn a_leading_byte_order_mark_is_not_part_of_the_first_header() {
+        let rows = decode(&format!("\u{feff}{HEADER}A,2025-06-02,1,true,1,1,x\r\n")).unwrap();
+
+        assert_eq!(rows[0].symbol, "A");
+        assert_eq!(rows[0].peers, "x");
+    }
+
+    #[test]
     fn an_empty_cell_on_a_required_member_is_a_null_at_its_row_and_member() {
         let body = format!("{HEADER}A,2025-06-02,1,true,1,1,x\nB,2025-06-02,,true,1,1,x\n");
         assert_eq!(

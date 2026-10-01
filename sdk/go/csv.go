@@ -81,10 +81,14 @@ func getCSV[T any](ctx context.Context, c *Client, endpointID, relativePath stri
 	return rows, nil
 }
 
+// utf8BOM is the byte order mark the Rust csv reader strips before the
+// header; encoding/csv keeps it, so decodeCSVRows drops it first.
+var utf8BOM = []byte("\xef\xbb\xbf")
+
 // decodeCSVRows decodes body into rows of T. On failure it returns the JSON
 // pointer of the row (and member), a DecodeKind, and the cause.
 func decodeCSVRows[T any](body []byte) ([]T, string, DecodeKind, error) {
-	reader := csv.NewReader(bytes.NewReader(body))
+	reader := csv.NewReader(bytes.NewReader(bytes.TrimPrefix(body, utf8BOM)))
 	reader.ReuseRecord = true
 	header, err := reader.Read()
 	if errors.Is(err, io.EOF) {
