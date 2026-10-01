@@ -14,17 +14,17 @@ pub(crate) struct BulkEodBar {
     #[pyo3(get)]
     pub date: ::chrono::NaiveDate,
     #[pyo3(get)]
-    pub open: String,
+    pub open: Option<String>,
     #[pyo3(get)]
-    pub low: String,
+    pub low: Option<String>,
     #[pyo3(get)]
-    pub high: String,
+    pub high: Option<String>,
     #[pyo3(get)]
-    pub close: String,
+    pub close: Option<String>,
     #[pyo3(get)]
-    pub adj_close: String,
+    pub adj_close: Option<String>,
     #[pyo3(get)]
-    pub volume: String,
+    pub volume: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -37,12 +37,12 @@ impl BulkEodBar {
     fn new(
         symbol: String,
         date: ::chrono::NaiveDate,
-        open: String,
-        low: String,
-        high: String,
-        close: String,
-        adj_close: String,
-        volume: String,
+        open: Option<String>,
+        low: Option<String>,
+        high: Option<String>,
+        close: Option<String>,
+        adj_close: Option<String>,
+        volume: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -156,12 +156,12 @@ impl From<libfmp::responses::bulk::BulkEodBar> for BulkEodBar {
         Self {
             symbol: value.symbol.into_inner(),
             date: value.date.into_inner(),
-            open: value.open.into_inner(),
-            low: value.low.into_inner(),
-            high: value.high.into_inner(),
-            close: value.close.into_inner(),
-            adj_close: value.adj_close.into_inner(),
-            volume: value.volume.into_inner(),
+            open: value.open.map(|value| value.into_inner()),
+            low: value.low.map(|value| value.into_inner()),
+            high: value.high.map(|value| value.into_inner()),
+            close: value.close.map(|value| value.into_inner()),
+            adj_close: value.adj_close.map(|value| value.into_inner()),
+            volume: value.volume.map(|value| value.into_inner()),
         }
     }
 }

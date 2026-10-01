@@ -14,10 +14,10 @@ use crate::{
 pub struct BulkEodBar {
     pub symbol: Ticker,
     pub date: Date,
-    pub open: NumericString,
-    pub low: NumericString,
-    pub high: NumericString,
-    pub close: NumericString,
-    pub adj_close: NumericString,
-    pub volume: NumericString,
+    pub open: Option<NumericString>,
+    pub low: Option<NumericString>,
+    pub high: Option<NumericString>,
+    pub close: Option<NumericString>,
+    pub adj_close: Option<NumericString>,
+    pub volume: Option<NumericString>,
 }

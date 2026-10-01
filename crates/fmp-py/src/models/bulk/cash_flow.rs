@@ -25,83 +25,83 @@ pub(crate) struct BulkCashFlowStatement {
     pub fiscal_year: String,
     pub period: String,
     #[pyo3(get)]
-    pub net_income: String,
+    pub net_income: Option<String>,
     #[pyo3(get)]
-    pub depreciation_and_amortization: String,
+    pub depreciation_and_amortization: Option<String>,
     #[pyo3(get)]
-    pub deferred_income_tax: String,
+    pub deferred_income_tax: Option<String>,
     #[pyo3(get)]
-    pub stock_based_compensation: String,
+    pub stock_based_compensation: Option<String>,
     #[pyo3(get)]
-    pub change_in_working_capital: String,
+    pub change_in_working_capital: Option<String>,
     #[pyo3(get)]
-    pub accounts_receivables: String,
+    pub accounts_receivables: Option<String>,
     #[pyo3(get)]
-    pub inventory: String,
+    pub inventory: Option<String>,
     #[pyo3(get)]
-    pub accounts_payables: String,
+    pub accounts_payables: Option<String>,
     #[pyo3(get)]
-    pub other_working_capital: String,
+    pub other_working_capital: Option<String>,
     #[pyo3(get)]
-    pub other_non_cash_items: String,
+    pub other_non_cash_items: Option<String>,
     #[pyo3(get)]
-    pub net_cash_provided_by_operating_activities: String,
+    pub net_cash_provided_by_operating_activities: Option<String>,
     #[pyo3(get)]
-    pub investments_in_property_plant_and_equipment: String,
+    pub investments_in_property_plant_and_equipment: Option<String>,
     #[pyo3(get)]
-    pub acquisitions_net: String,
+    pub acquisitions_net: Option<String>,
     #[pyo3(get)]
-    pub purchases_of_investments: String,
+    pub purchases_of_investments: Option<String>,
     #[pyo3(get)]
-    pub sales_maturities_of_investments: String,
+    pub sales_maturities_of_investments: Option<String>,
     #[pyo3(get)]
-    pub other_investing_activities: String,
+    pub other_investing_activities: Option<String>,
     #[pyo3(get)]
-    pub net_cash_provided_by_investing_activities: String,
+    pub net_cash_provided_by_investing_activities: Option<String>,
     #[pyo3(get)]
-    pub net_debt_issuance: String,
+    pub net_debt_issuance: Option<String>,
     #[pyo3(get)]
-    pub long_term_net_debt_issuance: String,
+    pub long_term_net_debt_issuance: Option<String>,
     #[pyo3(get)]
-    pub short_term_net_debt_issuance: String,
+    pub short_term_net_debt_issuance: Option<String>,
     #[pyo3(get)]
-    pub net_stock_issuance: String,
+    pub net_stock_issuance: Option<String>,
     #[pyo3(get)]
-    pub net_common_stock_issuance: String,
+    pub net_common_stock_issuance: Option<String>,
     #[pyo3(get)]
-    pub common_stock_issuance: String,
+    pub common_stock_issuance: Option<String>,
     #[pyo3(get)]
-    pub common_stock_repurchased: String,
+    pub common_stock_repurchased: Option<String>,
     #[pyo3(get)]
-    pub net_preferred_stock_issuance: String,
+    pub net_preferred_stock_issuance: Option<String>,
     #[pyo3(get)]
-    pub net_dividends_paid: String,
+    pub net_dividends_paid: Option<String>,
     #[pyo3(get)]
-    pub common_dividends_paid: String,
+    pub common_dividends_paid: Option<String>,
     #[pyo3(get)]
-    pub preferred_dividends_paid: String,
+    pub preferred_dividends_paid: Option<String>,
     #[pyo3(get)]
-    pub other_financing_activities: String,
+    pub other_financing_activities: Option<String>,
     #[pyo3(get)]
-    pub net_cash_provided_by_financing_activities: String,
+    pub net_cash_provided_by_financing_activities: Option<String>,
     #[pyo3(get)]
-    pub effect_of_forex_changes_on_cash: String,
+    pub effect_of_forex_changes_on_cash: Option<String>,
     #[pyo3(get)]
-    pub net_change_in_cash: String,
+    pub net_change_in_cash: Option<String>,
     #[pyo3(get)]
-    pub cash_at_end_of_period: String,
+    pub cash_at_end_of_period: Option<String>,
     #[pyo3(get)]
-    pub cash_at_beginning_of_period: String,
+    pub cash_at_beginning_of_period: Option<String>,
     #[pyo3(get)]
-    pub operating_cash_flow: String,
+    pub operating_cash_flow: Option<String>,
     #[pyo3(get)]
-    pub capital_expenditure: String,
+    pub capital_expenditure: Option<String>,
     #[pyo3(get)]
-    pub free_cash_flow: String,
+    pub free_cash_flow: Option<String>,
     #[pyo3(get)]
-    pub income_taxes_paid: String,
+    pub income_taxes_paid: Option<String>,
     #[pyo3(get)]
-    pub interest_paid: String,
+    pub interest_paid: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -121,45 +121,45 @@ impl BulkCashFlowStatement {
         fiscal_year: String,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
-        net_income: String,
-        depreciation_and_amortization: String,
-        deferred_income_tax: String,
-        stock_based_compensation: String,
-        change_in_working_capital: String,
-        accounts_receivables: String,
-        inventory: String,
-        accounts_payables: String,
-        other_working_capital: String,
-        other_non_cash_items: String,
-        net_cash_provided_by_operating_activities: String,
-        investments_in_property_plant_and_equipment: String,
-        acquisitions_net: String,
-        purchases_of_investments: String,
-        sales_maturities_of_investments: String,
-        other_investing_activities: String,
-        net_cash_provided_by_investing_activities: String,
-        net_debt_issuance: String,
-        long_term_net_debt_issuance: String,
-        short_term_net_debt_issuance: String,
-        net_stock_issuance: String,
-        net_common_stock_issuance: String,
-        common_stock_issuance: String,
-        common_stock_repurchased: String,
-        net_preferred_stock_issuance: String,
-        net_dividends_paid: String,
-        common_dividends_paid: String,
-        preferred_dividends_paid: String,
-        other_financing_activities: String,
-        net_cash_provided_by_financing_activities: String,
-        effect_of_forex_changes_on_cash: String,
-        net_change_in_cash: String,
-        cash_at_end_of_period: String,
-        cash_at_beginning_of_period: String,
-        operating_cash_flow: String,
-        capital_expenditure: String,
-        free_cash_flow: String,
-        income_taxes_paid: String,
-        interest_paid: String,
+        net_income: Option<String>,
+        depreciation_and_amortization: Option<String>,
+        deferred_income_tax: Option<String>,
+        stock_based_compensation: Option<String>,
+        change_in_working_capital: Option<String>,
+        accounts_receivables: Option<String>,
+        inventory: Option<String>,
+        accounts_payables: Option<String>,
+        other_working_capital: Option<String>,
+        other_non_cash_items: Option<String>,
+        net_cash_provided_by_operating_activities: Option<String>,
+        investments_in_property_plant_and_equipment: Option<String>,
+        acquisitions_net: Option<String>,
+        purchases_of_investments: Option<String>,
+        sales_maturities_of_investments: Option<String>,
+        other_investing_activities: Option<String>,
+        net_cash_provided_by_investing_activities: Option<String>,
+        net_debt_issuance: Option<String>,
+        long_term_net_debt_issuance: Option<String>,
+        short_term_net_debt_issuance: Option<String>,
+        net_stock_issuance: Option<String>,
+        net_common_stock_issuance: Option<String>,
+        common_stock_issuance: Option<String>,
+        common_stock_repurchased: Option<String>,
+        net_preferred_stock_issuance: Option<String>,
+        net_dividends_paid: Option<String>,
+        common_dividends_paid: Option<String>,
+        preferred_dividends_paid: Option<String>,
+        other_financing_activities: Option<String>,
+        net_cash_provided_by_financing_activities: Option<String>,
+        effect_of_forex_changes_on_cash: Option<String>,
+        net_change_in_cash: Option<String>,
+        cash_at_end_of_period: Option<String>,
+        cash_at_beginning_of_period: Option<String>,
+        operating_cash_flow: Option<String>,
+        capital_expenditure: Option<String>,
+        free_cash_flow: Option<String>,
+        income_taxes_paid: Option<String>,
+        interest_paid: Option<String>,
     ) -> Self {
         Self {
             date,
@@ -937,53 +937,83 @@ impl From<libfmp::responses::bulk::BulkCashFlowStatement> for BulkCashFlowStatem
             accepted_date: value.accepted_date.into_inner(),
             fiscal_year: value.fiscal_year.as_str().to_owned(),
             period: value.period.to_string(),
-            net_income: value.net_income.into_inner(),
-            depreciation_and_amortization: value.depreciation_and_amortization.into_inner(),
-            deferred_income_tax: value.deferred_income_tax.into_inner(),
-            stock_based_compensation: value.stock_based_compensation.into_inner(),
-            change_in_working_capital: value.change_in_working_capital.into_inner(),
-            accounts_receivables: value.accounts_receivables.into_inner(),
-            inventory: value.inventory.into_inner(),
-            accounts_payables: value.accounts_payables.into_inner(),
-            other_working_capital: value.other_working_capital.into_inner(),
-            other_non_cash_items: value.other_non_cash_items.into_inner(),
+            net_income: value.net_income.map(|value| value.into_inner()),
+            depreciation_and_amortization: value
+                .depreciation_and_amortization
+                .map(|value| value.into_inner()),
+            deferred_income_tax: value.deferred_income_tax.map(|value| value.into_inner()),
+            stock_based_compensation: value
+                .stock_based_compensation
+                .map(|value| value.into_inner()),
+            change_in_working_capital: value
+                .change_in_working_capital
+                .map(|value| value.into_inner()),
+            accounts_receivables: value.accounts_receivables.map(|value| value.into_inner()),
+            inventory: value.inventory.map(|value| value.into_inner()),
+            accounts_payables: value.accounts_payables.map(|value| value.into_inner()),
+            other_working_capital: value.other_working_capital.map(|value| value.into_inner()),
+            other_non_cash_items: value.other_non_cash_items.map(|value| value.into_inner()),
             net_cash_provided_by_operating_activities: value
                 .net_cash_provided_by_operating_activities
-                .into_inner(),
+                .map(|value| value.into_inner()),
             investments_in_property_plant_and_equipment: value
                 .investments_in_property_plant_and_equipment
-                .into_inner(),
-            acquisitions_net: value.acquisitions_net.into_inner(),
-            purchases_of_investments: value.purchases_of_investments.into_inner(),
-            sales_maturities_of_investments: value.sales_maturities_of_investments.into_inner(),
-            other_investing_activities: value.other_investing_activities.into_inner(),
+                .map(|value| value.into_inner()),
+            acquisitions_net: value.acquisitions_net.map(|value| value.into_inner()),
+            purchases_of_investments: value
+                .purchases_of_investments
+                .map(|value| value.into_inner()),
+            sales_maturities_of_investments: value
+                .sales_maturities_of_investments
+                .map(|value| value.into_inner()),
+            other_investing_activities: value
+                .other_investing_activities
+                .map(|value| value.into_inner()),
             net_cash_provided_by_investing_activities: value
                 .net_cash_provided_by_investing_activities
-                .into_inner(),
-            net_debt_issuance: value.net_debt_issuance.into_inner(),
-            long_term_net_debt_issuance: value.long_term_net_debt_issuance.into_inner(),
-            short_term_net_debt_issuance: value.short_term_net_debt_issuance.into_inner(),
-            net_stock_issuance: value.net_stock_issuance.into_inner(),
-            net_common_stock_issuance: value.net_common_stock_issuance.into_inner(),
-            common_stock_issuance: value.common_stock_issuance.into_inner(),
-            common_stock_repurchased: value.common_stock_repurchased.into_inner(),
-            net_preferred_stock_issuance: value.net_preferred_stock_issuance.into_inner(),
-            net_dividends_paid: value.net_dividends_paid.into_inner(),
-            common_dividends_paid: value.common_dividends_paid.into_inner(),
-            preferred_dividends_paid: value.preferred_dividends_paid.into_inner(),
-            other_financing_activities: value.other_financing_activities.into_inner(),
+                .map(|value| value.into_inner()),
+            net_debt_issuance: value.net_debt_issuance.map(|value| value.into_inner()),
+            long_term_net_debt_issuance: value
+                .long_term_net_debt_issuance
+                .map(|value| value.into_inner()),
+            short_term_net_debt_issuance: value
+                .short_term_net_debt_issuance
+                .map(|value| value.into_inner()),
+            net_stock_issuance: value.net_stock_issuance.map(|value| value.into_inner()),
+            net_common_stock_issuance: value
+                .net_common_stock_issuance
+                .map(|value| value.into_inner()),
+            common_stock_issuance: value.common_stock_issuance.map(|value| value.into_inner()),
+            common_stock_repurchased: value
+                .common_stock_repurchased
+                .map(|value| value.into_inner()),
+            net_preferred_stock_issuance: value
+                .net_preferred_stock_issuance
+                .map(|value| value.into_inner()),
+            net_dividends_paid: value.net_dividends_paid.map(|value| value.into_inner()),
+            common_dividends_paid: value.common_dividends_paid.map(|value| value.into_inner()),
+            preferred_dividends_paid: value
+                .preferred_dividends_paid
+                .map(|value| value.into_inner()),
+            other_financing_activities: value
+                .other_financing_activities
+                .map(|value| value.into_inner()),
             net_cash_provided_by_financing_activities: value
                 .net_cash_provided_by_financing_activities
-                .into_inner(),
-            effect_of_forex_changes_on_cash: value.effect_of_forex_changes_on_cash.into_inner(),
-            net_change_in_cash: value.net_change_in_cash.into_inner(),
-            cash_at_end_of_period: value.cash_at_end_of_period.into_inner(),
-            cash_at_beginning_of_period: value.cash_at_beginning_of_period.into_inner(),
-            operating_cash_flow: value.operating_cash_flow.into_inner(),
-            capital_expenditure: value.capital_expenditure.into_inner(),
-            free_cash_flow: value.free_cash_flow.into_inner(),
-            income_taxes_paid: value.income_taxes_paid.into_inner(),
-            interest_paid: value.interest_paid.into_inner(),
+                .map(|value| value.into_inner()),
+            effect_of_forex_changes_on_cash: value
+                .effect_of_forex_changes_on_cash
+                .map(|value| value.into_inner()),
+            net_change_in_cash: value.net_change_in_cash.map(|value| value.into_inner()),
+            cash_at_end_of_period: value.cash_at_end_of_period.map(|value| value.into_inner()),
+            cash_at_beginning_of_period: value
+                .cash_at_beginning_of_period
+                .map(|value| value.into_inner()),
+            operating_cash_flow: value.operating_cash_flow.map(|value| value.into_inner()),
+            capital_expenditure: value.capital_expenditure.map(|value| value.into_inner()),
+            free_cash_flow: value.free_cash_flow.map(|value| value.into_inner()),
+            income_taxes_paid: value.income_taxes_paid.map(|value| value.into_inner()),
+            interest_paid: value.interest_paid.map(|value| value.into_inner()),
         }
     }
 }
@@ -1008,79 +1038,79 @@ pub(crate) struct BulkCashFlowStatementGrowth {
     #[pyo3(get)]
     pub reported_currency: String,
     #[pyo3(get)]
-    pub growth_net_income: String,
+    pub growth_net_income: Option<String>,
     #[pyo3(get)]
-    pub growth_depreciation_and_amortization: String,
+    pub growth_depreciation_and_amortization: Option<String>,
     #[pyo3(get)]
-    pub growth_deferred_income_tax: String,
+    pub growth_deferred_income_tax: Option<String>,
     #[pyo3(get)]
-    pub growth_stock_based_compensation: String,
+    pub growth_stock_based_compensation: Option<String>,
     #[pyo3(get)]
-    pub growth_change_in_working_capital: String,
+    pub growth_change_in_working_capital: Option<String>,
     #[pyo3(get)]
-    pub growth_accounts_receivables: String,
+    pub growth_accounts_receivables: Option<String>,
     #[pyo3(get)]
-    pub growth_inventory: String,
+    pub growth_inventory: Option<String>,
     #[pyo3(get)]
-    pub growth_accounts_payables: String,
+    pub growth_accounts_payables: Option<String>,
     #[pyo3(get)]
-    pub growth_other_working_capital: String,
+    pub growth_other_working_capital: Option<String>,
     #[pyo3(get)]
-    pub growth_other_non_cash_items: String,
+    pub growth_other_non_cash_items: Option<String>,
     #[pyo3(get)]
-    pub growth_net_cash_provided_by_operating_activities: String,
+    pub growth_net_cash_provided_by_operating_activities: Option<String>,
     #[pyo3(get)]
-    pub growth_investments_in_property_plant_and_equipment: String,
+    pub growth_investments_in_property_plant_and_equipment: Option<String>,
     #[pyo3(get)]
-    pub growth_acquisitions_net: String,
+    pub growth_acquisitions_net: Option<String>,
     #[pyo3(get)]
-    pub growth_purchases_of_investments: String,
+    pub growth_purchases_of_investments: Option<String>,
     #[pyo3(get)]
-    pub growth_sales_maturities_of_investments: String,
+    pub growth_sales_maturities_of_investments: Option<String>,
     #[pyo3(get)]
-    pub growth_other_investing_activities: String,
+    pub growth_other_investing_activities: Option<String>,
     #[pyo3(get)]
-    pub growth_net_cash_used_for_investing_activities: String,
+    pub growth_net_cash_used_for_investing_activities: Option<String>,
     #[pyo3(get)]
-    pub growth_debt_repayment: String,
+    pub growth_debt_repayment: Option<String>,
     #[pyo3(get)]
-    pub growth_common_stock_issued: String,
+    pub growth_common_stock_issued: Option<String>,
     #[pyo3(get)]
-    pub growth_common_stock_repurchased: String,
+    pub growth_common_stock_repurchased: Option<String>,
     #[pyo3(get)]
-    pub growth_dividends_paid: String,
+    pub growth_dividends_paid: Option<String>,
     #[pyo3(get)]
-    pub growth_other_financing_activities: String,
+    pub growth_other_financing_activities: Option<String>,
     #[pyo3(get)]
-    pub growth_net_cash_used_provided_by_financing_activities: String,
+    pub growth_net_cash_used_provided_by_financing_activities: Option<String>,
     #[pyo3(get)]
-    pub growth_effect_of_forex_changes_on_cash: String,
+    pub growth_effect_of_forex_changes_on_cash: Option<String>,
     #[pyo3(get)]
-    pub growth_net_change_in_cash: String,
+    pub growth_net_change_in_cash: Option<String>,
     #[pyo3(get)]
-    pub growth_cash_at_end_of_period: String,
+    pub growth_cash_at_end_of_period: Option<String>,
     #[pyo3(get)]
-    pub growth_cash_at_beginning_of_period: String,
+    pub growth_cash_at_beginning_of_period: Option<String>,
     #[pyo3(get)]
-    pub growth_operating_cash_flow: String,
+    pub growth_operating_cash_flow: Option<String>,
     #[pyo3(get)]
-    pub growth_capital_expenditure: String,
+    pub growth_capital_expenditure: Option<String>,
     #[pyo3(get)]
-    pub growth_free_cash_flow: String,
+    pub growth_free_cash_flow: Option<String>,
     #[pyo3(get)]
-    pub growth_net_debt_issuance: String,
+    pub growth_net_debt_issuance: Option<String>,
     #[pyo3(get)]
-    pub growth_long_term_net_debt_issuance: String,
+    pub growth_long_term_net_debt_issuance: Option<String>,
     #[pyo3(get)]
-    pub growth_short_term_net_debt_issuance: String,
+    pub growth_short_term_net_debt_issuance: Option<String>,
     #[pyo3(get)]
-    pub growth_net_stock_issuance: String,
+    pub growth_net_stock_issuance: Option<String>,
     #[pyo3(get)]
-    pub growth_preferred_dividends_paid: String,
+    pub growth_preferred_dividends_paid: Option<String>,
     #[pyo3(get)]
-    pub growth_income_taxes_paid: String,
+    pub growth_income_taxes_paid: Option<String>,
     #[pyo3(get)]
-    pub growth_interest_paid: String,
+    pub growth_interest_paid: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -1097,43 +1127,43 @@ impl BulkCashFlowStatementGrowth {
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         reported_currency: String,
-        growth_net_income: String,
-        growth_depreciation_and_amortization: String,
-        growth_deferred_income_tax: String,
-        growth_stock_based_compensation: String,
-        growth_change_in_working_capital: String,
-        growth_accounts_receivables: String,
-        growth_inventory: String,
-        growth_accounts_payables: String,
-        growth_other_working_capital: String,
-        growth_other_non_cash_items: String,
-        growth_net_cash_provided_by_operating_activities: String,
-        growth_investments_in_property_plant_and_equipment: String,
-        growth_acquisitions_net: String,
-        growth_purchases_of_investments: String,
-        growth_sales_maturities_of_investments: String,
-        growth_other_investing_activities: String,
-        growth_net_cash_used_for_investing_activities: String,
-        growth_debt_repayment: String,
-        growth_common_stock_issued: String,
-        growth_common_stock_repurchased: String,
-        growth_dividends_paid: String,
-        growth_other_financing_activities: String,
-        growth_net_cash_used_provided_by_financing_activities: String,
-        growth_effect_of_forex_changes_on_cash: String,
-        growth_net_change_in_cash: String,
-        growth_cash_at_end_of_period: String,
-        growth_cash_at_beginning_of_period: String,
-        growth_operating_cash_flow: String,
-        growth_capital_expenditure: String,
-        growth_free_cash_flow: String,
-        growth_net_debt_issuance: String,
-        growth_long_term_net_debt_issuance: String,
-        growth_short_term_net_debt_issuance: String,
-        growth_net_stock_issuance: String,
-        growth_preferred_dividends_paid: String,
-        growth_income_taxes_paid: String,
-        growth_interest_paid: String,
+        growth_net_income: Option<String>,
+        growth_depreciation_and_amortization: Option<String>,
+        growth_deferred_income_tax: Option<String>,
+        growth_stock_based_compensation: Option<String>,
+        growth_change_in_working_capital: Option<String>,
+        growth_accounts_receivables: Option<String>,
+        growth_inventory: Option<String>,
+        growth_accounts_payables: Option<String>,
+        growth_other_working_capital: Option<String>,
+        growth_other_non_cash_items: Option<String>,
+        growth_net_cash_provided_by_operating_activities: Option<String>,
+        growth_investments_in_property_plant_and_equipment: Option<String>,
+        growth_acquisitions_net: Option<String>,
+        growth_purchases_of_investments: Option<String>,
+        growth_sales_maturities_of_investments: Option<String>,
+        growth_other_investing_activities: Option<String>,
+        growth_net_cash_used_for_investing_activities: Option<String>,
+        growth_debt_repayment: Option<String>,
+        growth_common_stock_issued: Option<String>,
+        growth_common_stock_repurchased: Option<String>,
+        growth_dividends_paid: Option<String>,
+        growth_other_financing_activities: Option<String>,
+        growth_net_cash_used_provided_by_financing_activities: Option<String>,
+        growth_effect_of_forex_changes_on_cash: Option<String>,
+        growth_net_change_in_cash: Option<String>,
+        growth_cash_at_end_of_period: Option<String>,
+        growth_cash_at_beginning_of_period: Option<String>,
+        growth_operating_cash_flow: Option<String>,
+        growth_capital_expenditure: Option<String>,
+        growth_free_cash_flow: Option<String>,
+        growth_net_debt_issuance: Option<String>,
+        growth_long_term_net_debt_issuance: Option<String>,
+        growth_short_term_net_debt_issuance: Option<String>,
+        growth_net_stock_issuance: Option<String>,
+        growth_preferred_dividends_paid: Option<String>,
+        growth_income_taxes_paid: Option<String>,
+        growth_interest_paid: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -1933,63 +1963,105 @@ impl From<libfmp::responses::bulk::BulkCashFlowStatementGrowth> for BulkCashFlow
             fiscal_year: value.fiscal_year.as_str().to_owned(),
             period: value.period.to_string(),
             reported_currency: value.reported_currency.into_inner(),
-            growth_net_income: value.growth_net_income.into_inner(),
+            growth_net_income: value.growth_net_income.map(|value| value.into_inner()),
             growth_depreciation_and_amortization: value
                 .growth_depreciation_and_amortization
-                .into_inner(),
-            growth_deferred_income_tax: value.growth_deferred_income_tax.into_inner(),
-            growth_stock_based_compensation: value.growth_stock_based_compensation.into_inner(),
-            growth_change_in_working_capital: value.growth_change_in_working_capital.into_inner(),
-            growth_accounts_receivables: value.growth_accounts_receivables.into_inner(),
-            growth_inventory: value.growth_inventory.into_inner(),
-            growth_accounts_payables: value.growth_accounts_payables.into_inner(),
-            growth_other_working_capital: value.growth_other_working_capital.into_inner(),
-            growth_other_non_cash_items: value.growth_other_non_cash_items.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_deferred_income_tax: value
+                .growth_deferred_income_tax
+                .map(|value| value.into_inner()),
+            growth_stock_based_compensation: value
+                .growth_stock_based_compensation
+                .map(|value| value.into_inner()),
+            growth_change_in_working_capital: value
+                .growth_change_in_working_capital
+                .map(|value| value.into_inner()),
+            growth_accounts_receivables: value
+                .growth_accounts_receivables
+                .map(|value| value.into_inner()),
+            growth_inventory: value.growth_inventory.map(|value| value.into_inner()),
+            growth_accounts_payables: value
+                .growth_accounts_payables
+                .map(|value| value.into_inner()),
+            growth_other_working_capital: value
+                .growth_other_working_capital
+                .map(|value| value.into_inner()),
+            growth_other_non_cash_items: value
+                .growth_other_non_cash_items
+                .map(|value| value.into_inner()),
             growth_net_cash_provided_by_operating_activities: value
                 .growth_net_cash_provided_by_operating_activities
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_investments_in_property_plant_and_equipment: value
                 .growth_investments_in_property_plant_and_equipment
-                .into_inner(),
-            growth_acquisitions_net: value.growth_acquisitions_net.into_inner(),
-            growth_purchases_of_investments: value.growth_purchases_of_investments.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_acquisitions_net: value
+                .growth_acquisitions_net
+                .map(|value| value.into_inner()),
+            growth_purchases_of_investments: value
+                .growth_purchases_of_investments
+                .map(|value| value.into_inner()),
             growth_sales_maturities_of_investments: value
                 .growth_sales_maturities_of_investments
-                .into_inner(),
-            growth_other_investing_activities: value.growth_other_investing_activities.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_other_investing_activities: value
+                .growth_other_investing_activities
+                .map(|value| value.into_inner()),
             growth_net_cash_used_for_investing_activities: value
                 .growth_net_cash_used_for_investing_activities
-                .into_inner(),
-            growth_debt_repayment: value.growth_debt_repayment.into_inner(),
-            growth_common_stock_issued: value.growth_common_stock_issued.into_inner(),
-            growth_common_stock_repurchased: value.growth_common_stock_repurchased.into_inner(),
-            growth_dividends_paid: value.growth_dividends_paid.into_inner(),
-            growth_other_financing_activities: value.growth_other_financing_activities.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_debt_repayment: value.growth_debt_repayment.map(|value| value.into_inner()),
+            growth_common_stock_issued: value
+                .growth_common_stock_issued
+                .map(|value| value.into_inner()),
+            growth_common_stock_repurchased: value
+                .growth_common_stock_repurchased
+                .map(|value| value.into_inner()),
+            growth_dividends_paid: value.growth_dividends_paid.map(|value| value.into_inner()),
+            growth_other_financing_activities: value
+                .growth_other_financing_activities
+                .map(|value| value.into_inner()),
             growth_net_cash_used_provided_by_financing_activities: value
                 .growth_net_cash_used_provided_by_financing_activities
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_effect_of_forex_changes_on_cash: value
                 .growth_effect_of_forex_changes_on_cash
-                .into_inner(),
-            growth_net_change_in_cash: value.growth_net_change_in_cash.into_inner(),
-            growth_cash_at_end_of_period: value.growth_cash_at_end_of_period.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_net_change_in_cash: value
+                .growth_net_change_in_cash
+                .map(|value| value.into_inner()),
+            growth_cash_at_end_of_period: value
+                .growth_cash_at_end_of_period
+                .map(|value| value.into_inner()),
             growth_cash_at_beginning_of_period: value
                 .growth_cash_at_beginning_of_period
-                .into_inner(),
-            growth_operating_cash_flow: value.growth_operating_cash_flow.into_inner(),
-            growth_capital_expenditure: value.growth_capital_expenditure.into_inner(),
-            growth_free_cash_flow: value.growth_free_cash_flow.into_inner(),
-            growth_net_debt_issuance: value.growth_net_debt_issuance.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_operating_cash_flow: value
+                .growth_operating_cash_flow
+                .map(|value| value.into_inner()),
+            growth_capital_expenditure: value
+                .growth_capital_expenditure
+                .map(|value| value.into_inner()),
+            growth_free_cash_flow: value.growth_free_cash_flow.map(|value| value.into_inner()),
+            growth_net_debt_issuance: value
+                .growth_net_debt_issuance
+                .map(|value| value.into_inner()),
             growth_long_term_net_debt_issuance: value
                 .growth_long_term_net_debt_issuance
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_short_term_net_debt_issuance: value
                 .growth_short_term_net_debt_issuance
-                .into_inner(),
-            growth_net_stock_issuance: value.growth_net_stock_issuance.into_inner(),
-            growth_preferred_dividends_paid: value.growth_preferred_dividends_paid.into_inner(),
-            growth_income_taxes_paid: value.growth_income_taxes_paid.into_inner(),
-            growth_interest_paid: value.growth_interest_paid.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_net_stock_issuance: value
+                .growth_net_stock_issuance
+                .map(|value| value.into_inner()),
+            growth_preferred_dividends_paid: value
+                .growth_preferred_dividends_paid
+                .map(|value| value.into_inner()),
+            growth_income_taxes_paid: value
+                .growth_income_taxes_paid
+                .map(|value| value.into_inner()),
+            growth_interest_paid: value.growth_interest_paid.map(|value| value.into_inner()),
         }
     }
 }

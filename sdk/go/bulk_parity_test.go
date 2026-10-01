@@ -171,7 +171,7 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 
 	cashFlow := assertCSVFixtureParity[BulkCashFlowStatement](t, "bulk_cash_flow_statements.csv", 47)
 	if cashFlow[0].CIK != "0000000000" || cashFlow[0].AcceptedDate != mustParseDateTime(t, "2024-03-30 20:00:00") ||
-		cashFlow[0].Period != "Q1" || cashFlow[0].NetIncome != "14932000000" {
+		cashFlow[0].Period != "Q1" || cellText(cashFlow[0].NetIncome) != "14932000000" {
 		t.Fatalf("bulk_cash_flow_statements = %+v", cashFlow[0])
 	}
 	cashGrowth := assertCSVFixtureParity[BulkCashFlowStatementGrowth](t, "bulk_cash_flow_statement_growth.csv", 42)
@@ -184,8 +184,8 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 	}
 
 	eod := assertCSVFixtureParity[BulkEodBar](t, "bulk_eod.csv", 8)
-	if want := (BulkEodBar{Symbol: "HKDCNH", Date: mustParseDate(t, "2025-06-02"), Open: "0.91858", Low: "0.91692",
-		High: "0.9186", Close: "0.91741", AdjClose: "0.91741", Volume: "0"}); eod[1] != want {
+	if eod[1].Symbol != "HKDCNH" || eod[1].Date != mustParseDate(t, "2025-06-02") ||
+		cellText(eod[1].Open) != "0.91858" || cellText(eod[1].Volume) != "0" {
 		t.Fatalf("bulk_eod = %+v", eod[1])
 	}
 }

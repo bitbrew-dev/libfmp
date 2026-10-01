@@ -448,45 +448,45 @@ type BulkCashFlowStatement struct {
 	AcceptedDate                           DateTime `json:"acceptedDate"`
 	FiscalYear                             string   `json:"fiscalYear"`
 	Period                                 string   `json:"period"`
-	NetIncome                              string   `json:"netIncome"`
-	DepreciationAndAmortization            string   `json:"depreciationAndAmortization"`
-	DeferredIncomeTax                      string   `json:"deferredIncomeTax"`
-	StockBasedCompensation                 string   `json:"stockBasedCompensation"`
-	ChangeInWorkingCapital                 string   `json:"changeInWorkingCapital"`
-	AccountsReceivables                    string   `json:"accountsReceivables"`
-	Inventory                              string   `json:"inventory"`
-	AccountsPayables                       string   `json:"accountsPayables"`
-	OtherWorkingCapital                    string   `json:"otherWorkingCapital"`
-	OtherNonCashItems                      string   `json:"otherNonCashItems"`
-	NetCashProvidedByOperatingActivities   string   `json:"netCashProvidedByOperatingActivities"`
-	InvestmentsInPropertyPlantAndEquipment string   `json:"investmentsInPropertyPlantAndEquipment"`
-	AcquisitionsNet                        string   `json:"acquisitionsNet"`
-	PurchasesOfInvestments                 string   `json:"purchasesOfInvestments"`
-	SalesMaturitiesOfInvestments           string   `json:"salesMaturitiesOfInvestments"`
-	OtherInvestingActivities               string   `json:"otherInvestingActivities"`
-	NetCashProvidedByInvestingActivities   string   `json:"netCashProvidedByInvestingActivities"`
-	NetDebtIssuance                        string   `json:"netDebtIssuance"`
-	LongTermNetDebtIssuance                string   `json:"longTermNetDebtIssuance"`
-	ShortTermNetDebtIssuance               string   `json:"shortTermNetDebtIssuance"`
-	NetStockIssuance                       string   `json:"netStockIssuance"`
-	NetCommonStockIssuance                 string   `json:"netCommonStockIssuance"`
-	CommonStockIssuance                    string   `json:"commonStockIssuance"`
-	CommonStockRepurchased                 string   `json:"commonStockRepurchased"`
-	NetPreferredStockIssuance              string   `json:"netPreferredStockIssuance"`
-	NetDividendsPaid                       string   `json:"netDividendsPaid"`
-	CommonDividendsPaid                    string   `json:"commonDividendsPaid"`
-	PreferredDividendsPaid                 string   `json:"preferredDividendsPaid"`
-	OtherFinancingActivities               string   `json:"otherFinancingActivities"`
-	NetCashProvidedByFinancingActivities   string   `json:"netCashProvidedByFinancingActivities"`
-	EffectOfForexChangesOnCash             string   `json:"effectOfForexChangesOnCash"`
-	NetChangeInCash                        string   `json:"netChangeInCash"`
-	CashAtEndOfPeriod                      string   `json:"cashAtEndOfPeriod"`
-	CashAtBeginningOfPeriod                string   `json:"cashAtBeginningOfPeriod"`
-	OperatingCashFlow                      string   `json:"operatingCashFlow"`
-	CapitalExpenditure                     string   `json:"capitalExpenditure"`
-	FreeCashFlow                           string   `json:"freeCashFlow"`
-	IncomeTaxesPaid                        string   `json:"incomeTaxesPaid"`
-	InterestPaid                           string   `json:"interestPaid"`
+	NetIncome                              *string  `json:"netIncome"`
+	DepreciationAndAmortization            *string  `json:"depreciationAndAmortization"`
+	DeferredIncomeTax                      *string  `json:"deferredIncomeTax"`
+	StockBasedCompensation                 *string  `json:"stockBasedCompensation"`
+	ChangeInWorkingCapital                 *string  `json:"changeInWorkingCapital"`
+	AccountsReceivables                    *string  `json:"accountsReceivables"`
+	Inventory                              *string  `json:"inventory"`
+	AccountsPayables                       *string  `json:"accountsPayables"`
+	OtherWorkingCapital                    *string  `json:"otherWorkingCapital"`
+	OtherNonCashItems                      *string  `json:"otherNonCashItems"`
+	NetCashProvidedByOperatingActivities   *string  `json:"netCashProvidedByOperatingActivities"`
+	InvestmentsInPropertyPlantAndEquipment *string  `json:"investmentsInPropertyPlantAndEquipment"`
+	AcquisitionsNet                        *string  `json:"acquisitionsNet"`
+	PurchasesOfInvestments                 *string  `json:"purchasesOfInvestments"`
+	SalesMaturitiesOfInvestments           *string  `json:"salesMaturitiesOfInvestments"`
+	OtherInvestingActivities               *string  `json:"otherInvestingActivities"`
+	NetCashProvidedByInvestingActivities   *string  `json:"netCashProvidedByInvestingActivities"`
+	NetDebtIssuance                        *string  `json:"netDebtIssuance"`
+	LongTermNetDebtIssuance                *string  `json:"longTermNetDebtIssuance"`
+	ShortTermNetDebtIssuance               *string  `json:"shortTermNetDebtIssuance"`
+	NetStockIssuance                       *string  `json:"netStockIssuance"`
+	NetCommonStockIssuance                 *string  `json:"netCommonStockIssuance"`
+	CommonStockIssuance                    *string  `json:"commonStockIssuance"`
+	CommonStockRepurchased                 *string  `json:"commonStockRepurchased"`
+	NetPreferredStockIssuance              *string  `json:"netPreferredStockIssuance"`
+	NetDividendsPaid                       *string  `json:"netDividendsPaid"`
+	CommonDividendsPaid                    *string  `json:"commonDividendsPaid"`
+	PreferredDividendsPaid                 *string  `json:"preferredDividendsPaid"`
+	OtherFinancingActivities               *string  `json:"otherFinancingActivities"`
+	NetCashProvidedByFinancingActivities   *string  `json:"netCashProvidedByFinancingActivities"`
+	EffectOfForexChangesOnCash             *string  `json:"effectOfForexChangesOnCash"`
+	NetChangeInCash                        *string  `json:"netChangeInCash"`
+	CashAtEndOfPeriod                      *string  `json:"cashAtEndOfPeriod"`
+	CashAtBeginningOfPeriod                *string  `json:"cashAtBeginningOfPeriod"`
+	OperatingCashFlow                      *string  `json:"operatingCashFlow"`
+	CapitalExpenditure                     *string  `json:"capitalExpenditure"`
+	FreeCashFlow                           *string  `json:"freeCashFlow"`
+	IncomeTaxesPaid                        *string  `json:"incomeTaxesPaid"`
+	InterestPaid                           *string  `json:"interestPaid"`
 }
 
 // bulkCashFlowStatementShadow mirrors BulkCashFlowStatement with a pointer or
@@ -567,84 +567,6 @@ func (m *BulkCashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkCashFlowStatement", "fiscalYear")
 	case shadow.Period == nil:
 		return missingMemberError("BulkCashFlowStatement", "period")
-	case shadow.NetIncome == nil:
-		return missingMemberError("BulkCashFlowStatement", "netIncome")
-	case shadow.DepreciationAndAmortization == nil:
-		return missingMemberError("BulkCashFlowStatement", "depreciationAndAmortization")
-	case shadow.DeferredIncomeTax == nil:
-		return missingMemberError("BulkCashFlowStatement", "deferredIncomeTax")
-	case shadow.StockBasedCompensation == nil:
-		return missingMemberError("BulkCashFlowStatement", "stockBasedCompensation")
-	case shadow.ChangeInWorkingCapital == nil:
-		return missingMemberError("BulkCashFlowStatement", "changeInWorkingCapital")
-	case shadow.AccountsReceivables == nil:
-		return missingMemberError("BulkCashFlowStatement", "accountsReceivables")
-	case shadow.Inventory == nil:
-		return missingMemberError("BulkCashFlowStatement", "inventory")
-	case shadow.AccountsPayables == nil:
-		return missingMemberError("BulkCashFlowStatement", "accountsPayables")
-	case shadow.OtherWorkingCapital == nil:
-		return missingMemberError("BulkCashFlowStatement", "otherWorkingCapital")
-	case shadow.OtherNonCashItems == nil:
-		return missingMemberError("BulkCashFlowStatement", "otherNonCashItems")
-	case shadow.NetCashProvidedByOperatingActivities == nil:
-		return missingMemberError("BulkCashFlowStatement", "netCashProvidedByOperatingActivities")
-	case shadow.InvestmentsInPropertyPlantAndEquipment == nil:
-		return missingMemberError("BulkCashFlowStatement", "investmentsInPropertyPlantAndEquipment")
-	case shadow.AcquisitionsNet == nil:
-		return missingMemberError("BulkCashFlowStatement", "acquisitionsNet")
-	case shadow.PurchasesOfInvestments == nil:
-		return missingMemberError("BulkCashFlowStatement", "purchasesOfInvestments")
-	case shadow.SalesMaturitiesOfInvestments == nil:
-		return missingMemberError("BulkCashFlowStatement", "salesMaturitiesOfInvestments")
-	case shadow.OtherInvestingActivities == nil:
-		return missingMemberError("BulkCashFlowStatement", "otherInvestingActivities")
-	case shadow.NetCashProvidedByInvestingActivities == nil:
-		return missingMemberError("BulkCashFlowStatement", "netCashProvidedByInvestingActivities")
-	case shadow.NetDebtIssuance == nil:
-		return missingMemberError("BulkCashFlowStatement", "netDebtIssuance")
-	case shadow.LongTermNetDebtIssuance == nil:
-		return missingMemberError("BulkCashFlowStatement", "longTermNetDebtIssuance")
-	case shadow.ShortTermNetDebtIssuance == nil:
-		return missingMemberError("BulkCashFlowStatement", "shortTermNetDebtIssuance")
-	case shadow.NetStockIssuance == nil:
-		return missingMemberError("BulkCashFlowStatement", "netStockIssuance")
-	case shadow.NetCommonStockIssuance == nil:
-		return missingMemberError("BulkCashFlowStatement", "netCommonStockIssuance")
-	case shadow.CommonStockIssuance == nil:
-		return missingMemberError("BulkCashFlowStatement", "commonStockIssuance")
-	case shadow.CommonStockRepurchased == nil:
-		return missingMemberError("BulkCashFlowStatement", "commonStockRepurchased")
-	case shadow.NetPreferredStockIssuance == nil:
-		return missingMemberError("BulkCashFlowStatement", "netPreferredStockIssuance")
-	case shadow.NetDividendsPaid == nil:
-		return missingMemberError("BulkCashFlowStatement", "netDividendsPaid")
-	case shadow.CommonDividendsPaid == nil:
-		return missingMemberError("BulkCashFlowStatement", "commonDividendsPaid")
-	case shadow.PreferredDividendsPaid == nil:
-		return missingMemberError("BulkCashFlowStatement", "preferredDividendsPaid")
-	case shadow.OtherFinancingActivities == nil:
-		return missingMemberError("BulkCashFlowStatement", "otherFinancingActivities")
-	case shadow.NetCashProvidedByFinancingActivities == nil:
-		return missingMemberError("BulkCashFlowStatement", "netCashProvidedByFinancingActivities")
-	case shadow.EffectOfForexChangesOnCash == nil:
-		return missingMemberError("BulkCashFlowStatement", "effectOfForexChangesOnCash")
-	case shadow.NetChangeInCash == nil:
-		return missingMemberError("BulkCashFlowStatement", "netChangeInCash")
-	case shadow.CashAtEndOfPeriod == nil:
-		return missingMemberError("BulkCashFlowStatement", "cashAtEndOfPeriod")
-	case shadow.CashAtBeginningOfPeriod == nil:
-		return missingMemberError("BulkCashFlowStatement", "cashAtBeginningOfPeriod")
-	case shadow.OperatingCashFlow == nil:
-		return missingMemberError("BulkCashFlowStatement", "operatingCashFlow")
-	case shadow.CapitalExpenditure == nil:
-		return missingMemberError("BulkCashFlowStatement", "capitalExpenditure")
-	case shadow.FreeCashFlow == nil:
-		return missingMemberError("BulkCashFlowStatement", "freeCashFlow")
-	case shadow.IncomeTaxesPaid == nil:
-		return missingMemberError("BulkCashFlowStatement", "incomeTaxesPaid")
-	case shadow.InterestPaid == nil:
-		return missingMemberError("BulkCashFlowStatement", "interestPaid")
 	}
 	*m = BulkCashFlowStatement{
 		Date:                                   *shadow.Date,
@@ -655,45 +577,45 @@ func (m *BulkCashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		AcceptedDate:                           *shadow.AcceptedDate,
 		FiscalYear:                             *shadow.FiscalYear,
 		Period:                                 *shadow.Period,
-		NetIncome:                              *shadow.NetIncome,
-		DepreciationAndAmortization:            *shadow.DepreciationAndAmortization,
-		DeferredIncomeTax:                      *shadow.DeferredIncomeTax,
-		StockBasedCompensation:                 *shadow.StockBasedCompensation,
-		ChangeInWorkingCapital:                 *shadow.ChangeInWorkingCapital,
-		AccountsReceivables:                    *shadow.AccountsReceivables,
-		Inventory:                              *shadow.Inventory,
-		AccountsPayables:                       *shadow.AccountsPayables,
-		OtherWorkingCapital:                    *shadow.OtherWorkingCapital,
-		OtherNonCashItems:                      *shadow.OtherNonCashItems,
-		NetCashProvidedByOperatingActivities:   *shadow.NetCashProvidedByOperatingActivities,
-		InvestmentsInPropertyPlantAndEquipment: *shadow.InvestmentsInPropertyPlantAndEquipment,
-		AcquisitionsNet:                        *shadow.AcquisitionsNet,
-		PurchasesOfInvestments:                 *shadow.PurchasesOfInvestments,
-		SalesMaturitiesOfInvestments:           *shadow.SalesMaturitiesOfInvestments,
-		OtherInvestingActivities:               *shadow.OtherInvestingActivities,
-		NetCashProvidedByInvestingActivities:   *shadow.NetCashProvidedByInvestingActivities,
-		NetDebtIssuance:                        *shadow.NetDebtIssuance,
-		LongTermNetDebtIssuance:                *shadow.LongTermNetDebtIssuance,
-		ShortTermNetDebtIssuance:               *shadow.ShortTermNetDebtIssuance,
-		NetStockIssuance:                       *shadow.NetStockIssuance,
-		NetCommonStockIssuance:                 *shadow.NetCommonStockIssuance,
-		CommonStockIssuance:                    *shadow.CommonStockIssuance,
-		CommonStockRepurchased:                 *shadow.CommonStockRepurchased,
-		NetPreferredStockIssuance:              *shadow.NetPreferredStockIssuance,
-		NetDividendsPaid:                       *shadow.NetDividendsPaid,
-		CommonDividendsPaid:                    *shadow.CommonDividendsPaid,
-		PreferredDividendsPaid:                 *shadow.PreferredDividendsPaid,
-		OtherFinancingActivities:               *shadow.OtherFinancingActivities,
-		NetCashProvidedByFinancingActivities:   *shadow.NetCashProvidedByFinancingActivities,
-		EffectOfForexChangesOnCash:             *shadow.EffectOfForexChangesOnCash,
-		NetChangeInCash:                        *shadow.NetChangeInCash,
-		CashAtEndOfPeriod:                      *shadow.CashAtEndOfPeriod,
-		CashAtBeginningOfPeriod:                *shadow.CashAtBeginningOfPeriod,
-		OperatingCashFlow:                      *shadow.OperatingCashFlow,
-		CapitalExpenditure:                     *shadow.CapitalExpenditure,
-		FreeCashFlow:                           *shadow.FreeCashFlow,
-		IncomeTaxesPaid:                        *shadow.IncomeTaxesPaid,
-		InterestPaid:                           *shadow.InterestPaid,
+		NetIncome:                              shadow.NetIncome,
+		DepreciationAndAmortization:            shadow.DepreciationAndAmortization,
+		DeferredIncomeTax:                      shadow.DeferredIncomeTax,
+		StockBasedCompensation:                 shadow.StockBasedCompensation,
+		ChangeInWorkingCapital:                 shadow.ChangeInWorkingCapital,
+		AccountsReceivables:                    shadow.AccountsReceivables,
+		Inventory:                              shadow.Inventory,
+		AccountsPayables:                       shadow.AccountsPayables,
+		OtherWorkingCapital:                    shadow.OtherWorkingCapital,
+		OtherNonCashItems:                      shadow.OtherNonCashItems,
+		NetCashProvidedByOperatingActivities:   shadow.NetCashProvidedByOperatingActivities,
+		InvestmentsInPropertyPlantAndEquipment: shadow.InvestmentsInPropertyPlantAndEquipment,
+		AcquisitionsNet:                        shadow.AcquisitionsNet,
+		PurchasesOfInvestments:                 shadow.PurchasesOfInvestments,
+		SalesMaturitiesOfInvestments:           shadow.SalesMaturitiesOfInvestments,
+		OtherInvestingActivities:               shadow.OtherInvestingActivities,
+		NetCashProvidedByInvestingActivities:   shadow.NetCashProvidedByInvestingActivities,
+		NetDebtIssuance:                        shadow.NetDebtIssuance,
+		LongTermNetDebtIssuance:                shadow.LongTermNetDebtIssuance,
+		ShortTermNetDebtIssuance:               shadow.ShortTermNetDebtIssuance,
+		NetStockIssuance:                       shadow.NetStockIssuance,
+		NetCommonStockIssuance:                 shadow.NetCommonStockIssuance,
+		CommonStockIssuance:                    shadow.CommonStockIssuance,
+		CommonStockRepurchased:                 shadow.CommonStockRepurchased,
+		NetPreferredStockIssuance:              shadow.NetPreferredStockIssuance,
+		NetDividendsPaid:                       shadow.NetDividendsPaid,
+		CommonDividendsPaid:                    shadow.CommonDividendsPaid,
+		PreferredDividendsPaid:                 shadow.PreferredDividendsPaid,
+		OtherFinancingActivities:               shadow.OtherFinancingActivities,
+		NetCashProvidedByFinancingActivities:   shadow.NetCashProvidedByFinancingActivities,
+		EffectOfForexChangesOnCash:             shadow.EffectOfForexChangesOnCash,
+		NetChangeInCash:                        shadow.NetChangeInCash,
+		CashAtEndOfPeriod:                      shadow.CashAtEndOfPeriod,
+		CashAtBeginningOfPeriod:                shadow.CashAtBeginningOfPeriod,
+		OperatingCashFlow:                      shadow.OperatingCashFlow,
+		CapitalExpenditure:                     shadow.CapitalExpenditure,
+		FreeCashFlow:                           shadow.FreeCashFlow,
+		IncomeTaxesPaid:                        shadow.IncomeTaxesPaid,
+		InterestPaid:                           shadow.InterestPaid,
 	}
 	return nil
 }
@@ -701,48 +623,48 @@ func (m *BulkCashFlowStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 // BulkCashFlowStatementGrowth is one worldwide bulk cash-flow-statement-growth
 // row.
 type BulkCashFlowStatementGrowth struct {
-	Symbol                                         string `json:"symbol"`
-	Date                                           Date   `json:"date"`
-	FiscalYear                                     string `json:"fiscalYear"`
-	Period                                         string `json:"period"`
-	ReportedCurrency                               string `json:"reportedCurrency"`
-	GrowthNetIncome                                string `json:"growthNetIncome"`
-	GrowthDepreciationAndAmortization              string `json:"growthDepreciationAndAmortization"`
-	GrowthDeferredIncomeTax                        string `json:"growthDeferredIncomeTax"`
-	GrowthStockBasedCompensation                   string `json:"growthStockBasedCompensation"`
-	GrowthChangeInWorkingCapital                   string `json:"growthChangeInWorkingCapital"`
-	GrowthAccountsReceivables                      string `json:"growthAccountsReceivables"`
-	GrowthInventory                                string `json:"growthInventory"`
-	GrowthAccountsPayables                         string `json:"growthAccountsPayables"`
-	GrowthOtherWorkingCapital                      string `json:"growthOtherWorkingCapital"`
-	GrowthOtherNonCashItems                        string `json:"growthOtherNonCashItems"`
-	GrowthNetCashProvidedByOperatingActivities     string `json:"growthNetCashProvidedByOperatingActivites"`
-	GrowthInvestmentsInPropertyPlantAndEquipment   string `json:"growthInvestmentsInPropertyPlantAndEquipment"`
-	GrowthAcquisitionsNet                          string `json:"growthAcquisitionsNet"`
-	GrowthPurchasesOfInvestments                   string `json:"growthPurchasesOfInvestments"`
-	GrowthSalesMaturitiesOfInvestments             string `json:"growthSalesMaturitiesOfInvestments"`
-	GrowthOtherInvestingActivities                 string `json:"growthOtherInvestingActivites"`
-	GrowthNetCashUsedForInvestingActivities        string `json:"growthNetCashUsedForInvestingActivites"`
-	GrowthDebtRepayment                            string `json:"growthDebtRepayment"`
-	GrowthCommonStockIssued                        string `json:"growthCommonStockIssued"`
-	GrowthCommonStockRepurchased                   string `json:"growthCommonStockRepurchased"`
-	GrowthDividendsPaid                            string `json:"growthDividendsPaid"`
-	GrowthOtherFinancingActivities                 string `json:"growthOtherFinancingActivites"`
-	GrowthNetCashUsedProvidedByFinancingActivities string `json:"growthNetCashUsedProvidedByFinancingActivities"`
-	GrowthEffectOfForexChangesOnCash               string `json:"growthEffectOfForexChangesOnCash"`
-	GrowthNetChangeInCash                          string `json:"growthNetChangeInCash"`
-	GrowthCashAtEndOfPeriod                        string `json:"growthCashAtEndOfPeriod"`
-	GrowthCashAtBeginningOfPeriod                  string `json:"growthCashAtBeginningOfPeriod"`
-	GrowthOperatingCashFlow                        string `json:"growthOperatingCashFlow"`
-	GrowthCapitalExpenditure                       string `json:"growthCapitalExpenditure"`
-	GrowthFreeCashFlow                             string `json:"growthFreeCashFlow"`
-	GrowthNetDebtIssuance                          string `json:"growthNetDebtIssuance"`
-	GrowthLongTermNetDebtIssuance                  string `json:"growthLongTermNetDebtIssuance"`
-	GrowthShortTermNetDebtIssuance                 string `json:"growthShortTermNetDebtIssuance"`
-	GrowthNetStockIssuance                         string `json:"growthNetStockIssuance"`
-	GrowthPreferredDividendsPaid                   string `json:"growthPreferredDividendsPaid"`
-	GrowthIncomeTaxesPaid                          string `json:"growthIncomeTaxesPaid"`
-	GrowthInterestPaid                             string `json:"growthInterestPaid"`
+	Symbol                                         string  `json:"symbol"`
+	Date                                           Date    `json:"date"`
+	FiscalYear                                     string  `json:"fiscalYear"`
+	Period                                         string  `json:"period"`
+	ReportedCurrency                               string  `json:"reportedCurrency"`
+	GrowthNetIncome                                *string `json:"growthNetIncome"`
+	GrowthDepreciationAndAmortization              *string `json:"growthDepreciationAndAmortization"`
+	GrowthDeferredIncomeTax                        *string `json:"growthDeferredIncomeTax"`
+	GrowthStockBasedCompensation                   *string `json:"growthStockBasedCompensation"`
+	GrowthChangeInWorkingCapital                   *string `json:"growthChangeInWorkingCapital"`
+	GrowthAccountsReceivables                      *string `json:"growthAccountsReceivables"`
+	GrowthInventory                                *string `json:"growthInventory"`
+	GrowthAccountsPayables                         *string `json:"growthAccountsPayables"`
+	GrowthOtherWorkingCapital                      *string `json:"growthOtherWorkingCapital"`
+	GrowthOtherNonCashItems                        *string `json:"growthOtherNonCashItems"`
+	GrowthNetCashProvidedByOperatingActivities     *string `json:"growthNetCashProvidedByOperatingActivites"`
+	GrowthInvestmentsInPropertyPlantAndEquipment   *string `json:"growthInvestmentsInPropertyPlantAndEquipment"`
+	GrowthAcquisitionsNet                          *string `json:"growthAcquisitionsNet"`
+	GrowthPurchasesOfInvestments                   *string `json:"growthPurchasesOfInvestments"`
+	GrowthSalesMaturitiesOfInvestments             *string `json:"growthSalesMaturitiesOfInvestments"`
+	GrowthOtherInvestingActivities                 *string `json:"growthOtherInvestingActivites"`
+	GrowthNetCashUsedForInvestingActivities        *string `json:"growthNetCashUsedForInvestingActivites"`
+	GrowthDebtRepayment                            *string `json:"growthDebtRepayment"`
+	GrowthCommonStockIssued                        *string `json:"growthCommonStockIssued"`
+	GrowthCommonStockRepurchased                   *string `json:"growthCommonStockRepurchased"`
+	GrowthDividendsPaid                            *string `json:"growthDividendsPaid"`
+	GrowthOtherFinancingActivities                 *string `json:"growthOtherFinancingActivites"`
+	GrowthNetCashUsedProvidedByFinancingActivities *string `json:"growthNetCashUsedProvidedByFinancingActivities"`
+	GrowthEffectOfForexChangesOnCash               *string `json:"growthEffectOfForexChangesOnCash"`
+	GrowthNetChangeInCash                          *string `json:"growthNetChangeInCash"`
+	GrowthCashAtEndOfPeriod                        *string `json:"growthCashAtEndOfPeriod"`
+	GrowthCashAtBeginningOfPeriod                  *string `json:"growthCashAtBeginningOfPeriod"`
+	GrowthOperatingCashFlow                        *string `json:"growthOperatingCashFlow"`
+	GrowthCapitalExpenditure                       *string `json:"growthCapitalExpenditure"`
+	GrowthFreeCashFlow                             *string `json:"growthFreeCashFlow"`
+	GrowthNetDebtIssuance                          *string `json:"growthNetDebtIssuance"`
+	GrowthLongTermNetDebtIssuance                  *string `json:"growthLongTermNetDebtIssuance"`
+	GrowthShortTermNetDebtIssuance                 *string `json:"growthShortTermNetDebtIssuance"`
+	GrowthNetStockIssuance                         *string `json:"growthNetStockIssuance"`
+	GrowthPreferredDividendsPaid                   *string `json:"growthPreferredDividendsPaid"`
+	GrowthIncomeTaxesPaid                          *string `json:"growthIncomeTaxesPaid"`
+	GrowthInterestPaid                             *string `json:"growthInterestPaid"`
 }
 
 // bulkCashFlowStatementGrowthShadow mirrors BulkCashFlowStatementGrowth with a
@@ -812,80 +734,6 @@ func (m *BulkCashFlowStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		return missingMemberError("BulkCashFlowStatementGrowth", "period")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("BulkCashFlowStatementGrowth", "reportedCurrency")
-	case shadow.GrowthNetIncome == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthNetIncome")
-	case shadow.GrowthDepreciationAndAmortization == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthDepreciationAndAmortization")
-	case shadow.GrowthDeferredIncomeTax == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthDeferredIncomeTax")
-	case shadow.GrowthStockBasedCompensation == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthStockBasedCompensation")
-	case shadow.GrowthChangeInWorkingCapital == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthChangeInWorkingCapital")
-	case shadow.GrowthAccountsReceivables == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthAccountsReceivables")
-	case shadow.GrowthInventory == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthInventory")
-	case shadow.GrowthAccountsPayables == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthAccountsPayables")
-	case shadow.GrowthOtherWorkingCapital == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthOtherWorkingCapital")
-	case shadow.GrowthOtherNonCashItems == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthOtherNonCashItems")
-	case shadow.GrowthNetCashProvidedByOperatingActivities == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthNetCashProvidedByOperatingActivites")
-	case shadow.GrowthInvestmentsInPropertyPlantAndEquipment == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthInvestmentsInPropertyPlantAndEquipment")
-	case shadow.GrowthAcquisitionsNet == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthAcquisitionsNet")
-	case shadow.GrowthPurchasesOfInvestments == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthPurchasesOfInvestments")
-	case shadow.GrowthSalesMaturitiesOfInvestments == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthSalesMaturitiesOfInvestments")
-	case shadow.GrowthOtherInvestingActivities == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthOtherInvestingActivites")
-	case shadow.GrowthNetCashUsedForInvestingActivities == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthNetCashUsedForInvestingActivites")
-	case shadow.GrowthDebtRepayment == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthDebtRepayment")
-	case shadow.GrowthCommonStockIssued == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthCommonStockIssued")
-	case shadow.GrowthCommonStockRepurchased == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthCommonStockRepurchased")
-	case shadow.GrowthDividendsPaid == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthDividendsPaid")
-	case shadow.GrowthOtherFinancingActivities == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthOtherFinancingActivites")
-	case shadow.GrowthNetCashUsedProvidedByFinancingActivities == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthNetCashUsedProvidedByFinancingActivities")
-	case shadow.GrowthEffectOfForexChangesOnCash == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthEffectOfForexChangesOnCash")
-	case shadow.GrowthNetChangeInCash == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthNetChangeInCash")
-	case shadow.GrowthCashAtEndOfPeriod == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthCashAtEndOfPeriod")
-	case shadow.GrowthCashAtBeginningOfPeriod == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthCashAtBeginningOfPeriod")
-	case shadow.GrowthOperatingCashFlow == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthOperatingCashFlow")
-	case shadow.GrowthCapitalExpenditure == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthCapitalExpenditure")
-	case shadow.GrowthFreeCashFlow == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthFreeCashFlow")
-	case shadow.GrowthNetDebtIssuance == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthNetDebtIssuance")
-	case shadow.GrowthLongTermNetDebtIssuance == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthLongTermNetDebtIssuance")
-	case shadow.GrowthShortTermNetDebtIssuance == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthShortTermNetDebtIssuance")
-	case shadow.GrowthNetStockIssuance == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthNetStockIssuance")
-	case shadow.GrowthPreferredDividendsPaid == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthPreferredDividendsPaid")
-	case shadow.GrowthIncomeTaxesPaid == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthIncomeTaxesPaid")
-	case shadow.GrowthInterestPaid == nil:
-		return missingMemberError("BulkCashFlowStatementGrowth", "growthInterestPaid")
 	}
 	*m = BulkCashFlowStatementGrowth{
 		Symbol:                            *shadow.Symbol,
@@ -893,57 +741,57 @@ func (m *BulkCashFlowStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 		FiscalYear:                        *shadow.FiscalYear,
 		Period:                            *shadow.Period,
 		ReportedCurrency:                  *shadow.ReportedCurrency,
-		GrowthNetIncome:                   *shadow.GrowthNetIncome,
-		GrowthDepreciationAndAmortization: *shadow.GrowthDepreciationAndAmortization,
-		GrowthDeferredIncomeTax:           *shadow.GrowthDeferredIncomeTax,
-		GrowthStockBasedCompensation:      *shadow.GrowthStockBasedCompensation,
-		GrowthChangeInWorkingCapital:      *shadow.GrowthChangeInWorkingCapital,
-		GrowthAccountsReceivables:         *shadow.GrowthAccountsReceivables,
-		GrowthInventory:                   *shadow.GrowthInventory,
-		GrowthAccountsPayables:            *shadow.GrowthAccountsPayables,
-		GrowthOtherWorkingCapital:         *shadow.GrowthOtherWorkingCapital,
-		GrowthOtherNonCashItems:           *shadow.GrowthOtherNonCashItems,
-		GrowthNetCashProvidedByOperatingActivities:     *shadow.GrowthNetCashProvidedByOperatingActivities,
-		GrowthInvestmentsInPropertyPlantAndEquipment:   *shadow.GrowthInvestmentsInPropertyPlantAndEquipment,
-		GrowthAcquisitionsNet:                          *shadow.GrowthAcquisitionsNet,
-		GrowthPurchasesOfInvestments:                   *shadow.GrowthPurchasesOfInvestments,
-		GrowthSalesMaturitiesOfInvestments:             *shadow.GrowthSalesMaturitiesOfInvestments,
-		GrowthOtherInvestingActivities:                 *shadow.GrowthOtherInvestingActivities,
-		GrowthNetCashUsedForInvestingActivities:        *shadow.GrowthNetCashUsedForInvestingActivities,
-		GrowthDebtRepayment:                            *shadow.GrowthDebtRepayment,
-		GrowthCommonStockIssued:                        *shadow.GrowthCommonStockIssued,
-		GrowthCommonStockRepurchased:                   *shadow.GrowthCommonStockRepurchased,
-		GrowthDividendsPaid:                            *shadow.GrowthDividendsPaid,
-		GrowthOtherFinancingActivities:                 *shadow.GrowthOtherFinancingActivities,
-		GrowthNetCashUsedProvidedByFinancingActivities: *shadow.GrowthNetCashUsedProvidedByFinancingActivities,
-		GrowthEffectOfForexChangesOnCash:               *shadow.GrowthEffectOfForexChangesOnCash,
-		GrowthNetChangeInCash:                          *shadow.GrowthNetChangeInCash,
-		GrowthCashAtEndOfPeriod:                        *shadow.GrowthCashAtEndOfPeriod,
-		GrowthCashAtBeginningOfPeriod:                  *shadow.GrowthCashAtBeginningOfPeriod,
-		GrowthOperatingCashFlow:                        *shadow.GrowthOperatingCashFlow,
-		GrowthCapitalExpenditure:                       *shadow.GrowthCapitalExpenditure,
-		GrowthFreeCashFlow:                             *shadow.GrowthFreeCashFlow,
-		GrowthNetDebtIssuance:                          *shadow.GrowthNetDebtIssuance,
-		GrowthLongTermNetDebtIssuance:                  *shadow.GrowthLongTermNetDebtIssuance,
-		GrowthShortTermNetDebtIssuance:                 *shadow.GrowthShortTermNetDebtIssuance,
-		GrowthNetStockIssuance:                         *shadow.GrowthNetStockIssuance,
-		GrowthPreferredDividendsPaid:                   *shadow.GrowthPreferredDividendsPaid,
-		GrowthIncomeTaxesPaid:                          *shadow.GrowthIncomeTaxesPaid,
-		GrowthInterestPaid:                             *shadow.GrowthInterestPaid,
+		GrowthNetIncome:                   shadow.GrowthNetIncome,
+		GrowthDepreciationAndAmortization: shadow.GrowthDepreciationAndAmortization,
+		GrowthDeferredIncomeTax:           shadow.GrowthDeferredIncomeTax,
+		GrowthStockBasedCompensation:      shadow.GrowthStockBasedCompensation,
+		GrowthChangeInWorkingCapital:      shadow.GrowthChangeInWorkingCapital,
+		GrowthAccountsReceivables:         shadow.GrowthAccountsReceivables,
+		GrowthInventory:                   shadow.GrowthInventory,
+		GrowthAccountsPayables:            shadow.GrowthAccountsPayables,
+		GrowthOtherWorkingCapital:         shadow.GrowthOtherWorkingCapital,
+		GrowthOtherNonCashItems:           shadow.GrowthOtherNonCashItems,
+		GrowthNetCashProvidedByOperatingActivities:     shadow.GrowthNetCashProvidedByOperatingActivities,
+		GrowthInvestmentsInPropertyPlantAndEquipment:   shadow.GrowthInvestmentsInPropertyPlantAndEquipment,
+		GrowthAcquisitionsNet:                          shadow.GrowthAcquisitionsNet,
+		GrowthPurchasesOfInvestments:                   shadow.GrowthPurchasesOfInvestments,
+		GrowthSalesMaturitiesOfInvestments:             shadow.GrowthSalesMaturitiesOfInvestments,
+		GrowthOtherInvestingActivities:                 shadow.GrowthOtherInvestingActivities,
+		GrowthNetCashUsedForInvestingActivities:        shadow.GrowthNetCashUsedForInvestingActivities,
+		GrowthDebtRepayment:                            shadow.GrowthDebtRepayment,
+		GrowthCommonStockIssued:                        shadow.GrowthCommonStockIssued,
+		GrowthCommonStockRepurchased:                   shadow.GrowthCommonStockRepurchased,
+		GrowthDividendsPaid:                            shadow.GrowthDividendsPaid,
+		GrowthOtherFinancingActivities:                 shadow.GrowthOtherFinancingActivities,
+		GrowthNetCashUsedProvidedByFinancingActivities: shadow.GrowthNetCashUsedProvidedByFinancingActivities,
+		GrowthEffectOfForexChangesOnCash:               shadow.GrowthEffectOfForexChangesOnCash,
+		GrowthNetChangeInCash:                          shadow.GrowthNetChangeInCash,
+		GrowthCashAtEndOfPeriod:                        shadow.GrowthCashAtEndOfPeriod,
+		GrowthCashAtBeginningOfPeriod:                  shadow.GrowthCashAtBeginningOfPeriod,
+		GrowthOperatingCashFlow:                        shadow.GrowthOperatingCashFlow,
+		GrowthCapitalExpenditure:                       shadow.GrowthCapitalExpenditure,
+		GrowthFreeCashFlow:                             shadow.GrowthFreeCashFlow,
+		GrowthNetDebtIssuance:                          shadow.GrowthNetDebtIssuance,
+		GrowthLongTermNetDebtIssuance:                  shadow.GrowthLongTermNetDebtIssuance,
+		GrowthShortTermNetDebtIssuance:                 shadow.GrowthShortTermNetDebtIssuance,
+		GrowthNetStockIssuance:                         shadow.GrowthNetStockIssuance,
+		GrowthPreferredDividendsPaid:                   shadow.GrowthPreferredDividendsPaid,
+		GrowthIncomeTaxesPaid:                          shadow.GrowthIncomeTaxesPaid,
+		GrowthInterestPaid:                             shadow.GrowthInterestPaid,
 	}
 	return nil
 }
 
 // BulkEodBar is one worldwide bulk end-of-day price row.
 type BulkEodBar struct {
-	Symbol   string `json:"symbol"`
-	Date     Date   `json:"date"`
-	Open     string `json:"open"`
-	Low      string `json:"low"`
-	High     string `json:"high"`
-	Close    string `json:"close"`
-	AdjClose string `json:"adjClose"`
-	Volume   string `json:"volume"`
+	Symbol   string  `json:"symbol"`
+	Date     Date    `json:"date"`
+	Open     *string `json:"open"`
+	Low      *string `json:"low"`
+	High     *string `json:"high"`
+	Close    *string `json:"close"`
+	AdjClose *string `json:"adjClose"`
+	Volume   *string `json:"volume"`
 }
 
 // bulkEodBarShadow mirrors BulkEodBar with a pointer or raw value for every
@@ -972,28 +820,16 @@ func (m *BulkEodBar) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkEodBar", "symbol")
 	case shadow.Date == nil:
 		return missingMemberError("BulkEodBar", "date")
-	case shadow.Open == nil:
-		return missingMemberError("BulkEodBar", "open")
-	case shadow.Low == nil:
-		return missingMemberError("BulkEodBar", "low")
-	case shadow.High == nil:
-		return missingMemberError("BulkEodBar", "high")
-	case shadow.Close == nil:
-		return missingMemberError("BulkEodBar", "close")
-	case shadow.AdjClose == nil:
-		return missingMemberError("BulkEodBar", "adjClose")
-	case shadow.Volume == nil:
-		return missingMemberError("BulkEodBar", "volume")
 	}
 	*m = BulkEodBar{
 		Symbol:   *shadow.Symbol,
 		Date:     *shadow.Date,
-		Open:     *shadow.Open,
-		Low:      *shadow.Low,
-		High:     *shadow.High,
-		Close:    *shadow.Close,
-		AdjClose: *shadow.AdjClose,
-		Volume:   *shadow.Volume,
+		Open:     shadow.Open,
+		Low:      shadow.Low,
+		High:     shadow.High,
+		Close:    shadow.Close,
+		AdjClose: shadow.AdjClose,
+		Volume:   shadow.Volume,
 	}
 	return nil
 }
