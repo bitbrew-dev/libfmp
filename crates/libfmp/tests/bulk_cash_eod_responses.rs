@@ -11,7 +11,9 @@ use libfmp::{
     types::Date,
 };
 
-use bulk_csv::{assert_empty_bodies, assert_members, assert_round_trip, decode, first_row};
+use bulk_csv::{
+    assert_empty_bodies, assert_required_members, assert_round_trip, decode, first_row,
+};
 
 const CASH_FLOW: &[u8] = include_bytes!("fixtures/bulk_cash_flow_statements.csv");
 const GROWTH: &[u8] = include_bytes!("fixtures/bulk_cash_flow_statement_growth.csv");
@@ -33,10 +35,27 @@ fn live_csv_fixtures_round_trip_every_cell_with_exact_field_counts() {
 }
 
 #[test]
-fn every_column_is_required_and_no_member_accepts_an_empty_cell() {
-    assert_members(&bulk_cash_flow_statements(query()), CASH_FLOW, &[]);
-    assert_members(&bulk_cash_flow_statement_growth(query()), GROWTH, &[]);
-    assert_members(&bulk_eod(day().into()), EOD, &[]);
+fn every_column_is_required_and_only_identity_members_reject_an_empty_cell() {
+    assert_required_members(
+        &bulk_cash_flow_statements(query()),
+        CASH_FLOW,
+        &[
+            "date",
+            "symbol",
+            "reportedCurrency",
+            "cik",
+            "filingDate",
+            "acceptedDate",
+            "fiscalYear",
+            "period",
+        ],
+    );
+    assert_required_members(
+        &bulk_cash_flow_statement_growth(query()),
+        GROWTH,
+        &["symbol", "date", "fiscalYear", "period", "reportedCurrency"],
+    );
+    assert_required_members(&bulk_eod(day().into()), EOD, &["symbol", "date"]);
 }
 
 #[test]
@@ -54,13 +73,13 @@ fn identity_fields_and_prices_preserve_provider_representations() {
     assert_eq!(cash_flow.cik.as_str(), "0000000000");
     assert_eq!(cash_flow.accepted_date.to_string(), "2024-03-30 20:00:00");
     assert_eq!(cash_flow.period, FiscalPeriod::Q1);
-    assert_eq!(cash_flow.net_income.as_str(), "14932000000");
+    assert_eq!(cash_flow.net_income.unwrap().as_str(), "14932000000");
 
     let eod = decode(&bulk_eod(day().into()), EOD).unwrap();
     assert_eq!(eod[1].symbol.as_str(), "HKDCNH");
     assert_eq!(eod[1].date, day());
-    assert_eq!(eod[1].open.as_str(), "0.91858");
-    assert_eq!(eod[1].volume.as_str(), "0");
+    assert_eq!(eod[1].open.as_ref().unwrap().as_str(), "0.91858");
+    assert_eq!(eod[1].volume.as_ref().unwrap().as_str(), "0");
 }
 
 #[test]

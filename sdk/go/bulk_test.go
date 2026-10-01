@@ -118,15 +118,15 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("BalanceSheetStatementGrowth = %+v, %v", balanceGrowth, err)
 	}
 	cashFlow, err := client.Bulk.CashFlowStatements(ctx, NewBulkStatementQuery(4_294_967_295, FiscalPeriodFullYear))
-	if err != nil || len(cashFlow) != 2 || cashFlow[0].NetIncome != "14932000000" {
+	if err != nil || len(cashFlow) != 2 || cellText(cashFlow[0].NetIncome) != "14932000000" {
 		t.Fatalf("CashFlowStatements = %+v, %v", cashFlow, err)
 	}
 	cashGrowth, err := client.Bulk.CashFlowStatementGrowth(ctx, NewBulkStatementQuery(2025, FiscalPeriodFullYear))
-	if err != nil || len(cashGrowth) != 2 || cashGrowth[0].GrowthNetIncome != "-0.04191152728446884" {
+	if err != nil || len(cashGrowth) != 2 || cellText(cashGrowth[0].GrowthNetIncome) != "-0.04191152728446884" {
 		t.Fatalf("CashFlowStatementGrowth = %+v, %v", cashGrowth, err)
 	}
 	eod, err := client.Bulk.Eod(ctx, NewBulkEodQuery(mustParseDate(t, "2024-10-22")))
-	if err != nil || len(eod) != 2 || eod[1].Close != "0.91741" {
+	if err != nil || len(eod) != 2 || cellText(eod[1].Close) != "0.91741" {
 		t.Fatalf("Eod = %+v, %v", eod, err)
 	}
 
