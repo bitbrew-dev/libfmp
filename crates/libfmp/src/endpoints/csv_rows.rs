@@ -3,10 +3,12 @@
 //! The `csv` crate only splits the body into records. Each record is then
 //! handed to the row's `Deserialize` impl as a map from header name to cell,
 //! so serde names, renames, and field codecs apply unchanged and a failure
-//! reports `[row].member` like the JSON decoder. A cell is always text: an
-//! empty cell is the only absence marker, so it becomes `None` for an
-//! `Option` member, stays `""` for a string member, and is reported as
-//! [`DecodeErrorKind::Null`] anywhere a value is required.
+//! reports `[row].member` like the JSON decoder. Every member of the row,
+//! `Option` or not, must be a header column; the first record checks it. A
+//! cell is always text: an empty cell is the only absence marker, so it
+//! becomes `None` for an `Option` member, stays `""` for a string member,
+//! and is reported as [`DecodeErrorKind::Null`] anywhere a value is
+//! required.
 
 use bytes::Bytes;
 use serde::de::{
@@ -37,8 +39,12 @@ where
             Ok(false) => return Ok(rows),
             Err(_) => return Err(syntax(Some(rows.len()))),
         }
-        let cells = headers.iter().zip(record.iter().map(Cell));
-        let row = serde_path_to_error::deserialize(MapDeserializer::new(cells))
+        let cells = RowCells {
+            headers: &headers,
+            record: &record,
+            require_columns: rows.is_empty(),
+        };
+        let row = serde_path_to_error::deserialize(cells)
             .map_err(|error| row_failure(rows.len(), &error, &headers, &record))?;
         rows.push(row);
     }
@@ -84,6 +90,44 @@ fn row_failure(
     DecodeFailure::Shape {
         path: Some(path),
         kind,
+    }
+}
+
+struct RowCells<'a> {
+    headers: &'a csv::StringRecord,
+    record: &'a csv::StringRecord,
+    require_columns: bool,
+}
+
+impl<'de> de::Deserializer<'de> for RowCells<'_> {
+    type Error = CellError;
+
+    fn deserialize_any<V: Visitor<'de>>(self, visitor: V) -> Result<V::Value, CellError> {
+        visitor.visit_map(MapDeserializer::new(
+            self.headers.iter().zip(self.record.iter().map(Cell)),
+        ))
+    }
+
+    fn deserialize_struct<V: Visitor<'de>>(
+        self,
+        _name: &'static str,
+        fields: &'static [&'static str],
+        visitor: V,
+    ) -> Result<V::Value, CellError> {
+        if self.require_columns
+            && let Some(field) = fields
+                .iter()
+                .find(|field| !self.headers.iter().any(|header| header == **field))
+        {
+            return Err(de::Error::missing_field(field));
+        }
+        self.deserialize_any(visitor)
+    }
+
+    serde::forward_to_deserialize_any! {
+        bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64 char str string bytes byte_buf
+        option unit unit_struct newtype_struct seq tuple tuple_struct map enum identifier
+        ignored_any
     }
 }
 
@@ -281,12 +325,18 @@ mod tests {
     }
 
     #[test]
-    fn a_missing_column_is_a_missing_member() {
+    fn a_missing_column_is_a_missing_member_even_for_an_option() {
         let body = "symbol,date,price,listed,volume,Stock Price\nA,2025-06-02,1,true,1,1\n";
         assert_eq!(
             failure(body),
             (Some("[0].peers".into()), DecodeErrorKind::MissingMember)
         );
+        let body = "symbol,date,price,listed,Stock Price,peers\nA,2025-06-02,1,true,1,x\n";
+        assert_eq!(
+            failure(body),
+            (Some("[0].volume".into()), DecodeErrorKind::MissingMember)
+        );
+        assert_eq!(decode("symbol,date\n").unwrap(), []);
     }
 
     #[test]
