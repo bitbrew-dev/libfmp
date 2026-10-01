@@ -336,7 +336,9 @@ fn render_method(namespace: &NamespacePlan, method: &MethodPlan, out: &mut Strin
         .as_ref()
         .map_or(String::new(), |query| format!(", q {query}"));
     let (result, zero) = match &method.response {
-        ResponseKind::Rows(model) => (format!("[]{model}"), "nil".to_string()),
+        ResponseKind::Rows(model) | ResponseKind::CsvRows(model) => {
+            (format!("[]{model}"), "nil".to_string())
+        }
         ResponseKind::Single(model) => (model.clone(), format!("{model}{{}}")),
         ResponseKind::Dynamic => ("[]jsontext.Value".to_string(), "nil".to_string()),
         ResponseKind::Binary(_) => ("BinaryPayload".to_string(), "BinaryPayload{}".to_string()),
@@ -366,6 +368,12 @@ fn render_method(namespace: &NamespacePlan, method: &MethodPlan, out: &mut Strin
                 out,
                 "\treturn n.client.getBinary(ctx, {id:?}, {path:?}, {params}, []string{{{}}})\n}}\n",
                 types.join(", ")
+            );
+        }
+        ResponseKind::CsvRows(model) => {
+            let _ = writeln!(
+                out,
+                "\treturn getCSV[{model}](ctx, n.client, {id:?}, {path:?}, {params})\n}}\n"
             );
         }
         ResponseKind::Rows(_) | ResponseKind::Single(_) | ResponseKind::Dynamic => {

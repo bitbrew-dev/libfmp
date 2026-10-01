@@ -69,6 +69,7 @@ impl QueryPlan {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub(crate) enum ResponseKind {
     Rows(String),
+    CsvRows(String),
     Single(String),
     Dynamic,
     Binary(Vec<String>),
@@ -270,7 +271,9 @@ impl Context<'_> {
         let response = match (&endpoint.response_model, &wire.contract) {
             (_, Contract::Binary(types)) if endpoint.binary => ResponseKind::Binary(types.clone()),
             (None, Contract::Rows) if endpoint.dynamic => ResponseKind::Dynamic,
-            (Some(model), Contract::Rows) => {
+            (Some(model), contract @ (Contract::Rows | Contract::CsvRows))
+                if !(endpoint.single && *contract == Contract::CsvRows) =>
+            {
                 let owner = self.model_owner.get(&model.name).ok_or_else(|| {
                     format!("response model `{}` is not a discovered struct", model.name)
                 })?;
@@ -281,7 +284,9 @@ impl Context<'_> {
                         model.name
                     ));
                 }
-                if endpoint.single {
+                if *contract == Contract::CsvRows {
+                    ResponseKind::CsvRows(go_name(&model.name))
+                } else if endpoint.single {
                     ResponseKind::Single(go_name(&model.name))
                 } else {
                     ResponseKind::Rows(go_name(&model.name))
