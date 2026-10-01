@@ -2,10 +2,9 @@
 
 Covers the eleven bulk methods whose bodies live in ``fmp.bulk.snapshots``,
 ``fmp.bulk.metrics``, and (for ``company_profiles``) ``fmp.company``: one test
-per method routes the documented fixture body, calls the method, and asserts
-the exact request target plus a few typed fields. Bulk bodies are CSV-backed,
-so most numeric columns arrive as ``str``; only the date columns decode to
-``datetime.date``. The expected targets are the ones the Rust
+per method routes the live CSV fixture body as ``text/csv``, calls the method, and asserts
+the exact request target plus a few typed fields. Numeric columns arrive as
+``str`` verbatim; only the date columns decode to ``datetime.date``. The expected targets are the ones the Rust
 ``bulk_snapshot_endpoints.rs`` and ``bulk_metrics_endpoints.rs`` tests pin.
 """
 
@@ -14,7 +13,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from conftest import FixtureServer, load_fixture
+from conftest import CSV_CONTENT_TYPE, FixtureServer, load_csv_fixture, load_fixture
 from fmp.bulk import BulkNamespace
 from fmp.bulk.metrics import BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeer
 from fmp.bulk.snapshots import (
@@ -30,6 +29,11 @@ from fmp.company import CompanyProfile
 DATE_2025_07_09 = datetime.date(2025, 7, 9)
 
 
+def route_csv(fixture_server: FixtureServer, path: str, fixture: str) -> None:
+    """Serve the shared CSV fixture on ``path`` as ``text/csv``, as the bulk routes answer."""
+    fixture_server.route(path, load_csv_fixture(fixture), content_type=CSV_CONTENT_TYPE)
+
+
 def test_bulk_namespace_is_the_generated_type(client: Any) -> None:
     """``client.bulk`` is the generated flat namespace class."""
     assert isinstance(client.bulk, BulkNamespace)
@@ -37,24 +41,23 @@ def test_bulk_namespace_is_the_generated_type(client: Any) -> None:
 
 def test_company_profiles_form_encodes_the_part(client: Any, fixture_server: FixtureServer) -> None:
     """``company_profiles`` sends ``part`` verbatim, form-encoding spaces and slashes."""
-    fixture_server.route("/profile-bulk", load_fixture("bulk_company_profiles.json"))
+    route_csv(fixture_server, "/profile-bulk", "bulk_company_profiles.csv")
     rows = client.bulk.company_profiles("segment 0/alpha")
 
     assert fixture_server.requests[0].target == "/profile-bulk?part=segment+0%2Falpha"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, CompanyProfile)
-    assert row.symbol == "AAPL"
-    assert row.company_name == "Apple Inc."
-    assert row.price == pytest.approx(271.36)
-    assert row.market_cap == 4_009_711_150_080
-    assert row.ipo_date == datetime.date(1980, 12, 12)
+    assert row.symbol == "WMB"
+    assert row.company_name == "The Williams Companies, Inc."
+    assert row.price == pytest.approx(67.78)
+    assert row.market_cap == 82_906_291_252
     assert row.is_etf is False
 
 
 def test_company_profiles_with_a_numeric_part(client: Any, fixture_server: FixtureServer) -> None:
     """A plain numeric partition is sent as-is without inferring a range."""
-    fixture_server.route("/profile-bulk", load_fixture("bulk_company_profiles.json"))
+    route_csv(fixture_server, "/profile-bulk", "bulk_company_profiles.csv")
     client.bulk.company_profiles("0")
 
     assert fixture_server.requests[0].target == "/profile-bulk?part=0"
@@ -62,98 +65,96 @@ def test_company_profiles_with_a_numeric_part(client: Any, fixture_server: Fixtu
 
 def test_stock_ratings_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
     """``stock_ratings`` maps to ``/rating-bulk`` with no query string."""
-    fixture_server.route("/rating-bulk", load_fixture("bulk_stock_ratings.json"))
+    route_csv(fixture_server, "/rating-bulk", "bulk_stock_ratings.csv")
     rows = client.bulk.stock_ratings()
 
     assert fixture_server.requests[0].target == "/rating-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkStockRating)
     assert row.symbol == "000001.SZ"
-    assert row.date == DATE_2025_07_09
-    assert row.rating == "B+"
-    assert row.discounted_cash_flow_score == "5"
+    assert row.date == datetime.date(2026, 9, 30)
+    assert row.rating == "B-"
+    assert row.discounted_cash_flow_score == "1"
     with pytest.raises(TypeError):
         client.bulk.stock_ratings("0")
 
 
 def test_dcf_valuations_decodes_the_spaced_stock_price_column(client: Any, fixture_server: FixtureServer) -> None:
     """``dcf_valuations`` maps the provider's ``Stock Price`` column to ``stock_price``."""
-    fixture_server.route("/dcf-bulk", load_fixture("bulk_dcf_valuations.json"))
+    route_csv(fixture_server, "/dcf-bulk", "bulk_dcf_valuations.csv")
     rows = client.bulk.dcf_valuations()
 
     assert fixture_server.requests[0].target == "/dcf-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkDcfValuation)
-    assert row.symbol == "000002.SZ"
-    assert row.date == DATE_2025_07_09
-    assert row.dcf == "179.6654688379575"
-    assert row.stock_price == "6.54"
+    assert row.symbol == "000006.SZ"
+    assert row.date == datetime.date(2026, 9, 29)
+    assert row.dcf == "2.525226853334803"
+    assert row.stock_price == "7.62"
 
 
 def test_financial_scores_keeps_string_backed_numbers(client: Any, fixture_server: FixtureServer) -> None:
     """``financial_scores`` maps to ``/scores-bulk`` and keeps the CSV strings."""
-    fixture_server.route("/scores-bulk", load_fixture("bulk_financial_scores.json"))
+    route_csv(fixture_server, "/scores-bulk", "bulk_financial_scores.csv")
     rows = client.bulk.financial_scores()
 
     assert fixture_server.requests[0].target == "/scores-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkFinancialScore)
     assert row.symbol == "000001.SZ"
     assert row.reported_currency == "CNY"
-    assert row.altman_z_score == "0.29153682196643543"
-    assert row.piotroski_score == "5"
-    assert row.market_cap == "236751980000"
+    assert row.altman_z_score == "-0.06634014283050256"
+    assert row.piotroski_score == "4"
+    assert row.market_cap == "219286875637"
 
 
 def test_price_target_summaries_preserves_the_raw_publishers_cell(client: Any, fixture_server: FixtureServer) -> None:
-    """``price_target_summaries`` keeps the provider's malformed ``publishers`` cell verbatim."""
-    fixture_server.route("/price-target-summary-bulk", load_fixture("bulk_price_target_summaries.json"))
+    """``price_target_summaries`` keeps the quoted ``publishers`` cell verbatim as one string."""
+    route_csv(fixture_server, "/price-target-summary-bulk", "bulk_price_target_summaries.csv")
     rows = client.bulk.price_target_summaries()
 
     assert fixture_server.requests[0].target == "/price-target-summary-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkPriceTargetSummary)
     assert row.symbol == "A"
-    assert row.all_time_count == "18"
-    assert row.all_time_avg_price_target == "146.61"
-    assert row.publishers == '[""TheFly"'
+    assert row.all_time_count == "53"
+    assert row.all_time_avg_price_target == "159.49"
+    assert row.publishers == '["StreetInsider","Benzinga","Pulse 2.0"]'
 
 
 def test_etf_holdings_form_encodes_the_part(client: Any, fixture_server: FixtureServer) -> None:
-    """``etf_holdings`` shares the ``part`` shape and keeps the raw ``lastUpdated"`` column."""
-    fixture_server.route("/etf-holder-bulk", load_fixture("bulk_etf_holdings.json"))
+    """``etf_holdings`` shares the ``part`` shape and decodes ``lastUpdated`` as a date."""
+    route_csv(fixture_server, "/etf-holder-bulk", "bulk_etf_holdings.csv")
     rows = client.bulk.etf_holdings("part 1/beta")
 
     assert fixture_server.requests[0].target == "/etf-holder-bulk?part=part+1%2Fbeta"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkEtfHolding)
-    assert row.symbol == "EXCH.AS"
-    assert row.asset == "009150.KS"
-    assert row.isin == "KR7009150004"
-    assert row.weight_percentage == "0.09611"
-    assert row.last_updated_raw == '2024-09-06"'
+    assert row.symbol == " -- "
+    assert row.asset == "TDW"
+    assert row.isin == "US88642R1095"
+    assert row.weight_percentage == "2.63"
+    assert row.last_updated == datetime.date(2026, 9, 27)
 
 
-def test_upgrades_downgrades_consensus_accepts_an_empty_symbol(client: Any, fixture_server: FixtureServer) -> None:
-    """``upgrades_downgrades_consensus`` decodes the documented empty-symbol row."""
-    fixture_server.route(
-        "/upgrades-downgrades-consensus-bulk", load_fixture("bulk_upgrades_downgrades_consensus.json")
-    )
+def test_upgrades_downgrades_consensus_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
+    """``upgrades_downgrades_consensus`` maps to its bulk route and keeps the counts as text."""
+    route_csv(fixture_server, "/upgrades-downgrades-consensus-bulk", "bulk_upgrades_downgrades_consensus.csv")
     rows = client.bulk.upgrades_downgrades_consensus()
 
     assert fixture_server.requests[0].target == "/upgrades-downgrades-consensus-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkUpgradesDowngradesConsensus)
-    assert row.symbol == ""
+    assert row.symbol == "000550.SZ"
     assert row.consensus == "Buy"
-    assert row.buy == "1"
-    assert row.strong_buy == "0"
+    assert row.buy == "14"
+    assert row.strong_buy == "1"
 
 
 def test_key_metrics_ttm_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:

@@ -55,10 +55,17 @@ FIXTURES_DIR = Path(__file__).resolve().parents[2] / "libfmp" / "tests" / "fixtu
 
 JSON_CONTENT_TYPE = "application/json"
 
+CSV_CONTENT_TYPE = "text/csv"
+
 
 def load_fixture(name: str) -> Any:
     """Return the parsed JSON body of ``crates/libfmp/tests/fixtures/<name>``."""
     return json.loads((FIXTURES_DIR / name).read_text(encoding="utf-8"))
+
+
+def load_csv_fixture(name: str) -> bytes:
+    """Return the raw CSV body of ``crates/libfmp/tests/fixtures/<name>``, as bulk routes answer."""
+    return (FIXTURES_DIR / name).read_bytes()
 
 
 def _errors_namespace() -> SimpleNamespace:
