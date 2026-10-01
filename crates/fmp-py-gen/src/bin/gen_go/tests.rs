@@ -722,6 +722,63 @@ fn empty_or_null_codec_decodes_empty_and_null_to_nil_through_the_raw_shadow() {
 }
 
 #[test]
+fn empty_or_null_object_codec_decodes_empty_and_null_to_nil_through_the_raw_shadow() {
+    let aliases = BTreeMap::new();
+    let structs = vec![StructDef {
+        name: "NetWorthRange".to_string(),
+        ..row(vec![field("min", "i64", FieldAttrs::default())])
+    }];
+    let table = TypeTable::new(&structs, &aliases);
+    let codec = "crate::codecs::empty_or_null_object::deserialize";
+    let def = row(vec![field(
+        "income_range",
+        "Option<NetWorthRange>",
+        deserialize_with(codec),
+    )]);
+    let mapped = table.go_field(&def, &def.fields[0]).expect("maps");
+    assert_eq!(
+        (
+            mapped.public_ty.as_str(),
+            mapped.shadow_ty.as_str(),
+            mapped.codec,
+            mapped.required_key(),
+        ),
+        (
+            "*NetWorthRange",
+            "jsontext.Value",
+            Codec::EmptyOrNullObject,
+            true
+        )
+    );
+    let models = plan_models("test", &[&def], &table).expect("plans");
+    let rendered = render_models("test", &models);
+    for expected in [
+        "IncomeRange *NetWorthRange `json:\"incomeRange\"`",
+        "IncomeRange jsontext.Value `json:\"incomeRange\"`",
+        "case len(shadow.IncomeRange) == 0:",
+        "var incomeRange *NetWorthRange\n\tif shadow.IncomeRange.Kind() != 'n' && \
+         string(shadow.IncomeRange) != \"\\\"\\\"\" {\n\t\tvar value NetWorthRange\n",
+        "return memberDecodeError(\"Row\", \"incomeRange\", shadow.IncomeRange, err)",
+        "IncomeRange: incomeRange,",
+    ] {
+        assert!(
+            rendered.contains(expected),
+            "missing {expected:?} in\n{rendered}"
+        );
+    }
+
+    for (name, ty) in [
+        ("bare", "NetWorthRange"),
+        ("text", "Option<String>"),
+        ("many", "Option<Vec<NetWorthRange>>"),
+    ] {
+        let def = row(vec![field(name, ty, deserialize_with(codec))]);
+        let error = table.go_field(&def, &def.fields[0]).expect_err(name);
+        assert!(error.contains("empty_or_null_object"), "{name}: {error}");
+    }
+}
+
+#[test]
 fn null_text_codec_decodes_the_null_text_and_null_to_nil_through_the_raw_shadow() {
     let aliases = BTreeMap::new();
     let structs = Vec::new();
