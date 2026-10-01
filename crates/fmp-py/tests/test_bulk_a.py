@@ -13,7 +13,7 @@ from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from conftest import CSV_CONTENT_TYPE, FixtureServer, load_csv_fixture, load_fixture
+from conftest import CSV_CONTENT_TYPE, FixtureServer, load_csv_fixture
 from fmp.bulk import BulkNamespace
 from fmp.bulk.metrics import BulkEarningsSurprise, BulkFinancialRatiosTtm, BulkKeyMetricsTtm, BulkStockPeer
 from fmp.bulk.snapshots import (
@@ -25,9 +25,6 @@ from fmp.bulk.snapshots import (
     BulkUpgradesDowngradesConsensus,
 )
 from fmp.company import CompanyProfile
-
-DATE_2025_07_09 = datetime.date(2025, 7, 9)
-
 
 def route_csv(fixture_server: FixtureServer, path: str, fixture: str) -> None:
     """Serve the shared CSV fixture on ``path`` as ``text/csv``, as the bulk routes answer."""
@@ -159,66 +156,66 @@ def test_upgrades_downgrades_consensus_takes_no_arguments(client: Any, fixture_s
 
 def test_key_metrics_ttm_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
     """``key_metrics_ttm`` maps to ``/key-metrics-ttm-bulk`` with no query string."""
-    fixture_server.route("/key-metrics-ttm-bulk", load_fixture("bulk_key_metrics_ttm.json"))
+    route_csv(fixture_server, "/key-metrics-ttm-bulk", "bulk_key_metrics_ttm.csv")
     rows = client.bulk.key_metrics_ttm()
 
     assert fixture_server.requests[0].target == "/key-metrics-ttm-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkKeyMetricsTtm)
     assert row.symbol == "000001.SZ"
-    assert row.market_cap == "249171756000"
-    assert row.ev_to_ebitda_ttm == "-14.656106051669223"
-    assert row.earnings_yield_ttm == "0.14960077934639543"
+    assert row.market_cap == "224526473551"
+    assert row.ev_to_ebitda_ttm == "29.23198788110799"
+    assert row.earnings_yield_ttm == "0.19355846887948813"
 
 
 def test_financial_ratios_ttm_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
     """``financial_ratios_ttm`` maps to ``/ratios-ttm-bulk`` with no query string."""
-    fixture_server.route("/ratios-ttm-bulk", load_fixture("bulk_financial_ratios_ttm.json"))
+    route_csv(fixture_server, "/ratios-ttm-bulk", "bulk_financial_ratios_ttm.csv")
     rows = client.bulk.financial_ratios_ttm()
 
     assert fixture_server.requests[0].target == "/ratios-ttm-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkFinancialRatiosTtm)
     assert row.symbol == "000001.SZ"
-    assert row.asset_turnover_ttm == "0.029075827062555015"
-    assert row.book_value_per_share_ttm == "22.260885357516656"
-    assert row.net_income_per_ebt_ttm == "0.8225101702576465"
+    assert row.asset_turnover_ttm == "0.03463701192046656"
+    assert row.book_value_per_share_ttm == "24.12738217279904"
+    assert row.net_income_per_ebt_ttm == "0.83539656299258"
 
 
 def test_stock_peers_takes_no_arguments(client: Any, fixture_server: FixtureServer) -> None:
     """``stock_peers`` maps to ``/peers-bulk`` and keeps the peers cell as one string."""
-    fixture_server.route("/peers-bulk", load_fixture("bulk_stock_peers.json"))
+    route_csv(fixture_server, "/peers-bulk", "bulk_stock_peers.csv")
     rows = client.bulk.stock_peers()
 
     assert fixture_server.requests[0].target == "/peers-bulk"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkStockPeer)
     assert row.symbol == "000001.SZ"
-    assert row.peers == "600036.SS"
+    assert row.peers == "3698.HK,600000.SS,600015.SS,600016.SS,600036.SS,601166.SS,601658.SS"
 
 
 def test_earnings_surprises_encodes_the_required_year(client: Any, fixture_server: FixtureServer) -> None:
     """``earnings_surprises`` sends ``year`` as the only query parameter."""
-    fixture_server.route("/earnings-surprises-bulk", load_fixture("bulk_earnings_surprises.json"))
+    route_csv(fixture_server, "/earnings-surprises-bulk", "bulk_earnings_surprises.csv")
     rows = client.bulk.earnings_surprises(2026)
 
     assert fixture_server.requests[0].target == "/earnings-surprises-bulk?year=2026"
-    assert len(rows) == 1
+    assert len(rows) == 2
     row = rows[0]
     assert isinstance(row, BulkEarningsSurprise)
-    assert row.symbol == "AMKYF"
-    assert row.date == DATE_2025_07_09
-    assert row.eps_actual == "0.3631"
-    assert row.eps_estimated == "0.3615"
-    assert row.last_updated == DATE_2025_07_09
+    assert row.symbol == "AUTO.OL"
+    assert row.date == datetime.date(2024, 12, 31)
+    assert row.eps_actual == "0.1332"
+    assert row.eps_estimated == "0.1581"
+    assert row.last_updated == datetime.date(2025, 10, 7)
 
 
 def test_earnings_surprises_accepts_the_year_keyword(client: Any, fixture_server: FixtureServer) -> None:
     """The constructor argument is also reachable by keyword."""
-    fixture_server.route("/earnings-surprises-bulk", load_fixture("bulk_earnings_surprises.json"))
+    route_csv(fixture_server, "/earnings-surprises-bulk", "bulk_earnings_surprises.csv")
     client.bulk.earnings_surprises(year=2024)
 
     assert fixture_server.requests[0].target == "/earnings-surprises-bulk?year=2024"
@@ -240,8 +237,8 @@ def test_status_error_carries_the_bulk_endpoint_id(
 def test_decode_error_names_the_bulk_endpoint(
     client: Any, fixture_server: FixtureServer, errors: SimpleNamespace
 ) -> None:
-    """A non-JSON body on a bulk method maps to ``FmpDecodeError``."""
-    fixture_server.route("/peers-bulk", b"not-json", content_type="text/plain")
+    """A body that is not ``text/csv`` on a bulk method maps to ``FmpDecodeError``."""
+    fixture_server.route("/peers-bulk", b"not-csv", content_type="text/plain")
     with pytest.raises(errors.FmpDecodeError):
         client.bulk.stock_peers()
     assert fixture_server.requests[0].target == "/peers-bulk"
