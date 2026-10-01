@@ -151,12 +151,12 @@ def check_bulk_contract(client: FmpClient) -> None:
     ipo_date: datetime.date | None = profiles[0].ipo_date
     statements: list[BulkIncomeStatement] = client.bulk.income_statements(2026, "Q1")
     accepted: datetime.datetime = statements[0].accepted_date
-    revenue: str = statements[0].revenue
+    revenue: str | None = statements[0].revenue
     surprises: list[BulkEarningsSurprise] = client.bulk.earnings_surprises(year=2026)
-    eps_actual: str = surprises[0].eps_actual
+    eps_actual: str | None = surprises[0].eps_actual
     bars: list[BulkEodBar] = client.bulk.eod(datetime.date(2024, 10, 22))
     more_bars: list[BulkEodBar] = client.bulk.eod(date="2024-10-22")
-    close: str = bars[0].close
+    close: str | None = bars[0].close
     _ = (ipo_date, accepted, revenue, eps_actual, close, more_bars)
 
 
