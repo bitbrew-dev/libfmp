@@ -222,7 +222,7 @@ func mutateFixtureMember(t *testing.T, fixture, member string, value jsontext.Va
 
 // TestEveryFixtureIsReferencedByAGoTest enforces the ADR 0030 acceptance
 // check that every shared fixture decodes through a Go model: each .json
-// file under the fixture directory must be named, as a quoted literal, in at
+// or .csv file under the fixture directory must be named, as a quoted literal, in at
 // least one *_test.go file of this package. The fixture README is not a
 // fixture and is the only file the scan skips. Every unreferenced fixture is
 // listed, so a newly recorded fixture fails here until a domain test uses it.
@@ -246,7 +246,7 @@ func TestEveryFixtureIsReferencedByAGoTest(t *testing.T) {
 	}
 	var fixtures, unreferenced []string
 	for _, entry := range entries {
-		if entry.IsDir() || filepath.Ext(entry.Name()) != ".json" {
+		if entry.IsDir() || !slices.Contains([]string{".json", ".csv"}, filepath.Ext(entry.Name())) {
 			continue
 		}
 		fixtures = append(fixtures, entry.Name())
