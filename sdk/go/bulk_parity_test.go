@@ -1,8 +1,9 @@
 package fmp
 
 import (
-	"encoding/json/jsontext"
+	"encoding/csv"
 	"encoding/json/v2"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -20,10 +21,10 @@ func TestBulkFixturesDecodeAndReencodeToTheSameMemberSet(t *testing.T) {
 	assertCSVFixtureParity[BulkPriceTargetSummary](t, "bulk_price_target_summaries.csv", 10)
 	assertCSVFixtureParity[BulkETFHolding](t, "bulk_etf_holdings.csv", 9)
 	assertCSVFixtureParity[BulkUpgradesDowngradesConsensus](t, "bulk_upgrades_downgrades_consensus.csv", 7)
-	assertFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.json")
-	assertFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.json")
-	assertFixtureParity[BulkStockPeer](t, "bulk_stock_peers.json")
-	assertFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.json")
+	assertCSVFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.csv", 43)
+	assertCSVFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.csv", 60)
+	assertCSVFixtureParity[BulkStockPeer](t, "bulk_stock_peers.csv", 2)
+	assertCSVFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.csv", 5)
 	assertFixtureParity[BulkIncomeStatement](t, "bulk_income_statements.json")
 	assertFixtureParity[BulkIncomeStatementGrowth](t, "bulk_income_statement_growth.json")
 	assertFixtureParity[BulkBalanceSheetStatement](t, "bulk_balance_sheet_statements.json")
@@ -72,15 +73,14 @@ func TestBulkSnapshotsDecodeExactValues(t *testing.T) {
 }
 
 // Exact values copied from crates/libfmp/tests/bulk_metrics_responses.rs,
-// including the beyond-u64 and high-precision strings that must survive
-// untouched (ADR 0028: numeric strings are never parsed).
+// including the beyond-u64, high-precision, and exponent cells that must
+// survive untouched (numeric strings are never parsed).
 func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 	t.Parallel()
-	metrics := assertFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.json")
-	if len(metrics) != 1 || metrics[0].Symbol != "000001.SZ" || metrics[0].MarketCap != "249171756000" ||
-		metrics[0].EnterpriseValueTTM != "-496959244000" || metrics[0].CurrentRatioTTM != "0" ||
-		metrics[0].FreeCashFlowToFirmTTM != "-35237570137.11014" {
-		t.Fatalf("bulk_key_metrics_ttm = %+v", metrics)
+	metrics := assertCSVFixtureParity[BulkKeyMetricsTTM](t, "bulk_key_metrics_ttm.csv", 43)
+	if metrics[0].Symbol != "000001.SZ" || metrics[0].MarketCap != "224526473551" ||
+		metrics[0].EvToEbitdaTTM != "29.23198788110799" {
+		t.Fatalf("bulk_key_metrics_ttm = %+v", metrics[0])
 	}
 	encoded, err := json.Marshal(metrics[0])
 	if err != nil || !strings.Contains(string(encoded), `"evToEBITDATTM":`) ||
@@ -89,54 +89,40 @@ func TestBulkMetricsPreserveNumericTextIncludingBeyondU64(t *testing.T) {
 		strings.Contains(string(encoded), "Ttm") {
 		t.Fatalf("re-encoded key metrics = %s, %v", encoded, err)
 	}
-	ratios := assertFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.json")
-	if len(ratios) != 1 || ratios[0].EnterpriseValueTTM != "-496959244000" || ratios[0].ReceivablesTurnoverTTM != "0" ||
-		ratios[0].GrossProfitMarginTTM != "1.1622776732779352" {
-		t.Fatalf("bulk_financial_ratios_ttm = %+v", ratios)
-	}
-	if encoded, err := json.Marshal(ratios[0]); err != nil || !strings.Contains(string(encoded), `"netIncomePerEBTTTM":`) {
-		t.Fatalf("re-encoded ratios = %s, %v", encoded, err)
+	ratios := assertCSVFixtureParity[BulkFinancialRatiosTTM](t, "bulk_financial_ratios_ttm.csv", 60)
+	if ratios[0].GrossProfitMarginTTM != "0.5535250166330814" || ratios[0].NetIncomePerEbtTTM != "0.83539656299258" {
+		t.Fatalf("bulk_financial_ratios_ttm = %+v", ratios[0])
 	}
 
 	const beyondU64 = "18446744073709551616"
 	const highPrecision = "-12345678901234567890123456789.123456789012345678901234567890"
-	var wire []map[string]jsontext.Value
-	if err := json.Unmarshal(readFixture(t, "bulk_key_metrics_ttm.json"), &wire); err != nil {
-		t.Fatal(err)
-	}
-	wire[0]["marketCap"] = jsontext.Value(`"` + beyondU64 + `"`)
-	wire[0]["freeCashFlowToFirmTTM"] = jsontext.Value(`"` + highPrecision + `"`)
-	huge, err := json.Marshal(wire)
+	records, err := csv.NewReader(strings.NewReader(string(readFixture(t, "bulk_key_metrics_ttm.csv")))).ReadAll()
 	if err != nil {
 		t.Fatal(err)
 	}
-	var decoded []BulkKeyMetricsTTM
-	if err := json.Unmarshal(huge, &decoded); err != nil || len(decoded) != 1 ||
-		decoded[0].MarketCap != beyondU64 || decoded[0].FreeCashFlowToFirmTTM != highPrecision {
+	row := slices.Clone(records[1])
+	for name, value := range map[string]string{"marketCap": beyondU64, "freeCashFlowToFirmTTM": highPrecision,
+		"evToSalesTTM": "6.9148336e-9"} {
+		row[slices.Index(records[0], name)] = value
+	}
+	var body strings.Builder
+	writer := csv.NewWriter(&body)
+	_ = writer.WriteAll([][]string{records[0], row})
+	decoded, _, kind, err := decodeCSVRows[BulkKeyMetricsTTM]([]byte(body.String()))
+	if kind != DecodeKindNone || decoded[0].MarketCap != beyondU64 ||
+		decoded[0].FreeCashFlowToFirmTTM != highPrecision || decoded[0].EvToSalesTTM != "6.9148336e-9" {
 		t.Fatalf("beyond-u64 decode = %+v, %v", decoded, err)
 	}
-	if encoded, err := json.Marshal(decoded[0]); err != nil ||
-		!strings.Contains(string(encoded), `"marketCap":"`+beyondU64+`"`) ||
-		!strings.Contains(string(encoded), `"freeCashFlowToFirmTTM":"`+highPrecision+`"`) {
-		t.Fatalf("beyond-u64 re-encode = %s, %v", encoded, err)
-	}
-	wire[0]["marketCap"] = jsontext.Value(`249171756000`)
-	numeric, err := json.Marshal(wire)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := json.Unmarshal(numeric, &decoded); err == nil {
-		t.Fatalf("a JSON number decoded into the numeric-string member marketCap: %+v", decoded)
-	}
 
-	peers := assertFixtureParity[BulkStockPeer](t, "bulk_stock_peers.json")
-	if want := (BulkStockPeer{Symbol: "000001.SZ", Peers: "600036.SS"}); len(peers) != 1 || peers[0] != want {
-		t.Fatalf("bulk_stock_peers = %+v", peers)
+	peers := assertCSVFixtureParity[BulkStockPeer](t, "bulk_stock_peers.csv", 2)
+	if want := (BulkStockPeer{Symbol: "000001.SZ",
+		Peers: "3698.HK,600000.SS,600015.SS,600016.SS,600036.SS,601166.SS,601658.SS"}); peers[0] != want {
+		t.Fatalf("bulk_stock_peers = %+v", peers[0])
 	}
-	surprises := assertFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.json")
-	if want := (BulkEarningsSurprise{Symbol: "AMKYF", Date: mustParseDate(t, "2025-07-09"), EPSActual: "0.3631",
-		EPSEstimated: "0.3615", LastUpdated: mustParseDate(t, "2025-07-09")}); len(surprises) != 1 || surprises[0] != want {
-		t.Fatalf("bulk_earnings_surprises = %+v", surprises)
+	surprises := assertCSVFixtureParity[BulkEarningsSurprise](t, "bulk_earnings_surprises.csv", 5)
+	if want := (BulkEarningsSurprise{Symbol: "AUTO.OL", Date: mustParseDate(t, "2024-12-31"), EPSActual: "0.1332",
+		EPSEstimated: "0.1581", LastUpdated: mustParseDate(t, "2025-10-07")}); surprises[0] != want {
+		t.Fatalf("bulk_earnings_surprises = %+v", surprises[0])
 	}
 }
 
