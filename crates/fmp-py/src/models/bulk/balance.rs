@@ -25,111 +25,111 @@ pub(crate) struct BulkBalanceSheetStatement {
     pub fiscal_year: String,
     pub period: String,
     #[pyo3(get)]
-    pub cash_and_cash_equivalents: String,
+    pub cash_and_cash_equivalents: Option<String>,
     #[pyo3(get)]
-    pub short_term_investments: String,
+    pub short_term_investments: Option<String>,
     #[pyo3(get)]
-    pub cash_and_short_term_investments: String,
+    pub cash_and_short_term_investments: Option<String>,
     #[pyo3(get)]
-    pub net_receivables: String,
+    pub net_receivables: Option<String>,
     #[pyo3(get)]
-    pub accounts_receivables: String,
+    pub accounts_receivables: Option<String>,
     #[pyo3(get)]
-    pub other_receivables: String,
+    pub other_receivables: Option<String>,
     #[pyo3(get)]
-    pub inventory: String,
+    pub inventory: Option<String>,
     #[pyo3(get)]
-    pub prepaids: String,
+    pub prepaids: Option<String>,
     #[pyo3(get)]
-    pub other_current_assets: String,
+    pub other_current_assets: Option<String>,
     #[pyo3(get)]
-    pub total_current_assets: String,
+    pub total_current_assets: Option<String>,
     #[pyo3(get)]
-    pub property_plant_equipment_net: String,
+    pub property_plant_equipment_net: Option<String>,
     #[pyo3(get)]
-    pub goodwill: String,
+    pub goodwill: Option<String>,
     #[pyo3(get)]
-    pub intangible_assets: String,
+    pub intangible_assets: Option<String>,
     #[pyo3(get)]
-    pub goodwill_and_intangible_assets: String,
+    pub goodwill_and_intangible_assets: Option<String>,
     #[pyo3(get)]
-    pub long_term_investments: String,
+    pub long_term_investments: Option<String>,
     #[pyo3(get)]
-    pub tax_assets: String,
+    pub tax_assets: Option<String>,
     #[pyo3(get)]
-    pub other_non_current_assets: String,
+    pub other_non_current_assets: Option<String>,
     #[pyo3(get)]
-    pub total_non_current_assets: String,
+    pub total_non_current_assets: Option<String>,
     #[pyo3(get)]
-    pub other_assets: String,
+    pub other_assets: Option<String>,
     #[pyo3(get)]
-    pub total_assets: String,
+    pub total_assets: Option<String>,
     #[pyo3(get)]
-    pub total_payables: String,
+    pub total_payables: Option<String>,
     #[pyo3(get)]
-    pub account_payables: String,
+    pub account_payables: Option<String>,
     #[pyo3(get)]
-    pub other_payables: String,
+    pub other_payables: Option<String>,
     #[pyo3(get)]
-    pub accrued_expenses: String,
+    pub accrued_expenses: Option<String>,
     #[pyo3(get)]
-    pub short_term_debt: String,
+    pub short_term_debt: Option<String>,
     #[pyo3(get)]
-    pub capital_lease_obligations_current: String,
+    pub capital_lease_obligations_current: Option<String>,
     #[pyo3(get)]
-    pub tax_payables: String,
+    pub tax_payables: Option<String>,
     #[pyo3(get)]
-    pub deferred_revenue: String,
+    pub deferred_revenue: Option<String>,
     #[pyo3(get)]
-    pub other_current_liabilities: String,
+    pub other_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub total_current_liabilities: String,
+    pub total_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub long_term_debt: String,
+    pub long_term_debt: Option<String>,
     #[pyo3(get)]
-    pub capital_lease_obligations_non_current: String,
+    pub capital_lease_obligations_non_current: Option<String>,
     #[pyo3(get)]
-    pub deferred_revenue_non_current: String,
+    pub deferred_revenue_non_current: Option<String>,
     #[pyo3(get)]
-    pub deferred_tax_liabilities_non_current: String,
+    pub deferred_tax_liabilities_non_current: Option<String>,
     #[pyo3(get)]
-    pub other_non_current_liabilities: String,
+    pub other_non_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub total_non_current_liabilities: String,
+    pub total_non_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub other_liabilities: String,
+    pub other_liabilities: Option<String>,
     #[pyo3(get)]
-    pub capital_lease_obligations: String,
+    pub capital_lease_obligations: Option<String>,
     #[pyo3(get)]
-    pub total_liabilities: String,
+    pub total_liabilities: Option<String>,
     #[pyo3(get)]
-    pub treasury_stock: String,
+    pub treasury_stock: Option<String>,
     #[pyo3(get)]
-    pub preferred_stock: String,
+    pub preferred_stock: Option<String>,
     #[pyo3(get)]
-    pub common_stock: String,
+    pub common_stock: Option<String>,
     #[pyo3(get)]
-    pub retained_earnings: String,
+    pub retained_earnings: Option<String>,
     #[pyo3(get)]
-    pub additional_paid_in_capital: String,
+    pub additional_paid_in_capital: Option<String>,
     #[pyo3(get)]
-    pub accumulated_other_comprehensive_income_loss: String,
+    pub accumulated_other_comprehensive_income_loss: Option<String>,
     #[pyo3(get)]
-    pub other_total_stockholders_equity: String,
+    pub other_total_stockholders_equity: Option<String>,
     #[pyo3(get)]
-    pub total_stockholders_equity: String,
+    pub total_stockholders_equity: Option<String>,
     #[pyo3(get)]
-    pub total_equity: String,
+    pub total_equity: Option<String>,
     #[pyo3(get)]
-    pub minority_interest: String,
+    pub minority_interest: Option<String>,
     #[pyo3(get)]
-    pub total_liabilities_and_total_equity: String,
+    pub total_liabilities_and_total_equity: Option<String>,
     #[pyo3(get)]
-    pub total_investments: String,
+    pub total_investments: Option<String>,
     #[pyo3(get)]
-    pub total_debt: String,
+    pub total_debt: Option<String>,
     #[pyo3(get)]
-    pub net_debt: String,
+    pub net_debt: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -149,59 +149,59 @@ impl BulkBalanceSheetStatement {
         fiscal_year: String,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
-        cash_and_cash_equivalents: String,
-        short_term_investments: String,
-        cash_and_short_term_investments: String,
-        net_receivables: String,
-        accounts_receivables: String,
-        other_receivables: String,
-        inventory: String,
-        prepaids: String,
-        other_current_assets: String,
-        total_current_assets: String,
-        property_plant_equipment_net: String,
-        goodwill: String,
-        intangible_assets: String,
-        goodwill_and_intangible_assets: String,
-        long_term_investments: String,
-        tax_assets: String,
-        other_non_current_assets: String,
-        total_non_current_assets: String,
-        other_assets: String,
-        total_assets: String,
-        total_payables: String,
-        account_payables: String,
-        other_payables: String,
-        accrued_expenses: String,
-        short_term_debt: String,
-        capital_lease_obligations_current: String,
-        tax_payables: String,
-        deferred_revenue: String,
-        other_current_liabilities: String,
-        total_current_liabilities: String,
-        long_term_debt: String,
-        capital_lease_obligations_non_current: String,
-        deferred_revenue_non_current: String,
-        deferred_tax_liabilities_non_current: String,
-        other_non_current_liabilities: String,
-        total_non_current_liabilities: String,
-        other_liabilities: String,
-        capital_lease_obligations: String,
-        total_liabilities: String,
-        treasury_stock: String,
-        preferred_stock: String,
-        common_stock: String,
-        retained_earnings: String,
-        additional_paid_in_capital: String,
-        accumulated_other_comprehensive_income_loss: String,
-        other_total_stockholders_equity: String,
-        total_stockholders_equity: String,
-        total_equity: String,
-        minority_interest: String,
-        total_liabilities_and_total_equity: String,
-        total_investments: String,
-        total_debt: String,
-        net_debt: String,
+        cash_and_cash_equivalents: Option<String>,
+        short_term_investments: Option<String>,
+        cash_and_short_term_investments: Option<String>,
+        net_receivables: Option<String>,
+        accounts_receivables: Option<String>,
+        other_receivables: Option<String>,
+        inventory: Option<String>,
+        prepaids: Option<String>,
+        other_current_assets: Option<String>,
+        total_current_assets: Option<String>,
+        property_plant_equipment_net: Option<String>,
+        goodwill: Option<String>,
+        intangible_assets: Option<String>,
+        goodwill_and_intangible_assets: Option<String>,
+        long_term_investments: Option<String>,
+        tax_assets: Option<String>,
+        other_non_current_assets: Option<String>,
+        total_non_current_assets: Option<String>,
+        other_assets: Option<String>,
+        total_assets: Option<String>,
+        total_payables: Option<String>,
+        account_payables: Option<String>,
+        other_payables: Option<String>,
+        accrued_expenses: Option<String>,
+        short_term_debt: Option<String>,
+        capital_lease_obligations_current: Option<String>,
+        tax_payables: Option<String>,
+        deferred_revenue: Option<String>,
+        other_current_liabilities: Option<String>,
+        total_current_liabilities: Option<String>,
+        long_term_debt: Option<String>,
+        capital_lease_obligations_non_current: Option<String>,
+        deferred_revenue_non_current: Option<String>,
+        deferred_tax_liabilities_non_current: Option<String>,
+        other_non_current_liabilities: Option<String>,
+        total_non_current_liabilities: Option<String>,
+        other_liabilities: Option<String>,
+        capital_lease_obligations: Option<String>,
+        total_liabilities: Option<String>,
+        treasury_stock: Option<String>,
+        preferred_stock: Option<String>,
+        common_stock: Option<String>,
+        retained_earnings: Option<String>,
+        additional_paid_in_capital: Option<String>,
+        accumulated_other_comprehensive_income_loss: Option<String>,
+        other_total_stockholders_equity: Option<String>,
+        total_stockholders_equity: Option<String>,
+        total_equity: Option<String>,
+        minority_interest: Option<String>,
+        total_liabilities_and_total_equity: Option<String>,
+        total_investments: Option<String>,
+        total_debt: Option<String>,
+        net_debt: Option<String>,
     ) -> Self {
         Self {
             date,
@@ -1161,67 +1161,99 @@ impl From<libfmp::responses::bulk::BulkBalanceSheetStatement> for BulkBalanceShe
             accepted_date: value.accepted_date.into_inner(),
             fiscal_year: value.fiscal_year.as_str().to_owned(),
             period: value.period.to_string(),
-            cash_and_cash_equivalents: value.cash_and_cash_equivalents.into_inner(),
-            short_term_investments: value.short_term_investments.into_inner(),
-            cash_and_short_term_investments: value.cash_and_short_term_investments.into_inner(),
-            net_receivables: value.net_receivables.into_inner(),
-            accounts_receivables: value.accounts_receivables.into_inner(),
-            other_receivables: value.other_receivables.into_inner(),
-            inventory: value.inventory.into_inner(),
-            prepaids: value.prepaids.into_inner(),
-            other_current_assets: value.other_current_assets.into_inner(),
-            total_current_assets: value.total_current_assets.into_inner(),
-            property_plant_equipment_net: value.property_plant_equipment_net.into_inner(),
-            goodwill: value.goodwill.into_inner(),
-            intangible_assets: value.intangible_assets.into_inner(),
-            goodwill_and_intangible_assets: value.goodwill_and_intangible_assets.into_inner(),
-            long_term_investments: value.long_term_investments.into_inner(),
-            tax_assets: value.tax_assets.into_inner(),
-            other_non_current_assets: value.other_non_current_assets.into_inner(),
-            total_non_current_assets: value.total_non_current_assets.into_inner(),
-            other_assets: value.other_assets.into_inner(),
-            total_assets: value.total_assets.into_inner(),
-            total_payables: value.total_payables.into_inner(),
-            account_payables: value.account_payables.into_inner(),
-            other_payables: value.other_payables.into_inner(),
-            accrued_expenses: value.accrued_expenses.into_inner(),
-            short_term_debt: value.short_term_debt.into_inner(),
-            capital_lease_obligations_current: value.capital_lease_obligations_current.into_inner(),
-            tax_payables: value.tax_payables.into_inner(),
-            deferred_revenue: value.deferred_revenue.into_inner(),
-            other_current_liabilities: value.other_current_liabilities.into_inner(),
-            total_current_liabilities: value.total_current_liabilities.into_inner(),
-            long_term_debt: value.long_term_debt.into_inner(),
+            cash_and_cash_equivalents: value
+                .cash_and_cash_equivalents
+                .map(|value| value.into_inner()),
+            short_term_investments: value.short_term_investments.map(|value| value.into_inner()),
+            cash_and_short_term_investments: value
+                .cash_and_short_term_investments
+                .map(|value| value.into_inner()),
+            net_receivables: value.net_receivables.map(|value| value.into_inner()),
+            accounts_receivables: value.accounts_receivables.map(|value| value.into_inner()),
+            other_receivables: value.other_receivables.map(|value| value.into_inner()),
+            inventory: value.inventory.map(|value| value.into_inner()),
+            prepaids: value.prepaids.map(|value| value.into_inner()),
+            other_current_assets: value.other_current_assets.map(|value| value.into_inner()),
+            total_current_assets: value.total_current_assets.map(|value| value.into_inner()),
+            property_plant_equipment_net: value
+                .property_plant_equipment_net
+                .map(|value| value.into_inner()),
+            goodwill: value.goodwill.map(|value| value.into_inner()),
+            intangible_assets: value.intangible_assets.map(|value| value.into_inner()),
+            goodwill_and_intangible_assets: value
+                .goodwill_and_intangible_assets
+                .map(|value| value.into_inner()),
+            long_term_investments: value.long_term_investments.map(|value| value.into_inner()),
+            tax_assets: value.tax_assets.map(|value| value.into_inner()),
+            other_non_current_assets: value
+                .other_non_current_assets
+                .map(|value| value.into_inner()),
+            total_non_current_assets: value
+                .total_non_current_assets
+                .map(|value| value.into_inner()),
+            other_assets: value.other_assets.map(|value| value.into_inner()),
+            total_assets: value.total_assets.map(|value| value.into_inner()),
+            total_payables: value.total_payables.map(|value| value.into_inner()),
+            account_payables: value.account_payables.map(|value| value.into_inner()),
+            other_payables: value.other_payables.map(|value| value.into_inner()),
+            accrued_expenses: value.accrued_expenses.map(|value| value.into_inner()),
+            short_term_debt: value.short_term_debt.map(|value| value.into_inner()),
+            capital_lease_obligations_current: value
+                .capital_lease_obligations_current
+                .map(|value| value.into_inner()),
+            tax_payables: value.tax_payables.map(|value| value.into_inner()),
+            deferred_revenue: value.deferred_revenue.map(|value| value.into_inner()),
+            other_current_liabilities: value
+                .other_current_liabilities
+                .map(|value| value.into_inner()),
+            total_current_liabilities: value
+                .total_current_liabilities
+                .map(|value| value.into_inner()),
+            long_term_debt: value.long_term_debt.map(|value| value.into_inner()),
             capital_lease_obligations_non_current: value
                 .capital_lease_obligations_non_current
-                .into_inner(),
-            deferred_revenue_non_current: value.deferred_revenue_non_current.into_inner(),
+                .map(|value| value.into_inner()),
+            deferred_revenue_non_current: value
+                .deferred_revenue_non_current
+                .map(|value| value.into_inner()),
             deferred_tax_liabilities_non_current: value
                 .deferred_tax_liabilities_non_current
-                .into_inner(),
-            other_non_current_liabilities: value.other_non_current_liabilities.into_inner(),
-            total_non_current_liabilities: value.total_non_current_liabilities.into_inner(),
-            other_liabilities: value.other_liabilities.into_inner(),
-            capital_lease_obligations: value.capital_lease_obligations.into_inner(),
-            total_liabilities: value.total_liabilities.into_inner(),
-            treasury_stock: value.treasury_stock.into_inner(),
-            preferred_stock: value.preferred_stock.into_inner(),
-            common_stock: value.common_stock.into_inner(),
-            retained_earnings: value.retained_earnings.into_inner(),
-            additional_paid_in_capital: value.additional_paid_in_capital.into_inner(),
+                .map(|value| value.into_inner()),
+            other_non_current_liabilities: value
+                .other_non_current_liabilities
+                .map(|value| value.into_inner()),
+            total_non_current_liabilities: value
+                .total_non_current_liabilities
+                .map(|value| value.into_inner()),
+            other_liabilities: value.other_liabilities.map(|value| value.into_inner()),
+            capital_lease_obligations: value
+                .capital_lease_obligations
+                .map(|value| value.into_inner()),
+            total_liabilities: value.total_liabilities.map(|value| value.into_inner()),
+            treasury_stock: value.treasury_stock.map(|value| value.into_inner()),
+            preferred_stock: value.preferred_stock.map(|value| value.into_inner()),
+            common_stock: value.common_stock.map(|value| value.into_inner()),
+            retained_earnings: value.retained_earnings.map(|value| value.into_inner()),
+            additional_paid_in_capital: value
+                .additional_paid_in_capital
+                .map(|value| value.into_inner()),
             accumulated_other_comprehensive_income_loss: value
                 .accumulated_other_comprehensive_income_loss
-                .into_inner(),
-            other_total_stockholders_equity: value.other_total_stockholders_equity.into_inner(),
-            total_stockholders_equity: value.total_stockholders_equity.into_inner(),
-            total_equity: value.total_equity.into_inner(),
-            minority_interest: value.minority_interest.into_inner(),
+                .map(|value| value.into_inner()),
+            other_total_stockholders_equity: value
+                .other_total_stockholders_equity
+                .map(|value| value.into_inner()),
+            total_stockholders_equity: value
+                .total_stockholders_equity
+                .map(|value| value.into_inner()),
+            total_equity: value.total_equity.map(|value| value.into_inner()),
+            minority_interest: value.minority_interest.map(|value| value.into_inner()),
             total_liabilities_and_total_equity: value
                 .total_liabilities_and_total_equity
-                .into_inner(),
-            total_investments: value.total_investments.into_inner(),
-            total_debt: value.total_debt.into_inner(),
-            net_debt: value.net_debt.into_inner(),
+                .map(|value| value.into_inner()),
+            total_investments: value.total_investments.map(|value| value.into_inner()),
+            total_debt: value.total_debt.map(|value| value.into_inner()),
+            net_debt: value.net_debt.map(|value| value.into_inner()),
         }
     }
 }
@@ -1246,107 +1278,107 @@ pub(crate) struct BulkBalanceSheetStatementGrowth {
     #[pyo3(get)]
     pub reported_currency: String,
     #[pyo3(get)]
-    pub growth_cash_and_cash_equivalents: String,
+    pub growth_cash_and_cash_equivalents: Option<String>,
     #[pyo3(get)]
-    pub growth_short_term_investments: String,
+    pub growth_short_term_investments: Option<String>,
     #[pyo3(get)]
-    pub growth_cash_and_short_term_investments: String,
+    pub growth_cash_and_short_term_investments: Option<String>,
     #[pyo3(get)]
-    pub growth_net_receivables: String,
+    pub growth_net_receivables: Option<String>,
     #[pyo3(get)]
-    pub growth_inventory: String,
+    pub growth_inventory: Option<String>,
     #[pyo3(get)]
-    pub growth_other_current_assets: String,
+    pub growth_other_current_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_total_current_assets: String,
+    pub growth_total_current_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_property_plant_equipment_net: String,
+    pub growth_property_plant_equipment_net: Option<String>,
     #[pyo3(get)]
-    pub growth_goodwill: String,
+    pub growth_goodwill: Option<String>,
     #[pyo3(get)]
-    pub growth_intangible_assets: String,
+    pub growth_intangible_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_goodwill_and_intangible_assets: String,
+    pub growth_goodwill_and_intangible_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_long_term_investments: String,
+    pub growth_long_term_investments: Option<String>,
     #[pyo3(get)]
-    pub growth_tax_assets: String,
+    pub growth_tax_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_other_non_current_assets: String,
+    pub growth_other_non_current_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_total_non_current_assets: String,
+    pub growth_total_non_current_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_other_assets: String,
+    pub growth_other_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_total_assets: String,
+    pub growth_total_assets: Option<String>,
     #[pyo3(get)]
-    pub growth_account_payables: String,
+    pub growth_account_payables: Option<String>,
     #[pyo3(get)]
-    pub growth_short_term_debt: String,
+    pub growth_short_term_debt: Option<String>,
     #[pyo3(get)]
-    pub growth_tax_payables: String,
+    pub growth_tax_payables: Option<String>,
     #[pyo3(get)]
-    pub growth_deferred_revenue: String,
+    pub growth_deferred_revenue: Option<String>,
     #[pyo3(get)]
-    pub growth_other_current_liabilities: String,
+    pub growth_other_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub growth_total_current_liabilities: String,
+    pub growth_total_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub growth_long_term_debt: String,
+    pub growth_long_term_debt: Option<String>,
     #[pyo3(get)]
-    pub growth_deferred_revenue_non_current: String,
+    pub growth_deferred_revenue_non_current: Option<String>,
     #[pyo3(get)]
-    pub growth_deferred_tax_liabilities_non_current: String,
+    pub growth_deferred_tax_liabilities_non_current: Option<String>,
     #[pyo3(get)]
-    pub growth_other_non_current_liabilities: String,
+    pub growth_other_non_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub growth_total_non_current_liabilities: String,
+    pub growth_total_non_current_liabilities: Option<String>,
     #[pyo3(get)]
-    pub growth_other_liabilities: String,
+    pub growth_other_liabilities: Option<String>,
     #[pyo3(get)]
-    pub growth_total_liabilities: String,
+    pub growth_total_liabilities: Option<String>,
     #[pyo3(get)]
-    pub growth_preferred_stock: String,
+    pub growth_preferred_stock: Option<String>,
     #[pyo3(get)]
-    pub growth_common_stock: String,
+    pub growth_common_stock: Option<String>,
     #[pyo3(get)]
-    pub growth_retained_earnings: String,
+    pub growth_retained_earnings: Option<String>,
     #[pyo3(get)]
-    pub growth_accumulated_other_comprehensive_income_loss: String,
+    pub growth_accumulated_other_comprehensive_income_loss: Option<String>,
     #[pyo3(get)]
-    pub growth_other_total_stockholders_equity: String,
+    pub growth_other_total_stockholders_equity: Option<String>,
     #[pyo3(get)]
-    pub growth_total_stockholders_equity: String,
+    pub growth_total_stockholders_equity: Option<String>,
     #[pyo3(get)]
-    pub growth_minority_interest: String,
+    pub growth_minority_interest: Option<String>,
     #[pyo3(get)]
-    pub growth_total_equity: String,
+    pub growth_total_equity: Option<String>,
     #[pyo3(get)]
-    pub growth_total_liabilities_and_stockholders_equity: String,
+    pub growth_total_liabilities_and_stockholders_equity: Option<String>,
     #[pyo3(get)]
-    pub growth_total_investments: String,
+    pub growth_total_investments: Option<String>,
     #[pyo3(get)]
-    pub growth_total_debt: String,
+    pub growth_total_debt: Option<String>,
     #[pyo3(get)]
-    pub growth_net_debt: String,
+    pub growth_net_debt: Option<String>,
     #[pyo3(get)]
-    pub growth_accounts_receivables: String,
+    pub growth_accounts_receivables: Option<String>,
     #[pyo3(get)]
-    pub growth_other_receivables: String,
+    pub growth_other_receivables: Option<String>,
     #[pyo3(get)]
-    pub growth_prepaids: String,
+    pub growth_prepaids: Option<String>,
     #[pyo3(get)]
-    pub growth_total_payables: String,
+    pub growth_total_payables: Option<String>,
     #[pyo3(get)]
-    pub growth_other_payables: String,
+    pub growth_other_payables: Option<String>,
     #[pyo3(get)]
-    pub growth_accrued_expenses: String,
+    pub growth_accrued_expenses: Option<String>,
     #[pyo3(get)]
-    pub growth_capital_lease_obligations_current: String,
+    pub growth_capital_lease_obligations_current: Option<String>,
     #[pyo3(get)]
-    pub growth_additional_paid_in_capital: String,
+    pub growth_additional_paid_in_capital: Option<String>,
     #[pyo3(get)]
-    pub growth_treasury_stock: String,
+    pub growth_treasury_stock: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -1363,57 +1395,57 @@ impl BulkBalanceSheetStatementGrowth {
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         reported_currency: String,
-        growth_cash_and_cash_equivalents: String,
-        growth_short_term_investments: String,
-        growth_cash_and_short_term_investments: String,
-        growth_net_receivables: String,
-        growth_inventory: String,
-        growth_other_current_assets: String,
-        growth_total_current_assets: String,
-        growth_property_plant_equipment_net: String,
-        growth_goodwill: String,
-        growth_intangible_assets: String,
-        growth_goodwill_and_intangible_assets: String,
-        growth_long_term_investments: String,
-        growth_tax_assets: String,
-        growth_other_non_current_assets: String,
-        growth_total_non_current_assets: String,
-        growth_other_assets: String,
-        growth_total_assets: String,
-        growth_account_payables: String,
-        growth_short_term_debt: String,
-        growth_tax_payables: String,
-        growth_deferred_revenue: String,
-        growth_other_current_liabilities: String,
-        growth_total_current_liabilities: String,
-        growth_long_term_debt: String,
-        growth_deferred_revenue_non_current: String,
-        growth_deferred_tax_liabilities_non_current: String,
-        growth_other_non_current_liabilities: String,
-        growth_total_non_current_liabilities: String,
-        growth_other_liabilities: String,
-        growth_total_liabilities: String,
-        growth_preferred_stock: String,
-        growth_common_stock: String,
-        growth_retained_earnings: String,
-        growth_accumulated_other_comprehensive_income_loss: String,
-        growth_other_total_stockholders_equity: String,
-        growth_total_stockholders_equity: String,
-        growth_minority_interest: String,
-        growth_total_equity: String,
-        growth_total_liabilities_and_stockholders_equity: String,
-        growth_total_investments: String,
-        growth_total_debt: String,
-        growth_net_debt: String,
-        growth_accounts_receivables: String,
-        growth_other_receivables: String,
-        growth_prepaids: String,
-        growth_total_payables: String,
-        growth_other_payables: String,
-        growth_accrued_expenses: String,
-        growth_capital_lease_obligations_current: String,
-        growth_additional_paid_in_capital: String,
-        growth_treasury_stock: String,
+        growth_cash_and_cash_equivalents: Option<String>,
+        growth_short_term_investments: Option<String>,
+        growth_cash_and_short_term_investments: Option<String>,
+        growth_net_receivables: Option<String>,
+        growth_inventory: Option<String>,
+        growth_other_current_assets: Option<String>,
+        growth_total_current_assets: Option<String>,
+        growth_property_plant_equipment_net: Option<String>,
+        growth_goodwill: Option<String>,
+        growth_intangible_assets: Option<String>,
+        growth_goodwill_and_intangible_assets: Option<String>,
+        growth_long_term_investments: Option<String>,
+        growth_tax_assets: Option<String>,
+        growth_other_non_current_assets: Option<String>,
+        growth_total_non_current_assets: Option<String>,
+        growth_other_assets: Option<String>,
+        growth_total_assets: Option<String>,
+        growth_account_payables: Option<String>,
+        growth_short_term_debt: Option<String>,
+        growth_tax_payables: Option<String>,
+        growth_deferred_revenue: Option<String>,
+        growth_other_current_liabilities: Option<String>,
+        growth_total_current_liabilities: Option<String>,
+        growth_long_term_debt: Option<String>,
+        growth_deferred_revenue_non_current: Option<String>,
+        growth_deferred_tax_liabilities_non_current: Option<String>,
+        growth_other_non_current_liabilities: Option<String>,
+        growth_total_non_current_liabilities: Option<String>,
+        growth_other_liabilities: Option<String>,
+        growth_total_liabilities: Option<String>,
+        growth_preferred_stock: Option<String>,
+        growth_common_stock: Option<String>,
+        growth_retained_earnings: Option<String>,
+        growth_accumulated_other_comprehensive_income_loss: Option<String>,
+        growth_other_total_stockholders_equity: Option<String>,
+        growth_total_stockholders_equity: Option<String>,
+        growth_minority_interest: Option<String>,
+        growth_total_equity: Option<String>,
+        growth_total_liabilities_and_stockholders_equity: Option<String>,
+        growth_total_investments: Option<String>,
+        growth_total_debt: Option<String>,
+        growth_net_debt: Option<String>,
+        growth_accounts_receivables: Option<String>,
+        growth_other_receivables: Option<String>,
+        growth_prepaids: Option<String>,
+        growth_total_payables: Option<String>,
+        growth_other_payables: Option<String>,
+        growth_accrued_expenses: Option<String>,
+        growth_capital_lease_obligations_current: Option<String>,
+        growth_additional_paid_in_capital: Option<String>,
+        growth_treasury_stock: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -2414,79 +2446,123 @@ impl From<libfmp::responses::bulk::BulkBalanceSheetStatementGrowth>
             fiscal_year: value.fiscal_year.as_str().to_owned(),
             period: value.period.to_string(),
             reported_currency: value.reported_currency.into_inner(),
-            growth_cash_and_cash_equivalents: value.growth_cash_and_cash_equivalents.into_inner(),
-            growth_short_term_investments: value.growth_short_term_investments.into_inner(),
+            growth_cash_and_cash_equivalents: value
+                .growth_cash_and_cash_equivalents
+                .map(|value| value.into_inner()),
+            growth_short_term_investments: value
+                .growth_short_term_investments
+                .map(|value| value.into_inner()),
             growth_cash_and_short_term_investments: value
                 .growth_cash_and_short_term_investments
-                .into_inner(),
-            growth_net_receivables: value.growth_net_receivables.into_inner(),
-            growth_inventory: value.growth_inventory.into_inner(),
-            growth_other_current_assets: value.growth_other_current_assets.into_inner(),
-            growth_total_current_assets: value.growth_total_current_assets.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_net_receivables: value.growth_net_receivables.map(|value| value.into_inner()),
+            growth_inventory: value.growth_inventory.map(|value| value.into_inner()),
+            growth_other_current_assets: value
+                .growth_other_current_assets
+                .map(|value| value.into_inner()),
+            growth_total_current_assets: value
+                .growth_total_current_assets
+                .map(|value| value.into_inner()),
             growth_property_plant_equipment_net: value
                 .growth_property_plant_equipment_net
-                .into_inner(),
-            growth_goodwill: value.growth_goodwill.into_inner(),
-            growth_intangible_assets: value.growth_intangible_assets.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_goodwill: value.growth_goodwill.map(|value| value.into_inner()),
+            growth_intangible_assets: value
+                .growth_intangible_assets
+                .map(|value| value.into_inner()),
             growth_goodwill_and_intangible_assets: value
                 .growth_goodwill_and_intangible_assets
-                .into_inner(),
-            growth_long_term_investments: value.growth_long_term_investments.into_inner(),
-            growth_tax_assets: value.growth_tax_assets.into_inner(),
-            growth_other_non_current_assets: value.growth_other_non_current_assets.into_inner(),
-            growth_total_non_current_assets: value.growth_total_non_current_assets.into_inner(),
-            growth_other_assets: value.growth_other_assets.into_inner(),
-            growth_total_assets: value.growth_total_assets.into_inner(),
-            growth_account_payables: value.growth_account_payables.into_inner(),
-            growth_short_term_debt: value.growth_short_term_debt.into_inner(),
-            growth_tax_payables: value.growth_tax_payables.into_inner(),
-            growth_deferred_revenue: value.growth_deferred_revenue.into_inner(),
-            growth_other_current_liabilities: value.growth_other_current_liabilities.into_inner(),
-            growth_total_current_liabilities: value.growth_total_current_liabilities.into_inner(),
-            growth_long_term_debt: value.growth_long_term_debt.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_long_term_investments: value
+                .growth_long_term_investments
+                .map(|value| value.into_inner()),
+            growth_tax_assets: value.growth_tax_assets.map(|value| value.into_inner()),
+            growth_other_non_current_assets: value
+                .growth_other_non_current_assets
+                .map(|value| value.into_inner()),
+            growth_total_non_current_assets: value
+                .growth_total_non_current_assets
+                .map(|value| value.into_inner()),
+            growth_other_assets: value.growth_other_assets.map(|value| value.into_inner()),
+            growth_total_assets: value.growth_total_assets.map(|value| value.into_inner()),
+            growth_account_payables: value
+                .growth_account_payables
+                .map(|value| value.into_inner()),
+            growth_short_term_debt: value.growth_short_term_debt.map(|value| value.into_inner()),
+            growth_tax_payables: value.growth_tax_payables.map(|value| value.into_inner()),
+            growth_deferred_revenue: value
+                .growth_deferred_revenue
+                .map(|value| value.into_inner()),
+            growth_other_current_liabilities: value
+                .growth_other_current_liabilities
+                .map(|value| value.into_inner()),
+            growth_total_current_liabilities: value
+                .growth_total_current_liabilities
+                .map(|value| value.into_inner()),
+            growth_long_term_debt: value.growth_long_term_debt.map(|value| value.into_inner()),
             growth_deferred_revenue_non_current: value
                 .growth_deferred_revenue_non_current
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_deferred_tax_liabilities_non_current: value
                 .growth_deferred_tax_liabilities_non_current
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_other_non_current_liabilities: value
                 .growth_other_non_current_liabilities
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_total_non_current_liabilities: value
                 .growth_total_non_current_liabilities
-                .into_inner(),
-            growth_other_liabilities: value.growth_other_liabilities.into_inner(),
-            growth_total_liabilities: value.growth_total_liabilities.into_inner(),
-            growth_preferred_stock: value.growth_preferred_stock.into_inner(),
-            growth_common_stock: value.growth_common_stock.into_inner(),
-            growth_retained_earnings: value.growth_retained_earnings.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_other_liabilities: value
+                .growth_other_liabilities
+                .map(|value| value.into_inner()),
+            growth_total_liabilities: value
+                .growth_total_liabilities
+                .map(|value| value.into_inner()),
+            growth_preferred_stock: value.growth_preferred_stock.map(|value| value.into_inner()),
+            growth_common_stock: value.growth_common_stock.map(|value| value.into_inner()),
+            growth_retained_earnings: value
+                .growth_retained_earnings
+                .map(|value| value.into_inner()),
             growth_accumulated_other_comprehensive_income_loss: value
                 .growth_accumulated_other_comprehensive_income_loss
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_other_total_stockholders_equity: value
                 .growth_other_total_stockholders_equity
-                .into_inner(),
-            growth_total_stockholders_equity: value.growth_total_stockholders_equity.into_inner(),
-            growth_minority_interest: value.growth_minority_interest.into_inner(),
-            growth_total_equity: value.growth_total_equity.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_total_stockholders_equity: value
+                .growth_total_stockholders_equity
+                .map(|value| value.into_inner()),
+            growth_minority_interest: value
+                .growth_minority_interest
+                .map(|value| value.into_inner()),
+            growth_total_equity: value.growth_total_equity.map(|value| value.into_inner()),
             growth_total_liabilities_and_stockholders_equity: value
                 .growth_total_liabilities_and_stockholders_equity
-                .into_inner(),
-            growth_total_investments: value.growth_total_investments.into_inner(),
-            growth_total_debt: value.growth_total_debt.into_inner(),
-            growth_net_debt: value.growth_net_debt.into_inner(),
-            growth_accounts_receivables: value.growth_accounts_receivables.into_inner(),
-            growth_other_receivables: value.growth_other_receivables.into_inner(),
-            growth_prepaids: value.growth_prepaids.into_inner(),
-            growth_total_payables: value.growth_total_payables.into_inner(),
-            growth_other_payables: value.growth_other_payables.into_inner(),
-            growth_accrued_expenses: value.growth_accrued_expenses.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_total_investments: value
+                .growth_total_investments
+                .map(|value| value.into_inner()),
+            growth_total_debt: value.growth_total_debt.map(|value| value.into_inner()),
+            growth_net_debt: value.growth_net_debt.map(|value| value.into_inner()),
+            growth_accounts_receivables: value
+                .growth_accounts_receivables
+                .map(|value| value.into_inner()),
+            growth_other_receivables: value
+                .growth_other_receivables
+                .map(|value| value.into_inner()),
+            growth_prepaids: value.growth_prepaids.map(|value| value.into_inner()),
+            growth_total_payables: value.growth_total_payables.map(|value| value.into_inner()),
+            growth_other_payables: value.growth_other_payables.map(|value| value.into_inner()),
+            growth_accrued_expenses: value
+                .growth_accrued_expenses
+                .map(|value| value.into_inner()),
             growth_capital_lease_obligations_current: value
                 .growth_capital_lease_obligations_current
-                .into_inner(),
-            growth_additional_paid_in_capital: value.growth_additional_paid_in_capital.into_inner(),
-            growth_treasury_stock: value.growth_treasury_stock.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_additional_paid_in_capital: value
+                .growth_additional_paid_in_capital
+                .map(|value| value.into_inner()),
+            growth_treasury_stock: value.growth_treasury_stock.map(|value| value.into_inner()),
         }
     }
 }

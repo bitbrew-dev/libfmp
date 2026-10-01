@@ -159,7 +159,7 @@ func TestBulkStatementsDecodeExactValuesAndKeepProviderTypos(t *testing.T) {
 
 	balance := assertCSVFixtureParity[BulkBalanceSheetStatement](t, "bulk_balance_sheet_statements.csv", 61)
 	if balance[1].Symbol != "0002.KL" || balance[1].ReportedCurrency != "MYR" ||
-		balance[1].AcceptedDate != mustParseDateTime(t, "2025-06-30 00:00:00") || balance[0].TotalAssets != "5769270000000" {
+		balance[1].AcceptedDate != mustParseDateTime(t, "2025-06-30 00:00:00") || cellText(balance[0].TotalAssets) != "5769270000000" {
 		t.Fatalf("bulk_balance_sheet_statements = %+v", balance)
 	}
 	balanceGrowth := assertCSVFixtureParity[BulkBalanceSheetStatementGrowth](t, "bulk_balance_sheet_statement_growth.csv", 56)

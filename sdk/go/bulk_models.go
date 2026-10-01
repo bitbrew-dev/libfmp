@@ -20,59 +20,59 @@ type BulkBalanceSheetStatement struct {
 	AcceptedDate                            DateTime `json:"acceptedDate"`
 	FiscalYear                              string   `json:"fiscalYear"`
 	Period                                  string   `json:"period"`
-	CashAndCashEquivalents                  string   `json:"cashAndCashEquivalents"`
-	ShortTermInvestments                    string   `json:"shortTermInvestments"`
-	CashAndShortTermInvestments             string   `json:"cashAndShortTermInvestments"`
-	NetReceivables                          string   `json:"netReceivables"`
-	AccountsReceivables                     string   `json:"accountsReceivables"`
-	OtherReceivables                        string   `json:"otherReceivables"`
-	Inventory                               string   `json:"inventory"`
-	Prepaids                                string   `json:"prepaids"`
-	OtherCurrentAssets                      string   `json:"otherCurrentAssets"`
-	TotalCurrentAssets                      string   `json:"totalCurrentAssets"`
-	PropertyPlantEquipmentNet               string   `json:"propertyPlantEquipmentNet"`
-	Goodwill                                string   `json:"goodwill"`
-	IntangibleAssets                        string   `json:"intangibleAssets"`
-	GoodwillAndIntangibleAssets             string   `json:"goodwillAndIntangibleAssets"`
-	LongTermInvestments                     string   `json:"longTermInvestments"`
-	TaxAssets                               string   `json:"taxAssets"`
-	OtherNonCurrentAssets                   string   `json:"otherNonCurrentAssets"`
-	TotalNonCurrentAssets                   string   `json:"totalNonCurrentAssets"`
-	OtherAssets                             string   `json:"otherAssets"`
-	TotalAssets                             string   `json:"totalAssets"`
-	TotalPayables                           string   `json:"totalPayables"`
-	AccountPayables                         string   `json:"accountPayables"`
-	OtherPayables                           string   `json:"otherPayables"`
-	AccruedExpenses                         string   `json:"accruedExpenses"`
-	ShortTermDebt                           string   `json:"shortTermDebt"`
-	CapitalLeaseObligationsCurrent          string   `json:"capitalLeaseObligationsCurrent"`
-	TaxPayables                             string   `json:"taxPayables"`
-	DeferredRevenue                         string   `json:"deferredRevenue"`
-	OtherCurrentLiabilities                 string   `json:"otherCurrentLiabilities"`
-	TotalCurrentLiabilities                 string   `json:"totalCurrentLiabilities"`
-	LongTermDebt                            string   `json:"longTermDebt"`
-	CapitalLeaseObligationsNonCurrent       string   `json:"capitalLeaseObligationsNonCurrent"`
-	DeferredRevenueNonCurrent               string   `json:"deferredRevenueNonCurrent"`
-	DeferredTaxLiabilitiesNonCurrent        string   `json:"deferredTaxLiabilitiesNonCurrent"`
-	OtherNonCurrentLiabilities              string   `json:"otherNonCurrentLiabilities"`
-	TotalNonCurrentLiabilities              string   `json:"totalNonCurrentLiabilities"`
-	OtherLiabilities                        string   `json:"otherLiabilities"`
-	CapitalLeaseObligations                 string   `json:"capitalLeaseObligations"`
-	TotalLiabilities                        string   `json:"totalLiabilities"`
-	TreasuryStock                           string   `json:"treasuryStock"`
-	PreferredStock                          string   `json:"preferredStock"`
-	CommonStock                             string   `json:"commonStock"`
-	RetainedEarnings                        string   `json:"retainedEarnings"`
-	AdditionalPaidInCapital                 string   `json:"additionalPaidInCapital"`
-	AccumulatedOtherComprehensiveIncomeLoss string   `json:"accumulatedOtherComprehensiveIncomeLoss"`
-	OtherTotalStockholdersEquity            string   `json:"otherTotalStockholdersEquity"`
-	TotalStockholdersEquity                 string   `json:"totalStockholdersEquity"`
-	TotalEquity                             string   `json:"totalEquity"`
-	MinorityInterest                        string   `json:"minorityInterest"`
-	TotalLiabilitiesAndTotalEquity          string   `json:"totalLiabilitiesAndTotalEquity"`
-	TotalInvestments                        string   `json:"totalInvestments"`
-	TotalDebt                               string   `json:"totalDebt"`
-	NetDebt                                 string   `json:"netDebt"`
+	CashAndCashEquivalents                  *string  `json:"cashAndCashEquivalents"`
+	ShortTermInvestments                    *string  `json:"shortTermInvestments"`
+	CashAndShortTermInvestments             *string  `json:"cashAndShortTermInvestments"`
+	NetReceivables                          *string  `json:"netReceivables"`
+	AccountsReceivables                     *string  `json:"accountsReceivables"`
+	OtherReceivables                        *string  `json:"otherReceivables"`
+	Inventory                               *string  `json:"inventory"`
+	Prepaids                                *string  `json:"prepaids"`
+	OtherCurrentAssets                      *string  `json:"otherCurrentAssets"`
+	TotalCurrentAssets                      *string  `json:"totalCurrentAssets"`
+	PropertyPlantEquipmentNet               *string  `json:"propertyPlantEquipmentNet"`
+	Goodwill                                *string  `json:"goodwill"`
+	IntangibleAssets                        *string  `json:"intangibleAssets"`
+	GoodwillAndIntangibleAssets             *string  `json:"goodwillAndIntangibleAssets"`
+	LongTermInvestments                     *string  `json:"longTermInvestments"`
+	TaxAssets                               *string  `json:"taxAssets"`
+	OtherNonCurrentAssets                   *string  `json:"otherNonCurrentAssets"`
+	TotalNonCurrentAssets                   *string  `json:"totalNonCurrentAssets"`
+	OtherAssets                             *string  `json:"otherAssets"`
+	TotalAssets                             *string  `json:"totalAssets"`
+	TotalPayables                           *string  `json:"totalPayables"`
+	AccountPayables                         *string  `json:"accountPayables"`
+	OtherPayables                           *string  `json:"otherPayables"`
+	AccruedExpenses                         *string  `json:"accruedExpenses"`
+	ShortTermDebt                           *string  `json:"shortTermDebt"`
+	CapitalLeaseObligationsCurrent          *string  `json:"capitalLeaseObligationsCurrent"`
+	TaxPayables                             *string  `json:"taxPayables"`
+	DeferredRevenue                         *string  `json:"deferredRevenue"`
+	OtherCurrentLiabilities                 *string  `json:"otherCurrentLiabilities"`
+	TotalCurrentLiabilities                 *string  `json:"totalCurrentLiabilities"`
+	LongTermDebt                            *string  `json:"longTermDebt"`
+	CapitalLeaseObligationsNonCurrent       *string  `json:"capitalLeaseObligationsNonCurrent"`
+	DeferredRevenueNonCurrent               *string  `json:"deferredRevenueNonCurrent"`
+	DeferredTaxLiabilitiesNonCurrent        *string  `json:"deferredTaxLiabilitiesNonCurrent"`
+	OtherNonCurrentLiabilities              *string  `json:"otherNonCurrentLiabilities"`
+	TotalNonCurrentLiabilities              *string  `json:"totalNonCurrentLiabilities"`
+	OtherLiabilities                        *string  `json:"otherLiabilities"`
+	CapitalLeaseObligations                 *string  `json:"capitalLeaseObligations"`
+	TotalLiabilities                        *string  `json:"totalLiabilities"`
+	TreasuryStock                           *string  `json:"treasuryStock"`
+	PreferredStock                          *string  `json:"preferredStock"`
+	CommonStock                             *string  `json:"commonStock"`
+	RetainedEarnings                        *string  `json:"retainedEarnings"`
+	AdditionalPaidInCapital                 *string  `json:"additionalPaidInCapital"`
+	AccumulatedOtherComprehensiveIncomeLoss *string  `json:"accumulatedOtherComprehensiveIncomeLoss"`
+	OtherTotalStockholdersEquity            *string  `json:"otherTotalStockholdersEquity"`
+	TotalStockholdersEquity                 *string  `json:"totalStockholdersEquity"`
+	TotalEquity                             *string  `json:"totalEquity"`
+	MinorityInterest                        *string  `json:"minorityInterest"`
+	TotalLiabilitiesAndTotalEquity          *string  `json:"totalLiabilitiesAndTotalEquity"`
+	TotalInvestments                        *string  `json:"totalInvestments"`
+	TotalDebt                               *string  `json:"totalDebt"`
+	NetDebt                                 *string  `json:"netDebt"`
 }
 
 // bulkBalanceSheetStatementShadow mirrors BulkBalanceSheetStatement with a
@@ -167,112 +167,6 @@ func (m *BulkBalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		return missingMemberError("BulkBalanceSheetStatement", "fiscalYear")
 	case shadow.Period == nil:
 		return missingMemberError("BulkBalanceSheetStatement", "period")
-	case shadow.CashAndCashEquivalents == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "cashAndCashEquivalents")
-	case shadow.ShortTermInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "shortTermInvestments")
-	case shadow.CashAndShortTermInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "cashAndShortTermInvestments")
-	case shadow.NetReceivables == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "netReceivables")
-	case shadow.AccountsReceivables == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "accountsReceivables")
-	case shadow.OtherReceivables == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherReceivables")
-	case shadow.Inventory == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "inventory")
-	case shadow.Prepaids == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "prepaids")
-	case shadow.OtherCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherCurrentAssets")
-	case shadow.TotalCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalCurrentAssets")
-	case shadow.PropertyPlantEquipmentNet == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "propertyPlantEquipmentNet")
-	case shadow.Goodwill == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "goodwill")
-	case shadow.IntangibleAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "intangibleAssets")
-	case shadow.GoodwillAndIntangibleAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "goodwillAndIntangibleAssets")
-	case shadow.LongTermInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "longTermInvestments")
-	case shadow.TaxAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "taxAssets")
-	case shadow.OtherNonCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherNonCurrentAssets")
-	case shadow.TotalNonCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalNonCurrentAssets")
-	case shadow.OtherAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherAssets")
-	case shadow.TotalAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalAssets")
-	case shadow.TotalPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalPayables")
-	case shadow.AccountPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "accountPayables")
-	case shadow.OtherPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherPayables")
-	case shadow.AccruedExpenses == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "accruedExpenses")
-	case shadow.ShortTermDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "shortTermDebt")
-	case shadow.CapitalLeaseObligationsCurrent == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "capitalLeaseObligationsCurrent")
-	case shadow.TaxPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "taxPayables")
-	case shadow.DeferredRevenue == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "deferredRevenue")
-	case shadow.OtherCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherCurrentLiabilities")
-	case shadow.TotalCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalCurrentLiabilities")
-	case shadow.LongTermDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "longTermDebt")
-	case shadow.CapitalLeaseObligationsNonCurrent == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "capitalLeaseObligationsNonCurrent")
-	case shadow.DeferredRevenueNonCurrent == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "deferredRevenueNonCurrent")
-	case shadow.DeferredTaxLiabilitiesNonCurrent == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "deferredTaxLiabilitiesNonCurrent")
-	case shadow.OtherNonCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherNonCurrentLiabilities")
-	case shadow.TotalNonCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalNonCurrentLiabilities")
-	case shadow.OtherLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherLiabilities")
-	case shadow.CapitalLeaseObligations == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "capitalLeaseObligations")
-	case shadow.TotalLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalLiabilities")
-	case shadow.TreasuryStock == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "treasuryStock")
-	case shadow.PreferredStock == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "preferredStock")
-	case shadow.CommonStock == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "commonStock")
-	case shadow.RetainedEarnings == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "retainedEarnings")
-	case shadow.AdditionalPaidInCapital == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "additionalPaidInCapital")
-	case shadow.AccumulatedOtherComprehensiveIncomeLoss == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "accumulatedOtherComprehensiveIncomeLoss")
-	case shadow.OtherTotalStockholdersEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "otherTotalStockholdersEquity")
-	case shadow.TotalStockholdersEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalStockholdersEquity")
-	case shadow.TotalEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalEquity")
-	case shadow.MinorityInterest == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "minorityInterest")
-	case shadow.TotalLiabilitiesAndTotalEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalLiabilitiesAndTotalEquity")
-	case shadow.TotalInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalInvestments")
-	case shadow.TotalDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "totalDebt")
-	case shadow.NetDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatement", "netDebt")
 	}
 	*m = BulkBalanceSheetStatement{
 		Date:                                    *shadow.Date,
@@ -283,59 +177,59 @@ func (m *BulkBalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		AcceptedDate:                            *shadow.AcceptedDate,
 		FiscalYear:                              *shadow.FiscalYear,
 		Period:                                  *shadow.Period,
-		CashAndCashEquivalents:                  *shadow.CashAndCashEquivalents,
-		ShortTermInvestments:                    *shadow.ShortTermInvestments,
-		CashAndShortTermInvestments:             *shadow.CashAndShortTermInvestments,
-		NetReceivables:                          *shadow.NetReceivables,
-		AccountsReceivables:                     *shadow.AccountsReceivables,
-		OtherReceivables:                        *shadow.OtherReceivables,
-		Inventory:                               *shadow.Inventory,
-		Prepaids:                                *shadow.Prepaids,
-		OtherCurrentAssets:                      *shadow.OtherCurrentAssets,
-		TotalCurrentAssets:                      *shadow.TotalCurrentAssets,
-		PropertyPlantEquipmentNet:               *shadow.PropertyPlantEquipmentNet,
-		Goodwill:                                *shadow.Goodwill,
-		IntangibleAssets:                        *shadow.IntangibleAssets,
-		GoodwillAndIntangibleAssets:             *shadow.GoodwillAndIntangibleAssets,
-		LongTermInvestments:                     *shadow.LongTermInvestments,
-		TaxAssets:                               *shadow.TaxAssets,
-		OtherNonCurrentAssets:                   *shadow.OtherNonCurrentAssets,
-		TotalNonCurrentAssets:                   *shadow.TotalNonCurrentAssets,
-		OtherAssets:                             *shadow.OtherAssets,
-		TotalAssets:                             *shadow.TotalAssets,
-		TotalPayables:                           *shadow.TotalPayables,
-		AccountPayables:                         *shadow.AccountPayables,
-		OtherPayables:                           *shadow.OtherPayables,
-		AccruedExpenses:                         *shadow.AccruedExpenses,
-		ShortTermDebt:                           *shadow.ShortTermDebt,
-		CapitalLeaseObligationsCurrent:          *shadow.CapitalLeaseObligationsCurrent,
-		TaxPayables:                             *shadow.TaxPayables,
-		DeferredRevenue:                         *shadow.DeferredRevenue,
-		OtherCurrentLiabilities:                 *shadow.OtherCurrentLiabilities,
-		TotalCurrentLiabilities:                 *shadow.TotalCurrentLiabilities,
-		LongTermDebt:                            *shadow.LongTermDebt,
-		CapitalLeaseObligationsNonCurrent:       *shadow.CapitalLeaseObligationsNonCurrent,
-		DeferredRevenueNonCurrent:               *shadow.DeferredRevenueNonCurrent,
-		DeferredTaxLiabilitiesNonCurrent:        *shadow.DeferredTaxLiabilitiesNonCurrent,
-		OtherNonCurrentLiabilities:              *shadow.OtherNonCurrentLiabilities,
-		TotalNonCurrentLiabilities:              *shadow.TotalNonCurrentLiabilities,
-		OtherLiabilities:                        *shadow.OtherLiabilities,
-		CapitalLeaseObligations:                 *shadow.CapitalLeaseObligations,
-		TotalLiabilities:                        *shadow.TotalLiabilities,
-		TreasuryStock:                           *shadow.TreasuryStock,
-		PreferredStock:                          *shadow.PreferredStock,
-		CommonStock:                             *shadow.CommonStock,
-		RetainedEarnings:                        *shadow.RetainedEarnings,
-		AdditionalPaidInCapital:                 *shadow.AdditionalPaidInCapital,
-		AccumulatedOtherComprehensiveIncomeLoss: *shadow.AccumulatedOtherComprehensiveIncomeLoss,
-		OtherTotalStockholdersEquity:            *shadow.OtherTotalStockholdersEquity,
-		TotalStockholdersEquity:                 *shadow.TotalStockholdersEquity,
-		TotalEquity:                             *shadow.TotalEquity,
-		MinorityInterest:                        *shadow.MinorityInterest,
-		TotalLiabilitiesAndTotalEquity:          *shadow.TotalLiabilitiesAndTotalEquity,
-		TotalInvestments:                        *shadow.TotalInvestments,
-		TotalDebt:                               *shadow.TotalDebt,
-		NetDebt:                                 *shadow.NetDebt,
+		CashAndCashEquivalents:                  shadow.CashAndCashEquivalents,
+		ShortTermInvestments:                    shadow.ShortTermInvestments,
+		CashAndShortTermInvestments:             shadow.CashAndShortTermInvestments,
+		NetReceivables:                          shadow.NetReceivables,
+		AccountsReceivables:                     shadow.AccountsReceivables,
+		OtherReceivables:                        shadow.OtherReceivables,
+		Inventory:                               shadow.Inventory,
+		Prepaids:                                shadow.Prepaids,
+		OtherCurrentAssets:                      shadow.OtherCurrentAssets,
+		TotalCurrentAssets:                      shadow.TotalCurrentAssets,
+		PropertyPlantEquipmentNet:               shadow.PropertyPlantEquipmentNet,
+		Goodwill:                                shadow.Goodwill,
+		IntangibleAssets:                        shadow.IntangibleAssets,
+		GoodwillAndIntangibleAssets:             shadow.GoodwillAndIntangibleAssets,
+		LongTermInvestments:                     shadow.LongTermInvestments,
+		TaxAssets:                               shadow.TaxAssets,
+		OtherNonCurrentAssets:                   shadow.OtherNonCurrentAssets,
+		TotalNonCurrentAssets:                   shadow.TotalNonCurrentAssets,
+		OtherAssets:                             shadow.OtherAssets,
+		TotalAssets:                             shadow.TotalAssets,
+		TotalPayables:                           shadow.TotalPayables,
+		AccountPayables:                         shadow.AccountPayables,
+		OtherPayables:                           shadow.OtherPayables,
+		AccruedExpenses:                         shadow.AccruedExpenses,
+		ShortTermDebt:                           shadow.ShortTermDebt,
+		CapitalLeaseObligationsCurrent:          shadow.CapitalLeaseObligationsCurrent,
+		TaxPayables:                             shadow.TaxPayables,
+		DeferredRevenue:                         shadow.DeferredRevenue,
+		OtherCurrentLiabilities:                 shadow.OtherCurrentLiabilities,
+		TotalCurrentLiabilities:                 shadow.TotalCurrentLiabilities,
+		LongTermDebt:                            shadow.LongTermDebt,
+		CapitalLeaseObligationsNonCurrent:       shadow.CapitalLeaseObligationsNonCurrent,
+		DeferredRevenueNonCurrent:               shadow.DeferredRevenueNonCurrent,
+		DeferredTaxLiabilitiesNonCurrent:        shadow.DeferredTaxLiabilitiesNonCurrent,
+		OtherNonCurrentLiabilities:              shadow.OtherNonCurrentLiabilities,
+		TotalNonCurrentLiabilities:              shadow.TotalNonCurrentLiabilities,
+		OtherLiabilities:                        shadow.OtherLiabilities,
+		CapitalLeaseObligations:                 shadow.CapitalLeaseObligations,
+		TotalLiabilities:                        shadow.TotalLiabilities,
+		TreasuryStock:                           shadow.TreasuryStock,
+		PreferredStock:                          shadow.PreferredStock,
+		CommonStock:                             shadow.CommonStock,
+		RetainedEarnings:                        shadow.RetainedEarnings,
+		AdditionalPaidInCapital:                 shadow.AdditionalPaidInCapital,
+		AccumulatedOtherComprehensiveIncomeLoss: shadow.AccumulatedOtherComprehensiveIncomeLoss,
+		OtherTotalStockholdersEquity:            shadow.OtherTotalStockholdersEquity,
+		TotalStockholdersEquity:                 shadow.TotalStockholdersEquity,
+		TotalEquity:                             shadow.TotalEquity,
+		MinorityInterest:                        shadow.MinorityInterest,
+		TotalLiabilitiesAndTotalEquity:          shadow.TotalLiabilitiesAndTotalEquity,
+		TotalInvestments:                        shadow.TotalInvestments,
+		TotalDebt:                               shadow.TotalDebt,
+		NetDebt:                                 shadow.NetDebt,
 	}
 	return nil
 }
@@ -343,62 +237,62 @@ func (m *BulkBalanceSheetStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 // BulkBalanceSheetStatementGrowth is one worldwide bulk
 // balance-sheet-statement-growth row.
 type BulkBalanceSheetStatementGrowth struct {
-	Symbol                                        string `json:"symbol"`
-	Date                                          Date   `json:"date"`
-	FiscalYear                                    string `json:"fiscalYear"`
-	Period                                        string `json:"period"`
-	ReportedCurrency                              string `json:"reportedCurrency"`
-	GrowthCashAndCashEquivalents                  string `json:"growthCashAndCashEquivalents"`
-	GrowthShortTermInvestments                    string `json:"growthShortTermInvestments"`
-	GrowthCashAndShortTermInvestments             string `json:"growthCashAndShortTermInvestments"`
-	GrowthNetReceivables                          string `json:"growthNetReceivables"`
-	GrowthInventory                               string `json:"growthInventory"`
-	GrowthOtherCurrentAssets                      string `json:"growthOtherCurrentAssets"`
-	GrowthTotalCurrentAssets                      string `json:"growthTotalCurrentAssets"`
-	GrowthPropertyPlantEquipmentNet               string `json:"growthPropertyPlantEquipmentNet"`
-	GrowthGoodwill                                string `json:"growthGoodwill"`
-	GrowthIntangibleAssets                        string `json:"growthIntangibleAssets"`
-	GrowthGoodwillAndIntangibleAssets             string `json:"growthGoodwillAndIntangibleAssets"`
-	GrowthLongTermInvestments                     string `json:"growthLongTermInvestments"`
-	GrowthTaxAssets                               string `json:"growthTaxAssets"`
-	GrowthOtherNonCurrentAssets                   string `json:"growthOtherNonCurrentAssets"`
-	GrowthTotalNonCurrentAssets                   string `json:"growthTotalNonCurrentAssets"`
-	GrowthOtherAssets                             string `json:"growthOtherAssets"`
-	GrowthTotalAssets                             string `json:"growthTotalAssets"`
-	GrowthAccountPayables                         string `json:"growthAccountPayables"`
-	GrowthShortTermDebt                           string `json:"growthShortTermDebt"`
-	GrowthTaxPayables                             string `json:"growthTaxPayables"`
-	GrowthDeferredRevenue                         string `json:"growthDeferredRevenue"`
-	GrowthOtherCurrentLiabilities                 string `json:"growthOtherCurrentLiabilities"`
-	GrowthTotalCurrentLiabilities                 string `json:"growthTotalCurrentLiabilities"`
-	GrowthLongTermDebt                            string `json:"growthLongTermDebt"`
-	GrowthDeferredRevenueNonCurrent               string `json:"growthDeferredRevenueNonCurrent"`
-	GrowthDeferredTaxLiabilitiesNonCurrent        string `json:"growthDeferredTaxLiabilitiesNonCurrent"`
-	GrowthOtherNonCurrentLiabilities              string `json:"growthOtherNonCurrentLiabilities"`
-	GrowthTotalNonCurrentLiabilities              string `json:"growthTotalNonCurrentLiabilities"`
-	GrowthOtherLiabilities                        string `json:"growthOtherLiabilities"`
-	GrowthTotalLiabilities                        string `json:"growthTotalLiabilities"`
-	GrowthPreferredStock                          string `json:"growthPreferredStock"`
-	GrowthCommonStock                             string `json:"growthCommonStock"`
-	GrowthRetainedEarnings                        string `json:"growthRetainedEarnings"`
-	GrowthAccumulatedOtherComprehensiveIncomeLoss string `json:"growthAccumulatedOtherComprehensiveIncomeLoss"`
-	GrowthOtherTotalStockholdersEquity            string `json:"growthOthertotalStockholdersEquity"`
-	GrowthTotalStockholdersEquity                 string `json:"growthTotalStockholdersEquity"`
-	GrowthMinorityInterest                        string `json:"growthMinorityInterest"`
-	GrowthTotalEquity                             string `json:"growthTotalEquity"`
-	GrowthTotalLiabilitiesAndStockholdersEquity   string `json:"growthTotalLiabilitiesAndStockholdersEquity"`
-	GrowthTotalInvestments                        string `json:"growthTotalInvestments"`
-	GrowthTotalDebt                               string `json:"growthTotalDebt"`
-	GrowthNetDebt                                 string `json:"growthNetDebt"`
-	GrowthAccountsReceivables                     string `json:"growthAccountsReceivables"`
-	GrowthOtherReceivables                        string `json:"growthOtherReceivables"`
-	GrowthPrepaids                                string `json:"growthPrepaids"`
-	GrowthTotalPayables                           string `json:"growthTotalPayables"`
-	GrowthOtherPayables                           string `json:"growthOtherPayables"`
-	GrowthAccruedExpenses                         string `json:"growthAccruedExpenses"`
-	GrowthCapitalLeaseObligationsCurrent          string `json:"growthCapitalLeaseObligationsCurrent"`
-	GrowthAdditionalPaidInCapital                 string `json:"growthAdditionalPaidInCapital"`
-	GrowthTreasuryStock                           string `json:"growthTreasuryStock"`
+	Symbol                                        string  `json:"symbol"`
+	Date                                          Date    `json:"date"`
+	FiscalYear                                    string  `json:"fiscalYear"`
+	Period                                        string  `json:"period"`
+	ReportedCurrency                              string  `json:"reportedCurrency"`
+	GrowthCashAndCashEquivalents                  *string `json:"growthCashAndCashEquivalents"`
+	GrowthShortTermInvestments                    *string `json:"growthShortTermInvestments"`
+	GrowthCashAndShortTermInvestments             *string `json:"growthCashAndShortTermInvestments"`
+	GrowthNetReceivables                          *string `json:"growthNetReceivables"`
+	GrowthInventory                               *string `json:"growthInventory"`
+	GrowthOtherCurrentAssets                      *string `json:"growthOtherCurrentAssets"`
+	GrowthTotalCurrentAssets                      *string `json:"growthTotalCurrentAssets"`
+	GrowthPropertyPlantEquipmentNet               *string `json:"growthPropertyPlantEquipmentNet"`
+	GrowthGoodwill                                *string `json:"growthGoodwill"`
+	GrowthIntangibleAssets                        *string `json:"growthIntangibleAssets"`
+	GrowthGoodwillAndIntangibleAssets             *string `json:"growthGoodwillAndIntangibleAssets"`
+	GrowthLongTermInvestments                     *string `json:"growthLongTermInvestments"`
+	GrowthTaxAssets                               *string `json:"growthTaxAssets"`
+	GrowthOtherNonCurrentAssets                   *string `json:"growthOtherNonCurrentAssets"`
+	GrowthTotalNonCurrentAssets                   *string `json:"growthTotalNonCurrentAssets"`
+	GrowthOtherAssets                             *string `json:"growthOtherAssets"`
+	GrowthTotalAssets                             *string `json:"growthTotalAssets"`
+	GrowthAccountPayables                         *string `json:"growthAccountPayables"`
+	GrowthShortTermDebt                           *string `json:"growthShortTermDebt"`
+	GrowthTaxPayables                             *string `json:"growthTaxPayables"`
+	GrowthDeferredRevenue                         *string `json:"growthDeferredRevenue"`
+	GrowthOtherCurrentLiabilities                 *string `json:"growthOtherCurrentLiabilities"`
+	GrowthTotalCurrentLiabilities                 *string `json:"growthTotalCurrentLiabilities"`
+	GrowthLongTermDebt                            *string `json:"growthLongTermDebt"`
+	GrowthDeferredRevenueNonCurrent               *string `json:"growthDeferredRevenueNonCurrent"`
+	GrowthDeferredTaxLiabilitiesNonCurrent        *string `json:"growthDeferredTaxLiabilitiesNonCurrent"`
+	GrowthOtherNonCurrentLiabilities              *string `json:"growthOtherNonCurrentLiabilities"`
+	GrowthTotalNonCurrentLiabilities              *string `json:"growthTotalNonCurrentLiabilities"`
+	GrowthOtherLiabilities                        *string `json:"growthOtherLiabilities"`
+	GrowthTotalLiabilities                        *string `json:"growthTotalLiabilities"`
+	GrowthPreferredStock                          *string `json:"growthPreferredStock"`
+	GrowthCommonStock                             *string `json:"growthCommonStock"`
+	GrowthRetainedEarnings                        *string `json:"growthRetainedEarnings"`
+	GrowthAccumulatedOtherComprehensiveIncomeLoss *string `json:"growthAccumulatedOtherComprehensiveIncomeLoss"`
+	GrowthOtherTotalStockholdersEquity            *string `json:"growthOthertotalStockholdersEquity"`
+	GrowthTotalStockholdersEquity                 *string `json:"growthTotalStockholdersEquity"`
+	GrowthMinorityInterest                        *string `json:"growthMinorityInterest"`
+	GrowthTotalEquity                             *string `json:"growthTotalEquity"`
+	GrowthTotalLiabilitiesAndStockholdersEquity   *string `json:"growthTotalLiabilitiesAndStockholdersEquity"`
+	GrowthTotalInvestments                        *string `json:"growthTotalInvestments"`
+	GrowthTotalDebt                               *string `json:"growthTotalDebt"`
+	GrowthNetDebt                                 *string `json:"growthNetDebt"`
+	GrowthAccountsReceivables                     *string `json:"growthAccountsReceivables"`
+	GrowthOtherReceivables                        *string `json:"growthOtherReceivables"`
+	GrowthPrepaids                                *string `json:"growthPrepaids"`
+	GrowthTotalPayables                           *string `json:"growthTotalPayables"`
+	GrowthOtherPayables                           *string `json:"growthOtherPayables"`
+	GrowthAccruedExpenses                         *string `json:"growthAccruedExpenses"`
+	GrowthCapitalLeaseObligationsCurrent          *string `json:"growthCapitalLeaseObligationsCurrent"`
+	GrowthAdditionalPaidInCapital                 *string `json:"growthAdditionalPaidInCapital"`
+	GrowthTreasuryStock                           *string `json:"growthTreasuryStock"`
 }
 
 // bulkBalanceSheetStatementGrowthShadow mirrors
@@ -482,108 +376,6 @@ func (m *BulkBalanceSheetStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decode
 		return missingMemberError("BulkBalanceSheetStatementGrowth", "period")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("BulkBalanceSheetStatementGrowth", "reportedCurrency")
-	case shadow.GrowthCashAndCashEquivalents == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthCashAndCashEquivalents")
-	case shadow.GrowthShortTermInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthShortTermInvestments")
-	case shadow.GrowthCashAndShortTermInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthCashAndShortTermInvestments")
-	case shadow.GrowthNetReceivables == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthNetReceivables")
-	case shadow.GrowthInventory == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthInventory")
-	case shadow.GrowthOtherCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherCurrentAssets")
-	case shadow.GrowthTotalCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalCurrentAssets")
-	case shadow.GrowthPropertyPlantEquipmentNet == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthPropertyPlantEquipmentNet")
-	case shadow.GrowthGoodwill == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthGoodwill")
-	case shadow.GrowthIntangibleAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthIntangibleAssets")
-	case shadow.GrowthGoodwillAndIntangibleAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthGoodwillAndIntangibleAssets")
-	case shadow.GrowthLongTermInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthLongTermInvestments")
-	case shadow.GrowthTaxAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTaxAssets")
-	case shadow.GrowthOtherNonCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherNonCurrentAssets")
-	case shadow.GrowthTotalNonCurrentAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalNonCurrentAssets")
-	case shadow.GrowthOtherAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherAssets")
-	case shadow.GrowthTotalAssets == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalAssets")
-	case shadow.GrowthAccountPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthAccountPayables")
-	case shadow.GrowthShortTermDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthShortTermDebt")
-	case shadow.GrowthTaxPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTaxPayables")
-	case shadow.GrowthDeferredRevenue == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthDeferredRevenue")
-	case shadow.GrowthOtherCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherCurrentLiabilities")
-	case shadow.GrowthTotalCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalCurrentLiabilities")
-	case shadow.GrowthLongTermDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthLongTermDebt")
-	case shadow.GrowthDeferredRevenueNonCurrent == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthDeferredRevenueNonCurrent")
-	case shadow.GrowthDeferredTaxLiabilitiesNonCurrent == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthDeferredTaxLiabilitiesNonCurrent")
-	case shadow.GrowthOtherNonCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherNonCurrentLiabilities")
-	case shadow.GrowthTotalNonCurrentLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalNonCurrentLiabilities")
-	case shadow.GrowthOtherLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherLiabilities")
-	case shadow.GrowthTotalLiabilities == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalLiabilities")
-	case shadow.GrowthPreferredStock == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthPreferredStock")
-	case shadow.GrowthCommonStock == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthCommonStock")
-	case shadow.GrowthRetainedEarnings == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthRetainedEarnings")
-	case shadow.GrowthAccumulatedOtherComprehensiveIncomeLoss == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthAccumulatedOtherComprehensiveIncomeLoss")
-	case shadow.GrowthOtherTotalStockholdersEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOthertotalStockholdersEquity")
-	case shadow.GrowthTotalStockholdersEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalStockholdersEquity")
-	case shadow.GrowthMinorityInterest == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthMinorityInterest")
-	case shadow.GrowthTotalEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalEquity")
-	case shadow.GrowthTotalLiabilitiesAndStockholdersEquity == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalLiabilitiesAndStockholdersEquity")
-	case shadow.GrowthTotalInvestments == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalInvestments")
-	case shadow.GrowthTotalDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalDebt")
-	case shadow.GrowthNetDebt == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthNetDebt")
-	case shadow.GrowthAccountsReceivables == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthAccountsReceivables")
-	case shadow.GrowthOtherReceivables == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherReceivables")
-	case shadow.GrowthPrepaids == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthPrepaids")
-	case shadow.GrowthTotalPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTotalPayables")
-	case shadow.GrowthOtherPayables == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthOtherPayables")
-	case shadow.GrowthAccruedExpenses == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthAccruedExpenses")
-	case shadow.GrowthCapitalLeaseObligationsCurrent == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthCapitalLeaseObligationsCurrent")
-	case shadow.GrowthAdditionalPaidInCapital == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthAdditionalPaidInCapital")
-	case shadow.GrowthTreasuryStock == nil:
-		return missingMemberError("BulkBalanceSheetStatementGrowth", "growthTreasuryStock")
 	}
 	*m = BulkBalanceSheetStatementGrowth{
 		Symbol:                                        *shadow.Symbol,
@@ -591,57 +383,57 @@ func (m *BulkBalanceSheetStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decode
 		FiscalYear:                                    *shadow.FiscalYear,
 		Period:                                        *shadow.Period,
 		ReportedCurrency:                              *shadow.ReportedCurrency,
-		GrowthCashAndCashEquivalents:                  *shadow.GrowthCashAndCashEquivalents,
-		GrowthShortTermInvestments:                    *shadow.GrowthShortTermInvestments,
-		GrowthCashAndShortTermInvestments:             *shadow.GrowthCashAndShortTermInvestments,
-		GrowthNetReceivables:                          *shadow.GrowthNetReceivables,
-		GrowthInventory:                               *shadow.GrowthInventory,
-		GrowthOtherCurrentAssets:                      *shadow.GrowthOtherCurrentAssets,
-		GrowthTotalCurrentAssets:                      *shadow.GrowthTotalCurrentAssets,
-		GrowthPropertyPlantEquipmentNet:               *shadow.GrowthPropertyPlantEquipmentNet,
-		GrowthGoodwill:                                *shadow.GrowthGoodwill,
-		GrowthIntangibleAssets:                        *shadow.GrowthIntangibleAssets,
-		GrowthGoodwillAndIntangibleAssets:             *shadow.GrowthGoodwillAndIntangibleAssets,
-		GrowthLongTermInvestments:                     *shadow.GrowthLongTermInvestments,
-		GrowthTaxAssets:                               *shadow.GrowthTaxAssets,
-		GrowthOtherNonCurrentAssets:                   *shadow.GrowthOtherNonCurrentAssets,
-		GrowthTotalNonCurrentAssets:                   *shadow.GrowthTotalNonCurrentAssets,
-		GrowthOtherAssets:                             *shadow.GrowthOtherAssets,
-		GrowthTotalAssets:                             *shadow.GrowthTotalAssets,
-		GrowthAccountPayables:                         *shadow.GrowthAccountPayables,
-		GrowthShortTermDebt:                           *shadow.GrowthShortTermDebt,
-		GrowthTaxPayables:                             *shadow.GrowthTaxPayables,
-		GrowthDeferredRevenue:                         *shadow.GrowthDeferredRevenue,
-		GrowthOtherCurrentLiabilities:                 *shadow.GrowthOtherCurrentLiabilities,
-		GrowthTotalCurrentLiabilities:                 *shadow.GrowthTotalCurrentLiabilities,
-		GrowthLongTermDebt:                            *shadow.GrowthLongTermDebt,
-		GrowthDeferredRevenueNonCurrent:               *shadow.GrowthDeferredRevenueNonCurrent,
-		GrowthDeferredTaxLiabilitiesNonCurrent:        *shadow.GrowthDeferredTaxLiabilitiesNonCurrent,
-		GrowthOtherNonCurrentLiabilities:              *shadow.GrowthOtherNonCurrentLiabilities,
-		GrowthTotalNonCurrentLiabilities:              *shadow.GrowthTotalNonCurrentLiabilities,
-		GrowthOtherLiabilities:                        *shadow.GrowthOtherLiabilities,
-		GrowthTotalLiabilities:                        *shadow.GrowthTotalLiabilities,
-		GrowthPreferredStock:                          *shadow.GrowthPreferredStock,
-		GrowthCommonStock:                             *shadow.GrowthCommonStock,
-		GrowthRetainedEarnings:                        *shadow.GrowthRetainedEarnings,
-		GrowthAccumulatedOtherComprehensiveIncomeLoss: *shadow.GrowthAccumulatedOtherComprehensiveIncomeLoss,
-		GrowthOtherTotalStockholdersEquity:            *shadow.GrowthOtherTotalStockholdersEquity,
-		GrowthTotalStockholdersEquity:                 *shadow.GrowthTotalStockholdersEquity,
-		GrowthMinorityInterest:                        *shadow.GrowthMinorityInterest,
-		GrowthTotalEquity:                             *shadow.GrowthTotalEquity,
-		GrowthTotalLiabilitiesAndStockholdersEquity:   *shadow.GrowthTotalLiabilitiesAndStockholdersEquity,
-		GrowthTotalInvestments:                        *shadow.GrowthTotalInvestments,
-		GrowthTotalDebt:                               *shadow.GrowthTotalDebt,
-		GrowthNetDebt:                                 *shadow.GrowthNetDebt,
-		GrowthAccountsReceivables:                     *shadow.GrowthAccountsReceivables,
-		GrowthOtherReceivables:                        *shadow.GrowthOtherReceivables,
-		GrowthPrepaids:                                *shadow.GrowthPrepaids,
-		GrowthTotalPayables:                           *shadow.GrowthTotalPayables,
-		GrowthOtherPayables:                           *shadow.GrowthOtherPayables,
-		GrowthAccruedExpenses:                         *shadow.GrowthAccruedExpenses,
-		GrowthCapitalLeaseObligationsCurrent:          *shadow.GrowthCapitalLeaseObligationsCurrent,
-		GrowthAdditionalPaidInCapital:                 *shadow.GrowthAdditionalPaidInCapital,
-		GrowthTreasuryStock:                           *shadow.GrowthTreasuryStock,
+		GrowthCashAndCashEquivalents:                  shadow.GrowthCashAndCashEquivalents,
+		GrowthShortTermInvestments:                    shadow.GrowthShortTermInvestments,
+		GrowthCashAndShortTermInvestments:             shadow.GrowthCashAndShortTermInvestments,
+		GrowthNetReceivables:                          shadow.GrowthNetReceivables,
+		GrowthInventory:                               shadow.GrowthInventory,
+		GrowthOtherCurrentAssets:                      shadow.GrowthOtherCurrentAssets,
+		GrowthTotalCurrentAssets:                      shadow.GrowthTotalCurrentAssets,
+		GrowthPropertyPlantEquipmentNet:               shadow.GrowthPropertyPlantEquipmentNet,
+		GrowthGoodwill:                                shadow.GrowthGoodwill,
+		GrowthIntangibleAssets:                        shadow.GrowthIntangibleAssets,
+		GrowthGoodwillAndIntangibleAssets:             shadow.GrowthGoodwillAndIntangibleAssets,
+		GrowthLongTermInvestments:                     shadow.GrowthLongTermInvestments,
+		GrowthTaxAssets:                               shadow.GrowthTaxAssets,
+		GrowthOtherNonCurrentAssets:                   shadow.GrowthOtherNonCurrentAssets,
+		GrowthTotalNonCurrentAssets:                   shadow.GrowthTotalNonCurrentAssets,
+		GrowthOtherAssets:                             shadow.GrowthOtherAssets,
+		GrowthTotalAssets:                             shadow.GrowthTotalAssets,
+		GrowthAccountPayables:                         shadow.GrowthAccountPayables,
+		GrowthShortTermDebt:                           shadow.GrowthShortTermDebt,
+		GrowthTaxPayables:                             shadow.GrowthTaxPayables,
+		GrowthDeferredRevenue:                         shadow.GrowthDeferredRevenue,
+		GrowthOtherCurrentLiabilities:                 shadow.GrowthOtherCurrentLiabilities,
+		GrowthTotalCurrentLiabilities:                 shadow.GrowthTotalCurrentLiabilities,
+		GrowthLongTermDebt:                            shadow.GrowthLongTermDebt,
+		GrowthDeferredRevenueNonCurrent:               shadow.GrowthDeferredRevenueNonCurrent,
+		GrowthDeferredTaxLiabilitiesNonCurrent:        shadow.GrowthDeferredTaxLiabilitiesNonCurrent,
+		GrowthOtherNonCurrentLiabilities:              shadow.GrowthOtherNonCurrentLiabilities,
+		GrowthTotalNonCurrentLiabilities:              shadow.GrowthTotalNonCurrentLiabilities,
+		GrowthOtherLiabilities:                        shadow.GrowthOtherLiabilities,
+		GrowthTotalLiabilities:                        shadow.GrowthTotalLiabilities,
+		GrowthPreferredStock:                          shadow.GrowthPreferredStock,
+		GrowthCommonStock:                             shadow.GrowthCommonStock,
+		GrowthRetainedEarnings:                        shadow.GrowthRetainedEarnings,
+		GrowthAccumulatedOtherComprehensiveIncomeLoss: shadow.GrowthAccumulatedOtherComprehensiveIncomeLoss,
+		GrowthOtherTotalStockholdersEquity:            shadow.GrowthOtherTotalStockholdersEquity,
+		GrowthTotalStockholdersEquity:                 shadow.GrowthTotalStockholdersEquity,
+		GrowthMinorityInterest:                        shadow.GrowthMinorityInterest,
+		GrowthTotalEquity:                             shadow.GrowthTotalEquity,
+		GrowthTotalLiabilitiesAndStockholdersEquity:   shadow.GrowthTotalLiabilitiesAndStockholdersEquity,
+		GrowthTotalInvestments:                        shadow.GrowthTotalInvestments,
+		GrowthTotalDebt:                               shadow.GrowthTotalDebt,
+		GrowthNetDebt:                                 shadow.GrowthNetDebt,
+		GrowthAccountsReceivables:                     shadow.GrowthAccountsReceivables,
+		GrowthOtherReceivables:                        shadow.GrowthOtherReceivables,
+		GrowthPrepaids:                                shadow.GrowthPrepaids,
+		GrowthTotalPayables:                           shadow.GrowthTotalPayables,
+		GrowthOtherPayables:                           shadow.GrowthOtherPayables,
+		GrowthAccruedExpenses:                         shadow.GrowthAccruedExpenses,
+		GrowthCapitalLeaseObligationsCurrent:          shadow.GrowthCapitalLeaseObligationsCurrent,
+		GrowthAdditionalPaidInCapital:                 shadow.GrowthAdditionalPaidInCapital,
+		GrowthTreasuryStock:                           shadow.GrowthTreasuryStock,
 	}
 	return nil
 }
