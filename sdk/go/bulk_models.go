@@ -1216,37 +1216,37 @@ type BulkIncomeStatement struct {
 	AcceptedDate                            DateTime `json:"acceptedDate"`
 	FiscalYear                              string   `json:"fiscalYear"`
 	Period                                  string   `json:"period"`
-	Revenue                                 string   `json:"revenue"`
-	CostOfRevenue                           string   `json:"costOfRevenue"`
-	GrossProfit                             string   `json:"grossProfit"`
-	ResearchAndDevelopmentExpenses          string   `json:"researchAndDevelopmentExpenses"`
-	GeneralAndAdministrativeExpenses        string   `json:"generalAndAdministrativeExpenses"`
-	SellingAndMarketingExpenses             string   `json:"sellingAndMarketingExpenses"`
-	SellingGeneralAndAdministrativeExpenses string   `json:"sellingGeneralAndAdministrativeExpenses"`
-	OtherExpenses                           string   `json:"otherExpenses"`
-	OperatingExpenses                       string   `json:"operatingExpenses"`
-	CostAndExpenses                         string   `json:"costAndExpenses"`
-	NetInterestIncome                       string   `json:"netInterestIncome"`
-	InterestIncome                          string   `json:"interestIncome"`
-	InterestExpense                         string   `json:"interestExpense"`
-	DepreciationAndAmortization             string   `json:"depreciationAndAmortization"`
-	Ebitda                                  string   `json:"ebitda"`
-	Ebit                                    string   `json:"ebit"`
-	NonOperatingIncomeExcludingInterest     string   `json:"nonOperatingIncomeExcludingInterest"`
-	OperatingIncome                         string   `json:"operatingIncome"`
-	TotalOtherIncomeExpensesNet             string   `json:"totalOtherIncomeExpensesNet"`
-	IncomeBeforeTax                         string   `json:"incomeBeforeTax"`
-	IncomeTaxExpense                        string   `json:"incomeTaxExpense"`
-	NetIncomeFromContinuingOperations       string   `json:"netIncomeFromContinuingOperations"`
-	NetIncomeFromDiscontinuedOperations     string   `json:"netIncomeFromDiscontinuedOperations"`
-	OtherAdjustmentsToNetIncome             string   `json:"otherAdjustmentsToNetIncome"`
-	NetIncome                               string   `json:"netIncome"`
-	NetIncomeDeductions                     string   `json:"netIncomeDeductions"`
-	BottomLineNetIncome                     string   `json:"bottomLineNetIncome"`
-	EPS                                     string   `json:"eps"`
-	EPSDiluted                              string   `json:"epsDiluted"`
-	WeightedAverageShsOut                   string   `json:"weightedAverageShsOut"`
-	WeightedAverageShsOutDil                string   `json:"weightedAverageShsOutDil"`
+	Revenue                                 *string  `json:"revenue"`
+	CostOfRevenue                           *string  `json:"costOfRevenue"`
+	GrossProfit                             *string  `json:"grossProfit"`
+	ResearchAndDevelopmentExpenses          *string  `json:"researchAndDevelopmentExpenses"`
+	GeneralAndAdministrativeExpenses        *string  `json:"generalAndAdministrativeExpenses"`
+	SellingAndMarketingExpenses             *string  `json:"sellingAndMarketingExpenses"`
+	SellingGeneralAndAdministrativeExpenses *string  `json:"sellingGeneralAndAdministrativeExpenses"`
+	OtherExpenses                           *string  `json:"otherExpenses"`
+	OperatingExpenses                       *string  `json:"operatingExpenses"`
+	CostAndExpenses                         *string  `json:"costAndExpenses"`
+	NetInterestIncome                       *string  `json:"netInterestIncome"`
+	InterestIncome                          *string  `json:"interestIncome"`
+	InterestExpense                         *string  `json:"interestExpense"`
+	DepreciationAndAmortization             *string  `json:"depreciationAndAmortization"`
+	Ebitda                                  *string  `json:"ebitda"`
+	Ebit                                    *string  `json:"ebit"`
+	NonOperatingIncomeExcludingInterest     *string  `json:"nonOperatingIncomeExcludingInterest"`
+	OperatingIncome                         *string  `json:"operatingIncome"`
+	TotalOtherIncomeExpensesNet             *string  `json:"totalOtherIncomeExpensesNet"`
+	IncomeBeforeTax                         *string  `json:"incomeBeforeTax"`
+	IncomeTaxExpense                        *string  `json:"incomeTaxExpense"`
+	NetIncomeFromContinuingOperations       *string  `json:"netIncomeFromContinuingOperations"`
+	NetIncomeFromDiscontinuedOperations     *string  `json:"netIncomeFromDiscontinuedOperations"`
+	OtherAdjustmentsToNetIncome             *string  `json:"otherAdjustmentsToNetIncome"`
+	NetIncome                               *string  `json:"netIncome"`
+	NetIncomeDeductions                     *string  `json:"netIncomeDeductions"`
+	BottomLineNetIncome                     *string  `json:"bottomLineNetIncome"`
+	EPS                                     *string  `json:"eps"`
+	EPSDiluted                              *string  `json:"epsDiluted"`
+	WeightedAverageShsOut                   *string  `json:"weightedAverageShsOut"`
+	WeightedAverageShsOutDil                *string  `json:"weightedAverageShsOutDil"`
 }
 
 // bulkIncomeStatementShadow mirrors BulkIncomeStatement with a pointer or raw
@@ -1319,68 +1319,6 @@ func (m *BulkIncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		return missingMemberError("BulkIncomeStatement", "fiscalYear")
 	case shadow.Period == nil:
 		return missingMemberError("BulkIncomeStatement", "period")
-	case shadow.Revenue == nil:
-		return missingMemberError("BulkIncomeStatement", "revenue")
-	case shadow.CostOfRevenue == nil:
-		return missingMemberError("BulkIncomeStatement", "costOfRevenue")
-	case shadow.GrossProfit == nil:
-		return missingMemberError("BulkIncomeStatement", "grossProfit")
-	case shadow.ResearchAndDevelopmentExpenses == nil:
-		return missingMemberError("BulkIncomeStatement", "researchAndDevelopmentExpenses")
-	case shadow.GeneralAndAdministrativeExpenses == nil:
-		return missingMemberError("BulkIncomeStatement", "generalAndAdministrativeExpenses")
-	case shadow.SellingAndMarketingExpenses == nil:
-		return missingMemberError("BulkIncomeStatement", "sellingAndMarketingExpenses")
-	case shadow.SellingGeneralAndAdministrativeExpenses == nil:
-		return missingMemberError("BulkIncomeStatement", "sellingGeneralAndAdministrativeExpenses")
-	case shadow.OtherExpenses == nil:
-		return missingMemberError("BulkIncomeStatement", "otherExpenses")
-	case shadow.OperatingExpenses == nil:
-		return missingMemberError("BulkIncomeStatement", "operatingExpenses")
-	case shadow.CostAndExpenses == nil:
-		return missingMemberError("BulkIncomeStatement", "costAndExpenses")
-	case shadow.NetInterestIncome == nil:
-		return missingMemberError("BulkIncomeStatement", "netInterestIncome")
-	case shadow.InterestIncome == nil:
-		return missingMemberError("BulkIncomeStatement", "interestIncome")
-	case shadow.InterestExpense == nil:
-		return missingMemberError("BulkIncomeStatement", "interestExpense")
-	case shadow.DepreciationAndAmortization == nil:
-		return missingMemberError("BulkIncomeStatement", "depreciationAndAmortization")
-	case shadow.Ebitda == nil:
-		return missingMemberError("BulkIncomeStatement", "ebitda")
-	case shadow.Ebit == nil:
-		return missingMemberError("BulkIncomeStatement", "ebit")
-	case shadow.NonOperatingIncomeExcludingInterest == nil:
-		return missingMemberError("BulkIncomeStatement", "nonOperatingIncomeExcludingInterest")
-	case shadow.OperatingIncome == nil:
-		return missingMemberError("BulkIncomeStatement", "operatingIncome")
-	case shadow.TotalOtherIncomeExpensesNet == nil:
-		return missingMemberError("BulkIncomeStatement", "totalOtherIncomeExpensesNet")
-	case shadow.IncomeBeforeTax == nil:
-		return missingMemberError("BulkIncomeStatement", "incomeBeforeTax")
-	case shadow.IncomeTaxExpense == nil:
-		return missingMemberError("BulkIncomeStatement", "incomeTaxExpense")
-	case shadow.NetIncomeFromContinuingOperations == nil:
-		return missingMemberError("BulkIncomeStatement", "netIncomeFromContinuingOperations")
-	case shadow.NetIncomeFromDiscontinuedOperations == nil:
-		return missingMemberError("BulkIncomeStatement", "netIncomeFromDiscontinuedOperations")
-	case shadow.OtherAdjustmentsToNetIncome == nil:
-		return missingMemberError("BulkIncomeStatement", "otherAdjustmentsToNetIncome")
-	case shadow.NetIncome == nil:
-		return missingMemberError("BulkIncomeStatement", "netIncome")
-	case shadow.NetIncomeDeductions == nil:
-		return missingMemberError("BulkIncomeStatement", "netIncomeDeductions")
-	case shadow.BottomLineNetIncome == nil:
-		return missingMemberError("BulkIncomeStatement", "bottomLineNetIncome")
-	case shadow.EPS == nil:
-		return missingMemberError("BulkIncomeStatement", "eps")
-	case shadow.EPSDiluted == nil:
-		return missingMemberError("BulkIncomeStatement", "epsDiluted")
-	case shadow.WeightedAverageShsOut == nil:
-		return missingMemberError("BulkIncomeStatement", "weightedAverageShsOut")
-	case shadow.WeightedAverageShsOutDil == nil:
-		return missingMemberError("BulkIncomeStatement", "weightedAverageShsOutDil")
 	}
 	*m = BulkIncomeStatement{
 		Date:                                    *shadow.Date,
@@ -1391,77 +1329,77 @@ func (m *BulkIncomeStatement) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 		AcceptedDate:                            *shadow.AcceptedDate,
 		FiscalYear:                              *shadow.FiscalYear,
 		Period:                                  *shadow.Period,
-		Revenue:                                 *shadow.Revenue,
-		CostOfRevenue:                           *shadow.CostOfRevenue,
-		GrossProfit:                             *shadow.GrossProfit,
-		ResearchAndDevelopmentExpenses:          *shadow.ResearchAndDevelopmentExpenses,
-		GeneralAndAdministrativeExpenses:        *shadow.GeneralAndAdministrativeExpenses,
-		SellingAndMarketingExpenses:             *shadow.SellingAndMarketingExpenses,
-		SellingGeneralAndAdministrativeExpenses: *shadow.SellingGeneralAndAdministrativeExpenses,
-		OtherExpenses:                           *shadow.OtherExpenses,
-		OperatingExpenses:                       *shadow.OperatingExpenses,
-		CostAndExpenses:                         *shadow.CostAndExpenses,
-		NetInterestIncome:                       *shadow.NetInterestIncome,
-		InterestIncome:                          *shadow.InterestIncome,
-		InterestExpense:                         *shadow.InterestExpense,
-		DepreciationAndAmortization:             *shadow.DepreciationAndAmortization,
-		Ebitda:                                  *shadow.Ebitda,
-		Ebit:                                    *shadow.Ebit,
-		NonOperatingIncomeExcludingInterest:     *shadow.NonOperatingIncomeExcludingInterest,
-		OperatingIncome:                         *shadow.OperatingIncome,
-		TotalOtherIncomeExpensesNet:             *shadow.TotalOtherIncomeExpensesNet,
-		IncomeBeforeTax:                         *shadow.IncomeBeforeTax,
-		IncomeTaxExpense:                        *shadow.IncomeTaxExpense,
-		NetIncomeFromContinuingOperations:       *shadow.NetIncomeFromContinuingOperations,
-		NetIncomeFromDiscontinuedOperations:     *shadow.NetIncomeFromDiscontinuedOperations,
-		OtherAdjustmentsToNetIncome:             *shadow.OtherAdjustmentsToNetIncome,
-		NetIncome:                               *shadow.NetIncome,
-		NetIncomeDeductions:                     *shadow.NetIncomeDeductions,
-		BottomLineNetIncome:                     *shadow.BottomLineNetIncome,
-		EPS:                                     *shadow.EPS,
-		EPSDiluted:                              *shadow.EPSDiluted,
-		WeightedAverageShsOut:                   *shadow.WeightedAverageShsOut,
-		WeightedAverageShsOutDil:                *shadow.WeightedAverageShsOutDil,
+		Revenue:                                 shadow.Revenue,
+		CostOfRevenue:                           shadow.CostOfRevenue,
+		GrossProfit:                             shadow.GrossProfit,
+		ResearchAndDevelopmentExpenses:          shadow.ResearchAndDevelopmentExpenses,
+		GeneralAndAdministrativeExpenses:        shadow.GeneralAndAdministrativeExpenses,
+		SellingAndMarketingExpenses:             shadow.SellingAndMarketingExpenses,
+		SellingGeneralAndAdministrativeExpenses: shadow.SellingGeneralAndAdministrativeExpenses,
+		OtherExpenses:                           shadow.OtherExpenses,
+		OperatingExpenses:                       shadow.OperatingExpenses,
+		CostAndExpenses:                         shadow.CostAndExpenses,
+		NetInterestIncome:                       shadow.NetInterestIncome,
+		InterestIncome:                          shadow.InterestIncome,
+		InterestExpense:                         shadow.InterestExpense,
+		DepreciationAndAmortization:             shadow.DepreciationAndAmortization,
+		Ebitda:                                  shadow.Ebitda,
+		Ebit:                                    shadow.Ebit,
+		NonOperatingIncomeExcludingInterest:     shadow.NonOperatingIncomeExcludingInterest,
+		OperatingIncome:                         shadow.OperatingIncome,
+		TotalOtherIncomeExpensesNet:             shadow.TotalOtherIncomeExpensesNet,
+		IncomeBeforeTax:                         shadow.IncomeBeforeTax,
+		IncomeTaxExpense:                        shadow.IncomeTaxExpense,
+		NetIncomeFromContinuingOperations:       shadow.NetIncomeFromContinuingOperations,
+		NetIncomeFromDiscontinuedOperations:     shadow.NetIncomeFromDiscontinuedOperations,
+		OtherAdjustmentsToNetIncome:             shadow.OtherAdjustmentsToNetIncome,
+		NetIncome:                               shadow.NetIncome,
+		NetIncomeDeductions:                     shadow.NetIncomeDeductions,
+		BottomLineNetIncome:                     shadow.BottomLineNetIncome,
+		EPS:                                     shadow.EPS,
+		EPSDiluted:                              shadow.EPSDiluted,
+		WeightedAverageShsOut:                   shadow.WeightedAverageShsOut,
+		WeightedAverageShsOutDil:                shadow.WeightedAverageShsOutDil,
 	}
 	return nil
 }
 
 // BulkIncomeStatementGrowth is one worldwide bulk income-statement-growth row.
 type BulkIncomeStatementGrowth struct {
-	Symbol                                    string `json:"symbol"`
-	Date                                      Date   `json:"date"`
-	FiscalYear                                string `json:"fiscalYear"`
-	Period                                    string `json:"period"`
-	ReportedCurrency                          string `json:"reportedCurrency"`
-	GrowthRevenue                             string `json:"growthRevenue"`
-	GrowthCostOfRevenue                       string `json:"growthCostOfRevenue"`
-	GrowthGrossProfit                         string `json:"growthGrossProfit"`
-	GrowthGrossProfitRatio                    string `json:"growthGrossProfitRatio"`
-	GrowthResearchAndDevelopmentExpenses      string `json:"growthResearchAndDevelopmentExpenses"`
-	GrowthGeneralAndAdministrativeExpenses    string `json:"growthGeneralAndAdministrativeExpenses"`
-	GrowthSellingAndMarketingExpenses         string `json:"growthSellingAndMarketingExpenses"`
-	GrowthOtherExpenses                       string `json:"growthOtherExpenses"`
-	GrowthOperatingExpenses                   string `json:"growthOperatingExpenses"`
-	GrowthCostAndExpenses                     string `json:"growthCostAndExpenses"`
-	GrowthInterestIncome                      string `json:"growthInterestIncome"`
-	GrowthInterestExpense                     string `json:"growthInterestExpense"`
-	GrowthDepreciationAndAmortization         string `json:"growthDepreciationAndAmortization"`
-	GrowthEbitda                              string `json:"growthEBITDA"`
-	GrowthOperatingIncome                     string `json:"growthOperatingIncome"`
-	GrowthIncomeBeforeTax                     string `json:"growthIncomeBeforeTax"`
-	GrowthIncomeTaxExpense                    string `json:"growthIncomeTaxExpense"`
-	GrowthNetIncome                           string `json:"growthNetIncome"`
-	GrowthEPS                                 string `json:"growthEPS"`
-	GrowthEPSDiluted                          string `json:"growthEPSDiluted"`
-	GrowthWeightedAverageShsOut               string `json:"growthWeightedAverageShsOut"`
-	GrowthWeightedAverageShsOutDil            string `json:"growthWeightedAverageShsOutDil"`
-	GrowthEbit                                string `json:"growthEBIT"`
-	GrowthNonOperatingIncomeExcludingInterest string `json:"growthNonOperatingIncomeExcludingInterest"`
-	GrowthNetInterestIncome                   string `json:"growthNetInterestIncome"`
-	GrowthTotalOtherIncomeExpensesNet         string `json:"growthTotalOtherIncomeExpensesNet"`
-	GrowthNetIncomeFromContinuingOperations   string `json:"growthNetIncomeFromContinuingOperations"`
-	GrowthOtherAdjustmentsToNetIncome         string `json:"growthOtherAdjustmentsToNetIncome"`
-	GrowthNetIncomeDeductions                 string `json:"growthNetIncomeDeductions"`
+	Symbol                                    string  `json:"symbol"`
+	Date                                      Date    `json:"date"`
+	FiscalYear                                string  `json:"fiscalYear"`
+	Period                                    string  `json:"period"`
+	ReportedCurrency                          string  `json:"reportedCurrency"`
+	GrowthRevenue                             *string `json:"growthRevenue"`
+	GrowthCostOfRevenue                       *string `json:"growthCostOfRevenue"`
+	GrowthGrossProfit                         *string `json:"growthGrossProfit"`
+	GrowthGrossProfitRatio                    *string `json:"growthGrossProfitRatio"`
+	GrowthResearchAndDevelopmentExpenses      *string `json:"growthResearchAndDevelopmentExpenses"`
+	GrowthGeneralAndAdministrativeExpenses    *string `json:"growthGeneralAndAdministrativeExpenses"`
+	GrowthSellingAndMarketingExpenses         *string `json:"growthSellingAndMarketingExpenses"`
+	GrowthOtherExpenses                       *string `json:"growthOtherExpenses"`
+	GrowthOperatingExpenses                   *string `json:"growthOperatingExpenses"`
+	GrowthCostAndExpenses                     *string `json:"growthCostAndExpenses"`
+	GrowthInterestIncome                      *string `json:"growthInterestIncome"`
+	GrowthInterestExpense                     *string `json:"growthInterestExpense"`
+	GrowthDepreciationAndAmortization         *string `json:"growthDepreciationAndAmortization"`
+	GrowthEbitda                              *string `json:"growthEBITDA"`
+	GrowthOperatingIncome                     *string `json:"growthOperatingIncome"`
+	GrowthIncomeBeforeTax                     *string `json:"growthIncomeBeforeTax"`
+	GrowthIncomeTaxExpense                    *string `json:"growthIncomeTaxExpense"`
+	GrowthNetIncome                           *string `json:"growthNetIncome"`
+	GrowthEPS                                 *string `json:"growthEPS"`
+	GrowthEPSDiluted                          *string `json:"growthEPSDiluted"`
+	GrowthWeightedAverageShsOut               *string `json:"growthWeightedAverageShsOut"`
+	GrowthWeightedAverageShsOutDil            *string `json:"growthWeightedAverageShsOutDil"`
+	GrowthEbit                                *string `json:"growthEBIT"`
+	GrowthNonOperatingIncomeExcludingInterest *string `json:"growthNonOperatingIncomeExcludingInterest"`
+	GrowthNetInterestIncome                   *string `json:"growthNetInterestIncome"`
+	GrowthTotalOtherIncomeExpensesNet         *string `json:"growthTotalOtherIncomeExpensesNet"`
+	GrowthNetIncomeFromContinuingOperations   *string `json:"growthNetIncomeFromContinuingOperations"`
+	GrowthOtherAdjustmentsToNetIncome         *string `json:"growthOtherAdjustmentsToNetIncome"`
+	GrowthNetIncomeDeductions                 *string `json:"growthNetIncomeDeductions"`
 }
 
 // bulkIncomeStatementGrowthShadow mirrors BulkIncomeStatementGrowth with a
@@ -1523,64 +1461,6 @@ func (m *BulkIncomeStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		return missingMemberError("BulkIncomeStatementGrowth", "period")
 	case shadow.ReportedCurrency == nil:
 		return missingMemberError("BulkIncomeStatementGrowth", "reportedCurrency")
-	case shadow.GrowthRevenue == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthRevenue")
-	case shadow.GrowthCostOfRevenue == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthCostOfRevenue")
-	case shadow.GrowthGrossProfit == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthGrossProfit")
-	case shadow.GrowthGrossProfitRatio == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthGrossProfitRatio")
-	case shadow.GrowthResearchAndDevelopmentExpenses == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthResearchAndDevelopmentExpenses")
-	case shadow.GrowthGeneralAndAdministrativeExpenses == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthGeneralAndAdministrativeExpenses")
-	case shadow.GrowthSellingAndMarketingExpenses == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthSellingAndMarketingExpenses")
-	case shadow.GrowthOtherExpenses == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthOtherExpenses")
-	case shadow.GrowthOperatingExpenses == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthOperatingExpenses")
-	case shadow.GrowthCostAndExpenses == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthCostAndExpenses")
-	case shadow.GrowthInterestIncome == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthInterestIncome")
-	case shadow.GrowthInterestExpense == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthInterestExpense")
-	case shadow.GrowthDepreciationAndAmortization == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthDepreciationAndAmortization")
-	case shadow.GrowthEbitda == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthEBITDA")
-	case shadow.GrowthOperatingIncome == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthOperatingIncome")
-	case shadow.GrowthIncomeBeforeTax == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthIncomeBeforeTax")
-	case shadow.GrowthIncomeTaxExpense == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthIncomeTaxExpense")
-	case shadow.GrowthNetIncome == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthNetIncome")
-	case shadow.GrowthEPS == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthEPS")
-	case shadow.GrowthEPSDiluted == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthEPSDiluted")
-	case shadow.GrowthWeightedAverageShsOut == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthWeightedAverageShsOut")
-	case shadow.GrowthWeightedAverageShsOutDil == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthWeightedAverageShsOutDil")
-	case shadow.GrowthEbit == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthEBIT")
-	case shadow.GrowthNonOperatingIncomeExcludingInterest == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthNonOperatingIncomeExcludingInterest")
-	case shadow.GrowthNetInterestIncome == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthNetInterestIncome")
-	case shadow.GrowthTotalOtherIncomeExpensesNet == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthTotalOtherIncomeExpensesNet")
-	case shadow.GrowthNetIncomeFromContinuingOperations == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthNetIncomeFromContinuingOperations")
-	case shadow.GrowthOtherAdjustmentsToNetIncome == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthOtherAdjustmentsToNetIncome")
-	case shadow.GrowthNetIncomeDeductions == nil:
-		return missingMemberError("BulkIncomeStatementGrowth", "growthNetIncomeDeductions")
 	}
 	*m = BulkIncomeStatementGrowth{
 		Symbol:                                 *shadow.Symbol,
@@ -1588,35 +1468,35 @@ func (m *BulkIncomeStatementGrowth) UnmarshalJSONFrom(dec *jsontext.Decoder) err
 		FiscalYear:                             *shadow.FiscalYear,
 		Period:                                 *shadow.Period,
 		ReportedCurrency:                       *shadow.ReportedCurrency,
-		GrowthRevenue:                          *shadow.GrowthRevenue,
-		GrowthCostOfRevenue:                    *shadow.GrowthCostOfRevenue,
-		GrowthGrossProfit:                      *shadow.GrowthGrossProfit,
-		GrowthGrossProfitRatio:                 *shadow.GrowthGrossProfitRatio,
-		GrowthResearchAndDevelopmentExpenses:   *shadow.GrowthResearchAndDevelopmentExpenses,
-		GrowthGeneralAndAdministrativeExpenses: *shadow.GrowthGeneralAndAdministrativeExpenses,
-		GrowthSellingAndMarketingExpenses:      *shadow.GrowthSellingAndMarketingExpenses,
-		GrowthOtherExpenses:                    *shadow.GrowthOtherExpenses,
-		GrowthOperatingExpenses:                *shadow.GrowthOperatingExpenses,
-		GrowthCostAndExpenses:                  *shadow.GrowthCostAndExpenses,
-		GrowthInterestIncome:                   *shadow.GrowthInterestIncome,
-		GrowthInterestExpense:                  *shadow.GrowthInterestExpense,
-		GrowthDepreciationAndAmortization:      *shadow.GrowthDepreciationAndAmortization,
-		GrowthEbitda:                           *shadow.GrowthEbitda,
-		GrowthOperatingIncome:                  *shadow.GrowthOperatingIncome,
-		GrowthIncomeBeforeTax:                  *shadow.GrowthIncomeBeforeTax,
-		GrowthIncomeTaxExpense:                 *shadow.GrowthIncomeTaxExpense,
-		GrowthNetIncome:                        *shadow.GrowthNetIncome,
-		GrowthEPS:                              *shadow.GrowthEPS,
-		GrowthEPSDiluted:                       *shadow.GrowthEPSDiluted,
-		GrowthWeightedAverageShsOut:            *shadow.GrowthWeightedAverageShsOut,
-		GrowthWeightedAverageShsOutDil:         *shadow.GrowthWeightedAverageShsOutDil,
-		GrowthEbit:                             *shadow.GrowthEbit,
-		GrowthNonOperatingIncomeExcludingInterest: *shadow.GrowthNonOperatingIncomeExcludingInterest,
-		GrowthNetInterestIncome:                   *shadow.GrowthNetInterestIncome,
-		GrowthTotalOtherIncomeExpensesNet:         *shadow.GrowthTotalOtherIncomeExpensesNet,
-		GrowthNetIncomeFromContinuingOperations:   *shadow.GrowthNetIncomeFromContinuingOperations,
-		GrowthOtherAdjustmentsToNetIncome:         *shadow.GrowthOtherAdjustmentsToNetIncome,
-		GrowthNetIncomeDeductions:                 *shadow.GrowthNetIncomeDeductions,
+		GrowthRevenue:                          shadow.GrowthRevenue,
+		GrowthCostOfRevenue:                    shadow.GrowthCostOfRevenue,
+		GrowthGrossProfit:                      shadow.GrowthGrossProfit,
+		GrowthGrossProfitRatio:                 shadow.GrowthGrossProfitRatio,
+		GrowthResearchAndDevelopmentExpenses:   shadow.GrowthResearchAndDevelopmentExpenses,
+		GrowthGeneralAndAdministrativeExpenses: shadow.GrowthGeneralAndAdministrativeExpenses,
+		GrowthSellingAndMarketingExpenses:      shadow.GrowthSellingAndMarketingExpenses,
+		GrowthOtherExpenses:                    shadow.GrowthOtherExpenses,
+		GrowthOperatingExpenses:                shadow.GrowthOperatingExpenses,
+		GrowthCostAndExpenses:                  shadow.GrowthCostAndExpenses,
+		GrowthInterestIncome:                   shadow.GrowthInterestIncome,
+		GrowthInterestExpense:                  shadow.GrowthInterestExpense,
+		GrowthDepreciationAndAmortization:      shadow.GrowthDepreciationAndAmortization,
+		GrowthEbitda:                           shadow.GrowthEbitda,
+		GrowthOperatingIncome:                  shadow.GrowthOperatingIncome,
+		GrowthIncomeBeforeTax:                  shadow.GrowthIncomeBeforeTax,
+		GrowthIncomeTaxExpense:                 shadow.GrowthIncomeTaxExpense,
+		GrowthNetIncome:                        shadow.GrowthNetIncome,
+		GrowthEPS:                              shadow.GrowthEPS,
+		GrowthEPSDiluted:                       shadow.GrowthEPSDiluted,
+		GrowthWeightedAverageShsOut:            shadow.GrowthWeightedAverageShsOut,
+		GrowthWeightedAverageShsOutDil:         shadow.GrowthWeightedAverageShsOutDil,
+		GrowthEbit:                             shadow.GrowthEbit,
+		GrowthNonOperatingIncomeExcludingInterest: shadow.GrowthNonOperatingIncomeExcludingInterest,
+		GrowthNetInterestIncome:                   shadow.GrowthNetInterestIncome,
+		GrowthTotalOtherIncomeExpensesNet:         shadow.GrowthTotalOtherIncomeExpensesNet,
+		GrowthNetIncomeFromContinuingOperations:   shadow.GrowthNetIncomeFromContinuingOperations,
+		GrowthOtherAdjustmentsToNetIncome:         shadow.GrowthOtherAdjustmentsToNetIncome,
+		GrowthNetIncomeDeductions:                 shadow.GrowthNetIncomeDeductions,
 	}
 	return nil
 }

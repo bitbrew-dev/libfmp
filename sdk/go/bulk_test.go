@@ -102,11 +102,11 @@ func TestBulkMethodsUseExactPathsAndWireParameterOrder(t *testing.T) {
 		t.Fatalf("EarningsSurprises = %+v, %v", surprises, err)
 	}
 	income, err := client.Bulk.IncomeStatements(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ1))
-	if err != nil || len(income) != 2 || income[0].Revenue != "251641000000" {
+	if err != nil || len(income) != 3 || cellText(income[0].Revenue) != "251641000000" {
 		t.Fatalf("IncomeStatements = %+v, %v", income, err)
 	}
 	incomeGrowth, err := client.Bulk.IncomeStatementGrowth(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ2))
-	if err != nil || len(incomeGrowth) != 2 || incomeGrowth[0].GrowthRevenue != "-0.08220846812871789" {
+	if err != nil || len(incomeGrowth) != 2 || cellText(incomeGrowth[0].GrowthRevenue) != "-0.08220846812871789" {
 		t.Fatalf("IncomeStatementGrowth = %+v, %v", incomeGrowth, err)
 	}
 	balance, err := client.Bulk.BalanceSheetStatements(ctx, NewBulkStatementQuery(2026, FiscalPeriodQ3))

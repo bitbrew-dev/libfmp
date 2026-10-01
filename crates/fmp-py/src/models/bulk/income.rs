@@ -25,67 +25,67 @@ pub(crate) struct BulkIncomeStatement {
     pub fiscal_year: String,
     pub period: String,
     #[pyo3(get)]
-    pub revenue: String,
+    pub revenue: Option<String>,
     #[pyo3(get)]
-    pub cost_of_revenue: String,
+    pub cost_of_revenue: Option<String>,
     #[pyo3(get)]
-    pub gross_profit: String,
+    pub gross_profit: Option<String>,
     #[pyo3(get)]
-    pub research_and_development_expenses: String,
+    pub research_and_development_expenses: Option<String>,
     #[pyo3(get)]
-    pub general_and_administrative_expenses: String,
+    pub general_and_administrative_expenses: Option<String>,
     #[pyo3(get)]
-    pub selling_and_marketing_expenses: String,
+    pub selling_and_marketing_expenses: Option<String>,
     #[pyo3(get)]
-    pub selling_general_and_administrative_expenses: String,
+    pub selling_general_and_administrative_expenses: Option<String>,
     #[pyo3(get)]
-    pub other_expenses: String,
+    pub other_expenses: Option<String>,
     #[pyo3(get)]
-    pub operating_expenses: String,
+    pub operating_expenses: Option<String>,
     #[pyo3(get)]
-    pub cost_and_expenses: String,
+    pub cost_and_expenses: Option<String>,
     #[pyo3(get)]
-    pub net_interest_income: String,
+    pub net_interest_income: Option<String>,
     #[pyo3(get)]
-    pub interest_income: String,
+    pub interest_income: Option<String>,
     #[pyo3(get)]
-    pub interest_expense: String,
+    pub interest_expense: Option<String>,
     #[pyo3(get)]
-    pub depreciation_and_amortization: String,
+    pub depreciation_and_amortization: Option<String>,
     #[pyo3(get)]
-    pub ebitda: String,
+    pub ebitda: Option<String>,
     #[pyo3(get)]
-    pub ebit: String,
+    pub ebit: Option<String>,
     #[pyo3(get)]
-    pub non_operating_income_excluding_interest: String,
+    pub non_operating_income_excluding_interest: Option<String>,
     #[pyo3(get)]
-    pub operating_income: String,
+    pub operating_income: Option<String>,
     #[pyo3(get)]
-    pub total_other_income_expenses_net: String,
+    pub total_other_income_expenses_net: Option<String>,
     #[pyo3(get)]
-    pub income_before_tax: String,
+    pub income_before_tax: Option<String>,
     #[pyo3(get)]
-    pub income_tax_expense: String,
+    pub income_tax_expense: Option<String>,
     #[pyo3(get)]
-    pub net_income_from_continuing_operations: String,
+    pub net_income_from_continuing_operations: Option<String>,
     #[pyo3(get)]
-    pub net_income_from_discontinued_operations: String,
+    pub net_income_from_discontinued_operations: Option<String>,
     #[pyo3(get)]
-    pub other_adjustments_to_net_income: String,
+    pub other_adjustments_to_net_income: Option<String>,
     #[pyo3(get)]
-    pub net_income: String,
+    pub net_income: Option<String>,
     #[pyo3(get)]
-    pub net_income_deductions: String,
+    pub net_income_deductions: Option<String>,
     #[pyo3(get)]
-    pub bottom_line_net_income: String,
+    pub bottom_line_net_income: Option<String>,
     #[pyo3(get)]
-    pub eps: String,
+    pub eps: Option<String>,
     #[pyo3(get)]
-    pub eps_diluted: String,
+    pub eps_diluted: Option<String>,
     #[pyo3(get)]
-    pub weighted_average_shs_out: String,
+    pub weighted_average_shs_out: Option<String>,
     #[pyo3(get)]
-    pub weighted_average_shs_out_dil: String,
+    pub weighted_average_shs_out_dil: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -105,37 +105,37 @@ impl BulkIncomeStatement {
         fiscal_year: String,
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
-        revenue: String,
-        cost_of_revenue: String,
-        gross_profit: String,
-        research_and_development_expenses: String,
-        general_and_administrative_expenses: String,
-        selling_and_marketing_expenses: String,
-        selling_general_and_administrative_expenses: String,
-        other_expenses: String,
-        operating_expenses: String,
-        cost_and_expenses: String,
-        net_interest_income: String,
-        interest_income: String,
-        interest_expense: String,
-        depreciation_and_amortization: String,
-        ebitda: String,
-        ebit: String,
-        non_operating_income_excluding_interest: String,
-        operating_income: String,
-        total_other_income_expenses_net: String,
-        income_before_tax: String,
-        income_tax_expense: String,
-        net_income_from_continuing_operations: String,
-        net_income_from_discontinued_operations: String,
-        other_adjustments_to_net_income: String,
-        net_income: String,
-        net_income_deductions: String,
-        bottom_line_net_income: String,
-        eps: String,
-        eps_diluted: String,
-        weighted_average_shs_out: String,
-        weighted_average_shs_out_dil: String,
+        revenue: Option<String>,
+        cost_of_revenue: Option<String>,
+        gross_profit: Option<String>,
+        research_and_development_expenses: Option<String>,
+        general_and_administrative_expenses: Option<String>,
+        selling_and_marketing_expenses: Option<String>,
+        selling_general_and_administrative_expenses: Option<String>,
+        other_expenses: Option<String>,
+        operating_expenses: Option<String>,
+        cost_and_expenses: Option<String>,
+        net_interest_income: Option<String>,
+        interest_income: Option<String>,
+        interest_expense: Option<String>,
+        depreciation_and_amortization: Option<String>,
+        ebitda: Option<String>,
+        ebit: Option<String>,
+        non_operating_income_excluding_interest: Option<String>,
+        operating_income: Option<String>,
+        total_other_income_expenses_net: Option<String>,
+        income_before_tax: Option<String>,
+        income_tax_expense: Option<String>,
+        net_income_from_continuing_operations: Option<String>,
+        net_income_from_discontinued_operations: Option<String>,
+        other_adjustments_to_net_income: Option<String>,
+        net_income: Option<String>,
+        net_income_deductions: Option<String>,
+        bottom_line_net_income: Option<String>,
+        eps: Option<String>,
+        eps_diluted: Option<String>,
+        weighted_average_shs_out: Option<String>,
+        weighted_average_shs_out_dil: Option<String>,
     ) -> Self {
         Self {
             date,
@@ -764,47 +764,61 @@ impl From<libfmp::responses::bulk::BulkIncomeStatement> for BulkIncomeStatement 
             accepted_date: value.accepted_date.into_inner(),
             fiscal_year: value.fiscal_year.as_str().to_owned(),
             period: value.period.to_string(),
-            revenue: value.revenue.into_inner(),
-            cost_of_revenue: value.cost_of_revenue.into_inner(),
-            gross_profit: value.gross_profit.into_inner(),
-            research_and_development_expenses: value.research_and_development_expenses.into_inner(),
+            revenue: value.revenue.map(|value| value.into_inner()),
+            cost_of_revenue: value.cost_of_revenue.map(|value| value.into_inner()),
+            gross_profit: value.gross_profit.map(|value| value.into_inner()),
+            research_and_development_expenses: value
+                .research_and_development_expenses
+                .map(|value| value.into_inner()),
             general_and_administrative_expenses: value
                 .general_and_administrative_expenses
-                .into_inner(),
-            selling_and_marketing_expenses: value.selling_and_marketing_expenses.into_inner(),
+                .map(|value| value.into_inner()),
+            selling_and_marketing_expenses: value
+                .selling_and_marketing_expenses
+                .map(|value| value.into_inner()),
             selling_general_and_administrative_expenses: value
                 .selling_general_and_administrative_expenses
-                .into_inner(),
-            other_expenses: value.other_expenses.into_inner(),
-            operating_expenses: value.operating_expenses.into_inner(),
-            cost_and_expenses: value.cost_and_expenses.into_inner(),
-            net_interest_income: value.net_interest_income.into_inner(),
-            interest_income: value.interest_income.into_inner(),
-            interest_expense: value.interest_expense.into_inner(),
-            depreciation_and_amortization: value.depreciation_and_amortization.into_inner(),
-            ebitda: value.ebitda.into_inner(),
-            ebit: value.ebit.into_inner(),
+                .map(|value| value.into_inner()),
+            other_expenses: value.other_expenses.map(|value| value.into_inner()),
+            operating_expenses: value.operating_expenses.map(|value| value.into_inner()),
+            cost_and_expenses: value.cost_and_expenses.map(|value| value.into_inner()),
+            net_interest_income: value.net_interest_income.map(|value| value.into_inner()),
+            interest_income: value.interest_income.map(|value| value.into_inner()),
+            interest_expense: value.interest_expense.map(|value| value.into_inner()),
+            depreciation_and_amortization: value
+                .depreciation_and_amortization
+                .map(|value| value.into_inner()),
+            ebitda: value.ebitda.map(|value| value.into_inner()),
+            ebit: value.ebit.map(|value| value.into_inner()),
             non_operating_income_excluding_interest: value
                 .non_operating_income_excluding_interest
-                .into_inner(),
-            operating_income: value.operating_income.into_inner(),
-            total_other_income_expenses_net: value.total_other_income_expenses_net.into_inner(),
-            income_before_tax: value.income_before_tax.into_inner(),
-            income_tax_expense: value.income_tax_expense.into_inner(),
+                .map(|value| value.into_inner()),
+            operating_income: value.operating_income.map(|value| value.into_inner()),
+            total_other_income_expenses_net: value
+                .total_other_income_expenses_net
+                .map(|value| value.into_inner()),
+            income_before_tax: value.income_before_tax.map(|value| value.into_inner()),
+            income_tax_expense: value.income_tax_expense.map(|value| value.into_inner()),
             net_income_from_continuing_operations: value
                 .net_income_from_continuing_operations
-                .into_inner(),
+                .map(|value| value.into_inner()),
             net_income_from_discontinued_operations: value
                 .net_income_from_discontinued_operations
-                .into_inner(),
-            other_adjustments_to_net_income: value.other_adjustments_to_net_income.into_inner(),
-            net_income: value.net_income.into_inner(),
-            net_income_deductions: value.net_income_deductions.into_inner(),
-            bottom_line_net_income: value.bottom_line_net_income.into_inner(),
-            eps: value.eps.into_inner(),
-            eps_diluted: value.eps_diluted.into_inner(),
-            weighted_average_shs_out: value.weighted_average_shs_out.into_inner(),
-            weighted_average_shs_out_dil: value.weighted_average_shs_out_dil.into_inner(),
+                .map(|value| value.into_inner()),
+            other_adjustments_to_net_income: value
+                .other_adjustments_to_net_income
+                .map(|value| value.into_inner()),
+            net_income: value.net_income.map(|value| value.into_inner()),
+            net_income_deductions: value.net_income_deductions.map(|value| value.into_inner()),
+            bottom_line_net_income: value.bottom_line_net_income.map(|value| value.into_inner()),
+            eps: value.eps.map(|value| value.into_inner()),
+            eps_diluted: value.eps_diluted.map(|value| value.into_inner()),
+            weighted_average_shs_out: value
+                .weighted_average_shs_out
+                .map(|value| value.into_inner()),
+            weighted_average_shs_out_dil: value
+                .weighted_average_shs_out_dil
+                .map(|value| value.into_inner()),
         }
     }
 }
@@ -829,63 +843,63 @@ pub(crate) struct BulkIncomeStatementGrowth {
     #[pyo3(get)]
     pub reported_currency: String,
     #[pyo3(get)]
-    pub growth_revenue: String,
+    pub growth_revenue: Option<String>,
     #[pyo3(get)]
-    pub growth_cost_of_revenue: String,
+    pub growth_cost_of_revenue: Option<String>,
     #[pyo3(get)]
-    pub growth_gross_profit: String,
+    pub growth_gross_profit: Option<String>,
     #[pyo3(get)]
-    pub growth_gross_profit_ratio: String,
+    pub growth_gross_profit_ratio: Option<String>,
     #[pyo3(get)]
-    pub growth_research_and_development_expenses: String,
+    pub growth_research_and_development_expenses: Option<String>,
     #[pyo3(get)]
-    pub growth_general_and_administrative_expenses: String,
+    pub growth_general_and_administrative_expenses: Option<String>,
     #[pyo3(get)]
-    pub growth_selling_and_marketing_expenses: String,
+    pub growth_selling_and_marketing_expenses: Option<String>,
     #[pyo3(get)]
-    pub growth_other_expenses: String,
+    pub growth_other_expenses: Option<String>,
     #[pyo3(get)]
-    pub growth_operating_expenses: String,
+    pub growth_operating_expenses: Option<String>,
     #[pyo3(get)]
-    pub growth_cost_and_expenses: String,
+    pub growth_cost_and_expenses: Option<String>,
     #[pyo3(get)]
-    pub growth_interest_income: String,
+    pub growth_interest_income: Option<String>,
     #[pyo3(get)]
-    pub growth_interest_expense: String,
+    pub growth_interest_expense: Option<String>,
     #[pyo3(get)]
-    pub growth_depreciation_and_amortization: String,
+    pub growth_depreciation_and_amortization: Option<String>,
     #[pyo3(get)]
-    pub growth_ebitda: String,
+    pub growth_ebitda: Option<String>,
     #[pyo3(get)]
-    pub growth_operating_income: String,
+    pub growth_operating_income: Option<String>,
     #[pyo3(get)]
-    pub growth_income_before_tax: String,
+    pub growth_income_before_tax: Option<String>,
     #[pyo3(get)]
-    pub growth_income_tax_expense: String,
+    pub growth_income_tax_expense: Option<String>,
     #[pyo3(get)]
-    pub growth_net_income: String,
+    pub growth_net_income: Option<String>,
     #[pyo3(get)]
-    pub growth_eps: String,
+    pub growth_eps: Option<String>,
     #[pyo3(get)]
-    pub growth_eps_diluted: String,
+    pub growth_eps_diluted: Option<String>,
     #[pyo3(get)]
-    pub growth_weighted_average_shs_out: String,
+    pub growth_weighted_average_shs_out: Option<String>,
     #[pyo3(get)]
-    pub growth_weighted_average_shs_out_dil: String,
+    pub growth_weighted_average_shs_out_dil: Option<String>,
     #[pyo3(get)]
-    pub growth_ebit: String,
+    pub growth_ebit: Option<String>,
     #[pyo3(get)]
-    pub growth_non_operating_income_excluding_interest: String,
+    pub growth_non_operating_income_excluding_interest: Option<String>,
     #[pyo3(get)]
-    pub growth_net_interest_income: String,
+    pub growth_net_interest_income: Option<String>,
     #[pyo3(get)]
-    pub growth_total_other_income_expenses_net: String,
+    pub growth_total_other_income_expenses_net: Option<String>,
     #[pyo3(get)]
-    pub growth_net_income_from_continuing_operations: String,
+    pub growth_net_income_from_continuing_operations: Option<String>,
     #[pyo3(get)]
-    pub growth_other_adjustments_to_net_income: String,
+    pub growth_other_adjustments_to_net_income: Option<String>,
     #[pyo3(get)]
-    pub growth_net_income_deductions: String,
+    pub growth_net_income_deductions: Option<String>,
 }
 
 #[gen_stub_pymethods]
@@ -902,35 +916,35 @@ impl BulkIncomeStatementGrowth {
         #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("builtins", "typing")))]
         period: String,
         reported_currency: String,
-        growth_revenue: String,
-        growth_cost_of_revenue: String,
-        growth_gross_profit: String,
-        growth_gross_profit_ratio: String,
-        growth_research_and_development_expenses: String,
-        growth_general_and_administrative_expenses: String,
-        growth_selling_and_marketing_expenses: String,
-        growth_other_expenses: String,
-        growth_operating_expenses: String,
-        growth_cost_and_expenses: String,
-        growth_interest_income: String,
-        growth_interest_expense: String,
-        growth_depreciation_and_amortization: String,
-        growth_ebitda: String,
-        growth_operating_income: String,
-        growth_income_before_tax: String,
-        growth_income_tax_expense: String,
-        growth_net_income: String,
-        growth_eps: String,
-        growth_eps_diluted: String,
-        growth_weighted_average_shs_out: String,
-        growth_weighted_average_shs_out_dil: String,
-        growth_ebit: String,
-        growth_non_operating_income_excluding_interest: String,
-        growth_net_interest_income: String,
-        growth_total_other_income_expenses_net: String,
-        growth_net_income_from_continuing_operations: String,
-        growth_other_adjustments_to_net_income: String,
-        growth_net_income_deductions: String,
+        growth_revenue: Option<String>,
+        growth_cost_of_revenue: Option<String>,
+        growth_gross_profit: Option<String>,
+        growth_gross_profit_ratio: Option<String>,
+        growth_research_and_development_expenses: Option<String>,
+        growth_general_and_administrative_expenses: Option<String>,
+        growth_selling_and_marketing_expenses: Option<String>,
+        growth_other_expenses: Option<String>,
+        growth_operating_expenses: Option<String>,
+        growth_cost_and_expenses: Option<String>,
+        growth_interest_income: Option<String>,
+        growth_interest_expense: Option<String>,
+        growth_depreciation_and_amortization: Option<String>,
+        growth_ebitda: Option<String>,
+        growth_operating_income: Option<String>,
+        growth_income_before_tax: Option<String>,
+        growth_income_tax_expense: Option<String>,
+        growth_net_income: Option<String>,
+        growth_eps: Option<String>,
+        growth_eps_diluted: Option<String>,
+        growth_weighted_average_shs_out: Option<String>,
+        growth_weighted_average_shs_out_dil: Option<String>,
+        growth_ebit: Option<String>,
+        growth_non_operating_income_excluding_interest: Option<String>,
+        growth_net_interest_income: Option<String>,
+        growth_total_other_income_expenses_net: Option<String>,
+        growth_net_income_from_continuing_operations: Option<String>,
+        growth_other_adjustments_to_net_income: Option<String>,
+        growth_net_income_deductions: Option<String>,
     ) -> Self {
         Self {
             symbol,
@@ -1539,53 +1553,73 @@ impl From<libfmp::responses::bulk::BulkIncomeStatementGrowth> for BulkIncomeStat
             fiscal_year: value.fiscal_year.as_str().to_owned(),
             period: value.period.to_string(),
             reported_currency: value.reported_currency.into_inner(),
-            growth_revenue: value.growth_revenue.into_inner(),
-            growth_cost_of_revenue: value.growth_cost_of_revenue.into_inner(),
-            growth_gross_profit: value.growth_gross_profit.into_inner(),
-            growth_gross_profit_ratio: value.growth_gross_profit_ratio.into_inner(),
+            growth_revenue: value.growth_revenue.map(|value| value.into_inner()),
+            growth_cost_of_revenue: value.growth_cost_of_revenue.map(|value| value.into_inner()),
+            growth_gross_profit: value.growth_gross_profit.map(|value| value.into_inner()),
+            growth_gross_profit_ratio: value
+                .growth_gross_profit_ratio
+                .map(|value| value.into_inner()),
             growth_research_and_development_expenses: value
                 .growth_research_and_development_expenses
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_general_and_administrative_expenses: value
                 .growth_general_and_administrative_expenses
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_selling_and_marketing_expenses: value
                 .growth_selling_and_marketing_expenses
-                .into_inner(),
-            growth_other_expenses: value.growth_other_expenses.into_inner(),
-            growth_operating_expenses: value.growth_operating_expenses.into_inner(),
-            growth_cost_and_expenses: value.growth_cost_and_expenses.into_inner(),
-            growth_interest_income: value.growth_interest_income.into_inner(),
-            growth_interest_expense: value.growth_interest_expense.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_other_expenses: value.growth_other_expenses.map(|value| value.into_inner()),
+            growth_operating_expenses: value
+                .growth_operating_expenses
+                .map(|value| value.into_inner()),
+            growth_cost_and_expenses: value
+                .growth_cost_and_expenses
+                .map(|value| value.into_inner()),
+            growth_interest_income: value.growth_interest_income.map(|value| value.into_inner()),
+            growth_interest_expense: value
+                .growth_interest_expense
+                .map(|value| value.into_inner()),
             growth_depreciation_and_amortization: value
                 .growth_depreciation_and_amortization
-                .into_inner(),
-            growth_ebitda: value.growth_ebitda.into_inner(),
-            growth_operating_income: value.growth_operating_income.into_inner(),
-            growth_income_before_tax: value.growth_income_before_tax.into_inner(),
-            growth_income_tax_expense: value.growth_income_tax_expense.into_inner(),
-            growth_net_income: value.growth_net_income.into_inner(),
-            growth_eps: value.growth_eps.into_inner(),
-            growth_eps_diluted: value.growth_eps_diluted.into_inner(),
-            growth_weighted_average_shs_out: value.growth_weighted_average_shs_out.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_ebitda: value.growth_ebitda.map(|value| value.into_inner()),
+            growth_operating_income: value
+                .growth_operating_income
+                .map(|value| value.into_inner()),
+            growth_income_before_tax: value
+                .growth_income_before_tax
+                .map(|value| value.into_inner()),
+            growth_income_tax_expense: value
+                .growth_income_tax_expense
+                .map(|value| value.into_inner()),
+            growth_net_income: value.growth_net_income.map(|value| value.into_inner()),
+            growth_eps: value.growth_eps.map(|value| value.into_inner()),
+            growth_eps_diluted: value.growth_eps_diluted.map(|value| value.into_inner()),
+            growth_weighted_average_shs_out: value
+                .growth_weighted_average_shs_out
+                .map(|value| value.into_inner()),
             growth_weighted_average_shs_out_dil: value
                 .growth_weighted_average_shs_out_dil
-                .into_inner(),
-            growth_ebit: value.growth_ebit.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_ebit: value.growth_ebit.map(|value| value.into_inner()),
             growth_non_operating_income_excluding_interest: value
                 .growth_non_operating_income_excluding_interest
-                .into_inner(),
-            growth_net_interest_income: value.growth_net_interest_income.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_net_interest_income: value
+                .growth_net_interest_income
+                .map(|value| value.into_inner()),
             growth_total_other_income_expenses_net: value
                 .growth_total_other_income_expenses_net
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_net_income_from_continuing_operations: value
                 .growth_net_income_from_continuing_operations
-                .into_inner(),
+                .map(|value| value.into_inner()),
             growth_other_adjustments_to_net_income: value
                 .growth_other_adjustments_to_net_income
-                .into_inner(),
-            growth_net_income_deductions: value.growth_net_income_deductions.into_inner(),
+                .map(|value| value.into_inner()),
+            growth_net_income_deductions: value
+                .growth_net_income_deductions
+                .map(|value| value.into_inner()),
         }
     }
 }
