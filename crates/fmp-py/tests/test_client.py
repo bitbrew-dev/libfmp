@@ -1,6 +1,10 @@
 """Runtime contract of ``FmpClient`` and the ``client.quote`` namespace."""
 
 import pickle
+import threading
+import time
+from collections.abc import Iterator
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from types import MappingProxyType, SimpleNamespace
 from typing import Any
 
@@ -282,6 +286,51 @@ def test_transport_error_is_structured(errors: SimpleNamespace) -> None:
     assert error.category == "transport"
     assert error.endpoint == "quote-short"
     assert (error.status, error.body, error.body_truncated) == (None, None, None)
+
+
+class _SlowCsvHandler(BaseHTTPRequestHandler):
+    """Answer every request with a header-only CSV body after a short delay."""
+
+    def do_GET(self) -> None:
+        """Delay, then send the CSV header."""
+        time.sleep(1.0)
+        body = b"symbol\n"
+        self.send_response(200)
+        self.send_header("Content-Type", "text/csv")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def log_message(self, _format: str, *_args: Any) -> None:
+        """Silence the default stderr access log."""
+
+
+@pytest.fixture
+def slow_csv_server() -> Iterator[str]:
+    """A loopback server whose CSV answers take one second; yields its origin."""
+    server = ThreadingHTTPServer(("127.0.0.1", 0), _SlowCsvHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        yield f"http://127.0.0.1:{server.server_port}"
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=5)
+
+
+def test_explicit_timeout_applies_to_bulk_methods(slow_csv_server: str, errors: SimpleNamespace) -> None:
+    """A given ``timeout`` bounds bulk calls too, despite their 600 s default."""
+    client = FmpClient(base_url=slow_csv_server, path_prefix="", auth_mode="none", timeout=0.2)
+    with pytest.raises(errors.FmpTransportError) as raised:
+        client.bulk.company_profiles("0")
+    assert raised.value.endpoint == "profile-bulk"
+
+
+def test_bulk_methods_default_to_the_long_bulk_timeout(slow_csv_server: str) -> None:
+    """Without ``timeout``, a slow bulk body still decodes (the 600 s bulk default)."""
+    client = FmpClient(base_url=slow_csv_server, path_prefix="", auth_mode="none")
+    assert client.bulk.company_profiles("0") == []
 
 
 def test_status_error_redacts_configured_query_secret(fixture_server: FixtureServer, errors: SimpleNamespace) -> None:

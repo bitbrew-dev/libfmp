@@ -29,7 +29,19 @@ use crate::{
 
 pub use crate::endpoints::{EndpointSpec, QueryParameters};
 
-const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
+/// Default logical deadline for one call, redirects and body included (30 s).
+///
+/// It applies only while the client timeout is unset;
+/// [`ClientBuilder::timeout`] replaces it for every endpoint.
+pub const DEFAULT_TIMEOUT: Duration = Duration::from_secs(30);
+
+/// Default logical deadline for one CSV bulk call (600 s).
+///
+/// Whole-market bulk bodies arrive slowly: `profile-bulk` part 0 measured
+/// 31.4 MB in 202 s on 2026-10-02. It applies only while the client timeout
+/// is unset; [`ClientBuilder::timeout`] replaces it for every endpoint, bulk
+/// included (ADR 0035).
+pub const DEFAULT_BULK_TIMEOUT: Duration = Duration::from_secs(600);
 const DEFAULT_CONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 /// Default maximum bytes buffered for each HTTP response (64 MiB).
 ///
@@ -72,7 +84,7 @@ pub struct ClientBuilder {
     authentication_conflict: bool,
     default_headers: Vec<(String, String)>,
     user_agent: String,
-    timeout: Duration,
+    timeout: Option<Duration>,
     connect_timeout: Duration,
     max_response_body_bytes: Option<usize>,
     danger_allow_insecure_authentication: bool,
@@ -90,7 +102,7 @@ impl Default for ClientBuilder {
             authentication_conflict: false,
             default_headers: Vec::new(),
             user_agent: format!("libfmp/{VERSION}"),
-            timeout: DEFAULT_TIMEOUT,
+            timeout: None,
             connect_timeout: DEFAULT_CONNECT_TIMEOUT,
             max_response_body_bytes: None,
             danger_allow_insecure_authentication: false,
@@ -170,9 +182,12 @@ impl ClientBuilder {
     /// Sets one logical transport timeout across redirects and body buffering.
     ///
     /// The client enforces this deadline around custom executors as well as the
-    /// built-in executor; individual redirect hops do not reset it.
+    /// built-in executor; individual redirect hops do not reset it. Until this
+    /// is set, each endpoint uses its own default: [`DEFAULT_TIMEOUT`], or
+    /// [`DEFAULT_BULK_TIMEOUT`] for CSV bulk routes. Once set, it applies to
+    /// every endpoint, bulk included.
     pub fn timeout(mut self, timeout: Duration) -> Self {
-        self.timeout = timeout;
+        self.timeout = Some(timeout);
         self
     }
 
@@ -270,14 +285,12 @@ impl ClientBuilder {
             match self.executor {
                 Some(executor) => (executor, DeadlineBackend::Thread),
                 None => (
-                    Arc::new(
-                        ReqwestExecutor::new(self.timeout, self.connect_timeout).map_err(|_| {
-                            Error::configuration_with_kind(
-                                ConfigurationErrorKind::HttpClient,
-                                "HTTP client could not be constructed",
-                            )
-                        })?,
-                    ),
+                    Arc::new(ReqwestExecutor::new(self.connect_timeout).map_err(|_| {
+                        Error::configuration_with_kind(
+                            ConfigurationErrorKind::HttpClient,
+                            "HTTP client could not be constructed",
+                        )
+                    })?),
                     DeadlineBackend::Tokio,
                 ),
             };
@@ -309,7 +322,7 @@ struct ClientInner {
     redactor: Redactor,
     executor: Arc<dyn HttpExecutor>,
     deadline_backend: DeadlineBackend,
-    timeout: Duration,
+    timeout: Option<Duration>,
     max_response_body_bytes: Option<usize>,
     redirect_policy: RedirectPolicy,
 }
@@ -386,10 +399,11 @@ impl Client {
             redactor.add_secret(&SecretString::new((*value).to_owned()));
         }
 
+        let timeout = self.inner.timeout.unwrap_or(endpoint.default_timeout());
         with_timeout(
             self.inner.deadline_backend,
-            self.inner.timeout,
-            self.execute_redirects(endpoint, url, headers, &redactor),
+            timeout,
+            self.execute_redirects(endpoint, url, headers, &redactor, timeout),
         )
         .await
         .ok_or_else(|| Error::transport(Some(endpoint.id()), "request deadline exceeded"))?
@@ -401,6 +415,7 @@ impl Client {
         mut url: Url,
         headers: HeaderMap,
         redactor: &Redactor,
+        timeout: Duration,
     ) -> Result<R> {
         for redirect_count in 0..=MAX_REDIRECTS {
             apply_query_auth(&mut url, self.inner.auth.query.as_ref());
@@ -416,6 +431,7 @@ impl Client {
                     url.clone(),
                     headers.clone(),
                     max_body_bytes,
+                    timeout,
                 ))
                 .await
                 .map_err(|_| Error::transport(Some(endpoint.id()), "request execution failed"))?;
@@ -1052,7 +1068,7 @@ mod tests {
         let injected = Client::builder()
             .base_url("https://example.test")
             .executor(Arc::new(
-                ReqwestExecutor::new(DEFAULT_TIMEOUT, DEFAULT_CONNECT_TIMEOUT).unwrap(),
+                ReqwestExecutor::new(DEFAULT_CONNECT_TIMEOUT).unwrap(),
             ))
             .build()
             .unwrap();
@@ -1128,5 +1144,12 @@ mod tests {
         assert_eq!(DEFAULT_MAX_RESPONSE_BODY_BYTES, 64 * 1024 * 1024);
         assert_eq!(DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES, 256 * 1024 * 1024);
         assert_eq!(ClientBuilder::default().max_response_body_bytes, None);
+    }
+
+    #[test]
+    fn default_timeouts_are_the_documented_values() {
+        assert_eq!(DEFAULT_TIMEOUT, Duration::from_secs(30));
+        assert_eq!(DEFAULT_BULK_TIMEOUT, Duration::from_secs(600));
+        assert_eq!(ClientBuilder::default().timeout, None);
     }
 }

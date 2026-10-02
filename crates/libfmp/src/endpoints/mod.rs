@@ -61,6 +61,7 @@ pub struct EndpointSpec<Q, R> {
     metadata: EndpointMetadata,
     max_response_body_bytes: Option<usize>,
     default_max_response_body_bytes: usize,
+    default_timeout: std::time::Duration,
 }
 
 impl<Q, R> EndpointSpec<Q, R> {
@@ -81,6 +82,7 @@ impl<Q, R> EndpointSpec<Q, R> {
             metadata: EndpointMetadata::new(),
             max_response_body_bytes: None,
             default_max_response_body_bytes: crate::client::DEFAULT_MAX_RESPONSE_BODY_BYTES,
+            default_timeout: crate::client::DEFAULT_TIMEOUT,
         }
     }
 
@@ -142,6 +144,14 @@ impl<Q, R> EndpointSpec<Q, R> {
     pub const fn default_max_response_body_bytes(&self) -> usize {
         self.default_max_response_body_bytes
     }
+
+    /// Returns the call deadline used while the client timeout is unset.
+    ///
+    /// This is [`crate::client::DEFAULT_TIMEOUT`] except for CSV bulk
+    /// descriptors, which use [`crate::client::DEFAULT_BULK_TIMEOUT`].
+    pub const fn default_timeout(&self) -> std::time::Duration {
+        self.default_timeout
+    }
 }
 
 impl<Q, R> EndpointSpec<Q, R>
@@ -181,7 +191,9 @@ where
     ///
     /// Each record decodes into one `Row` by header name. Unless the endpoint
     /// or the client sets a limit, the body may grow to
-    /// [`crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES`].
+    /// [`crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES`], and unless the
+    /// client sets a timeout, the call may take
+    /// [`crate::client::DEFAULT_BULK_TIMEOUT`].
     pub const fn get_csv(id: &'static str, relative_path: &'static str, query: Q) -> Self {
         let mut spec = Self::with_response(
             HttpMethod::Get,
@@ -191,6 +203,7 @@ where
             ResponseContract::csv(),
         );
         spec.default_max_response_body_bytes = crate::client::DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES;
+        spec.default_timeout = crate::client::DEFAULT_BULK_TIMEOUT;
         spec
     }
 }
