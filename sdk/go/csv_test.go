@@ -9,7 +9,9 @@ import (
 	"net/http"
 	"slices"
 	"strconv"
+	"sync"
 	"testing"
+	"time"
 )
 
 const csvEndpoint = "csv-contract-test"
@@ -219,4 +221,63 @@ func cellText(value *string) string {
 		return ""
 	}
 	return *value
+}
+
+// deadlineTransport records how much of each request's context deadline
+// remains when the request leaves the client.
+type deadlineTransport struct {
+	next      http.RoundTripper
+	mu        sync.Mutex
+	remaining []time.Duration
+}
+
+func (d *deadlineTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	deadline, ok := req.Context().Deadline()
+	d.mu.Lock()
+	if ok {
+		d.remaining = append(d.remaining, time.Until(deadline))
+	} else {
+		d.remaining = append(d.remaining, 0)
+	}
+	d.mu.Unlock()
+	return d.next.RoundTrip(req)
+}
+
+// TestBulkTimeoutDefaultsUntilTheClientSetsOne mirrors
+// csv_bulk_endpoints_default_to_the_bulk_timeout_until_the_client_sets_one.
+func TestBulkTimeoutDefaultsUntilTheClientSetsOne(t *testing.T) {
+	t.Parallel()
+	server, _ := newServer(t, func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/router/stable/bulk-probe" {
+			w.Header().Set("Content-Type", "text/csv")
+			_, _ = w.Write([]byte(csvProbeHeader))
+			return
+		}
+		jsonHandler(`[{"symbol":"A"}]`)(w, r)
+	})
+	cases := []struct {
+		name      string
+		opts      []Option
+		bulk, all time.Duration
+	}{
+		{"unset", nil, DefaultBulkTimeout, DefaultTimeout},
+		{"configured", []Option{WithTimeout(5 * time.Second)}, 5 * time.Second, 5 * time.Second},
+	}
+	for _, tc := range cases {
+		transport := &deadlineTransport{next: server.Client().Transport}
+		opts := append([]Option{WithHTTPClient(&http.Client{Transport: transport})}, tc.opts...)
+		client := newClient(t, server, opts...)
+		if _, err := getCSV[csvProbeRow](context.Background(), client, csvEndpoint, "bulk-probe", nil); err != nil {
+			t.Fatalf("%s bulk: %v", tc.name, err)
+		}
+		if _, err := probe(t, client); err != nil {
+			t.Fatalf("%s json: %v", tc.name, err)
+		}
+		for i, want := range []time.Duration{tc.bulk, tc.all} {
+			got := transport.remaining[i]
+			if got > want || got < want-5*time.Second {
+				t.Fatalf("%s request %d deadline = %v, want about %v", tc.name, i, got, want)
+			}
+		}
+	}
 }

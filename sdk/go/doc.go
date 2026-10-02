@@ -38,7 +38,9 @@
 // times; RedirectNone returns the redirect as a status error instead. One
 // context deadline (WithTimeout, default 30 seconds) spans the whole call,
 // including redirects and the body read. Response bodies are capped by
-// WithMaxResponseBodyBytes (default 64 MiB).
+// WithMaxResponseBodyBytes (default 64 MiB). Until those options are set,
+// CSV bulk calls use DefaultBulkTimeout (600 seconds) and
+// DefaultBulkMaxResponseBodyBytes (256 MiB) instead.
 //
 // WithHTTPClient injects a caller-owned *http.Client for proxies and tests.
 // The SDK shallow-copies it to install its redirect policy, so the caller's

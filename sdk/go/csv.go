@@ -42,8 +42,8 @@ type csvColumn struct {
 // json-tagged member, pointer or not, must be a header column; the first
 // record checks it. An empty
 // or header-only body yields no rows, and the provider-message check of
-// getJSON does not apply. The redirect, timeout, and no-retry rules of
-// getJSON are unchanged; the body cap is the bulk limit.
+// getJSON does not apply. The redirect and no-retry rules of getJSON are
+// unchanged; the body cap is the bulk limit and the deadline the bulk timeout.
 func getCSV[T any](ctx context.Context, c *Client, endpointID, relativePath string, query []queryParam) ([]T, error) {
 	if err := validateRelativePath(relativePath); err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func getCSV[T any](ctx context.Context, c *Client, endpointID, relativePath stri
 	}
 	target.RawQuery = rawQuery
 
-	ctx, cancel := context.WithTimeout(ctx, c.timeout)
+	ctx, cancel := context.WithTimeout(ctx, c.bulkTimeout)
 	defer cancel()
 	resp, err := c.executeRedirects(ctx, endpointID, target, c.bulkMaxResponseBodyBytes)
 	if err != nil {
