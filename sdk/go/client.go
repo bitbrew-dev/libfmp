@@ -20,6 +20,10 @@ const (
 	DefaultPathPrefix = "stable"
 	// DefaultTimeout is the logical deadline for one call, redirects included.
 	DefaultTimeout = 30 * time.Second
+	// DefaultBulkTimeout is the logical deadline for one CSV bulk call while
+	// WithTimeout is unset (600 s): profile-bulk part 0 measured 31.4 MB in
+	// 202 s on 2026-10-02 (ADR 0035).
+	DefaultBulkTimeout = 600 * time.Second
 	// DefaultConnectTimeout bounds connection establishment.
 	DefaultConnectTimeout = 10 * time.Second
 	// DefaultMaxResponseBodyBytes is the largest body buffered per response (64 MiB).
@@ -66,6 +70,7 @@ type clientConfig struct {
 	defaultHeaders           []headerPair
 	userAgent                string
 	timeout                  time.Duration
+	timeoutSet               bool
 	connectTimeout           time.Duration
 	maxResponseBodyBytes     int64
 	maxResponseBodyBytesSet  bool
@@ -116,8 +121,14 @@ func WithUserAgent(userAgent string) Option {
 }
 
 // WithTimeout sets one logical deadline across redirects and the body read.
+// It applies to every endpoint, bulk included; until it is set, bulk
+// endpoints use DefaultBulkTimeout and the others use DefaultTimeout. A
+// client given through WithHTTPClient keeps its own Timeout field as well.
 func WithTimeout(timeout time.Duration) Option {
-	return func(c *clientConfig) { c.timeout = timeout }
+	return func(c *clientConfig) {
+		c.timeout = timeout
+		c.timeoutSet = true
+	}
 }
 
 // WithConnectTimeout bounds connection establishment. It applies only to the
@@ -179,7 +190,10 @@ type Client struct {
 	// bulkMaxResponseBodyBytes caps CSV bulk bodies: the configured limit,
 	// or DefaultBulkMaxResponseBodyBytes when none was set.
 	bulkMaxResponseBodyBytes int64
-	redirectPolicy           RedirectPolicy
+	// bulkTimeout bounds CSV bulk calls: the configured timeout, or
+	// DefaultBulkTimeout when none was set.
+	bulkTimeout    time.Duration
+	redirectPolicy RedirectPolicy
 }
 
 // NewClient validates the options and builds a client with the direct FMP
@@ -273,6 +287,10 @@ func NewClient(opts ...Option) (*Client, error) {
 	client.bulkMaxResponseBodyBytes = DefaultBulkMaxResponseBodyBytes
 	if cfg.maxResponseBodyBytesSet {
 		client.bulkMaxResponseBodyBytes = cfg.maxResponseBodyBytes
+	}
+	client.bulkTimeout = DefaultBulkTimeout
+	if cfg.timeoutSet {
+		client.bulkTimeout = cfg.timeout
 	}
 	client.bindNamespaces()
 	return client, nil
