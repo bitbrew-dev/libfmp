@@ -68,6 +68,19 @@ evidence is now a second source, so both need a rule.
   `senate-net-worth` rows. The same audit saw fractional amounts
   (`32500.5`) on members typed as integers; those became `MarketValue`
   (`f64`) under the next rule.
+  A 92-member survey for
+  [#407](https://github.com/bitbrew-dev/libfmp/issues/407) (538 rows) then
+  saw `cashAndCashEquivalents` (24 rows) and `mutualFundsAndETFs` (2 rows)
+  absent too, so both became optional-when-absent.
+- A response whose column set is open-ended keeps the columns it does not
+  type in a rest map instead of dropping them. In a derived model the
+  sanctioned shape is `#[serde(flatten)]` on a bare `DynamicObject`; a
+  hand-written `Deserialize` stays reserved for header-only models such as
+  `FinancialReportJson`. First case, #407:
+  `CongressionalMemberNetWorthAggregate` types the six most frequent extra
+  columns (`pensionAndRetirementAssets`, `Other` as `other_amount`,
+  `otherAssets`, `salaryAndWages`, `trusts`, `governmentSecurities`) and
+  keeps the rest in `additional_columns`.
 - A member whose non-null value has the wrong type (a year where a date is
   documented) is a separate type fix, not an `Option`.
 - Every change is breaking and ships in a minor release with a
@@ -88,6 +101,9 @@ anything else unmarshals into the struct with failures reported through
 A plain `Option<T>` without a codec is `Codec::Plain`: the key
 may be absent or null, and `skip_serializing_if = "Option::is_none"` adds
 `omitzero` so a re-encoded row omits it as serde does.
+A `#[serde(flatten)]` bare `DynamicObject` maps to `Codec::Embedded`, a
+`jsontext.Value` with the `embed` option, so json/v2 keeps every member no
+named field claims and re-encodes it.
 
 ## Alternatives considered
 

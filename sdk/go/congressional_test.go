@@ -130,12 +130,12 @@ func TestCongressionalMemberAndNetWorthMethodsUseExactPathsAndWireParameterOrder
 		t.Fatalf("NetWorth paged = %+v, %v", paged, err)
 	}
 	totals, err := client.Congressional.NetWorthAggregated(ctx, NewCongressionalNetWorthAggregatedQuery("P000197"))
-	if err != nil || len(totals) != 1 || totals[0].Total != 225_219_551 {
+	if err != nil || len(totals) != 5 || totals[0].Total != 225_219_551 {
 		t.Fatalf("NetWorthAggregated = %+v, %v", totals, err)
 	}
 	columns, err := client.Congressional.NetWorthAggregated(ctx,
 		NewCongressionalNetWorthAggregatedQuery("P000197").WithTotalsCol(""))
-	if err != nil || len(columns) != 1 {
+	if err != nil || len(columns) != 5 {
 		t.Fatalf("NetWorthAggregated totalsCol = %+v, %v", columns, err)
 	}
 	assertCongressionalRequests(t, rec, 8)

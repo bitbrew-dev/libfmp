@@ -534,45 +534,60 @@ func (m *CongressionalMemberNetWorth) UnmarshalJSONFrom(dec *jsontext.Decoder) e
 // CongressionalMemberNetWorthAggregate is aggregated congressional net-worth
 // totals for one filing year.
 type CongressionalMemberNetWorthAggregate struct {
-	MemberID                  string   `json:"senateID"`
-	Year                      uint32   `json:"year"`
-	Total                     float64  `json:"total"`
-	RealEstateLiabilities     *float64 `json:"realEstateLiabilities,omitzero"`
-	CashAndCashEquivalents    float64  `json:"cashAndCashEquivalents"`
-	BusinessAndSelfEmployment *float64 `json:"businessAndSelfEmployment,omitzero"`
-	RealEstate                *float64 `json:"realEstate,omitzero"`
-	OwnershipInterest         *float64 `json:"ownershipInterest,omitzero"`
-	Stock                     *float64 `json:"stock,omitzero"`
-	Options                   *float64 `json:"options,omitzero"`
-	RevolvingAndCreditLines   *float64 `json:"revolvingAndCreditLines,omitzero"`
-	AssetBackedSecurities     *float64 `json:"assetBackedSecurities,omitzero"`
-	BusinessLiabilities       *float64 `json:"businessLiabilities,omitzero"`
-	MutualFundsAndETFs        float64  `json:"mutualFundsAndETFs"`
+	MemberID                   string         `json:"senateID"`
+	Year                       uint32         `json:"year"`
+	Total                      float64        `json:"total"`
+	RealEstateLiabilities      *float64       `json:"realEstateLiabilities,omitzero"`
+	CashAndCashEquivalents     *float64       `json:"cashAndCashEquivalents,omitzero"`
+	BusinessAndSelfEmployment  *float64       `json:"businessAndSelfEmployment,omitzero"`
+	RealEstate                 *float64       `json:"realEstate,omitzero"`
+	OwnershipInterest          *float64       `json:"ownershipInterest,omitzero"`
+	Stock                      *float64       `json:"stock,omitzero"`
+	Options                    *float64       `json:"options,omitzero"`
+	RevolvingAndCreditLines    *float64       `json:"revolvingAndCreditLines,omitzero"`
+	AssetBackedSecurities      *float64       `json:"assetBackedSecurities,omitzero"`
+	BusinessLiabilities        *float64       `json:"businessLiabilities,omitzero"`
+	MutualFundsAndETFs         *float64       `json:"mutualFundsAndETFs,omitzero"`
+	PensionAndRetirementAssets *float64       `json:"pensionAndRetirementAssets,omitzero"`
+	OtherAmount                *float64       `json:"Other,omitzero"`
+	OtherAssets                *float64       `json:"otherAssets,omitzero"`
+	SalaryAndWages             *float64       `json:"salaryAndWages,omitzero"`
+	Trusts                     *float64       `json:"trusts,omitzero"`
+	GovernmentSecurities       *float64       `json:"governmentSecurities,omitzero"`
+	AdditionalColumns          jsontext.Value `json:",embed"`
 }
 
 // congressionalMemberNetWorthAggregateShadow mirrors
 // CongressionalMemberNetWorthAggregate with a pointer or raw value for every
 // required member so a missing or null member is observable after decoding.
 type congressionalMemberNetWorthAggregateShadow struct {
-	MemberID                  *string  `json:"senateID"`
-	Year                      *uint32  `json:"year"`
-	Total                     *float64 `json:"total"`
-	RealEstateLiabilities     *float64 `json:"realEstateLiabilities"`
-	CashAndCashEquivalents    *float64 `json:"cashAndCashEquivalents"`
-	BusinessAndSelfEmployment *float64 `json:"businessAndSelfEmployment"`
-	RealEstate                *float64 `json:"realEstate"`
-	OwnershipInterest         *float64 `json:"ownershipInterest"`
-	Stock                     *float64 `json:"stock"`
-	Options                   *float64 `json:"options"`
-	RevolvingAndCreditLines   *float64 `json:"revolvingAndCreditLines"`
-	AssetBackedSecurities     *float64 `json:"assetBackedSecurities"`
-	BusinessLiabilities       *float64 `json:"businessLiabilities"`
-	MutualFundsAndETFs        *float64 `json:"mutualFundsAndETFs"`
+	MemberID                   *string        `json:"senateID"`
+	Year                       *uint32        `json:"year"`
+	Total                      *float64       `json:"total"`
+	RealEstateLiabilities      *float64       `json:"realEstateLiabilities"`
+	CashAndCashEquivalents     *float64       `json:"cashAndCashEquivalents"`
+	BusinessAndSelfEmployment  *float64       `json:"businessAndSelfEmployment"`
+	RealEstate                 *float64       `json:"realEstate"`
+	OwnershipInterest          *float64       `json:"ownershipInterest"`
+	Stock                      *float64       `json:"stock"`
+	Options                    *float64       `json:"options"`
+	RevolvingAndCreditLines    *float64       `json:"revolvingAndCreditLines"`
+	AssetBackedSecurities      *float64       `json:"assetBackedSecurities"`
+	BusinessLiabilities        *float64       `json:"businessLiabilities"`
+	MutualFundsAndETFs         *float64       `json:"mutualFundsAndETFs"`
+	PensionAndRetirementAssets *float64       `json:"pensionAndRetirementAssets"`
+	OtherAmount                *float64       `json:"Other"`
+	OtherAssets                *float64       `json:"otherAssets"`
+	SalaryAndWages             *float64       `json:"salaryAndWages"`
+	Trusts                     *float64       `json:"trusts"`
+	GovernmentSecurities       *float64       `json:"governmentSecurities"`
+	AdditionalColumns          jsontext.Value `json:",embed"`
 }
 
 // UnmarshalJSONFrom decodes one JSON object and rejects it with a Decode
 // error naming the first required member that is missing or null, as the
-// Rust decoder does. Unknown members are ignored.
+// Rust decoder does. Every member no named field claims is kept in
+// AdditionalColumns.
 func (m *CongressionalMemberNetWorthAggregate) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	var shadow congressionalMemberNetWorthAggregateShadow
 	if err := json.UnmarshalDecode(dec, &shadow); err != nil {
@@ -585,26 +600,32 @@ func (m *CongressionalMemberNetWorthAggregate) UnmarshalJSONFrom(dec *jsontext.D
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "year")
 	case shadow.Total == nil:
 		return missingMemberError("CongressionalMemberNetWorthAggregate", "total")
-	case shadow.CashAndCashEquivalents == nil:
-		return missingMemberError("CongressionalMemberNetWorthAggregate", "cashAndCashEquivalents")
-	case shadow.MutualFundsAndETFs == nil:
-		return missingMemberError("CongressionalMemberNetWorthAggregate", "mutualFundsAndETFs")
+	}
+	if len(shadow.AdditionalColumns) == 0 {
+		shadow.AdditionalColumns = jsontext.Value("{}")
 	}
 	*m = CongressionalMemberNetWorthAggregate{
-		MemberID:                  *shadow.MemberID,
-		Year:                      *shadow.Year,
-		Total:                     *shadow.Total,
-		RealEstateLiabilities:     shadow.RealEstateLiabilities,
-		CashAndCashEquivalents:    *shadow.CashAndCashEquivalents,
-		BusinessAndSelfEmployment: shadow.BusinessAndSelfEmployment,
-		RealEstate:                shadow.RealEstate,
-		OwnershipInterest:         shadow.OwnershipInterest,
-		Stock:                     shadow.Stock,
-		Options:                   shadow.Options,
-		RevolvingAndCreditLines:   shadow.RevolvingAndCreditLines,
-		AssetBackedSecurities:     shadow.AssetBackedSecurities,
-		BusinessLiabilities:       shadow.BusinessLiabilities,
-		MutualFundsAndETFs:        *shadow.MutualFundsAndETFs,
+		MemberID:                   *shadow.MemberID,
+		Year:                       *shadow.Year,
+		Total:                      *shadow.Total,
+		RealEstateLiabilities:      shadow.RealEstateLiabilities,
+		CashAndCashEquivalents:     shadow.CashAndCashEquivalents,
+		BusinessAndSelfEmployment:  shadow.BusinessAndSelfEmployment,
+		RealEstate:                 shadow.RealEstate,
+		OwnershipInterest:          shadow.OwnershipInterest,
+		Stock:                      shadow.Stock,
+		Options:                    shadow.Options,
+		RevolvingAndCreditLines:    shadow.RevolvingAndCreditLines,
+		AssetBackedSecurities:      shadow.AssetBackedSecurities,
+		BusinessLiabilities:        shadow.BusinessLiabilities,
+		MutualFundsAndETFs:         shadow.MutualFundsAndETFs,
+		PensionAndRetirementAssets: shadow.PensionAndRetirementAssets,
+		OtherAmount:                shadow.OtherAmount,
+		OtherAssets:                shadow.OtherAssets,
+		SalaryAndWages:             shadow.SalaryAndWages,
+		Trusts:                     shadow.Trusts,
+		GovernmentSecurities:       shadow.GovernmentSecurities,
+		AdditionalColumns:          shadow.AdditionalColumns,
 	}
 	return nil
 }

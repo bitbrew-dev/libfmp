@@ -14,5 +14,39 @@
     "stock": 136748525,
     "total": 225219551,
     "year": 2024
+  },
+  {
+    "mutualFundsAndETFs": 15001,
+    "pensionAndRetirementAssets": 250001,
+    "senateID": "C001123",
+    "total": 265002,
+    "year": 2023
+  },
+  {
+    "cashAndCashEquivalents": 50001,
+    "governmentSecurities": 15001,
+    "senateID": "R000619",
+    "total": 65002,
+    "year": 2022
+  },
+  {
+    "cashAndCashEquivalents": 100001,
+    "mutualFundsAndETFs": 1001,
+    "pensionAndRetirementIncome": 5001,
+    "salaryAndWages": 174000,
+    "senateID": "R000619",
+    "spousalIncome": 201,
+    "total": 280204,
+    "year": 2021
+  },
+  {
+    "Other": 1001,
+    "cashAndCashEquivalents": 15001,
+    "mutualFundsAndETFs": 50001,
+    "otherAssets": 2001,
+    "senateID": "R000619",
+    "total": 68004,
+    "trusts": 0,
+    "year": 2020
   }
 ]

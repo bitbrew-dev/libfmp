@@ -142,11 +142,25 @@ func TestDocumentedMemberAndNetWorthFixturesDecodeExactValues(t *testing.T) {
 
 	totals := assertFixtureParity[CongressionalMemberNetWorthAggregate](t, "congress_senate_net_worth_aggregated.json")
 	if want := (CongressionalMemberNetWorthAggregate{MemberID: "P000197", Year: 2024, Total: 225_219_551,
-		RealEstateLiabilities: new(27_000_005.0), CashAndCashEquivalents: 291_009, BusinessAndSelfEmployment: new(0.0),
+		RealEstateLiabilities: new(27_000_005.0), CashAndCashEquivalents: new(291_009.0), BusinessAndSelfEmployment: new(0.0),
 		RealEstate: new(45_032_504.0), OwnershipInterest: new(70_140_014.0), Stock: new(136_748_525.0), Options: new(0.0),
 		RevolvingAndCreditLines: new(1_500_002.0), AssetBackedSecurities: new(4_475_006.0), BusinessLiabilities: new(3_000_001.0),
-		MutualFundsAndETFs: 32_501}); len(totals) != 1 || !reflect.DeepEqual(totals[0], want) {
+		MutualFundsAndETFs: new(32_501.0), AdditionalColumns: jsontext.Value("{}")}); len(totals) != 5 || !reflect.DeepEqual(totals[0], want) {
 		t.Fatalf("congress_senate_net_worth_aggregated = %+v", totals)
+	}
+	if want := (CongressionalMemberNetWorthAggregate{MemberID: "R000619", Year: 2021, Total: 280_204,
+		CashAndCashEquivalents: new(100_001.0), MutualFundsAndETFs: new(1_001.0), SalaryAndWages: new(174_000.0),
+		AdditionalColumns: jsontext.Value(`{"pensionAndRetirementIncome":5001,"spousalIncome":201}`)}); !reflect.DeepEqual(totals[3], want) {
+		t.Fatalf("aggregate with additional columns = %+v, want %+v", totals[3], want)
+	}
+	if want := (CongressionalMemberNetWorthAggregate{MemberID: "R000619", Year: 2020, Total: 68_004,
+		CashAndCashEquivalents: new(15_001.0), MutualFundsAndETFs: new(50_001.0), OtherAmount: new(1_001.0),
+		OtherAssets: new(2_001.0), Trusts: new(0.0), AdditionalColumns: jsontext.Value("{}")}); !reflect.DeepEqual(totals[4], want) {
+		t.Fatalf("aggregate with Other = %+v, want %+v", totals[4], want)
+	}
+	if totals[1].CashAndCashEquivalents != nil || !reflect.DeepEqual(totals[1].PensionAndRetirementAssets, new(250_001.0)) ||
+		totals[2].MutualFundsAndETFs != nil || !reflect.DeepEqual(totals[2].GovernmentSecurities, new(15_001.0)) {
+		t.Fatalf("aggregate absent cash or mutual funds = %+v, %+v", totals[1], totals[2])
 	}
 	if encoded, err := json.Marshal(totals[0]); err != nil || !strings.Contains(string(encoded), `"mutualFundsAndETFs":32501`) {
 		t.Fatalf("re-encoded aggregate = %s, %v", encoded, err)
@@ -299,14 +313,13 @@ func TestCongressionalNetWorthFractionalNullAndAbsentMembers(t *testing.T) {
 		t.Fatalf("re-encoded debtDetails = %s, %v", encoded, err)
 	}
 
-	const sparse = `[{"cashAndCashEquivalents":121004.5,"mutualFundsAndETFs":34526531.5,` +
-		`"senateID":"M000355","total":59082540.5,"year":2023}]`
+	const sparse = `[{"senateID":"M000355","total":59082540.5,"year":2023}]`
 	var totals []CongressionalMemberNetWorthAggregate
 	if err := json.Unmarshal([]byte(sparse), &totals); err != nil || len(totals) != 1 {
 		t.Fatalf("sparse aggregate = %+v, %v", totals, err)
 	}
 	if want := (CongressionalMemberNetWorthAggregate{MemberID: "M000355", Year: 2023, Total: 59_082_540.5,
-		CashAndCashEquivalents: 121_004.5, MutualFundsAndETFs: 34_526_531.5}); !reflect.DeepEqual(totals[0], want) {
+		AdditionalColumns: jsontext.Value("{}")}); !reflect.DeepEqual(totals[0], want) {
 		t.Fatalf("sparse aggregate = %+v, want %+v", totals[0], want)
 	}
 	encoded, err := json.Marshal(totals)
@@ -323,11 +336,8 @@ func TestCongressionalNetWorthFractionalNullAndAbsentMembers(t *testing.T) {
 		len(totals) != 1 || totals[0].RealEstate != nil {
 		t.Fatalf("null realEstate = %+v, %v, want nil", totals, err)
 	}
-	for _, member := range []string{"total", "cashAndCashEquivalents", "mutualFundsAndETFs"} {
-		var rows []CongressionalMemberNetWorthAggregate
-		if err := json.Unmarshal(mutateFixtureMember(t, "congress_senate_net_worth_aggregated.json", member, nil), &rows); err == nil {
-			t.Fatalf("missing %s decoded", member)
-		}
+	if err := json.Unmarshal(mutateFixtureMember(t, "congress_senate_net_worth_aggregated.json", "total", nil), &totals); err == nil {
+		t.Fatal("missing total decoded")
 	}
 }
 

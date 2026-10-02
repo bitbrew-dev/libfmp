@@ -1223,7 +1223,7 @@ pub(crate) struct CongressionalMemberNetWorthAggregate {
     #[pyo3(get)]
     pub real_estate_liabilities: Option<f64>,
     #[pyo3(get)]
-    pub cash_and_cash_equivalents: f64,
+    pub cash_and_cash_equivalents: Option<f64>,
     #[pyo3(get)]
     pub business_and_self_employment: Option<f64>,
     #[pyo3(get)]
@@ -1241,7 +1241,20 @@ pub(crate) struct CongressionalMemberNetWorthAggregate {
     #[pyo3(get)]
     pub business_liabilities: Option<f64>,
     #[pyo3(get)]
-    pub mutual_funds_and_etfs: f64,
+    pub mutual_funds_and_etfs: Option<f64>,
+    #[pyo3(get)]
+    pub pension_and_retirement_assets: Option<f64>,
+    #[pyo3(get)]
+    pub other_amount: Option<f64>,
+    #[pyo3(get)]
+    pub other_assets: Option<f64>,
+    #[pyo3(get)]
+    pub salary_and_wages: Option<f64>,
+    #[pyo3(get)]
+    pub trusts: Option<f64>,
+    #[pyo3(get)]
+    pub government_securities: Option<f64>,
+    additional_columns: ::serde_json::Map<String, ::serde_json::Value>,
 }
 
 #[gen_stub_pymethods]
@@ -1250,13 +1263,13 @@ impl CongressionalMemberNetWorthAggregate {
     #[new]
     #[allow(clippy::too_many_arguments)]
     #[allow(clippy::fn_params_excessive_bools)]
-    #[pyo3(signature = (*, member_id, year, total, real_estate_liabilities, cash_and_cash_equivalents, business_and_self_employment, real_estate, ownership_interest, stock, options, revolving_and_credit_lines, asset_backed_securities, business_liabilities, mutual_funds_and_etfs))]
+    #[pyo3(signature = (*, member_id, year, total, real_estate_liabilities, cash_and_cash_equivalents, business_and_self_employment, real_estate, ownership_interest, stock, options, revolving_and_credit_lines, asset_backed_securities, business_liabilities, mutual_funds_and_etfs, pension_and_retirement_assets, other_amount, other_assets, salary_and_wages, trusts, government_securities, additional_columns))]
     fn new(
         member_id: String,
         year: u32,
         total: f64,
         real_estate_liabilities: Option<f64>,
-        cash_and_cash_equivalents: f64,
+        cash_and_cash_equivalents: Option<f64>,
         business_and_self_employment: Option<f64>,
         real_estate: Option<f64>,
         ownership_interest: Option<f64>,
@@ -1265,9 +1278,24 @@ impl CongressionalMemberNetWorthAggregate {
         revolving_and_credit_lines: Option<f64>,
         asset_backed_securities: Option<f64>,
         business_liabilities: Option<f64>,
-        mutual_funds_and_etfs: f64,
-    ) -> Self {
-        Self {
+        mutual_funds_and_etfs: Option<f64>,
+        pension_and_retirement_assets: Option<f64>,
+        other_amount: Option<f64>,
+        other_assets: Option<f64>,
+        salary_and_wages: Option<f64>,
+        trusts: Option<f64>,
+        government_securities: Option<f64>,
+        additional_columns: String,
+    ) -> PyResult<Self> {
+        let additional_columns = ::serde_json::from_str::<
+            ::serde_json::Map<String, ::serde_json::Value>,
+        >(&additional_columns)
+        .map_err(|error| {
+            ::pyo3::exceptions::PyValueError::new_err(format!(
+                "invalid JSON for field `additional_columns`: {error}"
+            ))
+        })?;
+        Ok(Self {
             member_id,
             year,
             total,
@@ -1282,14 +1310,21 @@ impl CongressionalMemberNetWorthAggregate {
             asset_backed_securities,
             business_liabilities,
             mutual_funds_and_etfs,
-        }
+            pension_and_retirement_assets,
+            other_amount,
+            other_assets,
+            salary_and_wages,
+            trusts,
+            government_securities,
+            additional_columns,
+        })
     }
 
     #[classattr]
     const __hash__: Option<Py<PyAny>> = None;
 
     #[classattr]
-    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['member_id'], typing.Literal['year'], typing.Literal['total'], typing.Literal['real_estate_liabilities'], typing.Literal['cash_and_cash_equivalents'], typing.Literal['business_and_self_employment'], typing.Literal['real_estate'], typing.Literal['ownership_interest'], typing.Literal['stock'], typing.Literal['options'], typing.Literal['revolving_and_credit_lines'], typing.Literal['asset_backed_securities'], typing.Literal['business_liabilities'], typing.Literal['mutual_funds_and_etfs']]", imports = ("typing",)))]
+    #[gen_stub(override_return_type(type_repr = "tuple[typing.Literal['member_id'], typing.Literal['year'], typing.Literal['total'], typing.Literal['real_estate_liabilities'], typing.Literal['cash_and_cash_equivalents'], typing.Literal['business_and_self_employment'], typing.Literal['real_estate'], typing.Literal['ownership_interest'], typing.Literal['stock'], typing.Literal['options'], typing.Literal['revolving_and_credit_lines'], typing.Literal['asset_backed_securities'], typing.Literal['business_liabilities'], typing.Literal['mutual_funds_and_etfs'], typing.Literal['pension_and_retirement_assets'], typing.Literal['other_amount'], typing.Literal['other_assets'], typing.Literal['salary_and_wages'], typing.Literal['trusts'], typing.Literal['government_securities'], typing.Literal['additional_columns']]", imports = ("typing",)))]
     fn __match_args__(py: Python<'_>) -> PyResult<Bound<'_, PyTuple>> {
         PyTuple::new(
             py,
@@ -1308,6 +1343,13 @@ impl CongressionalMemberNetWorthAggregate {
                 "asset_backed_securities",
                 "business_liabilities",
                 "mutual_funds_and_etfs",
+                "pension_and_retirement_assets",
+                "other_amount",
+                "other_assets",
+                "salary_and_wages",
+                "trusts",
+                "government_securities",
+                "additional_columns",
             ],
         )
     }
@@ -1365,6 +1407,39 @@ impl CongressionalMemberNetWorthAggregate {
             "mutual_funds_and_etfs",
             self.mutual_funds_and_etfs.clone().into_bound_py_any(py)?,
         )?;
+        kwargs.set_item(
+            "pension_and_retirement_assets",
+            self.pension_and_retirement_assets
+                .clone()
+                .into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_amount",
+            self.other_amount.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "other_assets",
+            self.other_assets.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "salary_and_wages",
+            self.salary_and_wages.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item("trusts", self.trusts.clone().into_bound_py_any(py)?)?;
+        kwargs.set_item(
+            "government_securities",
+            self.government_securities.clone().into_bound_py_any(py)?,
+        )?;
+        kwargs.set_item(
+            "additional_columns",
+            ::serde_json::to_string(&self.additional_columns)
+                .map_err(|error| {
+                    ::pyo3::exceptions::PyValueError::new_err(format!(
+                        "failed to serialize field `additional_columns`: {error}"
+                    ))
+                })?
+                .into_bound_py_any(py)?,
+        )?;
         Ok((PyTuple::empty(py), kwargs))
     }
     #[allow(clippy::clone_on_copy)]
@@ -1419,6 +1494,30 @@ impl CongressionalMemberNetWorthAggregate {
                     "mutual_funds_and_etfs",
                     self.mutual_funds_and_etfs.clone().into_bound_py_any(py)?,
                 ),
+                (
+                    "pension_and_retirement_assets",
+                    self.pension_and_retirement_assets
+                        .clone()
+                        .into_bound_py_any(py)?,
+                ),
+                (
+                    "other_amount",
+                    self.other_amount.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "other_assets",
+                    self.other_assets.clone().into_bound_py_any(py)?,
+                ),
+                (
+                    "salary_and_wages",
+                    self.salary_and_wages.clone().into_bound_py_any(py)?,
+                ),
+                ("trusts", self.trusts.clone().into_bound_py_any(py)?),
+                (
+                    "government_securities",
+                    self.government_securities.clone().into_bound_py_any(py)?,
+                ),
+                ("additional_columns", self.additional_columns(py)?),
             ],
         )
     }
@@ -1484,7 +1583,37 @@ impl CongressionalMemberNetWorthAggregate {
             "mutual_funds_and_etfs",
             crate::models::convert::DictValue::dict_value(&self.mutual_funds_and_etfs, py)?,
         )?;
+        dict.set_item(
+            "pension_and_retirement_assets",
+            crate::models::convert::DictValue::dict_value(&self.pension_and_retirement_assets, py)?,
+        )?;
+        dict.set_item(
+            "other_amount",
+            crate::models::convert::DictValue::dict_value(&self.other_amount, py)?,
+        )?;
+        dict.set_item(
+            "other_assets",
+            crate::models::convert::DictValue::dict_value(&self.other_assets, py)?,
+        )?;
+        dict.set_item(
+            "salary_and_wages",
+            crate::models::convert::DictValue::dict_value(&self.salary_and_wages, py)?,
+        )?;
+        dict.set_item(
+            "trusts",
+            crate::models::convert::DictValue::dict_value(&self.trusts, py)?,
+        )?;
+        dict.set_item(
+            "government_securities",
+            crate::models::convert::DictValue::dict_value(&self.government_securities, py)?,
+        )?;
+        dict.set_item("additional_columns", self.additional_columns(py)?)?;
         Ok(dict)
+    }
+
+    #[getter]
+    fn additional_columns<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        crate::models::convert::object_to_py(py, &self.additional_columns)
     }
 }
 
@@ -1507,6 +1636,13 @@ impl From<libfmp::responses::congressional::CongressionalMemberNetWorthAggregate
             asset_backed_securities: value.asset_backed_securities,
             business_liabilities: value.business_liabilities,
             mutual_funds_and_etfs: value.mutual_funds_and_etfs,
+            pension_and_retirement_assets: value.pension_and_retirement_assets,
+            other_amount: value.other_amount,
+            other_assets: value.other_assets,
+            salary_and_wages: value.salary_and_wages,
+            trusts: value.trusts,
+            government_securities: value.government_securities,
+            additional_columns: value.additional_columns,
         }
     }
 }
