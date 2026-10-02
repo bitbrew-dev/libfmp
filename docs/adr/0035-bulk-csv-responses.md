@@ -121,6 +121,18 @@ included, and an endpoint override still wins. Bodies stay buffered, as in
 ADR 0028, and decode record by record from the buffer; there is no streaming
 API.
 
+### Call deadline
+
+The call deadline follows the same rule (issue #404). Bulk bodies arrive
+slowly: `profile-bulk` part 0 measured 31.4 MB in 202 s on 2026-10-02, well
+past the 30 s default, so the call failed with a transport error mid-body.
+CSV bulk descriptors default to `DEFAULT_BULK_TIMEOUT` (600 s, Go
+`DefaultBulkTimeout`) while the client timeout is unset; every other endpoint
+keeps the 30 s default. Once a caller sets the client timeout
+(`ClientBuilder::timeout`, Go `WithTimeout`, Python `timeout=`), it applies to
+every endpoint, bulk included. The deadline still spans the whole call,
+redirects and body included, and the connect timeout is unchanged.
+
 ## Alternatives considered
 
 - **Evidence-only `Option`s for bulk rows.** Rejected: about forty members
