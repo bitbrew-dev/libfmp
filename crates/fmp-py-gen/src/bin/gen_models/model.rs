@@ -10,6 +10,9 @@ use crate::emit::{convert_expr, wrap_type};
 /// The Python type a `serde_json::Number` field reads and accepts.
 const NUMBER_STUB: &str = "builtins.int | builtins.float";
 
+/// The Python type a `DynamicObject` (JSON object) field reads.
+const OBJECT_STUB: &str = "builtins.dict[builtins.str, typing.Any]";
+
 /// How a base (non-composed) field type maps into the Python model.
 pub(crate) enum Class {
     Scalar {
@@ -325,6 +328,12 @@ impl KeptField {
             (Pass::Number, true) => format!(
                 "    #[gen_stub(override_return_type(type_repr = \"{NUMBER_STUB} | None\", imports = (\"builtins\",)))]\n"
             ),
+            (Pass::Object, false) => format!(
+                "    #[gen_stub(override_return_type(type_repr = \"{OBJECT_STUB}\", imports = (\"builtins\", \"typing\")))]\n"
+            ),
+            (Pass::Object, true) => format!(
+                "    #[gen_stub(override_return_type(type_repr = \"{OBJECT_STUB} | None\", imports = (\"builtins\", \"typing\")))]\n"
+            ),
             _ => String::new(),
         };
         Some(format!(
@@ -429,4 +438,41 @@ fn is_valid_python_ident(name: &str) -> bool {
         _ => return false,
     }
     chars.all(|c| c == '_' || c.is_ascii_alphanumeric())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{KeptField, Pass};
+
+    fn getter(pass: Pass, optional: bool) -> String {
+        KeptField::passthrough("data".to_owned(), pass, optional)
+            .getter_method()
+            .expect("a passthrough field has a getter")
+    }
+
+    #[test]
+    fn number_getters_stub_int_or_float() {
+        assert!(getter(Pass::Number, false).contains(
+            "override_return_type(type_repr = \"builtins.int | builtins.float\", imports = (\"builtins\",))"
+        ));
+        assert!(getter(Pass::Number, true).contains(
+            "override_return_type(type_repr = \"builtins.int | builtins.float | None\", imports = (\"builtins\",))"
+        ));
+    }
+
+    #[test]
+    fn object_getters_stub_a_str_keyed_dict() {
+        assert!(getter(Pass::Object, false).contains(
+            "override_return_type(type_repr = \"builtins.dict[builtins.str, typing.Any]\", imports = (\"builtins\", \"typing\"))"
+        ));
+        assert!(getter(Pass::Object, true).contains(
+            "override_return_type(type_repr = \"builtins.dict[builtins.str, typing.Any] | None\", imports = (\"builtins\", \"typing\"))"
+        ));
+    }
+
+    #[test]
+    fn value_getters_keep_the_inferred_any() {
+        assert!(!getter(Pass::Value, false).contains("gen_stub"));
+        assert!(!getter(Pass::Value, true).contains("gen_stub"));
+    }
 }

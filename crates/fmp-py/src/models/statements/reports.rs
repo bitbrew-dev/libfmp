@@ -226,6 +226,7 @@ impl FinancialReportJson {
     }
 
     #[getter]
+    #[gen_stub(override_return_type(type_repr = "builtins.dict[builtins.str, typing.Any]", imports = ("builtins", "typing")))]
     fn sections<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         crate::models::convert::object_to_py(py, &self.sections)
     }

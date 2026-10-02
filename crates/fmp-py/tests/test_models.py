@@ -26,6 +26,8 @@ import pytest
 
 NATIVE_ROOT = Path(str(files("fmp"))) / "_native"
 NUMBER = "builtins.int | builtins.float"
+OBJECT = "builtins.dict[builtins.str, typing.Any]"
+JSON_RETURNS = frozenset({"typing.Any", OBJECT, f"{OBJECT} | None"})
 
 
 @dataclass(frozen=True)
@@ -36,6 +38,7 @@ class ModelStub:
     name: str
     params: tuple[tuple[str, str], ...]
     json_params: frozenset[str]
+    object_params: frozenset[str]
     attributes: tuple[str, ...]
 
     @property
@@ -61,10 +64,15 @@ def _model_stubs() -> dict[str, ModelStub]:
             json_params = frozenset(
                 name
                 for name, method in methods.items()
-                if method.returns is not None and ast.unparse(method.returns) == "typing.Any"
+                if method.returns is not None and ast.unparse(method.returns) in JSON_RETURNS
             )
             attributes = tuple(name for name, _ in params if name in methods)
-            found[f"{module}.{node.name}"] = ModelStub(module, node.name, params, json_params, attributes)
+            object_params = frozenset(
+                name for name in attributes if ast.unparse(methods[name].returns or ast.Constant(None)).startswith(OBJECT)
+            )
+            found[f"{module}.{node.name}"] = ModelStub(
+                module, node.name, params, json_params, object_params, attributes
+            )
     return found
 
 
@@ -247,3 +255,20 @@ def test_number_field_rejects_other_values(value: object, error: type[Exception]
     model = MODELS[path]
     with pytest.raises(error):
         model.cls(**{**kwargs_for(model), name: value})
+
+
+OBJECT_FIELDS = sorted((path, name) for path, model in MODELS.items() for name in model.object_params)
+
+
+def test_object_fields_are_typed_str_keyed_dicts() -> None:
+    """The former ``Any`` JSON-object fields are stubbed ``dict[str, Any]``."""
+    assert len(OBJECT_FIELDS) == 4
+
+
+@pytest.mark.parametrize(("path", "name"), OBJECT_FIELDS, ids=lambda part: part.removeprefix("fmp._native."))
+def test_object_field_reads_a_dict(path: str, name: str) -> None:
+    """An object field built from JSON text reads back as a ``dict``."""
+    model = MODELS[path]
+    row = model.cls(**{**kwargs_for(model), name: '{"a": 1}'})
+    assert getattr(row, name) == {"a": 1}
+    assert type(getattr(row, name)) is dict
