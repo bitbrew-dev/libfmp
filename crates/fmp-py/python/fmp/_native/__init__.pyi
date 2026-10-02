@@ -172,6 +172,9 @@ class FmpClient:
     the default host the constructor raises `FmpConfigError` naming
     `FMP_API_KEY`.
     `timeout` and `connect_timeout` are positive finite numbers of seconds.
+    When `timeout` is omitted, `client.bulk` methods may take up to 600
+    seconds and every other method up to 30; a given `timeout` applies to
+    every method, bulk included.
     `max_response_body_bytes` bounds each buffered response; when omitted,
     `client.bulk` methods buffer up to 256 MiB and every other method up to
     64 MiB. Authenticated

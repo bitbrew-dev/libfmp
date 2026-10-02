@@ -12,7 +12,10 @@ use bytes::Bytes;
 use http::header::{CONTENT_TYPE, HeaderMap, HeaderValue, LOCATION};
 use libfmp::{
     Client,
-    client::{DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES, DEFAULT_MAX_RESPONSE_BODY_BYTES, EndpointSpec},
+    client::{
+        DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES, DEFAULT_BULK_TIMEOUT,
+        DEFAULT_MAX_RESPONSE_BODY_BYTES, DEFAULT_TIMEOUT, EndpointSpec,
+    },
     config::{Authentication, RedirectPolicy},
     endpoints::BinaryBody,
     error::{ConfigurationErrorKind, ErrorCategory},
@@ -749,6 +752,51 @@ async fn csv_bulk_endpoints_default_to_the_bulk_body_limit_until_the_client_sets
             DEFAULT_BULK_MAX_RESPONSE_BODY_BYTES,
             DEFAULT_MAX_RESPONSE_BODY_BYTES,
             64
+        ]
+    );
+}
+
+#[tokio::test]
+async fn csv_bulk_endpoints_default_to_the_bulk_timeout_until_the_client_sets_one() {
+    let mut headers = HeaderMap::new();
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("text/csv"));
+    let csv = || TransportResponse::new(200, headers.clone(), b"ok\ntrue\n".as_slice());
+    let bulk = EndpointSpec::<(), Vec<Answer>>::get_csv("bulk-test", "bulk-test", ());
+    let executor = Arc::new(ScriptedExecutor::new(vec![
+        Ok(csv()),
+        Ok(json_response()),
+        Ok(csv()),
+        Ok(json_response()),
+    ]));
+    let unset = Client::builder()
+        .base_url("https://example.test")
+        .executor(executor.clone())
+        .build()
+        .unwrap();
+    let configured = Client::builder()
+        .base_url("https://example.test")
+        .timeout(Duration::from_secs(5))
+        .executor(executor.clone())
+        .build()
+        .unwrap();
+
+    unset.execute(&bulk).await.unwrap();
+    unset.execute(&endpoint()).await.unwrap();
+    configured.execute(&bulk).await.unwrap();
+    configured.execute(&endpoint()).await.unwrap();
+
+    let timeouts: Vec<_> = executor
+        .requests()
+        .iter()
+        .map(PreparedRequest::timeout)
+        .collect();
+    assert_eq!(
+        timeouts,
+        [
+            DEFAULT_BULK_TIMEOUT,
+            DEFAULT_TIMEOUT,
+            Duration::from_secs(5),
+            Duration::from_secs(5)
         ]
     );
 }

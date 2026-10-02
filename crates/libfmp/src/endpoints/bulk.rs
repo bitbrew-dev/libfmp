@@ -13,9 +13,12 @@
 //! client limit is unset: whole-market bodies such as `ratios-ttm-bulk`
 //! exceed the 64 MiB general default. A limit set with
 //! [`crate::client::ClientBuilder::max_response_body_bytes`] applies to bulk
-//! routes too, and every bulk call shares the client's single logical
-//! timeout, which [`crate::client::ClientBuilder::timeout`] can raise. The
-//! Python binding exposes the same eighteen methods under `client.bulk`.
+//! routes too. The same rule holds for the call deadline: while the client
+//! timeout is unset, bulk calls use
+//! [`crate::client::DEFAULT_BULK_TIMEOUT`] (600 s) because whole-market bodies
+//! arrive slowly, and every other route keeps the 30 s default. A timeout set
+//! with [`crate::client::ClientBuilder::timeout`] applies to bulk routes too.
+//! The Python binding exposes the same eighteen methods under `client.bulk`.
 
 use crate::{
     Client, Result,

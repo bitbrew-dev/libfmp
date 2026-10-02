@@ -35,6 +35,7 @@ pub struct PreparedRequest {
     url: Url,
     headers: HeaderMap,
     max_response_body_bytes: usize,
+    timeout: std::time::Duration,
 }
 
 impl PreparedRequest {
@@ -43,12 +44,14 @@ impl PreparedRequest {
         url: Url,
         headers: HeaderMap,
         max_response_body_bytes: usize,
+        timeout: std::time::Duration,
     ) -> Self {
         Self {
             method,
             url,
             headers,
             max_response_body_bytes,
+            timeout,
         }
     }
 
@@ -77,6 +80,15 @@ impl PreparedRequest {
     /// before it exceeds this value. The client also checks returned buffers.
     pub fn max_response_body_bytes(&self) -> usize {
         self.max_response_body_bytes
+    }
+
+    /// Returns the logical deadline of the call this request belongs to.
+    ///
+    /// The client enforces it around every executor; an executor may also
+    /// apply it to its own transport. It spans the whole redirect chain, so
+    /// it is an upper bound for this one request.
+    pub fn timeout(&self) -> std::time::Duration {
+        self.timeout
     }
 }
 
@@ -215,11 +227,9 @@ pub(crate) struct ReqwestExecutor {
 
 impl ReqwestExecutor {
     pub(crate) fn new(
-        timeout: std::time::Duration,
         connect_timeout: std::time::Duration,
     ) -> std::result::Result<Self, ExecutorError> {
         let client = reqwest::Client::builder()
-            .timeout(timeout)
             .connect_timeout(connect_timeout)
             // Redirects are handled above the executor boundary so every auth
             // mode follows exactly the same same-origin rule.
@@ -244,6 +254,7 @@ impl HttpExecutor for ReqwestExecutor {
                 .client
                 .request(request.method.into_reqwest(), request.url)
                 .headers(request.headers)
+                .timeout(request.timeout)
                 .send()
                 .await
                 .map_err(|_| ExecutorError::new())?;
