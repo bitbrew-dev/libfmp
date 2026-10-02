@@ -142,6 +142,13 @@ class CongressionalMemberNetWorthAggregate:
         typing.Literal["asset_backed_securities"],
         typing.Literal["business_liabilities"],
         typing.Literal["mutual_funds_and_etfs"],
+        typing.Literal["pension_and_retirement_assets"],
+        typing.Literal["other_amount"],
+        typing.Literal["other_assets"],
+        typing.Literal["salary_and_wages"],
+        typing.Literal["trusts"],
+        typing.Literal["government_securities"],
+        typing.Literal["additional_columns"],
     ]
 
     @property
@@ -153,7 +160,7 @@ class CongressionalMemberNetWorthAggregate:
     @property
     def real_estate_liabilities(self) -> typing.Optional[builtins.float]: ...
     @property
-    def cash_and_cash_equivalents(self) -> builtins.float: ...
+    def cash_and_cash_equivalents(self) -> typing.Optional[builtins.float]: ...
     @property
     def business_and_self_employment(self) -> typing.Optional[builtins.float]: ...
     @property
@@ -171,7 +178,21 @@ class CongressionalMemberNetWorthAggregate:
     @property
     def business_liabilities(self) -> typing.Optional[builtins.float]: ...
     @property
-    def mutual_funds_and_etfs(self) -> builtins.float: ...
+    def mutual_funds_and_etfs(self) -> typing.Optional[builtins.float]: ...
+    @property
+    def pension_and_retirement_assets(self) -> typing.Optional[builtins.float]: ...
+    @property
+    def other_amount(self) -> typing.Optional[builtins.float]: ...
+    @property
+    def other_assets(self) -> typing.Optional[builtins.float]: ...
+    @property
+    def salary_and_wages(self) -> typing.Optional[builtins.float]: ...
+    @property
+    def trusts(self) -> typing.Optional[builtins.float]: ...
+    @property
+    def government_securities(self) -> typing.Optional[builtins.float]: ...
+    @property
+    def additional_columns(self) -> typing.Any: ...
     def __eq__(self, other: builtins.object, /) -> builtins.bool: ...
     def __new__(
         cls,
@@ -180,7 +201,7 @@ class CongressionalMemberNetWorthAggregate:
         year: builtins.int,
         total: builtins.float,
         real_estate_liabilities: typing.Optional[builtins.float],
-        cash_and_cash_equivalents: builtins.float,
+        cash_and_cash_equivalents: typing.Optional[builtins.float],
         business_and_self_employment: typing.Optional[builtins.float],
         real_estate: typing.Optional[builtins.float],
         ownership_interest: typing.Optional[builtins.float],
@@ -189,7 +210,14 @@ class CongressionalMemberNetWorthAggregate:
         revolving_and_credit_lines: typing.Optional[builtins.float],
         asset_backed_securities: typing.Optional[builtins.float],
         business_liabilities: typing.Optional[builtins.float],
-        mutual_funds_and_etfs: builtins.float,
+        mutual_funds_and_etfs: typing.Optional[builtins.float],
+        pension_and_retirement_assets: typing.Optional[builtins.float],
+        other_amount: typing.Optional[builtins.float],
+        other_assets: typing.Optional[builtins.float],
+        salary_and_wages: typing.Optional[builtins.float],
+        trusts: typing.Optional[builtins.float],
+        government_securities: typing.Optional[builtins.float],
+        additional_columns: builtins.str,
     ) -> CongressionalMemberNetWorthAggregate: ...
     def __getnewargs_ex__(self) -> tuple[tuple, dict]: ...
     def __repr__(self) -> builtins.str: ...

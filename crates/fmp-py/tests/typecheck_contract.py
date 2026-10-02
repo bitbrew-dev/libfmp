@@ -209,7 +209,9 @@ def check_congressional_contract(client: FmpClient) -> None:
     value: float | None = entries[0].value
     total: float = totals[0].total
     options: float | None = totals[0].options
-    _ = (disclosed, gains, born, years_active, value_range, value, total, options)
+    cash: float | None = totals[0].cash_and_cash_equivalents
+    other: float | None = totals[0].other_amount
+    _ = (disclosed, gains, born, years_active, value_range, value, total, options, cash, other)
 
 
 def check_funds_contract(client: FmpClient) -> None:

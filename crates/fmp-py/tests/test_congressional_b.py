@@ -6,6 +6,7 @@ trade feeds live in ``test_congressional_a.py``.
 """
 
 import datetime
+import pickle
 from types import SimpleNamespace
 from typing import Any
 
@@ -167,7 +168,7 @@ def test_net_worth_aggregated_with_member_id_only(client: Any, fixture_server: F
     rows = client.congressional.net_worth_aggregated(MEMBER_ID)
 
     assert fixture_server.requests[0].target == "/senate-net-worth-aggregated?senateID=P000197"
-    assert len(rows) == 1
+    assert len(rows) == 5
     row = rows[0]
     assert isinstance(row, CongressionalMemberNetWorthAggregate)
     assert row.member_id == MEMBER_ID
@@ -178,6 +179,29 @@ def test_net_worth_aggregated_with_member_id_only(client: Any, fixture_server: F
     assert row.business_and_self_employment == 0
     assert row.mutual_funds_and_etfs == 32_501
     assert row.revolving_and_credit_lines == 1_500_002
+    assert row.additional_columns == {}
+
+
+def test_net_worth_aggregated_optional_typed_and_additional_columns(
+    client: Any, fixture_server: FixtureServer
+) -> None:
+    """Absent cash or mutual funds decode as ``None``; unmodeled columns land in ``additional_columns``."""
+    fixture_server.route("/senate-net-worth-aggregated", load_fixture("congress_senate_net_worth_aggregated.json"))
+    rows = client.congressional.net_worth_aggregated(MEMBER_ID)
+
+    assert rows[1].cash_and_cash_equivalents is None
+    assert rows[1].pension_and_retirement_assets == 250_001
+    assert rows[2].mutual_funds_and_etfs is None
+    assert rows[2].government_securities == 15_001
+    assert rows[3].salary_and_wages == 174_000
+    assert rows[3].additional_columns == {"pensionAndRetirementIncome": 5001, "spousalIncome": 201}
+    assert rows[4].other_amount == 1_001
+    assert rows[4].other_assets == 2_001
+    assert rows[4].trusts == 0
+    assert isinstance(rows[4].additional_columns, dict)
+    assert rows[4].additional_columns == {}
+    assert rows[3].to_dict()["additional_columns"] == {"pensionAndRetirementIncome": 5001, "spousalIncome": 201}
+    assert pickle.loads(pickle.dumps(rows[3])) == rows[3]
 
 
 def test_net_worth_aggregated_with_totals_col(client: Any, fixture_server: FixtureServer) -> None:
@@ -186,7 +210,7 @@ def test_net_worth_aggregated_with_totals_col(client: Any, fixture_server: Fixtu
     rows = client.congressional.net_worth_aggregated(MEMBER_ID, totals_col="stock")
 
     assert fixture_server.requests[0].target == "/senate-net-worth-aggregated?senateID=P000197&totalsCol=stock"
-    assert len(rows) == 1
+    assert len(rows) == 5
     assert rows[0].total == 225_219_551
 
 

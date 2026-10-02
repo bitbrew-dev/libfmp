@@ -13,7 +13,7 @@ use libfmp::{
         },
         metadata::{AccessRequirement, EndpointBounds, GeographicAvailability},
     },
-    error::ErrorCategory,
+    error::{DecodeErrorKind, ErrorCategory},
     responses::congressional::{CongressionalMemberNetWorth, CongressionalMemberNetWorthAggregate},
     transport::HttpMethod,
     types::{CongressionalMemberId, Limit, Page},
@@ -291,15 +291,11 @@ fn itemized_fractional_value_and_null_members_decode_exactly() {
     assert_eq!(entry.value_range.unwrap().max, None);
 }
 
-const AGGREGATE_REQUIRED: [&str; 5] = [
-    "senateID",
-    "year",
-    "total",
+const AGGREGATE_REQUIRED: [&str; 3] = ["senateID", "year", "total"];
+
+const AGGREGATE_OMITTABLE: [&str; 17] = [
     "cashAndCashEquivalents",
     "mutualFundsAndETFs",
-];
-
-const AGGREGATE_OMITTABLE: [&str; 9] = [
     "realEstate",
     "stock",
     "realEstateLiabilities",
@@ -309,6 +305,12 @@ const AGGREGATE_OMITTABLE: [&str; 9] = [
     "revolvingAndCreditLines",
     "assetBackedSecurities",
     "businessLiabilities",
+    "pensionAndRetirementAssets",
+    "Other",
+    "otherAssets",
+    "salaryAndWages",
+    "trusts",
+    "governmentSecurities",
 ];
 
 #[test]
@@ -355,13 +357,12 @@ fn aggregated_required_fields_are_strict_and_omittable_fields_may_be_absent() {
         sparse.as_object_mut().unwrap().remove(field);
     }
     sparse["total"] = serde_json::json!(59082540.5);
-    sparse["cashAndCashEquivalents"] = serde_json::json!(121004.5);
-    sparse["mutualFundsAndETFs"] = serde_json::json!(34526531.5);
     let totals =
         serde_json::from_value::<CongressionalMemberNetWorthAggregate>(sparse.clone()).unwrap();
     assert_eq!(totals.total, 59_082_540.5);
-    assert_eq!(totals.cash_and_cash_equivalents, 121_004.5);
-    assert_eq!(totals.mutual_funds_and_etfs, 34_526_531.5);
+    assert_eq!(totals.cash_and_cash_equivalents, None);
+    assert_eq!(totals.mutual_funds_and_etfs, None);
+    assert!(totals.additional_columns.is_empty());
     assert_eq!(totals.real_estate, None);
     assert_eq!(totals.stock, None);
     assert_eq!(totals.real_estate_liabilities, None);
@@ -384,6 +385,80 @@ fn aggregated_required_fields_are_strict_and_omittable_fields_may_be_absent() {
         serde_json::from_value::<CongressionalMemberNetWorthAggregate>(fractional).unwrap();
     assert_eq!(totals.real_estate, Some(3_000_000.5));
     assert_eq!(totals.stock, Some(8_000.5));
+}
+
+#[test]
+fn aggregated_rows_keep_typed_and_additional_columns_and_round_trip() {
+    let rows =
+        serde_json::from_slice::<Vec<CongressionalMemberNetWorthAggregate>>(AGGREGATED).unwrap();
+    assert_eq!(rows.len(), 5);
+    assert!(rows[0].additional_columns.is_empty());
+    assert_eq!(rows[1].cash_and_cash_equivalents, None);
+    assert_eq!(rows[1].pension_and_retirement_assets, Some(250_001.0));
+    assert_eq!(rows[2].mutual_funds_and_etfs, None);
+    assert_eq!(rows[2].government_securities, Some(15_001.0));
+    assert_eq!(rows[3].salary_and_wages, Some(174_000.0));
+    assert_eq!(
+        serde_json::Value::Object(rows[3].additional_columns.clone()),
+        serde_json::json!({"pensionAndRetirementIncome": 5001, "spousalIncome": 201})
+    );
+    assert_eq!(rows[4].other_amount, Some(1_001.0));
+    assert_eq!(rows[4].other_assets, Some(2_001.0));
+    assert_eq!(rows[4].trusts, Some(0.0));
+    assert!(rows[4].additional_columns.is_empty());
+
+    for row in &rows {
+        let encoded = serde_json::to_string(row).unwrap();
+        let members = serde_json::to_value(row).unwrap();
+        let members = members.as_object().unwrap();
+        assert_eq!(encoded.matches(':').count(), members.len(), "{encoded}");
+        for key in members.keys() {
+            assert_eq!(
+                encoded.matches(&format!("\"{key}\":")).count(),
+                1,
+                "{encoded}"
+            );
+        }
+    }
+    assert_eq!(
+        serde_json::to_value(&rows).unwrap(),
+        serde_json::from_slice::<serde_json::Value>(AGGREGATED).unwrap()
+    );
+}
+
+#[tokio::test]
+async fn aggregated_type_and_missing_member_errors_keep_their_row_path() {
+    let row = serde_json::from_slice::<serde_json::Value>(AGGREGATED).unwrap()[3].clone();
+    let mut wrong_type = row.clone();
+    wrong_type["total"] = serde_json::json!("not a number");
+    let mut missing = row;
+    missing.as_object_mut().unwrap().remove("total");
+    let body =
+        |row: serde_json::Value| -> &'static [u8] { serde_json::to_vec(&[row]).unwrap().leak() };
+    let executor = Arc::new(FixtureExecutor::new([
+        json_fixture(body(wrong_type)),
+        json_fixture(body(missing)),
+    ]));
+    let client = Client::builder()
+        .authentication(Authentication::fmp_header("secret"))
+        .executor(executor)
+        .build()
+        .unwrap();
+    let member_id = || CongressionalMemberId::new("R000619").unwrap();
+
+    let error = client
+        .congressional_net_worth_aggregated(member_id())
+        .await
+        .unwrap_err();
+    assert_eq!(error.category(), ErrorCategory::Decode);
+    assert_eq!(error.decode_path(), Some("[0].total"));
+    assert_eq!(error.decode_kind(), Some(DecodeErrorKind::WrongType));
+    let error = client
+        .congressional_net_worth_aggregated(member_id())
+        .await
+        .unwrap_err();
+    assert_eq!(error.decode_path(), Some("[0].total"));
+    assert_eq!(error.decode_kind(), Some(DecodeErrorKind::MissingMember));
 }
 
 #[tokio::test]

@@ -7,7 +7,7 @@
 use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::{
-    codecs::{DynamicJson, OpaqueDateText, TitleCaseBoolFlag},
+    codecs::{DynamicJson, DynamicObject, OpaqueDateText, TitleCaseBoolFlag},
     types::{CalendarYear, CongressionalMemberId, Date, FormType, MarketValue},
 };
 
@@ -145,8 +145,10 @@ pub struct CongressionalMemberNetWorth {
 
 /// Aggregated congressional net-worth totals for one filing year.
 ///
-/// Only the member, year, total, cash and mutual-fund members are sent on
-/// every row; the other amounts are `None` when the key is absent.
+/// Only the member, year and total are sent on every row; every amount is
+/// `None` when its key is absent. Columns without a typed member, such as
+/// `pensionAndRetirementIncome` or `spousalIncome`, are kept in
+/// `additional_columns` instead of being dropped.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[non_exhaustive]
 #[serde(rename_all = "camelCase")]
@@ -159,8 +161,9 @@ pub struct CongressionalMemberNetWorthAggregate {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
     pub real_estate_liabilities: Option<MarketValue>,
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub cash_and_cash_equivalents: MarketValue,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub cash_and_cash_equivalents: Option<MarketValue>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
     pub business_and_self_employment: Option<MarketValue>,
@@ -186,6 +189,29 @@ pub struct CongressionalMemberNetWorthAggregate {
     #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
     pub business_liabilities: Option<MarketValue>,
     #[serde(rename = "mutualFundsAndETFs")]
-    #[serde(serialize_with = "crate::codecs::integral_f64::serialize")]
-    pub mutual_funds_and_etfs: MarketValue,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub mutual_funds_and_etfs: Option<MarketValue>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub pension_and_retirement_assets: Option<MarketValue>,
+    #[serde(rename = "Other")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub other_amount: Option<MarketValue>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub other_assets: Option<MarketValue>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub salary_and_wages: Option<MarketValue>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub trusts: Option<MarketValue>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(serialize_with = "crate::codecs::integral_f64::serialize_option")]
+    pub government_securities: Option<MarketValue>,
+    /// Every column without a typed member above, keyed by its wire name.
+    #[serde(flatten)]
+    pub additional_columns: DynamicObject,
 }
