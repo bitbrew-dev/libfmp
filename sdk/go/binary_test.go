@@ -95,7 +95,7 @@ func TestGetBinaryRetainsBytesAndSafeContentMetadata(t *testing.T) {
 // binary_contract_rejects_missing_and_wrong_content_types.
 func TestGetBinaryRejectsMissingAndWrongContentTypes(t *testing.T) {
 	t.Parallel()
-	const payload = "future-binary-response"
+	const payload = "future-binary-response\x00"
 	cases := []struct {
 		name    string
 		handler http.HandlerFunc
@@ -117,7 +117,8 @@ func TestGetBinaryRejectsMissingAndWrongContentTypes(t *testing.T) {
 			server, rec := newServer(t, tc.handler)
 			_, err := getBinaryProbe(t, newClient(t, server))
 			typed := assertBinaryError(t, err, CategoryDecode, http.StatusOK)
-			if typed.Message != tc.message || typed.Body == nil || typed.Body.Text != payload || rec.count() != 1 {
+			if typed.Message != tc.message || typed.Body == nil || strings.Contains(typed.Body.Text, "future-binary") ||
+				!strings.HasPrefix(typed.Body.Text, "<binary body omitted: 23 bytes") || rec.count() != 1 {
 				t.Fatalf("error = %+v after %d requests", typed, rec.count())
 			}
 		})
@@ -139,7 +140,7 @@ func TestGetBinaryDiagnosticsAreBoundedAndTokenSafe(t *testing.T) {
 
 	_, err := getBinaryProbe(t, client)
 	typed := assertBinaryError(t, err, CategoryDecode, http.StatusOK)
-	if typed.Body == nil || !typed.Body.Truncated || len(typed.Body.Text) > MaxSafeBodyBytes {
+	if typed.Body == nil || typed.Body.Truncated || !strings.HasPrefix(typed.Body.Text, "<binary body omitted: ") {
 		t.Fatalf("safe body = %+v", typed.Body)
 	}
 	diagnostic := fmt.Sprintf("%v %+v %s", typed, typed, err.Error())
@@ -173,5 +174,89 @@ func TestGetBinaryAppliesTheBodyCapAndPathRules(t *testing.T) {
 	assertConfigurationKind(t, err, ConfigurationKindInvalidPath)
 	if rec.count() != 2 {
 		t.Fatalf("invalid path issued a request (%d total)", rec.count())
+	}
+}
+
+const (
+	labeledJSON = "application/json; charset=utf-8"
+	zipWorkbook = "PK\x03\x04workbook-entries-private-bytes"
+)
+
+func xlsxCall(t *testing.T, contentType, body string) (BinaryPayload, error) {
+	t.Helper()
+	server, _ := newServer(t, func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", contentType)
+		w.Header().Set("Content-Disposition", "attachment; filename = AAPL_2024_FY_.xlsx")
+		_, _ = w.Write([]byte(body))
+	})
+	return newClient(t, server).Statements.Reports.Xlsx(context.Background(),
+		NewFinancialReportsXlsxQuery("AAPL", 2024, FiscalPeriodFullYear))
+}
+
+func xlsxError(t *testing.T, err error, category ErrorCategory) *Error {
+	t.Helper()
+	var typed *Error
+	if !errors.As(err, &typed) || typed.Category != category || typed.Status != http.StatusOK ||
+		typed.Endpoint != "financial-reports-xlsx" {
+		t.Fatalf("error = %+v (%v), want category %v", typed, err, category)
+	}
+	return typed
+}
+
+// TestXlsxAcceptsAZipWorkbookLabeledAsJSON mirrors
+// xlsx_accepts_a_zip_workbook_labeled_as_json_and_keeps_its_content_type.
+func TestXlsxAcceptsAZipWorkbookLabeledAsJSON(t *testing.T) {
+	t.Parallel()
+	for _, contentType := range []string{statementsXlsxType, labeledJSON} {
+		payload, err := xlsxCall(t, contentType, zipWorkbook)
+		if err != nil || string(payload.Data) != zipWorkbook || payload.ContentType != contentType ||
+			payload.ContentDisposition != "attachment; filename = AAPL_2024_FY_.xlsx" {
+			t.Fatalf("%s: payload = %+v, %v", contentType, payload, err)
+		}
+	}
+}
+
+// TestXlsxLabeledAsJSONKeepsTheProviderMessageCheck mirrors
+// xlsx_labeled_as_json_keeps_the_provider_message_check.
+func TestXlsxLabeledAsJSONKeepsTheProviderMessageCheck(t *testing.T) {
+	t.Parallel()
+	const message = `{"Error Message":"Limit reached for xlsx"}`
+	_, err := xlsxCall(t, labeledJSON, message)
+	if typed := xlsxError(t, err, CategoryStatus); typed.Body == nil || typed.Body.Text != message {
+		t.Fatalf("provider message body = %+v", typed.Body)
+	}
+}
+
+// TestXlsxRejectsOtherBodiesWithoutEchoingTheirBytes mirrors
+// xlsx_rejects_other_bodies_without_echoing_their_bytes.
+func TestXlsxRejectsOtherBodiesWithoutEchoingTheirBytes(t *testing.T) {
+	t.Parallel()
+	const garbage = "\x00\x01garbage-private-payload\xff"
+	_, err := xlsxCall(t, labeledJSON, garbage)
+	typed := xlsxError(t, err, CategoryDecode)
+	want := fmt.Sprintf("<binary body omitted: %d bytes, content-type %s>", len(garbage), labeledJSON)
+	if typed.Body == nil || typed.Body.Text != want {
+		t.Fatalf("body = %+v, want %q", typed.Body, want)
+	}
+	if diagnostic := fmt.Sprintf("%v %+v %s", typed, typed, err.Error()); strings.Contains(diagnostic, "garbage-private") {
+		t.Fatalf("diagnostic leaked the body: %s", diagnostic)
+	}
+}
+
+// TestJSONEndpointsNeverSniffWorkbookSignatures mirrors
+// json_endpoints_never_sniff_workbook_signatures.
+func TestJSONEndpointsNeverSniffWorkbookSignatures(t *testing.T) {
+	t.Parallel()
+	for _, contentType := range []string{statementsXlsxType, "application/json"} {
+		server, _ := newServer(t, func(w http.ResponseWriter, _ *http.Request) {
+			w.Header().Set("Content-Type", contentType)
+			_, _ = w.Write([]byte(zipWorkbook))
+		})
+		_, err := newClient(t, server).Statements.Reports.JSON(context.Background(),
+			NewFinancialReportsJSONQuery("AAPL", 2024, FiscalPeriodFullYear))
+		var typed *Error
+		if !errors.As(err, &typed) || typed.Category != CategoryDecode || typed.Endpoint != "financial-reports-json" {
+			t.Fatalf("%s: error = %+v (%v)", contentType, typed, err)
+		}
 	}
 }
