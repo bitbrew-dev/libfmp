@@ -15,6 +15,9 @@ on:
       - 'crates/libfmp/src/responses/**'
       - 'crates/libfmp/src/endpoints/**'
       - 'rust-toolchain.toml'
+      - '!crates/fmp-py/examples/**'
+      - '!sdk/go/examples/**'
+      - '!sdk/node/examples/**'
   push:
     branches: [main]
     paths:
@@ -28,6 +31,9 @@ on:
       - 'crates/libfmp/src/responses/**'
       - 'crates/libfmp/src/endpoints/**'
       - 'rust-toolchain.toml'
+      - '!crates/fmp-py/examples/**'
+      - '!sdk/go/examples/**'
+      - '!sdk/node/examples/**'
 
 permissions:
   contents: read
