@@ -20,9 +20,9 @@ def save_xlsx(client: FmpClient) -> None:
     try:
         payload = client.statements.reports.xlsx("AAPL", 2024, "FY")
     except FmpDecodeError as error:
-        # A body whose Content-Type is not an XLSX (or generic binary) type is
-        # rejected as a decode error. For a binary endpoint error.body is raw bytes
-        # rendered as text, so log the structured attributes, not the body.
+        # A body that is neither labeled as XLSX (or generic binary) nor starts
+        # with the XLSX (ZIP) signature is rejected as a decode error. For a binary
+        # endpoint error.body is a short summary, never the raw bytes.
         print(f"xlsx rejected: category={error.category} status={error.status} endpoint={error.endpoint}")
         return
     print(f"{payload!r}: content_type={payload.content_type} bytes={payload.byte_len}")
