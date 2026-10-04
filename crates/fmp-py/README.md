@@ -29,6 +29,14 @@ naming `FMP_API_KEY`, while a custom `base_url` selects no auth.
 Rust transport waits, so threads keep running. A Python async facade is not
 part of this release.
 
+## Examples
+
+Runnable scripts for common tasks and the trickier configuration (auth modes,
+timeouts and bulk limits, error handling, threads, bulk CSV, binary downloads,
+pagination) live in
+[`crates/fmp-py/examples`](https://github.com/bitbrew-dev/libfmp/blob/main/crates/fmp-py/examples/README.md).
+Run any of them with `uv run <script>.py` from that directory.
+
 ## Requirements
 
 - CPython 3.10 or newer (`abi3-py310`: one wheel per platform covers every
