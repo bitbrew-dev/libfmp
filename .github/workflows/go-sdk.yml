@@ -1,23 +1,14 @@
 name: Go SDK
 
+# Pull requests always start this workflow so the required `go sdk (...)`
+# checks report on every PR: a workflow skipped by a `paths` filter leaves
+# required checks pending and blocks the merge. The `changes` job decides
+# whether the Go checks do real work; when nothing Go-related changed, every
+# step is skipped and the job still reports success.
 on:
   workflow_dispatch:
   pull_request:
     branches: [main]
-    paths:
-      - 'sdk/go/**'
-      - 'scripts/check_go_sdk.sh'
-      - 'scripts/check_go_coverage.py'
-      - 'scripts/check_go_coverage_test.py'
-      - '.github/workflows/go-sdk.yml'
-      - 'crates/libfmp/tests/fixtures/**'
-      - 'crates/fmp-py-gen/**'
-      - 'crates/libfmp/src/responses/**'
-      - 'crates/libfmp/src/endpoints/**'
-      - 'rust-toolchain.toml'
-      - '!crates/fmp-py/examples/**'
-      - '!sdk/go/examples/**'
-      - '!sdk/node/examples/**'
   push:
     branches: [main]
     paths:
@@ -31,9 +22,7 @@ on:
       - 'crates/libfmp/src/responses/**'
       - 'crates/libfmp/src/endpoints/**'
       - 'rust-toolchain.toml'
-      - '!crates/fmp-py/examples/**'
       - '!sdk/go/examples/**'
-      - '!sdk/node/examples/**'
 
 permissions:
   contents: read
@@ -43,36 +32,80 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: go sdk changes
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.filter.outputs.go_any_modified }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: detect go-relevant changes
+        id: filter
+        # Only a pull request has a base to diff against; push and
+        # workflow_dispatch always run the checks, so they skip detection.
+        if: github.event_name == 'pull_request'
+        uses: tj-actions/changed-files@2f7c5bfce28377bc069a65ba478de0a74aa0ca32 # v46.0.1
+        with:
+          files_yaml: |
+            go:
+              - sdk/go/**
+              - '!sdk/go/examples/**'
+              - scripts/check_go_sdk.sh
+              - scripts/check_go_coverage.py
+              - scripts/check_go_coverage_test.py
+              - .github/workflows/go-sdk.yml
+              - crates/libfmp/tests/fixtures/**
+              - crates/fmp-py-gen/**
+              - crates/libfmp/src/responses/**
+              - crates/libfmp/src/endpoints/**
+              - rust-toolchain.toml
+
   check:
     name: go sdk (${{ matrix.os }})
+    needs: changes
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    # A skipped run only echoes, so it takes the cheap ubuntu runner either way.
+    runs-on: ${{ (github.event_name != 'pull_request' || needs.changes.outputs.go == 'true') && matrix.os || 'ubuntu-latest' }}
+    env:
+      # Pull requests run the checks only for Go-relevant changes; push and
+      # workflow_dispatch always run them (push keeps its own paths filter).
+      RUN_GO_CHECKS: ${{ github.event_name != 'pull_request' || needs.changes.outputs.go == 'true' }}
     steps:
+      - name: report skipped go checks
+        if: env.RUN_GO_CHECKS != 'true'
+        run: echo "No Go-relevant changes in this pull request; skipping the Go SDK checks."
+
       - name: checkout repository
+        if: env.RUN_GO_CHECKS == 'true'
         uses: actions/checkout@v5
 
       - name: set up the go version pinned in sdk/go/go.mod
+        if: env.RUN_GO_CHECKS == 'true'
         uses: actions/setup-go@v6
         with:
           go-version-file: sdk/go/go.mod
           cache: false
 
       - name: install golangci-lint v2
+        if: env.RUN_GO_CHECKS == 'true'
         uses: golangci/golangci-lint-action@v9
         with:
           version: v2.13.2
           install-only: true
 
       - name: install the toolchain pinned in rust-toolchain.toml
+        if: env.RUN_GO_CHECKS == 'true'
         run: |
           rustup toolchain install
           rustup show active-toolchain
 
       - name: cache cargo artifacts
+        if: env.RUN_GO_CHECKS == 'true'
         uses: Swatinem/rust-cache@v2
 
       - name: run the go sdk checks
+        if: env.RUN_GO_CHECKS == 'true'
         run: bash scripts/check_go_sdk.sh
