@@ -10,8 +10,11 @@ use crate::{
 
 /// Official XLSX MIME followed by the binary fallback accepted for proxy compatibility.
 ///
-/// This is an SDK interoperability policy. The endpoint does not inspect ZIP
-/// magic and rejects every other or missing response content type.
+/// This is an SDK interoperability policy. A body under any other content
+/// type is still accepted when it starts with the ZIP magic `PK\x03\x04`,
+/// because FMP labels real workbooks `application/json` (#411); its content
+/// type is kept as received. A missing content type, or any other body, is
+/// rejected without echoing the body bytes.
 pub const FINANCIAL_REPORTS_XLSX_CONTENT_TYPES: &[&str] = &[
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     "application/octet-stream",
