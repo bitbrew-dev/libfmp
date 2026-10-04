@@ -87,7 +87,9 @@ contents, or content-type parameters.
 Each endpoint owns its accepted MIME allow-list because the provider source does
 not establish one global binary MIME policy. The client validates `Content-Type`
 against that endpoint contract before constructing `BinaryResponse`; optional
-`Content-Disposition` is retained only when it is valid header text.
+`Content-Disposition` is retained only when it is valid header text. Since #411
+a body with the magic bytes of an expected format is also accepted under a
+mismatched content type (ADR 0008).
 
 `PartialEq` and `Eq` compare bytes, exact content type, and optional content
 disposition. Metadata is part of binary response identity rather than incidental

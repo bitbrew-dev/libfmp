@@ -42,6 +42,17 @@ though the endpoint is documented as an XLSX download. The SDK therefore uses
 `application/octet-stream` for binary-compatible proxies; it does not model
 the copied JSON example as the XLSX response contract.
 
+Update 2026-10-04 (#411): FMP now serves the real workbook with
+`Content-Type: application/json; charset=utf-8`. The SDK (Rust and Go) also
+accepts a successful body that starts with the magic bytes of an expected
+format (XLSX and the ZIP family: `PK\x03\x04`), whatever its declared media
+type; the content type is kept exactly as received. `Content-Disposition` is
+not used for the decision. A JSON-labeled body that is an FMP provider
+message still yields the provider-message error. Every other error on a
+binary endpoint summarises the body (`<binary body omitted: N bytes, ...>`)
+instead of echoing its bytes. `application/octet-stream` has no signature and
+is never sniffed.
+
 `FinancialReportDate` links use `SecretUrl` so embedded API keys remain
 redacted in debug and display surfaces; implicit serialization is disallowed.
 Revenue segmentation uses the shared dynamic row type and the closed documented query value
