@@ -330,7 +330,37 @@ impl ExpectedContentType {
                 .any(|expected| media_type.eq_ignore_ascii_case(expected)),
         }
     }
+
+    pub(crate) const fn is_binary(self) -> bool {
+        matches!(self, Self::Binary(_))
+    }
+
+    /// Reports whether `body` opens with the signature of one of the expected
+    /// binary formats, whatever its declared media type.
+    ///
+    /// FMP has served real workbooks labeled `application/json` (#411). Only
+    /// the `Binary` arm sniffs; formats without a table entry never match.
+    pub(crate) fn matches_signature(self, body: &[u8]) -> bool {
+        let Self::Binary(expected) = self else {
+            return false;
+        };
+        expected.iter().any(|expected| {
+            BINARY_SIGNATURES.iter().any(|(media_type, magic)| {
+                expected.eq_ignore_ascii_case(media_type) && body.starts_with(magic)
+            })
+        })
+    }
 }
+
+const ZIP_MAGIC: &[u8] = b"PK\x03\x04";
+
+const BINARY_SIGNATURES: &[(&str, &[u8])] = &[
+    (
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ZIP_MAGIC,
+    ),
+    ("application/zip", ZIP_MAGIC),
+];
 
 fn valid_json_media_type(media_type: &str) -> bool {
     let Some((type_name, subtype)) = media_type.split_once('/') else {
@@ -510,7 +540,7 @@ const ERROR_MESSAGE_MEMBER: &str = "Error Message";
 /// One is a short plain-text line such as `Invalid name` that is not JSON at
 /// all; the other is a JSON object whose only member is `"Error Message"`.
 /// Both checks are bounded by size so ordinary payloads are not parsed twice.
-fn is_provider_message(body: &[u8]) -> bool {
+pub(crate) fn is_provider_message(body: &[u8]) -> bool {
     let body = body.trim_ascii();
     match body.first() {
         None => false,

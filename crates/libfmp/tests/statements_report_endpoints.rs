@@ -349,9 +349,111 @@ async fn rejected_xlsx_diagnostics_are_bounded_and_hide_tokens_and_links() {
     let diagnostic = format!("{error:?} {error}");
 
     assert_eq!(error.category(), ErrorCategory::Decode);
-    assert!(safe_body.is_truncated());
+    assert!(!safe_body.is_truncated());
+    assert!(safe_body.as_str().starts_with("<binary body omitted: "));
     assert!(safe_body.as_str().len() <= MAX_SAFE_BODY_BYTES);
     assert!(!safe_body.as_str().contains(BODY_SECRET));
     assert!(!diagnostic.contains(AUTH_SECRET));
     assert!(!diagnostic.contains(BODY_SECRET));
+}
+
+const LABELED_JSON: &str = "application/json; charset=utf-8";
+const ZIP_WORKBOOK: &[u8] = b"PK\x03\x04workbook-entries-private-bytes";
+
+async fn xlsx_call(response: TransportResponse) -> libfmp::Result<BinaryResponse> {
+    let client = Client::builder()
+        .authentication(Authentication::fmp_header("secret"))
+        .executor(Arc::new(FixtureExecutor::new([response])))
+        .build()
+        .unwrap();
+    client
+        .financial_reports_xlsx(FinancialReportsXlsxQuery::new(
+            Ticker::new("AAPL").unwrap(),
+            Year(2024),
+            FiscalPeriod::FullYear,
+        ))
+        .await
+}
+
+#[tokio::test]
+async fn xlsx_accepts_a_zip_workbook_labeled_as_json_and_keeps_its_content_type() {
+    const DISPOSITION: &str = "attachment; filename = AAPL_2024_FY_.xlsx";
+    let official = xlsx_call(binary_fixture(Some(OFFICIAL_XLSX), None, ZIP_WORKBOOK))
+        .await
+        .unwrap();
+    let labeled = xlsx_call(binary_fixture(
+        Some(LABELED_JSON),
+        Some(DISPOSITION),
+        ZIP_WORKBOOK,
+    ))
+    .await
+    .unwrap();
+
+    assert_eq!(official.as_bytes(), ZIP_WORKBOOK);
+    assert_eq!(official.content_type(), OFFICIAL_XLSX);
+    assert_eq!(labeled.as_bytes(), ZIP_WORKBOOK);
+    assert_eq!(labeled.content_type(), LABELED_JSON);
+    assert_eq!(labeled.content_disposition(), Some(DISPOSITION));
+}
+
+#[tokio::test]
+async fn xlsx_labeled_as_json_keeps_the_provider_message_check() {
+    const MESSAGE: &[u8] = br#"{"Error Message":"Limit reached for xlsx"}"#;
+    let error = xlsx_call(binary_fixture(Some(LABELED_JSON), None, MESSAGE))
+        .await
+        .unwrap_err();
+
+    assert_eq!(error.category(), ErrorCategory::Status);
+    assert_eq!(error.status_code(), Some(200));
+    assert_eq!(error.endpoint(), Some("financial-reports-xlsx"));
+    assert_eq!(
+        error.body().unwrap().as_str(),
+        r#"{"Error Message":"Limit reached for xlsx"}"#
+    );
+}
+
+#[tokio::test]
+async fn xlsx_rejects_other_bodies_without_echoing_their_bytes() {
+    const GARBAGE: &[u8] = b"\x00\x01garbage-private-payload\xff";
+    let error = xlsx_call(binary_fixture(Some(LABELED_JSON), None, GARBAGE))
+        .await
+        .unwrap_err();
+    let diagnostic = format!("{error:?} {error}");
+
+    assert_eq!(error.category(), ErrorCategory::Decode);
+    assert_eq!(error.status_code(), Some(200));
+    assert_eq!(
+        error.body().unwrap().as_str(),
+        format!(
+            "<binary body omitted: {} bytes, content-type {LABELED_JSON}>",
+            GARBAGE.len()
+        )
+    );
+    assert!(!diagnostic.contains("garbage-private-payload"));
+}
+
+#[tokio::test]
+async fn json_endpoints_never_sniff_workbook_signatures() {
+    let executor = Arc::new(FixtureExecutor::new([
+        binary_fixture(Some(OFFICIAL_XLSX), None, ZIP_WORKBOOK),
+        binary_fixture(Some("application/json"), None, ZIP_WORKBOOK),
+    ]));
+    let client = Client::builder()
+        .authentication(Authentication::fmp_header("secret"))
+        .executor(executor)
+        .build()
+        .unwrap();
+    let query = || {
+        FinancialReportsJsonQuery::new(
+            Ticker::new("AAPL").unwrap(),
+            Year(2024),
+            FiscalPeriod::FullYear,
+        )
+    };
+
+    for _ in 0..2 {
+        let error = client.financial_reports_json(query()).await.unwrap_err();
+        assert_eq!(error.category(), ErrorCategory::Decode);
+        assert_eq!(error.endpoint(), Some("financial-reports-json"));
+    }
 }

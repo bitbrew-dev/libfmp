@@ -22,7 +22,9 @@ use url::Url;
 use crate::{
     Result, VERSION,
     config::{Authentication, DEFAULT_BASE_URL, DEFAULT_PATH_PREFIX, RedirectPolicy},
-    endpoints::{DecodeFailure, QueryEncoder, ResponseMetadata},
+    endpoints::{
+        DecodeFailure, ExpectedContentType, QueryEncoder, ResponseMetadata, is_provider_message,
+    },
     error::{ConfigurationErrorKind, Error, Redactor, SafeBody, SecretString},
     transport::{HttpExecutor, PreparedRequest, ReqwestExecutor, TransportResponse},
 };
@@ -476,11 +478,12 @@ impl Client {
                 return status_error(endpoint.id(), response, redactor);
             }
 
+            let expected = endpoint.response().expected_content_type();
             let Some(content_type) = response.headers().get(CONTENT_TYPE) else {
                 return Err(Error::decode(
                     Some(endpoint.id()),
                     Some(response.status()),
-                    Some(safe_body(response.body(), redactor)),
+                    Some(error_body(expected, response.body(), None, redactor)),
                     "successful response omitted its content type",
                 ));
             };
@@ -488,19 +491,30 @@ impl Client {
                 return Err(Error::decode(
                     Some(endpoint.id()),
                     Some(response.status()),
-                    Some(safe_body(response.body(), redactor)),
+                    Some(error_body(expected, response.body(), None, redactor)),
                     "successful response used an invalid content type",
                 ));
             };
-            if !endpoint
-                .response()
-                .expected_content_type()
-                .matches(content_type)
-            {
+            if !expected.matches(content_type) && !expected.matches_signature(response.body()) {
+                if expected.is_binary()
+                    && ExpectedContentType::Json.matches(content_type)
+                    && is_provider_message(response.body())
+                {
+                    return Err(Error::provider_message(
+                        endpoint.id(),
+                        response.status(),
+                        Some(safe_body(response.body(), redactor)),
+                    ));
+                }
                 return Err(Error::decode(
                     Some(endpoint.id()),
                     Some(response.status()),
-                    Some(safe_body(response.body(), redactor)),
+                    Some(error_body(
+                        expected,
+                        response.body(),
+                        Some(content_type),
+                        redactor,
+                    )),
                     "successful response used an unexpected content type",
                 ));
             }
@@ -1053,6 +1067,27 @@ fn status_error<R>(
 
 fn safe_body(body: &[u8], redactor: &Redactor) -> SafeBody {
     SafeBody::new(&String::from_utf8_lossy(body), redactor)
+}
+
+/// Builds the body of a decode error, summarizing it for binary endpoints so
+/// raw payload bytes never reach a diagnostic (#411).
+fn error_body(
+    expected: ExpectedContentType,
+    body: &[u8],
+    content_type: Option<&str>,
+    redactor: &Redactor,
+) -> SafeBody {
+    if !expected.is_binary() {
+        return safe_body(body, redactor);
+    }
+    let summary = match content_type {
+        Some(content_type) => format!(
+            "<binary body omitted: {} bytes, content-type {content_type}>",
+            body.len()
+        ),
+        None => format!("<binary body omitted: {} bytes>", body.len()),
+    };
+    SafeBody::new(&summary, redactor)
 }
 
 #[cfg(test)]

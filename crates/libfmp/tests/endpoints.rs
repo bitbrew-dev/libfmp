@@ -268,7 +268,7 @@ async fn binary_response_equality_includes_bytes_and_exact_content_metadata() {
 #[tokio::test]
 async fn binary_contract_rejects_missing_and_wrong_content_types() {
     const BINARY_TYPE: &str = "application/octet-stream";
-    const BINARY_BYTES: &[u8] = b"future-binary-response";
+    const BINARY_BYTES: &[u8] = b"future-binary-response\x00";
     let endpoint: EndpointSpec<(), BinaryBody> = EndpointSpec::get_binary(
         "binary-contract-test",
         "future-download",
@@ -322,7 +322,8 @@ async fn unexpected_binary_content_has_bounded_token_safe_diagnostics() {
     let diagnostic = format!("{error:?} {error}");
 
     assert_eq!(error.category(), ErrorCategory::Decode);
-    assert!(safe_body.is_truncated());
+    assert!(!safe_body.is_truncated());
+    assert!(safe_body.as_str().starts_with("<binary body omitted: "));
     assert!(safe_body.as_str().len() <= MAX_SAFE_BODY_BYTES);
     assert!(!diagnostic.contains(AUTH_SECRET));
     assert!(!diagnostic.contains(BODY_SECRET));
