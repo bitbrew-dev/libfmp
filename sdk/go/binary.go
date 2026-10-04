@@ -1,6 +1,7 @@
 package fmp
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"strings"
@@ -32,7 +33,10 @@ func (p BinaryPayload) Format(f fmt.State, _ rune) {
 
 // getBinary issues one GET for a logical endpoint and returns the raw body
 // when the response carries one of the expected media types, compared
-// case-insensitively without parameters. endpointID is the registry id
+// case-insensitively without parameters, or when the body opens with the
+// signature of one of them (FMP has labeled real workbooks as JSON, #411).
+// A JSON-labeled provider message keeps its provider-message error; every
+// other error summarizes the body instead of echoing its bytes. endpointID is the registry id
 // carried by errors, never a URL. The redirect, timeout, body cap, and
 // no-retry rules of getJSON apply unchanged.
 func (c *Client) getBinary(ctx context.Context, endpointID, relativePath string, query []queryParam,
@@ -57,13 +61,16 @@ func (c *Client) getBinary(ctx context.Context, endpointID, relativePath string,
 	contentType := resp.header.Get("Content-Type")
 	switch {
 	case contentType == "":
-		return BinaryPayload{}, decodeError(endpointID, resp.status, c.safeBody(resp.body),
+		return BinaryPayload{}, decodeError(endpointID, resp.status, c.binaryErrorBody(resp.body, ""),
 			"successful response omitted its content type", nil)
 	case !visibleHeaderText(contentType):
-		return BinaryPayload{}, decodeError(endpointID, resp.status, c.safeBody(resp.body),
+		return BinaryPayload{}, decodeError(endpointID, resp.status, c.binaryErrorBody(resp.body, ""),
 			"successful response used an invalid content type", nil)
-	case !matchesMediaType(contentType, expectedContentTypes):
-		return BinaryPayload{}, decodeError(endpointID, resp.status, c.safeBody(resp.body),
+	case !matchesMediaType(contentType, expectedContentTypes) && !matchesSignature(resp.body, expectedContentTypes):
+		if validJSONMediaType(contentType) && isProviderMessage(resp.body) {
+			return BinaryPayload{}, providerMessageError(endpointID, resp.status, c.safeBody(resp.body))
+		}
+		return BinaryPayload{}, decodeError(endpointID, resp.status, c.binaryErrorBody(resp.body, contentType),
 			"successful response used an unexpected content type", nil)
 	}
 	disposition := resp.header.Get("Content-Disposition")
@@ -86,4 +93,32 @@ func matchesMediaType(contentType string, expected []string) bool {
 		}
 	}
 	return false
+}
+
+var zipMagic = []byte("PK\x03\x04")
+
+// binarySignatures maps binary media types to the magic bytes their bodies
+// start with. Types without an entry are never sniffed.
+var binarySignatures = map[string][]byte{
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": zipMagic,
+	"application/zip": zipMagic,
+}
+
+func matchesSignature(body []byte, expected []string) bool {
+	for _, candidate := range expected {
+		if magic, ok := binarySignatures[strings.ToLower(candidate)]; ok && bytes.HasPrefix(body, magic) {
+			return true
+		}
+	}
+	return false
+}
+
+// binaryErrorBody summarizes a rejected binary body without its bytes.
+func (c *Client) binaryErrorBody(body []byte, contentType string) *SafeBody {
+	summary := fmt.Sprintf("<binary body omitted: %d bytes>", len(body))
+	if contentType != "" {
+		summary = fmt.Sprintf("<binary body omitted: %d bytes, content-type %s>", len(body), contentType)
+	}
+	safe := NewSafeBody(summary, c.redactor)
+	return &safe
 }
