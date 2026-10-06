@@ -6,6 +6,6 @@ package fmp
 // Cargo.toml). scripts/set-version.sh rewrites it at release time and the
 // release workflow tags sdk/go/v<Version> at the release commit, so it must
 // never be edited by hand; version_test.go fails when it drifts.
-const Version = "1.3.2"
+const Version = "1.4.0"
 
 const defaultUserAgent = "libfmp-go/" + Version

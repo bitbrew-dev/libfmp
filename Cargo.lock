@@ -238,7 +238,7 @@ checksum = "d45db016d36b838f563236e9193d0ee6ce38f3f68b6c94e914b4929c96bbb890"
 
 [[package]]
 name = "fmp-py"
-version = "1.3.2"
+version = "1.4.0"
 dependencies = [
  "chrono",
  "http",
@@ -252,7 +252,7 @@ dependencies = [
 
 [[package]]
 name = "fmp-py-gen"
-version = "1.3.2"
+version = "1.4.0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -728,7 +728,7 @@ checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
 name = "libfmp"
-version = "1.3.2"
+version = "1.4.0"
 dependencies = [
  "bytes",
  "chrono",
