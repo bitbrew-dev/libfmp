@@ -16,7 +16,7 @@ pub mod responses;
 pub mod transport;
 pub mod types;
 
-pub use client::{Client, ClientBuilder};
+pub use client::{Client, ClientBuilder, Response};
 pub use error::{Error, Result};
 
 pub use bytes;
