@@ -9,7 +9,7 @@
 //! module for both), renders user-defined bases as `builtins.<Base>`, and has
 //! no way to declare the structured attributes, hence the local macro.
 
-use std::fmt;
+use std::{collections::BTreeMap, fmt};
 
 use pyo3::{
     create_exception,
@@ -75,6 +75,27 @@ static ERROR_ATTRIBUTES: &[MemberInfo] = &[
         name: "decode_kind",
         r#type: <Option<String> as PyStubType>::type_output,
         doc: "Why a JSON response failed to decode: `\"syntax\"`, `\"null\"`, `\"missing_member\"`, `\"wrong_type\"`, or `\"invalid_value\"`.",
+        default: None,
+        deprecated: None,
+    },
+    MemberInfo {
+        name: "retry_after",
+        r#type: <Option<f64> as PyStubType>::type_output,
+        doc: "Seconds to wait before retrying, from `Retry-After` (delta-seconds or HTTP-date; a past date is `0.0`), when sent.",
+        default: None,
+        deprecated: None,
+    },
+    MemberInfo {
+        name: "headers",
+        r#type: <Option<BTreeMap<String, String>> as PyStubType>::type_output,
+        doc: "The allowlisted response headers (`retry-after`, `x-proxy-*`, `x-ratelimit-*`), lowercase and redacted; `None` when none were sent.",
+        default: None,
+        deprecated: None,
+    },
+    MemberInfo {
+        name: "proxy_error",
+        r#type: <Option<String> as PyStubType>::type_output,
+        doc: "The `X-Proxy-Error` reason a proxy such as valet sent, for example `\"rate_limited\"`.",
         default: None,
         deprecated: None,
     },
@@ -204,6 +225,9 @@ fn set_validation_attributes(exception: &Bound<'_, PyBaseException>) -> PyResult
     exception.setattr("body_truncated", py.None())?;
     exception.setattr("decode_path", py.None())?;
     exception.setattr("decode_kind", py.None())?;
+    exception.setattr("retry_after", py.None())?;
+    exception.setattr("headers", py.None())?;
+    exception.setattr("proxy_error", py.None())?;
     Ok(())
 }
 
@@ -226,6 +250,22 @@ fn set_error_attributes(
             .decode_kind()
             .map(libfmp::error::DecodeErrorKind::as_str),
     )?;
+    exception.setattr(
+        "retry_after",
+        error.retry_after().map(|delay| delay.as_secs_f64()),
+    )?;
+    let headers = error.headers();
+    exception.setattr(
+        "headers",
+        (!headers.is_empty()).then(|| {
+            let mut retained = BTreeMap::new();
+            for (name, value) in headers.iter() {
+                retained.entry(name).or_insert(value);
+            }
+            retained
+        }),
+    )?;
+    exception.setattr("proxy_error", error.proxy_error())?;
     Ok(())
 }
 
@@ -244,6 +284,9 @@ pub(crate) fn register(module: &Bound<'_, PyModule>) -> PyResult<()> {
     base.setattr("body_truncated", py.None())?;
     base.setattr("decode_path", py.None())?;
     base.setattr("decode_kind", py.None())?;
+    base.setattr("retry_after", py.None())?;
+    base.setattr("headers", py.None())?;
+    base.setattr("proxy_error", py.None())?;
 
     py.get_type::<FmpValidationError>()
         .setattr("category", "validation")?;

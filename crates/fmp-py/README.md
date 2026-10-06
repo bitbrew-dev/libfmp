@@ -152,7 +152,7 @@ package root):
 
 | Exception | Raised when |
 |-----------|-------------|
-| `FmpError` | base class; carries `category`, `endpoint`, `status`, `body`, `body_truncated`, `decode_path`, `decode_kind` |
+| `FmpError` | base class; carries `category`, `endpoint`, `status`, `body`, `body_truncated`, `decode_path`, `decode_kind`, `retry_after`, `headers`, `proxy_error` |
 | `FmpConfigError` | the client cannot be built (missing key, bad URL, insecure auth) |
 | `FmpValidationError` | an argument is rejected before the request |
 | `FmpTransportError` | the request never produced a response |
@@ -172,6 +172,14 @@ except FmpStatusError as error:
 
 Bodies attached to errors are redacted before they reach Python: an echoed
 `apikey` query value shows as `[REDACTED]`.
+
+A status error also keeps an allowlisted set of response headers, useful
+behind a rate-limiting proxy: `headers` is a dict of the lowercase
+`retry-after`, `x-proxy-*` and `x-ratelimit-*` headers (or `None`),
+`retry_after` is the delay in seconds as a float (delta-seconds or HTTP-date,
+a past date is `0.0`), and `proxy_error` is the proxy's `X-Proxy-Error`
+reason, such as `"rate_limited"`. No other header (`Set-Cookie`,
+`Authorization`, ...) is ever stored, and none appears in `str(error)`.
 
 ## Closing a client
 
