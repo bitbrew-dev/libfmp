@@ -76,6 +76,24 @@ class FmpError(builtins.Exception):
         Why a JSON response failed to decode: `"syntax"`, `"null"`, `"missing_member"`, `"wrong_type"`, or `"invalid_value"`.
         """
 
+    @property
+    def retry_after(self) -> typing.Optional[builtins.float]:
+        r"""
+        Seconds to wait before retrying, from `Retry-After` (delta-seconds or HTTP-date; a past date is `0.0`), when sent.
+        """
+
+    @property
+    def headers(self) -> typing.Optional[builtins.dict[builtins.str, builtins.str]]:
+        r"""
+        The allowlisted response headers (`retry-after`, `x-proxy-*`, `x-ratelimit-*`), lowercase and redacted; `None` when none were sent.
+        """
+
+    @property
+    def proxy_error(self) -> typing.Optional[builtins.str]:
+        r"""
+        The `X-Proxy-Error` reason a proxy such as valet sent, for example `"rate_limited"`.
+        """
+
 
 class FmpStatusError(FmpError):
     r"""

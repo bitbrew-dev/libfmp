@@ -677,7 +677,10 @@ def check_error_contract(client: FmpClient) -> None:
         endpoint: str | None = error.endpoint
         body: str | None = error.body
         body_truncated: bool | None = error.body_truncated
-        _ = (status, endpoint, body, body_truncated)
+        retry_after: float | None = error.retry_after
+        headers: dict[str, str] | None = error.headers
+        proxy_error: str | None = error.proxy_error
+        _ = (status, endpoint, body, body_truncated, retry_after, headers, proxy_error)
     except FmpValidationError as error:
         category: str | None = error.category
         _ = category

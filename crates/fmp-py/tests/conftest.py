@@ -96,15 +96,16 @@ def _errors_namespace() -> SimpleNamespace:
 
 @dataclass(frozen=True)
 class Route:
-    """One canned response: HTTP status, body, and content type.
+    """One canned response: HTTP status, body, content type, and extra headers.
 
     ``body`` is sent verbatim when it is ``bytes``; any other value is JSON
-    encoded.
+    encoded. ``headers`` are sent in order after the content type.
     """
 
     body: Any = field(default_factory=list)
     status: int = 200
     content_type: str = JSON_CONTENT_TYPE
+    headers: tuple[tuple[str, str], ...] = ()
 
     def payload(self) -> bytes:
         """Return the encoded response body."""
@@ -157,9 +158,12 @@ class FixtureServer:
         *,
         status: int = 200,
         content_type: str = JSON_CONTENT_TYPE,
+        headers: tuple[tuple[str, str], ...] = (),
     ) -> Route:
         """Register the response for ``path`` and return the stored route."""
-        stored = Route(body=[] if body is None else body, status=status, content_type=content_type)
+        stored = Route(
+            body=[] if body is None else body, status=status, content_type=content_type, headers=headers
+        )
         self.routes[path] = stored
         return stored
 
@@ -206,6 +210,8 @@ class FixtureServer:
                 payload = route.payload()
                 self.send_response(route.status)
                 self.send_header("Content-Type", route.content_type)
+                for name, value in route.headers:
+                    self.send_header(name, value)
                 self.send_header("Content-Length", str(len(payload)))
                 self.end_headers()
                 self.wfile.write(payload)
