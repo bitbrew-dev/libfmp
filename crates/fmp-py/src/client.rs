@@ -17,6 +17,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::{
     errors::to_py_error,
+    response_hook,
     runtime::{self, ClientHandle},
 };
 
@@ -194,6 +195,18 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// non-loopback HTTP requires `danger_allow_insecure_authentication=True`.
 /// Redirects are either disabled or restricted to the same origin.
 ///
+/// `on_response`, when given, is called as `on_response(endpoint_id, status,
+/// headers)` after every successful response, for every namespace method, for
+/// example `("quote-short", 200, {"x-proxy-cache": "HIT",
+/// "x-proxy-daily-remaining": "42"})`. `headers` holds only the allowlisted
+/// response headers (`retry-after`, `x-proxy-*`, `x-ratelimit-*`), lowercase
+/// and redacted, first value winning for a repeated name, the same as an
+/// error's `headers`, but `{}` rather than `None` when none were sent. It runs
+/// on the calling thread, with the GIL, after the body decoded and before the
+/// method returns, so it is safe to use from several threads. It is never
+/// called for errors, which carry their own `headers`. If it raises, the
+/// method raises that exception and its decoded data is discarded.
+///
 /// `close()` releases the client's pooled connections; afterwards every call,
 /// including through a namespace fetched before the close, raises
 /// `FmpConfigError`. Closing twice is a no-op, and `with FmpClient(...) as
@@ -208,7 +221,7 @@ pub(crate) struct FmpClient {
 #[pymethods]
 impl FmpClient {
     #[new]
-    #[pyo3(signature = (*, token=None, base_url=None, path_prefix=None, auth_mode=None, auth_name=None, auth_prefix=None, headers=None, timeout=None, connect_timeout=None, max_response_body_bytes=None, danger_allow_insecure_authentication=false, follow_redirects=None))]
+    #[pyo3(signature = (*, token=None, base_url=None, path_prefix=None, auth_mode=None, auth_name=None, auth_prefix=None, headers=None, timeout=None, connect_timeout=None, max_response_body_bytes=None, danger_allow_insecure_authentication=false, follow_redirects=None, on_response=None))]
     #[allow(clippy::too_many_arguments)]
     fn new(
         token: Option<String>,
@@ -226,6 +239,8 @@ impl FmpClient {
         max_response_body_bytes: Option<Bound<'_, PyInt>>,
         danger_allow_insecure_authentication: bool,
         follow_redirects: Option<bool>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Callable[[builtins.str, builtins.int, builtins.dict[builtins.str, builtins.str]], None]]", imports = ("builtins", "typing")))]
+        on_response: Option<Bound<'_, PyAny>>,
     ) -> PyResult<Self> {
         let auth = authentication(auth_mode, token, auth_name, auth_prefix)?;
         let mut builder = ClientBuilder::default().authentication(auth);
@@ -262,12 +277,22 @@ impl FmpClient {
             });
         }
 
+        let on_response = on_response.filter(|callback| !callback.is_none());
+        if let Some(callback) = &on_response {
+            if !callback.is_callable() {
+                return Err(invalid_configuration(
+                    "on_response must be callable or None",
+                ));
+            }
+            builder = builder.on_response(response_hook::record);
+        }
+
         builder
             .clone()
             .build()
             .map_err(|error| build_error(auth_mode, error))?;
         Ok(Self {
-            builder: ClientHandle::new(builder),
+            builder: ClientHandle::new(builder, on_response.map(Bound::unbind)),
         })
     }
 

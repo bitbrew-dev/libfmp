@@ -11,6 +11,7 @@ mod facade_domains;
 mod models;
 mod namespaces;
 mod registration;
+mod response_hook;
 mod runtime;
 mod secrets;
 
