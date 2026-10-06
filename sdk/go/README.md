@@ -75,6 +75,30 @@ append the secret as the last query pair of every request. `WithBaseURL` and
 `WithPathPrefix` route the client through a proxy; `WithHTTPClient` injects a
 caller-owned `*http.Client` for tests and custom transports.
 
+### Using a proxy
+
+A proxy that issues its own keys and forwards to FMP, such as
+[valet](https://valet.bitbrew.app), needs only `FMP_API_KEY=vk_...` and
+`FMP_BASE_URL=https://valet.bitbrew.app/fmp` in the environment:
+
+```go
+client, err := fmp.NewClientFromEnv(fmp.WithTimeout(20 * time.Second))
+if err != nil {
+	return err
+}
+```
+
+`NewClientFromEnv` sends the key in the `apikey` header and keeps the base
+URL's path, so the quote endpoint goes to
+`https://valet.bitbrew.app/fmp/stable/quote`. Without `FMP_BASE_URL` it
+targets the FMP origin; without `FMP_API_KEY` it returns
+`ConfigurationKindMissingCredential`. Options are applied after the
+environment, so `WithBaseURL` wins, but `WithAuthentication` conflicts with
+the environment key (use `NewClient` to pick another mode). Plaintext
+`http://` to a non-loopback host still needs
+`WithDangerAllowInsecureAuthentication`. `NewClient` never reads either
+variable.
+
 `client.CloseIdleConnections()` closes the idle keep-alive connections of the
 transport `NewClient` built; the client stays usable. It is a no-op with
 `WithHTTPClient`, whose transport stays with the caller. There is no `Close`:
@@ -113,11 +137,13 @@ if err != nil {
 }
 ```
 
-The environment names match the Rust crate's live opt-in tests:
+The environment names match the Rust crate (`Client::from_env`) and its live
+opt-in tests:
 
 | Variable | Read by |
 | --- | --- |
-| `FMP_API_KEY` | `FMPHeaderFromEnv` and `APIKeyFromEnv` |
+| `FMP_API_KEY` | `FMPHeaderFromEnv`, `APIKeyFromEnv`, and `NewClientFromEnv` |
+| `FMP_BASE_URL` | `BaseURLFromEnv` and `NewClientFromEnv` |
 | `FMP_LIVE_TESTS` | live tests (`live_test.go`), which run only when it is `1` |
 | `FMP_PROXY_BASE_URL`, `FMP_PROXY_TOKEN`, `FMP_PROXY_PATH_PREFIX`, `FMP_TENANT` | live tests against a proxy |
 
