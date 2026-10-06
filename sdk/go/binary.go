@@ -68,7 +68,7 @@ func (c *Client) getBinary(ctx context.Context, endpointID, relativePath string,
 			"successful response used an invalid content type", nil)
 	case !matchesMediaType(contentType, expectedContentTypes) && !matchesSignature(resp.body, expectedContentTypes):
 		if validJSONMediaType(contentType) && isProviderMessage(resp.body) {
-			return BinaryPayload{}, providerMessageError(endpointID, resp.status, c.safeBody(resp.body))
+			return BinaryPayload{}, c.providerMessageError(endpointID, resp)
 		}
 		return BinaryPayload{}, decodeError(endpointID, resp.status, c.binaryErrorBody(resp.body, contentType),
 			"successful response used an unexpected content type", nil)

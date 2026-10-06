@@ -4,6 +4,7 @@ import (
 	"encoding/json/jsontext"
 	"errors"
 	"fmt"
+	"net/http"
 	"slices"
 	"sort"
 	"strings"
@@ -154,6 +155,11 @@ func (k DecodeKind) description() string {
 // pointer of the offending member, such as "/37/beta", and names array
 // indexes and member names only, never a member value. Path is "" for a
 // failure at the document root and on every non-decode error.
+//
+// Headers holds the allowlisted response headers of a Status error (see
+// IsRetainedHeaderName), redacted and bounded; it is nil when none were
+// received and never appears in the Error text. RetryAfter and ProxyError
+// read it.
 type Error struct {
 	Category          ErrorCategory
 	Message           string
@@ -163,6 +169,7 @@ type Error struct {
 	ConfigurationKind ConfigurationKind
 	Path              string
 	DecodeKind        DecodeKind
+	Headers           http.Header
 	member            string
 	memberPath        jsontext.Pointer
 	memberKind        DecodeKind

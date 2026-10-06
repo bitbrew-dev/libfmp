@@ -195,7 +195,11 @@ when FMP answers a success status with its own error message (the plain-text
 of the documented payload. A `Decode` error also carries `Path`, the
 JSON pointer of the failing member (`/37/beta`), and `DecodeKind`, the coarse
 reason (`DecodeKindNull`, `DecodeKindWrongType`, ...); neither ever includes
-the member value. The client never retries, wraps every
+the member value. A `Status` error also keeps `Headers`, only the allowlisted
+`Retry-After`, `X-Proxy-*` and `X-RateLimit-*` response headers (redacted,
+nil when none arrived): `RetryAfter()` returns the delay (delta-seconds or
+HTTP-date, a past date is zero) and `ProxyError()` the proxy's
+`X-Proxy-Error` reason. The client never retries, wraps every
 transport failure before it escapes, and formats `Authentication`, `Client`,
 and `Error` without any secret value, so an error is safe to log.
 

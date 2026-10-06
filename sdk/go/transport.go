@@ -239,7 +239,15 @@ func causeAddresses(err error) []string {
 }
 
 func (c *Client) statusError(endpointID string, resp *bufferedResponse) *Error {
-	return statusError(endpointID, resp.status, c.safeBody(resp.body))
+	err := statusError(endpointID, resp.status, c.safeBody(resp.body))
+	err.Headers = retainedHeaders(resp.header, c.redactor)
+	return err
+}
+
+func (c *Client) providerMessageError(endpointID string, resp *bufferedResponse) *Error {
+	err := providerMessageError(endpointID, resp.status, c.safeBody(resp.body))
+	err.Headers = retainedHeaders(resp.header, c.redactor)
+	return err
 }
 
 // applyQueryAuth strips any pair carrying the protected query name and
