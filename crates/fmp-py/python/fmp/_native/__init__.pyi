@@ -171,6 +171,14 @@ class FmpClient:
     both selects no auth, which is valid only with a custom base URL: against
     the default host the constructor raises `FmpConfigError` naming
     `FMP_API_KEY`.
+    When `base_url` is omitted, the `FMP_BASE_URL` environment variable is
+    read the same way, so a proxy such as valet needs only `FMP_API_KEY=vk_...`
+    and `FMP_BASE_URL=https://valet.bitbrew.app/fmp`: the key goes in the
+    `apikey` header and the quote endpoint resolves to
+    `https://valet.bitbrew.app/fmp/stable/quote`. An explicit `base_url`
+    always wins, and without either the client targets
+    `https://financialmodelingprep.com`. The variable only replaces the base
+    URL; it never selects or relaxes authentication.
     `timeout` and `connect_timeout` are positive finite numbers of seconds.
     When `timeout` is omitted, `client.bulk` methods may take up to 600
     seconds and every other method up to 30; a given `timeout` applies to
