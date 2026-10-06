@@ -93,4 +93,11 @@ let rows = client.quote_short(Ticker::new("AAPL")?).await?;
 # }
 ```
 
+A status error keeps an allowlisted set of response headers: `Retry-After`,
+`X-Proxy-*` and `X-RateLimit-*`. `err.retry_after()` returns the delay as a
+`Duration` (delta-seconds or HTTP-date, a past date is zero),
+`err.proxy_error()` returns the proxy's `X-Proxy-Error` reason, and
+`err.headers()` lists every retained header. No other header is stored, and
+headers never appear in the error's `Display` text.
+
 Rust 1.96 or newer is supported. The repository pins Rust 1.96.0 for development and release validation. This project is available under the [MIT License](LICENSE).
