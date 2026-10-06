@@ -21,7 +21,10 @@ use url::Url;
 
 use crate::{
     Result, VERSION,
-    config::{Authentication, DEFAULT_BASE_URL, DEFAULT_PATH_PREFIX, RedirectPolicy},
+    config::{
+        Authentication, DEFAULT_BASE_URL, DEFAULT_PATH_PREFIX, RedirectPolicy,
+        fmp_api_key_from_env, fmp_base_url_from_env,
+    },
     endpoints::{
         DecodeFailure, ExpectedContentType, QueryEncoder, ResponseMetadata, is_provider_message,
     },
@@ -143,6 +146,69 @@ impl fmt::Debug for ClientBuilder {
 }
 
 impl ClientBuilder {
+    /// Starts a builder from the `FMP_API_KEY` and `FMP_BASE_URL` process
+    /// environment variables, for example to route through a proxy that
+    /// issues its own keys.
+    ///
+    /// The key becomes [`Authentication::FmpHeader`] (the `apikey` header);
+    /// the base URL, when set, replaces [`DEFAULT_BASE_URL`] and keeps its
+    /// path, so `https://valet.bitbrew.app/fmp` sends the quote endpoint to
+    /// `https://valet.bitbrew.app/fmp/stable/quote`. The path prefix stays
+    /// [`DEFAULT_PATH_PREFIX`]. Both values are trimmed, and an empty or
+    /// whitespace-only value counts as unset (see
+    /// [`crate::config::fmp_api_key_from_env`] and
+    /// [`crate::config::fmp_base_url_from_env`]).
+    ///
+    /// This is the only constructor that reads the environment:
+    /// [`Client::builder`] never does. The returned builder already has its
+    /// authentication selected, so calling [`Self::authentication`] on it
+    /// fails at [`Self::build`] with
+    /// [`ConfigurationErrorKind::ConflictingAuthentication`]; every other
+    /// setter, including [`Self::base_url`], still applies.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`ConfigurationErrorKind::MissingCredential`] when
+    /// `FMP_API_KEY` is unset or blank. An `FMP_BASE_URL` that is not an
+    /// absolute HTTP(S) URL fails at [`Self::build`] with
+    /// [`ConfigurationErrorKind::InvalidBaseUrl`] or
+    /// [`ConfigurationErrorKind::UnsafeBaseUrl`], and a plaintext
+    /// non-loopback `http://` URL with
+    /// [`ConfigurationErrorKind::InsecureAuthentication`] unless
+    /// [`Self::danger_allow_insecure_authentication`] is set.
+    ///
+    /// ```no_run
+    /// use std::time::Duration;
+    ///
+    /// use libfmp::ClientBuilder;
+    ///
+    /// # fn main() -> libfmp::Result<()> {
+    /// // FMP_API_KEY=vk_... FMP_BASE_URL=https://valet.bitbrew.app/fmp
+    /// let client = ClientBuilder::from_env()?
+    ///     .timeout(Duration::from_secs(10))
+    ///     .build()?;
+    /// # let _ = client;
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn from_env() -> Result<Self> {
+        Self::from_env_values(fmp_api_key_from_env(), fmp_base_url_from_env())
+    }
+
+    fn from_env_values(api_key: Option<String>, base_url: Option<String>) -> Result<Self> {
+        let api_key = api_key.ok_or_else(|| {
+            Error::configuration_with_kind(
+                ConfigurationErrorKind::MissingCredential,
+                "FMP_API_KEY is not set",
+            )
+        })?;
+        let builder = Self::default().authentication(Authentication::fmp_header(api_key));
+        Ok(match base_url {
+            Some(base_url) => builder.base_url(base_url),
+            None => builder,
+        })
+    }
+
     /// Sets an absolute HTTP(S) base URL. Existing base path segments are kept.
     pub fn base_url(mut self, base_url: impl Into<String>) -> Self {
         self.base_url = base_url.into();
@@ -358,8 +424,18 @@ impl fmt::Debug for Client {
 
 impl Client {
     /// Starts a client builder with the direct FMP stable API defaults.
+    ///
+    /// The builder never reads the environment; see [`Self::from_env`].
     pub fn builder() -> ClientBuilder {
         ClientBuilder::default()
+    }
+
+    /// Builds a client from `FMP_API_KEY` and `FMP_BASE_URL`.
+    ///
+    /// Shorthand for `ClientBuilder::from_env()?.build()`; see
+    /// [`ClientBuilder::from_env`] for the rules and errors.
+    pub fn from_env() -> Result<Self> {
+        ClientBuilder::from_env()?.build()
     }
 
     /// Executes a typed endpoint using only transport-owned default headers.
@@ -1171,6 +1247,94 @@ mod tests {
         assert_eq!(
             url.as_str(),
             "https://example.test/gateway/stable/quote-short"
+        );
+    }
+
+    fn env_client(api_key: Option<&str>, base_url: Option<&str>) -> Result<Client> {
+        ClientBuilder::from_env_values(api_key.map(str::to_owned), base_url.map(str::to_owned))?
+            .build()
+    }
+
+    #[test]
+    fn env_constructor_targets_a_proxy_base_with_the_apikey_header() {
+        let client = env_client(Some("vk_example"), Some("https://valet.bitbrew.app/fmp")).unwrap();
+        let url =
+            build_endpoint_url(&client.inner.base_url, &client.inner.path_prefix, "quote").unwrap();
+        assert_eq!(url.as_str(), "https://valet.bitbrew.app/fmp/stable/quote");
+        let (name, value) = client.inner.auth.header.as_ref().unwrap();
+        assert_eq!(name.as_str(), "apikey");
+        assert_eq!(value, "vk_example");
+        assert!(client.inner.auth.query.is_none());
+    }
+
+    #[test]
+    fn env_constructor_without_a_base_url_keeps_the_fmp_origin() {
+        let client = env_client(Some("vk_example"), None).unwrap();
+        let url =
+            build_endpoint_url(&client.inner.base_url, &client.inner.path_prefix, "quote").unwrap();
+        assert_eq!(
+            url.as_str(),
+            "https://financialmodelingprep.com/stable/quote"
+        );
+    }
+
+    #[test]
+    fn env_constructor_reports_typed_configuration_errors() {
+        for (api_key, base_url, kind) in [
+            (None, None, ConfigurationErrorKind::MissingCredential),
+            (
+                None,
+                Some("https://valet.bitbrew.app/fmp"),
+                ConfigurationErrorKind::MissingCredential,
+            ),
+            (
+                Some("vk_example"),
+                Some("valet.bitbrew.app/fmp"),
+                ConfigurationErrorKind::InvalidBaseUrl,
+            ),
+            (
+                Some("vk_example"),
+                Some("https://user:pass@valet.bitbrew.app/fmp"),
+                ConfigurationErrorKind::UnsafeBaseUrl,
+            ),
+            (
+                Some("vk_example"),
+                Some("http://example.test/fmp"),
+                ConfigurationErrorKind::InsecureAuthentication,
+            ),
+        ] {
+            let error = env_client(api_key, base_url).unwrap_err();
+            assert_eq!(error.configuration_kind(), Some(kind));
+            assert!(!error.to_string().contains("vk_example"));
+        }
+    }
+
+    #[test]
+    fn env_constructor_keeps_the_loopback_and_dangerous_http_rules() {
+        assert!(env_client(Some("vk_example"), Some("http://127.0.0.1:8080/fmp")).is_ok());
+        let builder = ClientBuilder::from_env_values(
+            Some("vk_example".to_owned()),
+            Some("http://example.test/fmp".to_owned()),
+        )
+        .unwrap();
+        assert!(
+            builder
+                .danger_allow_insecure_authentication(true)
+                .build()
+                .is_ok()
+        );
+    }
+
+    #[test]
+    fn env_constructor_rejects_a_second_authentication() {
+        let error = ClientBuilder::from_env_values(Some("vk_example".to_owned()), None)
+            .unwrap()
+            .authentication(Authentication::bearer("other"))
+            .build()
+            .unwrap_err();
+        assert_eq!(
+            error.configuration_kind(),
+            Some(ConfigurationErrorKind::ConflictingAuthentication)
         );
     }
 

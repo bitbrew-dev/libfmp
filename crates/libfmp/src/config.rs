@@ -32,7 +32,40 @@ pub fn fmp_api_key_from_env() -> Option<String> {
     fmp_api_key_from_value(std::env::var(FMP_API_KEY_ENV).ok().as_deref())
 }
 
+/// The process environment variable that [`fmp_base_url_from_env`] reads.
+pub const FMP_BASE_URL_ENV: &str = "FMP_BASE_URL";
+
+/// Reads a base URL override, such as a proxy origin, from the
+/// `FMP_BASE_URL` process environment variable.
+///
+/// Surrounding whitespace is trimmed; an unset, empty, or whitespace-only
+/// value yields `None`. The value is not validated here:
+/// [`crate::ClientBuilder::build`] rejects anything that is not an absolute
+/// HTTP(S) URL. [`crate::ClientBuilder::from_env`] applies it together with
+/// the key.
+///
+/// ```
+/// use libfmp::config::{FMP_BASE_URL_ENV, fmp_base_url_from_env};
+///
+/// let expected = std::env::var(FMP_BASE_URL_ENV)
+///     .ok()
+///     .map(|value| value.trim().to_owned())
+///     .filter(|value| !value.is_empty());
+/// assert_eq!(fmp_base_url_from_env(), expected);
+/// ```
+pub fn fmp_base_url_from_env() -> Option<String> {
+    fmp_base_url_from_value(std::env::var(FMP_BASE_URL_ENV).ok().as_deref())
+}
+
 fn fmp_api_key_from_value(value: Option<&str>) -> Option<String> {
+    trimmed_non_empty(value)
+}
+
+fn fmp_base_url_from_value(value: Option<&str>) -> Option<String> {
+    trimmed_non_empty(value)
+}
+
+fn trimmed_non_empty(value: Option<&str>) -> Option<String> {
     let trimmed = value?.trim();
     if trimmed.is_empty() {
         None
@@ -196,6 +229,21 @@ mod tests {
         assert_eq!(
             Authentication::fmp_header_from_env(),
             expected.map(Authentication::fmp_header)
+        );
+        assert_eq!(
+            fmp_base_url_from_env(),
+            fmp_base_url_from_value(std::env::var(FMP_BASE_URL_ENV).ok().as_deref())
+        );
+    }
+
+    #[test]
+    fn env_base_url_is_trimmed_and_absent_when_blank() {
+        assert_eq!(fmp_base_url_from_value(None), None);
+        assert_eq!(fmp_base_url_from_value(Some("")), None);
+        assert_eq!(fmp_base_url_from_value(Some(" \t\n")), None);
+        assert_eq!(
+            fmp_base_url_from_value(Some("  https://valet.bitbrew.app/fmp\n")).as_deref(),
+            Some("https://valet.bitbrew.app/fmp")
         );
     }
 }
