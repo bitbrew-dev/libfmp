@@ -357,7 +357,7 @@ func (c *Client) getJSON(ctx context.Context, endpointID, relativePath string, q
 			"successful response used an unexpected content type", nil)
 	}
 	if isProviderMessage(resp.body) {
-		return providerMessageError(endpointID, resp.status, c.safeBody(resp.body))
+		return c.providerMessageError(endpointID, resp)
 	}
 	if err := json.Unmarshal(resp.body, out); err != nil {
 		decoded := decodeError(endpointID, resp.status, c.safeBody(resp.body),
