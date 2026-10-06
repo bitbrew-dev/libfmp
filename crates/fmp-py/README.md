@@ -23,7 +23,9 @@ print(rows[0].symbol, rows[0].price)
 omitted (unset, empty, or whitespace-only counts as absent); an explicit
 `token=...` always wins, and `auth_mode="none"` ignores the variable. With
 neither a token nor the variable, the default host raises `FmpConfigError`
-naming `FMP_API_KEY`, while a custom `base_url` selects no auth.
+naming `FMP_API_KEY`, while a custom `base_url` selects no auth. When
+`base_url` is omitted, `FMP_BASE_URL` is read the same way (see
+[Using a proxy](#using-a-proxy)).
 
 `FmpClient` is synchronous: each call releases the Python GIL while the async
 Rust transport waits, so threads keep running. A Python async facade is not
@@ -192,6 +194,39 @@ runtime is shared by every client and stays up.
 A client that is never closed keeps its pooled connections until the next
 request made through any client after it and its namespaces are
 garbage-collected, or until the process exits.
+
+## Using a proxy
+
+A proxy that issues its own keys and forwards to FMP, such as
+[valet](https://valet.bitbrew.app), needs two environment variables and no
+code change:
+
+```sh
+export FMP_API_KEY=vk_...
+export FMP_BASE_URL=https://valet.bitbrew.app/fmp
+```
+
+```python
+from fmp import FmpClient
+
+client = FmpClient()
+rows = client.quote.short("AAPL")
+```
+
+The key goes in the `apikey` header and the base URL keeps its path, so the
+quote endpoint resolves to `https://valet.bitbrew.app/fmp/stable/quote`.
+The rules:
+
+| Setting | Result |
+| --- | --- |
+| `base_url=...` given | used as is; `FMP_BASE_URL` is ignored |
+| `base_url` omitted, `FMP_BASE_URL` set | the variable (trimmed) is the base URL |
+| neither (or a blank variable) | `https://financialmodelingprep.com` |
+| `auth_mode="none"` | no credential is sent, whichever base URL applies |
+| plaintext `http://` to a non-loopback host with a key | `FmpConfigError` unless `danger_allow_insecure_authentication=True` |
+
+`FMP_BASE_URL` only replaces the base URL; the `token` and `FMP_API_KEY`
+rules above are unchanged.
 
 ## Custom router or proxy
 

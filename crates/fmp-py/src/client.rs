@@ -6,7 +6,7 @@ use std::{sync::Arc, time::Duration};
 
 use libfmp::{
     ClientBuilder,
-    config::{Authentication, RedirectPolicy, fmp_api_key_from_env},
+    config::{Authentication, RedirectPolicy, fmp_api_key_from_env, fmp_base_url_from_env},
     error::ConfigurationErrorKind,
 };
 use pyo3::{
@@ -37,6 +37,12 @@ fn resolve_token(mode: Option<&str>, token: Option<String>) -> Option<String> {
         (Some("none"), None) => None,
         (_, None) => fmp_api_key_from_env(),
     }
+}
+
+/// Resolves the base URL: an explicit `base_url` always wins, otherwise
+/// `FMP_BASE_URL` is used when set, and `None` keeps the default FMP origin.
+fn resolve_base_url(base_url: Option<String>) -> Option<String> {
+    base_url.or_else(fmp_base_url_from_env)
 }
 
 /// Names `FMP_API_KEY` when the default host was left without a credential
@@ -170,6 +176,14 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
 /// both selects no auth, which is valid only with a custom base URL: against
 /// the default host the constructor raises `FmpConfigError` naming
 /// `FMP_API_KEY`.
+/// When `base_url` is omitted, the `FMP_BASE_URL` environment variable is
+/// read the same way, so a proxy such as valet needs only `FMP_API_KEY=vk_...`
+/// and `FMP_BASE_URL=https://valet.bitbrew.app/fmp`: the key goes in the
+/// `apikey` header and the quote endpoint resolves to
+/// `https://valet.bitbrew.app/fmp/stable/quote`. An explicit `base_url`
+/// always wins, and without either the client targets
+/// `https://financialmodelingprep.com`. The variable only replaces the base
+/// URL; it never selects or relaxes authentication.
 /// `timeout` and `connect_timeout` are positive finite numbers of seconds.
 /// When `timeout` is omitted, `client.bulk` methods may take up to 600
 /// seconds and every other method up to 30; a given `timeout` applies to
@@ -216,7 +230,7 @@ impl FmpClient {
         let auth = authentication(auth_mode, token, auth_name, auth_prefix)?;
         let mut builder = ClientBuilder::default().authentication(auth);
 
-        if let Some(base_url) = base_url {
+        if let Some(base_url) = resolve_base_url(base_url) {
             builder = builder.base_url(base_url);
         }
         if let Some(path_prefix) = path_prefix {
