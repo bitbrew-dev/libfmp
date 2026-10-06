@@ -67,6 +67,29 @@ to a non-loopback host is still refused unless the builder opts in with
 `danger_allow_insecure_authentication(true)`. `Client::builder()` itself never
 reads either variable.
 
+To read the proxy's cache status and remaining daily budget on a success, run
+the endpoint spec through `execute_with_metadata`. It returns a `Response`
+with the decoded `data`, the HTTP `status` and the allowlisted, redacted
+`headers` (the same allowlist as status errors, below):
+
+```rust
+use libfmp::{Client, endpoints::quote::{QuoteShortQuery, quote_short}, types::Ticker};
+
+# async fn example() -> Result<(), Box<dyn std::error::Error>> {
+let client = Client::from_env()?;
+let spec = quote_short(QuoteShortQuery::new(Ticker::new("AAPL")?));
+let response = client.execute_with_metadata(&spec).await?;
+let cache = response.headers.get("x-proxy-cache"); // Some("HIT") or Some("MISS")
+let remaining = response.headers.get("x-proxy-daily-remaining");
+# let _ = (response.data, cache, remaining);
+# Ok(())
+# }
+```
+
+Every endpoint method has a public spec function under `libfmp::endpoints`,
+and `execute` returns the same data without the metadata. On failure nothing
+changes: the error already carries its headers.
+
 ## Custom router or proxy
 
 Transport choices do not change endpoint code. A caller can select a custom base URL and path prefix, no auth, FMP header or query auth, bearer auth, custom secret header or query auth, and arbitrary default headers.

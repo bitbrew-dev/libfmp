@@ -401,6 +401,22 @@ pub struct Client {
     inner: Arc<ClientInner>,
 }
 
+/// A decoded success with the HTTP status and allowlisted response headers.
+///
+/// Returned by [`Client::execute_with_metadata`]. `headers` holds only the
+/// names accepted by [`crate::error::is_retained_header_name`], redacted and
+/// bounded exactly like [`Error::headers`].
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive]
+pub struct Response<T> {
+    /// The decoded endpoint data, as [`Client::execute`] returns it.
+    pub data: T,
+    /// The HTTP status of the final (post-redirect) response.
+    pub status: u16,
+    /// The allowlisted, redacted headers of the final response.
+    pub headers: SafeHeaders,
+}
+
 impl fmt::Debug for Client {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         formatter
@@ -443,6 +459,43 @@ impl Client {
     where
         Q: QueryParameters,
     {
+        self.execute_with_metadata(endpoint)
+            .await
+            .map(|response| response.data)
+    }
+
+    /// Executes a typed endpoint and keeps the status and allowlisted headers.
+    ///
+    /// The request, redirects and decoding are exactly those of
+    /// [`Self::execute`]; on success the decoded data comes back with the HTTP
+    /// status and the [`SafeHeaders`] of the final response, filtered by the
+    /// same allowlist as [`Error::headers`] (`retry-after`, `x-proxy-*`,
+    /// `x-ratelimit-*`) and redacted. Errors are unchanged and already carry
+    /// their own headers.
+    ///
+    /// Endpoint spec functions are public, so any endpoint method has a
+    /// metadata form. Reading a proxy's cache status and remaining budget:
+    ///
+    /// ```no_run
+    /// use libfmp::{Client, endpoints::quote::{QuoteQuery, quote}, types::Ticker};
+    ///
+    /// # async fn run() -> libfmp::Result<()> {
+    /// let client = Client::from_env()?;
+    /// let spec = quote(QuoteQuery::new(Ticker::new("AAPL")?));
+    /// let response = client.execute_with_metadata(&spec).await?;
+    /// let cache = response.headers.get("x-proxy-cache");
+    /// let remaining = response.headers.get("x-proxy-daily-remaining");
+    /// println!("{} rows, cache {cache:?}, remaining {remaining:?}", response.data.len());
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub async fn execute_with_metadata<Q, R>(
+        &self,
+        endpoint: &EndpointSpec<Q, R>,
+    ) -> Result<Response<R>>
+    where
+        Q: QueryParameters,
+    {
         self.execute_with_headers(endpoint, &[]).await
     }
 
@@ -454,7 +507,7 @@ impl Client {
         &self,
         endpoint: &EndpointSpec<Q, R>,
         request_headers: &[(&str, &str)],
-    ) -> Result<R>
+    ) -> Result<Response<R>>
     where
         Q: QueryParameters,
     {
@@ -494,7 +547,7 @@ impl Client {
         headers: HeaderMap,
         redactor: &Redactor,
         timeout: Duration,
-    ) -> Result<R> {
+    ) -> Result<Response<R>> {
         for redirect_count in 0..=MAX_REDIRECTS {
             apply_query_auth(&mut url, self.inner.auth.query.as_ref());
             let max_body_bytes = endpoint
@@ -607,6 +660,11 @@ impl Client {
                     response.body_bytes(),
                     ResponseMetadata::new(content_type, content_disposition),
                 )
+                .map(|data| Response {
+                    data,
+                    status: response.status(),
+                    headers: safe_headers(&response, redactor),
+                })
                 .map_err(|failure| match failure {
                     DecodeFailure::Shape { path, kind } => Error::decode(
                         Some(endpoint.id()),
