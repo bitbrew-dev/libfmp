@@ -1,7 +1,15 @@
 //! Stable, transport-independent error and diagnostic safety contracts.
 
-use std::{borrow::Cow, collections::BTreeSet, error::Error as StdError, fmt};
+use std::{
+    borrow::Cow,
+    collections::BTreeSet,
+    error::Error as StdError,
+    fmt,
+    time::{Duration, SystemTime, UNIX_EPOCH},
+};
 
+use chrono::{DateTime, NaiveDateTime};
+use http::HeaderMap;
 use serde::{Deserialize, Deserializer};
 
 use crate::types::{EmptyTickerList, InvalidDateRange, InvalidTemporalValue, StringValueError};
@@ -11,6 +19,13 @@ pub const REDACTED: &str = "[REDACTED]";
 
 /// Maximum UTF-8 byte length retained from a provider response body.
 pub const MAX_SAFE_BODY_BYTES: usize = 4096;
+
+/// Maximum number of response headers retained by [`SafeHeaders`].
+pub const MAX_SAFE_HEADERS: usize = 16;
+
+/// Maximum UTF-8 byte length of a response header value retained by
+/// [`SafeHeaders`]; longer values are dropped, never truncated.
+pub const MAX_SAFE_HEADER_VALUE_BYTES: usize = 256;
 
 /// Why a custom secret header or query name was rejected.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -494,6 +509,104 @@ impl fmt::Debug for SafeBody {
     }
 }
 
+/// Reports whether a response header may be retained for callers.
+///
+/// This is the single allowlist shared by every place that exposes response
+/// headers: `retry-after`, plus every name starting with `x-proxy-` or
+/// `x-ratelimit-`, compared case-insensitively. Everything else, including
+/// `set-cookie`, `authorization` and `apikey`, is never retained.
+pub fn is_retained_header_name(name: &str) -> bool {
+    let name = name.to_ascii_lowercase();
+    name == "retry-after" || name.starts_with("x-proxy-") || name.starts_with("x-ratelimit-")
+}
+
+/// The allowlisted, redacted and bounded response headers kept for callers.
+///
+/// Only names accepted by [`is_retained_header_name`] are kept, lowercased
+/// and in response order. Values that are not visible ASCII or exceed
+/// [`MAX_SAFE_HEADER_VALUE_BYTES`] are dropped, at most [`MAX_SAFE_HEADERS`]
+/// entries are kept, and every value passes through the [`Redactor`].
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SafeHeaders {
+    entries: Box<[(Box<str>, Box<str>)]>,
+}
+
+impl SafeHeaders {
+    /// Keeps the allowlisted headers of a response, redacted and bounded.
+    pub fn from_header_map(headers: &HeaderMap, redactor: &Redactor) -> Self {
+        let entries = headers
+            .iter()
+            .filter(|(name, _)| is_retained_header_name(name.as_str()))
+            .filter_map(|(name, value)| {
+                let value = redactor.redact_header(name.as_str(), value.to_str().ok()?);
+                (value.len() <= MAX_SAFE_HEADER_VALUE_BYTES)
+                    .then(|| (name.as_str().into(), value.into_boxed_str()))
+            })
+            .take(MAX_SAFE_HEADERS)
+            .collect();
+        Self { entries }
+    }
+
+    /// Returns the first retained value for a name, compared case-insensitively.
+    pub fn get(&self, name: &str) -> Option<&str> {
+        self.iter()
+            .find(|(retained, _)| retained.eq_ignore_ascii_case(name))
+            .map(|(_, value)| value)
+    }
+
+    /// Iterates the retained `(lowercase name, value)` pairs in response order.
+    pub fn iter(&self) -> impl Iterator<Item = (&str, &str)> {
+        self.entries
+            .iter()
+            .map(|(name, value)| (name.as_ref(), value.as_ref()))
+    }
+
+    /// Returns the number of retained headers.
+    pub fn len(&self) -> usize {
+        self.entries.len()
+    }
+
+    /// Reports whether no header was retained.
+    pub fn is_empty(&self) -> bool {
+        self.entries.is_empty()
+    }
+
+    /// Returns the `Retry-After` delay relative to now.
+    ///
+    /// See [`SafeHeaders::retry_after_at`].
+    pub fn retry_after(&self) -> Option<Duration> {
+        self.retry_after_at(SystemTime::now())
+    }
+
+    /// Returns the `Retry-After` delay relative to `now`.
+    ///
+    /// Accepts delta-seconds and every HTTP-date form of RFC 9110. A date at
+    /// or before `now` yields `Some(Duration::ZERO)`, meaning retry at once;
+    /// an absent or unparsable value yields `None`.
+    pub fn retry_after_at(&self, now: SystemTime) -> Option<Duration> {
+        let value = self.get("retry-after")?.trim();
+        if !value.is_empty() && value.bytes().all(|byte| byte.is_ascii_digit()) {
+            return Some(Duration::from_secs(value.parse().unwrap_or(u64::MAX)));
+        }
+        let target = parse_http_date(value)?;
+        let now = now.duration_since(UNIX_EPOCH).ok()?;
+        Some(target.saturating_sub(now))
+    }
+}
+
+/// Parses an IMF-fixdate, RFC 850 or asctime HTTP-date as time since the epoch.
+fn parse_http_date(value: &str) -> Option<Duration> {
+    let seconds = DateTime::parse_from_rfc2822(value)
+        .map(|date| date.timestamp())
+        .or_else(|_| {
+            NaiveDateTime::parse_from_str(value, "%A, %d-%b-%y %H:%M:%S GMT")
+                .or_else(|_| NaiveDateTime::parse_from_str(value, "%a %b %e %H:%M:%S %Y"))
+                .map(|date| date.and_utc().timestamp())
+        })
+        .ok()?;
+    Some(Duration::from_secs(u64::try_from(seconds).unwrap_or(0)))
+}
+
 /// The stable error value returned by the Rust client.
 ///
 /// Equality compares every retained field, so tests and callers can match a
@@ -512,6 +625,7 @@ pub struct Error {
     configuration_kind: Option<ConfigurationErrorKind>,
     decode_path: Option<Box<str>>,
     decode_kind: Option<DecodeErrorKind>,
+    headers: SafeHeaders,
 }
 
 impl Error {
@@ -603,7 +717,14 @@ impl Error {
             configuration_kind: None,
             decode_path: None,
             decode_kind: None,
+            headers: SafeHeaders::default(),
         }
+    }
+
+    /// Attaches the allowlisted response headers of a status error.
+    pub(crate) fn with_headers(mut self, headers: SafeHeaders) -> Self {
+        self.headers = headers;
+        self
     }
 
     /// Attaches where and why a JSON response failed to decode.
@@ -667,6 +788,28 @@ impl Error {
     /// Returns the coarse reason a JSON response failed to decode, when known.
     pub fn decode_kind(&self) -> Option<DecodeErrorKind> {
         self.decode_kind
+    }
+
+    /// Returns the allowlisted response headers, empty when none were kept.
+    ///
+    /// Status errors keep `Retry-After`, `X-Proxy-*` and `X-RateLimit-*`
+    /// (see [`is_retained_header_name`]); no other error carries headers.
+    /// Headers never appear in the [`Display`](fmt::Display) output.
+    pub fn headers(&self) -> &SafeHeaders {
+        &self.headers
+    }
+
+    /// Returns how long to wait before retrying, from `Retry-After`.
+    ///
+    /// See [`SafeHeaders::retry_after_at`] for the accepted forms; a date in
+    /// the past yields `Some(Duration::ZERO)`.
+    pub fn retry_after(&self) -> Option<Duration> {
+        self.headers.retry_after()
+    }
+
+    /// Returns the `X-Proxy-Error` reason a proxy such as valet sent.
+    pub fn proxy_error(&self) -> Option<&str> {
+        self.headers.get("x-proxy-error")
     }
 }
 

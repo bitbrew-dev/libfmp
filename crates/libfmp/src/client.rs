@@ -28,7 +28,7 @@ use crate::{
     endpoints::{
         DecodeFailure, ExpectedContentType, QueryEncoder, ResponseMetadata, is_provider_message,
     },
-    error::{ConfigurationErrorKind, Error, Redactor, SafeBody, SecretString},
+    error::{ConfigurationErrorKind, Error, Redactor, SafeBody, SafeHeaders, SecretString},
     transport::{HttpExecutor, PreparedRequest, ReqwestExecutor, TransportResponse},
 };
 
@@ -580,7 +580,8 @@ impl Client {
                         endpoint.id(),
                         response.status(),
                         Some(safe_body(response.body(), redactor)),
-                    ));
+                    )
+                    .with_headers(safe_headers(&response, redactor)));
                 }
                 return Err(Error::decode(
                     Some(endpoint.id()),
@@ -618,7 +619,8 @@ impl Client {
                         endpoint.id(),
                         response.status(),
                         Some(safe_body(response.body(), redactor)),
-                    ),
+                    )
+                    .with_headers(safe_headers(&response, redactor)),
                 });
         }
 
@@ -1138,7 +1140,12 @@ fn status_error<R>(
         endpoint,
         response.status(),
         Some(safe_body(response.body(), redactor)),
-    ))
+    )
+    .with_headers(safe_headers(&response, redactor)))
+}
+
+fn safe_headers(response: &TransportResponse, redactor: &Redactor) -> SafeHeaders {
+    SafeHeaders::from_header_map(response.headers(), redactor)
 }
 
 fn safe_body(body: &[u8], redactor: &Redactor) -> SafeBody {
