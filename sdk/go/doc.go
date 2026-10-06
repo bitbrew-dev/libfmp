@@ -20,6 +20,13 @@
 //	}
 //	client, err := fmp.NewClient(fmp.WithAuthentication(auth))
 //
+// NewClientFromEnv is the shorthand for a proxy that issues its own keys,
+// such as valet: with FMP_API_KEY=vk_... and
+// FMP_BASE_URL=https://valet.bitbrew.app/fmp it sends the key in the
+// "apikey" header to https://valet.bitbrew.app/fmp/stable/quote and so on.
+// Without FMP_BASE_URL it targets DefaultBaseURL. Options given to it are
+// applied after the environment, so WithBaseURL wins.
+//
 // Header authentication modes (FMPHeader, Bearer, CustomHeader,
 // CustomHeaderWithPrefix) never place a credential in the URL. Query modes
 // (FMPQuery, CustomQuery) append the secret as the last query pair of every
@@ -62,8 +69,9 @@
 //
 // # Environment
 //
-// FMPHeaderFromEnv reads FMP_API_KEY. NewClient never reads a credential
-// from the environment; it consults the proxy variables (HTTP_PROXY,
+// FMPHeaderFromEnv reads FMP_API_KEY, BaseURLFromEnv reads FMP_BASE_URL,
+// and NewClientFromEnv reads both. NewClient never reads a credential or a
+// base URL from the environment; it consults the proxy variables (HTTP_PROXY,
 // HTTPS_PROXY, NO_PROXY) once through the transport's proxy function, as the
 // first request would, to register the proxy host for cause redaction. The
 // opt-in live tests (live_test.go) use the same names as the Rust crate's

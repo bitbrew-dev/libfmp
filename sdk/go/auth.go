@@ -9,6 +9,10 @@ import (
 // EnvAPIKey is the process environment variable read by FMPHeaderFromEnv.
 const EnvAPIKey = "FMP_API_KEY"
 
+// EnvBaseURL is the process environment variable read by BaseURLFromEnv,
+// typically a proxy origin such as https://valet.bitbrew.app/fmp.
+const EnvBaseURL = "FMP_BASE_URL"
+
 const (
 	fmpHeaderName = "apikey"
 	fmpQueryName  = "apikey"
@@ -58,6 +62,44 @@ func FMPHeaderFromEnv() (Authentication, bool) {
 		return Authentication{}, false
 	}
 	return FMPHeader(key), true
+}
+
+// BaseURLFromEnv reads FMP_BASE_URL, trims surrounding whitespace, and
+// reports false when the variable is unset, empty, or whitespace-only. The
+// value is not validated here; NewClient rejects anything that is not an
+// absolute HTTP(S) URL.
+func BaseURLFromEnv() (string, bool) {
+	value := strings.TrimSpace(os.Getenv(EnvBaseURL))
+	return value, value != ""
+}
+
+// NewClientFromEnv builds a client from FMP_API_KEY and FMP_BASE_URL, for
+// example to route through a proxy that issues its own keys. The key is sent
+// as FMPHeader (the "apikey" header). FMP_BASE_URL, when set, replaces
+// DefaultBaseURL and keeps its path, so https://valet.bitbrew.app/fmp sends
+// the quote endpoint to https://valet.bitbrew.app/fmp/stable/quote; the path
+// prefix stays DefaultPathPrefix. Both values use the normalization of
+// APIKeyFromEnv and BaseURLFromEnv.
+//
+// The options are applied after the environment, so WithBaseURL and the
+// other options win; WithAuthentication cannot be combined with it (the
+// client would have two authentication selections and NewClient reports
+// ConfigurationKindConflictingAuthentication). An unset or blank
+// FMP_API_KEY is ConfigurationKindMissingCredential. Every NewClient rule
+// still applies, including the refusal of authenticated plaintext HTTP to a
+// non-loopback host without WithDangerAllowInsecureAuthentication. NewClient
+// itself never reads either variable.
+func NewClientFromEnv(opts ...Option) (*Client, error) {
+	auth, ok := FMPHeaderFromEnv()
+	if !ok {
+		return nil, configurationError(ConfigurationKindMissingCredential,
+			"FMP_API_KEY is not set")
+	}
+	envOpts := []Option{WithAuthentication(auth)}
+	if baseURL, ok := BaseURLFromEnv(); ok {
+		envOpts = append(envOpts, WithBaseURL(baseURL))
+	}
+	return NewClient(append(envOpts, opts...)...)
 }
 
 // FMPQuery sends the FMP API key in the "apikey" query parameter.

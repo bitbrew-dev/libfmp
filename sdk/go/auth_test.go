@@ -328,3 +328,122 @@ func assertNoSecret(t *testing.T, secret string, texts ...string) {
 		}
 	}
 }
+
+func setOrUnsetEnv(t *testing.T, name, value string, set bool) {
+	t.Helper()
+	t.Setenv(name, value)
+	if !set {
+		if err := os.Unsetenv(name); err != nil {
+			t.Fatal(err)
+		}
+	}
+}
+
+func TestBaseURLFromEnvNormalizesTheVariable(t *testing.T) {
+	cases := []struct {
+		name  string
+		value string
+		set   bool
+		want  string
+		ok    bool
+	}{
+		{name: "unset"},
+		{name: "empty", set: true},
+		{name: "blank", value: " \t\n", set: true},
+		{name: "padded", value: "  https://valet.bitbrew.app/fmp\n", set: true,
+			want: "https://valet.bitbrew.app/fmp", ok: true},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			setOrUnsetEnv(t, EnvBaseURL, tc.value, tc.set)
+			got, ok := BaseURLFromEnv()
+			if got != tc.want || ok != tc.ok {
+				t.Fatalf("BaseURLFromEnv() = %q, %v; want %q, %v", got, ok, tc.want, tc.ok)
+			}
+		})
+	}
+}
+
+func TestNewClientFromEnvTargetsAProxyBaseWithTheAPIKeyHeader(t *testing.T) {
+	t.Setenv(EnvAPIKey, "vk_example")
+	t.Setenv(EnvBaseURL, "https://valet.bitbrew.app/fmp")
+	client, err := NewClientFromEnv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := client.buildEndpointURL("quote").String(); got != "https://valet.bitbrew.app/fmp/stable/quote" {
+		t.Fatalf("endpoint URL = %q", got)
+	}
+	if client.auth.headerName != "apikey" || client.auth.headerValue != "vk_example" || client.auth.queryName != "" {
+		t.Fatalf("auth = header %q, query %q", client.auth.headerName, client.auth.queryName)
+	}
+}
+
+func TestNewClientFromEnvWithoutABaseURLKeepsTheFMPOrigin(t *testing.T) {
+	t.Setenv(EnvAPIKey, "vk_example")
+	setOrUnsetEnv(t, EnvBaseURL, "", false)
+	client, err := NewClientFromEnv()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := client.buildEndpointURL("quote").String(); got != DefaultBaseURL+"/stable/quote" {
+		t.Fatalf("endpoint URL = %q", got)
+	}
+}
+
+func TestNewClientFromEnvAppliesOptionsAfterTheEnvironment(t *testing.T) {
+	t.Setenv(EnvAPIKey, "vk_example")
+	t.Setenv(EnvBaseURL, "https://valet.bitbrew.app/fmp")
+	client, err := NewClientFromEnv(WithBaseURL("https://proxy.example/router"), WithPathPrefix(""))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := client.buildEndpointURL("quote").String(); got != "https://proxy.example/router/quote" {
+		t.Fatalf("endpoint URL = %q", got)
+	}
+	_, err = NewClientFromEnv(WithAuthentication(Bearer("other")))
+	assertConfigurationKind(t, err, ConfigurationKindConflictingAuthentication)
+}
+
+func TestNewClientFromEnvReportsTypedConfigurationErrors(t *testing.T) {
+	cases := []struct {
+		name    string
+		key     string
+		keySet  bool
+		baseURL string
+		want    ConfigurationKind
+	}{
+		{name: "missing key", want: ConfigurationKindMissingCredential},
+		{name: "blank key", key: "  ", keySet: true, baseURL: "https://valet.bitbrew.app/fmp",
+			want: ConfigurationKindMissingCredential},
+		{name: "relative base", key: "vk_example", keySet: true, baseURL: "valet.bitbrew.app/fmp",
+			want: ConfigurationKindInvalidBaseURL},
+		{name: "credentials in base", key: "vk_example", keySet: true,
+			baseURL: "https://user:pass@valet.bitbrew.app/fmp", want: ConfigurationKindUnsafeBaseURL},
+		{name: "plaintext base", key: "vk_example", keySet: true, baseURL: "http://example.test/fmp",
+			want: ConfigurationKindInsecureAuthentication},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			setOrUnsetEnv(t, EnvAPIKey, tc.key, tc.keySet)
+			setOrUnsetEnv(t, EnvBaseURL, tc.baseURL, tc.baseURL != "")
+			_, err := NewClientFromEnv()
+			assertConfigurationKind(t, err, tc.want)
+			if strings.Contains(err.Error(), "vk_example") {
+				t.Fatalf("error leaked the key: %v", err)
+			}
+		})
+	}
+}
+
+func TestNewClientFromEnvKeepsTheLoopbackAndDangerousHTTPRules(t *testing.T) {
+	t.Setenv(EnvAPIKey, "vk_example")
+	t.Setenv(EnvBaseURL, "http://127.0.0.1:8080/fmp")
+	if _, err := NewClientFromEnv(); err != nil {
+		t.Fatalf("loopback HTTP: %v", err)
+	}
+	t.Setenv(EnvBaseURL, "http://example.test/fmp")
+	if _, err := NewClientFromEnv(WithDangerAllowInsecureAuthentication()); err != nil {
+		t.Fatalf("dangerous opt-in: %v", err)
+	}
+}
