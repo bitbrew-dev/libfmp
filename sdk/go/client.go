@@ -366,6 +366,7 @@ func (c *Client) getJSON(ctx context.Context, endpointID, relativePath string, q
 		decoded.Path, decoded.DecodeKind = c.redactor.Redact(path), kind
 		return decoded
 	}
+	c.recordResponseMetadata(ctx, endpointID, resp)
 	return nil
 }
 
