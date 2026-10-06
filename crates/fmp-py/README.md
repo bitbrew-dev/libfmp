@@ -236,6 +236,30 @@ The rules:
 `FMP_BASE_URL` only replaces the base URL; the `token` and `FMP_API_KEY`
 rules above are unchanged.
 
+To read the proxy's cache status and remaining daily budget on a success,
+pass `on_response`. It is called as `on_response(endpoint_id, status,
+headers)` after every successful call, from any namespace:
+
+```python
+from fmp import FmpClient
+
+
+def on_response(endpoint_id: str, status: int, headers: dict[str, str]) -> None:
+    print(endpoint_id, headers.get("x-proxy-cache"), headers.get("x-proxy-daily-remaining"))
+
+
+client = FmpClient(on_response=on_response)
+rows = client.quote.short("AAPL")  # prints: quote-short HIT 41
+```
+
+- `headers` has only the allowlisted headers (`retry-after`, `x-proxy-*`,
+  `x-ratelimit-*`), lowercase and redacted; a repeated name keeps its first
+  value, like an error's `headers`, and it is `{}` when none were sent.
+- It runs on the calling thread with the GIL, before the method returns, so
+  it works from several threads at once and each call sees its own headers.
+- It is never called for errors: an `FmpError` already carries `headers`.
+- If it raises, the method raises that exception and its data is discarded.
+
 ## Custom router or proxy
 
 ```python

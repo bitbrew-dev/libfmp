@@ -189,6 +189,18 @@ class FmpClient:
     non-loopback HTTP requires `danger_allow_insecure_authentication=True`.
     Redirects are either disabled or restricted to the same origin.
 
+    `on_response`, when given, is called as `on_response(endpoint_id, status,
+    headers)` after every successful response, for every namespace method, for
+    example `("quote-short", 200, {"x-proxy-cache": "HIT",
+    "x-proxy-daily-remaining": "42"})`. `headers` holds only the allowlisted
+    response headers (`retry-after`, `x-proxy-*`, `x-ratelimit-*`), lowercase
+    and redacted, first value winning for a repeated name, the same as an
+    error's `headers`, but `{}` rather than `None` when none were sent. It runs
+    on the calling thread, with the GIL, after the body decoded and before the
+    method returns, so it is safe to use from several threads. It is never
+    called for errors, which carry their own `headers`. If it raises, the
+    method raises that exception and its decoded data is discarded.
+
     `close()` releases the client's pooled connections; afterwards every call,
     including through a namespace fetched before the close, raises
     `FmpConfigError`. Closing twice is a no-op, and `with FmpClient(...) as
@@ -405,6 +417,12 @@ class FmpClient:
         max_response_body_bytes: typing.Optional[builtins.int] = None,
         danger_allow_insecure_authentication: builtins.bool = False,
         follow_redirects: typing.Optional[builtins.bool] = None,
+        on_response: typing.Optional[
+            typing.Callable[
+                [builtins.str, builtins.int, builtins.dict[builtins.str, builtins.str]],
+                None,
+            ]
+        ] = None,
     ) -> FmpClient: ...
     def close(self) -> None:
         r"""

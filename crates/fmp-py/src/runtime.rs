@@ -22,9 +22,12 @@ use std::{
 use libfmp::{Client, ClientBuilder};
 use tokio::runtime::{Builder as RuntimeBuilder, Handle, Runtime};
 
-use pyo3::PyResult;
+use pyo3::{Py, PyResult, types::PyAny};
 
-use crate::errors::{FmpError, to_py_error};
+use crate::{
+    errors::{FmpError, to_py_error},
+    response_hook,
+};
 
 fn configuration_error(message: &'static str) -> pyo3::PyErr {
     to_py_error(libfmp::Error::configuration(message))
@@ -48,13 +51,17 @@ const CLOSED_MESSAGE: &str = "the client is closed";
 pub(crate) struct ClientHandle {
     builder: ClientBuilder,
     closed: AtomicBool,
+    on_response: Option<Py<PyAny>>,
 }
 
 impl ClientHandle {
-    pub(crate) fn new(builder: ClientBuilder) -> Arc<Self> {
+    /// `on_response`, when given, is called after every successful response;
+    /// the builder must already carry [`response_hook::record`] as observer.
+    pub(crate) fn new(builder: ClientBuilder, on_response: Option<Py<PyAny>>) -> Arc<Self> {
         Arc::new(Self {
             builder,
             closed: AtomicBool::new(false),
+            on_response,
         })
     }
 
@@ -205,7 +212,8 @@ fn current() -> PyResult<Arc<Inner>> {
 /// Returns a configuration error when `handle` is closed, or when called from
 /// inside a runtime worker thread, where `Runtime::block_on` would panic.
 /// Callers release the GIL (via `Python::detach`) around this so other Python
-/// threads make progress.
+/// threads make progress. With an `on_response` callback, it runs here after
+/// the call, with the GIL re-acquired, and its exception is returned.
 pub(crate) fn block_on<F, Fut, T>(handle: Arc<ClientHandle>, operation: F) -> PyResult<T>
 where
     F: FnOnce(Client) -> Fut,
@@ -221,7 +229,12 @@ where
     }
     let inner = current()?;
     let client = inner.client(&handle)?;
-    Ok(inner.block_on(operation(client)))
+    let Some(callback) = &handle.on_response else {
+        return Ok(inner.block_on(operation(client)));
+    };
+    let (output, seen) = inner.block_on(response_hook::capture(operation(client)));
+    response_hook::deliver(callback, seen)?;
+    Ok(output)
 }
 
 /// Mark `handle` closed and drop its pooled client, releasing its idle
