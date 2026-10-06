@@ -95,6 +95,7 @@ pub struct ClientBuilder {
     danger_allow_insecure_authentication: bool,
     redirect_policy: RedirectPolicy,
     executor: Option<Arc<dyn HttpExecutor>>,
+    on_response: Option<ResponseObserver>,
 }
 
 impl Default for ClientBuilder {
@@ -113,6 +114,7 @@ impl Default for ClientBuilder {
             danger_allow_insecure_authentication: false,
             redirect_policy: RedirectPolicy::SameOrigin,
             executor: None,
+            on_response: None,
         }
     }
 }
@@ -141,6 +143,7 @@ impl fmt::Debug for ClientBuilder {
             )
             .field("redirect_policy", &self.redirect_policy)
             .field("custom_executor", &self.executor.is_some())
+            .field("response_observer", &self.on_response.is_some())
             .finish()
     }
 }
@@ -302,6 +305,39 @@ impl ClientBuilder {
         self
     }
 
+    /// Registers an observer called after every successful response.
+    ///
+    /// It receives a [`ResponseInfo`] with the endpoint id, the HTTP status
+    /// and the same allowlisted, redacted [`SafeHeaders`] that
+    /// [`Client::execute_with_metadata`] returns, for every call made through
+    /// the client, endpoint methods included. It fires once per call, only
+    /// after the body decoded, never on status, provider-message, decode or
+    /// transport errors (those carry their headers on the [`Error`]). It
+    /// returns `()`, so it cannot fail the call.
+    ///
+    /// The observer runs inline on the task driving the request, before the
+    /// call returns: keep it cheap and non-blocking (record a value, send on a
+    /// channel). A later call replaces an earlier observer.
+    ///
+    /// ```
+    /// use std::sync::{Arc, Mutex};
+    ///
+    /// let remaining = Arc::new(Mutex::new(None::<String>));
+    /// let seen = Arc::clone(&remaining);
+    /// let builder = libfmp::Client::builder().on_response(move |info| {
+    ///     let value = info.headers.get("x-proxy-daily-remaining").map(str::to_owned);
+    ///     *seen.lock().unwrap() = value;
+    /// });
+    /// # let _ = builder;
+    /// ```
+    pub fn on_response(
+        mut self,
+        observer: impl Fn(&ResponseInfo<'_>) + Send + Sync + 'static,
+    ) -> Self {
+        self.on_response = Some(Arc::new(observer));
+        self
+    }
+
     /// Validates configuration and builds a cheap-to-clone async client.
     pub fn build(self) -> Result<Client> {
         if self.authentication_conflict {
@@ -376,6 +412,7 @@ impl ClientBuilder {
                 timeout: self.timeout,
                 max_response_body_bytes: self.max_response_body_bytes,
                 redirect_policy: self.redirect_policy,
+                on_response: self.on_response,
             }),
         })
     }
@@ -393,12 +430,30 @@ struct ClientInner {
     timeout: Option<Duration>,
     max_response_body_bytes: Option<usize>,
     redirect_policy: RedirectPolicy,
+    on_response: Option<ResponseObserver>,
 }
 
 /// Async Financial Modeling Prep client shared by all endpoint modules.
 #[derive(Clone)]
 pub struct Client {
     inner: Arc<ClientInner>,
+}
+
+/// The observer registered with [`ClientBuilder::on_response`].
+pub type ResponseObserver = Arc<dyn Fn(&ResponseInfo<'_>) + Send + Sync>;
+
+/// What a [`ResponseObserver`] learns about one successful response.
+///
+/// It never carries the body or any header outside the allowlist.
+#[derive(Debug, Clone, Copy, PartialEq)]
+#[non_exhaustive]
+pub struct ResponseInfo<'a> {
+    /// The registry id of the endpoint, for example `"quote"`.
+    pub endpoint: &'static str,
+    /// The HTTP status of the final (post-redirect) response.
+    pub status: u16,
+    /// The allowlisted, redacted headers of the final response.
+    pub headers: &'a SafeHeaders,
 }
 
 /// A decoded success with the HTTP status and allowlisted response headers.
@@ -660,10 +715,20 @@ impl Client {
                     response.body_bytes(),
                     ResponseMetadata::new(content_type, content_disposition),
                 )
-                .map(|data| Response {
-                    data,
-                    status: response.status(),
-                    headers: safe_headers(&response, redactor),
+                .map(|data| {
+                    let success = Response {
+                        data,
+                        status: response.status(),
+                        headers: safe_headers(&response, redactor),
+                    };
+                    if let Some(observer) = &self.inner.on_response {
+                        observer(&ResponseInfo {
+                            endpoint: endpoint.id(),
+                            status: success.status,
+                            headers: &success.headers,
+                        });
+                    }
+                    success
                 })
                 .map_err(|failure| match failure {
                     DecodeFailure::Shape { path, kind } => Error::decode(

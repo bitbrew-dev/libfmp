@@ -1,10 +1,10 @@
 #[allow(dead_code)] // Only the fixture executor is used here.
 mod support;
 
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use libfmp::{
-    Client,
+    Client, ClientBuilder,
     config::Authentication,
     endpoints::quote::{QuoteShortQuery, quote_short},
     error::ErrorCategory,
@@ -37,14 +37,38 @@ fn response(status: u16, pairs: &[(&str, &str)], body: &'static str) -> Transpor
     TransportResponse::new(status, headers, body)
 }
 
-fn client(response: TransportResponse) -> Client {
+fn builder(response: TransportResponse) -> ClientBuilder {
     Client::builder()
         .base_url("https://proxy.example/router")
         .path_prefix("stable")
         .authentication(Authentication::None)
         .executor(Arc::new(FixtureExecutor::new([response])))
+}
+
+fn client(response: TransportResponse) -> Client {
+    builder(response).build().unwrap()
+}
+
+type Seen = Arc<Mutex<Vec<(&'static str, u16, Vec<(String, String)>)>>>;
+
+/// Builds a client whose observer records every call it sees.
+fn observed(response: TransportResponse) -> (Client, Seen) {
+    let seen = Seen::default();
+    let sink = Arc::clone(&seen);
+    let client = builder(response)
+        .on_response(move |info| {
+            let headers = info
+                .headers
+                .iter()
+                .map(|(name, value)| (name.to_owned(), value.to_owned()))
+                .collect();
+            sink.lock()
+                .unwrap()
+                .push((info.endpoint, info.status, headers));
+        })
         .build()
-        .unwrap()
+        .unwrap();
+    (client, seen)
 }
 
 #[tokio::test]
@@ -99,4 +123,52 @@ async fn execute_with_metadata_errors_are_unchanged() {
 
     assert_eq!(error.category(), ErrorCategory::Status);
     assert_eq!(error.headers().get("x-proxy-daily-remaining"), Some("0"));
+}
+
+#[tokio::test]
+async fn observer_sees_endpoint_method_successes() {
+    let (client, seen) = observed(response(200, VALET_HEADERS, BODY));
+
+    let rows = client
+        .quote_short(Ticker::new("AAPL").unwrap())
+        .await
+        .unwrap();
+
+    assert_eq!(rows.len(), 1);
+    let seen = seen.lock().unwrap();
+    let pair = |name: &str, value: &str| (name.to_owned(), value.to_owned());
+    assert_eq!(
+        *seen,
+        [(
+            "quote-short",
+            200,
+            vec![
+                pair("x-proxy-cache", "HIT"),
+                pair("x-proxy-daily-remaining", "42")
+            ]
+        )]
+    );
+}
+
+#[tokio::test]
+async fn observer_is_silent_on_errors() {
+    for failure in [
+        response(429, VALET_HEADERS, "slow down"),
+        response(
+            200,
+            VALET_HEADERS,
+            r#"{"Error Message":"Invalid API KEY."}"#,
+        ),
+        response(200, VALET_HEADERS, r#"[{"symbol":7}]"#),
+    ] {
+        let (client, seen) = observed(failure);
+        let query = QuoteShortQuery::new(Ticker::new("AAPL").unwrap());
+
+        client
+            .execute_with_metadata(&quote_short(query))
+            .await
+            .unwrap_err();
+
+        assert!(seen.lock().unwrap().is_empty());
+    }
 }
