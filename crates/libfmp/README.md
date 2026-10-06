@@ -90,6 +90,12 @@ Every endpoint method has a public spec function under `libfmp::endpoints`,
 and `execute` returns the same data without the metadata. On failure nothing
 changes: the error already carries its headers.
 
+To watch every call, endpoint methods included, register
+`ClientBuilder::on_response(|info| ...)`. After each decoded success it gets a
+`ResponseInfo` with the endpoint id, status and the same allowlisted headers.
+It never fires on errors, cannot fail the call, and runs inline on the request
+task, so keep it cheap and non-blocking.
+
 ## Custom router or proxy
 
 Transport choices do not change endpoint code. A caller can select a custom base URL and path prefix, no auth, FMP header or query auth, bearer auth, custom secret header or query auth, and arbitrary default headers.
