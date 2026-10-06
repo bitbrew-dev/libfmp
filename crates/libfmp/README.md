@@ -35,6 +35,38 @@ empty, or whitespace-only), so the `env::var` line above is the explicit form.
 
 The documented bare JSON array remains a `Vec<QuoteShort>`; empty and multi-row responses keep their original shape.
 
+## Using a proxy
+
+A proxy that issues its own keys and forwards to FMP, such as
+[valet](https://valet.bitbrew.app), needs two environment variables and no
+code change:
+
+```sh
+export FMP_API_KEY=vk_...
+export FMP_BASE_URL=https://valet.bitbrew.app/fmp
+```
+
+```rust
+use libfmp::{Client, types::Ticker};
+
+# async fn example() -> Result<(), Box<dyn std::error::Error>> {
+let client = Client::from_env()?;
+let rows = client.quote_short(Ticker::new("AAPL")?).await?;
+# let _ = rows;
+# Ok(())
+# }
+```
+
+`Client::from_env()` (or `ClientBuilder::from_env()?` to keep configuring)
+sends the key in the `apikey` header and keeps the base URL's path, so the
+quote endpoint goes to `https://valet.bitbrew.app/fmp/stable/quote`. Without
+`FMP_BASE_URL` it targets `https://financialmodelingprep.com`, and without
+`FMP_API_KEY` it returns a `MissingCredential` configuration error. Both values
+are trimmed and a blank value counts as unset. A plaintext `http://` base URL
+to a non-loopback host is still refused unless the builder opts in with
+`danger_allow_insecure_authentication(true)`. `Client::builder()` itself never
+reads either variable.
+
 ## Custom router or proxy
 
 Transport choices do not change endpoint code. A caller can select a custom base URL and path prefix, no auth, FMP header or query auth, bearer auth, custom secret header or query auth, and arbitrary default headers.
