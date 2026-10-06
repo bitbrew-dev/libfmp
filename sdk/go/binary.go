@@ -77,6 +77,7 @@ func (c *Client) getBinary(ctx context.Context, endpointID, relativePath string,
 	if !visibleHeaderText(disposition) {
 		disposition = ""
 	}
+	c.recordResponseMetadata(ctx, endpointID, resp)
 	return BinaryPayload{Data: resp.body, ContentType: contentType, ContentDisposition: disposition}, nil
 }
 

@@ -99,6 +99,25 @@ the environment key (use `NewClient` to pick another mode). Plaintext
 `WithDangerAllowInsecureAuthentication`. `NewClient` never reads either
 variable.
 
+To read the proxy's cache status and remaining daily budget on a success,
+attach a `ResponseMetadata` to the call's context. After a decoded success the
+client fills it with the endpoint id, the HTTP status and the allowlisted,
+redacted headers (the same allowlist as errors: `Retry-After`, `X-Proxy-*`,
+`X-RateLimit-*`):
+
+```go
+var meta fmp.ResponseMetadata
+quotes, err := client.Quote.Short(fmp.WithResponseMetadata(ctx, &meta), fmp.NewQuoteShortQuery("AAPL"))
+if err != nil {
+	return err // *Error already carries its headers; meta is untouched
+}
+cache := meta.Headers.Get("X-Proxy-Cache") // "HIT" or "MISS"
+remaining := meta.Headers.Get("X-Proxy-Daily-Remaining")
+```
+
+Use one context and one `ResponseMetadata` per call: concurrent calls sharing
+a `meta` race on it.
+
 `client.CloseIdleConnections()` closes the idle keep-alive connections of the
 transport `NewClient` built; the client stays usable. It is a no-op with
 `WithHTTPClient`, whose transport stays with the caller. There is no `Close`:

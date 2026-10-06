@@ -78,6 +78,7 @@ func getCSV[T any](ctx context.Context, c *Client, endpointID, relativePath stri
 		decoded.Path, decoded.DecodeKind = c.redactor.Redact(path), kind
 		return nil, decoded
 	}
+	c.recordResponseMetadata(ctx, endpointID, resp)
 	return rows, nil
 }
 

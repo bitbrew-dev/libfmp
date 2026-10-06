@@ -27,6 +27,12 @@
 // Without FMP_BASE_URL it targets DefaultBaseURL. Options given to it are
 // applied after the environment, so WithBaseURL wins.
 //
+// To read such a proxy's X-Proxy-Cache and X-Proxy-Daily-Remaining headers
+// on a success, pass WithResponseMetadata(ctx, &meta): after a decoded
+// success the client fills meta with the endpoint id, the status and the
+// allowlisted headers (see IsRetainedHeaderName). Errors leave meta untouched
+// and carry their own headers. Use one ctx/meta pair per call.
+//
 // Header authentication modes (FMPHeader, Bearer, CustomHeader,
 // CustomHeaderWithPrefix) never place a credential in the URL. Query modes
 // (FMPQuery, CustomQuery) append the secret as the last query pair of every
