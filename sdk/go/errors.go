@@ -77,7 +77,9 @@ const (
 	ConfigurationKindInvalidQueryName
 	// ConfigurationKindEmptyCredential: a credential is empty.
 	ConfigurationKindEmptyCredential
-	// ConfigurationKindMissingCredential: direct FMP access has no credential.
+	// ConfigurationKindMissingCredential: no credential was available, either
+	// for direct FMP access or because NewClientFromEnv found FMP_API_KEY
+	// unset or blank (for any base URL, proxies included).
 	ConfigurationKindMissingCredential
 	// ConfigurationKindInsecureAuthentication: a credential over plain HTTP to a non-loopback host.
 	ConfigurationKindInsecureAuthentication
