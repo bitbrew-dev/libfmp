@@ -85,7 +85,9 @@ pub enum ConfigurationErrorKind {
     InvalidQueryName,
     /// A credential is empty.
     EmptyCredential,
-    /// Direct FMP access was configured without an API credential.
+    /// No API credential was available: direct FMP access was configured
+    /// without one, or [`crate::ClientBuilder::from_env`] found
+    /// `FMP_API_KEY` unset or blank (for any base URL, proxies included).
     MissingCredential,
     /// Authentication was configured over plaintext HTTP to a non-loopback host.
     InsecureAuthentication,
