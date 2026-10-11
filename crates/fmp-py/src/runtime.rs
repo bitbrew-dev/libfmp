@@ -385,3 +385,49 @@ mod fork_tests {
         );
     }
 }
+
+#[cfg(test)]
+mod abort_tests {
+    use super::*;
+    use std::{sync::mpsc, time::Duration};
+
+    /// Sends once when dropped, so a test can observe a task being torn down.
+    struct DropSignal(mpsc::Sender<()>);
+
+    impl Drop for DropSignal {
+        fn drop(&mut self) {
+            let _ = self.0.send(());
+        }
+    }
+
+    #[test]
+    fn dropping_the_guard_aborts_the_task() {
+        let inner = current().expect("runtime builds");
+        let (sender, dropped) = mpsc::channel();
+        let signal = DropSignal(sender);
+        let guard = AbortOnDrop(inner.runtime.spawn(async move {
+            let _signal = signal;
+            std::future::pending::<()>().await
+        }));
+
+        drop(guard);
+
+        dropped
+            .recv_timeout(Duration::from_secs(5))
+            .expect("the pending task was aborted and its state dropped");
+    }
+
+    #[test]
+    fn the_guard_resolves_to_the_task_output() {
+        let inner = current().expect("runtime builds");
+        let output = inner.block_on(AbortOnDrop(inner.runtime.spawn(async { 21 * 2 })));
+        assert_eq!(output.ok(), Some(42));
+    }
+
+    #[test]
+    fn a_panicking_task_becomes_an_error() {
+        let inner = current().expect("runtime builds");
+        let output = inner.block_on(AbortOnDrop(inner.runtime.spawn(async { panic!("boom") })));
+        assert!(output.is_err());
+    }
+}
