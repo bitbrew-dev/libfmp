@@ -21,7 +21,7 @@ uv run quickstart.py
   directory, whose path is printed.
 - Scripts marked "offline" stage their scenarios against a loopback server in
   `_local_server.py`, so they need neither a key nor network access.
-- `async_client.py` needs a release that ships `AsyncFmpClient`. For an
+- `async_client.py` uses `AsyncFmpClient` (fmp-py-sdk 1.5.0 or newer). For an
   Airflow deferrable trigger built on it, see the
   [Asyncio client](../README.md#airflow-deferrable-operators) section of the
   package README.
