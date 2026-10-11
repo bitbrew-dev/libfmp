@@ -21,6 +21,10 @@ uv run quickstart.py
   directory, whose path is printed.
 - Scripts marked "offline" stage their scenarios against a loopback server in
   `_local_server.py`, so they need neither a key nor network access.
+- `async_client.py` needs a release that ships `AsyncFmpClient`. For an
+  Airflow deferrable trigger built on it, see the
+  [Asyncio client](../README.md#airflow-deferrable-operators) section of the
+  package README.
 
 ## Scripts
 
@@ -31,6 +35,7 @@ uv run quickstart.py
 | `timeouts_and_limits.py` | `timeout` and `connect_timeout`; bulk defaults (600 s, 256 MiB) vs the rest (30 s, 64 MiB); an explicit value applies to bulk too | offline |
 | `errors.py` | config, validation, transport, status (including a provider error inside a 200 body) and decode errors; `decode_path` and `decode_kind` | offline, one call needs network |
 | `nullable_fields.py` | `Optional` members such as `CompanyProfile.isin` / `country`; congressional net-worth columns that may be `None` and the `additional_columns` dict | key |
+| `async_client.py` | `async with AsyncFmpClient() as client:`, awaited calls vs an `asyncio.gather` fan-out with a semaphore, a `wait_for` timeout that aborts the request | key (the cancellation part is offline) |
 | `lifecycle_and_threads.py` | `with FmpClient() as client:`, `close()` semantics, a `ThreadPoolExecutor` fan-out on one shared client | key |
 | `bulk.py` | one small bulk endpoint, its row count, and a CSV written with the `csv` module | key with bulk access |
 | `binary_and_dicts.py` | `statements.reports.xlsx` bytes saved to a file; `to_dict()` for JSON or a DataFrame hand-off | key |
