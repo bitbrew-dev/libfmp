@@ -13,7 +13,7 @@ use crate::errors::to_py_error;
 use crate::models::statements::summaries::{
     EnterpriseValue, FinancialScore, LatestFinancialStatement, OwnerEarnings,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements summaries endpoints for a single client, exposed as `client.statements.summaries`.
 #[gen_stub_pyclass]
@@ -105,6 +105,90 @@ impl StatementsSummariesNamespace {
                 client.enterprise_values(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(EnterpriseValue::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Statements summaries endpoints for a single async client, exposed as `client.statements.summaries`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.summaries", frozen)]
+pub(crate) struct AsyncStatementsSummariesNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsSummariesNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsSummariesNamespace {
+    /// Retrieves the latest worldwide financial-statement filings.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn latest_financial_statements(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<LatestFinancialStatement>> {
+        let query = latest_financial_statements_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_financial_statements(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(LatestFinancialStatement::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide financial-health scores for one company.
+    #[pyo3(signature = (symbol))]
+    async fn financial_scores(&self, symbol: String) -> PyResult<Vec<FinancialScore>> {
+        let query = financial_scores_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_scores(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(FinancialScore::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide owner earnings for one company.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn owner_earnings(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<OwnerEarnings>> {
+        let query = owner_earnings_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.owner_earnings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(OwnerEarnings::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide enterprise values for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn enterprise_values(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<EnterpriseValue>> {
+        let query = enterprise_values_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.enterprise_values(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(EnterpriseValue::from).collect())
             .map_err(to_py_error)
     }

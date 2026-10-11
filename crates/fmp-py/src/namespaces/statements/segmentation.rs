@@ -11,7 +11,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::segmentation::RevenueSegmentation;
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements segmentation endpoints for a single client, exposed as `client.statements.segmentation`.
 #[gen_stub_pyclass]
@@ -69,6 +69,61 @@ impl StatementsSegmentationNamespace {
                 client.revenue_geographic_segmentation(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(RevenueSegmentation::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Statements segmentation endpoints for a single async client, exposed as `client.statements.segmentation`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.segmentation", frozen)]
+pub(crate) struct AsyncStatementsSegmentationNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsSegmentationNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsSegmentationNamespace {
+    /// Retrieves product revenue segmentation for one company.
+    #[pyo3(signature = (symbol, *, period=None, structure=None))]
+    async fn revenue_product(
+        &self,
+        symbol: String,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"flat\"]]", imports = ("typing",)))]
+        structure: Option<String>,
+    ) -> PyResult<Vec<RevenueSegmentation>> {
+        let query = revenue_product_query(&symbol, period.as_deref(), structure.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.revenue_product_segmentation(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(RevenueSegmentation::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves geographic revenue segmentation for one company.
+    #[pyo3(signature = (symbol, *, period=None, structure=None))]
+    async fn revenue_geographic(
+        &self,
+        symbol: String,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"flat\"]]", imports = ("typing",)))]
+        structure: Option<String>,
+    ) -> PyResult<Vec<RevenueSegmentation>> {
+        let query = revenue_geographic_query(&symbol, period.as_deref(), structure.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.revenue_geographic_segmentation(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(RevenueSegmentation::from).collect())
             .map_err(to_py_error)
     }

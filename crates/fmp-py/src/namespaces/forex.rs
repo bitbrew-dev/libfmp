@@ -12,7 +12,7 @@ use crate::errors::to_py_error;
 use crate::models::chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar};
 use crate::models::forex::ForexPair;
 use crate::models::quote::{Quote, QuoteShort};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Forex endpoints for a single client, exposed as `client.forex`.
 #[gen_stub_pyclass]
@@ -164,6 +164,142 @@ impl ForexNamespace {
                 client.forex_chart_one_hour(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Forex endpoints for a single async client, exposed as `client.forex`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.forex", frozen)]
+pub(crate) struct AsyncForexNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncForexNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncForexNamespace {
+    /// Lists the provider's documented forex pairs.
+    async fn list(&self) -> PyResult<Vec<ForexPair>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_list().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(ForexPair::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a detailed US-only quote for one forex pair.
+    #[pyo3(signature = (symbol))]
+    async fn quote(&self, symbol: String) -> PyResult<Vec<Quote>> {
+        let query = quote_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_quote(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(Quote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a compact US-only quote for one forex pair.
+    #[pyo3(signature = (symbol))]
+    async fn quote_short(&self, symbol: String) -> PyResult<Vec<QuoteShort>> {
+        let query = quote_short_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_quote_short(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact end-of-day forex history.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_light(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartLightBar>> {
+        let query = chart_light_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_chart_light(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartLightBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves detailed end-of-day forex history.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_full(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartFullBar>> {
+        let query = chart_full_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_chart_full(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartFullBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves one-minute forex history.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_one_minute(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = chart_one_minute_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_chart_one_minute(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves five-minute forex history.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_five_minutes(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = chart_five_minutes_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_chart_five_minutes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves one-hour forex history.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_one_hour(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = chart_one_hour_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_chart_one_hour(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
             .map_err(to_py_error)
     }

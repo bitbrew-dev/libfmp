@@ -53,12 +53,14 @@ fn register_analyst(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::analyst::StockGrade>()?;
     module.add_class::<crate::models::analyst::StockGradesSummary>()?;
     module.add_class::<crate::namespaces::analyst::AnalystNamespace>()?;
+    module.add_class::<crate::namespaces::analyst::AsyncAnalystNamespace>()?;
     add_submodule(parent, "fmp._native.analyst", &module)
 }
 
 fn register_bulk(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "bulk")?;
     module.add_class::<crate::namespaces::bulk::BulkNamespace>()?;
+    module.add_class::<crate::namespaces::bulk::AsyncBulkNamespace>()?;
     register_bulk_balance(&module)?;
     register_bulk_cash_flow(&module)?;
     register_bulk_eod(&module)?;
@@ -124,6 +126,7 @@ fn register_calendar(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::calendar::IpoProspectus>()?;
     module.add_class::<crate::models::calendar::StockSplitEvent>()?;
     module.add_class::<crate::namespaces::calendar::CalendarNamespace>()?;
+    module.add_class::<crate::namespaces::calendar::AsyncCalendarNamespace>()?;
     add_submodule(parent, "fmp._native.calendar", &module)
 }
 
@@ -134,6 +137,7 @@ fn register_chart(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::chart::StockChartIntradayBar>()?;
     module.add_class::<crate::models::chart::StockChartLightBar>()?;
     module.add_class::<crate::namespaces::chart::ChartNamespace>()?;
+    module.add_class::<crate::namespaces::chart::AsyncChartNamespace>()?;
     add_submodule(parent, "fmp._native.chart", &module)
 }
 
@@ -143,6 +147,9 @@ fn register_commitment_of_traders(parent: &Bound<'_, PyModule>) -> PyResult<()> 
     module.add_class::<crate::models::commitment_of_traders::CotReport>()?;
     module.add_class::<crate::models::commitment_of_traders::CotReportListing>()?;
     module.add_class::<crate::namespaces::commitment_of_traders::CommitmentOfTradersNamespace>()?;
+    module
+        .add_class::<crate::namespaces::commitment_of_traders::AsyncCommitmentOfTradersNamespace>(
+        )?;
     add_submodule(parent, "fmp._native.commitment_of_traders", &module)
 }
 
@@ -150,6 +157,7 @@ fn register_commodities(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "commodities")?;
     module.add_class::<crate::models::commodities::CommodityListing>()?;
     module.add_class::<crate::namespaces::commodities::CommoditiesNamespace>()?;
+    module.add_class::<crate::namespaces::commodities::AsyncCommoditiesNamespace>()?;
     add_submodule(parent, "fmp._native.commodities", &module)
 }
 
@@ -168,6 +176,7 @@ fn register_company(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::company::ShareFloat>()?;
     module.add_class::<crate::models::company::StockPeer>()?;
     module.add_class::<crate::namespaces::company::CompanyNamespace>()?;
+    module.add_class::<crate::namespaces::company::AsyncCompanyNamespace>()?;
     add_submodule(parent, "fmp._native.company", &module)
 }
 
@@ -181,6 +190,7 @@ fn register_congressional(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::congressional::CongressionalNetWorthRange>()?;
     module.add_class::<crate::models::congressional::CongressionalTrade>()?;
     module.add_class::<crate::namespaces::congressional::CongressionalNamespace>()?;
+    module.add_class::<crate::namespaces::congressional::AsyncCongressionalNamespace>()?;
     add_submodule(parent, "fmp._native.congressional", &module)
 }
 
@@ -188,6 +198,7 @@ fn register_crypto(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "crypto")?;
     module.add_class::<crate::models::crypto::CryptocurrencyListing>()?;
     module.add_class::<crate::namespaces::crypto::CryptoNamespace>()?;
+    module.add_class::<crate::namespaces::crypto::AsyncCryptoNamespace>()?;
     add_submodule(parent, "fmp._native.crypto", &module)
 }
 
@@ -197,6 +208,7 @@ fn register_dcf(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::dcf::CustomLeveredDcfValuation>()?;
     module.add_class::<crate::models::dcf::DcfValuation>()?;
     module.add_class::<crate::namespaces::dcf::DcfNamespace>()?;
+    module.add_class::<crate::namespaces::dcf::AsyncDcfNamespace>()?;
     add_submodule(parent, "fmp._native.dcf", &module)
 }
 
@@ -214,6 +226,7 @@ fn register_directory(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::directory::FinancialStatementSymbol>()?;
     module.add_class::<crate::models::directory::SymbolChange>()?;
     module.add_class::<crate::namespaces::directory::DirectoryNamespace>()?;
+    module.add_class::<crate::namespaces::directory::AsyncDirectoryNamespace>()?;
     add_submodule(parent, "fmp._native.directory", &module)
 }
 
@@ -224,6 +237,7 @@ fn register_economics(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::economics::MarketRiskPremium>()?;
     module.add_class::<crate::models::economics::TreasuryRate>()?;
     module.add_class::<crate::namespaces::economics::EconomicsNamespace>()?;
+    module.add_class::<crate::namespaces::economics::AsyncEconomicsNamespace>()?;
     add_submodule(parent, "fmp._native.economics", &module)
 }
 
@@ -233,6 +247,7 @@ fn register_esg(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::esg::EsgDisclosure>()?;
     module.add_class::<crate::models::esg::EsgRating>()?;
     module.add_class::<crate::namespaces::esg::EsgNamespace>()?;
+    module.add_class::<crate::namespaces::esg::AsyncEsgNamespace>()?;
     add_submodule(parent, "fmp._native.esg", &module)
 }
 
@@ -240,6 +255,7 @@ fn register_forex(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "forex")?;
     module.add_class::<crate::models::forex::ForexPair>()?;
     module.add_class::<crate::namespaces::forex::ForexNamespace>()?;
+    module.add_class::<crate::namespaces::forex::AsyncForexNamespace>()?;
     add_submodule(parent, "fmp._native.forex", &module)
 }
 
@@ -250,6 +266,7 @@ fn register_fundraising(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::fundraising::RegulationDOffering>()?;
     module.add_class::<crate::models::fundraising::RegulationDOfferingSearchResult>()?;
     module.add_class::<crate::namespaces::fundraising::FundraisingNamespace>()?;
+    module.add_class::<crate::namespaces::fundraising::AsyncFundraisingNamespace>()?;
     add_submodule(parent, "fmp._native.fundraising", &module)
 }
 
@@ -265,6 +282,7 @@ fn register_funds(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::funds::FundDisclosureHolder>()?;
     module.add_class::<crate::models::funds::FundDisclosureSearchResult>()?;
     module.add_class::<crate::namespaces::funds::FundsNamespace>()?;
+    module.add_class::<crate::namespaces::funds::AsyncFundsNamespace>()?;
     add_submodule(parent, "fmp._native.funds", &module)
 }
 
@@ -274,6 +292,7 @@ fn register_indexes(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::indexes::IndexConstituent>()?;
     module.add_class::<crate::models::indexes::IndexListing>()?;
     module.add_class::<crate::namespaces::indexes::IndexesNamespace>()?;
+    module.add_class::<crate::namespaces::indexes::AsyncIndexesNamespace>()?;
     add_submodule(parent, "fmp._native.indexes", &module)
 }
 
@@ -285,6 +304,7 @@ fn register_insider_trading(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::insider_trading::InsiderTradeStatistics>()?;
     module.add_class::<crate::models::insider_trading::InsiderTransactionType>()?;
     module.add_class::<crate::namespaces::insider_trading::InsiderTradingNamespace>()?;
+    module.add_class::<crate::namespaces::insider_trading::AsyncInsiderTradingNamespace>()?;
     add_submodule(parent, "fmp._native.insider_trading", &module)
 }
 
@@ -301,6 +321,7 @@ fn register_institutional_ownership(parent: &Bound<'_, PyModule>) -> PyResult<()
     module
         .add_class::<crate::namespaces::institutional_ownership::InstitutionalOwnershipNamespace>(
         )?;
+    module.add_class::<crate::namespaces::institutional_ownership::AsyncInstitutionalOwnershipNamespace>()?;
     add_submodule(parent, "fmp._native.institutional_ownership", &module)
 }
 
@@ -312,6 +333,7 @@ fn register_market(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::market::SectorPe>()?;
     module.add_class::<crate::models::market::SectorPerformance>()?;
     module.add_class::<crate::namespaces::market::MarketNamespace>()?;
+    module.add_class::<crate::namespaces::market::AsyncMarketNamespace>()?;
     add_submodule(parent, "fmp._native.market", &module)
 }
 
@@ -320,6 +342,7 @@ fn register_market_hours(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::market_hours::ExchangeHoliday>()?;
     module.add_class::<crate::models::market_hours::ExchangeMarketHours>()?;
     module.add_class::<crate::namespaces::market_hours::MarketHoursNamespace>()?;
+    module.add_class::<crate::namespaces::market_hours::AsyncMarketHoursNamespace>()?;
     add_submodule(parent, "fmp._native.market_hours", &module)
 }
 
@@ -328,6 +351,7 @@ fn register_news(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::news::Article>()?;
     module.add_class::<crate::models::news::NewsArticle>()?;
     module.add_class::<crate::namespaces::news::NewsNamespace>()?;
+    module.add_class::<crate::namespaces::news::AsyncNewsNamespace>()?;
     add_submodule(parent, "fmp._native.news", &module)
 }
 
@@ -339,6 +363,7 @@ fn register_quote(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::quote::QuoteShort>()?;
     module.add_class::<crate::models::quote::StockPriceChange>()?;
     module.add_class::<crate::namespaces::quote::QuoteNamespace>()?;
+    module.add_class::<crate::namespaces::quote::AsyncQuoteNamespace>()?;
     add_submodule(parent, "fmp._native.quote", &module)
 }
 
@@ -346,6 +371,7 @@ fn register_screener(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "screener")?;
     module.add_class::<crate::models::screener::CompanyScreenerResult>()?;
     module.add_class::<crate::namespaces::screener::ScreenerNamespace>()?;
+    module.add_class::<crate::namespaces::screener::AsyncScreenerNamespace>()?;
     add_submodule(parent, "fmp._native.screener", &module)
 }
 
@@ -358,6 +384,7 @@ fn register_search(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::search::NameSearchResult>()?;
     module.add_class::<crate::models::search::SymbolSearchResult>()?;
     module.add_class::<crate::namespaces::search::SearchNamespace>()?;
+    module.add_class::<crate::namespaces::search::AsyncSearchNamespace>()?;
     add_submodule(parent, "fmp._native.search", &module)
 }
 
@@ -368,12 +395,14 @@ fn register_sec_filings(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::sec_filings::SecFiling>()?;
     module.add_class::<crate::models::sec_filings::SicClassification>()?;
     module.add_class::<crate::namespaces::sec_filings::SecFilingsNamespace>()?;
+    module.add_class::<crate::namespaces::sec_filings::AsyncSecFilingsNamespace>()?;
     add_submodule(parent, "fmp._native.sec_filings", &module)
 }
 
 fn register_statements(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "statements")?;
     module.add_class::<crate::namespaces::statements::StatementsNamespace>()?;
+    module.add_class::<crate::namespaces::statements::AsyncStatementsNamespace>()?;
     register_statements_as_reported(&module)?;
     register_statements_balance(&module)?;
     register_statements_cash_flow(&module)?;
@@ -392,6 +421,7 @@ fn register_statements_as_reported(parent: &Bound<'_, PyModule>) -> PyResult<()>
     module.add_class::<crate::models::statements::as_reported::AsReportedFinancialStatement>()?;
     module
         .add_class::<crate::namespaces::statements::as_reported::StatementsAsReportedNamespace>()?;
+    module.add_class::<crate::namespaces::statements::as_reported::AsyncStatementsAsReportedNamespace>()?;
     add_submodule(parent, "fmp._native.statements.as_reported", &module)
 }
 
@@ -400,6 +430,8 @@ fn register_statements_balance(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::statements::balance::BalanceSheetStatement>()?;
     module.add_class::<crate::models::statements::balance::BalanceSheetStatementTtm>()?;
     module.add_class::<crate::namespaces::statements::balance::StatementsBalanceNamespace>()?;
+    module
+        .add_class::<crate::namespaces::statements::balance::AsyncStatementsBalanceNamespace>()?;
     add_submodule(parent, "fmp._native.statements.balance", &module)
 }
 
@@ -407,12 +439,16 @@ fn register_statements_cash_flow(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "cash_flow")?;
     module.add_class::<crate::models::statements::cash_flow::CashFlowStatement>()?;
     module.add_class::<crate::namespaces::statements::cash_flow::StatementsCashFlowNamespace>()?;
+    module
+        .add_class::<crate::namespaces::statements::cash_flow::AsyncStatementsCashFlowNamespace>(
+        )?;
     add_submodule(parent, "fmp._native.statements.cash_flow", &module)
 }
 
 fn register_statements_growth(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "growth")?;
     module.add_class::<crate::namespaces::statements::growth::StatementsGrowthNamespace>()?;
+    module.add_class::<crate::namespaces::statements::growth::AsyncStatementsGrowthNamespace>()?;
     register_statements_growth_balance(&module)?;
     register_statements_growth_cash_flow(&module)?;
     register_statements_growth_combined(&module)?;
@@ -449,6 +485,7 @@ fn register_statements_income(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     let module = PyModule::new(parent.py(), "income")?;
     module.add_class::<crate::models::statements::income::IncomeStatement>()?;
     module.add_class::<crate::namespaces::statements::income::StatementsIncomeNamespace>()?;
+    module.add_class::<crate::namespaces::statements::income::AsyncStatementsIncomeNamespace>()?;
     add_submodule(parent, "fmp._native.statements.income", &module)
 }
 
@@ -457,6 +494,8 @@ fn register_statements_metrics(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::statements::metrics::KeyMetrics>()?;
     module.add_class::<crate::models::statements::metrics::KeyMetricsTtm>()?;
     module.add_class::<crate::namespaces::statements::metrics::StatementsMetricsNamespace>()?;
+    module
+        .add_class::<crate::namespaces::statements::metrics::AsyncStatementsMetricsNamespace>()?;
     add_submodule(parent, "fmp._native.statements.metrics", &module)
 }
 
@@ -465,6 +504,7 @@ fn register_statements_ratios(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::statements::ratios::FinancialRatios>()?;
     module.add_class::<crate::models::statements::ratios::FinancialRatiosTtm>()?;
     module.add_class::<crate::namespaces::statements::ratios::StatementsRatiosNamespace>()?;
+    module.add_class::<crate::namespaces::statements::ratios::AsyncStatementsRatiosNamespace>()?;
     add_submodule(parent, "fmp._native.statements.ratios", &module)
 }
 
@@ -473,6 +513,8 @@ fn register_statements_reports(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::statements::reports::FinancialReportDate>()?;
     module.add_class::<crate::models::statements::reports::FinancialReportJson>()?;
     module.add_class::<crate::namespaces::statements::reports::StatementsReportsNamespace>()?;
+    module
+        .add_class::<crate::namespaces::statements::reports::AsyncStatementsReportsNamespace>()?;
     add_submodule(parent, "fmp._native.statements.reports", &module)
 }
 
@@ -482,6 +524,7 @@ fn register_statements_segmentation(parent: &Bound<'_, PyModule>) -> PyResult<()
     module
         .add_class::<crate::namespaces::statements::segmentation::StatementsSegmentationNamespace>(
         )?;
+    module.add_class::<crate::namespaces::statements::segmentation::AsyncStatementsSegmentationNamespace>()?;
     add_submodule(parent, "fmp._native.statements.segmentation", &module)
 }
 
@@ -492,6 +535,9 @@ fn register_statements_summaries(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::statements::summaries::LatestFinancialStatement>()?;
     module.add_class::<crate::models::statements::summaries::OwnerEarnings>()?;
     module.add_class::<crate::namespaces::statements::summaries::StatementsSummariesNamespace>()?;
+    module
+        .add_class::<crate::namespaces::statements::summaries::AsyncStatementsSummariesNamespace>(
+        )?;
     add_submodule(parent, "fmp._native.statements.summaries", &module)
 }
 
@@ -507,6 +553,9 @@ fn register_technical_indicators(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::technical_indicators::WeightedMovingAverageBar>()?;
     module.add_class::<crate::models::technical_indicators::WilliamsBar>()?;
     module.add_class::<crate::namespaces::technical_indicators::TechnicalIndicatorsNamespace>()?;
+    module
+        .add_class::<crate::namespaces::technical_indicators::AsyncTechnicalIndicatorsNamespace>(
+        )?;
     add_submodule(parent, "fmp._native.technical_indicators", &module)
 }
 
@@ -521,6 +570,7 @@ fn register_tipranks(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::tipranks::TipRanksRecommendationCounts>()?;
     module.add_class::<crate::models::tipranks::TipRanksSymbolSummary>()?;
     module.add_class::<crate::namespaces::tipranks::TipranksNamespace>()?;
+    module.add_class::<crate::namespaces::tipranks::AsyncTipranksNamespace>()?;
     add_submodule(parent, "fmp._native.tipranks", &module)
 }
 
@@ -530,5 +580,6 @@ fn register_transcripts(parent: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<crate::models::transcripts::EarningsTranscriptDate>()?;
     module.add_class::<crate::models::transcripts::LatestEarningsTranscript>()?;
     module.add_class::<crate::namespaces::transcripts::TranscriptsNamespace>()?;
+    module.add_class::<crate::namespaces::transcripts::AsyncTranscriptsNamespace>()?;
     add_submodule(parent, "fmp._native.transcripts", &module)
 }

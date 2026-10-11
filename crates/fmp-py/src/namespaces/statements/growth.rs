@@ -15,7 +15,7 @@ use crate::models::statements::growth::balance::BalanceSheetStatementGrowth;
 use crate::models::statements::growth::cash_flow::CashFlowStatementGrowth;
 use crate::models::statements::growth::combined::FinancialStatementGrowth;
 use crate::models::statements::growth::income::IncomeStatementGrowth;
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements growth endpoints for a single client, exposed as `client.statements.growth`.
 #[gen_stub_pyclass]
@@ -123,6 +123,110 @@ impl StatementsGrowthNamespace {
                 client.financial_statement_growth(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(FinancialStatementGrowth::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Statements growth endpoints for a single async client, exposed as `client.statements.growth`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.growth", frozen)]
+pub(crate) struct AsyncStatementsGrowthNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsGrowthNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsGrowthNamespace {
+    /// Retrieves worldwide income-statement growth for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn income(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<IncomeStatementGrowth>> {
+        let query = income_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.income_statement_growth(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IncomeStatementGrowth::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide balance-sheet-statement growth for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn balance_sheet(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<BalanceSheetStatementGrowth>> {
+        let query = balance_sheet_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.balance_sheet_statement_growth(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BalanceSheetStatementGrowth::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide cash-flow-statement growth for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn cash_flow(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<CashFlowStatementGrowth>> {
+        let query = cash_flow_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cash_flow_statement_growth(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CashFlowStatementGrowth::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves combined worldwide financial-statement growth for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn financial(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<FinancialStatementGrowth>> {
+        let query = financial_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_statement_growth(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

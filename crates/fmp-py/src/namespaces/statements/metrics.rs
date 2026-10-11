@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::metrics::{KeyMetrics, KeyMetricsTtm};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements metrics endpoints for a single client, exposed as `client.statements.metrics`.
 #[gen_stub_pyclass]
@@ -59,6 +59,53 @@ impl StatementsMetricsNamespace {
                 client.key_metrics_ttm(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(KeyMetricsTtm::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Statements metrics endpoints for a single async client, exposed as `client.statements.metrics`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.metrics", frozen)]
+pub(crate) struct AsyncStatementsMetricsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsMetricsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsMetricsNamespace {
+    /// Retrieves historical worldwide key metrics for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn key_metrics(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<KeyMetrics>> {
+        let query = key_metrics_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.key_metrics(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(KeyMetrics::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide trailing-twelve-month key metrics for one company.
+    #[pyo3(signature = (symbol))]
+    async fn key_metrics_ttm(&self, symbol: String) -> PyResult<Vec<KeyMetricsTtm>> {
+        let query = key_metrics_ttm_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.key_metrics_ttm(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(KeyMetricsTtm::from).collect())
             .map_err(to_py_error)
     }

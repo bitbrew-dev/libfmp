@@ -11,7 +11,7 @@ use crate::errors::to_py_error;
 use crate::models::chart::{
     StockChartAdjustedBar, StockChartFullBar, StockChartIntradayBar, StockChartLightBar,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Chart endpoints for a single client, exposed as `client.chart`.
 #[gen_stub_pyclass]
@@ -237,6 +237,205 @@ impl ChartNamespace {
                 client.stock_chart_four_hours(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Chart endpoints for a single async client, exposed as `client.chart`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.chart", frozen)]
+pub(crate) struct AsyncChartNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncChartNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncChartNamespace {
+    /// Retrieves compact worldwide end-of-day stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn light(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartLightBar>> {
+        let query = light_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_light(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartLightBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves detailed worldwide end-of-day stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn full(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartFullBar>> {
+        let query = full_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_full(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartFullBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves split-unadjusted worldwide end-of-day stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn non_split_adjusted(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartAdjustedBar>> {
+        let query = non_split_adjusted_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_non_split_adjusted(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartAdjustedBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves dividend-adjusted worldwide end-of-day stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn dividend_adjusted(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartAdjustedBar>> {
+        let query = dividend_adjusted_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_dividend_adjusted(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartAdjustedBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves one-minute worldwide intraday stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None, nonadjusted=None, extended=None))]
+    async fn one_minute(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        nonadjusted: Option<bool>,
+        extended: Option<bool>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = one_minute_query(&symbol, from_, to, nonadjusted, extended)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_one_minute(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves five-minute worldwide intraday stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None, nonadjusted=None, extended=None))]
+    async fn five_minutes(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        nonadjusted: Option<bool>,
+        extended: Option<bool>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = five_minutes_query(&symbol, from_, to, nonadjusted, extended)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_five_minutes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves fifteen-minute worldwide intraday stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None, nonadjusted=None, extended=None))]
+    async fn fifteen_minutes(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        nonadjusted: Option<bool>,
+        extended: Option<bool>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = fifteen_minutes_query(&symbol, from_, to, nonadjusted, extended)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_fifteen_minutes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves thirty-minute worldwide intraday stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None, nonadjusted=None, extended=None))]
+    async fn thirty_minutes(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        nonadjusted: Option<bool>,
+        extended: Option<bool>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = thirty_minutes_query(&symbol, from_, to, nonadjusted, extended)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_thirty_minutes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves one-hour worldwide intraday stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None, nonadjusted=None, extended=None))]
+    async fn one_hour(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        nonadjusted: Option<bool>,
+        extended: Option<bool>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = one_hour_query(&symbol, from_, to, nonadjusted, extended)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_one_hour(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves four-hour worldwide intraday stock chart rows.
+    #[pyo3(signature = (symbol, *, from_=None, to=None, nonadjusted=None, extended=None))]
+    async fn four_hours(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        nonadjusted: Option<bool>,
+        extended: Option<bool>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = four_hours_query(&symbol, from_, to, nonadjusted, extended)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_chart_four_hours(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
             .map_err(to_py_error)
     }

@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::balance::{BalanceSheetStatement, BalanceSheetStatementTtm};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements balance endpoints for a single client, exposed as `client.statements.balance`.
 #[gen_stub_pyclass]
@@ -63,6 +63,62 @@ impl StatementsBalanceNamespace {
                 client.balance_sheet_statement_ttm(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BalanceSheetStatementTtm::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Statements balance endpoints for a single async client, exposed as `client.statements.balance`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.balance", frozen)]
+pub(crate) struct AsyncStatementsBalanceNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsBalanceNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsBalanceNamespace {
+    /// Retrieves historical worldwide balance sheets for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn statement(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<BalanceSheetStatement>> {
+        let query = statement_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.balance_sheet_statement(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BalanceSheetStatement::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves trailing-twelve-month worldwide balance sheets for one company.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn statement_ttm(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<BalanceSheetStatementTtm>> {
+        let query = statement_ttm_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.balance_sheet_statement_ttm(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

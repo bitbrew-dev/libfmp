@@ -17,7 +17,7 @@ use crate::models::funds::{
     FundDisclosure, FundDisclosureHolder, FundDisclosureSearchResult,
 };
 use crate::models::institutional_ownership::Form13fFilingDate;
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Funds endpoints for a single client, exposed as `client.funds`.
 #[gen_stub_pyclass]
@@ -192,6 +192,152 @@ impl FundsNamespace {
                 client.fund_disclosure_dates(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(Form13fFilingDate::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Funds endpoints for a single async client, exposed as `client.funds`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.funds", frozen)]
+pub(crate) struct AsyncFundsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncFundsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncFundsNamespace {
+    /// Retrieves the worldwide holdings of one ETF or mutual fund.
+    #[pyo3(signature = (symbol))]
+    async fn etf_holdings(&self, symbol: String) -> PyResult<Vec<EtfFundHolding>> {
+        let query = etf_holdings_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.etf_holdings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EtfFundHolding::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide descriptive and trading information for one fund.
+    #[pyo3(signature = (symbol))]
+    async fn etf_info(&self, symbol: String) -> PyResult<Vec<EtfFundInfo>> {
+        let query = etf_info_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.etf_info(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EtfFundInfo::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide country allocation for one ETF or mutual fund.
+    #[pyo3(signature = (symbol))]
+    async fn etf_country_weightings(&self, symbol: String) -> PyResult<Vec<EtfCountryWeighting>> {
+        let query = etf_country_weightings_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.etf_country_weightings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EtfCountryWeighting::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide ETF exposure to one requested asset.
+    #[pyo3(signature = (symbol))]
+    async fn etf_asset_exposure(&self, symbol: String) -> PyResult<Vec<EtfAssetExposure>> {
+        let query = etf_asset_exposure_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.etf_asset_exposure(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EtfAssetExposure::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide sector allocation for one ETF or mutual fund.
+    #[pyo3(signature = (symbol))]
+    async fn etf_sector_weightings(&self, symbol: String) -> PyResult<Vec<EtfSectorWeighting>> {
+        let query = etf_sector_weightings_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.etf_sector_weightings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EtfSectorWeighting::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest US fund disclosures holding one requested asset.
+    #[pyo3(signature = (symbol))]
+    async fn latest_disclosure_holders(
+        &self,
+        symbol: String,
+    ) -> PyResult<Vec<FundDisclosureHolder>> {
+        let query = latest_disclosure_holders_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_fund_disclosure_holders(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(FundDisclosureHolder::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves positions from one US mutual-fund disclosure period.
+    #[pyo3(signature = (symbol, year, quarter, *, cik=None))]
+    async fn disclosures(
+        &self,
+        symbol: String,
+        year: i64,
+        quarter: i64,
+        cik: Option<String>,
+    ) -> PyResult<Vec<FundDisclosure>> {
+        let query = disclosures_query(&symbol, year, quarter, cik.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.fund_disclosures(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(FundDisclosure::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US mutual-fund and ETF disclosure holders by exact name text.
+    #[pyo3(signature = (name))]
+    async fn search_disclosure_holders(
+        &self,
+        name: String,
+    ) -> PyResult<Vec<FundDisclosureSearchResult>> {
+        let query = search_disclosure_holders_query(&name)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_fund_disclosure_holders(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(FundDisclosureSearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves available US fund-disclosure reporting dates.
+    #[pyo3(signature = (symbol, *, cik=None))]
+    async fn disclosure_dates(
+        &self,
+        symbol: String,
+        cik: Option<String>,
+    ) -> PyResult<Vec<Form13fFilingDate>> {
+        let query = disclosure_dates_query(&symbol, cik.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.fund_disclosure_dates(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(Form13fFilingDate::from).collect())
             .map_err(to_py_error)
     }

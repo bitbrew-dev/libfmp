@@ -15,7 +15,7 @@ use crate::models::insider_trading::{
     BeneficialOwnershipAcquisition, InsiderReportingName, InsiderTrade, InsiderTradeStatistics,
     InsiderTransactionType,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Insider trading endpoints for a single client, exposed as `client.insider_trading`.
 #[gen_stub_pyclass]
@@ -157,6 +157,132 @@ impl InsiderTradingNamespace {
                 client.beneficial_ownership_acquisitions(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BeneficialOwnershipAcquisition::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Insider trading endpoints for a single async client, exposed as `client.insider_trading`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.insider_trading", frozen)]
+pub(crate) struct AsyncInsiderTradingNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncInsiderTradingNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncInsiderTradingNamespace {
+    /// Retrieves the latest US insider trades with optional date and pagination filters.
+    #[pyo3(signature = (*, date=None, page=None, limit=None))]
+    async fn latest_trades(
+        &self,
+        date: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<InsiderTrade>> {
+        let query = latest_trades_query(date, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_insider_trades(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(InsiderTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US insider trades using independently optional filters.
+    #[pyo3(signature = (*, symbol=None, page=None, limit=None, reporting_cik=None, company_cik=None, transaction_type=None))]
+    async fn search_trades(
+        &self,
+        symbol: Option<String>,
+        page: Option<i64>,
+        limit: Option<i64>,
+        reporting_cik: Option<String>,
+        company_cik: Option<String>,
+        transaction_type: Option<String>,
+    ) -> PyResult<Vec<InsiderTrade>> {
+        let query = search_trades_query(
+            symbol.as_deref(),
+            page,
+            limit,
+            reporting_cik.as_deref(),
+            company_cik.as_deref(),
+            transaction_type.as_deref(),
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_insider_trades(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(InsiderTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US insider-reporting identities by name.
+    #[pyo3(signature = (name))]
+    async fn search_reporting_names(&self, name: String) -> PyResult<Vec<InsiderReportingName>> {
+        let query = search_reporting_names_query(&name)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_insider_reporting_names(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(InsiderReportingName::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the US insider transaction-type taxonomy.
+    async fn transaction_types(&self) -> PyResult<Vec<InsiderTransactionType>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.insider_transaction_types().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(InsiderTransactionType::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves quarterly US insider-trade statistics for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn trade_statistics(&self, symbol: String) -> PyResult<Vec<InsiderTradeStatistics>> {
+        let query = trade_statistics_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.insider_trade_statistics(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(InsiderTradeStatistics::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves US beneficial-ownership acquisition filings for one ticker.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn beneficial_ownership_acquisitions(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<BeneficialOwnershipAcquisition>> {
+        let query = beneficial_ownership_acquisitions_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.beneficial_ownership_acquisitions(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

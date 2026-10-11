@@ -16,7 +16,7 @@ use crate::models::analyst::{
     FinancialEstimate, HistoricalRating, HistoricalStockGrade, PriceTargetConsensus,
     PriceTargetSummary, RatingSnapshot, StockGrade, StockGradesSummary,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Analyst endpoints for a single client, exposed as `client.analyst`.
 #[gen_stub_pyclass]
@@ -173,6 +173,134 @@ impl AnalystNamespace {
                 client.stock_grades_summary(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(StockGradesSummary::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Analyst endpoints for a single async client, exposed as `client.analyst`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.analyst", frozen)]
+pub(crate) struct AsyncAnalystNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncAnalystNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncAnalystNamespace {
+    /// Retrieves worldwide analyst financial estimates for one ticker.
+    #[pyo3(signature = (symbol, period, *, page=None, limit=None))]
+    async fn financial_estimates(
+        &self,
+        symbol: String,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"annual\", \"quarter\"]", imports = ("typing",)))]
+        period: String,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<FinancialEstimate>> {
+        let query = financial_estimates_query(&symbol, &period, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_estimates(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(FinancialEstimate::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide financial-rating snapshot for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn ratings_snapshot(&self, symbol: String) -> PyResult<Vec<RatingSnapshot>> {
+        let query = ratings_snapshot_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.ratings_snapshot(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(RatingSnapshot::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide historical financial ratings for one ticker.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn historical_ratings(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<HistoricalRating>> {
+        let query = historical_ratings_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_ratings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(HistoricalRating::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the US-only price-target summary for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn price_target_summary(&self, symbol: String) -> PyResult<Vec<PriceTargetSummary>> {
+        let query = price_target_summary_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.price_target_summary(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(PriceTargetSummary::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the US-only price-target consensus for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn price_target_consensus(&self, symbol: String) -> PyResult<Vec<PriceTargetConsensus>> {
+        let query = price_target_consensus_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.price_target_consensus(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(PriceTargetConsensus::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves current worldwide stock-grade actions for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn stock_grades(&self, symbol: String) -> PyResult<Vec<StockGrade>> {
+        let query = stock_grades_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_grades(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockGrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide historical stock-grade counts for one ticker.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn historical_stock_grades(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<HistoricalStockGrade>> {
+        let query = historical_stock_grades_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_stock_grades(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(HistoricalStockGrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide stock-grades summary for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn stock_grades_summary(&self, symbol: String) -> PyResult<Vec<StockGradesSummary>> {
+        let query = stock_grades_summary_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_grades_summary(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(StockGradesSummary::from).collect())
             .map_err(to_py_error)
     }

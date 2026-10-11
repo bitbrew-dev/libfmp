@@ -66,7 +66,7 @@ fn quote_registry_renders_the_drop_in_namespace() {
         "#[pyclass(module = \"fmp._native.quote\", frozen)]",
         "pub(crate) struct QuoteNamespace {",
         "pub(crate) fn new(builder: Arc<ClientHandle>) -> Self",
-        "use crate::runtime::{ClientHandle, block_on};",
+        "use crate::runtime::{ClientHandle, block_on, spawn};",
         "use libfmp::endpoints::quote::{",
         "QuoteQuery, QuoteShortQuery",
         "use crate::models::quote::{",
@@ -78,9 +78,13 @@ fn quote_registry_renders_the_drop_in_namespace() {
         "fn mutual_funds(&self, py: Python<'_>) -> PyResult<Vec<QuoteShort>> {",
         "client.mutual_fund_quotes().await",
         "fn short_query(symbol: &str) -> PyResult<QuoteShortQuery> {\n    let symbol = args::ticker(\"symbol\", symbol)?;\n    Ok(QuoteShortQuery::new(symbol))\n}",
+        "/// Quote endpoints for a single async client, exposed as `client.quote`.\n#[gen_stub_pyclass]\n#[pyclass(module = \"fmp._native.quote\", frozen)]\npub(crate) struct AsyncQuoteNamespace {",
+        "    /// The full quote for a symbol.\n    #[pyo3(signature = (symbol))]\n    async fn full(&self, symbol: String) -> PyResult<Vec<Quote>> {\n        let query = full_query(&symbol)?;\n        let rows = spawn(self.builder.clone(), |client| async move { client.quote(query).await }).await?;\n        rows.map(|items| items.into_iter().map(Quote::from).collect()).map_err(to_py_error)\n    }",
+        "async fn mutual_funds(&self) -> PyResult<Vec<QuoteShort>> {",
     ] {
         assert!(quote.contains(needle), "missing {needle:?} in:\n{quote}");
     }
+    assert_eq!(quote.matches("fn short_query(").count(), 1);
     assert!(!quote.contains("#[getter]"));
     assert!(!quote.contains("BinaryPayload"));
 }
@@ -146,11 +150,13 @@ fn nested_fixture_renders_parent_getters_and_children() {
     let parent = source(&files, "statements/mod.rs");
     for needle in [
         "pub(crate) mod income;\npub(crate) mod reports;",
-        "use self::income::StatementsIncomeNamespace;",
+        "use self::income::{AsyncStatementsIncomeNamespace, StatementsIncomeNamespace};",
         "#[pyclass(module = \"fmp._native.statements\", frozen)]",
         "pub(crate) struct StatementsNamespace {",
         "    #[getter]\n    fn income(&self) -> StatementsIncomeNamespace {\n        StatementsIncomeNamespace::new(self.builder.clone())\n    }",
         "    #[getter]\n    fn reports(&self) -> StatementsReportsNamespace {",
+        "pub(crate) struct AsyncStatementsNamespace {",
+        "    #[getter]\n    fn income(&self) -> AsyncStatementsIncomeNamespace {\n        AsyncStatementsIncomeNamespace::new(self.builder.clone())\n    }",
     ] {
         assert!(parent.contains(needle), "missing {needle:?} in:\n{parent}");
     }
@@ -179,7 +185,7 @@ fn nested_fixture_renders_parent_getters_and_children() {
     let reports = source(&files, "statements/reports.rs");
     for needle in [
         "use libfmp::endpoints::statements::reports::FinancialReportsXlsxQuery;",
-        "use crate::args;\nuse crate::binary::BinaryPayload;\nuse crate::errors::to_py_error;\nuse crate::runtime::{ClientHandle, block_on};\n",
+        "use crate::args;\nuse crate::binary::BinaryPayload;\nuse crate::errors::to_py_error;\nuse crate::runtime::{ClientHandle, block_on, spawn};\n",
         "pub(crate) struct StatementsReportsNamespace {",
         "    /// Downloads one financial report as an XLSX workbook.\n    #[pyo3(signature = (symbol, year, period))]\n    fn financial_reports_xlsx(&self, py: Python<'_>, symbol: &str, year: i64, #[gen_stub(override_type(type_repr = \"typing.Literal[\\\"Q1\\\", \\\"Q2\\\", \\\"Q3\\\", \\\"Q4\\\", \\\"FY\\\"]\", imports = (\"typing\",)))] period: &str) -> PyResult<BinaryPayload> {",
         "let query = financial_reports_xlsx_query(symbol, year, period)?;",
@@ -188,6 +194,7 @@ fn nested_fixture_renders_parent_getters_and_children() {
         "fn financial_reports_xlsx_query(symbol: &str, year: i64, period: &str) -> PyResult<FinancialReportsXlsxQuery> {",
         "let period = args::fiscal_period(\"period\", period)?;",
         "Ok(FinancialReportsXlsxQuery::new(symbol, year, period))",
+        "period: String) -> PyResult<BinaryPayload> {\n        let query = financial_reports_xlsx_query(&symbol, year, &period)?;\n        let response = spawn(self.builder.clone(), |client| async move { client.financial_reports_xlsx(query).await }).await?;\n        response.map(BinaryPayload::from).map_err(to_py_error)\n    }",
     ] {
         assert!(
             reports.contains(needle),
@@ -220,13 +227,15 @@ fn dynamic_fixture_renders_dict_rows_with_the_stub_override() {
     let files = render_all(&manifest().join("tests/fixtures/dynamic_rows"));
     let sec = source(&files, "sec_filings.rs");
     for needle in [
-        "use crate::args;\nuse crate::convert;\nuse crate::errors::to_py_error;\nuse crate::runtime::{ClientHandle, block_on};\n",
+        "use crate::args;\nuse crate::convert;\nuse crate::errors::to_py_error;\nuse crate::runtime::{ClientHandle, block_on, spawn};\n",
         "#[pyo3(signature = (*, symbol=None, cik=None, sic_code=None))]\n    #[gen_stub(override_return_type(type_repr = \"list[dict[str, typing.Any]]\", imports = (\"typing\")))]\n    fn search_industry_classifications(",
         "sic_code: Option<&str>) -> PyResult<Vec<Py<PyAny>>> {",
         "let query = search_industry_classifications_query(symbol, cik, sic_code)?;",
         "let rows = py.detach(move || block_on(builder, |client| async move { client.search_industry_classifications(query).await }))?;",
         "        rows.map_err(to_py_error)?.iter().map(|row| convert::dynamic_object_to_py(py, row).map(Bound::unbind)).collect()\n    }",
         "let mut query = IndustryClassificationSearchQuery::new();",
+        "    async fn search_industry_classifications(&self, symbol: Option<String>, cik: Option<String>, sic_code: Option<String>) -> PyResult<Vec<Py<PyAny>>> {\n        let query = search_industry_classifications_query(symbol.as_deref(), cik.as_deref(), sic_code.as_deref())?;",
+        "        Python::attach(|py| rows.map_err(to_py_error)?.iter().map(|row| convert::dynamic_object_to_py(py, row).map(Bound::unbind)).collect())\n    }",
     ] {
         assert!(sec.contains(needle), "missing {needle:?} in:\n{sec}");
     }
@@ -331,6 +340,8 @@ fn wide_signatures_get_the_clippy_allow_and_prefixed_input_types() {
         "symbols: args::SymbolsArg, range: (args::DateArg, args::DateArg), page: Option<i64>, since: Option<args::DateTimeArg>, active: Option<bool>, party: Option<&str>",
         "let party = args::optional(\"party\", party, args::text)?;",
         "Ok(WideQuery::new(symbols, range, page, since, active, party))",
+        "party=None))]\n    async fn wide(&self, symbols: args::SymbolsArg, range: (args::DateArg, args::DateArg), page: Option<i64>, since: Option<args::DateTimeArg>, active: Option<bool>, party: Option<String>) -> PyResult<",
+        "let query = wide_query(symbols, range, page, since, active, party.as_deref())?;",
     ] {
         assert!(source.contains(needle), "missing {needle:?} in:\n{source}");
     }
@@ -449,8 +460,8 @@ fn binding_files_render_the_wiring_and_parse() {
     syn::parse_file(&registration).expect("registration parses");
     for needle in [
         "pub(crate) fn register_namespaces(parent: &Bound<'_, PyModule>) -> PyResult<()> {\n    register_analyst(parent)?;",
-        "fn register_statements(parent: &Bound<'_, PyModule>) -> PyResult<()> {\n    let module = PyModule::new(parent.py(), \"statements\")?;\n    module.add_class::<crate::namespaces::statements::StatementsNamespace>()?;\n    register_statements_as_reported(&module)?;",
-        "    module.add_class::<crate::models::statements::income::IncomeStatement>()?;\n    module.add_class::<crate::namespaces::statements::income::StatementsIncomeNamespace>()?;\n    add_submodule(parent, \"fmp._native.statements.income\", &module)\n}",
+        "fn register_statements(parent: &Bound<'_, PyModule>) -> PyResult<()> {\n    let module = PyModule::new(parent.py(), \"statements\")?;\n    module.add_class::<crate::namespaces::statements::StatementsNamespace>()?;\n    module.add_class::<crate::namespaces::statements::AsyncStatementsNamespace>()?;\n    register_statements_as_reported(&module)?;",
+        "    module.add_class::<crate::models::statements::income::IncomeStatement>()?;\n    module.add_class::<crate::namespaces::statements::income::StatementsIncomeNamespace>()?;\n    module.add_class::<crate::namespaces::statements::income::AsyncStatementsIncomeNamespace>()?;\n    add_submodule(parent, \"fmp._native.statements.income\", &module)\n}",
     ] {
         assert!(
             registration.contains(needle),
@@ -460,8 +471,15 @@ fn binding_files_render_the_wiring_and_parse() {
 
     let getters = render_client_namespaces(&tree);
     syn::parse_file(&getters).expect("client getters parse");
-    assert!(getters.contains("use crate::namespaces::statements::StatementsNamespace;"));
-    assert!(getters.contains("    #[getter]\n    fn statements(&self) -> StatementsNamespace {"));
+    assert!(getters.contains(
+        "use crate::namespaces::statements::{AsyncStatementsNamespace, StatementsNamespace};"
+    ));
+    assert!(getters.contains(
+        "impl FmpClient {\n    /// The `statements` endpoints, reached as `client.statements`.\n    #[getter]\n    fn statements(&self) -> StatementsNamespace {"
+    ));
+    assert!(getters.contains(
+        "impl AsyncFmpClient {\n    /// The `statements` endpoints, reached as `client.statements`.\n    #[getter]\n    fn statements(&self) -> AsyncStatementsNamespace {"
+    ));
     assert!(!getters.contains("fn income("));
 
     let namespaces_mod = render_namespaces_mod(&tree);

@@ -1,18 +1,20 @@
 //! Rendering one namespace node into Rust source.
 //!
+//! Each node renders two classes in one file: the sync `<Path>Namespace` for
+//! `FmpClient` and its `Async<Path>Namespace` twin for `AsyncFmpClient`.
 //! Every method follows the same shape:
 //! a free `<name>_query` function converts the Python arguments and builds
-//! the `libfmp` query (the part an async twin will share), and the
-//! `#[pymethods]` body only detaches from the interpreter, runs the call on
-//! the shared runtime, and maps rows into the generated models (or a
+//! the `libfmp` query (shared by both twins), and the `#[pymethods]` body
+//! only hands the call to the shared runtime (detached `block_on`, or an
+//! awaited `spawn`) and maps rows into the generated models (or a
 //! `BinaryResponse` into the hand-written `BinaryPayload`).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 
 use crate::GENERATED_HEADER;
-use crate::method::{render_method, render_query_fn};
-use crate::plan::{Node, struct_name_for};
+use crate::method::{render_async_method, render_method, render_query_fn};
+use crate::plan::{Node, async_struct_name_for, struct_name_for};
 
 /// Where the types of one verified entry live, as segments under
 /// `libfmp::endpoints`: the query type's module and each nested builder's
@@ -117,42 +119,80 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
     if methods.is_empty() {
         out.push_str("use crate::runtime::ClientHandle;\n");
     } else {
-        out.push_str("use crate::runtime::{ClientHandle, block_on};\n");
+        out.push_str("use crate::runtime::{ClientHandle, block_on, spawn};\n");
     }
     if !node.children.is_empty() {
         out.push('\n');
         for child in &node.children {
             let mut child_path = node.path.clone();
             child_path.push(child.clone());
-            let _ = writeln!(out, "use self::{child}::{};", struct_name_for(&child_path));
+            let _ = writeln!(
+                out,
+                "use self::{child}::{{{}, {}}};",
+                async_struct_name_for(&child_path),
+                struct_name_for(&child_path)
+            );
         }
     }
 
+    render_class(&mut out, node, Flavor::Sync);
+    render_class(&mut out, node, Flavor::Async);
+
+    for endpoint in methods {
+        if endpoint.query_type.is_some() {
+            out.push('\n');
+            render_query_fn(&mut out, endpoint, &struct_name);
+        }
+    }
+
+    Ok(Rendered { source: out })
+}
+
+/// Which of a node's two classes [`render_class`] emits.
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Flavor {
+    Sync,
+    Async,
+}
+
+/// Renders one namespace class: the struct, its constructor, and the
+/// `#[pymethods]` block with every endpoint wrapper plus one getter per child
+/// returning the child's class of the same flavor.
+fn render_class(out: &mut String, node: &Node, flavor: Flavor) {
+    let dotted = node.dotted();
+    let (struct_name, client): (fn(&[String]) -> String, &str) = match flavor {
+        Flavor::Sync => (struct_name_for, "client"),
+        Flavor::Async => (async_struct_name_for, "async client"),
+    };
+    let name = struct_name(&node.path);
     let _ = write!(
         out,
-        "\n/// {} endpoints for a single client, exposed as `client.{dotted}`.\n",
+        "\n/// {} endpoints for a single {client}, exposed as `client.{dotted}`.\n",
         humanize(&node.path)
     );
     out.push_str("#[gen_stub_pyclass]\n");
     let _ = writeln!(out, "#[pyclass(module = \"fmp._native.{dotted}\", frozen)]");
     let _ = writeln!(
         out,
-        "pub(crate) struct {struct_name} {{\n    builder: Arc<ClientHandle>,\n}}\n"
+        "pub(crate) struct {name} {{\n    builder: Arc<ClientHandle>,\n}}\n"
     );
     let _ = writeln!(
         out,
-        "impl {struct_name} {{\n    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {{\n        Self {{ builder }}\n    }}\n}}\n"
+        "impl {name} {{\n    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {{\n        Self {{ builder }}\n    }}\n}}\n"
     );
 
     out.push_str("#[gen_stub_pymethods]\n#[pymethods]\n");
-    let _ = writeln!(out, "impl {struct_name} {{");
+    let _ = writeln!(out, "impl {name} {{");
     let mut first = true;
-    for endpoint in methods {
+    for endpoint in &node.endpoints {
         if !first {
             out.push('\n');
         }
         first = false;
-        render_method(&mut out, endpoint);
+        match flavor {
+            Flavor::Sync => render_method(out, endpoint),
+            Flavor::Async => render_async_method(out, endpoint),
+        }
     }
     for child in &node.children {
         if !first {
@@ -161,7 +201,7 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
         first = false;
         let mut child_path = node.path.clone();
         child_path.push(child.clone());
-        let child_struct = struct_name_for(&child_path);
+        let child_struct = struct_name(&child_path);
         let _ = writeln!(
             out,
             "    /// The `{dotted}.{child}` endpoints, reached as `client.{dotted}.{child}`."
@@ -173,15 +213,6 @@ pub(crate) fn render(node: &Node, query_modules: &QueryModules) -> Result<Render
         );
     }
     out.push_str("}\n");
-
-    for endpoint in methods {
-        if endpoint.query_type.is_some() {
-            out.push('\n');
-            render_query_fn(&mut out, endpoint, &struct_name);
-        }
-    }
-
-    Ok(Rendered { source: out })
 }
 
 /// `use <prefix>::<module>::{A, B};` with the braces dropped for one name.

@@ -13,7 +13,7 @@ use crate::errors::to_py_error;
 use crate::models::transcripts::{
     EarningsTranscript, EarningsTranscriptDate, LatestEarningsTranscript,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Transcripts endpoints for a single client, exposed as `client.transcripts`.
 #[gen_stub_pyclass]
@@ -86,6 +86,79 @@ impl TranscriptsNamespace {
                 client.earnings_transcript_dates(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(EarningsTranscriptDate::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Transcripts endpoints for a single async client, exposed as `client.transcripts`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.transcripts", frozen)]
+pub(crate) struct AsyncTranscriptsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncTranscriptsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncTranscriptsNamespace {
+    /// Retrieves the latest worldwide earnings-transcript metadata.
+    #[pyo3(signature = (*, limit=None, page=None))]
+    async fn latest(
+        &self,
+        limit: Option<i64>,
+        page: Option<i64>,
+    ) -> PyResult<Vec<LatestEarningsTranscript>> {
+        let query = latest_query(limit, page)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_earnings_transcripts(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(LatestEarningsTranscript::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves complete worldwide earnings-call transcripts.
+    #[pyo3(signature = (symbol, year, quarter, *, limit=None))]
+    async fn by_quarter(
+        &self,
+        symbol: String,
+        year: i64,
+        quarter: i64,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<EarningsTranscript>> {
+        let query = by_quarter_query(&symbol, year, quarter, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.earnings_transcript(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EarningsTranscript::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves available worldwide transcript dates for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn dates(&self, symbol: String) -> PyResult<Vec<EarningsTranscriptDate>> {
+        let query = dates_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.earnings_transcript_dates(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

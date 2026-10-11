@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::dcf::{CustomDcfValuation, CustomLeveredDcfValuation, DcfValuation};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Dcf endpoints for a single client, exposed as `client.dcf`.
 #[gen_stub_pyclass]
@@ -165,6 +165,160 @@ impl DcfNamespace {
                 client.custom_levered_discounted_cash_flow(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CustomLeveredDcfValuation::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Dcf endpoints for a single async client, exposed as `client.dcf`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.dcf", frozen)]
+pub(crate) struct AsyncDcfNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncDcfNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncDcfNamespace {
+    /// Retrieves the standard discounted-cash-flow valuation for one company.
+    #[pyo3(signature = (symbol))]
+    async fn standard(&self, symbol: String) -> PyResult<Vec<DcfValuation>> {
+        let query = standard_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.discounted_cash_flow(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(DcfValuation::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the levered discounted-cash-flow valuation for one company.
+    #[pyo3(signature = (symbol))]
+    async fn levered(&self, symbol: String) -> PyResult<Vec<DcfValuation>> {
+        let query = levered_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.levered_discounted_cash_flow(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(DcfValuation::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a custom unlevered discounted-cash-flow valuation.
+    #[pyo3(signature = (symbol, *, revenue_growth_pct=None, ebitda_pct=None, depreciation_and_amortization_pct=None, cash_and_short_term_investments_pct=None, receivables_pct=None, inventories_pct=None, payable_pct=None, ebit_pct=None, capital_expenditure_pct=None, operating_cash_flow_pct=None, selling_general_and_administrative_expenses_pct=None, tax_rate=None, long_term_growth_rate=None, cost_of_debt=None, cost_of_equity=None, market_risk_premium=None, beta=None, risk_free_rate=None))]
+    #[allow(clippy::too_many_arguments)]
+    async fn custom(
+        &self,
+        symbol: String,
+        revenue_growth_pct: Option<f64>,
+        ebitda_pct: Option<f64>,
+        depreciation_and_amortization_pct: Option<f64>,
+        cash_and_short_term_investments_pct: Option<f64>,
+        receivables_pct: Option<f64>,
+        inventories_pct: Option<f64>,
+        payable_pct: Option<f64>,
+        ebit_pct: Option<f64>,
+        capital_expenditure_pct: Option<f64>,
+        operating_cash_flow_pct: Option<f64>,
+        selling_general_and_administrative_expenses_pct: Option<f64>,
+        tax_rate: Option<f64>,
+        long_term_growth_rate: Option<f64>,
+        cost_of_debt: Option<f64>,
+        cost_of_equity: Option<f64>,
+        market_risk_premium: Option<f64>,
+        beta: Option<f64>,
+        risk_free_rate: Option<f64>,
+    ) -> PyResult<Vec<CustomDcfValuation>> {
+        let query = custom_query(
+            &symbol,
+            revenue_growth_pct,
+            ebitda_pct,
+            depreciation_and_amortization_pct,
+            cash_and_short_term_investments_pct,
+            receivables_pct,
+            inventories_pct,
+            payable_pct,
+            ebit_pct,
+            capital_expenditure_pct,
+            operating_cash_flow_pct,
+            selling_general_and_administrative_expenses_pct,
+            tax_rate,
+            long_term_growth_rate,
+            cost_of_debt,
+            cost_of_equity,
+            market_risk_premium,
+            beta,
+            risk_free_rate,
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.custom_discounted_cash_flow(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CustomDcfValuation::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a custom levered discounted-cash-flow valuation.
+    #[pyo3(signature = (symbol, *, revenue_growth_pct=None, ebitda_pct=None, depreciation_and_amortization_pct=None, cash_and_short_term_investments_pct=None, receivables_pct=None, inventories_pct=None, payable_pct=None, ebit_pct=None, capital_expenditure_pct=None, operating_cash_flow_pct=None, selling_general_and_administrative_expenses_pct=None, tax_rate=None, long_term_growth_rate=None, cost_of_debt=None, cost_of_equity=None, market_risk_premium=None, beta=None, risk_free_rate=None))]
+    #[allow(clippy::too_many_arguments)]
+    async fn custom_levered(
+        &self,
+        symbol: String,
+        revenue_growth_pct: Option<f64>,
+        ebitda_pct: Option<f64>,
+        depreciation_and_amortization_pct: Option<f64>,
+        cash_and_short_term_investments_pct: Option<f64>,
+        receivables_pct: Option<f64>,
+        inventories_pct: Option<f64>,
+        payable_pct: Option<f64>,
+        ebit_pct: Option<f64>,
+        capital_expenditure_pct: Option<f64>,
+        operating_cash_flow_pct: Option<f64>,
+        selling_general_and_administrative_expenses_pct: Option<f64>,
+        tax_rate: Option<f64>,
+        long_term_growth_rate: Option<f64>,
+        cost_of_debt: Option<f64>,
+        cost_of_equity: Option<f64>,
+        market_risk_premium: Option<f64>,
+        beta: Option<f64>,
+        risk_free_rate: Option<f64>,
+    ) -> PyResult<Vec<CustomLeveredDcfValuation>> {
+        let query = custom_levered_query(
+            &symbol,
+            revenue_growth_pct,
+            ebitda_pct,
+            depreciation_and_amortization_pct,
+            cash_and_short_term_investments_pct,
+            receivables_pct,
+            inventories_pct,
+            payable_pct,
+            ebit_pct,
+            capital_expenditure_pct,
+            operating_cash_flow_pct,
+            selling_general_and_administrative_expenses_pct,
+            tax_rate,
+            long_term_growth_rate,
+            cost_of_debt,
+            cost_of_equity,
+            market_risk_premium,
+            beta,
+            risk_free_rate,
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.custom_levered_discounted_cash_flow(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

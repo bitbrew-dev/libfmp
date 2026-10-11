@@ -11,7 +11,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::market_hours::{ExchangeHoliday, ExchangeMarketHours};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Market hours endpoints for a single client, exposed as `client.market_hours`.
 #[gen_stub_pyclass]
@@ -82,6 +82,68 @@ impl MarketHoursNamespace {
                 client.all_exchange_market_hours(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(ExchangeMarketHours::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Market hours endpoints for a single async client, exposed as `client.market_hours`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.market_hours", frozen)]
+pub(crate) struct AsyncMarketHoursNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncMarketHoursNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncMarketHoursNamespace {
+    /// Retrieves trading hours for one exchange.
+    #[pyo3(signature = (exchange, *, timestamp=None))]
+    async fn exchange(
+        &self,
+        exchange: String,
+        timestamp: Option<String>,
+    ) -> PyResult<Vec<ExchangeMarketHours>> {
+        let query = exchange_query(&exchange, timestamp.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.exchange_market_hours(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(ExchangeMarketHours::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves holidays for one exchange.
+    #[pyo3(signature = (exchange, *, from_=None, to=None))]
+    async fn holidays(
+        &self,
+        exchange: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<ExchangeHoliday>> {
+        let query = holidays_query(&exchange, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.holidays_by_exchange(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(ExchangeHoliday::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves trading hours for all exchanges.
+    #[pyo3(signature = (*, timestamp=None))]
+    async fn all_exchanges(&self, timestamp: Option<String>) -> PyResult<Vec<ExchangeMarketHours>> {
+        let query = all_exchanges_query(timestamp.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.all_exchange_market_hours(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(ExchangeMarketHours::from).collect())
             .map_err(to_py_error)
     }

@@ -13,7 +13,7 @@ use crate::models::technical_indicators::{
     RelativeStrengthIndexBar, SimpleMovingAverageBar, StandardDeviationBar,
     TripleExponentialMovingAverageBar, WeightedMovingAverageBar, WilliamsBar,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Technical indicators endpoints for a single client, exposed as `client.technical_indicators`.
 #[gen_stub_pyclass]
@@ -267,6 +267,241 @@ impl TechnicalIndicatorsNamespace {
                 client.average_directional_index(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(AverageDirectionalIndexBar::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Technical indicators endpoints for a single async client, exposed as `client.technical_indicators`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.technical_indicators", frozen)]
+pub(crate) struct AsyncTechnicalIndicatorsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncTechnicalIndicatorsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncTechnicalIndicatorsNamespace {
+    /// Retrieves worldwide simple-moving-average bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn simple_moving_average(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<SimpleMovingAverageBar>> {
+        let query = simple_moving_average_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.simple_moving_average(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(SimpleMovingAverageBar::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide exponential-moving-average bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn exponential_moving_average(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<ExponentialMovingAverageBar>> {
+        let query =
+            exponential_moving_average_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.exponential_moving_average(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(ExponentialMovingAverageBar::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide weighted-moving-average bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn weighted_moving_average(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<WeightedMovingAverageBar>> {
+        let query = weighted_moving_average_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.weighted_moving_average(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(WeightedMovingAverageBar::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide double-exponential-moving-average bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn double_exponential_moving_average(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<DoubleExponentialMovingAverageBar>> {
+        let query =
+            double_exponential_moving_average_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.double_exponential_moving_average(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(DoubleExponentialMovingAverageBar::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide triple-exponential-moving-average bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn triple_exponential_moving_average(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<TripleExponentialMovingAverageBar>> {
+        let query =
+            triple_exponential_moving_average_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.triple_exponential_moving_average(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(TripleExponentialMovingAverageBar::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide relative-strength-index bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn relative_strength_index(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<RelativeStrengthIndexBar>> {
+        let query = relative_strength_index_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.relative_strength_index(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(RelativeStrengthIndexBar::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide standard-deviation bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn standard_deviation(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StandardDeviationBar>> {
+        let query = standard_deviation_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.standard_deviation(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StandardDeviationBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide Williams bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn williams(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<WilliamsBar>> {
+        let query = williams_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.williams(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(WilliamsBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide average-directional-index bars.
+    #[pyo3(signature = (symbol, period_length, timeframe, *, from_=None, to=None))]
+    async fn average_directional_index(
+        &self,
+        symbol: String,
+        period_length: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"1min\", \"5min\", \"15min\", \"30min\", \"1hour\", \"4hour\", \"1day\"]", imports = ("typing",)))]
+        timeframe: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<AverageDirectionalIndexBar>> {
+        let query = average_directional_index_query(&symbol, period_length, &timeframe, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.average_directional_index(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

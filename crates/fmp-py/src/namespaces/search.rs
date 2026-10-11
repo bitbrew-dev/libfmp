@@ -15,7 +15,7 @@ use crate::models::search::{
     CikSearchResult, CusipSearchResult, ExchangeVariant, IsinSearchResult, NameSearchResult,
     SymbolSearchResult,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Search endpoints for a single client, exposed as `client.search`.
 #[gen_stub_pyclass]
@@ -129,6 +129,105 @@ impl SearchNamespace {
                 client.search_exchange_variants(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(ExchangeVariant::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Search endpoints for a single async client, exposed as `client.search`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.search", frozen)]
+pub(crate) struct AsyncSearchNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncSearchNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncSearchNamespace {
+    /// Searches worldwide companies and instruments by symbol.
+    #[pyo3(signature = (query, *, limit=None, exchange=None))]
+    async fn symbol(
+        &self,
+        query: String,
+        limit: Option<i64>,
+        exchange: Option<String>,
+    ) -> PyResult<Vec<SymbolSearchResult>> {
+        let query = symbol_query(&query, limit, exchange.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_symbol(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SymbolSearchResult::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches worldwide companies and instruments by name.
+    #[pyo3(signature = (query, *, limit=None, exchange=None))]
+    async fn name(
+        &self,
+        query: String,
+        limit: Option<i64>,
+        exchange: Option<String>,
+    ) -> PyResult<Vec<NameSearchResult>> {
+        let query = name_query(&query, limit, exchange.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_name(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NameSearchResult::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US companies by Central Index Key.
+    #[pyo3(signature = (cik, *, limit=None))]
+    async fn cik(&self, cik: String, limit: Option<i64>) -> PyResult<Vec<CikSearchResult>> {
+        let query = cik_query(&cik, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_cik(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CikSearchResult::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches worldwide securities by CUSIP without constraining its length.
+    #[pyo3(signature = (cusip))]
+    async fn cusip(&self, cusip: String) -> PyResult<Vec<CusipSearchResult>> {
+        let query = cusip_query(&cusip)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_cusip(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CusipSearchResult::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches worldwide securities by ISIN without constraining its length.
+    #[pyo3(signature = (isin))]
+    async fn isin(&self, isin: String) -> PyResult<Vec<IsinSearchResult>> {
+        let query = isin_query(&isin)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_isin(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IsinSearchResult::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Finds worldwide exchange listings for a provider ticker.
+    #[pyo3(signature = (symbol))]
+    async fn exchange_variants(&self, symbol: String) -> PyResult<Vec<ExchangeVariant>> {
+        let query = exchange_variants_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_exchange_variants(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(ExchangeVariant::from).collect())
             .map_err(to_py_error)
     }

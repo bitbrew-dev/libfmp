@@ -15,7 +15,7 @@ use crate::models::fundraising::{
     CrowdfundingOffering, CrowdfundingOfferingSearchResult, RegulationDOffering,
     RegulationDOfferingSearchResult,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Fundraising endpoints for a single client, exposed as `client.fundraising`.
 #[gen_stub_pyclass]
@@ -150,6 +150,126 @@ impl FundraisingNamespace {
                 client.regulation_d_offerings_by_cik(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(RegulationDOffering::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Fundraising endpoints for a single async client, exposed as `client.fundraising`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.fundraising", frozen)]
+pub(crate) struct AsyncFundraisingNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncFundraisingNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncFundraisingNamespace {
+    /// Retrieves the latest US crowdfunding offerings.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn latest_crowdfunding_offerings(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CrowdfundingOffering>> {
+        let query = latest_crowdfunding_offerings_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_crowdfunding_offerings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CrowdfundingOffering::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US crowdfunding offerings for one issuer CIK.
+    #[pyo3(signature = (cik))]
+    async fn crowdfunding_offerings_by_cik(
+        &self,
+        cik: String,
+    ) -> PyResult<Vec<CrowdfundingOffering>> {
+        let query = crowdfunding_offerings_by_cik_query(&cik)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.crowdfunding_offerings_by_cik(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CrowdfundingOffering::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US crowdfunding offerings by company, campaign, or platform text.
+    #[pyo3(signature = (name))]
+    async fn search_crowdfunding_offerings(
+        &self,
+        name: String,
+    ) -> PyResult<Vec<CrowdfundingOfferingSearchResult>> {
+        let query = search_crowdfunding_offerings_query(&name)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_crowdfunding_offerings(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CrowdfundingOfferingSearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Searches US Regulation D offerings by company name or stock symbol.
+    #[pyo3(signature = (name))]
+    async fn search_regulation_d_offerings(
+        &self,
+        name: String,
+    ) -> PyResult<Vec<RegulationDOfferingSearchResult>> {
+        let query = search_regulation_d_offerings_query(&name)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_regulation_d_offerings(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(RegulationDOfferingSearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest US Regulation D offerings.
+    #[pyo3(signature = (*, page=None, limit=None, cik=None))]
+    async fn latest_regulation_d_offerings(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+        cik: Option<String>,
+    ) -> PyResult<Vec<RegulationDOffering>> {
+        let query = latest_regulation_d_offerings_query(page, limit, cik.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_regulation_d_offerings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(RegulationDOffering::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US Regulation D offerings for one issuer CIK.
+    #[pyo3(signature = (cik))]
+    async fn regulation_d_offerings_by_cik(
+        &self,
+        cik: String,
+    ) -> PyResult<Vec<RegulationDOffering>> {
+        let query = regulation_d_offerings_by_cik_query(&cik)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.regulation_d_offerings_by_cik(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(RegulationDOffering::from).collect())
             .map_err(to_py_error)
     }

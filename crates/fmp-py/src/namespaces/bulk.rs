@@ -20,7 +20,7 @@ use crate::models::bulk::snapshots::{
     BulkUpgradesDowngradesConsensus,
 };
 use crate::models::company::CompanyProfile;
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Bulk endpoints for a single client, exposed as `client.bulk`.
 #[gen_stub_pyclass]
@@ -346,6 +346,290 @@ impl BulkNamespace {
                 |client| async move { client.bulk_eod(query).await },
             )
         })?;
+        rows.map(|items| items.into_iter().map(BulkEodBar::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Bulk endpoints for a single async client, exposed as `client.bulk`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.bulk", frozen)]
+pub(crate) struct AsyncBulkNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncBulkNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncBulkNamespace {
+    /// Retrieves one provider partition of worldwide company profiles.
+    #[pyo3(signature = (part))]
+    async fn company_profiles(&self, part: String) -> PyResult<Vec<CompanyProfile>> {
+        let query = company_profiles_query(&part)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_company_profiles(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CompanyProfile::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide stock ratings in one provider bulk response.
+    async fn stock_ratings(&self) -> PyResult<Vec<BulkStockRating>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_stock_ratings().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkStockRating::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide discounted-cash-flow valuations in one provider bulk response.
+    async fn dcf_valuations(&self) -> PyResult<Vec<BulkDcfValuation>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_dcf_valuations().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkDcfValuation::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide financial scores in one provider bulk response.
+    async fn financial_scores(&self) -> PyResult<Vec<BulkFinancialScore>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_financial_scores().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkFinancialScore::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US price-target summaries in one provider bulk response.
+    async fn price_target_summaries(&self) -> PyResult<Vec<BulkPriceTargetSummary>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_price_target_summaries().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BulkPriceTargetSummary::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves one provider partition of worldwide ETF holdings.
+    #[pyo3(signature = (part))]
+    async fn etf_holdings(&self, part: String) -> PyResult<Vec<BulkEtfHolding>> {
+        let query = etf_holdings_query(&part)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_etf_holdings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkEtfHolding::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide upgrades/downgrades consensus in one provider bulk response.
+    async fn upgrades_downgrades_consensus(
+        &self,
+    ) -> PyResult<Vec<BulkUpgradesDowngradesConsensus>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_upgrades_downgrades_consensus().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BulkUpgradesDowngradesConsensus::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide trailing-twelve-month key metrics in one bulk response.
+    async fn key_metrics_ttm(&self) -> PyResult<Vec<BulkKeyMetricsTtm>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_key_metrics_ttm().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkKeyMetricsTtm::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide trailing-twelve-month financial ratios in one bulk response.
+    async fn financial_ratios_ttm(&self) -> PyResult<Vec<BulkFinancialRatiosTtm>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_financial_ratios_ttm().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BulkFinancialRatiosTtm::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide stock peers in one provider bulk response.
+    async fn stock_peers(&self) -> PyResult<Vec<BulkStockPeer>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_stock_peers().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkStockPeer::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide annual earnings surprises for one required provider year.
+    #[pyo3(signature = (year))]
+    async fn earnings_surprises(&self, year: i64) -> PyResult<Vec<BulkEarningsSurprise>> {
+        let query = earnings_surprises_query(year)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_earnings_surprises(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkEarningsSurprise::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide bulk income statements for one year and fiscal period.
+    #[pyo3(signature = (year, period))]
+    async fn income_statements(
+        &self,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<Vec<BulkIncomeStatement>> {
+        let query = income_statements_query(year, &period)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_income_statements(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkIncomeStatement::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide bulk income-statement growth for one year and fiscal period.
+    #[pyo3(signature = (year, period))]
+    async fn income_statement_growth(
+        &self,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<Vec<BulkIncomeStatementGrowth>> {
+        let query = income_statement_growth_query(year, &period)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_income_statement_growth(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BulkIncomeStatementGrowth::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide bulk balance sheets for one year and fiscal period.
+    #[pyo3(signature = (year, period))]
+    async fn balance_sheet_statements(
+        &self,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<Vec<BulkBalanceSheetStatement>> {
+        let query = balance_sheet_statements_query(year, &period)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_balance_sheet_statements(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BulkBalanceSheetStatement::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide bulk balance-sheet growth for one year and fiscal period.
+    #[pyo3(signature = (year, period))]
+    async fn balance_sheet_statement_growth(
+        &self,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<Vec<BulkBalanceSheetStatementGrowth>> {
+        let query = balance_sheet_statement_growth_query(year, &period)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_balance_sheet_statement_growth(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BulkBalanceSheetStatementGrowth::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide bulk cash-flow statements for one year and fiscal period.
+    #[pyo3(signature = (year, period))]
+    async fn cash_flow_statements(
+        &self,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<Vec<BulkCashFlowStatement>> {
+        let query = cash_flow_statements_query(year, &period)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_cash_flow_statements(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(BulkCashFlowStatement::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide bulk cash-flow growth for one year and fiscal period.
+    #[pyo3(signature = (year, period))]
+    async fn cash_flow_statement_growth(
+        &self,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<Vec<BulkCashFlowStatementGrowth>> {
+        let query = cash_flow_statement_growth_query(year, &period)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_cash_flow_statement_growth(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(BulkCashFlowStatementGrowth::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide bulk end-of-day prices for one required date.
+    #[pyo3(signature = (date))]
+    async fn eod(&self, date: args::DateArg) -> PyResult<Vec<BulkEodBar>> {
+        let query = eod_query(date)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.bulk_eod(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(BulkEodBar::from).collect())
             .map_err(to_py_error)
     }

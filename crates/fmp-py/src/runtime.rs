@@ -1,26 +1,32 @@
-//! Process-wide, fork-safe async runtime backing the synchronous FMP clients.
+//! Process-wide, fork-safe async runtime backing the FMP clients.
 //!
 //! A single multi-thread Tokio runtime and a builder-keyed client pool are
-//! shared by every `FmpClient` in the process. Both live behind [`current`],
-//! which rebuilds them the first time it runs in a new process generation so
-//! that a runtime inherited across `fork()` is never used or dropped in the
-//! child. This topology is deliberately process-global rather than
-//! thread-local: it is the shape a future asynchronous client needs, where a
-//! spawned future must outlive the calling thread and deliver its result to the
-//! Python event loop.
+//! shared by every `FmpClient` and `AsyncFmpClient` in the process. Both live
+//! behind [`current`], which rebuilds them the first time it runs in a new
+//! process generation so that a runtime inherited across `fork()` is never
+//! used or dropped in the child. This topology is deliberately process-global
+//! rather than thread-local: `AsyncFmpClient` spawns each request as a task
+//! that outlives the polling call and delivers its result to the Python event
+//! loop through [`spawn`].
 
 use std::{
     collections::HashMap,
     future::Future,
-    mem, process,
+    mem,
+    pin::Pin,
+    process,
     sync::{
         Arc, Mutex, OnceLock, RwLock, Weak,
         atomic::{AtomicBool, Ordering},
     },
+    task::{Context, Poll},
 };
 
 use libfmp::{Client, ClientBuilder};
-use tokio::runtime::{Builder as RuntimeBuilder, Handle, Runtime};
+use tokio::{
+    runtime::{Builder as RuntimeBuilder, Handle, Runtime},
+    task::JoinHandle,
+};
 
 use pyo3::{Py, PyResult, types::PyAny};
 
@@ -233,6 +239,62 @@ where
         return Ok(inner.block_on(operation(client)));
     };
     let (output, seen) = inner.block_on(response_hook::capture(operation(client)));
+    response_hook::deliver(callback, seen)?;
+    Ok(output)
+}
+
+/// A spawned task that is aborted when this guard is dropped.
+///
+/// Dropping a bare `JoinHandle` detaches its task, so a cancelled Python
+/// coroutine would leave the request running. Aborting after the task already
+/// finished is a no-op.
+struct AbortOnDrop<T>(JoinHandle<T>);
+
+impl<T> Drop for AbortOnDrop<T> {
+    fn drop(&mut self) {
+        self.0.abort();
+    }
+}
+
+impl<T> Future for AbortOnDrop<T> {
+    type Output = PyResult<T>;
+
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
+        Pin::new(&mut self.0)
+            .poll(cx)
+            .map(|joined| joined.map_err(|_| internal_error("an fmp request task panicked")))
+    }
+}
+
+/// Run `operation` against a cached client as a task on the shared runtime and
+/// await it, the asynchronous twin of [`block_on`].
+///
+/// The awaiting coroutine only polls the task's handle, so it never blocks
+/// the event loop thread. Dropping the returned future (an asyncio
+/// cancellation) aborts the task and with it the in-flight request. Returns a
+/// configuration error when `handle` is closed. With an `on_response`
+/// callback, it runs here after the task finishes, with the GIL, and its
+/// exception is returned.
+pub(crate) async fn spawn<F, Fut, T>(handle: Arc<ClientHandle>, operation: F) -> PyResult<T>
+where
+    F: FnOnce(Client) -> Fut,
+    Fut: Future<Output = T> + Send + 'static,
+    T: Send + 'static,
+{
+    if handle.is_closed() {
+        return Err(configuration_error(CLOSED_MESSAGE));
+    }
+    let inner = current()?;
+    let client = inner.client(&handle)?;
+    let Some(callback) = &handle.on_response else {
+        return AbortOnDrop(inner.runtime.spawn(operation(client))).await;
+    };
+    let task = AbortOnDrop(
+        inner
+            .runtime
+            .spawn(response_hook::capture(operation(client))),
+    );
+    let (output, seen) = task.await?;
     response_hook::deliver(callback, seen)?;
     Ok(output)
 }
