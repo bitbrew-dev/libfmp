@@ -32,6 +32,9 @@ one failure route (``status=401`` or ``body=b"not-json"``) per namespace to
 prove the error mapping stays structured. The ``client`` fixture targets the
 server with ``path_prefix=""`` and ``auth_mode="none"``; build your own
 ``FmpClient(base_url=fixture_server.base_url, ...)`` for other configurations.
+The ``async_client`` fixture is the same configuration as an ``AsyncFmpClient``.
+A route's ``delay`` holds the response back for that many seconds; a client
+that hung up meanwhile is counted in ``disconnects`` and gets no response.
 
 ``FMP_API_KEY`` and ``FMP_BASE_URL`` are removed from the environment for
 every test (the autouse ``isolated_api_key_env`` fixture), so values exported
@@ -41,7 +44,10 @@ exercise the pickup call ``monkeypatch.setenv`` themselves.
 """
 
 import json
+import select
+import socket
 import threading
+import time
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -96,16 +102,18 @@ def _errors_namespace() -> SimpleNamespace:
 
 @dataclass(frozen=True)
 class Route:
-    """One canned response: HTTP status, body, content type, and extra headers.
+    """One canned response: HTTP status, body, content type, extra headers, and delay.
 
     ``body`` is sent verbatim when it is ``bytes``; any other value is JSON
-    encoded. ``headers`` are sent in order after the content type.
+    encoded. ``headers`` are sent in order after the content type. ``delay``
+    is how many seconds the server waits before answering.
     """
 
     body: Any = field(default_factory=list)
     status: int = 200
     content_type: str = JSON_CONTENT_TYPE
     headers: tuple[tuple[str, str], ...] = ()
+    delay: float = 0.0
 
     def payload(self) -> bytes:
         """Return the encoded response body."""
@@ -130,12 +138,25 @@ class RecordedRequest:
         return f"{self.path}?{self.raw_query}" if self.raw_query else self.path
 
 
+class _Server(ThreadingHTTPServer):
+    """A threading server whose listen backlog absorbs a burst of concurrent connections."""
+
+    request_queue_size = 64
+
+
+def _peer_closed(connection: socket.socket) -> bool:
+    """Whether the client closed ``connection``: it is readable and a peek reads EOF."""
+    readable, _, _ = select.select([connection], [], [], 0)
+    return bool(readable) and connection.recv(1, socket.MSG_PEEK) == b""
+
+
 class FixtureServer:
     """A loopback HTTP server that answers from a route table.
 
     ``routes`` maps a request path (or a full ``path?query`` string) to a
     :class:`Route`; unmatched requests receive ``default``. Every request is
-    appended to ``requests`` in arrival order.
+    appended to ``requests`` in arrival order, and ``disconnects`` counts the
+    delayed requests whose client hung up before the answer.
     """
 
     def __init__(self, default: Route | None = None) -> None:
@@ -143,7 +164,8 @@ class FixtureServer:
         self.routes: dict[str, Route] = {}
         self.default: Route = default if default is not None else Route()
         self.requests: list[RecordedRequest] = []
-        self._server = ThreadingHTTPServer(("127.0.0.1", 0), self._handler_class())
+        self.disconnects = 0
+        self._server = _Server(("127.0.0.1", 0), self._handler_class())
         self._thread = threading.Thread(target=self._server.serve_forever, daemon=True)
 
     @property
@@ -159,10 +181,15 @@ class FixtureServer:
         status: int = 200,
         content_type: str = JSON_CONTENT_TYPE,
         headers: tuple[tuple[str, str], ...] = (),
+        delay: float = 0.0,
     ) -> Route:
         """Register the response for ``path`` and return the stored route."""
         stored = Route(
-            body=[] if body is None else body, status=status, content_type=content_type, headers=headers
+            body=[] if body is None else body,
+            status=status,
+            content_type=content_type,
+            headers=headers,
+            delay=delay,
         )
         self.routes[path] = stored
         return stored
@@ -207,6 +234,12 @@ class FixtureServer:
                 """Answer a GET from the route table."""
                 server._record(self)
                 route = server.lookup(self.path)
+                if route.delay:
+                    time.sleep(route.delay)
+                    if _peer_closed(self.connection):
+                        server.disconnects += 1
+                        self.close_connection = True
+                        return
                 payload = route.payload()
                 self.send_response(route.status)
                 self.send_header("Content-Type", route.content_type)
@@ -246,6 +279,14 @@ def client(fixture_server: FixtureServer) -> Any:
     from fmp import FmpClient
 
     return FmpClient(base_url=fixture_server.base_url, path_prefix="", auth_mode="none")
+
+
+@pytest.fixture
+def async_client(fixture_server: FixtureServer) -> Any:
+    """An unauthenticated ``AsyncFmpClient`` pointed at ``fixture_server``."""
+    from fmp import AsyncFmpClient
+
+    return AsyncFmpClient(base_url=fixture_server.base_url, path_prefix="", auth_mode="none")
 
 
 @pytest.fixture
