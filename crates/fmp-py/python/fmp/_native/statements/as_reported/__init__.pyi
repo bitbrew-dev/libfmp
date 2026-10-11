@@ -6,6 +6,7 @@ import typing
 
 __all__ = [
     "AsReportedFinancialStatement",
+    "AsyncStatementsAsReportedNamespace",
     "StatementsAsReportedNamespace",
 ]
 
@@ -51,6 +52,57 @@ class AsReportedFinancialStatement:
         r"""
         Returns the row as a `dict` keyed by attribute name; nested models become
         dicts and lists of models become lists of dicts.
+        """
+
+
+@typing.final
+class AsyncStatementsAsReportedNamespace:
+    r"""
+    Statements as reported endpoints for a single async client, exposed as `client.statements.as_reported`.
+    """
+
+    async def income(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves income statements as reported by one company.
+        """
+
+    async def balance_sheet(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves balance sheets as reported by one company.
+        """
+
+    async def cash_flow(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves cash-flow statements as reported by one company.
+        """
+
+    async def full(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+    ) -> builtins.list[AsReportedFinancialStatement]:
+        r"""
+        Retrieves complete financial statements as reported by one company.
         """
 
 

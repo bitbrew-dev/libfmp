@@ -5,6 +5,7 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncInstitutionalOwnershipNamespace",
     "Form13fFilingDate",
     "HolderIndustryBreakdown",
     "HolderPerformanceSummary",
@@ -15,6 +16,78 @@ __all__ = [
     "InstitutionalOwnershipNamespace",
     "InstitutionalPositionSummary",
 ]
+
+
+@typing.final
+class AsyncInstitutionalOwnershipNamespace:
+    r"""
+    Institutional ownership endpoints for a single async client, exposed as `client.institutional_ownership`.
+    """
+
+    async def latest_filings(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[InstitutionalOwnershipFiling]:
+        r"""
+        Retrieves the latest US institutional-ownership filings.
+        """
+
+    async def extract(
+        self, cik: builtins.str, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[InstitutionalHolding]:
+        r"""
+        Extracts the positions from one US institutional-ownership filing period.
+        """
+
+    async def form_13f_filing_dates(
+        self, cik: builtins.str
+    ) -> builtins.list[Form13fFilingDate]:
+        r"""
+        Retrieves available Form 13F filing dates for one US institutional holder.
+        """
+
+    async def holder_analytics(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        quarter: builtins.int,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[InstitutionalHolderAnalytics]:
+        r"""
+        Retrieves holder-level analytics for one US security and filing period.
+        """
+
+    async def holder_performance_summary(
+        self, cik: builtins.str, *, page: typing.Optional[builtins.int] = None
+    ) -> builtins.list[HolderPerformanceSummary]:
+        r"""
+        Retrieves a US institutional holder's portfolio performance summary.
+        """
+
+    async def holder_industry_breakdown(
+        self, cik: builtins.str, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[HolderIndustryBreakdown]:
+        r"""
+        Retrieves a US institutional holder's industry breakdown for one period.
+        """
+
+    async def positions_summary(
+        self, symbol: builtins.str, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[InstitutionalPositionSummary]:
+        r"""
+        Retrieves the US institutional position summary for one security and period.
+        """
+
+    async def industry_summary(
+        self, year: builtins.int, quarter: builtins.int
+    ) -> builtins.list[InstitutionalIndustrySummary]:
+        r"""
+        Retrieves US institutional industry values for one reporting period.
+        """
 
 
 @typing.final

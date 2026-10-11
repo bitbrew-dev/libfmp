@@ -5,9 +5,39 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncStatementsSegmentationNamespace",
     "RevenueSegmentation",
     "StatementsSegmentationNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsSegmentationNamespace:
+    r"""
+    Statements segmentation endpoints for a single async client, exposed as `client.statements.segmentation`.
+    """
+
+    async def revenue_product(
+        self,
+        symbol: builtins.str,
+        *,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+        structure: typing.Optional[typing.Literal["flat"]] = None,
+    ) -> builtins.list[RevenueSegmentation]:
+        r"""
+        Retrieves product revenue segmentation for one company.
+        """
+
+    async def revenue_geographic(
+        self,
+        symbol: builtins.str,
+        *,
+        period: typing.Optional[typing.Literal["annual", "quarter"]] = None,
+        structure: typing.Optional[typing.Literal["flat"]] = None,
+    ) -> builtins.list[RevenueSegmentation]:
+        r"""
+        Retrieves geographic revenue segmentation for one company.
+        """
 
 
 @typing.final

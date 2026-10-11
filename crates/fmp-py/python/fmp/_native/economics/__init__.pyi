@@ -5,12 +5,57 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncEconomicsNamespace",
     "EconomicCalendarEvent",
     "EconomicIndicatorObservation",
     "EconomicsNamespace",
     "MarketRiskPremium",
     "TreasuryRate",
 ]
+
+
+@typing.final
+class AsyncEconomicsNamespace:
+    r"""
+    Economics endpoints for a single async client, exposed as `client.economics`.
+    """
+
+    async def treasury_rates(
+        self,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[TreasuryRate]:
+        r"""
+        Retrieves Treasury-rate observations.
+        """
+
+    async def indicators(
+        self,
+        name: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[EconomicIndicatorObservation]:
+        r"""
+        Retrieves observations for one economic indicator.
+        """
+
+    async def calendar(
+        self,
+        *,
+        country: typing.Optional[builtins.str] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[EconomicCalendarEvent]:
+        r"""
+        Retrieves economic-calendar events.
+        """
+
+    async def market_risk_premium(self) -> builtins.list[MarketRiskPremium]:
+        r"""
+        Retrieves the provider's queryless country risk-premium rows.
+        """
 
 
 @typing.final

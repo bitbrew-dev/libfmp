@@ -5,11 +5,36 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncEsgNamespace",
     "EsgBenchmark",
     "EsgDisclosure",
     "EsgNamespace",
     "EsgRating",
 ]
+
+
+@typing.final
+class AsyncEsgNamespace:
+    r"""
+    Esg endpoints for a single async client, exposed as `client.esg`.
+    """
+
+    async def disclosures(self, symbol: builtins.str) -> builtins.list[EsgDisclosure]:
+        r"""
+        Retrieves ESG disclosure filings for one company.
+        """
+
+    async def ratings(self, symbol: builtins.str) -> builtins.list[EsgRating]:
+        r"""
+        Retrieves ESG ratings for one company.
+        """
+
+    async def benchmark(
+        self, *, year: typing.Optional[builtins.str] = None
+    ) -> builtins.list[EsgBenchmark]:
+        r"""
+        Retrieves sector ESG benchmarks, optionally for one provider year string.
+        """
 
 
 @typing.final

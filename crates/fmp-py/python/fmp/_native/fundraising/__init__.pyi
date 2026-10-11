@@ -5,12 +5,69 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncFundraisingNamespace",
     "CrowdfundingOffering",
     "CrowdfundingOfferingSearchResult",
     "FundraisingNamespace",
     "RegulationDOffering",
     "RegulationDOfferingSearchResult",
 ]
+
+
+@typing.final
+class AsyncFundraisingNamespace:
+    r"""
+    Fundraising endpoints for a single async client, exposed as `client.fundraising`.
+    """
+
+    async def latest_crowdfunding_offerings(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CrowdfundingOffering]:
+        r"""
+        Retrieves the latest US crowdfunding offerings.
+        """
+
+    async def crowdfunding_offerings_by_cik(
+        self, cik: builtins.str
+    ) -> builtins.list[CrowdfundingOffering]:
+        r"""
+        Retrieves US crowdfunding offerings for one issuer CIK.
+        """
+
+    async def search_crowdfunding_offerings(
+        self, name: builtins.str
+    ) -> builtins.list[CrowdfundingOfferingSearchResult]:
+        r"""
+        Searches US crowdfunding offerings by company, campaign, or platform text.
+        """
+
+    async def search_regulation_d_offerings(
+        self, name: builtins.str
+    ) -> builtins.list[RegulationDOfferingSearchResult]:
+        r"""
+        Searches US Regulation D offerings by company name or stock symbol.
+        """
+
+    async def latest_regulation_d_offerings(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        cik: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[RegulationDOffering]:
+        r"""
+        Retrieves the latest US Regulation D offerings.
+        """
+
+    async def regulation_d_offerings_by_cik(
+        self, cik: builtins.str
+    ) -> builtins.list[RegulationDOffering]:
+        r"""
+        Retrieves US Regulation D offerings for one issuer CIK.
+        """
 
 
 @typing.final

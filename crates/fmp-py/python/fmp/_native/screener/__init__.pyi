@@ -4,9 +4,45 @@ import builtins
 import typing
 
 __all__ = [
+    "AsyncScreenerNamespace",
     "CompanyScreenerResult",
     "ScreenerNamespace",
 ]
+
+
+@typing.final
+class AsyncScreenerNamespace:
+    r"""
+    Screener endpoints for a single async client, exposed as `client.screener`.
+    """
+
+    async def companies(
+        self,
+        *,
+        market_cap_more_than: typing.Optional[builtins.int] = None,
+        market_cap_lower_than: typing.Optional[builtins.int] = None,
+        sector: typing.Optional[builtins.str] = None,
+        industry: typing.Optional[builtins.str] = None,
+        beta_more_than: typing.Optional[builtins.float] = None,
+        beta_lower_than: typing.Optional[builtins.float] = None,
+        price_more_than: typing.Optional[builtins.float] = None,
+        price_lower_than: typing.Optional[builtins.float] = None,
+        dividend_more_than: typing.Optional[builtins.float] = None,
+        dividend_lower_than: typing.Optional[builtins.float] = None,
+        volume_more_than: typing.Optional[builtins.int] = None,
+        volume_lower_than: typing.Optional[builtins.int] = None,
+        exchange: typing.Optional[builtins.str] = None,
+        country: typing.Optional[builtins.str] = None,
+        is_etf: typing.Optional[builtins.bool] = None,
+        is_fund: typing.Optional[builtins.bool] = None,
+        is_actively_trading: typing.Optional[builtins.bool] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        include_all_share_classes: typing.Optional[builtins.bool] = None,
+    ) -> builtins.list[CompanyScreenerResult]:
+        r"""
+        Screens worldwide companies using the supplied optional filters.
+        """
 
 
 @typing.final

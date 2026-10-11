@@ -23,6 +23,7 @@ from fmp._native.statements import summaries
 import fmp._native.statements.summaries
 
 __all__ = [
+    "AsyncStatementsNamespace",
     "StatementsNamespace",
     "as_reported",
     "balance",
@@ -35,6 +36,81 @@ __all__ = [
     "segmentation",
     "summaries",
 ]
+
+
+@typing.final
+class AsyncStatementsNamespace:
+    r"""
+    Statements endpoints for a single async client, exposed as `client.statements`.
+    """
+
+    @property
+    def as_reported(
+        self,
+    ) -> fmp._native.statements.as_reported.AsyncStatementsAsReportedNamespace:
+        r"""
+        The `statements.as_reported` endpoints, reached as `client.statements.as_reported`.
+        """
+
+    @property
+    def balance(self) -> fmp._native.statements.balance.AsyncStatementsBalanceNamespace:
+        r"""
+        The `statements.balance` endpoints, reached as `client.statements.balance`.
+        """
+
+    @property
+    def cash_flow(
+        self,
+    ) -> fmp._native.statements.cash_flow.AsyncStatementsCashFlowNamespace:
+        r"""
+        The `statements.cash_flow` endpoints, reached as `client.statements.cash_flow`.
+        """
+
+    @property
+    def growth(self) -> fmp._native.statements.growth.AsyncStatementsGrowthNamespace:
+        r"""
+        The `statements.growth` endpoints, reached as `client.statements.growth`.
+        """
+
+    @property
+    def income(self) -> fmp._native.statements.income.AsyncStatementsIncomeNamespace:
+        r"""
+        The `statements.income` endpoints, reached as `client.statements.income`.
+        """
+
+    @property
+    def metrics(self) -> fmp._native.statements.metrics.AsyncStatementsMetricsNamespace:
+        r"""
+        The `statements.metrics` endpoints, reached as `client.statements.metrics`.
+        """
+
+    @property
+    def ratios(self) -> fmp._native.statements.ratios.AsyncStatementsRatiosNamespace:
+        r"""
+        The `statements.ratios` endpoints, reached as `client.statements.ratios`.
+        """
+
+    @property
+    def reports(self) -> fmp._native.statements.reports.AsyncStatementsReportsNamespace:
+        r"""
+        The `statements.reports` endpoints, reached as `client.statements.reports`.
+        """
+
+    @property
+    def segmentation(
+        self,
+    ) -> fmp._native.statements.segmentation.AsyncStatementsSegmentationNamespace:
+        r"""
+        The `statements.segmentation` endpoints, reached as `client.statements.segmentation`.
+        """
+
+    @property
+    def summaries(
+        self,
+    ) -> fmp._native.statements.summaries.AsyncStatementsSummariesNamespace:
+        r"""
+        The `statements.summaries` endpoints, reached as `client.statements.summaries`.
+        """
 
 
 @typing.final

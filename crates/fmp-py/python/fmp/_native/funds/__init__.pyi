@@ -7,6 +7,7 @@ import fmp._native.institutional_ownership
 import typing
 
 __all__ = [
+    "AsyncFundsNamespace",
     "EtfAssetExposure",
     "EtfCountryWeighting",
     "EtfFundHolding",
@@ -18,6 +19,77 @@ __all__ = [
     "FundDisclosureSearchResult",
     "FundsNamespace",
 ]
+
+
+@typing.final
+class AsyncFundsNamespace:
+    r"""
+    Funds endpoints for a single async client, exposed as `client.funds`.
+    """
+
+    async def etf_holdings(self, symbol: builtins.str) -> builtins.list[EtfFundHolding]:
+        r"""
+        Retrieves the worldwide holdings of one ETF or mutual fund.
+        """
+
+    async def etf_info(self, symbol: builtins.str) -> builtins.list[EtfFundInfo]:
+        r"""
+        Retrieves worldwide descriptive and trading information for one fund.
+        """
+
+    async def etf_country_weightings(
+        self, symbol: builtins.str
+    ) -> builtins.list[EtfCountryWeighting]:
+        r"""
+        Retrieves the worldwide country allocation for one ETF or mutual fund.
+        """
+
+    async def etf_asset_exposure(
+        self, symbol: builtins.str
+    ) -> builtins.list[EtfAssetExposure]:
+        r"""
+        Retrieves the worldwide ETF exposure to one requested asset.
+        """
+
+    async def etf_sector_weightings(
+        self, symbol: builtins.str
+    ) -> builtins.list[EtfSectorWeighting]:
+        r"""
+        Retrieves the worldwide sector allocation for one ETF or mutual fund.
+        """
+
+    async def latest_disclosure_holders(
+        self, symbol: builtins.str
+    ) -> builtins.list[FundDisclosureHolder]:
+        r"""
+        Retrieves the latest US fund disclosures holding one requested asset.
+        """
+
+    async def disclosures(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        quarter: builtins.int,
+        *,
+        cik: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[FundDisclosure]:
+        r"""
+        Retrieves positions from one US mutual-fund disclosure period.
+        """
+
+    async def search_disclosure_holders(
+        self, name: builtins.str
+    ) -> builtins.list[FundDisclosureSearchResult]:
+        r"""
+        Searches US mutual-fund and ETF disclosure holders by exact name text.
+        """
+
+    async def disclosure_dates(
+        self, symbol: builtins.str, *, cik: typing.Optional[builtins.str] = None
+    ) -> builtins.list[fmp._native.institutional_ownership.Form13fFilingDate]:
+        r"""
+        Retrieves available US fund-disclosure reporting dates.
+        """
 
 
 @typing.final

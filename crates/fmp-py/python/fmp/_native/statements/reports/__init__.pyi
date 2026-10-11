@@ -6,10 +6,43 @@ import fmp._native
 import typing
 
 __all__ = [
+    "AsyncStatementsReportsNamespace",
     "FinancialReportDate",
     "FinancialReportJson",
     "StatementsReportsNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsReportsNamespace:
+    r"""
+    Statements reports endpoints for a single async client, exposed as `client.statements.reports`.
+    """
+
+    async def dates(self, symbol: builtins.str) -> builtins.list[FinancialReportDate]:
+        r"""
+        Retrieves available financial-report periods and protected download links.
+        """
+
+    async def json(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
+    ) -> FinancialReportJson:
+        r"""
+        Retrieves one dynamic JSON financial report as a single object.
+        """
+
+    async def xlsx(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"],
+    ) -> fmp._native.BinaryPayload:
+        r"""
+        Downloads one financial report using the endpoint's XLSX MIME policy.
+        """
 
 
 @typing.final

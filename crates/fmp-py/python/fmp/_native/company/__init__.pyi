@@ -5,6 +5,7 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncCompanyNamespace",
     "CompanyExecutive",
     "CompanyMarketCapitalization",
     "CompanyNamespace",
@@ -19,6 +20,138 @@ __all__ = [
     "ShareFloat",
     "StockPeer",
 ]
+
+
+@typing.final
+class AsyncCompanyNamespace:
+    r"""
+    Company endpoints for a single async client, exposed as `client.company`.
+    """
+
+    async def profile(self, symbol: builtins.str) -> builtins.list[CompanyProfile]:
+        r"""
+        Retrieves worldwide company profiles by provider ticker.
+        """
+
+    async def profile_by_cik(self, cik: builtins.str) -> builtins.list[CompanyProfile]:
+        r"""
+        Retrieves US company profiles by representation-preserving CIK.
+        """
+
+    async def notes(self, symbol: builtins.str) -> builtins.list[CompanyNote]:
+        r"""
+        Retrieves company-issued notes for a US company.
+        """
+
+    async def stock_peers(self, symbol: builtins.str) -> builtins.list[StockPeer]:
+        r"""
+        Retrieves worldwide stock peers for a company.
+        """
+
+    async def delisted_companies(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[DelistedCompany]:
+        r"""
+        Retrieves delisted US companies with optional provider pagination.
+        """
+
+    async def employee_count(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[EmployeeCount]:
+        r"""
+        Retrieves current employee-count filings for a US company.
+        """
+
+    async def historical_employee_count(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[EmployeeCount]:
+        r"""
+        Retrieves historical employee-count filings for a US company.
+        """
+
+    async def market_capitalization(
+        self, symbol: builtins.str
+    ) -> builtins.list[CompanyMarketCapitalization]:
+        r"""
+        Retrieves current worldwide market capitalization for one company.
+        """
+
+    async def batch_market_capitalization(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[CompanyMarketCapitalization]:
+        r"""
+        Retrieves current worldwide market capitalization for multiple companies.
+        """
+
+    async def historical_market_capitalization(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[CompanyMarketCapitalization]:
+        r"""
+        Retrieves historical worldwide market capitalization for one company.
+        """
+
+    async def shares_float(
+        self, symbol: builtins.str
+    ) -> builtins.list[CompanyShareFloat]:
+        r"""
+        Retrieves current worldwide share-float data for one company.
+        """
+
+    async def all_shares_float(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[ShareFloat]:
+        r"""
+        Retrieves paginated worldwide share-float data for all companies.
+        """
+
+    async def latest_mergers_acquisitions(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[MergerAcquisition]:
+        r"""
+        Retrieves the latest US mergers and acquisitions with optional pagination.
+        """
+
+    async def search_mergers_acquisitions(
+        self, name: builtins.str
+    ) -> builtins.list[MergerAcquisition]:
+        r"""
+        Searches US mergers and acquisitions by representation-preserving company name.
+        """
+
+    async def key_executives(
+        self, symbol: builtins.str
+    ) -> builtins.list[CompanyExecutive]:
+        r"""
+        Retrieves worldwide company executives by provider ticker.
+        """
+
+    async def executive_compensation(
+        self, symbol: builtins.str
+    ) -> builtins.list[ExecutiveCompensation]:
+        r"""
+        Retrieves executive compensation for a US company.
+        """
+
+    async def executive_compensation_benchmark(
+        self, *, year: typing.Optional[builtins.str] = None
+    ) -> builtins.list[ExecutiveCompensationBenchmark]:
+        r"""
+        Retrieves US executive-compensation benchmarks with an optional year.
+        """
 
 
 @typing.final

@@ -6,6 +6,7 @@ import typing
 __all__ = [
     "AftermarketQuote",
     "AftermarketTrade",
+    "AsyncQuoteNamespace",
     "Quote",
     "QuoteNamespace",
     "QuoteShort",
@@ -94,6 +95,107 @@ class AftermarketTrade:
         r"""
         Returns the row as a `dict` keyed by attribute name; nested models become
         dicts and lists of models become lists of dicts.
+        """
+
+
+@typing.final
+class AsyncQuoteNamespace:
+    r"""
+    Quote endpoints for a single async client, exposed as `client.quote`.
+    """
+
+    async def full(self, symbol: builtins.str) -> builtins.list[Quote]:
+        r"""
+        The full quote for a symbol.
+        """
+
+    async def short(self, symbol: builtins.str) -> builtins.list[QuoteShort]:
+        r"""
+        The compact quote array for a symbol.
+        """
+
+    async def mutual_funds(self) -> builtins.list[QuoteShort]:
+        r"""
+        Compact quotes for every mutual fund, without a query.
+        """
+
+    async def aftermarket_trade(
+        self, symbol: builtins.str
+    ) -> builtins.list[AftermarketTrade]:
+        r"""
+        Retrieves US aftermarket trades for one ticker.
+        """
+
+    async def aftermarket_quote(
+        self, symbol: builtins.str
+    ) -> builtins.list[AftermarketQuote]:
+        r"""
+        Retrieves US aftermarket bid-and-ask quotes for one ticker.
+        """
+
+    async def stock_price_change(
+        self, symbol: builtins.str
+    ) -> builtins.list[StockPriceChange]:
+        r"""
+        Retrieves worldwide percentage price changes for one stock.
+        """
+
+    async def batch(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[Quote]:
+        r"""
+        Retrieves detailed worldwide stock quotes for multiple tickers.
+        """
+
+    async def batch_short(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact worldwide stock quotes for multiple tickers.
+        """
+
+    async def batch_aftermarket_trade(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[AftermarketTrade]:
+        r"""
+        Retrieves US aftermarket trades for multiple tickers.
+        """
+
+    async def batch_aftermarket_quote(
+        self, symbols: builtins.str | typing.Sequence[builtins.str]
+    ) -> builtins.list[AftermarketQuote]:
+        r"""
+        Retrieves US aftermarket bid-and-ask quotes for multiple tickers.
+        """
+
+    async def exchange(self, exchange: builtins.str) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for every stock on one exchange.
+        """
+
+    async def etfs(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented ETF universe.
+        """
+
+    async def commodities(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented commodity universe.
+        """
+
+    async def cryptocurrencies(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented cryptocurrency universe.
+        """
+
+    async def forex(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented forex universe.
+        """
+
+    async def indexes(self) -> builtins.list[QuoteShort]:
+        r"""
+        Retrieves compact quotes for the documented index universe.
         """
 
 

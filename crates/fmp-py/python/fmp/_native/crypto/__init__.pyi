@@ -9,9 +9,91 @@ import fmp._native.quote
 import typing
 
 __all__ = [
+    "AsyncCryptoNamespace",
     "CryptoNamespace",
     "CryptocurrencyListing",
 ]
+
+
+@typing.final
+class AsyncCryptoNamespace:
+    r"""
+    Crypto endpoints for a single async client, exposed as `client.crypto`.
+    """
+
+    async def list(self) -> builtins.list[CryptocurrencyListing]:
+        r"""
+        Lists the provider's documented cryptocurrency catalog.
+        """
+
+    async def quote(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.Quote]:
+        r"""
+        Retrieves a detailed quote for one cryptocurrency.
+        """
+
+    async def quote_short(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.QuoteShort]:
+        r"""
+        Retrieves a compact quote for one cryptocurrency.
+        """
+
+    async def chart_light(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartLightBar]:
+        r"""
+        Retrieves compact end-of-day cryptocurrency history.
+        """
+
+    async def chart_full(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartFullBar]:
+        r"""
+        Retrieves detailed end-of-day cryptocurrency history.
+        """
+
+    async def chart_one_minute(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-minute cryptocurrency history.
+        """
+
+    async def chart_five_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves five-minute cryptocurrency history.
+        """
+
+    async def chart_one_hour(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-hour cryptocurrency history.
+        """
 
 
 @typing.final

@@ -6,6 +6,7 @@ import typing
 
 __all__ = [
     "ActivelyTradingSymbol",
+    "AsyncDirectoryNamespace",
     "AvailableCountry",
     "AvailableExchange",
     "AvailableIndustry",
@@ -39,6 +40,84 @@ class ActivelyTradingSymbol:
         r"""
         Returns the row as a `dict` keyed by attribute name; nested models become
         dicts and lists of models become lists of dicts.
+        """
+
+
+@typing.final
+class AsyncDirectoryNamespace:
+    r"""
+    Directory endpoints for a single async client, exposed as `client.directory`.
+    """
+
+    async def company_symbols(self) -> builtins.list[CompanySymbol]:
+        r"""
+        Lists worldwide company and instrument symbols.
+        """
+
+    async def financial_statement_symbols(
+        self,
+    ) -> builtins.list[FinancialStatementSymbol]:
+        r"""
+        Lists worldwide companies with financial statements available.
+        """
+
+    async def cik_list(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[CikListing]:
+        r"""
+        Lists US SEC entities with optional provider pagination.
+        """
+
+    async def symbol_changes(
+        self,
+        *,
+        invalid: typing.Optional[builtins.bool] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SymbolChange]:
+        r"""
+        Lists US symbol changes without interpreting the provider's `invalid` flag.
+        """
+
+    async def etf_symbols(self) -> builtins.list[EtfSymbol]:
+        r"""
+        Lists worldwide exchange-traded fund symbols.
+        """
+
+    async def actively_trading(self) -> builtins.list[ActivelyTradingSymbol]:
+        r"""
+        Lists worldwide actively trading companies and instruments.
+        """
+
+    async def earnings_transcript_list(
+        self,
+    ) -> builtins.list[EarningsTranscriptAvailability]:
+        r"""
+        Lists US companies with their available earnings-transcript counts.
+        """
+
+    async def available_exchanges(
+        self, *, extended: typing.Optional[builtins.bool] = None
+    ) -> builtins.list[AvailableExchange]:
+        r"""
+        Lists supported worldwide stock exchanges.
+        """
+
+    async def available_sectors(self) -> builtins.list[AvailableSector]:
+        r"""
+        Lists the provider's available sectors.
+        """
+
+    async def available_industries(self) -> builtins.list[AvailableIndustry]:
+        r"""
+        Lists the provider's available industries.
+        """
+
+    async def available_countries(self) -> builtins.list[AvailableCountry]:
+        r"""
+        Lists the provider's available countries.
         """
 
 

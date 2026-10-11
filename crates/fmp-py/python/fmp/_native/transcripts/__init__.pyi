@@ -5,11 +5,48 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncTranscriptsNamespace",
     "EarningsTranscript",
     "EarningsTranscriptDate",
     "LatestEarningsTranscript",
     "TranscriptsNamespace",
 ]
+
+
+@typing.final
+class AsyncTranscriptsNamespace:
+    r"""
+    Transcripts endpoints for a single async client, exposed as `client.transcripts`.
+    """
+
+    async def latest(
+        self,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        page: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[LatestEarningsTranscript]:
+        r"""
+        Retrieves the latest worldwide earnings-transcript metadata.
+        """
+
+    async def by_quarter(
+        self,
+        symbol: builtins.str,
+        year: builtins.int,
+        quarter: builtins.int,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[EarningsTranscript]:
+        r"""
+        Retrieves complete worldwide earnings-call transcripts.
+        """
+
+    async def dates(
+        self, symbol: builtins.str
+    ) -> builtins.list[EarningsTranscriptDate]:
+        r"""
+        Retrieves available worldwide transcript dates for one ticker.
+        """
 
 
 @typing.final

@@ -5,6 +5,7 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncInsiderTradingNamespace",
     "BeneficialOwnershipAcquisition",
     "InsiderReportingName",
     "InsiderTrade",
@@ -12,6 +13,64 @@ __all__ = [
     "InsiderTradingNamespace",
     "InsiderTransactionType",
 ]
+
+
+@typing.final
+class AsyncInsiderTradingNamespace:
+    r"""
+    Insider trading endpoints for a single async client, exposed as `client.insider_trading`.
+    """
+
+    async def latest_trades(
+        self,
+        *,
+        date: typing.Optional[datetime.date | builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[InsiderTrade]:
+        r"""
+        Retrieves the latest US insider trades with optional date and pagination filters.
+        """
+
+    async def search_trades(
+        self,
+        *,
+        symbol: typing.Optional[builtins.str] = None,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+        reporting_cik: typing.Optional[builtins.str] = None,
+        company_cik: typing.Optional[builtins.str] = None,
+        transaction_type: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[InsiderTrade]:
+        r"""
+        Searches US insider trades using independently optional filters.
+        """
+
+    async def search_reporting_names(
+        self, name: builtins.str
+    ) -> builtins.list[InsiderReportingName]:
+        r"""
+        Searches US insider-reporting identities by name.
+        """
+
+    async def transaction_types(self) -> builtins.list[InsiderTransactionType]:
+        r"""
+        Retrieves the US insider transaction-type taxonomy.
+        """
+
+    async def trade_statistics(
+        self, symbol: builtins.str
+    ) -> builtins.list[InsiderTradeStatistics]:
+        r"""
+        Retrieves quarterly US insider-trade statistics for one ticker.
+        """
+
+    async def beneficial_ownership_acquisitions(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[BeneficialOwnershipAcquisition]:
+        r"""
+        Retrieves US beneficial-ownership acquisition filings for one ticker.
+        """
 
 
 @typing.final

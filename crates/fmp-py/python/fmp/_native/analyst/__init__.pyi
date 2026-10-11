@@ -6,6 +6,7 @@ import typing
 
 __all__ = [
     "AnalystNamespace",
+    "AsyncAnalystNamespace",
     "FinancialEstimate",
     "HistoricalRating",
     "HistoricalStockGrade",
@@ -74,6 +75,72 @@ class AnalystNamespace:
         """
 
     def stock_grades_summary(
+        self, symbol: builtins.str
+    ) -> builtins.list[StockGradesSummary]:
+        r"""
+        Retrieves the worldwide stock-grades summary for one ticker.
+        """
+
+
+@typing.final
+class AsyncAnalystNamespace:
+    r"""
+    Analyst endpoints for a single async client, exposed as `client.analyst`.
+    """
+
+    async def financial_estimates(
+        self,
+        symbol: builtins.str,
+        period: typing.Literal["annual", "quarter"],
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[FinancialEstimate]:
+        r"""
+        Retrieves worldwide analyst financial estimates for one ticker.
+        """
+
+    async def ratings_snapshot(
+        self, symbol: builtins.str
+    ) -> builtins.list[RatingSnapshot]:
+        r"""
+        Retrieves the worldwide financial-rating snapshot for one ticker.
+        """
+
+    async def historical_ratings(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[HistoricalRating]:
+        r"""
+        Retrieves worldwide historical financial ratings for one ticker.
+        """
+
+    async def price_target_summary(
+        self, symbol: builtins.str
+    ) -> builtins.list[PriceTargetSummary]:
+        r"""
+        Retrieves the US-only price-target summary for one ticker.
+        """
+
+    async def price_target_consensus(
+        self, symbol: builtins.str
+    ) -> builtins.list[PriceTargetConsensus]:
+        r"""
+        Retrieves the US-only price-target consensus for one ticker.
+        """
+
+    async def stock_grades(self, symbol: builtins.str) -> builtins.list[StockGrade]:
+        r"""
+        Retrieves current worldwide stock-grade actions for one ticker.
+        """
+
+    async def historical_stock_grades(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[HistoricalStockGrade]:
+        r"""
+        Retrieves worldwide historical stock-grade counts for one ticker.
+        """
+
+    async def stock_grades_summary(
         self, symbol: builtins.str
     ) -> builtins.list[StockGradesSummary]:
         r"""

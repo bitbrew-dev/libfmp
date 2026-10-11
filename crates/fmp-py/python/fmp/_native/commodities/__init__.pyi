@@ -9,9 +9,91 @@ import fmp._native.quote
 import typing
 
 __all__ = [
+    "AsyncCommoditiesNamespace",
     "CommoditiesNamespace",
     "CommodityListing",
 ]
+
+
+@typing.final
+class AsyncCommoditiesNamespace:
+    r"""
+    Commodities endpoints for a single async client, exposed as `client.commodities`.
+    """
+
+    async def list(self) -> builtins.list[CommodityListing]:
+        r"""
+        Lists the provider's documented commodity catalog.
+        """
+
+    async def quote(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.Quote]:
+        r"""
+        Retrieves a detailed US-only quote for one commodity.
+        """
+
+    async def quote_short(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.QuoteShort]:
+        r"""
+        Retrieves a compact US-only quote for one commodity.
+        """
+
+    async def chart_light(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartLightBar]:
+        r"""
+        Retrieves compact end-of-day commodity history.
+        """
+
+    async def chart_full(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartFullBar]:
+        r"""
+        Retrieves detailed end-of-day commodity history.
+        """
+
+    async def chart_one_minute(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-minute commodity history.
+        """
+
+    async def chart_five_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves five-minute commodity history.
+        """
+
+    async def chart_one_hour(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-hour commodity history.
+        """
 
 
 @typing.final
