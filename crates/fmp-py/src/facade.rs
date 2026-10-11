@@ -16,14 +16,14 @@ pyo3_stub_gen::module_variable!("fmp._native", "__version__", String);
 
 pyo3_stub_gen::reexport_module_members!(
     "fmp" from "fmp._native";
-    "FmpClient", "BinaryPayload", "__version__", "reveal_secret_urls", "set_reveal_secret_urls"
+    "FmpClient", "AsyncFmpClient", "BinaryPayload", "__version__", "reveal_secret_urls", "set_reveal_secret_urls"
 );
 pyo3_stub_gen::reexport_module_members!(
     "fmp" from "fmp._native.errors";
     "FmpError", "FmpValidationError", "FmpConfigError", "FmpTransportError", "FmpStatusError",
     "FmpDecodeError"
 );
-pyo3_stub_gen::reexport_module_members!("fmp.client" from "fmp._native"; "FmpClient");
+pyo3_stub_gen::reexport_module_members!("fmp.client" from "fmp._native"; "FmpClient", "AsyncFmpClient");
 pyo3_stub_gen::reexport_module_members!(
     "fmp.errors" from "fmp._native.errors";
     "FmpError", "FmpValidationError", "FmpConfigError", "FmpTransportError", "FmpStatusError",
