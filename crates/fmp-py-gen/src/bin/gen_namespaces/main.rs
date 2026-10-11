@@ -2,7 +2,8 @@
 //!
 //! Reads the endpoint registry under `crates/fmp-py-gen/registry`, validates
 //! it against the real `libfmp` signatures (refusing to emit on any error),
-//! and writes one frozen `pyclass` namespace per registry path under
+//! and writes one frozen `pyclass` namespace per registry path, with its
+//! `Async` twin in the same file, under
 //! `crates/fmp-py/src/namespaces/`: flat domains as `<domain>.rs`, nested
 //! ones as `<domain>/mod.rs` plus `<domain>/<sub>.rs`, each formatted with
 //! `rustfmt`. Run it with `cargo run -p fmp-py-gen --bin gen_namespaces`.
@@ -11,8 +12,9 @@
 //! extension, so adding a domain never edits `lib.rs` or `client.rs`:
 //! `namespaces/mod.rs`, `registration.rs` (every `fmp._native.<path>`
 //! submodule with its models and namespace classes, read back from the
-//! generated model files), `client_namespaces.rs` (one `FmpClient` getter
-//! per domain), and `facade_domains.rs` (the public `fmp.<path>` re-exports).
+//! generated model files), `client_namespaces.rs` (one getter per domain on
+//! both `FmpClient` and `AsyncFmpClient`), and `facade_domains.rs` (the
+//! public `fmp.<path>` re-exports).
 
 mod bindings;
 mod emit;

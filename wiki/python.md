@@ -41,9 +41,11 @@ valuation = client.dcf.custom("AAPL", beta=1.2, tax_rate=0.21)
 rows = client.sec_filings.search_industry_classifications(symbol="AAPL")
 ```
 
-The client is synchronous: each call releases the Python GIL while the async
-Rust transport waits, so other threads keep running. A Python async facade is
-not part of the current release.
+`FmpClient` is synchronous: each call releases the Python GIL while the async
+Rust transport waits, so other threads keep running. `AsyncFmpClient` is the
+asyncio twin, with the same namespaces and `async def` methods (see the
+[Asyncio client](../crates/fmp-py/README.md#asyncio-client) section of the
+fmp-py README).
 
 ## Responses
 

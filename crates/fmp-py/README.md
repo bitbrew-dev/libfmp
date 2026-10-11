@@ -28,8 +28,8 @@ naming `FMP_API_KEY`, while a custom `base_url` selects no auth. When
 [Using a proxy](#using-a-proxy)).
 
 `FmpClient` is synchronous: each call releases the Python GIL while the async
-Rust transport waits, so threads keep running. A Python async facade is not
-part of this release.
+Rust transport waits, so threads keep running. For asyncio code, use
+[`AsyncFmpClient`](#asyncio-client), the same surface with `async def` methods.
 
 ## Examples
 
@@ -202,6 +202,75 @@ runtime is shared by every client and stays up.
 A client that is never closed keeps its pooled connections until the next
 request made through any client after it and its namespaces are
 garbage-collected, or until the process exits.
+
+## Asyncio client
+
+`AsyncFmpClient` takes the same keywords and environment variables as
+`FmpClient` and exposes the same namespaces and methods, but every endpoint
+method is a coroutine, xlsx and bulk CSV included:
+
+```python
+import asyncio
+
+from fmp import AsyncFmpClient
+
+
+async def main() -> None:
+    async with AsyncFmpClient() as client:
+        rows = await client.quote.short("AAPL")
+        quotes, profiles = await asyncio.gather(
+            client.quote.full("MSFT"),
+            client.company.profile("NVDA"),
+        )
+
+
+asyncio.run(main())
+```
+
+| Topic | Behavior |
+|-------|----------|
+| Event loop | Requests run on the binding's process-wide runtime (shared with `FmpClient`); the coroutine only waits for the result, so the loop never blocks |
+| Concurrency | `asyncio.gather` on one client overlaps the requests; bound a large fan-out with a semaphore to stay inside your plan's rate limit |
+| Cancellation | Cancelling the awaiting task (`task.cancel()`, `asyncio.wait_for`, a task group) aborts the HTTP request |
+| Lazy start | A coroutine sends nothing until it is awaited |
+| Errors | The same exception classes as `FmpClient`, raised from the `await` |
+| `on_response` | A plain synchronous callable, run on the event loop thread before the coroutine returns; an exception it raises propagates from the `await` |
+| Closing | `close()`, `await aclose()`, or `async with`; afterwards every call raises `FmpConfigError`, and calls in flight finish |
+| Runtimes | asyncio, and anyio on its asyncio backend; trio is not supported |
+| `fork()` | Supported as for `FmpClient`: a child process rebuilds the runtime and awaits on its own event loop |
+
+### Airflow deferrable operators
+
+An Airflow trigger runs `async def run()` in the triggerer's shared event loop,
+where a blocking call would stall every other trigger. `AsyncFmpClient` awaits
+without blocking, so it fits a trigger directly:
+
+```python
+from collections.abc import AsyncIterator
+from typing import Any
+
+from airflow.triggers.base import BaseTrigger, TriggerEvent
+from fmp import AsyncFmpClient
+
+
+class QuoteTrigger(BaseTrigger):
+    def __init__(self, symbol: str) -> None:
+        super().__init__()
+        self.symbol = symbol
+
+    def serialize(self) -> tuple[str, dict[str, Any]]:
+        return ("my_dags.triggers.QuoteTrigger", {"symbol": self.symbol})
+
+    async def run(self) -> AsyncIterator[TriggerEvent]:
+        async with AsyncFmpClient() as client:
+            rows = await client.quote.short(self.symbol)
+        yield TriggerEvent({"symbol": self.symbol, "price": rows[0].price})
+```
+
+The client reads `FMP_API_KEY` on the triggerer host, so keep the key in the
+triggerer's environment (or a secrets backend) rather than in the serialized
+trigger kwargs. If Airflow cancels the trigger, the in-flight request is
+aborted.
 
 ## Using a proxy
 
