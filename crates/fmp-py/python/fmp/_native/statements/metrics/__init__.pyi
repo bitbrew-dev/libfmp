@@ -5,10 +5,38 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncStatementsMetricsNamespace",
     "KeyMetrics",
     "KeyMetricsTtm",
     "StatementsMetricsNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsMetricsNamespace:
+    r"""
+    Statements metrics endpoints for a single async client, exposed as `client.statements.metrics`.
+    """
+
+    async def key_metrics(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[KeyMetrics]:
+        r"""
+        Retrieves historical worldwide key metrics for one company.
+        """
+
+    async def key_metrics_ttm(
+        self, symbol: builtins.str
+    ) -> builtins.list[KeyMetricsTtm]:
+        r"""
+        Retrieves worldwide trailing-twelve-month key metrics for one company.
+        """
 
 
 @typing.final

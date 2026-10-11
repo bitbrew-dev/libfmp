@@ -5,9 +5,37 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncStatementsCashFlowNamespace",
     "CashFlowStatement",
     "StatementsCashFlowNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsCashFlowNamespace:
+    r"""
+    Statements cash flow endpoints for a single async client, exposed as `client.statements.cash_flow`.
+    """
+
+    async def statement(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[CashFlowStatement]:
+        r"""
+        Retrieves historical worldwide cash-flow statements for one company.
+        """
+
+    async def statement_ttm(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[CashFlowStatement]:
+        r"""
+        Retrieves trailing-twelve-month worldwide cash-flow statements for one company.
+        """
 
 
 @typing.final

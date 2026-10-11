@@ -5,10 +5,38 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncStatementsRatiosNamespace",
     "FinancialRatios",
     "FinancialRatiosTtm",
     "StatementsRatiosNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsRatiosNamespace:
+    r"""
+    Statements ratios endpoints for a single async client, exposed as `client.statements.ratios`.
+    """
+
+    async def financial_ratios(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[FinancialRatios]:
+        r"""
+        Retrieves historical worldwide financial ratios for one company.
+        """
+
+    async def financial_ratios_ttm(
+        self, symbol: builtins.str
+    ) -> builtins.list[FinancialRatiosTtm]:
+        r"""
+        Retrieves trailing-twelve-month worldwide financial ratios for one company.
+        """
 
 
 @typing.final

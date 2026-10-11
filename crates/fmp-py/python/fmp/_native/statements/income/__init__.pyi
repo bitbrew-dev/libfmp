@@ -5,9 +5,37 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncStatementsIncomeNamespace",
     "IncomeStatement",
     "StatementsIncomeNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsIncomeNamespace:
+    r"""
+    Statements income endpoints for a single async client, exposed as `client.statements.income`.
+    """
+
+    async def statement(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[IncomeStatement]:
+        r"""
+        Retrieves historical worldwide income statements for one company.
+        """
+
+    async def statement_ttm(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[IncomeStatement]:
+        r"""
+        Retrieves trailing-twelve-month worldwide income statements for one company.
+        """
 
 
 @typing.final

@@ -9,9 +9,91 @@ import fmp._native.quote
 import typing
 
 __all__ = [
+    "AsyncForexNamespace",
     "ForexNamespace",
     "ForexPair",
 ]
+
+
+@typing.final
+class AsyncForexNamespace:
+    r"""
+    Forex endpoints for a single async client, exposed as `client.forex`.
+    """
+
+    async def list(self) -> builtins.list[ForexPair]:
+        r"""
+        Lists the provider's documented forex pairs.
+        """
+
+    async def quote(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.Quote]:
+        r"""
+        Retrieves a detailed US-only quote for one forex pair.
+        """
+
+    async def quote_short(
+        self, symbol: builtins.str
+    ) -> builtins.list[fmp._native.quote.QuoteShort]:
+        r"""
+        Retrieves a compact US-only quote for one forex pair.
+        """
+
+    async def chart_light(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartLightBar]:
+        r"""
+        Retrieves compact end-of-day forex history.
+        """
+
+    async def chart_full(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartFullBar]:
+        r"""
+        Retrieves detailed end-of-day forex history.
+        """
+
+    async def chart_one_minute(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-minute forex history.
+        """
+
+    async def chart_five_minutes(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves five-minute forex history.
+        """
+
+    async def chart_one_hour(
+        self,
+        symbol: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[fmp._native.chart.StockChartIntradayBar]:
+        r"""
+        Retrieves one-hour forex history.
+        """
 
 
 @typing.final

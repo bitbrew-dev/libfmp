@@ -5,10 +5,43 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncMarketHoursNamespace",
     "ExchangeHoliday",
     "ExchangeMarketHours",
     "MarketHoursNamespace",
 ]
+
+
+@typing.final
+class AsyncMarketHoursNamespace:
+    r"""
+    Market hours endpoints for a single async client, exposed as `client.market_hours`.
+    """
+
+    async def exchange(
+        self, exchange: builtins.str, *, timestamp: typing.Optional[builtins.str] = None
+    ) -> builtins.list[ExchangeMarketHours]:
+        r"""
+        Retrieves trading hours for one exchange.
+        """
+
+    async def holidays(
+        self,
+        exchange: builtins.str,
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[ExchangeHoliday]:
+        r"""
+        Retrieves holidays for one exchange.
+        """
+
+    async def all_exchanges(
+        self, *, timestamp: typing.Optional[builtins.str] = None
+    ) -> builtins.list[ExchangeMarketHours]:
+        r"""
+        Retrieves trading hours for all exchanges.
+        """
 
 
 @typing.final

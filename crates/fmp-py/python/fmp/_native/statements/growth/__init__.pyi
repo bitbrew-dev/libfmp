@@ -12,12 +12,74 @@ from fmp._native.statements.growth import income
 import fmp._native.statements.growth.income
 
 __all__ = [
+    "AsyncStatementsGrowthNamespace",
     "StatementsGrowthNamespace",
     "balance",
     "cash_flow",
     "combined",
     "income",
 ]
+
+
+@typing.final
+class AsyncStatementsGrowthNamespace:
+    r"""
+    Statements growth endpoints for a single async client, exposed as `client.statements.growth`.
+    """
+
+    async def income(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[fmp._native.statements.growth.income.IncomeStatementGrowth]:
+        r"""
+        Retrieves worldwide income-statement growth for one company.
+        """
+
+    async def balance_sheet(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[
+        fmp._native.statements.growth.balance.BalanceSheetStatementGrowth
+    ]:
+        r"""
+        Retrieves worldwide balance-sheet-statement growth for one company.
+        """
+
+    async def cash_flow(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[fmp._native.statements.growth.cash_flow.CashFlowStatementGrowth]:
+        r"""
+        Retrieves worldwide cash-flow-statement growth for one company.
+        """
+
+    async def financial(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[fmp._native.statements.growth.combined.FinancialStatementGrowth]:
+        r"""
+        Retrieves combined worldwide financial-statement growth for one company.
+        """
 
 
 @typing.final

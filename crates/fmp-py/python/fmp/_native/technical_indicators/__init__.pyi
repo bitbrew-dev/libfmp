@@ -5,6 +5,7 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncTechnicalIndicatorsNamespace",
     "AverageDirectionalIndexBar",
     "DoubleExponentialMovingAverageBar",
     "ExponentialMovingAverageBar",
@@ -16,6 +17,148 @@ __all__ = [
     "WeightedMovingAverageBar",
     "WilliamsBar",
 ]
+
+
+@typing.final
+class AsyncTechnicalIndicatorsNamespace:
+    r"""
+    Technical indicators endpoints for a single async client, exposed as `client.technical_indicators`.
+    """
+
+    async def simple_moving_average(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[SimpleMovingAverageBar]:
+        r"""
+        Retrieves worldwide simple-moving-average bars.
+        """
+
+    async def exponential_moving_average(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[ExponentialMovingAverageBar]:
+        r"""
+        Retrieves worldwide exponential-moving-average bars.
+        """
+
+    async def weighted_moving_average(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[WeightedMovingAverageBar]:
+        r"""
+        Retrieves worldwide weighted-moving-average bars.
+        """
+
+    async def double_exponential_moving_average(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[DoubleExponentialMovingAverageBar]:
+        r"""
+        Retrieves worldwide double-exponential-moving-average bars.
+        """
+
+    async def triple_exponential_moving_average(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[TripleExponentialMovingAverageBar]:
+        r"""
+        Retrieves worldwide triple-exponential-moving-average bars.
+        """
+
+    async def relative_strength_index(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[RelativeStrengthIndexBar]:
+        r"""
+        Retrieves worldwide relative-strength-index bars.
+        """
+
+    async def standard_deviation(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[StandardDeviationBar]:
+        r"""
+        Retrieves worldwide standard-deviation bars.
+        """
+
+    async def williams(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[WilliamsBar]:
+        r"""
+        Retrieves worldwide Williams bars.
+        """
+
+    async def average_directional_index(
+        self,
+        symbol: builtins.str,
+        period_length: builtins.int,
+        timeframe: typing.Literal[
+            "1min", "5min", "15min", "30min", "1hour", "4hour", "1day"
+        ],
+        *,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[AverageDirectionalIndexBar]:
+        r"""
+        Retrieves worldwide average-directional-index bars.
+        """
 
 
 @typing.final

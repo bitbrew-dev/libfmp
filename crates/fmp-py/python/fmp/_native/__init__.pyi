@@ -67,6 +67,7 @@ from fmp._native import transcripts
 import fmp._native.transcripts
 
 __all__ = [
+    "AsyncFmpClient",
     "BinaryPayload",
     "FmpClient",
     "analyst",
@@ -105,6 +106,277 @@ __all__ = [
 ]
 
 __version__: builtins.str
+
+
+@typing.final
+class AsyncFmpClient:
+    r"""
+    An asyncio FMP client: the same namespaces and methods as `FmpClient`, but
+    every endpoint method is a coroutine to `await`.
+
+    The constructor takes the same keywords, environment fallbacks
+    (`FMP_API_KEY`, `FMP_BASE_URL`), and defaults as `FmpClient`, and raises
+    the same exceptions. Requests run on the process-wide runtime shared with
+    `FmpClient`, so awaiting one never blocks the event loop and concurrent
+    coroutines (`asyncio.gather`) run their requests in parallel. Cancelling
+    the awaiting task aborts its request. Coroutines need a running asyncio
+    loop (anyio on its asyncio backend works); trio is not supported.
+
+    `on_response` behaves as on `FmpClient`: a plain, synchronous callable run
+    on the event loop thread after the response decoded and before the
+    coroutine returns; if it raises, the coroutine raises that exception.
+
+    `close()` and `await aclose()` release the pooled connections; afterwards
+    every call, including through a namespace fetched before the close, raises
+    `FmpConfigError`. Calls already in flight finish normally. Closing twice
+    is a no-op, and `async with AsyncFmpClient(...) as client:` closes the
+    client when the block exits.
+    """
+
+    @property
+    def analyst(self) -> fmp._native.analyst.AsyncAnalystNamespace:
+        r"""
+        The `analyst` endpoints, reached as `client.analyst`.
+        """
+
+    @property
+    def bulk(self) -> fmp._native.bulk.AsyncBulkNamespace:
+        r"""
+        The `bulk` endpoints, reached as `client.bulk`.
+        """
+
+    @property
+    def calendar(self) -> fmp._native.calendar.AsyncCalendarNamespace:
+        r"""
+        The `calendar` endpoints, reached as `client.calendar`.
+        """
+
+    @property
+    def chart(self) -> fmp._native.chart.AsyncChartNamespace:
+        r"""
+        The `chart` endpoints, reached as `client.chart`.
+        """
+
+    @property
+    def commitment_of_traders(
+        self,
+    ) -> fmp._native.commitment_of_traders.AsyncCommitmentOfTradersNamespace:
+        r"""
+        The `commitment_of_traders` endpoints, reached as `client.commitment_of_traders`.
+        """
+
+    @property
+    def commodities(self) -> fmp._native.commodities.AsyncCommoditiesNamespace:
+        r"""
+        The `commodities` endpoints, reached as `client.commodities`.
+        """
+
+    @property
+    def company(self) -> fmp._native.company.AsyncCompanyNamespace:
+        r"""
+        The `company` endpoints, reached as `client.company`.
+        """
+
+    @property
+    def congressional(self) -> fmp._native.congressional.AsyncCongressionalNamespace:
+        r"""
+        The `congressional` endpoints, reached as `client.congressional`.
+        """
+
+    @property
+    def crypto(self) -> fmp._native.crypto.AsyncCryptoNamespace:
+        r"""
+        The `crypto` endpoints, reached as `client.crypto`.
+        """
+
+    @property
+    def dcf(self) -> fmp._native.dcf.AsyncDcfNamespace:
+        r"""
+        The `dcf` endpoints, reached as `client.dcf`.
+        """
+
+    @property
+    def directory(self) -> fmp._native.directory.AsyncDirectoryNamespace:
+        r"""
+        The `directory` endpoints, reached as `client.directory`.
+        """
+
+    @property
+    def economics(self) -> fmp._native.economics.AsyncEconomicsNamespace:
+        r"""
+        The `economics` endpoints, reached as `client.economics`.
+        """
+
+    @property
+    def esg(self) -> fmp._native.esg.AsyncEsgNamespace:
+        r"""
+        The `esg` endpoints, reached as `client.esg`.
+        """
+
+    @property
+    def forex(self) -> fmp._native.forex.AsyncForexNamespace:
+        r"""
+        The `forex` endpoints, reached as `client.forex`.
+        """
+
+    @property
+    def fundraising(self) -> fmp._native.fundraising.AsyncFundraisingNamespace:
+        r"""
+        The `fundraising` endpoints, reached as `client.fundraising`.
+        """
+
+    @property
+    def funds(self) -> fmp._native.funds.AsyncFundsNamespace:
+        r"""
+        The `funds` endpoints, reached as `client.funds`.
+        """
+
+    @property
+    def indexes(self) -> fmp._native.indexes.AsyncIndexesNamespace:
+        r"""
+        The `indexes` endpoints, reached as `client.indexes`.
+        """
+
+    @property
+    def insider_trading(
+        self,
+    ) -> fmp._native.insider_trading.AsyncInsiderTradingNamespace:
+        r"""
+        The `insider_trading` endpoints, reached as `client.insider_trading`.
+        """
+
+    @property
+    def institutional_ownership(
+        self,
+    ) -> fmp._native.institutional_ownership.AsyncInstitutionalOwnershipNamespace:
+        r"""
+        The `institutional_ownership` endpoints, reached as `client.institutional_ownership`.
+        """
+
+    @property
+    def market(self) -> fmp._native.market.AsyncMarketNamespace:
+        r"""
+        The `market` endpoints, reached as `client.market`.
+        """
+
+    @property
+    def market_hours(self) -> fmp._native.market_hours.AsyncMarketHoursNamespace:
+        r"""
+        The `market_hours` endpoints, reached as `client.market_hours`.
+        """
+
+    @property
+    def news(self) -> fmp._native.news.AsyncNewsNamespace:
+        r"""
+        The `news` endpoints, reached as `client.news`.
+        """
+
+    @property
+    def quote(self) -> fmp._native.quote.AsyncQuoteNamespace:
+        r"""
+        The `quote` endpoints, reached as `client.quote`.
+        """
+
+    @property
+    def screener(self) -> fmp._native.screener.AsyncScreenerNamespace:
+        r"""
+        The `screener` endpoints, reached as `client.screener`.
+        """
+
+    @property
+    def search(self) -> fmp._native.search.AsyncSearchNamespace:
+        r"""
+        The `search` endpoints, reached as `client.search`.
+        """
+
+    @property
+    def sec_filings(self) -> fmp._native.sec_filings.AsyncSecFilingsNamespace:
+        r"""
+        The `sec_filings` endpoints, reached as `client.sec_filings`.
+        """
+
+    @property
+    def statements(self) -> fmp._native.statements.AsyncStatementsNamespace:
+        r"""
+        The `statements` endpoints, reached as `client.statements`.
+        """
+
+    @property
+    def technical_indicators(
+        self,
+    ) -> fmp._native.technical_indicators.AsyncTechnicalIndicatorsNamespace:
+        r"""
+        The `technical_indicators` endpoints, reached as `client.technical_indicators`.
+        """
+
+    @property
+    def tipranks(self) -> fmp._native.tipranks.AsyncTipranksNamespace:
+        r"""
+        The `tipranks` endpoints, reached as `client.tipranks`.
+        """
+
+    @property
+    def transcripts(self) -> fmp._native.transcripts.AsyncTranscriptsNamespace:
+        r"""
+        The `transcripts` endpoints, reached as `client.transcripts`.
+        """
+
+    def __new__(
+        cls,
+        *,
+        token: typing.Optional[builtins.str] = None,
+        base_url: typing.Optional[builtins.str] = None,
+        path_prefix: typing.Optional[builtins.str] = None,
+        auth_mode: typing.Optional[
+            typing.Literal[
+                "none",
+                "fmp_header",
+                "fmp_query",
+                "bearer",
+                "custom_header",
+                "custom_query",
+            ]
+        ] = None,
+        auth_name: typing.Optional[builtins.str] = None,
+        auth_prefix: typing.Optional[builtins.str] = None,
+        headers: typing.Optional[typing.Mapping[builtins.str, builtins.str]] = None,
+        timeout: typing.Optional[builtins.float] = None,
+        connect_timeout: typing.Optional[builtins.float] = None,
+        max_response_body_bytes: typing.Optional[builtins.int] = None,
+        danger_allow_insecure_authentication: builtins.bool = False,
+        follow_redirects: typing.Optional[builtins.bool] = None,
+        on_response: typing.Optional[
+            typing.Callable[
+                [builtins.str, builtins.int, builtins.dict[builtins.str, builtins.str]],
+                None,
+            ]
+        ] = None,
+    ) -> AsyncFmpClient: ...
+    def close(self) -> None:
+        r"""
+        Releases the pooled HTTP connections and rejects every later call with
+        `FmpConfigError`. Calls already in flight finish normally. Idempotent.
+        """
+
+    async def aclose(self) -> None:
+        r"""
+        The awaitable form of `close()`, for `async` cleanup code.
+        """
+
+    async def __aenter__(self) -> AsyncFmpClient:
+        r"""
+        Returns the client itself for use in an `async with` block.
+        """
+
+    async def __aexit__(
+        self,
+        exc_type: typing.Optional[type[builtins.BaseException]],
+        exc_value: typing.Optional[builtins.BaseException],
+        traceback: typing.Optional[types.TracebackType],
+    ) -> None:
+        r"""
+        Closes the client and lets any exception from the block propagate.
+        """
 
 
 @typing.final

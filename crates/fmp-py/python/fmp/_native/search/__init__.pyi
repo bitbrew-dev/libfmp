@@ -5,6 +5,7 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncSearchNamespace",
     "CikSearchResult",
     "CusipSearchResult",
     "ExchangeVariant",
@@ -13,6 +14,59 @@ __all__ = [
     "SearchNamespace",
     "SymbolSearchResult",
 ]
+
+
+@typing.final
+class AsyncSearchNamespace:
+    r"""
+    Search endpoints for a single async client, exposed as `client.search`.
+    """
+
+    async def symbol(
+        self,
+        query: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        exchange: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[SymbolSearchResult]:
+        r"""
+        Searches worldwide companies and instruments by symbol.
+        """
+
+    async def name(
+        self,
+        query: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        exchange: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[NameSearchResult]:
+        r"""
+        Searches worldwide companies and instruments by name.
+        """
+
+    async def cik(
+        self, cik: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[CikSearchResult]:
+        r"""
+        Searches US companies by Central Index Key.
+        """
+
+    async def cusip(self, cusip: builtins.str) -> builtins.list[CusipSearchResult]:
+        r"""
+        Searches worldwide securities by CUSIP without constraining its length.
+        """
+
+    async def isin(self, isin: builtins.str) -> builtins.list[IsinSearchResult]:
+        r"""
+        Searches worldwide securities by ISIN without constraining its length.
+        """
+
+    async def exchange_variants(
+        self, symbol: builtins.str
+    ) -> builtins.list[ExchangeVariant]:
+        r"""
+        Finds worldwide exchange listings for a provider ticker.
+        """
 
 
 @typing.final

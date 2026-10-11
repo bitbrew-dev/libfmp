@@ -19,6 +19,7 @@ from fmp._native.bulk import snapshots
 import fmp._native.bulk.snapshots
 
 __all__ = [
+    "AsyncBulkNamespace",
     "BulkNamespace",
     "balance",
     "cash_flow",
@@ -27,6 +28,139 @@ __all__ = [
     "metrics",
     "snapshots",
 ]
+
+
+@typing.final
+class AsyncBulkNamespace:
+    r"""
+    Bulk endpoints for a single async client, exposed as `client.bulk`.
+    """
+
+    async def company_profiles(
+        self, part: builtins.str
+    ) -> builtins.list[fmp._native.company.CompanyProfile]:
+        r"""
+        Retrieves one provider partition of worldwide company profiles.
+        """
+
+    async def stock_ratings(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkStockRating]:
+        r"""
+        Retrieves worldwide stock ratings in one provider bulk response.
+        """
+
+    async def dcf_valuations(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkDcfValuation]:
+        r"""
+        Retrieves worldwide discounted-cash-flow valuations in one provider bulk response.
+        """
+
+    async def financial_scores(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkFinancialScore]:
+        r"""
+        Retrieves worldwide financial scores in one provider bulk response.
+        """
+
+    async def price_target_summaries(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkPriceTargetSummary]:
+        r"""
+        Retrieves US price-target summaries in one provider bulk response.
+        """
+
+    async def etf_holdings(
+        self, part: builtins.str
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkEtfHolding]:
+        r"""
+        Retrieves one provider partition of worldwide ETF holdings.
+        """
+
+    async def upgrades_downgrades_consensus(
+        self,
+    ) -> builtins.list[fmp._native.bulk.snapshots.BulkUpgradesDowngradesConsensus]:
+        r"""
+        Retrieves worldwide upgrades/downgrades consensus in one provider bulk response.
+        """
+
+    async def key_metrics_ttm(
+        self,
+    ) -> builtins.list[fmp._native.bulk.metrics.BulkKeyMetricsTtm]:
+        r"""
+        Retrieves worldwide trailing-twelve-month key metrics in one bulk response.
+        """
+
+    async def financial_ratios_ttm(
+        self,
+    ) -> builtins.list[fmp._native.bulk.metrics.BulkFinancialRatiosTtm]:
+        r"""
+        Retrieves worldwide trailing-twelve-month financial ratios in one bulk response.
+        """
+
+    async def stock_peers(
+        self,
+    ) -> builtins.list[fmp._native.bulk.metrics.BulkStockPeer]:
+        r"""
+        Retrieves worldwide stock peers in one provider bulk response.
+        """
+
+    async def earnings_surprises(
+        self, year: builtins.int
+    ) -> builtins.list[fmp._native.bulk.metrics.BulkEarningsSurprise]:
+        r"""
+        Retrieves worldwide annual earnings surprises for one required provider year.
+        """
+
+    async def income_statements(
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
+    ) -> builtins.list[fmp._native.bulk.income.BulkIncomeStatement]:
+        r"""
+        Retrieves worldwide bulk income statements for one year and fiscal period.
+        """
+
+    async def income_statement_growth(
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
+    ) -> builtins.list[fmp._native.bulk.income.BulkIncomeStatementGrowth]:
+        r"""
+        Retrieves worldwide bulk income-statement growth for one year and fiscal period.
+        """
+
+    async def balance_sheet_statements(
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
+    ) -> builtins.list[fmp._native.bulk.balance.BulkBalanceSheetStatement]:
+        r"""
+        Retrieves worldwide bulk balance sheets for one year and fiscal period.
+        """
+
+    async def balance_sheet_statement_growth(
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
+    ) -> builtins.list[fmp._native.bulk.balance.BulkBalanceSheetStatementGrowth]:
+        r"""
+        Retrieves worldwide bulk balance-sheet growth for one year and fiscal period.
+        """
+
+    async def cash_flow_statements(
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
+    ) -> builtins.list[fmp._native.bulk.cash_flow.BulkCashFlowStatement]:
+        r"""
+        Retrieves worldwide bulk cash-flow statements for one year and fiscal period.
+        """
+
+    async def cash_flow_statement_growth(
+        self, year: builtins.int, period: typing.Literal["Q1", "Q2", "Q3", "Q4", "FY"]
+    ) -> builtins.list[fmp._native.bulk.cash_flow.BulkCashFlowStatementGrowth]:
+        r"""
+        Retrieves worldwide bulk cash-flow growth for one year and fiscal period.
+        """
+
+    async def eod(
+        self, date: datetime.date | builtins.str
+    ) -> builtins.list[fmp._native.bulk.eod.BulkEodBar]:
+        r"""
+        Retrieves worldwide bulk end-of-day prices for one required date.
+        """
 
 
 @typing.final

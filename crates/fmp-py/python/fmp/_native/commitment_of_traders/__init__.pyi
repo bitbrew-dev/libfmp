@@ -5,11 +5,46 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncCommitmentOfTradersNamespace",
     "CommitmentOfTradersNamespace",
     "CotAnalysis",
     "CotReport",
     "CotReportListing",
 ]
+
+
+@typing.final
+class AsyncCommitmentOfTradersNamespace:
+    r"""
+    Commitment of traders endpoints for a single async client, exposed as `client.commitment_of_traders`.
+    """
+
+    async def report(
+        self,
+        *,
+        symbol: typing.Optional[builtins.str] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[CotReport]:
+        r"""
+        Retrieves detailed Commitment of Traders reports.
+        """
+
+    async def analysis(
+        self,
+        *,
+        symbol: typing.Optional[builtins.str] = None,
+        from_: typing.Optional[datetime.date | builtins.str] = None,
+        to: typing.Optional[datetime.date | builtins.str] = None,
+    ) -> builtins.list[CotAnalysis]:
+        r"""
+        Retrieves derived Commitment of Traders market analysis.
+        """
+
+    async def report_list(self) -> builtins.list[CotReportListing]:
+        r"""
+        Lists the Commitment of Traders reports available from the provider.
+        """
 
 
 @typing.final

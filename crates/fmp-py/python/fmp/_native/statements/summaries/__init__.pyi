@@ -5,12 +5,57 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncStatementsSummariesNamespace",
     "EnterpriseValue",
     "FinancialScore",
     "LatestFinancialStatement",
     "OwnerEarnings",
     "StatementsSummariesNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsSummariesNamespace:
+    r"""
+    Statements summaries endpoints for a single async client, exposed as `client.statements.summaries`.
+    """
+
+    async def latest_financial_statements(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[LatestFinancialStatement]:
+        r"""
+        Retrieves the latest worldwide financial-statement filings.
+        """
+
+    async def financial_scores(
+        self, symbol: builtins.str
+    ) -> builtins.list[FinancialScore]:
+        r"""
+        Retrieves worldwide financial-health scores for one company.
+        """
+
+    async def owner_earnings(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[OwnerEarnings]:
+        r"""
+        Retrieves worldwide owner earnings for one company.
+        """
+
+    async def enterprise_values(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[EnterpriseValue]:
+        r"""
+        Retrieves worldwide enterprise values for one company.
+        """
 
 
 @typing.final

@@ -5,12 +5,142 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncSecFilingsNamespace",
     "SecCompanyProfile",
     "SecCompanySearchResult",
     "SecFiling",
     "SecFilingsNamespace",
     "SicClassification",
 ]
+
+
+@typing.final
+class AsyncSecFilingsNamespace:
+    r"""
+    Sec filings endpoints for a single async client, exposed as `client.sec_filings`.
+    """
+
+    async def latest_8k(
+        self,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves the latest US 8-K SEC filings within the required date range.
+        """
+
+    async def latest(
+        self,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves the latest US financial SEC filings within the required date range.
+        """
+
+    async def by_form_type(
+        self,
+        form_type: builtins.str,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves US SEC filings by their open form type.
+        """
+
+    async def by_symbol(
+        self,
+        symbol: builtins.str,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves US SEC filings for a ticker.
+        """
+
+    async def by_cik(
+        self,
+        cik: builtins.str,
+        from_: datetime.date | builtins.str,
+        to: datetime.date | builtins.str,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecFiling]:
+        r"""
+        Retrieves US SEC filings for a string-backed CIK.
+        """
+
+    async def search_companies_by_name(
+        self, company: builtins.str
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Searches US SEC companies by company-name text.
+        """
+
+    async def search_companies_by_symbol(
+        self, symbol: builtins.str
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Searches US SEC companies by ticker.
+        """
+
+    async def search_companies_by_cik(
+        self, cik: builtins.str
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Searches US SEC companies by string-backed CIK.
+        """
+
+    async def company_profile(
+        self, symbol: builtins.str, *, cik_a: typing.Optional[builtins.str] = None
+    ) -> builtins.list[SecCompanyProfile]:
+        r"""
+        Retrieves the full US SEC company profile for a ticker.
+        """
+
+    async def industry_classifications(
+        self,
+        *,
+        industry_title: typing.Optional[builtins.str] = None,
+        sic_code: typing.Optional[builtins.str] = None,
+    ) -> builtins.list[SicClassification]:
+        r"""
+        Retrieves the US Standard Industrial Classification directory.
+        """
+
+    async def all_industry_classifications(
+        self,
+        *,
+        page: typing.Optional[builtins.int] = None,
+        limit: typing.Optional[builtins.int] = None,
+    ) -> builtins.list[SecCompanySearchResult]:
+        r"""
+        Retrieves the paginated US company industry-classification feed.
+        """
+
+    async def search_industry_classifications(
+        self,
+        *,
+        symbol: typing.Optional[builtins.str] = None,
+        cik: typing.Optional[builtins.str] = None,
+        sic_code: typing.Optional[builtins.str] = None,
+    ) -> list[dict[str, typing.Any]]:
+        r"""
+        Searches US industry classifications while preserving raw documented rows.
+        """
 
 
 @typing.final

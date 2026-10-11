@@ -5,10 +5,38 @@ import datetime
 import typing
 
 __all__ = [
+    "AsyncStatementsBalanceNamespace",
     "BalanceSheetStatement",
     "BalanceSheetStatementTtm",
     "StatementsBalanceNamespace",
 ]
+
+
+@typing.final
+class AsyncStatementsBalanceNamespace:
+    r"""
+    Statements balance endpoints for a single async client, exposed as `client.statements.balance`.
+    """
+
+    async def statement(
+        self,
+        symbol: builtins.str,
+        *,
+        limit: typing.Optional[builtins.int] = None,
+        period: typing.Optional[
+            typing.Literal["Q1", "Q2", "Q3", "Q4", "FY", "annual", "quarter"]
+        ] = None,
+    ) -> builtins.list[BalanceSheetStatement]:
+        r"""
+        Retrieves historical worldwide balance sheets for one company.
+        """
+
+    async def statement_ttm(
+        self, symbol: builtins.str, *, limit: typing.Optional[builtins.int] = None
+    ) -> builtins.list[BalanceSheetStatementTtm]:
+        r"""
+        Retrieves trailing-twelve-month worldwide balance sheets for one company.
+        """
 
 
 @typing.final
