@@ -19,7 +19,7 @@ use crate::models::company::{
     DelistedCompany, EmployeeCount, ExecutiveCompensation, ExecutiveCompensationBenchmark,
     MergerAcquisition, ShareFloat, StockPeer,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Company endpoints for a single client, exposed as `client.company`.
 #[gen_stub_pyclass]
@@ -338,6 +338,282 @@ impl CompanyNamespace {
                 client.executive_compensation_benchmark(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(ExecutiveCompensationBenchmark::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Company endpoints for a single async client, exposed as `client.company`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.company", frozen)]
+pub(crate) struct AsyncCompanyNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncCompanyNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncCompanyNamespace {
+    /// Retrieves worldwide company profiles by provider ticker.
+    #[pyo3(signature = (symbol))]
+    async fn profile(&self, symbol: String) -> PyResult<Vec<CompanyProfile>> {
+        let query = profile_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.profile(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CompanyProfile::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US company profiles by representation-preserving CIK.
+    #[pyo3(signature = (cik))]
+    async fn profile_by_cik(&self, cik: String) -> PyResult<Vec<CompanyProfile>> {
+        let query = profile_by_cik_query(&cik)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.profile_by_cik(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CompanyProfile::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves company-issued notes for a US company.
+    #[pyo3(signature = (symbol))]
+    async fn notes(&self, symbol: String) -> PyResult<Vec<CompanyNote>> {
+        let query = notes_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.company_notes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CompanyNote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide stock peers for a company.
+    #[pyo3(signature = (symbol))]
+    async fn stock_peers(&self, symbol: String) -> PyResult<Vec<StockPeer>> {
+        let query = stock_peers_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_peers(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockPeer::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves delisted US companies with optional provider pagination.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn delisted_companies(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<DelistedCompany>> {
+        let query = delisted_companies_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.delisted_companies(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(DelistedCompany::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves current employee-count filings for a US company.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn employee_count(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<EmployeeCount>> {
+        let query = employee_count_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.employee_count(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EmployeeCount::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves historical employee-count filings for a US company.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn historical_employee_count(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<EmployeeCount>> {
+        let query = historical_employee_count_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_employee_count(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EmployeeCount::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves current worldwide market capitalization for one company.
+    #[pyo3(signature = (symbol))]
+    async fn market_capitalization(
+        &self,
+        symbol: String,
+    ) -> PyResult<Vec<CompanyMarketCapitalization>> {
+        let query = market_capitalization_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.market_capitalization(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CompanyMarketCapitalization::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves current worldwide market capitalization for multiple companies.
+    #[pyo3(signature = (symbols))]
+    async fn batch_market_capitalization(
+        &self,
+        symbols: args::SymbolsArg,
+    ) -> PyResult<Vec<CompanyMarketCapitalization>> {
+        let query = batch_market_capitalization_query(symbols)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.batch_market_capitalization(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CompanyMarketCapitalization::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves historical worldwide market capitalization for one company.
+    #[pyo3(signature = (symbol, *, limit=None, from_=None, to=None))]
+    async fn historical_market_capitalization(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<CompanyMarketCapitalization>> {
+        let query = historical_market_capitalization_query(&symbol, limit, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_market_capitalization(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CompanyMarketCapitalization::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves current worldwide share-float data for one company.
+    #[pyo3(signature = (symbol))]
+    async fn shares_float(&self, symbol: String) -> PyResult<Vec<CompanyShareFloat>> {
+        let query = shares_float_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.shares_float(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CompanyShareFloat::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves paginated worldwide share-float data for all companies.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn all_shares_float(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<ShareFloat>> {
+        let query = all_shares_float_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.all_shares_float(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(ShareFloat::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest US mergers and acquisitions with optional pagination.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn latest_mergers_acquisitions(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<MergerAcquisition>> {
+        let query = latest_mergers_acquisitions_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_mergers_acquisitions(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(MergerAcquisition::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US mergers and acquisitions by representation-preserving company name.
+    #[pyo3(signature = (name))]
+    async fn search_mergers_acquisitions(&self, name: String) -> PyResult<Vec<MergerAcquisition>> {
+        let query = search_mergers_acquisitions_query(&name)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_mergers_acquisitions(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(MergerAcquisition::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide company executives by provider ticker.
+    #[pyo3(signature = (symbol))]
+    async fn key_executives(&self, symbol: String) -> PyResult<Vec<CompanyExecutive>> {
+        let query = key_executives_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.key_executives(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CompanyExecutive::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves executive compensation for a US company.
+    #[pyo3(signature = (symbol))]
+    async fn executive_compensation(&self, symbol: String) -> PyResult<Vec<ExecutiveCompensation>> {
+        let query = executive_compensation_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.executive_compensation(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(ExecutiveCompensation::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US executive-compensation benchmarks with an optional year.
+    #[pyo3(signature = (*, year=None))]
+    async fn executive_compensation_benchmark(
+        &self,
+        year: Option<String>,
+    ) -> PyResult<Vec<ExecutiveCompensationBenchmark>> {
+        let query = executive_compensation_benchmark_query(year.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.executive_compensation_benchmark(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

@@ -13,7 +13,7 @@ use crate::errors::to_py_error;
 use crate::models::economics::{
     EconomicCalendarEvent, EconomicIndicatorObservation, MarketRiskPremium, TreasuryRate,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Economics endpoints for a single client, exposed as `client.economics`.
 #[gen_stub_pyclass]
@@ -103,6 +103,88 @@ impl EconomicsNamespace {
                 client.market_risk_premium().await
             })
         })?;
+        rows.map(|items| items.into_iter().map(MarketRiskPremium::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Economics endpoints for a single async client, exposed as `client.economics`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.economics", frozen)]
+pub(crate) struct AsyncEconomicsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncEconomicsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncEconomicsNamespace {
+    /// Retrieves Treasury-rate observations.
+    #[pyo3(signature = (*, from_=None, to=None))]
+    async fn treasury_rates(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<TreasuryRate>> {
+        let query = treasury_rates_query(from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.treasury_rates(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(TreasuryRate::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves observations for one economic indicator.
+    #[pyo3(signature = (name, *, from_=None, to=None))]
+    async fn indicators(
+        &self,
+        name: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<EconomicIndicatorObservation>> {
+        let query = indicators_query(&name, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.economic_indicators(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(EconomicIndicatorObservation::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves economic-calendar events.
+    #[pyo3(signature = (*, country=None, from_=None, to=None))]
+    async fn calendar(
+        &self,
+        country: Option<String>,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<EconomicCalendarEvent>> {
+        let query = calendar_query(country.as_deref(), from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.economic_calendar(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EconomicCalendarEvent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the provider's queryless country risk-premium rows.
+    async fn market_risk_premium(&self) -> PyResult<Vec<MarketRiskPremium>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.market_risk_premium().await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(MarketRiskPremium::from).collect())
             .map_err(to_py_error)
     }

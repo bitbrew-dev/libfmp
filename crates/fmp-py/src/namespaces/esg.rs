@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::esg::{EsgBenchmark, EsgDisclosure, EsgRating};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Esg endpoints for a single client, exposed as `client.esg`.
 #[gen_stub_pyclass]
@@ -66,6 +66,59 @@ impl EsgNamespace {
                 client.esg_benchmark(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(EsgBenchmark::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Esg endpoints for a single async client, exposed as `client.esg`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.esg", frozen)]
+pub(crate) struct AsyncEsgNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncEsgNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncEsgNamespace {
+    /// Retrieves ESG disclosure filings for one company.
+    #[pyo3(signature = (symbol))]
+    async fn disclosures(&self, symbol: String) -> PyResult<Vec<EsgDisclosure>> {
+        let query = disclosures_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.esg_disclosures(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EsgDisclosure::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves ESG ratings for one company.
+    #[pyo3(signature = (symbol))]
+    async fn ratings(&self, symbol: String) -> PyResult<Vec<EsgRating>> {
+        let query = ratings_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.esg_ratings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EsgRating::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves sector ESG benchmarks, optionally for one provider year string.
+    #[pyo3(signature = (*, year=None))]
+    async fn benchmark(&self, year: Option<String>) -> PyResult<Vec<EsgBenchmark>> {
+        let query = benchmark_query(year.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.esg_benchmark(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(EsgBenchmark::from).collect())
             .map_err(to_py_error)
     }

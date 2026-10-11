@@ -18,7 +18,7 @@ use crate::errors::to_py_error;
 use crate::models::sec_filings::{
     SecCompanyProfile, SecCompanySearchResult, SecFiling, SicClassification,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Sec filings endpoints for a single client, exposed as `client.sec_filings`.
 #[gen_stub_pyclass]
@@ -296,6 +296,252 @@ impl SecFilingsNamespace {
             .iter()
             .map(|row| convert::dynamic_object_to_py(py, row).map(Bound::unbind))
             .collect()
+    }
+}
+
+/// Sec filings endpoints for a single async client, exposed as `client.sec_filings`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.sec_filings", frozen)]
+pub(crate) struct AsyncSecFilingsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncSecFilingsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncSecFilingsNamespace {
+    /// Retrieves the latest US 8-K SEC filings within the required date range.
+    #[pyo3(signature = (from_, to, *, page=None, limit=None))]
+    async fn latest_8k(
+        &self,
+        from_: args::DateArg,
+        to: args::DateArg,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<SecFiling>> {
+        let query = latest_8k_query(from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_8k_sec_filings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SecFiling::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest US financial SEC filings within the required date range.
+    #[pyo3(signature = (from_, to, *, page=None, limit=None))]
+    async fn latest(
+        &self,
+        from_: args::DateArg,
+        to: args::DateArg,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<SecFiling>> {
+        let query = latest_query(from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_sec_filings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SecFiling::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US SEC filings by their open form type.
+    #[pyo3(signature = (form_type, from_, to, *, page=None, limit=None))]
+    async fn by_form_type(
+        &self,
+        form_type: String,
+        from_: args::DateArg,
+        to: args::DateArg,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<SecFiling>> {
+        let query = by_form_type_query(&form_type, from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.sec_filings_by_form_type(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SecFiling::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US SEC filings for a ticker.
+    #[pyo3(signature = (symbol, from_, to, *, page=None, limit=None))]
+    async fn by_symbol(
+        &self,
+        symbol: String,
+        from_: args::DateArg,
+        to: args::DateArg,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<SecFiling>> {
+        let query = by_symbol_query(&symbol, from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.sec_filings_by_symbol(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SecFiling::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US SEC filings for a string-backed CIK.
+    #[pyo3(signature = (cik, from_, to, *, page=None, limit=None))]
+    async fn by_cik(
+        &self,
+        cik: String,
+        from_: args::DateArg,
+        to: args::DateArg,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<SecFiling>> {
+        let query = by_cik_query(&cik, from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.sec_filings_by_cik(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SecFiling::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US SEC companies by company-name text.
+    #[pyo3(signature = (company))]
+    async fn search_companies_by_name(
+        &self,
+        company: String,
+    ) -> PyResult<Vec<SecCompanySearchResult>> {
+        let query = search_companies_by_name_query(&company)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_sec_companies_by_name(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(SecCompanySearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Searches US SEC companies by ticker.
+    #[pyo3(signature = (symbol))]
+    async fn search_companies_by_symbol(
+        &self,
+        symbol: String,
+    ) -> PyResult<Vec<SecCompanySearchResult>> {
+        let query = search_companies_by_symbol_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_sec_companies_by_symbol(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(SecCompanySearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Searches US SEC companies by string-backed CIK.
+    #[pyo3(signature = (cik))]
+    async fn search_companies_by_cik(&self, cik: String) -> PyResult<Vec<SecCompanySearchResult>> {
+        let query = search_companies_by_cik_query(&cik)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_sec_companies_by_cik(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(SecCompanySearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves the full US SEC company profile for a ticker.
+    #[pyo3(signature = (symbol, *, cik_a=None))]
+    async fn company_profile(
+        &self,
+        symbol: String,
+        cik_a: Option<String>,
+    ) -> PyResult<Vec<SecCompanyProfile>> {
+        let query = company_profile_query(&symbol, cik_a.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.sec_company_profile(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SecCompanyProfile::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the US Standard Industrial Classification directory.
+    #[pyo3(signature = (*, industry_title=None, sic_code=None))]
+    async fn industry_classifications(
+        &self,
+        industry_title: Option<String>,
+        sic_code: Option<String>,
+    ) -> PyResult<Vec<SicClassification>> {
+        let query = industry_classifications_query(industry_title.as_deref(), sic_code.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.industry_classifications(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SicClassification::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the paginated US company industry-classification feed.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn all_industry_classifications(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<SecCompanySearchResult>> {
+        let query = all_industry_classifications_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.all_industry_classifications(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(SecCompanySearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Searches US industry classifications while preserving raw documented rows.
+    #[pyo3(signature = (*, symbol=None, cik=None, sic_code=None))]
+    #[gen_stub(override_return_type(type_repr = "list[dict[str, typing.Any]]", imports = ("typing")))]
+    async fn search_industry_classifications(
+        &self,
+        symbol: Option<String>,
+        cik: Option<String>,
+        sic_code: Option<String>,
+    ) -> PyResult<Vec<Py<PyAny>>> {
+        let query = search_industry_classifications_query(
+            symbol.as_deref(),
+            cik.as_deref(),
+            sic_code.as_deref(),
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_industry_classifications(query).await
+        })
+        .await?;
+        Python::attach(|py| {
+            rows.map_err(to_py_error)?
+                .iter()
+                .map(|row| convert::dynamic_object_to_py(py, row).map(Bound::unbind))
+                .collect()
+        })
     }
 }
 

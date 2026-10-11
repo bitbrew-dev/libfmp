@@ -18,16 +18,16 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 
 use crate::runtime::ClientHandle;
 
-use self::as_reported::StatementsAsReportedNamespace;
-use self::balance::StatementsBalanceNamespace;
-use self::cash_flow::StatementsCashFlowNamespace;
-use self::growth::StatementsGrowthNamespace;
-use self::income::StatementsIncomeNamespace;
-use self::metrics::StatementsMetricsNamespace;
-use self::ratios::StatementsRatiosNamespace;
-use self::reports::StatementsReportsNamespace;
-use self::segmentation::StatementsSegmentationNamespace;
-use self::summaries::StatementsSummariesNamespace;
+use self::as_reported::{AsyncStatementsAsReportedNamespace, StatementsAsReportedNamespace};
+use self::balance::{AsyncStatementsBalanceNamespace, StatementsBalanceNamespace};
+use self::cash_flow::{AsyncStatementsCashFlowNamespace, StatementsCashFlowNamespace};
+use self::growth::{AsyncStatementsGrowthNamespace, StatementsGrowthNamespace};
+use self::income::{AsyncStatementsIncomeNamespace, StatementsIncomeNamespace};
+use self::metrics::{AsyncStatementsMetricsNamespace, StatementsMetricsNamespace};
+use self::ratios::{AsyncStatementsRatiosNamespace, StatementsRatiosNamespace};
+use self::reports::{AsyncStatementsReportsNamespace, StatementsReportsNamespace};
+use self::segmentation::{AsyncStatementsSegmentationNamespace, StatementsSegmentationNamespace};
+use self::summaries::{AsyncStatementsSummariesNamespace, StatementsSummariesNamespace};
 
 /// Statements endpoints for a single client, exposed as `client.statements`.
 #[gen_stub_pyclass]
@@ -103,5 +103,82 @@ impl StatementsNamespace {
     #[getter]
     fn summaries(&self) -> StatementsSummariesNamespace {
         StatementsSummariesNamespace::new(self.builder.clone())
+    }
+}
+
+/// Statements endpoints for a single async client, exposed as `client.statements`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements", frozen)]
+pub(crate) struct AsyncStatementsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsNamespace {
+    /// The `statements.as_reported` endpoints, reached as `client.statements.as_reported`.
+    #[getter]
+    fn as_reported(&self) -> AsyncStatementsAsReportedNamespace {
+        AsyncStatementsAsReportedNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.balance` endpoints, reached as `client.statements.balance`.
+    #[getter]
+    fn balance(&self) -> AsyncStatementsBalanceNamespace {
+        AsyncStatementsBalanceNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.cash_flow` endpoints, reached as `client.statements.cash_flow`.
+    #[getter]
+    fn cash_flow(&self) -> AsyncStatementsCashFlowNamespace {
+        AsyncStatementsCashFlowNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.growth` endpoints, reached as `client.statements.growth`.
+    #[getter]
+    fn growth(&self) -> AsyncStatementsGrowthNamespace {
+        AsyncStatementsGrowthNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.income` endpoints, reached as `client.statements.income`.
+    #[getter]
+    fn income(&self) -> AsyncStatementsIncomeNamespace {
+        AsyncStatementsIncomeNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.metrics` endpoints, reached as `client.statements.metrics`.
+    #[getter]
+    fn metrics(&self) -> AsyncStatementsMetricsNamespace {
+        AsyncStatementsMetricsNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.ratios` endpoints, reached as `client.statements.ratios`.
+    #[getter]
+    fn ratios(&self) -> AsyncStatementsRatiosNamespace {
+        AsyncStatementsRatiosNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.reports` endpoints, reached as `client.statements.reports`.
+    #[getter]
+    fn reports(&self) -> AsyncStatementsReportsNamespace {
+        AsyncStatementsReportsNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.segmentation` endpoints, reached as `client.statements.segmentation`.
+    #[getter]
+    fn segmentation(&self) -> AsyncStatementsSegmentationNamespace {
+        AsyncStatementsSegmentationNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements.summaries` endpoints, reached as `client.statements.summaries`.
+    #[getter]
+    fn summaries(&self) -> AsyncStatementsSummariesNamespace {
+        AsyncStatementsSummariesNamespace::new(self.builder.clone())
     }
 }

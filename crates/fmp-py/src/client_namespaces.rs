@@ -3,37 +3,43 @@
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::gen_stub_pymethods;
 
-use crate::client::FmpClient;
-use crate::namespaces::analyst::AnalystNamespace;
-use crate::namespaces::bulk::BulkNamespace;
-use crate::namespaces::calendar::CalendarNamespace;
-use crate::namespaces::chart::ChartNamespace;
-use crate::namespaces::commitment_of_traders::CommitmentOfTradersNamespace;
-use crate::namespaces::commodities::CommoditiesNamespace;
-use crate::namespaces::company::CompanyNamespace;
-use crate::namespaces::congressional::CongressionalNamespace;
-use crate::namespaces::crypto::CryptoNamespace;
-use crate::namespaces::dcf::DcfNamespace;
-use crate::namespaces::directory::DirectoryNamespace;
-use crate::namespaces::economics::EconomicsNamespace;
-use crate::namespaces::esg::EsgNamespace;
-use crate::namespaces::forex::ForexNamespace;
-use crate::namespaces::fundraising::FundraisingNamespace;
-use crate::namespaces::funds::FundsNamespace;
-use crate::namespaces::indexes::IndexesNamespace;
-use crate::namespaces::insider_trading::InsiderTradingNamespace;
-use crate::namespaces::institutional_ownership::InstitutionalOwnershipNamespace;
-use crate::namespaces::market::MarketNamespace;
-use crate::namespaces::market_hours::MarketHoursNamespace;
-use crate::namespaces::news::NewsNamespace;
-use crate::namespaces::quote::QuoteNamespace;
-use crate::namespaces::screener::ScreenerNamespace;
-use crate::namespaces::search::SearchNamespace;
-use crate::namespaces::sec_filings::SecFilingsNamespace;
-use crate::namespaces::statements::StatementsNamespace;
-use crate::namespaces::technical_indicators::TechnicalIndicatorsNamespace;
-use crate::namespaces::tipranks::TipranksNamespace;
-use crate::namespaces::transcripts::TranscriptsNamespace;
+use crate::client::{AsyncFmpClient, FmpClient};
+use crate::namespaces::analyst::{AnalystNamespace, AsyncAnalystNamespace};
+use crate::namespaces::bulk::{AsyncBulkNamespace, BulkNamespace};
+use crate::namespaces::calendar::{AsyncCalendarNamespace, CalendarNamespace};
+use crate::namespaces::chart::{AsyncChartNamespace, ChartNamespace};
+use crate::namespaces::commitment_of_traders::{
+    AsyncCommitmentOfTradersNamespace, CommitmentOfTradersNamespace,
+};
+use crate::namespaces::commodities::{AsyncCommoditiesNamespace, CommoditiesNamespace};
+use crate::namespaces::company::{AsyncCompanyNamespace, CompanyNamespace};
+use crate::namespaces::congressional::{AsyncCongressionalNamespace, CongressionalNamespace};
+use crate::namespaces::crypto::{AsyncCryptoNamespace, CryptoNamespace};
+use crate::namespaces::dcf::{AsyncDcfNamespace, DcfNamespace};
+use crate::namespaces::directory::{AsyncDirectoryNamespace, DirectoryNamespace};
+use crate::namespaces::economics::{AsyncEconomicsNamespace, EconomicsNamespace};
+use crate::namespaces::esg::{AsyncEsgNamespace, EsgNamespace};
+use crate::namespaces::forex::{AsyncForexNamespace, ForexNamespace};
+use crate::namespaces::fundraising::{AsyncFundraisingNamespace, FundraisingNamespace};
+use crate::namespaces::funds::{AsyncFundsNamespace, FundsNamespace};
+use crate::namespaces::indexes::{AsyncIndexesNamespace, IndexesNamespace};
+use crate::namespaces::insider_trading::{AsyncInsiderTradingNamespace, InsiderTradingNamespace};
+use crate::namespaces::institutional_ownership::{
+    AsyncInstitutionalOwnershipNamespace, InstitutionalOwnershipNamespace,
+};
+use crate::namespaces::market::{AsyncMarketNamespace, MarketNamespace};
+use crate::namespaces::market_hours::{AsyncMarketHoursNamespace, MarketHoursNamespace};
+use crate::namespaces::news::{AsyncNewsNamespace, NewsNamespace};
+use crate::namespaces::quote::{AsyncQuoteNamespace, QuoteNamespace};
+use crate::namespaces::screener::{AsyncScreenerNamespace, ScreenerNamespace};
+use crate::namespaces::search::{AsyncSearchNamespace, SearchNamespace};
+use crate::namespaces::sec_filings::{AsyncSecFilingsNamespace, SecFilingsNamespace};
+use crate::namespaces::statements::{AsyncStatementsNamespace, StatementsNamespace};
+use crate::namespaces::technical_indicators::{
+    AsyncTechnicalIndicatorsNamespace, TechnicalIndicatorsNamespace,
+};
+use crate::namespaces::tipranks::{AsyncTipranksNamespace, TipranksNamespace};
+use crate::namespaces::transcripts::{AsyncTranscriptsNamespace, TranscriptsNamespace};
 
 #[gen_stub_pymethods]
 #[pymethods]
@@ -216,5 +222,189 @@ impl FmpClient {
     #[getter]
     fn transcripts(&self) -> TranscriptsNamespace {
         TranscriptsNamespace::new(self.builder.clone())
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncFmpClient {
+    /// The `analyst` endpoints, reached as `client.analyst`.
+    #[getter]
+    fn analyst(&self) -> AsyncAnalystNamespace {
+        AsyncAnalystNamespace::new(self.builder.clone())
+    }
+
+    /// The `bulk` endpoints, reached as `client.bulk`.
+    #[getter]
+    fn bulk(&self) -> AsyncBulkNamespace {
+        AsyncBulkNamespace::new(self.builder.clone())
+    }
+
+    /// The `calendar` endpoints, reached as `client.calendar`.
+    #[getter]
+    fn calendar(&self) -> AsyncCalendarNamespace {
+        AsyncCalendarNamespace::new(self.builder.clone())
+    }
+
+    /// The `chart` endpoints, reached as `client.chart`.
+    #[getter]
+    fn chart(&self) -> AsyncChartNamespace {
+        AsyncChartNamespace::new(self.builder.clone())
+    }
+
+    /// The `commitment_of_traders` endpoints, reached as `client.commitment_of_traders`.
+    #[getter]
+    fn commitment_of_traders(&self) -> AsyncCommitmentOfTradersNamespace {
+        AsyncCommitmentOfTradersNamespace::new(self.builder.clone())
+    }
+
+    /// The `commodities` endpoints, reached as `client.commodities`.
+    #[getter]
+    fn commodities(&self) -> AsyncCommoditiesNamespace {
+        AsyncCommoditiesNamespace::new(self.builder.clone())
+    }
+
+    /// The `company` endpoints, reached as `client.company`.
+    #[getter]
+    fn company(&self) -> AsyncCompanyNamespace {
+        AsyncCompanyNamespace::new(self.builder.clone())
+    }
+
+    /// The `congressional` endpoints, reached as `client.congressional`.
+    #[getter]
+    fn congressional(&self) -> AsyncCongressionalNamespace {
+        AsyncCongressionalNamespace::new(self.builder.clone())
+    }
+
+    /// The `crypto` endpoints, reached as `client.crypto`.
+    #[getter]
+    fn crypto(&self) -> AsyncCryptoNamespace {
+        AsyncCryptoNamespace::new(self.builder.clone())
+    }
+
+    /// The `dcf` endpoints, reached as `client.dcf`.
+    #[getter]
+    fn dcf(&self) -> AsyncDcfNamespace {
+        AsyncDcfNamespace::new(self.builder.clone())
+    }
+
+    /// The `directory` endpoints, reached as `client.directory`.
+    #[getter]
+    fn directory(&self) -> AsyncDirectoryNamespace {
+        AsyncDirectoryNamespace::new(self.builder.clone())
+    }
+
+    /// The `economics` endpoints, reached as `client.economics`.
+    #[getter]
+    fn economics(&self) -> AsyncEconomicsNamespace {
+        AsyncEconomicsNamespace::new(self.builder.clone())
+    }
+
+    /// The `esg` endpoints, reached as `client.esg`.
+    #[getter]
+    fn esg(&self) -> AsyncEsgNamespace {
+        AsyncEsgNamespace::new(self.builder.clone())
+    }
+
+    /// The `forex` endpoints, reached as `client.forex`.
+    #[getter]
+    fn forex(&self) -> AsyncForexNamespace {
+        AsyncForexNamespace::new(self.builder.clone())
+    }
+
+    /// The `fundraising` endpoints, reached as `client.fundraising`.
+    #[getter]
+    fn fundraising(&self) -> AsyncFundraisingNamespace {
+        AsyncFundraisingNamespace::new(self.builder.clone())
+    }
+
+    /// The `funds` endpoints, reached as `client.funds`.
+    #[getter]
+    fn funds(&self) -> AsyncFundsNamespace {
+        AsyncFundsNamespace::new(self.builder.clone())
+    }
+
+    /// The `indexes` endpoints, reached as `client.indexes`.
+    #[getter]
+    fn indexes(&self) -> AsyncIndexesNamespace {
+        AsyncIndexesNamespace::new(self.builder.clone())
+    }
+
+    /// The `insider_trading` endpoints, reached as `client.insider_trading`.
+    #[getter]
+    fn insider_trading(&self) -> AsyncInsiderTradingNamespace {
+        AsyncInsiderTradingNamespace::new(self.builder.clone())
+    }
+
+    /// The `institutional_ownership` endpoints, reached as `client.institutional_ownership`.
+    #[getter]
+    fn institutional_ownership(&self) -> AsyncInstitutionalOwnershipNamespace {
+        AsyncInstitutionalOwnershipNamespace::new(self.builder.clone())
+    }
+
+    /// The `market` endpoints, reached as `client.market`.
+    #[getter]
+    fn market(&self) -> AsyncMarketNamespace {
+        AsyncMarketNamespace::new(self.builder.clone())
+    }
+
+    /// The `market_hours` endpoints, reached as `client.market_hours`.
+    #[getter]
+    fn market_hours(&self) -> AsyncMarketHoursNamespace {
+        AsyncMarketHoursNamespace::new(self.builder.clone())
+    }
+
+    /// The `news` endpoints, reached as `client.news`.
+    #[getter]
+    fn news(&self) -> AsyncNewsNamespace {
+        AsyncNewsNamespace::new(self.builder.clone())
+    }
+
+    /// The `quote` endpoints, reached as `client.quote`.
+    #[getter]
+    fn quote(&self) -> AsyncQuoteNamespace {
+        AsyncQuoteNamespace::new(self.builder.clone())
+    }
+
+    /// The `screener` endpoints, reached as `client.screener`.
+    #[getter]
+    fn screener(&self) -> AsyncScreenerNamespace {
+        AsyncScreenerNamespace::new(self.builder.clone())
+    }
+
+    /// The `search` endpoints, reached as `client.search`.
+    #[getter]
+    fn search(&self) -> AsyncSearchNamespace {
+        AsyncSearchNamespace::new(self.builder.clone())
+    }
+
+    /// The `sec_filings` endpoints, reached as `client.sec_filings`.
+    #[getter]
+    fn sec_filings(&self) -> AsyncSecFilingsNamespace {
+        AsyncSecFilingsNamespace::new(self.builder.clone())
+    }
+
+    /// The `statements` endpoints, reached as `client.statements`.
+    #[getter]
+    fn statements(&self) -> AsyncStatementsNamespace {
+        AsyncStatementsNamespace::new(self.builder.clone())
+    }
+
+    /// The `technical_indicators` endpoints, reached as `client.technical_indicators`.
+    #[getter]
+    fn technical_indicators(&self) -> AsyncTechnicalIndicatorsNamespace {
+        AsyncTechnicalIndicatorsNamespace::new(self.builder.clone())
+    }
+
+    /// The `tipranks` endpoints, reached as `client.tipranks`.
+    #[getter]
+    fn tipranks(&self) -> AsyncTipranksNamespace {
+        AsyncTipranksNamespace::new(self.builder.clone())
+    }
+
+    /// The `transcripts` endpoints, reached as `client.transcripts`.
+    #[getter]
+    fn transcripts(&self) -> AsyncTranscriptsNamespace {
+        AsyncTranscriptsNamespace::new(self.builder.clone())
     }
 }

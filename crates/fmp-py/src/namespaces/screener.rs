@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::screener::CompanyScreenerResult;
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Screener endpoints for a single client, exposed as `client.screener`.
 #[gen_stub_pyclass]
@@ -82,6 +82,79 @@ impl ScreenerNamespace {
                 client.company_screener(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(CompanyScreenerResult::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Screener endpoints for a single async client, exposed as `client.screener`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.screener", frozen)]
+pub(crate) struct AsyncScreenerNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncScreenerNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncScreenerNamespace {
+    /// Screens worldwide companies using the supplied optional filters.
+    #[pyo3(signature = (*, market_cap_more_than=None, market_cap_lower_than=None, sector=None, industry=None, beta_more_than=None, beta_lower_than=None, price_more_than=None, price_lower_than=None, dividend_more_than=None, dividend_lower_than=None, volume_more_than=None, volume_lower_than=None, exchange=None, country=None, is_etf=None, is_fund=None, is_actively_trading=None, page=None, limit=None, include_all_share_classes=None))]
+    #[allow(clippy::too_many_arguments)]
+    async fn companies(
+        &self,
+        market_cap_more_than: Option<i64>,
+        market_cap_lower_than: Option<i64>,
+        sector: Option<String>,
+        industry: Option<String>,
+        beta_more_than: Option<f64>,
+        beta_lower_than: Option<f64>,
+        price_more_than: Option<f64>,
+        price_lower_than: Option<f64>,
+        dividend_more_than: Option<f64>,
+        dividend_lower_than: Option<f64>,
+        volume_more_than: Option<i64>,
+        volume_lower_than: Option<i64>,
+        exchange: Option<String>,
+        country: Option<String>,
+        is_etf: Option<bool>,
+        is_fund: Option<bool>,
+        is_actively_trading: Option<bool>,
+        page: Option<i64>,
+        limit: Option<i64>,
+        include_all_share_classes: Option<bool>,
+    ) -> PyResult<Vec<CompanyScreenerResult>> {
+        let query = companies_query(
+            market_cap_more_than,
+            market_cap_lower_than,
+            sector.as_deref(),
+            industry.as_deref(),
+            beta_more_than,
+            beta_lower_than,
+            price_more_than,
+            price_lower_than,
+            dividend_more_than,
+            dividend_lower_than,
+            volume_more_than,
+            volume_lower_than,
+            exchange.as_deref(),
+            country.as_deref(),
+            is_etf,
+            is_fund,
+            is_actively_trading,
+            page,
+            limit,
+            include_all_share_classes,
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.company_screener(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(CompanyScreenerResult::from).collect())
             .map_err(to_py_error)
     }

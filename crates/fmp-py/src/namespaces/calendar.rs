@@ -15,7 +15,7 @@ use crate::errors::to_py_error;
 use crate::models::calendar::{
     DividendEvent, EarningsEvent, IpoCalendarEvent, IpoDisclosure, IpoProspectus, StockSplitEvent,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Calendar endpoints for a single client, exposed as `client.calendar`.
 #[gen_stub_pyclass]
@@ -208,6 +208,168 @@ impl CalendarNamespace {
                 client.stock_splits_calendar(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(StockSplitEvent::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Calendar endpoints for a single async client, exposed as `client.calendar`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.calendar", frozen)]
+pub(crate) struct AsyncCalendarNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncCalendarNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncCalendarNamespace {
+    /// Retrieves worldwide dividend events for one company.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn dividends(&self, symbol: String, limit: Option<i64>) -> PyResult<Vec<DividendEvent>> {
+        let query = dividends_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.dividends(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(DividendEvent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide dividend calendar.
+    #[pyo3(signature = (*, from_=None, to=None, page=None))]
+    async fn dividends_calendar(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+    ) -> PyResult<Vec<DividendEvent>> {
+        let query = dividends_calendar_query(from_, to, page)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.dividends_calendar(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(DividendEvent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide earnings events for one company.
+    #[pyo3(signature = (symbol, *, limit=None, include_report_times=None))]
+    async fn earnings(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        include_report_times: Option<bool>,
+    ) -> PyResult<Vec<EarningsEvent>> {
+        let query = earnings_query(&symbol, limit, include_report_times)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.earnings(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EarningsEvent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide earnings calendar.
+    #[pyo3(signature = (*, from_=None, to=None, page=None, include_report_times=None))]
+    async fn earnings_calendar(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        include_report_times: Option<bool>,
+    ) -> PyResult<Vec<EarningsEvent>> {
+        let query = earnings_calendar_query(from_, to, page, include_report_times)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.earnings_calendar(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EarningsEvent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide IPO calendar.
+    #[pyo3(signature = (*, from_=None, to=None))]
+    async fn ipos_calendar(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<IpoCalendarEvent>> {
+        let query = ipos_calendar_query(from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.ipos_calendar(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IpoCalendarEvent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US IPO disclosure filings.
+    #[pyo3(signature = (*, from_=None, to=None))]
+    async fn ipos_disclosure(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<IpoDisclosure>> {
+        let query = ipos_disclosure_query(from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.ipos_disclosure(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IpoDisclosure::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US IPO prospectus filings and documented offering values.
+    #[pyo3(signature = (*, from_=None, to=None))]
+    async fn ipos_prospectus(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<IpoProspectus>> {
+        let query = ipos_prospectus_query(from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.ipos_prospectus(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IpoProspectus::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide stock-split events for one company.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn stock_splits(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<StockSplitEvent>> {
+        let query = stock_splits_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_splits(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockSplitEvent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the worldwide stock-splits calendar.
+    #[pyo3(signature = (*, from_=None, to=None, page=None))]
+    async fn stock_splits_calendar(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+    ) -> PyResult<Vec<StockSplitEvent>> {
+        let query = stock_splits_calendar_query(from_, to, page)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_splits_calendar(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(StockSplitEvent::from).collect())
             .map_err(to_py_error)
     }

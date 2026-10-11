@@ -88,3 +88,9 @@ pub(crate) fn struct_name_for(path: &[String]) -> String {
     name.push_str("Namespace");
     name
 }
+
+/// `["statements", "income"]` -> `AsyncStatementsIncomeNamespace`, the
+/// `AsyncFmpClient` twin of [`struct_name_for`].
+pub(crate) fn async_struct_name_for(path: &[String]) -> String {
+    format!("Async{}", struct_name_for(path))
+}

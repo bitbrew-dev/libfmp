@@ -12,7 +12,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::as_reported::AsReportedFinancialStatement;
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements as reported endpoints for a single client, exposed as `client.statements.as_reported`.
 #[gen_stub_pyclass]
@@ -125,6 +125,115 @@ impl StatementsAsReportedNamespace {
                 client.financial_statement_full_as_reported(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(AsReportedFinancialStatement::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Statements as reported endpoints for a single async client, exposed as `client.statements.as_reported`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.as_reported", frozen)]
+pub(crate) struct AsyncStatementsAsReportedNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsAsReportedNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsAsReportedNamespace {
+    /// Retrieves income statements as reported by one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn income(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<AsReportedFinancialStatement>> {
+        let query = income_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.income_statement_as_reported(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(AsReportedFinancialStatement::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves balance sheets as reported by one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn balance_sheet(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<AsReportedFinancialStatement>> {
+        let query = balance_sheet_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.balance_sheet_statement_as_reported(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(AsReportedFinancialStatement::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves cash-flow statements as reported by one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn cash_flow(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<AsReportedFinancialStatement>> {
+        let query = cash_flow_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cash_flow_statement_as_reported(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(AsReportedFinancialStatement::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves complete financial statements as reported by one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn full(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<AsReportedFinancialStatement>> {
+        let query = full_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_statement_full_as_reported(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

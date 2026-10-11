@@ -16,7 +16,7 @@ use crate::models::tipranks::{
     TipRanksAnalystProfile, TipRanksAnalystSummary, TipRanksFirmSummary, TipRanksPointInTimeRating,
     TipRanksRatingSearchResult, TipRanksSymbolSummary,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Tipranks endpoints for a single client, exposed as `client.tipranks`.
 #[gen_stub_pyclass]
@@ -211,6 +211,195 @@ impl TipranksNamespace {
                 client.tipranks_analysts(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(TipRanksAnalystProfile::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Tipranks endpoints for a single async client, exposed as `client.tipranks`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.tipranks", frozen)]
+pub(crate) struct AsyncTipranksNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncTipranksNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncTipranksNamespace {
+    /// Retrieves individual analyst ratings from the TipRanks add-on.
+    #[pyo3(signature = (*, expert_uid=None, symbol=None, from_=None, to=None, limit=None, page=None, nonadjusted=None))]
+    #[allow(clippy::too_many_arguments)]
+    async fn search_ratings(
+        &self,
+        expert_uid: Option<String>,
+        symbol: Option<String>,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        limit: Option<i64>,
+        page: Option<i64>,
+        nonadjusted: Option<bool>,
+    ) -> PyResult<Vec<TipRanksRatingSearchResult>> {
+        let query = search_ratings_query(
+            expert_uid.as_deref(),
+            symbol.as_deref(),
+            from_,
+            to,
+            limit,
+            page,
+            nonadjusted,
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_tipranks_ratings(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(TipRanksRatingSearchResult::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves a ticker's analyst ratings as of an optional snapshot date.
+    #[pyo3(signature = (symbol, *, date=None, limit=None, page=None, nonadjusted=None))]
+    async fn point_in_time_ratings_by_symbol(
+        &self,
+        symbol: String,
+        date: Option<args::DateArg>,
+        limit: Option<i64>,
+        page: Option<i64>,
+        nonadjusted: Option<bool>,
+    ) -> PyResult<Vec<TipRanksPointInTimeRating>> {
+        let query = point_in_time_ratings_by_symbol_query(&symbol, date, limit, page, nonadjusted)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.tipranks_point_in_time_ratings_by_symbol(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(TipRanksPointInTimeRating::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves an analyst's active coverage as of an optional snapshot date.
+    #[pyo3(signature = (*, expert_uid=None, analyst_name=None, date=None, limit=None, page=None, nonadjusted=None))]
+    async fn point_in_time_ratings_by_analyst(
+        &self,
+        expert_uid: Option<String>,
+        analyst_name: Option<String>,
+        date: Option<args::DateArg>,
+        limit: Option<i64>,
+        page: Option<i64>,
+        nonadjusted: Option<bool>,
+    ) -> PyResult<Vec<TipRanksPointInTimeRating>> {
+        let query = point_in_time_ratings_by_analyst_query(
+            expert_uid.as_deref(),
+            analyst_name.as_deref(),
+            date,
+            limit,
+            page,
+            nonadjusted,
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client
+                .tipranks_point_in_time_ratings_by_analyst(query)
+                .await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(TipRanksPointInTimeRating::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves a ticker's aggregate TipRanks ratings summary.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn symbol_summary(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<TipRanksSymbolSummary>> {
+        let query = symbol_summary_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.tipranks_symbol_summary(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(TipRanksSymbolSummary::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves an analyst's aggregate TipRanks ratings summary.
+    #[pyo3(signature = (expert_uid, *, from_=None, to=None))]
+    async fn analyst_summary(
+        &self,
+        expert_uid: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<TipRanksAnalystSummary>> {
+        let query = analyst_summary_query(&expert_uid, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.tipranks_analyst_summary(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(TipRanksAnalystSummary::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves a firm's aggregate TipRanks ratings summary.
+    #[pyo3(signature = (firm_name, *, from_=None, to=None))]
+    async fn firm_summary(
+        &self,
+        firm_name: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<TipRanksFirmSummary>> {
+        let query = firm_summary_query(&firm_name, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.tipranks_firm_summary(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(TipRanksFirmSummary::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves analyst profiles from the TipRanks directory.
+    #[pyo3(signature = (*, page=None, limit=None, firm_name=None, analyst_name=None))]
+    async fn analysts(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+        firm_name: Option<String>,
+        analyst_name: Option<String>,
+    ) -> PyResult<Vec<TipRanksAnalystProfile>> {
+        let query = analysts_query(page, limit, firm_name.as_deref(), analyst_name.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.tipranks_analysts(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

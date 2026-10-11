@@ -15,7 +15,7 @@ use crate::errors::to_py_error;
 use crate::models::market::{
     IndustryPe, IndustryPerformance, MarketMover, SectorPe, SectorPerformance,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Market endpoints for a single client, exposed as `client.market`.
 #[gen_stub_pyclass]
@@ -229,6 +229,196 @@ impl MarketNamespace {
         let rows = py.detach(move || {
             block_on(builder, |client| async move { client.most_actives().await })
         })?;
+        rows.map(|items| items.into_iter().map(MarketMover::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Market endpoints for a single async client, exposed as `client.market`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.market", frozen)]
+pub(crate) struct AsyncMarketNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncMarketNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncMarketNamespace {
+    /// Retrieves a worldwide dated sector-performance snapshot.
+    #[pyo3(signature = (date, *, exchange=None, sector=None))]
+    async fn sector_performance_snapshot(
+        &self,
+        date: args::DateArg,
+        exchange: Option<String>,
+        sector: Option<String>,
+    ) -> PyResult<Vec<SectorPerformance>> {
+        let query =
+            sector_performance_snapshot_query(date, exchange.as_deref(), sector.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.sector_performance_snapshot(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SectorPerformance::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a worldwide dated industry-performance snapshot.
+    #[pyo3(signature = (date, *, exchange=None, industry=None))]
+    async fn industry_performance_snapshot(
+        &self,
+        date: args::DateArg,
+        exchange: Option<String>,
+        industry: Option<String>,
+    ) -> PyResult<Vec<IndustryPerformance>> {
+        let query =
+            industry_performance_snapshot_query(date, exchange.as_deref(), industry.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.industry_performance_snapshot(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndustryPerformance::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a worldwide dated sector P/E snapshot.
+    #[pyo3(signature = (date, *, exchange=None, sector=None))]
+    async fn sector_pe_snapshot(
+        &self,
+        date: args::DateArg,
+        exchange: Option<String>,
+        sector: Option<String>,
+    ) -> PyResult<Vec<SectorPe>> {
+        let query = sector_pe_snapshot_query(date, exchange.as_deref(), sector.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.sector_pe_snapshot(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SectorPe::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a worldwide dated industry P/E snapshot.
+    #[pyo3(signature = (date, *, exchange=None, industry=None))]
+    async fn industry_pe_snapshot(
+        &self,
+        date: args::DateArg,
+        exchange: Option<String>,
+        industry: Option<String>,
+    ) -> PyResult<Vec<IndustryPe>> {
+        let query = industry_pe_snapshot_query(date, exchange.as_deref(), industry.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.industry_pe_snapshot(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndustryPe::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide historical sector performance.
+    #[pyo3(signature = (sector, *, from_=None, exchange=None, to=None))]
+    async fn historical_sector_performance(
+        &self,
+        sector: String,
+        from_: Option<args::DateArg>,
+        exchange: Option<String>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<SectorPerformance>> {
+        let query = historical_sector_performance_query(&sector, from_, exchange.as_deref(), to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_sector_performance(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SectorPerformance::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide historical industry performance.
+    #[pyo3(signature = (industry, *, exchange=None, from_=None, to=None))]
+    async fn historical_industry_performance(
+        &self,
+        industry: String,
+        exchange: Option<String>,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<IndustryPerformance>> {
+        let query =
+            historical_industry_performance_query(&industry, exchange.as_deref(), from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_industry_performance(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndustryPerformance::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide historical sector P/E ratios.
+    #[pyo3(signature = (sector, *, from_=None, exchange=None, to=None))]
+    async fn historical_sector_pe(
+        &self,
+        sector: String,
+        from_: Option<args::DateArg>,
+        exchange: Option<String>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<SectorPe>> {
+        let query = historical_sector_pe_query(&sector, from_, exchange.as_deref(), to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_sector_pe(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SectorPe::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide historical industry P/E ratios.
+    #[pyo3(signature = (industry, *, exchange=None, from_=None, to=None))]
+    async fn historical_industry_pe(
+        &self,
+        industry: String,
+        exchange: Option<String>,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<IndustryPe>> {
+        let query = historical_industry_pe_query(&industry, exchange.as_deref(), from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_industry_pe(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndustryPe::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the US-only list of biggest stock gainers.
+    async fn biggest_gainers(&self) -> PyResult<Vec<MarketMover>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.biggest_gainers().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(MarketMover::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the US-only list of biggest stock losers.
+    async fn biggest_losers(&self) -> PyResult<Vec<MarketMover>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.biggest_losers().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(MarketMover::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the US-only list of most actively traded stocks.
+    async fn most_actives(&self) -> PyResult<Vec<MarketMover>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.most_actives().await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(MarketMover::from).collect())
             .map_err(to_py_error)
     }

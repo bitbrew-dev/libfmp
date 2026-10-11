@@ -18,7 +18,7 @@ use crate::models::institutional_ownership::{
     InstitutionalHolderAnalytics, InstitutionalHolding, InstitutionalIndustrySummary,
     InstitutionalOwnershipFiling, InstitutionalPositionSummary,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Institutional ownership endpoints for a single client, exposed as `client.institutional_ownership`.
 #[gen_stub_pyclass]
@@ -210,6 +210,183 @@ impl InstitutionalOwnershipNamespace {
                 client.institutional_industry_summary(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(InstitutionalIndustrySummary::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Institutional ownership endpoints for a single async client, exposed as `client.institutional_ownership`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.institutional_ownership", frozen)]
+pub(crate) struct AsyncInstitutionalOwnershipNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncInstitutionalOwnershipNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncInstitutionalOwnershipNamespace {
+    /// Retrieves the latest US institutional-ownership filings.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn latest_filings(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<InstitutionalOwnershipFiling>> {
+        let query = latest_filings_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_institutional_ownership_filings(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(InstitutionalOwnershipFiling::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Extracts the positions from one US institutional-ownership filing period.
+    #[pyo3(signature = (cik, year, quarter))]
+    async fn extract(
+        &self,
+        cik: String,
+        year: i64,
+        quarter: i64,
+    ) -> PyResult<Vec<InstitutionalHolding>> {
+        let query = extract_query(&cik, year, quarter)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.institutional_ownership_extract(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(InstitutionalHolding::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves available Form 13F filing dates for one US institutional holder.
+    #[pyo3(signature = (cik))]
+    async fn form_13f_filing_dates(&self, cik: String) -> PyResult<Vec<Form13fFilingDate>> {
+        let query = form_13f_filing_dates_query(&cik)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.form_13f_filing_dates(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(Form13fFilingDate::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves holder-level analytics for one US security and filing period.
+    #[pyo3(signature = (symbol, year, quarter, *, page=None, limit=None))]
+    async fn holder_analytics(
+        &self,
+        symbol: String,
+        year: i64,
+        quarter: i64,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<InstitutionalHolderAnalytics>> {
+        let query = holder_analytics_query(&symbol, year, quarter, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.institutional_holder_analytics(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(InstitutionalHolderAnalytics::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves a US institutional holder's portfolio performance summary.
+    #[pyo3(signature = (cik, *, page=None))]
+    async fn holder_performance_summary(
+        &self,
+        cik: String,
+        page: Option<i64>,
+    ) -> PyResult<Vec<HolderPerformanceSummary>> {
+        let query = holder_performance_summary_query(&cik, page)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.holder_performance_summary(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(HolderPerformanceSummary::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves a US institutional holder's industry breakdown for one period.
+    #[pyo3(signature = (cik, year, quarter))]
+    async fn holder_industry_breakdown(
+        &self,
+        cik: String,
+        year: i64,
+        quarter: i64,
+    ) -> PyResult<Vec<HolderIndustryBreakdown>> {
+        let query = holder_industry_breakdown_query(&cik, year, quarter)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.holder_industry_breakdown(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(HolderIndustryBreakdown::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves the US institutional position summary for one security and period.
+    #[pyo3(signature = (symbol, year, quarter))]
+    async fn positions_summary(
+        &self,
+        symbol: String,
+        year: i64,
+        quarter: i64,
+    ) -> PyResult<Vec<InstitutionalPositionSummary>> {
+        let query = positions_summary_query(&symbol, year, quarter)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.institutional_positions_summary(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(InstitutionalPositionSummary::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves US institutional industry values for one reporting period.
+    #[pyo3(signature = (year, quarter))]
+    async fn industry_summary(
+        &self,
+        year: i64,
+        quarter: i64,
+    ) -> PyResult<Vec<InstitutionalIndustrySummary>> {
+        let query = industry_summary_query(year, quarter)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.institutional_industry_summary(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

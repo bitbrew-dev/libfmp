@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::cash_flow::CashFlowStatement;
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements cash flow endpoints for a single client, exposed as `client.statements.cash_flow`.
 #[gen_stub_pyclass]
@@ -63,6 +63,57 @@ impl StatementsCashFlowNamespace {
                 client.cash_flow_statement_ttm(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(CashFlowStatement::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Statements cash flow endpoints for a single async client, exposed as `client.statements.cash_flow`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.cash_flow", frozen)]
+pub(crate) struct AsyncStatementsCashFlowNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsCashFlowNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsCashFlowNamespace {
+    /// Retrieves historical worldwide cash-flow statements for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn statement(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<CashFlowStatement>> {
+        let query = statement_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cash_flow_statement(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CashFlowStatement::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves trailing-twelve-month worldwide cash-flow statements for one company.
+    #[pyo3(signature = (symbol, *, limit=None))]
+    async fn statement_ttm(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CashFlowStatement>> {
+        let query = statement_ttm_query(&symbol, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cash_flow_statement_ttm(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(CashFlowStatement::from).collect())
             .map_err(to_py_error)
     }

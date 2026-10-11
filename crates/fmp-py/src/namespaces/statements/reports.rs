@@ -12,7 +12,7 @@ use crate::args;
 use crate::binary::BinaryPayload;
 use crate::errors::to_py_error;
 use crate::models::statements::reports::{FinancialReportDate, FinancialReportJson};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements reports endpoints for a single client, exposed as `client.statements.reports`.
 #[gen_stub_pyclass]
@@ -81,6 +81,69 @@ impl StatementsReportsNamespace {
                 client.financial_reports_xlsx(query).await
             })
         })?;
+        response.map(BinaryPayload::from).map_err(to_py_error)
+    }
+}
+
+/// Statements reports endpoints for a single async client, exposed as `client.statements.reports`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.reports", frozen)]
+pub(crate) struct AsyncStatementsReportsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsReportsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsReportsNamespace {
+    /// Retrieves available financial-report periods and protected download links.
+    #[pyo3(signature = (symbol))]
+    async fn dates(&self, symbol: String) -> PyResult<Vec<FinancialReportDate>> {
+        let query = dates_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_reports_dates(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(FinancialReportDate::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves one dynamic JSON financial report as a single object.
+    #[pyo3(signature = (symbol, year, period))]
+    async fn json(
+        &self,
+        symbol: String,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<FinancialReportJson> {
+        let query = json_query(&symbol, year, &period)?;
+        let row = spawn(self.builder.clone(), |client| async move {
+            client.financial_reports_json(query).await
+        })
+        .await?;
+        row.map(FinancialReportJson::from).map_err(to_py_error)
+    }
+
+    /// Downloads one financial report using the endpoint's XLSX MIME policy.
+    #[pyo3(signature = (symbol, year, period))]
+    async fn xlsx(
+        &self,
+        symbol: String,
+        year: i64,
+        #[gen_stub(override_type(type_repr = "typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\"]", imports = ("typing",)))]
+        period: String,
+    ) -> PyResult<BinaryPayload> {
+        let query = xlsx_query(&symbol, year, &period)?;
+        let response = spawn(self.builder.clone(), |client| async move {
+            client.financial_reports_xlsx(query).await
+        })
+        .await?;
         response.map(BinaryPayload::from).map_err(to_py_error)
     }
 }

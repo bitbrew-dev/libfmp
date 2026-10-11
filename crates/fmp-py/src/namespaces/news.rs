@@ -13,7 +13,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::news::{Article, NewsArticle};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// News endpoints for a single client, exposed as `client.news`.
 #[gen_stub_pyclass]
@@ -240,6 +240,201 @@ impl NewsNamespace {
                 client.search_forex_news(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// News endpoints for a single async client, exposed as `client.news`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.news", frozen)]
+pub(crate) struct AsyncNewsNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncNewsNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncNewsNamespace {
+    /// Retrieves US-authored Financial Modeling Prep articles.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn articles(&self, page: Option<i64>, limit: Option<i64>) -> PyResult<Vec<Article>> {
+        let query = articles_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.articles(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(Article::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest worldwide general-news articles.
+    #[pyo3(signature = (*, from_=None, to=None, page=None, limit=None))]
+    async fn latest_general_news(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = latest_general_news_query(from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_general_news(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest US press releases.
+    #[pyo3(signature = (*, from_=None, to=None, page=None, limit=None))]
+    async fn latest_press_releases(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = latest_press_releases_query(from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_press_releases(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest stock-news articles.
+    #[pyo3(signature = (*, from_=None, to=None, page=None, limit=None))]
+    async fn latest_stock_news(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = latest_stock_news_query(from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_stock_news(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest cryptocurrency-news articles.
+    #[pyo3(signature = (*, from_=None, to=None, page=None, limit=None))]
+    async fn latest_crypto_news(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = latest_crypto_news_query(from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_crypto_news(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest foreign-exchange-news articles.
+    #[pyo3(signature = (*, from_=None, to=None, page=None, limit=None))]
+    async fn latest_forex_news(
+        &self,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = latest_forex_news_query(from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_forex_news(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches US press releases for an ordered non-empty ticker list.
+    #[pyo3(signature = (symbols, *, from_=None, to=None, page=None, limit=None))]
+    async fn search_press_releases(
+        &self,
+        symbols: args::SymbolsArg,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = search_press_releases_query(symbols, from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_press_releases(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches stock news for an ordered non-empty ticker list.
+    #[pyo3(signature = (symbols, *, from_=None, to=None, page=None, limit=None))]
+    async fn search_stock_news(
+        &self,
+        symbols: args::SymbolsArg,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = search_stock_news_query(symbols, from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_stock_news(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches cryptocurrency news for an ordered non-empty ticker list.
+    #[pyo3(signature = (symbols, *, from_=None, to=None, page=None, limit=None))]
+    async fn search_crypto_news(
+        &self,
+        symbols: args::SymbolsArg,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = search_crypto_news_query(symbols, from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_crypto_news(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches foreign-exchange news for an ordered non-empty ticker list.
+    #[pyo3(signature = (symbols, *, from_=None, to=None, page=None, limit=None))]
+    async fn search_forex_news(
+        &self,
+        symbols: args::SymbolsArg,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<NewsArticle>> {
+        let query = search_forex_news_query(symbols, from_, to, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.search_forex_news(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(NewsArticle::from).collect())
             .map_err(to_py_error)
     }

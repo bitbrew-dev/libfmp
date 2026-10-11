@@ -13,7 +13,7 @@ use crate::models::directory::{
     CikListing, CompanySymbol, EarningsTranscriptAvailability, EtfSymbol, FinancialStatementSymbol,
     SymbolChange,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Directory endpoints for a single client, exposed as `client.directory`.
 #[gen_stub_pyclass]
@@ -197,6 +197,156 @@ impl DirectoryNamespace {
                 client.available_countries().await
             })
         })?;
+        rows.map(|items| items.into_iter().map(AvailableCountry::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Directory endpoints for a single async client, exposed as `client.directory`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.directory", frozen)]
+pub(crate) struct AsyncDirectoryNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncDirectoryNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncDirectoryNamespace {
+    /// Lists worldwide company and instrument symbols.
+    async fn company_symbols(&self) -> PyResult<Vec<CompanySymbol>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.company_symbols().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CompanySymbol::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists worldwide companies with financial statements available.
+    async fn financial_statement_symbols(&self) -> PyResult<Vec<FinancialStatementSymbol>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_statement_symbols().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(FinancialStatementSymbol::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Lists US SEC entities with optional provider pagination.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn cik_list(&self, page: Option<i64>, limit: Option<i64>) -> PyResult<Vec<CikListing>> {
+        let query = cik_list_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cik_list(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CikListing::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists US symbol changes without interpreting the provider's `invalid` flag.
+    #[pyo3(signature = (*, invalid=None, limit=None))]
+    async fn symbol_changes(
+        &self,
+        invalid: Option<bool>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<SymbolChange>> {
+        let query = symbol_changes_query(invalid, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.symbol_changes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(SymbolChange::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists worldwide exchange-traded fund symbols.
+    async fn etf_symbols(&self) -> PyResult<Vec<EtfSymbol>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.etf_symbols().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(EtfSymbol::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists worldwide actively trading companies and instruments.
+    async fn actively_trading(&self) -> PyResult<Vec<ActivelyTradingSymbol>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.actively_trading().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(ActivelyTradingSymbol::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists US companies with their available earnings-transcript counts.
+    async fn earnings_transcript_list(&self) -> PyResult<Vec<EarningsTranscriptAvailability>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.earnings_transcript_list().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(EarningsTranscriptAvailability::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Lists supported worldwide stock exchanges.
+    #[pyo3(signature = (*, extended=None))]
+    async fn available_exchanges(
+        &self,
+        extended: Option<bool>,
+    ) -> PyResult<Vec<AvailableExchange>> {
+        let query = available_exchanges_query(extended)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.available_exchanges(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(AvailableExchange::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists the provider's available sectors.
+    async fn available_sectors(&self) -> PyResult<Vec<AvailableSector>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.available_sectors().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(AvailableSector::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists the provider's available industries.
+    async fn available_industries(&self) -> PyResult<Vec<AvailableIndustry>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.available_industries().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(AvailableIndustry::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists the provider's available countries.
+    async fn available_countries(&self) -> PyResult<Vec<AvailableCountry>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.available_countries().await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(AvailableCountry::from).collect())
             .map_err(to_py_error)
     }

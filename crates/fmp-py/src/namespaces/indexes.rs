@@ -12,7 +12,7 @@ use crate::errors::to_py_error;
 use crate::models::chart::{StockChartFullBar, StockChartIntradayBar, StockChartLightBar};
 use crate::models::indexes::{HistoricalIndexConstituent, IndexConstituent, IndexListing};
 use crate::models::quote::{Quote, QuoteShort};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Indexes endpoints for a single client, exposed as `client.indexes`.
 #[gen_stub_pyclass]
@@ -255,6 +255,217 @@ impl IndexesNamespace {
                 client.historical_dow_jones_constituents().await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(HistoricalIndexConstituent::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Indexes endpoints for a single async client, exposed as `client.indexes`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.indexes", frozen)]
+pub(crate) struct AsyncIndexesNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncIndexesNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncIndexesNamespace {
+    /// Lists worldwide stock-market indexes.
+    async fn list(&self) -> PyResult<Vec<IndexListing>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_list().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndexListing::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a detailed quote for one stock-market index.
+    #[pyo3(signature = (symbol))]
+    async fn quote(&self, symbol: String) -> PyResult<Vec<Quote>> {
+        let query = quote_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_quote(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(Quote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves a compact quote for one stock-market index.
+    #[pyo3(signature = (symbol))]
+    async fn quote_short(&self, symbol: String) -> PyResult<Vec<QuoteShort>> {
+        let query = quote_short_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_quote_short(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact end-of-day history for one stock-market index.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_light(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartLightBar>> {
+        let query = chart_light_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_chart_light(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartLightBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves detailed end-of-day history for one stock-market index.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_full(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartFullBar>> {
+        let query = chart_full_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_chart_full(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartFullBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves one-minute history for one stock-market index.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_one_minute(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = chart_one_minute_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_chart_one_minute(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves five-minute history for one stock-market index.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_five_minutes(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = chart_five_minutes_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_chart_five_minutes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves one-hour history for one stock-market index.
+    #[pyo3(signature = (symbol, *, from_=None, to=None))]
+    async fn chart_one_hour(
+        &self,
+        symbol: String,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<StockChartIntradayBar>> {
+        let query = chart_one_hour_query(&symbol, from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_chart_one_hour(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockChartIntradayBar::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists the current S&P 500 constituents.
+    async fn sp500_constituents(&self) -> PyResult<Vec<IndexConstituent>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.sp500_constituents().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndexConstituent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists the current Nasdaq constituents.
+    async fn nasdaq_constituents(&self) -> PyResult<Vec<IndexConstituent>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.nasdaq_constituents().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndexConstituent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists the current Dow Jones constituents.
+    async fn dow_jones_constituents(&self) -> PyResult<Vec<IndexConstituent>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.dow_jones_constituents().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(IndexConstituent::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists historical S&P 500 constituent changes.
+    async fn historical_sp500_constituents(&self) -> PyResult<Vec<HistoricalIndexConstituent>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_sp500_constituents().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(HistoricalIndexConstituent::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Lists historical Nasdaq constituent changes.
+    async fn historical_nasdaq_constituents(&self) -> PyResult<Vec<HistoricalIndexConstituent>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_nasdaq_constituents().await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(HistoricalIndexConstituent::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Lists historical Dow Jones constituent changes.
+    async fn historical_dow_jones_constituents(&self) -> PyResult<Vec<HistoricalIndexConstituent>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.historical_dow_jones_constituents().await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

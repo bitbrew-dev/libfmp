@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::commitment_of_traders::{CotAnalysis, CotReport, CotReportListing};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Commitment of traders endpoints for a single client, exposed as `client.commitment_of_traders`.
 #[gen_stub_pyclass]
@@ -78,6 +78,67 @@ impl CommitmentOfTradersNamespace {
                 |client| async move { client.cot_report_list().await },
             )
         })?;
+        rows.map(|items| items.into_iter().map(CotReportListing::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Commitment of traders endpoints for a single async client, exposed as `client.commitment_of_traders`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.commitment_of_traders", frozen)]
+pub(crate) struct AsyncCommitmentOfTradersNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncCommitmentOfTradersNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncCommitmentOfTradersNamespace {
+    /// Retrieves detailed Commitment of Traders reports.
+    #[pyo3(signature = (*, symbol=None, from_=None, to=None))]
+    async fn report(
+        &self,
+        symbol: Option<String>,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<CotReport>> {
+        let query = report_query(symbol.as_deref(), from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cot_report(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CotReport::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves derived Commitment of Traders market analysis.
+    #[pyo3(signature = (*, symbol=None, from_=None, to=None))]
+    async fn analysis(
+        &self,
+        symbol: Option<String>,
+        from_: Option<args::DateArg>,
+        to: Option<args::DateArg>,
+    ) -> PyResult<Vec<CotAnalysis>> {
+        let query = analysis_query(symbol.as_deref(), from_, to)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cot_analysis(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CotAnalysis::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Lists the Commitment of Traders reports available from the provider.
+    async fn report_list(&self) -> PyResult<Vec<CotReportListing>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cot_report_list().await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(CotReportListing::from).collect())
             .map_err(to_py_error)
     }

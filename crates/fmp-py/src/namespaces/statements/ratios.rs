@@ -9,7 +9,7 @@ use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use crate::args;
 use crate::errors::to_py_error;
 use crate::models::statements::ratios::{FinancialRatios, FinancialRatiosTtm};
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Statements ratios endpoints for a single client, exposed as `client.statements.ratios`.
 #[gen_stub_pyclass]
@@ -62,6 +62,53 @@ impl StatementsRatiosNamespace {
                 client.financial_ratios_ttm(query).await
             })
         })?;
+        rows.map(|items| items.into_iter().map(FinancialRatiosTtm::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Statements ratios endpoints for a single async client, exposed as `client.statements.ratios`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.statements.ratios", frozen)]
+pub(crate) struct AsyncStatementsRatiosNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncStatementsRatiosNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncStatementsRatiosNamespace {
+    /// Retrieves historical worldwide financial ratios for one company.
+    #[pyo3(signature = (symbol, *, limit=None, period=None))]
+    async fn financial_ratios(
+        &self,
+        symbol: String,
+        limit: Option<i64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"Q1\", \"Q2\", \"Q3\", \"Q4\", \"FY\", \"annual\", \"quarter\"]]", imports = ("typing",)))]
+        period: Option<String>,
+    ) -> PyResult<Vec<FinancialRatios>> {
+        let query = financial_ratios_query(&symbol, limit, period.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_ratios(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(FinancialRatios::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves trailing-twelve-month worldwide financial ratios for one company.
+    #[pyo3(signature = (symbol))]
+    async fn financial_ratios_ttm(&self, symbol: String) -> PyResult<Vec<FinancialRatiosTtm>> {
+        let query = financial_ratios_ttm_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.financial_ratios_ttm(query).await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(FinancialRatiosTtm::from).collect())
             .map_err(to_py_error)
     }

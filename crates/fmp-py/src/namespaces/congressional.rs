@@ -16,7 +16,7 @@ use crate::models::congressional::{
     CongressionalMemberNetWorth, CongressionalMemberNetWorthAggregate, CongressionalMemberPosition,
     CongressionalMemberProfile, CongressionalTrade,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Congressional endpoints for a single client, exposed as `client.congressional`.
 #[gen_stub_pyclass]
@@ -292,6 +292,252 @@ impl CongressionalNamespace {
                 client.congressional_net_worth_aggregated(query).await
             })
         })?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CongressionalMemberNetWorthAggregate::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+}
+
+/// Congressional endpoints for a single async client, exposed as `client.congressional`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.congressional", frozen)]
+pub(crate) struct AsyncCongressionalNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncCongressionalNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncCongressionalNamespace {
+    /// Retrieves the latest Senate financial disclosures.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn latest_senate_disclosures(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CongressionalTrade>> {
+        let query = latest_senate_disclosures_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_senate_disclosures(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves the latest House financial disclosures.
+    #[pyo3(signature = (*, page=None, limit=None))]
+    async fn latest_house_disclosures(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CongressionalTrade>> {
+        let query = latest_house_disclosures_query(page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.latest_house_disclosures(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves Senate trades for one ticker.
+    #[pyo3(signature = (symbol, *, page=None, limit=None))]
+    async fn senate_trades(
+        &self,
+        symbol: String,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CongressionalTrade>> {
+        let query = senate_trades_query(&symbol, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.senate_trades(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches Senate trades by member name.
+    #[pyo3(signature = (name))]
+    async fn senate_trades_by_name(&self, name: String) -> PyResult<Vec<CongressionalTrade>> {
+        let query = senate_trades_by_name_query(&name)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.senate_trades_by_name(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Looks up Senate trades by an optional member ID and pagination.
+    #[pyo3(signature = (*, page=None, limit=None, member_id=None))]
+    async fn senate_trades_by_member_id(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+        member_id: Option<String>,
+    ) -> PyResult<Vec<CongressionalTrade>> {
+        let query = senate_trades_by_member_id_query(page, limit, member_id.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.senate_trades_by_member_id(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves House trades for one ticker.
+    #[pyo3(signature = (symbol, *, page=None, limit=None))]
+    async fn house_trades(
+        &self,
+        symbol: String,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CongressionalTrade>> {
+        let query = house_trades_query(&symbol, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.house_trades(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Searches House trades by member name.
+    #[pyo3(signature = (name))]
+    async fn house_trades_by_name(&self, name: String) -> PyResult<Vec<CongressionalTrade>> {
+        let query = house_trades_by_name_query(&name)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.house_trades_by_name(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Looks up House trades by an optional member ID and pagination.
+    #[pyo3(signature = (*, page=None, limit=None, member_id=None))]
+    async fn house_trades_by_member_id(
+        &self,
+        page: Option<i64>,
+        limit: Option<i64>,
+        member_id: Option<String>,
+    ) -> PyResult<Vec<CongressionalTrade>> {
+        let query = house_trades_by_member_id_query(page, limit, member_id.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.house_trades_by_member_id(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(CongressionalTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves congressional profiles using optional provider filters.
+    #[pyo3(signature = (*, active=None, member_id=None, latest_party=None, latest_position=None, page=None, limit=None))]
+    async fn profiles(
+        &self,
+        active: Option<bool>,
+        member_id: Option<String>,
+        latest_party: Option<String>,
+        latest_position: Option<String>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CongressionalMemberProfile>> {
+        let query = profiles_query(
+            active,
+            member_id.as_deref(),
+            latest_party.as_deref(),
+            latest_position.as_deref(),
+            page,
+            limit,
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.congressional_profiles(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CongressionalMemberProfile::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves congressional position history using optional provider filters.
+    #[pyo3(signature = (*, member_id=None, party=None, position=None, page=None, limit=None))]
+    async fn positions(
+        &self,
+        member_id: Option<String>,
+        party: Option<String>,
+        position: Option<String>,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CongressionalMemberPosition>> {
+        let query = positions_query(
+            member_id.as_deref(),
+            party.as_deref(),
+            position.as_deref(),
+            page,
+            limit,
+        )?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.congressional_positions(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CongressionalMemberPosition::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves itemized congressional net-worth disclosures.
+    #[pyo3(signature = (member_id, *, page=None, limit=None))]
+    async fn net_worth(
+        &self,
+        member_id: String,
+        page: Option<i64>,
+        limit: Option<i64>,
+    ) -> PyResult<Vec<CongressionalMemberNetWorth>> {
+        let query = net_worth_query(&member_id, page, limit)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.congressional_net_worth(query).await
+        })
+        .await?;
+        rows.map(|items| {
+            items
+                .into_iter()
+                .map(CongressionalMemberNetWorth::from)
+                .collect()
+        })
+        .map_err(to_py_error)
+    }
+
+    /// Retrieves aggregated congressional net-worth totals by year.
+    #[pyo3(signature = (member_id, *, totals_col=None))]
+    async fn net_worth_aggregated(
+        &self,
+        member_id: String,
+        totals_col: Option<String>,
+    ) -> PyResult<Vec<CongressionalMemberNetWorthAggregate>> {
+        let query = net_worth_aggregated_query(&member_id, totals_col.as_deref())?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.congressional_net_worth_aggregated(query).await
+        })
+        .await?;
         rows.map(|items| {
             items
                 .into_iter()

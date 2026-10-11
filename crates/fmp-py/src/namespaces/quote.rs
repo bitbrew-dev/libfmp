@@ -15,7 +15,7 @@ use crate::errors::to_py_error;
 use crate::models::quote::{
     AftermarketQuote, AftermarketTrade, Quote, QuoteShort, StockPriceChange,
 };
-use crate::runtime::{ClientHandle, block_on};
+use crate::runtime::{ClientHandle, block_on, spawn};
 
 /// Quote endpoints for a single client, exposed as `client.quote`.
 #[gen_stub_pyclass]
@@ -242,6 +242,209 @@ impl QuoteNamespace {
         let rows = py.detach(move || {
             block_on(builder, |client| async move { client.index_quotes().await })
         })?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+}
+
+/// Quote endpoints for a single async client, exposed as `client.quote`.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native.quote", frozen)]
+pub(crate) struct AsyncQuoteNamespace {
+    builder: Arc<ClientHandle>,
+}
+
+impl AsyncQuoteNamespace {
+    pub(crate) fn new(builder: Arc<ClientHandle>) -> Self {
+        Self { builder }
+    }
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncQuoteNamespace {
+    /// The full quote for a symbol.
+    #[pyo3(signature = (symbol))]
+    async fn full(&self, symbol: String) -> PyResult<Vec<Quote>> {
+        let query = full_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.quote(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(Quote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// The compact quote array for a symbol.
+    #[pyo3(signature = (symbol))]
+    async fn short(&self, symbol: String) -> PyResult<Vec<QuoteShort>> {
+        let query = short_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.quote_short(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Compact quotes for every mutual fund, without a query.
+    async fn mutual_funds(&self) -> PyResult<Vec<QuoteShort>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.mutual_fund_quotes().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US aftermarket trades for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn aftermarket_trade(&self, symbol: String) -> PyResult<Vec<AftermarketTrade>> {
+        let query = aftermarket_trade_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.aftermarket_trade(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(AftermarketTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US aftermarket bid-and-ask quotes for one ticker.
+    #[pyo3(signature = (symbol))]
+    async fn aftermarket_quote(&self, symbol: String) -> PyResult<Vec<AftermarketQuote>> {
+        let query = aftermarket_quote_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.aftermarket_quote(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(AftermarketQuote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves worldwide percentage price changes for one stock.
+    #[pyo3(signature = (symbol))]
+    async fn stock_price_change(&self, symbol: String) -> PyResult<Vec<StockPriceChange>> {
+        let query = stock_price_change_query(&symbol)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.stock_price_change(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(StockPriceChange::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves detailed worldwide stock quotes for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    async fn batch(&self, symbols: args::SymbolsArg) -> PyResult<Vec<Quote>> {
+        let query = batch_query(symbols)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.batch_quote(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(Quote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact worldwide stock quotes for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    async fn batch_short(&self, symbols: args::SymbolsArg) -> PyResult<Vec<QuoteShort>> {
+        let query = batch_short_query(symbols)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.batch_quote_short(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US aftermarket trades for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    async fn batch_aftermarket_trade(
+        &self,
+        symbols: args::SymbolsArg,
+    ) -> PyResult<Vec<AftermarketTrade>> {
+        let query = batch_aftermarket_trade_query(symbols)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.batch_aftermarket_trade(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(AftermarketTrade::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves US aftermarket bid-and-ask quotes for multiple tickers.
+    #[pyo3(signature = (symbols))]
+    async fn batch_aftermarket_quote(
+        &self,
+        symbols: args::SymbolsArg,
+    ) -> PyResult<Vec<AftermarketQuote>> {
+        let query = batch_aftermarket_quote_query(symbols)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.batch_aftermarket_quote(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(AftermarketQuote::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for every stock on one exchange.
+    #[pyo3(signature = (exchange))]
+    async fn exchange(&self, exchange: String) -> PyResult<Vec<QuoteShort>> {
+        let query = exchange_query(&exchange)?;
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.exchange_quotes(query).await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented ETF universe.
+    async fn etfs(&self) -> PyResult<Vec<QuoteShort>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.etf_quotes().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented commodity universe.
+    async fn commodities(&self) -> PyResult<Vec<QuoteShort>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.commodity_quotes().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented cryptocurrency universe.
+    async fn cryptocurrencies(&self) -> PyResult<Vec<QuoteShort>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.cryptocurrency_quotes().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented forex universe.
+    async fn forex(&self) -> PyResult<Vec<QuoteShort>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.forex_quotes().await
+        })
+        .await?;
+        rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
+            .map_err(to_py_error)
+    }
+
+    /// Retrieves compact quotes for the documented index universe.
+    async fn indexes(&self) -> PyResult<Vec<QuoteShort>> {
+        let rows = spawn(self.builder.clone(), |client| async move {
+            client.index_quotes().await
+        })
+        .await?;
         rows.map(|items| items.into_iter().map(QuoteShort::from).collect())
             .map_err(to_py_error)
     }
