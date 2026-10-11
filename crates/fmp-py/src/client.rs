@@ -167,6 +167,74 @@ fn positive_duration(value: f64, field: &'static str) -> PyResult<Duration> {
     Duration::try_from_secs_f64(value).map_err(|_| invalid_configuration(message))
 }
 
+/// Validates the constructor keywords shared by `FmpClient` and
+/// `AsyncFmpClient` and builds the handle both hand to their namespaces.
+#[allow(clippy::too_many_arguments)]
+fn build_handle(
+    token: Option<String>,
+    base_url: Option<String>,
+    path_prefix: Option<String>,
+    auth_mode: Option<&str>,
+    auth_name: Option<String>,
+    auth_prefix: Option<String>,
+    headers: Option<&Bound<'_, PyMapping>>,
+    timeout: Option<f64>,
+    connect_timeout: Option<f64>,
+    max_response_body_bytes: Option<Bound<'_, PyInt>>,
+    danger_allow_insecure_authentication: bool,
+    follow_redirects: Option<bool>,
+    on_response: Option<Bound<'_, PyAny>>,
+) -> PyResult<Arc<ClientHandle>> {
+    let auth = authentication(auth_mode, token, auth_name, auth_prefix)?;
+    let mut builder = ClientBuilder::default().authentication(auth);
+
+    if let Some(base_url) = resolve_base_url(base_url) {
+        builder = builder.base_url(base_url);
+    }
+    if let Some(path_prefix) = path_prefix {
+        builder = builder.path_prefix(path_prefix);
+    }
+    if let Some(headers) = headers {
+        for item in headers.items()?.iter() {
+            let (name, value): (Bound<'_, PyAny>, Bound<'_, PyAny>) = item.extract()?;
+            builder = builder.default_header(header_text(&name)?, header_text(&value)?);
+        }
+    }
+    if let Some(timeout) = timeout {
+        builder = builder.timeout(positive_duration(timeout, "timeout")?);
+    }
+    if let Some(connect_timeout) = connect_timeout {
+        builder = builder.connect_timeout(positive_duration(connect_timeout, "connect_timeout")?);
+    }
+    if let Some(max_response_body_bytes) = max_response_body_bytes {
+        builder = builder.max_response_body_bytes(body_limit(&max_response_body_bytes)?);
+    }
+    builder = builder.danger_allow_insecure_authentication(danger_allow_insecure_authentication);
+    if let Some(follow_redirects) = follow_redirects {
+        builder = builder.redirect_policy(if follow_redirects {
+            RedirectPolicy::SameOrigin
+        } else {
+            RedirectPolicy::None
+        });
+    }
+
+    let on_response = on_response.filter(|callback| !callback.is_none());
+    if let Some(callback) = &on_response {
+        if !callback.is_callable() {
+            return Err(invalid_configuration(
+                "on_response must be callable or None",
+            ));
+        }
+        builder = builder.on_response(response_hook::record);
+    }
+
+    builder
+        .clone()
+        .build()
+        .map_err(|error| build_error(auth_mode, error))?;
+    Ok(ClientHandle::new(builder, on_response.map(Bound::unbind)))
+}
+
 /// A synchronous FMP client with proxy-ready transport configuration.
 ///
 /// When `token` is omitted, the `FMP_API_KEY` environment variable is read
@@ -242,58 +310,22 @@ impl FmpClient {
         #[gen_stub(override_type(type_repr = "typing.Optional[typing.Callable[[builtins.str, builtins.int, builtins.dict[builtins.str, builtins.str]], None]]", imports = ("builtins", "typing")))]
         on_response: Option<Bound<'_, PyAny>>,
     ) -> PyResult<Self> {
-        let auth = authentication(auth_mode, token, auth_name, auth_prefix)?;
-        let mut builder = ClientBuilder::default().authentication(auth);
-
-        if let Some(base_url) = resolve_base_url(base_url) {
-            builder = builder.base_url(base_url);
-        }
-        if let Some(path_prefix) = path_prefix {
-            builder = builder.path_prefix(path_prefix);
-        }
-        if let Some(headers) = headers {
-            for item in headers.items()?.iter() {
-                let (name, value): (Bound<'_, PyAny>, Bound<'_, PyAny>) = item.extract()?;
-                builder = builder.default_header(header_text(&name)?, header_text(&value)?);
-            }
-        }
-        if let Some(timeout) = timeout {
-            builder = builder.timeout(positive_duration(timeout, "timeout")?);
-        }
-        if let Some(connect_timeout) = connect_timeout {
-            builder =
-                builder.connect_timeout(positive_duration(connect_timeout, "connect_timeout")?);
-        }
-        if let Some(max_response_body_bytes) = max_response_body_bytes {
-            builder = builder.max_response_body_bytes(body_limit(&max_response_body_bytes)?);
-        }
-        builder =
-            builder.danger_allow_insecure_authentication(danger_allow_insecure_authentication);
-        if let Some(follow_redirects) = follow_redirects {
-            builder = builder.redirect_policy(if follow_redirects {
-                RedirectPolicy::SameOrigin
-            } else {
-                RedirectPolicy::None
-            });
-        }
-
-        let on_response = on_response.filter(|callback| !callback.is_none());
-        if let Some(callback) = &on_response {
-            if !callback.is_callable() {
-                return Err(invalid_configuration(
-                    "on_response must be callable or None",
-                ));
-            }
-            builder = builder.on_response(response_hook::record);
-        }
-
-        builder
-            .clone()
-            .build()
-            .map_err(|error| build_error(auth_mode, error))?;
-        Ok(Self {
-            builder: ClientHandle::new(builder, on_response.map(Bound::unbind)),
-        })
+        let builder = build_handle(
+            token,
+            base_url,
+            path_prefix,
+            auth_mode,
+            auth_name,
+            auth_prefix,
+            headers,
+            timeout,
+            connect_timeout,
+            max_response_body_bytes,
+            danger_allow_insecure_authentication,
+            follow_redirects,
+            on_response,
+        )?;
+        Ok(Self { builder })
     }
 
     /// Releases the pooled HTTP connections and rejects every later call with
@@ -320,5 +352,106 @@ impl FmpClient {
     ) -> PyResult<()> {
         let _ = (exc_type, exc_value, traceback);
         self.close()
+    }
+}
+
+/// An asyncio FMP client: the same namespaces and methods as `FmpClient`, but
+/// every endpoint method is a coroutine to `await`.
+///
+/// The constructor takes the same keywords, environment fallbacks
+/// (`FMP_API_KEY`, `FMP_BASE_URL`), and defaults as `FmpClient`, and raises
+/// the same exceptions. Requests run on the process-wide runtime shared with
+/// `FmpClient`, so awaiting one never blocks the event loop and concurrent
+/// coroutines (`asyncio.gather`) run their requests in parallel. Cancelling
+/// the awaiting task aborts its request. Coroutines need a running asyncio
+/// loop (anyio on its asyncio backend works); trio is not supported.
+///
+/// `on_response` behaves as on `FmpClient`: a plain, synchronous callable run
+/// on the event loop thread after the response decoded and before the
+/// coroutine returns; if it raises, the coroutine raises that exception.
+///
+/// `close()` and `await aclose()` release the pooled connections; afterwards
+/// every call, including through a namespace fetched before the close, raises
+/// `FmpConfigError`. Calls already in flight finish normally. Closing twice
+/// is a no-op, and `async with AsyncFmpClient(...) as client:` closes the
+/// client when the block exits.
+#[gen_stub_pyclass]
+#[pyclass(module = "fmp._native", frozen)]
+pub(crate) struct AsyncFmpClient {
+    pub(crate) builder: Arc<ClientHandle>,
+}
+
+#[gen_stub_pymethods]
+#[pymethods]
+impl AsyncFmpClient {
+    #[new]
+    #[pyo3(signature = (*, token=None, base_url=None, path_prefix=None, auth_mode=None, auth_name=None, auth_prefix=None, headers=None, timeout=None, connect_timeout=None, max_response_body_bytes=None, danger_allow_insecure_authentication=false, follow_redirects=None, on_response=None))]
+    #[allow(clippy::too_many_arguments)]
+    fn new(
+        token: Option<String>,
+        base_url: Option<String>,
+        path_prefix: Option<String>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Literal[\"none\", \"fmp_header\", \"fmp_query\", \"bearer\", \"custom_header\", \"custom_query\"]]", imports = ("typing",)))]
+        auth_mode: Option<&str>,
+        auth_name: Option<String>,
+        auth_prefix: Option<String>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Mapping[builtins.str, builtins.str]]", imports = ("builtins", "typing")))]
+        headers: Option<&Bound<'_, PyMapping>>,
+        timeout: Option<f64>,
+        connect_timeout: Option<f64>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[builtins.int]", imports = ("builtins", "typing")))]
+        max_response_body_bytes: Option<Bound<'_, PyInt>>,
+        danger_allow_insecure_authentication: bool,
+        follow_redirects: Option<bool>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[typing.Callable[[builtins.str, builtins.int, builtins.dict[builtins.str, builtins.str]], None]]", imports = ("builtins", "typing")))]
+        on_response: Option<Bound<'_, PyAny>>,
+    ) -> PyResult<Self> {
+        let builder = build_handle(
+            token,
+            base_url,
+            path_prefix,
+            auth_mode,
+            auth_name,
+            auth_prefix,
+            headers,
+            timeout,
+            connect_timeout,
+            max_response_body_bytes,
+            danger_allow_insecure_authentication,
+            follow_redirects,
+            on_response,
+        )?;
+        Ok(Self { builder })
+    }
+
+    /// Releases the pooled HTTP connections and rejects every later call with
+    /// `FmpConfigError`. Calls already in flight finish normally. Idempotent.
+    fn close(&self) -> PyResult<()> {
+        runtime::close(&self.builder)
+    }
+
+    /// The awaitable form of `close()`, for `async` cleanup code.
+    async fn aclose(&self) -> PyResult<()> {
+        runtime::close(&self.builder)
+    }
+
+    /// Returns the client itself for use in an `async with` block.
+    async fn __aenter__(slf: Py<Self>) -> Py<Self> {
+        slf
+    }
+
+    /// Closes the client and lets any exception from the block propagate.
+    #[pyo3(signature = (exc_type, exc_value, traceback))]
+    async fn __aexit__(
+        &self,
+        #[gen_stub(override_type(type_repr = "typing.Optional[type[builtins.BaseException]]", imports = ("builtins", "typing")))]
+        exc_type: Option<Py<PyAny>>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[builtins.BaseException]", imports = ("builtins", "typing")))]
+        exc_value: Option<Py<PyAny>>,
+        #[gen_stub(override_type(type_repr = "typing.Optional[types.TracebackType]", imports = ("types", "typing")))]
+        traceback: Option<Py<PyAny>>,
+    ) -> PyResult<()> {
+        let _ = (exc_type, exc_value, traceback);
+        runtime::close(&self.builder)
     }
 }
