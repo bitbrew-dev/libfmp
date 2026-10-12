@@ -305,6 +305,19 @@ The rules:
 `FMP_BASE_URL` only replaces the base URL; the `token` and `FMP_API_KEY`
 rules above are unchanged.
 
+The base URL is only the origin, plus any proxy path. The `stable` version
+segment comes from `path_prefix` (default `"stable"`), which is always added
+after it:
+
+| `base_url` | `path_prefix` | `quote` resolves to |
+| --- | --- | --- |
+| omitted, or `https://financialmodelingprep.com` | default | `https://financialmodelingprep.com/stable/quote` |
+| `https://financialmodelingprep.com/stable` | default | `.../stable/stable/quote`: **404** |
+| `https://financialmodelingprep.com/stable` | `""` | `https://financialmodelingprep.com/stable/quote` |
+
+To set the default explicitly, pass `base_url="https://financialmodelingprep.com"`
+without `/stable`.
+
 To read the proxy's cache status and remaining daily budget on a success,
 pass `on_response`. It is called as `on_response(endpoint_id, status,
 headers)` after every successful call, from any namespace:
