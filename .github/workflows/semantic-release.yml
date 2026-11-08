@@ -76,18 +76,18 @@ jobs:
           python3 -c "import re,pathlib,os; v=os.environ['VER']; p=pathlib.Path('Cargo.toml'); p.write_text(re.sub(r'(?m)^version = \"[0-9]+\.[0-9]+\.[0-9]+\"', f'version = \"{v}\"', p.read_text()))"
           grep -qF "version = \"${VER}\"" Cargo.toml || { echo "version sync failed: workspace version does not match ${VER}"; exit 1; }
           grep -E "^version" Cargo.toml
-      - name: build wheel
-        uses: PyO3/maturin-action@v1
-        with:
-          command: build
-          args: --release --out dist -m crates/fmp-py/Cargo.toml
-          manylinux: auto
       - name: build sdist
         if: matrix.os == 'ubuntu-latest'
         uses: PyO3/maturin-action@v1
         with:
           command: sdist
           args: --out dist -m crates/fmp-py/Cargo.toml
+      - name: build wheel
+        uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --release --out dist -m crates/fmp-py/Cargo.toml
+          manylinux: auto
       - name: upload the built distributions
         uses: actions/upload-artifact@v4
         with:
